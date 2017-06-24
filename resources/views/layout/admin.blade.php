@@ -37,7 +37,7 @@
 
   <link rel="stylesheet" href="{{ asset('semantic/semantic.min.css') }}">
 
-  <script src="{{ asset('js/semantic.min.js') }}"></script>
+  <script src="{{ asset('semantic/semantic.min.js') }}"></script>
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.0/fullcalendar.min.css" rel="stylesheet" />
 
