@@ -35,7 +35,7 @@
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
     crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="{{ asset('css/semantic.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('semantic/semantic.min.css') }}">
 
   <script src="{{ asset('js/semantic.min.js') }}"></script>
 
