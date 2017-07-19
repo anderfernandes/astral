@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Show;
+use Session;
+use Jenssegers\Date\Date;
 
 class EventController extends Controller
 {
@@ -40,7 +42,35 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'show'           => 'required',
+            'type'           => 'required',
+            'start'          => 'required',
+            'end'            => 'required',
+            'adults_price'   => 'required',
+            'children_price' => 'required',
+            'members_price'  => 'required',
+            'seats'          => 'required',
+            'memo'           => 'nullable',
+        ]);
+
+        $event = new Event;
+
+        $event->show_id        = $request->show;
+        $event->type           = $request->type;
+        $event->start          = new Date($request->start);
+        $event->end            = new Date($request->end);
+        $event->adults_price   = round($request->adults_price, 2);
+        $event->children_price = round($request->children_price, 2);
+        $event->members_price  = round($request->members_price, 2);
+        $event->seats          = $request->seats;
+        $event->memo           = $request->memo;
+
+        $event->save();
+
+        Session::flash('success',
+            'The event '.$event->type.' '.Show::find($event->show_id)->name.' on '.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').' has been added successfully!');
+        return redirect()->route('admin.events.show', $event);
     }
 
     /**
@@ -51,7 +81,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        //
+        return view('admin.events.show')->withEvent($event);
     }
 
     /**
@@ -62,7 +92,8 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        //
+        $shows = Show::pluck('name', 'id');
+        return view('admin.events.edit', compact('shows'))->withEvent($event);
     }
 
     /**
@@ -74,7 +105,34 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        //
+      $this->validate($request, [
+          'show_id'        => 'required',
+          'type'           => 'required',
+          'start'          => 'required',
+          'end'            => 'required',
+          'adults_price'   => 'required',
+          'children_price' => 'required',
+          'members_price'  => 'required',
+          'seats'          => 'required',
+          'memo'           => 'nullable',
+      ]);
+
+      $event->show_id        = $request->show_id;
+      $event->type           = $request->type;
+      $event->start          = new Date($request->start);
+      $event->end            = new Date($request->end);
+      $event->adults_price   = round($request->adults_price, 2);
+      $event->children_price = round($request->children_price, 2);
+      $event->members_price  = round($request->members_price, 2);
+      $event->seats          = $request->seats;
+      $event->memo           = $request->memo;
+
+      $event->save();
+
+      Session::flash('success',
+          'The '.$event->type.' '.Show::find($event->show_id)->name.' on '.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').' has been updated successfully!');
+
+      return redirect()->route('admin.events.show', $event);
     }
 
     /**
@@ -85,6 +143,11 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        $temp = $event;
+        $event->delete();
+
+        Session::flash('success',
+            'The '.$event->type.' '.Show::find($event->show_id)->name.' on '.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').' has been deleted successfully!');
+        return redirect()->route('admin.events.index');
     }
 }

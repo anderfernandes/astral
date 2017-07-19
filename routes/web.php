@@ -29,6 +29,7 @@ Route::group(
   Route::resource('events', 'EventController');
   // Setting resource
   Route::resource('settings', 'SettingController');
+  Route::put('settings', 'SettingController@update');
 });
 
 Auth::routes();

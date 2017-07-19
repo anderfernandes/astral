@@ -1,28 +1,32 @@
 @extends('layout.admin')
 
-@section('title', 'Add Event')
+@section('title', 'Edit Event')
 
 @section('content')
 
   <h2 class="ui dividing header">
     <i class="calendar icon"></i>
     <div class="content">
-      Add Event
-      <div class="sub header"></div>
+      Edit Event
+      <div class="ui label">{{ $event->type }}</div>
+      <div class="sub header">
+        <strong>{{ App\Show::find($event->show_id)->name }}</strong> on
+        <strong>{{ Date::parse($event->start)->format('l, F j, Y \a\t H:i A') }}</strong>
+      </div>
     </div>
   </h2>
 
-  {!! Form::open(['route' => 'admin.events.store', 'class' => 'ui form']) !!}
+  {!! Form::model($event, ['route' => ['admin.events.update', $event], 'class' => 'ui form', 'method' => 'PUT']) !!}
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="plus icon"></i> Add Event', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="edit icon"></i> Edit Event', ['type' => 'submit', 'class' => 'ui primary button']) !!}
     </div>
   </div>
   <div class="two fields">
     <div class="field">
       {!! Form::label('show', 'Show') !!}
-      {!! Form::select('show', $shows, null, ['placeholder' => 'Select a show']) !!}
+      {!! Form::select('show_id', $shows, null, ['placeholder' => 'Select a show']) !!}
     </div>
     <div class="field">
       {!! Form::label('type', 'Type') !!}
@@ -37,16 +41,22 @@
   </div>
   <div class="two fields">
     <div class="field">
-        {!! Form::label('start', 'Start Date and Time') !!}
-        <div class="ui left icon input">
-          {!! Form::text('start', null, ['placeholder' => 'Event Date and Time', 'id' => 'start']) !!}
+      {!! Form::label('start', 'Start Date') !!}
+      <div class="ui left icon input">
+        {!! Form::text('start',
+                       Date::parse($event->start)->format('l, F j, Y H:i A'),
+                       ['placeholder' => 'Event Date and Time', 'id' => 'start'])
+        !!}
         <i class="calendar icon"></i>
       </div>
     </div>
     <div class="field">
-      {!! Form::label('end', 'End Date and Time') !!}
+      {!! Form::label('end', 'End Date') !!}
       <div class="ui left icon input">
-        {!! Form::text('end', null, ['placeholder' => 'Event End Date and Time', 'id' =>'end']) !!}
+        {!! Form::text('end',
+                        Date::parse($event->end)->format('l, F j, Y H:i A'),
+                        ['placeholder' => 'Event End Date and Time', 'id' =>'end'])
+        !!}
         <i class="calendar icon"></i>
       </div>
     </div>
@@ -81,7 +91,7 @@
     </div>
     <div class="field">
       {!! Form::label('seats', 'Number of Seats Available') !!}
-      {!! Form::number('seats', App\Setting::find(1)->seats, ['placeholder' => 'Number of Seats Available']) !!}
+      {!! Form::number('seats', null, ['placeholder' => 'Number of Seats Available']) !!}
     </div>
   </div>
   <div class="field">
@@ -91,7 +101,7 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="plus icon"></i> Add Event', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="edit icon"></i> Edit Event', ['type' => 'submit', 'class' => 'ui primary button']) !!}
     </div>
   </div>
   {!! Form::close() !!}

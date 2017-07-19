@@ -27,4 +27,7 @@
   <a href="{{ route('admin.users.index') }}" class="item">
     <i class="large users icon"></i> Users
   </a>
+  <a href="{{ route('admin.settings.index') }}" class="item">
+    <i class="large setting icon"></i> Settings
+  </a>
 </div>

@@ -16,6 +16,10 @@
   <meta name="keywords" content="mayborn science theater, ctc planetarium, field trip,
   field trips, reservation, @yield('meta_keywords')" />
 
+  <!-- MomentJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+
   @yield('meta')
 
   <!-- Google Analytics -->
@@ -45,6 +49,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.0/fullcalendar.min.js"></script>
 
+  <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+  <script src="https://unpkg.com/flatpickr"></script>
+
 </head>
 <script>
   $(document)
@@ -59,7 +66,15 @@
       $('.message .close').on('click', function() {
         $(this).closest('.message').transition('fade');
       });
+      /*jQuery('.datetimepicker').datetimepicker({
+        format:'dddd, MMMM DD, YYYY H:mm',
+        formatTime:'H:mm',
+        formatDate:'dddd, MMMM DD, YYYY',
+        minTime: '08:00',
+        maxTime: '24:00'
+      });*/
     });
+
 </script>
 
 <body>

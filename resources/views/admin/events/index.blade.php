@@ -33,13 +33,38 @@
       @foreach($events as $event)
         <tr>
           <td>
-            <h4 class="ui image header">
-              <img src="https://semantic-ui.com/images/wireframe/square-image.png" class="ui mini rounded image">
-              <div class="content">
-                {{ $event->show }}
-                <div class="sub header">{{ $event->type }}</div>
+            <div class="ui unstackable items">
+              <div class="item">
+                <div class="ui small image">
+                  <img src="https://semantic-ui.com/images/wireframe/square-image.png">
+                </div>
+                <div class="content">
+                  <div class="meta">
+                    <span class="ui label">{{ $event->type }}</span>
+                    <span class="ui label">{{ App\Show::find($event->show_id)->type }}</span>
+                    <span class="ui label">{{ App\Show::find($event->show_id)->duration }} minutes</span>
+                  </div>
+                  <div class="ui header">
+                    {{ App\Show::find($event->show_id)->name }}
+                    <div class="sub header">
+                      <i class="calendar icon"></i>
+                      {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+                    </div>
+                  </div>
+                  <div class="meta">
+                    <span class="ui tag label">$ {{ $event->adults_price }} / adult</span>
+                    <span class="ui tag label">$ {{ $event->children_price }} / child</span>
+                    <span class="ui tag label">$ {{ $event->members_price }} / member</span>
+                  </div>
+                  <div class="description">
+
+                  </div>
+                  <div class="extra">
+                    Created {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i A') }}
+                  </div>
+                </div>
               </div>
-            </h4>
+            </div>
           </td>
           <td class="collapsing">
             <div class="ui basic icon buttons">

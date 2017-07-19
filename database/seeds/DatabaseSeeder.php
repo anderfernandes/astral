@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
         // Seed database with sample data
         $this->call(UsersTableSeeder::class);
         $this->call(ShowsTableSeeder::class);
+        $this->call(SettingsTableSeeder::class);
     }
 }
