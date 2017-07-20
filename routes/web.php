@@ -34,6 +34,9 @@ Route::group(
 
 Auth::routes();
 
+// Cashier Route
+Route::get('/cashier', 'CashierController@index')->name('cashier');
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/account', 'HomeController@account')->name('account');
