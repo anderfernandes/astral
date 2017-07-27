@@ -76,7 +76,7 @@
         <div class="ui label">
           $
         </div>
-        {!! Form::number('members_price', null, ['placeholder' => 'Adult Ticket Price', 'step' => '0.01']) !!}
+        {!! Form::number('members_price', null, ['placeholder' => 'Member Ticket Price', 'step' => '0.01']) !!}
       </div>
     </div>
     <div class="field">

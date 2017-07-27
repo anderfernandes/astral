@@ -19,7 +19,7 @@
 
   <div class="sixteen wide mobile ten wide computer column">
 
-  @if ($events)
+  @if (count($events) > 0)
     @foreach($events as $event)
       <div class="ui unstackable items">
         <div class="item">
@@ -28,7 +28,7 @@
           </div>
           <div class="content">
             <div class="meta">
-              <span class="ui label">{{ $event->type }}</span>
+              <span class="ui label" id="showtype">{{ $event->type }}</span>
               <span class="ui label">{{ App\Show::find($event->show_id)->type }}</span>
               <span class="ui label">{{ App\Show::find($event->show_id)->duration }} minutes</span>
             </div>
@@ -46,30 +46,24 @@
             </div>
             <div class="description">
               <div class="ui right labeled left action input">
-                <button class="ui icon button"><i class="plus icon"></i></button>
-                <button class="ui icon button"><i class="minus icon"></i></button>
-                <input type="number" placeholder="0">
-                <div class="ui tag label">
-                  at $ {{ number_format($event->adults_price, 2) }} / adult
-                </div>
+                <button onclick="changeAmount({{ $loop->index }}*3+0, 1, 'adult', '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ $event->adults_price }})" class="ui icon button plus"><i class="plus icon"></i></button>
+                <button onclick="changeAmount({{ $loop->index }}*3+0,-1, 'adult', '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ $event->adults_price }})" class="ui icon button"><i class="minus icon"></i></button>
+                <input min="0" value="0" type="number" placeholder="0">
+                <div class="ui tag label">at $ {{ number_format($event->adults_price, 2) }} / adult</div>
               </div>
               <br />
               <div class="ui right labeled left action input">
-                <button class="ui icon button"><i class="plus icon"></i></button>
-                <button class="ui icon button"><i class="minus icon"></i></button>
-                <input type="number" placeholder="0">
-                <div class="ui tag label">
-                  at $ {{ number_format($event->children_price, 2) }} / child
-                </div>
+                <button onclick="changeAmount({{ $loop->index }}*3+1, 1, 'children', '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ $event->children_price }})" class="ui icon button"><i class="plus icon"></i></button>
+                <button onclick="changeAmount({{ $loop->index }}*3+1,-1, 'children', '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ $event->children_price }})" class="ui icon button"><i class="minus icon"></i></button>
+                <input min="0" value="0" type="number" placeholder="0">
+                <div class="ui tag label">at $ {{ number_format($event->children_price, 2) }} / child</div>
               </div>
               <br />
               <div class="ui right labeled left action input">
-                <button class="ui icon button"><i class="plus icon"></i></button>
-                <button class="ui icon button"><i class="minus icon"></i></button>
-                <input type="number" placeholder="0">
-                <div class="ui tag label">
-                  at $ {{ number_format($event->member_price, 2) }} / member
-                </div>
+                <button onclick="changeAmount({{ $loop->index }}*3+2, 1, 'member', '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }})" class="ui icon button"><i class="plus icon"></i></button>
+                <button onclick="changeAmount({{ $loop->index }}*3+2,-1, 'member', '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }})" class="ui icon button"><i class="minus icon"></i></button>
+                <input min="0" value="0" type="number" placeholder="0">
+                <div class="ui tag label">at $ {{ number_format($event->member_price, 2) }} / member</div>
               </div>
             </div>
             <div class="extra">
@@ -99,64 +93,37 @@
       <h3 class="ui top attached header">
         <i class="file text icon"></i>Sale
       </h3>
-      <div class="ui attached segment">
-        <h4 class="ui header">
+      <div class="ui attached segment" id="tickets">
+        <!--<h4 class="ui header">
           <i class="ticket icon"></i>
           <div class="content">
             Adult Matinee $5.00 <i class="remove icon"></i>5 = $25.00
             <div class="sub header">Astronaut</div>
           </div>
-        </h4>
+        </h4>-->
       </div>
       <div class="ui attached segment">
-        <h4 class="ui header">
-          <i class="ticket icon"></i>
-          <div class="content">
-            Children Matinee $5.00<i class="remove icon"></i>5 = $25.00
-            <div class="sub header">Astronaut</div>
+        <div class="ui selection dropdown">
+          <input type="hidden" name="payment_method">
+          <i class="dropdown icon"></i>
+          <div class="default text"><i class="money icon"></i>Cash</div>
+          <div class="menu">
+            <div class="item" data-value="visa"><i class="money icon"></i>Cash</div>
+            <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
+            <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
+            <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
+            <div class="item" data-value="american"><i class="american express icon"></i>American Express</div>
           </div>
+        </div>
+        <h4 class="ui right floated header">
+          Subtotal = $ <span id="subtotal">0.00</span>
+          <div class="sub header">{{ App\Setting::find(1)->tax }}% Tax = $ <span id="tax">0.00</span></div>
         </h4>
-      </div>
-      <div class="ui attached segment">
-        <h4 class="ui right aligned header">
-          Subtotal = $25.00
-          <div class="sub header">{{ App\Setting::find(1)->tax }}% Tax = $1.00</div>
-        </h4>
-      </div>
-      <div class="ui attached segment">
-        <div class="ui radio checkbox">
-          <input name="payment" type="radio">
-          <label><i class="american express icon"></i></label>
-        </div>
-        <div class="ui radio checkbox">
-          <input name="payment" type="radio">
-        <label><i class="diners club icon"></i></label>
-        </div>
-        <div class="ui radio checkbox">
-          <input name="payment" type="radio">
-          <label><i class="discover icon"></i></label>
-        </div>
-        <div class="ui radio checkbox">
-          <input name="payment" type="radio">
-          <label><i class="mastercard icon"></i></label>
-        </div>
-        <div class="ui radio checkbox">
-          <input name="payment" type="radio">
-          <label><i class="visa icon"></i></label>
-        </div>
-        <div class="ui radio checkbox">
-          <input name="payment" type="radio">
-          <label><i class="money icon"></i></label>
-        </div>
-        <div class="ui radio checkbox">
-          <input name="payment" type="radio">
-          <label><i class="money icon"></i></label>
-        </div>
       </div>
       <div class="ui bottom attached header">
         Total
         <h1 class="ui right aligned header">
-          $25.00
+          $ <span id="total">0.00</span>
         </h1>
       </div>
     </div>
@@ -166,5 +133,42 @@
     </div>
   </div>
 </div>
+
+<script>
+
+  function changeAmount(number, operator, ticketType, show, eventType, price) {
+    var sum = 0;
+    var inputs = document.querySelectorAll("input[type='number']");
+    var divs = document.querySelectorAll(".ui.tag.label");
+    inputs[number].value = parseInt(inputs[number].value) + parseInt(operator);
+    if (parseInt(inputs[number].value) < 0)
+      inputs[number].value = 0;
+    for(i = 0; i < inputs.length; i++)
+    {
+      sum += parseInt(inputs[i].value) * parseFloat(divs[i].innerHTML.split(" ")[2]).toFixed(2);
+    }
+
+    var subtotal = sum.toFixed(2);
+    var tax = (sum * ({{ App\Setting::find(1)->tax }}/100)).toFixed(2);
+    var total = (parseFloat(subtotal) + parseFloat(tax)).toFixed(2);
+
+    document.querySelector('#subtotal').innerHTML = subtotal;
+    document.querySelector('#tax').innerHTML = tax;
+    document.querySelector('#total').innerHTML = total;
+
+    if (show)
+      var showTrimmed = show.replace(/\s+/g, "").replace(":", "");
+
+    console.log(showTrimmed);
+
+
+    if(operator == 1)
+      $('#tickets').append('<h4 class="ui header '+ ticketType + showTrimmed + eventType + price +'"><i class="ticket icon"></i><div class="content" style="width:100%">'+ ticketType +' | ' + eventType +' <span style="float:right">$ '+ price.toFixed(2) + '</span><div class="sub header">'+ show +'</div></div></h4>');
+    else {
+      $('.ui.header.'+ ticketType + showTrimmed + eventType + price + '').first().remove();
+    }
+  }
+
+</script>
 
 @endsection

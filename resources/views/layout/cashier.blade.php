@@ -60,8 +60,9 @@
         $(this).closest('.message').transition('fade');
       });
 
-      // Initialize checkboxes
+      // Initialize Semantic UI components
       $('.ui.radio.checkbox').checkbox();
+      $('.ui.dropdown').dropdown();
     });
 </script>
 

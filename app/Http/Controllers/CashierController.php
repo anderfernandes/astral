@@ -19,11 +19,11 @@ class CashierController extends Controller
       // Get the authenticated user
       $user = Auth::user();
       // Get today's date for the query that will show today's events
-      $today = Date::now()->format('Y-m-d');
+      $today = Date::now('America/Chicago')->addMinutes(-30)->toDateTimeString();
       // Get all events going on today
-      $events = Event::where('start','>=', $today . ' 00:00:00')
-                  ->where('start','<=', $today . ' 23:59:59')
-                  ->orderBy('start', 'desc')
+      $events = Event::where('start','>=', $today)
+                  ->where('start','<=', Date::now('America/Chicago')->endOfDay())
+                  ->orderBy('start', 'asc')
                   ->get();
       return view('cashier.index')->withUser($user)->withEvents($events);
     }
