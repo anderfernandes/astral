@@ -27,4 +27,9 @@ class CashierController extends Controller
                   ->get();
       return view('cashier.index')->withUser($user)->withEvents($events);
     }
+
+    public function store(Request $request)
+    {
+      var_dump($request->input('show'));
+    }
 }

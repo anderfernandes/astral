@@ -80,17 +80,19 @@
   </script>-->
 
   <!--- Sidebar Menu -->
+  @include('cashier.partial._sidebar')
 
   <!-- Page Contents -->
-  <div class="pusher" style="padding-top: 2.5rem">
+  <div class="pusher">
 
     <!-- Top Fixed Menu -->
+    @include('cashier.partial._menu')
 
     <!-- Messages -->
 
-    <div class="ui basic segment">
+    <div class="ui basic segment" style="padding-top:3.5rem">
 
-      @include('partial._message')
+      @include('cashier.partial._message')
 
       @yield('content')
 
