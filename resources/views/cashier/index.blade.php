@@ -4,7 +4,7 @@
 
 @section('icon', 'dollar')
 
-@section('name', 'Cashier | '.$user->firstname.' '.$user->lastname)
+@section('name', 'Cashier | '.Auth::user()->firstname.' '.Auth::user()->lastname)
 
 @section('content')
 
@@ -90,7 +90,7 @@
   </div>
 
   <div class="sixteen wide mobile five wide computer column">
-    {!! Form::open(['route' => 'cashier.store', 'class' => 'ui form']) !!}
+    {!! Form::open(['route' => 'cashier.store', 'class' => 'ui form', 'id' => 'cashier']) !!}
     <div class="ui two buttons">
       {!! Form::button('<i class="check icon"></i> Confirm', ['type' => 'submit', 'class' => 'ui green button']) !!}
       <a href="{{ route('cashier.index') }}" class="ui large negative button"><i class="remove icon"></i>Cancel</a>
@@ -145,10 +145,10 @@
 
 
   // Make sure users enter reference for Credit Card and Checks
-  $('button[type="submit"]').click(function() {
+  $('button[type="submit"].ui.class.green.button').click(function() {
     var payment_method = document.querySelector('input[name="payment_method"]').value
     if ( payment_method != 'cash' || payment_method == '') {
-      $('.ui.form')
+      $('#cashier.ui.form')
         .form({
           fields: {
             payment_method : 'empty',
@@ -156,13 +156,13 @@
           }
       });
     } else {
-      $('.ui.form')
+      $('#cashier.ui.form')
         .form({
           fields: {
             payment_method : 'empty'
           }
       });
-      $('form.ui.form').removeClass('error');
+      $('form#cashier.ui.form').removeClass('error');
       $('.field.error').removeClass('error');
     }
   });

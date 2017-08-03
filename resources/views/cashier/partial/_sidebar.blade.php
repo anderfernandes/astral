@@ -5,7 +5,7 @@
     {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
     <br /><br />
     <div class="ui tiny buttons">
-      <a href="{{ route('account') }}" class="ui red button"><i class="user icon"> </i>Account</a>
+      <a href="{{ route('account') }}" class="ui secondary button"><i class="user icon"> </i>Account</a>
       {!! Form::open(['route' => ['logout'], 'method' => 'POST']) !!}
         {{ csrf_field() }}
         {!! Form::button('<i class="sign out icon"></i> Logout',
@@ -15,19 +15,66 @@
     </div>
   </div>
   <!-- Pending loop to automatically pull all menu items -->
-  <a class="item" href="{{ route('admin.index') }}">
-    <i class="large dashboard icon"></i> Dashboard
+  <a class="{{ Request::routeIs('cashier.index') ? "active " : ""}}item" href="{{ route('cashier.index') }}" target="_blank">
+    <i class="money icon"></i> Cashier
   </a>
-  <a class="item" href="{{ route('admin.shows.index') }}">
-    <i class="large film icon"></i> Shows
+  <a class="item" href="{{ route('admin.index') }}" target="_blank">
+    <i class="file text outline icon"></i> Sales Report (Today)
   </a>
-  <a class="item" href="{{ route('admin.events.index') }}">
-    <i class="large calendar icon"></i> Calendar
+  <a class="item" href="javascript:$('.ui.basic.modal').modal('show')" target="_blank">
+    <i class="search icon"></i> Find Sale
   </a>
-  <a href="{{ route('admin.users.index') }}" class="item">
-    <i class="large users icon"></i> Users
-  </a>
-  <a href="{{ route('admin.settings.index') }}" class="item">
-    <i class="large setting icon"></i> Settings
-  </a>
+</div>
+
+<!-- Refund Modal -->
+<div class="ui basic modal">
+    <h2 class="ui icon header">
+      <i class="money icon"></i>
+      Find Sale
+    </h2>
+    <div class="content">
+      <p>
+        Fill out at least one field to find a sale
+          {!! Form::open(['route' => 'cashier.query', 'class' => 'ui form', 'id' => 'find-sale']) !!}
+          <div class="inverted segment">
+            <div class="four fields">
+              <div class="field">
+                {!! Form::label('id', 'Sale Number') !!}
+                {!! Form::text('id', null, ['placeholder' => 'Sale Number']) !!}
+              </div>
+              <div class="field">
+                {!! Form::label('total', 'Sale Total') !!}
+                {!! Form::text('id', null, ['placeholder' => 'Sale Total']) !!}
+              </div>
+              <div class="field">
+                {!! Form::label('payment_method', 'Sale Payment Method') !!}
+                <div class="ui selection dropdown">
+                  <input type="hidden" name="payment_method">
+                  <i class="dropdown icon"></i>
+                  <div class="default text">Payment Method</div>
+                  <div class="menu">
+                    <div class="item" data-value="cash"><i class="money icon"></i>Cash</div>
+                    <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
+                    <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
+                    <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
+                    <div class="item" data-value="american"><i class="american express icon"></i>American Express</div>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                {!! Form::label('reference', 'Reference') !!}
+                {!! Form::text('reference', null, ['placeholder' => 'Check or Credit Card #']) !!}
+              </div>
+            </div>
+          </div>
+      </p>
+    </div>
+    <div class="actions">
+      <div class="ui standard inverted button">
+        <i class="remove icon"></i>
+        Clear Form
+      </div>
+      {!! Form::button('<i class="search icon"></i> Find Sale', ['type' => 'submit', 'class' => 'ui green ok inverted button']) !!}
+    </div>
+    {!! Form::close() !!}
 </div>

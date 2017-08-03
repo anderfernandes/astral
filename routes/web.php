@@ -39,6 +39,8 @@ Route::get('cashier', 'CashierController@index')->name('cashier.index')->middlew
 
 Route::post('cashier', 'CashierController@store')->name('cashier.store')->middleware('auth');
 
+Route::post('cashier/query', 'CashierController@query')->name('cashier.query')->middleware('auth');
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/account', 'HomeController@account')->name('account')->middleware('auth');

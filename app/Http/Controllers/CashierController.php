@@ -71,4 +71,19 @@ class CashierController extends Controller
       return redirect()->route('cashier.index');
 
     }
+
+    public function query(Request $request, Sale $query)
+    {
+      //$payment_method = ($request->payment_method) ? $request->payment_method : '*';
+      //$reference      = ($request->reference)      ? $request->reference      : '*';
+
+      $results = \DB::table('sales')->where([
+        //['id', '=', $request->id],
+        //['total', '=', $request->total],
+        ['payment_method', '=' '*'],
+        //['reference'     , $reference     ]
+      ])->get();
+
+      return view('cashier.query')->withResults($results);
+    }
 }
