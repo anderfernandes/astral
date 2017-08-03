@@ -35,45 +35,40 @@ class CashierController extends Controller
     public function store(Request $request)
     {
 
-      $ticket = new Ticket;
-
-      
+      $this->validate($request, [
+        'payment_method'        => 'required',
+        'reference'             => 'nullable',
+        'ticket.*.type'         => 'required',
+        'ticket.*.price'        => 'required',
+        'ticket.*.event_id'     => 'required',
+        'ticket.*.cashier_id'   => 'required',
+        'ticket.*.customer_id'  => 'required',
+      ]);
 
       $sale = new Sale;
 
+      $sale->cashier_id     = Auth::user()->id;
+      $sale->payment_method = $request->payment_method;
+      $sale->reference      = $request->reference;
+      $sale->subtotal       = $request->subtotal;
+      $sale->total          = $request->total;
+      $sale->source         = "cashier";
+
       $sale->save();
 
-      // $ticket->sale()->associate($ticket);
+      $ticketsInput = $request->get('ticket');
 
-      $sale->payment_method = $request->payment_method;
-      $sale->reference = $request->reference;
-      $sale->subtotal = $request->subtotal;
-      $sale->total = $request->total;
-      $sale->source = "cashier";
+      $tickets = [];
 
-
-      foreach($request->input('ticket') as $t) {
-
-        $ticketsPurchased[] = [
-          'type'        => $t['ticket_type'],
-          'show_id'     => $t['show_id'],
-          'price'       => number_format($t['price'], 2),
-          'event_id'    => $t['event_id'],
-          'customer_id' => 999,
-          'cashier_id'  => Auth::user()->id,
-        ];
+      foreach($ticketsInput as $ticket){
+        $tickets[] = new Ticket($ticket);
       }
 
-      // $tickets = $request->get('ticket');
-
-      $sale->tickets()->createMany($ticketsPurchased);
+      $sale->tickets()->saveMany($tickets);
 
       Session::flash('success', count($request->input('ticket')). ' ticket(s) sold successfully');
 
-
-
       return redirect()->route('cashier.index');
-
 
     }
 }

@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Ticket extends Model
 {
 
-    protected $fillable = ['type', 'show_id', 'price', 'event_id', 'customer_id', 'cashier_id', 'sale_id'];
+    protected $fillable = ['type', 'price', 'event_id', 'customer_id', 'cashier_id', 'sale_id'];
 
     public function sale()
     {
-      $this->belongsTo('App\Sale');
+      $this->belongsToMany('App\Sale', 'sale_ticket');
     }
 }

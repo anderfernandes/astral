@@ -7,13 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Sale extends Model
 {
 
+    public $fillable = ['ticket_id'];
+
     public function tickets()
     {
-      return $this->hasMany('App\Ticket');
+      return $this->belongsToMany('App\Ticket');
     }
 
-    public function event()
-    {
-      return $this->hasMany('App\Event');
-    }
 }

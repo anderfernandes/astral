@@ -14,7 +14,7 @@
 
   @if (count($events) > 0)
     @foreach($events as $event)
-      <div class="ui unstackable items">
+      <div class="ui unstackable divided items">
         <div class="item">
           <div class="ui small image">
             <img src="https://semantic-ui.com/images/wireframe/square-image.png">
@@ -44,7 +44,7 @@
                     <div class="ui right labeled left action small input">
                       <button onclick="changeAmount({{ $loop->index }}*3+0, 1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon button plus"><i class="plus icon"></i></button>
                       <button onclick="changeAmount({{ $loop->index }}*3+0,-1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
-                      <input min="0" value="0" type="text" placeholder="0">
+                      <input readonly min="0" value="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->adults_price, 2) }} / adult</div>
                     </div>
                   </div>
@@ -52,7 +52,7 @@
                     <div class="ui right labeled left action small input">
                       <button onclick="changeAmount({{ $loop->index }}*3+1, 1, 'children', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->children_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="plus icon"></i></button>
                       <button onclick="changeAmount({{ $loop->index }}*3+1,-1, 'children', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->children_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
-                      <input min="0" value="0" type="text" placeholder="0">
+                      <input readonly min="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->children_price, 2) }} / child</div>
                     </div>
                   </div>
@@ -60,7 +60,7 @@
                     <div class="ui right labeled left action small input">
                       <button onclick="changeAmount({{ $loop->index }}*3+2, 1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="plus icon"></i></button>
                       <button onclick="changeAmount({{ $loop->index }}*3+2,-1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
-                      <input min="0" value="0" type="text" placeholder="0">
+                      <input readonly min="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->member_price, 2) }} / member</div>
                     </div>
                   </div>
@@ -116,7 +116,7 @@
               <div class="ui selection dropdown">
                 <input type="hidden" name="payment_method">
                 <i class="dropdown icon"></i>
-                <div class="default text"><i class="money icon"></i>Cash</div>
+                <div class="default text">Payment Method</div>
                 <div class="menu">
                   <div class="item" data-value="cash"><i class="money icon"></i>Cash</div>
                   <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
@@ -127,25 +127,51 @@
               </div>
             </div>
             <div class="field">
-              {!! Form::label('Check / Credit Card Reference') !!}
-              <input type="text" name="reference" placeholder="Last 4 for cards or check #. Leave blank for cash">
+              {!! Form::label('reference', 'Check / Credit Card Reference') !!}
+              {!! Form::text('reference', null, ['placeholder' => 'Last 4 for cards or check #. Leave blank for cash']) !!}
             </div>
           </div>
         </div>
         {!! Form::close() !!}
       </div>
-      <div class="ui attached segment" id="tickets">
-
-      </div>
+      <div class="ui attached segment" id="tickets"></div>
     </div>
   </div>
 </div>
 
 <script>
 
+  // Payment method and Reference Validation
+
+
+  // Make sure users enter reference for Credit Card and Checks
+  $('button[type="submit"]').click(function() {
+    var payment_method = document.querySelector('input[name="payment_method"]').value
+    if ( payment_method != 'cash' || payment_method == '') {
+      $('.ui.form')
+        .form({
+          fields: {
+            payment_method : 'empty',
+            reference      : 'empty'
+          }
+      });
+    } else {
+      $('.ui.form')
+        .form({
+          fields: {
+            payment_method : 'empty'
+          }
+      });
+      $('form.ui.form').removeClass('error');
+      $('.field.error').removeClass('error');
+    }
+  });
+
+
+
   var ticketId = 0;
 
-  function changeAmount(number, operator, ticket_type, show_id, show, event_type, price, event_id) {
+  function changeAmount(number, operator, type, show_id, show, event_type, price, event_id) {
     var currentTicketId = ticketId++;
     var sum = 0;
     var inputs = document.querySelectorAll("input[type='text']");
@@ -179,18 +205,20 @@
       var event_typeTrimmed = event_type.replace(/\s+/g, "").replace(":", "");
 
     if(operator == 1) {
-      $('#tickets').append('<h4 class="ui header '+ ticket_type + showTrimmed + event_typeTrimmed + price +'"><i class="ticket icon"></i><div class="content" style="width:100%">'+ ticket_type +' | ' + event_type +' <span style="float:right">$ '+ price.toFixed(2) + '</span><div class="sub header">'+ show +'</div></div></h4>');
-      $('form').append('<input class="'+ ticket_type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][ticket_type]" value="'+ ticket_type +'">');
-      $('form').append('<input class="'+ ticket_type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][show_id]" value="'+ show_id +'">');
-      $('form').append('<input class="'+ ticket_type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][price]" value="'+ price +'">');
-      $('form').append('<input class="'+ ticket_type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][event_id]" value="'+ event_id +'">');
+      $('#tickets').append('<h4 class="ui header '+ type + showTrimmed + event_typeTrimmed + price +'"><i class="ticket icon"></i><div class="content" style="width:100%">'+ type +' | ' + event_type +' <span style="float:right">$ '+ price.toFixed(2) + '</span><div class="sub header">'+ show +'</div></div></h4>');
+      $('form.ui.form').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][type]" value="'+ type +'">');
+      $('form.ui.form').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][price]" value="'+ price +'">');
+      $('form.ui.form').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][event_id]" value="'+ event_id +'">');
+      $('form.ui.form').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][cashier_id]" value="{{ Auth::user()->id }}">');
+      $('form.ui.form').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][customer_id]" value="999">');
     }
     else {
-      $('.ui.header.'+ ticket_type + showTrimmed + event_typeTrimmed + price + '').first().remove();
-      $('form.ui.form .'+ ticket_type + showTrimmed + event_typeTrimmed + price +'').first().remove();
-      $('form.ui.form .'+ ticket_type + showTrimmed + event_typeTrimmed + price +'').first().remove();
-      $('form.ui.form .'+ ticket_type + showTrimmed + event_typeTrimmed + price +'').first().remove();
-      $('form.ui.form .'+ ticket_type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('#tickets h4.ui.header.'+ type + showTrimmed + event_typeTrimmed + price + '').first().remove();
+      $('form.ui.form input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
     }
 
   }
