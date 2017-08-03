@@ -26,7 +26,7 @@ class CreateSettingsTable extends Migration
             $table->decimal('members_weekend')->nullable();
             $table->decimal('members_matinee')->nullable();
             $table->decimal('members_special_event')->nullable();
-            $table->decimal('tax')->nullable()->default(8.25);
+            $table->float('tax')->nullable()->default(8.25);
             $table->timestamps();
         });
     }

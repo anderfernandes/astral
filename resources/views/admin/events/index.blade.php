@@ -15,7 +15,7 @@
   <div class="ui secondary menu">
     <div class="item">
       <a class="ui primary button" href="{{ route('admin.events.create') }}">
-        <i class="plus icon"></i> New Event
+        <i class="calendar plus icon"></i> Create Event
       </a>
     </div>
     <div class="right item">
@@ -60,7 +60,7 @@
 
                   </div>
                   <div class="extra">
-                    Created {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i A') }}
+                    Created by {{ $event->creator->firstname }} {{ $event->creator->lastname }} on {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i A') }}
                   </div>
                 </div>
               </div>

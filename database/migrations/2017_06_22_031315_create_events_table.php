@@ -25,6 +25,8 @@ class CreateEventsTable extends Migration
             $table->decimal('children_price')->nullable();
             $table->decimal('members_price')->nullable();
             $table->integer('seats');
+            $table->integer('creator_id')->unsigned();
+            $table->foreign('creator_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

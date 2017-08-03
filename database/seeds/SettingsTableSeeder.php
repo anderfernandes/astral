@@ -14,7 +14,8 @@ class SettingsTableSeeder extends Seeder
         // Settings Table Seeder
         DB::table('settings')->insert([
           'organization' => 'Mayborn Science Theater',
-          'seats'        => 180
+          'seats'        => 180,
+          'tax'          => 8.25,
         ]);
     }
 }

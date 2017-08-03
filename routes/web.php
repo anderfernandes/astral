@@ -35,7 +35,7 @@ Route::group(
 Auth::routes();
 
 // Cashier Route
-Route::get('cashier', 'CashierController@index')->name('cashier')->middleware('auth');
+Route::get('cashier', 'CashierController@index')->name('cashier.index')->middleware('auth');
 
 Route::post('cashier', 'CashierController@store')->name('cashier.store')->middleware('auth');
 

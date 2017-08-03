@@ -22,16 +22,16 @@
           <div class="content">
             <div class="meta">
               <span class="ui label" id="showtype">{{ $event->type }}</span>
-              <span class="ui label">{{ App\Show::find($event->show_id)->type }}</span>
-              <span class="ui label">{{ App\Show::find($event->show_id)->duration }} minutes</span>
+              <span class="ui label">{{ $event->show->type }}</span>
+              <span class="ui label">{{ $event->show->duration }} minutes</span>
             </div>
             <div class="ui header">
-              {{ App\Show::find($event->show_id)->name }}
+              {{ $event->show->name }}
               <div class="sub header">
                 <i class="calendar icon"></i>
                 {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }} |
                 <i class="ticket icon"></i>
-                {{ $event->seats }} seats left
+                {{ $event->seats - App\Ticket::where('event_id', '=', $event->id)->count() }} seats left
               </div>
             </div>
             <div class="meta">
@@ -42,24 +42,24 @@
                 <div class="three fields">
                   <div class="field">
                     <div class="ui right labeled left action small input">
-                      <button onclick="changeAmount({{ $loop->index }}*3+0, 1, 'adult', {{ $event->show_id }}, '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ $event->adults_price }})" class="ui icon button plus"><i class="plus icon"></i></button>
-                      <button onclick="changeAmount({{ $loop->index }}*3+0,-1, 'adult', {{ $event->show_id }}, '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ $event->adults_price }})" class="ui icon button"><i class="minus icon"></i></button>
+                      <button onclick="changeAmount({{ $loop->index }}*3+0, 1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon button plus"><i class="plus icon"></i></button>
+                      <button onclick="changeAmount({{ $loop->index }}*3+0,-1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
                       <input min="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->adults_price, 2) }} / adult</div>
                     </div>
                   </div>
                   <div class="field">
                     <div class="ui right labeled left action small input">
-                      <button onclick="changeAmount({{ $loop->index }}*3+1, 1, 'children', {{ $event->show_id }}, '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ $event->children_price }})" class="ui icon button"><i class="plus icon"></i></button>
-                      <button onclick="changeAmount({{ $loop->index }}*3+1,-1, 'children', {{ $event->show_id }}, '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ $event->children_price }})" class="ui icon button"><i class="minus icon"></i></button>
+                      <button onclick="changeAmount({{ $loop->index }}*3+1, 1, 'children', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->children_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="plus icon"></i></button>
+                      <button onclick="changeAmount({{ $loop->index }}*3+1,-1, 'children', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->children_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
                       <input min="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->children_price, 2) }} / child</div>
                     </div>
                   </div>
                   <div class="field">
                     <div class="ui right labeled left action small input">
-                      <button onclick="changeAmount({{ $loop->index }}*3+2, 1, 'member', {{ $event->show_id }}, '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }})" class="ui icon button"><i class="plus icon"></i></button>
-                      <button onclick="changeAmount({{ $loop->index }}*3+2,-1, 'member', {{ $event->show_id }}, '{{ App\Show::find($event->show_id)->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }})" class="ui icon button"><i class="minus icon"></i></button>
+                      <button onclick="changeAmount({{ $loop->index }}*3+2, 1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="plus icon"></i></button>
+                      <button onclick="changeAmount({{ $loop->index }}*3+2,-1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
                       <input min="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->member_price, 2) }} / member</div>
                     </div>
@@ -68,7 +68,7 @@
               </div>
             </div>
             <div class="extra">
-              Created {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i A') }}
+              Created by {{ $event->creator->firstname }} {{ $event->creator->lastname }} on {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i A') }}
             </div>
           </div>
         </div>
@@ -93,33 +93,46 @@
     {!! Form::open(['route' => 'cashier.store', 'class' => 'ui form']) !!}
     <div class="ui two buttons">
       {!! Form::button('<i class="check icon"></i> Confirm', ['type' => 'submit', 'class' => 'ui green button']) !!}
-      <button class="ui large negative button"><i class="remove icon"></i>Cancel</button>
+      <a href="{{ route('cashier.index') }}" class="ui large negative button"><i class="remove icon"></i>Cancel</a>
+      <input type="hidden" name="subtotal" value="0">
+      <input type="hidden" name="total" value="0">
     </div>
-    {!! Form::close() !!}
+
     <div class="ui segments">
-      <div class="ui bottom attached header">
-        Total
-        <h1 class="ui right aligned header">
+      <div class="ui attached clearing segment">
+        <h4 class="ui left floated header">
+          Subtotal = $ <span id="subtotal">0.00</span>
+          <div class="sub header">{{ App\Setting::find(1)->tax }}% Tax = $ <span id="tax">0.00</span></div>
+        </h4>
+        <h1 class="ui right floated header">
           $ <span id="total">0.00</span>
         </h1>
       </div>
       <div class="ui attached segment">
-        <div class="ui selection dropdown">
-          <input type="hidden" name="payment_method">
-          <i class="dropdown icon"></i>
-          <div class="default text"><i class="money icon"></i>Cash</div>
-          <div class="menu">
-            <div class="item" data-value="visa"><i class="money icon"></i>Cash</div>
-            <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
-            <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
-            <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
-            <div class="item" data-value="american"><i class="american express icon"></i>American Express</div>
+        <div class="ui form">
+          <div class="two fields">
+            <div class="field">
+              {!! Form::label('Payment Method') !!}
+              <div class="ui selection dropdown">
+                <input type="hidden" name="payment_method">
+                <i class="dropdown icon"></i>
+                <div class="default text"><i class="money icon"></i>Cash</div>
+                <div class="menu">
+                  <div class="item" data-value="cash"><i class="money icon"></i>Cash</div>
+                  <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
+                  <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
+                  <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
+                  <div class="item" data-value="american"><i class="american express icon"></i>American Express</div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              {!! Form::label('Check / Credit Card Reference') !!}
+              <input type="text" name="reference" placeholder="Last 4 for cards or check #. Leave blank for cash">
+            </div>
           </div>
         </div>
-        <h4 class="ui right floated header">
-          Subtotal = $ <span id="subtotal">0.00</span>
-          <div class="sub header">{{ App\Setting::find(1)->tax }}% Tax = $ <span id="tax">0.00</span></div>
-        </h4>
+        {!! Form::close() !!}
       </div>
       <div class="ui attached segment" id="tickets">
 
@@ -130,49 +143,57 @@
 
 <script>
 
-  function changeAmount(number, operator, ticketType, showId, show, eventType, price) {
+  var ticketId = 0;
+
+  function changeAmount(number, operator, ticket_type, show_id, show, event_type, price, event_id) {
+    var currentTicketId = ticketId++;
     var sum = 0;
     var inputs = document.querySelectorAll("input[type='text']");
     var divs = document.querySelectorAll(".ui.price.label");
     inputs[number].value = parseInt(inputs[number].value) + parseInt(operator);
     if (parseInt(inputs[number].value) < 0)
       inputs[number].value = 0;
-    for(i = 0; i < inputs.length; i++)
+      // There is an extra input type text for the field reference. Count that one out
+    for(i = 0; i < inputs.length - 1; i++)
     {
+      // This reads the text of the label beside each amount input field. Careful!!!
       sum += parseInt(inputs[i].value) * parseFloat(divs[i].innerHTML.split(" ")[2]).toFixed(2);
-
     }
     var subtotal = sum.toFixed(2);
     var tax = (sum * ({{ App\Setting::find(1)->tax }}/100)).toFixed(2);
     var total = (parseFloat(subtotal) + parseFloat(tax)).toFixed(2);
 
+    // Display the totals
     document.querySelector('#subtotal').innerHTML = subtotal;
     document.querySelector('#tax').innerHTML = tax;
     document.querySelector('#total').innerHTML = total;
 
+    // Set subtotal and total in the hidden input to send to the server
+    document.querySelector('input[name="subtotal"]').value = subtotal;
+    document.querySelector('input[name="total"]').value = total;
+
     if (show)
       var showTrimmed = show.replace(/\s+/g, "").replace(":", "");
 
-    if (eventType)
-      var eventTypeTrimmed = eventType.replace(/\s+/g, "").replace(":", "");
+    if (event_type)
+      var event_typeTrimmed = event_type.replace(/\s+/g, "").replace(":", "");
 
     if(operator == 1) {
-      $('#tickets').append('<h4 class="ui header '+ ticketType + showTrimmed + eventTypeTrimmed + price +'"><i class="ticket icon"></i><div class="content" style="width:100%">'+ ticketType +' | ' + eventType +' <span style="float:right">$ '+ price.toFixed(2) + '</span><div class="sub header">'+ show +'</div></div></h4>');
-      $('form').append('<input type="hidden" name="tickettype[]" id="'+ ticketType + showTrimmed + eventTypeTrimmed + price +'" value="'+ ticketType +'">');
-      $('form').append('<input type="hidden" name="show[]" id="'+ ticketType + showTrimmed + eventTypeTrimmed + price +'" value="'+ showId +'">');
-      $('form').append('<input type="hidden" name="eventtype[]" id="'+ ticketType + showTrimmed + eventTypeTrimmed + price +'" value="'+ eventType +'">');
-      $('form').append('<input type="hidden" name="price[]" id="'+ ticketType + showTrimmed + eventTypeTrimmed + price +'" value="'+ price +'">');
+      $('#tickets').append('<h4 class="ui header '+ ticket_type + showTrimmed + event_typeTrimmed + price +'"><i class="ticket icon"></i><div class="content" style="width:100%">'+ ticket_type +' | ' + event_type +' <span style="float:right">$ '+ price.toFixed(2) + '</span><div class="sub header">'+ show +'</div></div></h4>');
+      $('form').append('<input class="'+ ticket_type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][ticket_type]" value="'+ ticket_type +'">');
+      $('form').append('<input class="'+ ticket_type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][show_id]" value="'+ show_id +'">');
+      $('form').append('<input class="'+ ticket_type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][price]" value="'+ price +'">');
+      $('form').append('<input class="'+ ticket_type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][event_id]" value="'+ event_id +'">');
     }
     else {
-      $('.ui.header.'+ ticketType + showTrimmed + eventTypeTrimmed + price + '').first().remove();
-      $('input[type="hidden"][name="tickettype"][value="'+ ticketType +'"]#'+ ticketType + showTrimmed + eventTypeTrimmed + price + '').first().remove();
-      $('input[type="hidden"][name="show"][value="'+ showId +'"]#'+ ticketType + showTrimmed + eventTypeTrimmed + price + '').first().remove();
-      $('input[type="hidden"][name="eventtype"][value="'+ eventType +'"]#'+ ticketType + showTrimmed + eventTypeTrimmed + price + '').first().remove();
-      $('input[type="hidden"][name="price"][value="'+ price +'"]#'+ ticketType + showTrimmed + eventTypeTrimmed + price + '').first().remove();
+      $('.ui.header.'+ ticket_type + showTrimmed + event_typeTrimmed + price + '').first().remove();
+      $('form.ui.form .'+ ticket_type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form .'+ ticket_type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form .'+ ticket_type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form .'+ ticket_type + showTrimmed + event_typeTrimmed + price +'').first().remove();
     }
 
   }
-
 </script>
 
 @endsection

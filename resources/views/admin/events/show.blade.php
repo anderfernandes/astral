@@ -17,9 +17,11 @@
       <i class="left chevron icon"></i> Back
     </a>
     <a href="{{ route('admin.events.edit', $event) }}" class="ui primary button">
-      <i class="edit icon"></i> Edit Event
+      <i class="edit icon"></i> Edit This Event
     </a>
-
+    <a href="{{ route('admin.events.create') }}" class="ui secondary button">
+      <i class="calendar plus icon"></i> Create New Event
+    </a>
     {!! Form::open(['route' => ['admin.events.destroy', $event], 'method' => 'DELETE']) !!}
       {!! Form::button('<i class="trash icon"></i> Delete Event', ['type' => 'submit', 'class' => 'ui negative button']) !!}
     {!! Form::close() !!}
@@ -49,7 +51,7 @@
           <span class="ui tag label">$ {{ $event->members_price }} / member</span>
         </div>
         <div class="description">
-          <p>Created on {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($event->created_at)->diffForHumans()}})</p>
+          <p>Created by {{ $event->creator->firstname }} {{ $event->creator->lastname }} on {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($event->created_at)->diffForHumans()}})</p>
           <p>Updated on {{ Date::parse($event->updated_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($event->updated_at)->diffForHumans()}})</p>
         </div>
         <div class="extra">

@@ -15,12 +15,22 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
             $table->integer('event_id')->unsigned();
             $table->foreign('event_id')->references('id')->on('events');
+
+            // This will ensure that if a sale is deleted, all tickets associated with it will also be deleted
             $table->integer('ticket_id')->unsigned();
-            $table->foreign('ticket_id')->references('id')->on('tickets');
+            $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
+
+            $table->integer('cashier_id')->unsigned();
+            $table->foreign('cashier_id')->references('id')->on('users');
+            $table->string('payment_method');
+            $table->string('reference');
+            $table->decimal('subtotal', 4, 2);
+            $table->decimal('total', 4, 2);
             $table->string('sale_source');
+
+            $table->timestamps();
         });
     }
 
