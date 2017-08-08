@@ -44,7 +44,7 @@
                     <div class="ui right labeled left action small input">
                       <button onclick="changeAmount({{ $loop->index }}*3+0, 1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon button plus"><i class="plus icon"></i></button>
                       <button onclick="changeAmount({{ $loop->index }}*3+0,-1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
-                      <input readonly min="0" value="0" value="0" type="text" placeholder="0">
+                      <input class="number-of-tickets" readonly min="0" value="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->adults_price, 2) }} / adult</div>
                     </div>
                   </div>
@@ -52,7 +52,7 @@
                     <div class="ui right labeled left action small input">
                       <button onclick="changeAmount({{ $loop->index }}*3+1, 1, 'children', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->children_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="plus icon"></i></button>
                       <button onclick="changeAmount({{ $loop->index }}*3+1,-1, 'children', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->children_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
-                      <input readonly min="0" value="0" type="text" placeholder="0">
+                      <input class="number-of-tickets" readonly min="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->children_price, 2) }} / child</div>
                     </div>
                   </div>
@@ -60,7 +60,7 @@
                     <div class="ui right labeled left action small input">
                       <button onclick="changeAmount({{ $loop->index }}*3+2, 1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="plus icon"></i></button>
                       <button onclick="changeAmount({{ $loop->index }}*3+2,-1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
-                      <input readonly min="0" value="0" type="text" placeholder="0">
+                      <input class="number-of-tickets" readonly min="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->member_price, 2) }} / member</div>
                     </div>
                   </div>
@@ -122,7 +122,7 @@
                   <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
                   <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
                   <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
-                  <div class="item" data-value="american"><i class="american express icon"></i>American Express</div>
+                  <div class="item" data-value="american express"><i class="american express icon"></i>American Express</div>
                 </div>
               </div>
             </div>
@@ -174,13 +174,13 @@
   function changeAmount(number, operator, type, show_id, show, event_type, price, event_id) {
     var currentTicketId = ticketId++;
     var sum = 0;
-    var inputs = document.querySelectorAll("input[type='text']");
+    var inputs = document.querySelectorAll(".number-of-tickets");
     var divs = document.querySelectorAll(".ui.price.label");
     inputs[number].value = parseInt(inputs[number].value) + parseInt(operator);
     if (parseInt(inputs[number].value) < 0)
       inputs[number].value = 0;
       // There is an extra input type text for the field reference. Count that one out
-    for(i = 0; i < inputs.length - 1; i++)
+    for(i = 0; i < inputs.length; i++)
     {
       // This reads the text of the label beside each amount input field. Careful!!!
       sum += parseInt(inputs[i].value) * parseFloat(divs[i].innerHTML.split(" ")[2]).toFixed(2);

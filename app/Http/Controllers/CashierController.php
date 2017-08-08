@@ -74,16 +74,29 @@ class CashierController extends Controller
 
     public function query(Request $request, Sale $query)
     {
-      //$payment_method = ($request->payment_method) ? $request->payment_method : '*';
-      //$reference      = ($request->reference)      ? $request->reference      : '*';
 
-      $results = \DB::table('sales')->where([
-        //['id', '=', $request->id],
-        //['total', '=', $request->total],
-        ['payment_method', '=' '*'],
-        //['reference'     , $reference     ]
-      ])->get();
+      $results = \DB::table('sales');
 
-      return view('cashier.query')->withResults($results);
+      if ($request->query_id)
+        $results = $results->where('id', $request->query_id);
+      else
+        $results;
+
+      if ($request->query_total)
+        $results = $results->where('total', $request->query_total);
+      else
+        $results;
+
+      if ($request->query_payment_method)
+        $results = $results->where('payment_method', $request->query_payment_method);
+      else
+        $results;
+
+      if ($request->query_reference)
+        $results = $results->where('reference', $request->query_reference);
+      else
+        $results;
+
+      return view('cashier.query')->withResults($results->get());
     }
 }

@@ -1,9 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Sale;
 use Illuminate\Http\Request;
+
+use Session;
+use Jenssegers\Date\Date;
+Use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class SaleController extends Controller
 {
@@ -46,7 +51,7 @@ class SaleController extends Controller
      */
     public function show(Sale $sale)
     {
-        //
+        return view('admin.sales.show')->withSale($sale);
     }
 
     /**

@@ -27,6 +27,8 @@ Route::group(
   Route::resource('users', 'UserController');
   // Events resource
   Route::resource('events', 'EventController');
+  // Sales Resource
+  Route::resource('sales', 'SaleController');
   // Setting resource
   Route::resource('settings', 'SettingController');
   Route::put('settings', 'SettingController@update');

@@ -13,4 +13,9 @@ class Ticket extends Model
     {
       $this->belongsToMany('App\Sale', 'sale_ticket');
     }
+
+    public function event()
+    {
+      $this->belongsTo('App\Event');
+    }
 }

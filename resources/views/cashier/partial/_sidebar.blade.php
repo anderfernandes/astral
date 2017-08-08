@@ -15,7 +15,7 @@
     </div>
   </div>
   <!-- Pending loop to automatically pull all menu items -->
-  <a class="{{ Request::routeIs('cashier.index') ? "active " : ""}}item" href="{{ route('cashier.index') }}" target="_blank">
+  <a class="{{ Request::routeIs('cashier.index') ? "active " : ""}}item" href="{{ route('cashier.index') }}">
     <i class="money icon"></i> Cashier
   </a>
   <a class="item" href="{{ route('admin.index') }}" target="_blank">
@@ -29,7 +29,7 @@
 <!-- Refund Modal -->
 <div class="ui basic modal">
     <h2 class="ui icon header">
-      <i class="money icon"></i>
+      <i class="search icon"></i>
       Find Sale
     </h2>
     <div class="content">
@@ -39,17 +39,21 @@
           <div class="inverted segment">
             <div class="four fields">
               <div class="field">
-                {!! Form::label('id', 'Sale Number') !!}
-                {!! Form::text('id', null, ['placeholder' => 'Sale Number']) !!}
+                {!! Form::label('query_id', 'Sale Number') !!}
+                {!! Form::text('query_id', null, ['placeholder' => 'Sale Number']) !!}
               </div>
               <div class="field">
-                {!! Form::label('total', 'Sale Total') !!}
-                {!! Form::text('id', null, ['placeholder' => 'Sale Total']) !!}
+                {!! Form::label('query_total', 'Sale Total') !!}
+                <div class="ui labeled input">
+                  <div class="ui label">$</div>
+                  {!! Form::text('query_total', null, ['placeholder' => 'Sale Total']) !!}
+                </div>
+
               </div>
               <div class="field">
-                {!! Form::label('payment_method', 'Sale Payment Method') !!}
+                {!! Form::label('query_payment_method', 'Sale Payment Method') !!}
                 <div class="ui selection dropdown">
-                  <input type="hidden" name="payment_method">
+                  <input type="hidden" name="query_payment_method">
                   <i class="dropdown icon"></i>
                   <div class="default text">Payment Method</div>
                   <div class="menu">
@@ -62,8 +66,8 @@
                 </div>
               </div>
               <div class="field">
-                {!! Form::label('reference', 'Reference') !!}
-                {!! Form::text('reference', null, ['placeholder' => 'Check or Credit Card #']) !!}
+                {!! Form::label('query_reference', 'Reference') !!}
+                {!! Form::text('query_reference', null, ['placeholder' => 'Check or Credit Card #']) !!}
               </div>
             </div>
           </div>
