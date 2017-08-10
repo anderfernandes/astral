@@ -18,10 +18,14 @@ class CreateSalesTable extends Migration
             $table->integer('cashier_id')->unsigned();
             $table->foreign('cashier_id')->references('id')->on('users');
             $table->string('payment_method');
+            $table->decimal('tendered', 4, 2);
+            $table->decimal('change_due', 4, 2);
             $table->string('reference')->nullable();
             $table->decimal('subtotal', 4, 2);
             $table->decimal('total', 4, 2);
             $table->string('source');
+            $table->text('memo')->nullable();
+            $table->boolean('refund');
             $table->timestamps();
         });
     }

@@ -66,6 +66,11 @@
       $('.message .close').on('click', function() {
         $(this).closest('.message').transition('fade');
       });
+
+      // Initialize Semantic UI components
+      $('.ui.radio.checkbox').checkbox();
+      $('.ui.dropdown').dropdown();
+
       /*jQuery('.datetimepicker').datetimepicker({
         format:'dddd, MMMM DD, YYYY H:mm',
         formatTime:'H:mm',

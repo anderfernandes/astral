@@ -1,4 +1,4 @@
-<div class="ui borderless huge fixed top menu">
+<div class="ui borderless fixed top menu">
   <a class="header toc item"><i class="sidebar large icon"></i></a>
   <div class="header item"><i class="sun large icon"></i></div>
   <div class="active header item">

@@ -87,4 +87,20 @@ class SaleController extends Controller
     {
         //
     }
+
+    public function refund(Request $request, Sale $sale)
+    {
+      // Pending server side validation
+
+      $sale->refund = true;
+      $sale->memo   = $request->memo;
+
+      $sale->save();
+
+
+      Session::flash('success',
+          'Sale # '.$sale->id.' has been refunded successfully!');
+
+      return redirect()->route('admin.sales.show', $sale);
+    }
 }

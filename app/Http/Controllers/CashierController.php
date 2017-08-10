@@ -38,6 +38,7 @@ class CashierController extends Controller
       $this->validate($request, [
         'payment_method'        => 'required',
         'reference'             => 'nullable',
+        'tendered'              => 'required',
         'ticket.*.type'         => 'required',
         'ticket.*.price'        => 'required',
         'ticket.*.event_id'     => 'required',
@@ -52,7 +53,10 @@ class CashierController extends Controller
       $sale->reference      = $request->reference;
       $sale->subtotal       = $request->subtotal;
       $sale->total          = $request->total;
+      $sale->tendered       = $request->tendered;
+      $sale->change_due     = $request->tendered - $request->total;
       $sale->source         = "cashier";
+      $sale->refund         = false;
 
       $sale->save();
 
@@ -72,31 +76,41 @@ class CashierController extends Controller
 
     }
 
-    public function query(Request $request, Sale $query)
+    public function query(Request $request)
     {
+      // Preventing all sales data from being pulled up
+      if( !$request->query_id && !$request->query_total && !$request->query_payment_method && !$request->query_reference)
+      {
+        $results = null;
 
-      $results = \DB::table('sales');
-
-      if ($request->query_id)
-        $results = $results->where('id', $request->query_id);
+        return view('cashier.query')->withResults($results);
+      }
       else
-        $results;
+      {
 
-      if ($request->query_total)
-        $results = $results->where('total', $request->query_total);
-      else
-        $results;
+        $results = \DB::table('sales');
 
-      if ($request->query_payment_method)
-        $results = $results->where('payment_method', $request->query_payment_method);
-      else
-        $results;
+        if ($request->query_id)
+          $results = $results->where('id', $request->query_id);
+        else
+          $results;
 
-      if ($request->query_reference)
-        $results = $results->where('reference', $request->query_reference);
-      else
-        $results;
+        if ($request->query_total)
+          $results = $results->where('total', $request->query_total);
+        else
+          $results;
 
-      return view('cashier.query')->withResults($results->get());
+        if ($request->query_payment_method)
+          $results = $results->where('payment_method', $request->query_payment_method);
+        else
+          $results;
+
+        if ($request->query_reference)
+          $results = $results->where('reference', $request->query_reference);
+        else
+          $results;
+
+        return view('cashier.query')->withResults($results->get());
+      }
     }
 }

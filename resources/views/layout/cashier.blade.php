@@ -90,7 +90,7 @@
 
     <!-- Messages -->
 
-    <div class="ui basic segment" style="padding-top:4.5rem">
+    <div class="ui basic segment" style="padding-top:3.5rem">
 
       @include('cashier.partial._message')
 

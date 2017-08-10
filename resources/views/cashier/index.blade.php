@@ -92,19 +92,37 @@
   <div class="sixteen wide mobile five wide computer column">
     {!! Form::open(['route' => 'cashier.store', 'class' => 'ui form', 'id' => 'cashier']) !!}
     <div class="ui two buttons">
-      {!! Form::button('<i class="check icon"></i> Confirm', ['type' => 'submit', 'class' => 'ui green button']) !!}
+      {!! Form::button('<i class="check icon"></i> Confirm', ['type' => 'submit', 'class' => 'ui green button', 'id' => 'submit-sale']) !!}
       <a href="{{ route('cashier.index') }}" class="ui large negative button"><i class="remove icon"></i>Cancel</a>
       <input type="hidden" name="subtotal" value="0">
       <input type="hidden" name="total" value="0">
     </div>
 
     <div class="ui segments">
+      <div class="ui attached segment">
+        <div class="ui form">
+          <div class="field">
+            {!! Form::label('tendered', 'Tendered') !!}
+            <div class="ui massive labeled input">
+              <div class="ui label">$</div>
+              {!! Form::text('tendered', 0.00, ['placeholder' => 'Tendered', 'id' => 'tendered']) !!}
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="ui attached clearing segment">
-        <h4 class="ui left floated header">
+        <h4 class="ui right floated header">
           Subtotal = $ <span id="subtotal">0.00</span>
           <div class="sub header">{{ App\Setting::find(1)->tax }}% Tax = $ <span id="tax">0.00</span></div>
         </h4>
+        <h4 class="ui left floated header">
+          <div class="sub header">Change Due</div>
+          <span id="dollar-sign">$</span> <span id="change-due">0.00</span>
+        </h4>
+      </div>
+      <div class="ui attached clearing segment">
         <h1 class="ui right floated header">
+          <div class="sub header">Total</div>
           $ <span id="total">0.00</span>
         </h1>
       </div>
@@ -123,6 +141,7 @@
                   <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
                   <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
                   <div class="item" data-value="american express"><i class="american express icon"></i>American Express</div>
+                  <div class="item" data-value="check"><i class="check icon"></i>Check</div>
                 </div>
               </div>
             </div>
@@ -145,21 +164,24 @@
 
 
   // Make sure users enter reference for Credit Card and Checks
-  $('button[type="submit"].ui.class.green.button').click(function() {
-    var payment_method = document.querySelector('input[name="payment_method"]').value
+  $('#submit-sale').click(function() {
+    var payment_method = document.querySelector('input[name="payment_method"]').value;
+
     if ( payment_method != 'cash' || payment_method == '') {
       $('#cashier.ui.form')
         .form({
           fields: {
             payment_method : 'empty',
-            reference      : 'empty'
+            reference      : 'empty',
+            tendered       : ['is[' + document.querySelector("#total").innerHTML + ']', 'empty'],
           }
       });
     } else {
       $('#cashier.ui.form')
         .form({
           fields: {
-            payment_method : 'empty'
+            payment_method : 'empty',
+            tendered       : ['is[' + document.querySelector("#total").innerHTML + ']', 'empty'],
           }
       });
       $('form#cashier.ui.form').removeClass('error');
@@ -170,6 +192,14 @@
 
 
   var ticketId = 0;
+
+  $('input#tendered').keyup(function(){
+    var tendered = parseFloat(document.getElementById('tendered').value).toFixed(2);
+    var total = parseFloat(document.getElementById('total').innerHTML).toFixed(2);
+    var changeDue = parseFloat(tendered - total).toFixed(2);
+    document.getElementById('change-due').innerHTML = changeDue.fontcolor((changeDue < 0 ? '#cf3534':'black'));
+    changeDue < 0 ? $('#dollar-sign').css('color', '#cf3534') : $('#dollar-sign').css('color', 'black');
+  });
 
   function changeAmount(number, operator, type, show_id, show, event_type, price, event_id) {
     var currentTicketId = ticketId++;

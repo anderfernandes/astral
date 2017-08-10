@@ -32,6 +32,7 @@ Route::group(
   // Setting resource
   Route::resource('settings', 'SettingController');
   Route::put('settings', 'SettingController@update');
+  Route::post('sales/refund/{sale}', 'SaleController@refund')->name('sales.refund');
 });
 
 Auth::routes();

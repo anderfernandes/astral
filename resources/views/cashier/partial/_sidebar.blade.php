@@ -19,66 +19,64 @@
     <i class="money icon"></i> Cashier
   </a>
   <a class="item" href="{{ route('admin.index') }}" target="_blank">
-    <i class="file text outline icon"></i> Sales Report (Today)
+    <i class="file text outline icon"></i> Sales Report
   </a>
-  <a class="item" href="javascript:$('.ui.basic.modal').modal('show')" target="_blank">
+  <a class="item" href="javascript:$('#find-sale-modal').modal('show')" target="_blank">
     <i class="search icon"></i> Find Sale
   </a>
 </div>
 
-<!-- Refund Modal -->
-<div class="ui basic modal">
-    <h2 class="ui icon header">
-      <i class="search icon"></i>
-      Find Sale
-    </h2>
-    <div class="content">
-      <p>
-        Fill out at least one field to find a sale
-          {!! Form::open(['route' => 'cashier.query', 'class' => 'ui form', 'id' => 'find-sale']) !!}
-          <div class="inverted segment">
-            <div class="four fields">
-              <div class="field">
-                {!! Form::label('query_id', 'Sale Number') !!}
-                {!! Form::text('query_id', null, ['placeholder' => 'Sale Number']) !!}
-              </div>
-              <div class="field">
-                {!! Form::label('query_total', 'Sale Total') !!}
-                <div class="ui labeled input">
-                  <div class="ui label">$</div>
-                  {!! Form::text('query_total', null, ['placeholder' => 'Sale Total']) !!}
-                </div>
+<!-- Find Sale Modal -->
+<div class="ui basic modal" id="find-sale-modal">
+  <div class="ui icon header">
+    <i class="search icon"></i>
+    Find Sale
+    <div class="sub header" style="color:white">Fill out at least one field to find a sale</div>
+  </div>
+  <div class="content">
+    {!! Form::open(['route' => 'cashier.query', 'class' => 'ui form', 'id' => 'find-sale']) !!}
+    <div class="inverted segment">
+      <div class="four fields">
+        <div class="field">
+          {!! Form::label('query_id', 'Sale Number') !!}
+          {!! Form::text('query_id', null, ['placeholder' => 'Sale Number']) !!}
+        </div>
+        <div class="field">
+          {!! Form::label('query_total', 'Sale Total') !!}
+          <div class="ui labeled input">
+            <div class="ui label">$</div>
+            {!! Form::text('query_total', null, ['placeholder' => 'Sale Total']) !!}
+          </div>
 
-              </div>
-              <div class="field">
-                {!! Form::label('query_payment_method', 'Sale Payment Method') !!}
-                <div class="ui selection dropdown">
-                  <input type="hidden" name="query_payment_method">
-                  <i class="dropdown icon"></i>
-                  <div class="default text">Payment Method</div>
-                  <div class="menu">
-                    <div class="item" data-value="cash"><i class="money icon"></i>Cash</div>
-                    <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
-                    <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
-                    <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
-                    <div class="item" data-value="american"><i class="american express icon"></i>American Express</div>
-                  </div>
-                </div>
-              </div>
-              <div class="field">
-                {!! Form::label('query_reference', 'Reference') !!}
-                {!! Form::text('query_reference', null, ['placeholder' => 'Check or Credit Card #']) !!}
-              </div>
+        </div>
+        <div class="field">
+          {!! Form::label('query_payment_method', 'Sale Payment Method') !!}
+          <div class="ui selection dropdown">
+            <input type="hidden" name="query_payment_method">
+            <i class="dropdown icon"></i>
+            <div class="default text">Payment Method</div>
+            <div class="menu">
+              <div class="item" data-value="cash"><i class="money icon"></i>Cash</div>
+              <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
+              <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
+              <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
+              <div class="item" data-value="american"><i class="american express icon"></i>American Express</div>
             </div>
           </div>
-      </p>
-    </div>
-    <div class="actions">
-      <div class="ui standard inverted button">
-        <i class="remove icon"></i>
-        Clear Form
+        </div>
+        <div class="field">
+          {!! Form::label('query_reference', 'Reference') !!}
+          {!! Form::text('query_reference', null, ['placeholder' => 'Check or Credit Card #']) !!}
+        </div>
       </div>
-      {!! Form::button('<i class="search icon"></i> Find Sale', ['type' => 'submit', 'class' => 'ui green ok inverted button']) !!}
     </div>
-    {!! Form::close() !!}
+  </div>
+  <div class="actions">
+    <div class="ui standard inverted button">
+      <i class="eraser icon"></i>
+      Clear Form
+    </div>
+    {!! Form::button('<i class="search icon"></i> Find Sale', ['type' => 'submit', 'class' => 'ui green ok inverted button']) !!}
+  </div>
+  {!! Form::close() !!}
 </div>

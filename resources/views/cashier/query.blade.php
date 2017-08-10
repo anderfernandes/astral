@@ -20,7 +20,7 @@
       </div>
     </div>
   @else
-  <table class="ui celled padded table">
+  <table class="ui celled padded selectable striped table">
     <thead>
       <tr>
         <th class="single line">Sale Number</th>
@@ -34,7 +34,11 @@
     </thead>
     <tbody>
     @foreach($results as $result)
+      @if ($result->refund)
+      <tr class="negative">
+      @else
       <tr>
+      @endif
         <td class="single line selectable">
           <a href="{{ route ('admin.sales.show', $result->id) }}" target="_blank"><h2 class="ui center aligned header">{{ $result->id }}</h2></a>
         </td>
@@ -47,6 +51,8 @@
             <a href="{{ route ('admin.sales.show', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="discover icon"></i></h2></a>
           @elseif ($result->payment_method == 'american express')
             <a href="{{ route ('admin.sales.show', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="american express icon"></i></h2></a>
+          @elseif ($result->payment_method == 'check')
+            <a href="{{ route ('admin.sales.show', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="check icon"></i></h2></a>
           @else
             <a href="{{ route ('admin.sales.show', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="money icon"></i></h2></a>
           @endif
