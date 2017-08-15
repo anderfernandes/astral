@@ -42,16 +42,16 @@
                 <div class="two fields">
                   <div class="field">
                     <div class="ui right labeled left action small input">
-                      <button onclick="changeAmount({{ $loop->index }}*3+0, 1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon button plus"><i class="plus icon"></i></button>
-                      <button onclick="changeAmount({{ $loop->index }}*3+0,-1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
+                      <div onclick="changeAmount({{ $loop->index }}*3+0, 1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon inverted green button"><i class="plus icon"></i></div>
+                      <div onclick="changeAmount({{ $loop->index }}*3+0,-1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon inverted red button"><i class="minus icon"></i></div>
                       <input class="number-of-tickets" readonly min="0" value="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->adults_price, 2) }} / adult</div>
                     </div>
                   </div>
                   <div class="field">
                     <div class="ui right labeled left action small input">
-                      <button onclick="changeAmount({{ $loop->index }}*3+1, 1, 'children', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->children_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="plus icon"></i></button>
-                      <button onclick="changeAmount({{ $loop->index }}*3+1,-1, 'children', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->children_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
+                      <div onclick="changeAmount({{ $loop->index }}*3+1, 1, 'children', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->children_price, 2) }}, {{ $event->id }})" class="ui icon inverted green button"><i class="plus icon"></i></div>
+                      <div onclick="changeAmount({{ $loop->index }}*3+1,-1, 'children', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->children_price, 2) }}, {{ $event->id }})" class="ui icon inverted red button"><i class="minus icon"></i></div>
                       <input class="number-of-tickets" readonly min="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->children_price, 2) }} / child</div>
                     </div>
@@ -60,8 +60,8 @@
                 <div class="two fields">
                   <div class="field">
                     <div class="ui right labeled left action small input">
-                      <button onclick="changeAmount({{ $loop->index }}*3+2, 1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="plus icon"></i></button>
-                      <button onclick="changeAmount({{ $loop->index }}*3+2,-1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="minus icon"></i></button>
+                      <div onclick="changeAmount({{ $loop->index }}*3+2, 1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon inverted green button"><i class="plus icon"></i></div>
+                      <div onclick="changeAmount({{ $loop->index }}*3+2,-1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon inverted red button"><i class="minus icon"></i></div>
                       <input class="number-of-tickets" readonly min="0" value="0" type="text" placeholder="0">
                       <div class="ui price label">at $ {{ number_format($event->member_price, 2) }} / member</div>
                     </div>
@@ -107,7 +107,7 @@
             {!! Form::label('tendered', 'Tendered') !!}
             <div class="ui massive labeled input">
               <div class="ui label">$</div>
-              {!! Form::text('tendered', 0.00, ['placeholder' => 'Tendered', 'id' => 'tendered']) !!}
+              {!! Form::text('tendered', 0.00, ['placeholder' => 'Tendered', 'id' => 'tendered', 'autofocus' => true]) !!}
             </div>
           </div>
         </div>
@@ -189,7 +189,7 @@
       $('.field#tendered-input').addClass('error');
 
     } else {
-      
+
       $('#cashier.ui.form')
         .form({
           fields: {
@@ -227,14 +227,19 @@
       // This reads the text of the label beside each amount input field. Careful!!!
       sum += parseInt(inputs[i].value) * parseFloat(divs[i].innerHTML.split(" ")[2]).toFixed(2);
     }
+    var tendered = parseFloat(document.getElementById('tendered').value).toFixed(2);
     var subtotal = sum.toFixed(2);
     var tax = (sum * ({{ App\Setting::find(1)->tax }}/100)).toFixed(2);
     var total = (parseFloat(subtotal) + parseFloat(tax)).toFixed(2);
+    var changeDue = parseFloat(tendered - total).toFixed(2);
+    changeDue < 0 ? $('#dollar-sign, #change-due').css('color', '#cf3534') : $('#dollar-sign, #change-due').css('color', 'black');
 
     // Display the totals
     document.querySelector('#subtotal').innerHTML = subtotal;
     document.querySelector('#tax').innerHTML = tax;
     document.querySelector('#total').innerHTML = total;
+
+    document.querySelector('#change-due').innerHTML = changeDue;
 
     // Set subtotal and total in the hidden input to send to the server
     document.querySelector('input[name="subtotal"]').value = subtotal;
