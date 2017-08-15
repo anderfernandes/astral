@@ -76,7 +76,7 @@
   </script>-->
 
   <!--- Sidebar Menu -->
-  @include('partial._sidebar')
+  <!--- @ include('partial._sidebar') --->
 
 
 
