@@ -39,7 +39,7 @@
             </div>
             <div class="description">
               <div class="ui form">
-                <div class="three fields">
+                <div class="two fields">
                   <div class="field">
                     <div class="ui right labeled left action small input">
                       <button onclick="changeAmount({{ $loop->index }}*3+0, 1, 'adult', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->adults_price, 2) }}, {{ $event->id }})" class="ui icon button plus"><i class="plus icon"></i></button>
@@ -56,6 +56,8 @@
                       <div class="ui price label">at $ {{ number_format($event->children_price, 2) }} / child</div>
                     </div>
                   </div>
+                </div>
+                <div class="two fields">
                   <div class="field">
                     <div class="ui right labeled left action small input">
                       <button onclick="changeAmount({{ $loop->index }}*3+2, 1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon button"><i class="plus icon"></i></button>
@@ -128,7 +130,7 @@
       </div>
       <div class="ui attached segment">
         <div class="ui form">
-          <div class="two fields">
+          <!--<div class="two fields">-->
             <div class="field">
               {!! Form::label('Payment Method') !!}
               <div class="ui selection dropdown">
@@ -149,7 +151,7 @@
               {!! Form::label('reference', 'Reference') !!}
               {!! Form::text('reference', null, ['placeholder' => 'Last 4 for cards or check #. Leave blank for cash']) !!}
             </div>
-          </div>
+          <!--</div>-->
         </div>
         {!! Form::close() !!}
       </div>
@@ -202,6 +204,7 @@
   });
 
   function changeAmount(number, operator, type, show_id, show, event_type, price, event_id) {
+    console.log(operator);
     var currentTicketId = ticketId++;
     var sum = 0;
     var inputs = document.querySelectorAll(".number-of-tickets");
@@ -236,19 +239,19 @@
 
     if(operator == 1) {
       $('#tickets').append('<h4 class="ui header '+ type + showTrimmed + event_typeTrimmed + price +'"><i class="ticket icon"></i><div class="content" style="width:100%">'+ type +' | ' + event_type +' <span style="float:right">$ '+ price.toFixed(2) + '</span><div class="sub header">'+ show +'</div></div></h4>');
-      $('form.ui.form').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][type]" value="'+ type +'">');
-      $('form.ui.form').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][price]" value="'+ price +'">');
-      $('form.ui.form').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][event_id]" value="'+ event_id +'">');
-      $('form.ui.form').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][cashier_id]" value="{{ Auth::user()->id }}">');
-      $('form.ui.form').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][customer_id]" value="999">');
+      $('form.ui.form#cashier').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][type]" value="'+ type +'">');
+      $('form.ui.form#cashier').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][price]" value="'+ price +'">');
+      $('form.ui.form#cashier').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][event_id]" value="'+ event_id +'">');
+      $('form.ui.form#cashier').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][cashier_id]" value="{{ Auth::user()->id }}">');
+      $('form.ui.form#cashier').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][customer_id]" value="999">');
     }
-    else {
+    if (operator == -1) {
       $('#tickets h4.ui.header.'+ type + showTrimmed + event_typeTrimmed + price + '').first().remove();
-      $('form.ui.form input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
-      $('form.ui.form input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
-      $('form.ui.form input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
-      $('form.ui.form input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
-      $('form.ui.form input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form#cashier input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form#cashier input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form#cashier input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form#cashier input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+      $('form.ui.form#cashier input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
     }
 
   }

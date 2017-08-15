@@ -55,15 +55,16 @@
         </div>
 
         <div class="field">
-          <div class="ui two buttons">
-            <button type="submit" class="ui secondary button">
+
+            <button type="submit" class="ui fluid secondary button">
               <i class="sign in icon"></i> Login
             </button>
-            <a href="{{ route('register') }}" class="ui primary button">
+            <div class="ui horizontal divider">OR</div>
+            <a href="{{ route('register') }}" class="ui fluid primary button">
               Register
               <i class="right chevron icon"></i>
             </a>
-          </div>
+
 
 
           <!-- <a href="{ /* route('password.request') */ }">
