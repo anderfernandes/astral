@@ -103,7 +103,7 @@
     <div class="ui segments">
       <div class="ui attached segment">
         <div class="ui form">
-          <div class="field">
+          <div class="field" id="tendered-input">
             {!! Form::label('tendered', 'Tendered') !!}
             <div class="ui massive labeled input">
               <div class="ui label">$</div>
@@ -166,8 +166,13 @@
 
 
   // Make sure users enter reference for Credit Card and Checks
-  $('#submit-sale').click(function() {
+  $('#submit-sale').click(function(event) {
     var payment_method = document.querySelector('input[name="payment_method"]').value;
+    var reference = document.querySelector('input[name="reference"]').value;
+    var total = parseFloat(document.querySelector("#total").innerHTML).toFixed(2);
+    var tendered = parseFloat(document.querySelector('input#tendered').value).toFixed(2);
+    // Returns true if tendered is less than total
+    var checkCashSale = (tendered < total) ? true : false;
 
     if ( payment_method != 'cash' || payment_method == '') {
       $('#cashier.ui.form')
@@ -178,20 +183,24 @@
             tendered       : ['is[' + document.querySelector("#total").innerHTML + ']', 'empty'],
           }
       });
+
+    } else if (tendered < total) {
+      event.preventDefault();
+      $('.field#tendered-input').addClass('error');
+
     } else {
+      
       $('#cashier.ui.form')
         .form({
           fields: {
             payment_method : 'empty',
-            //tendered       : ['is[' + document.querySelector("#total").innerHTML + ']', 'empty'],
+
           }
       });
       $('form#cashier.ui.form').removeClass('error');
       $('.field.error').removeClass('error');
     }
   });
-
-
 
   var ticketId = 0;
 
@@ -204,7 +213,7 @@
   });
 
   function changeAmount(number, operator, type, show_id, show, event_type, price, event_id) {
-    console.log(operator);
+
     var currentTicketId = ticketId++;
     var sum = 0;
     var inputs = document.querySelectorAll(".number-of-tickets");
