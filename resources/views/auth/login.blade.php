@@ -9,7 +9,7 @@
     <div class="content">
       Astral
       <div class="sub header">
-      Mayborn Science Theater
+      {{ App\Setting::find(1)->organization }}
       </div>
     </div>
     </h2>

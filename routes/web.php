@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // Admin Routes
@@ -29,10 +29,10 @@ Route::group(
   Route::resource('events', 'EventController');
   // Sales Resource
   Route::resource('sales', 'SaleController');
+  Route::post('sales/refund/{sale}', 'SaleController@refund')->name('sales.refund');
   // Setting resource
   Route::resource('settings', 'SettingController');
   Route::put('settings', 'SettingController@update');
-  Route::post('sales/refund/{sale}', 'SaleController@refund')->name('sales.refund');
 });
 
 Auth::routes();
@@ -41,6 +41,8 @@ Auth::routes();
 Route::get('cashier', 'CashierController@index')->name('cashier.index')->middleware('auth');
 
 Route::post('cashier', 'CashierController@store')->name('cashier.store')->middleware('auth');
+
+Route::get('cashier/reports/{type}', 'CashierController@reports')->name('cashier.reports')->middleware('auth');
 
 Route::post('cashier/query', 'CashierController@query')->name('cashier.query')->middleware('auth');
 

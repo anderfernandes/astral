@@ -16,7 +16,7 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.users.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="save icon"></i> Save Changes', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   <div class="two fields">
@@ -52,7 +52,7 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.users.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="save icon"></i> Save Changes', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   {!! Form::close() !!}

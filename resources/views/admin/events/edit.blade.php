@@ -11,7 +11,7 @@
       <div class="ui label">{{ $event->type }}</div>
       <div class="sub header">
         <strong>{{ App\Show::find($event->show_id)->name }}</strong> on
-        <strong>{{ Date::parse($event->start)->format('l, F j, Y \a\t H:i A') }}</strong>
+        <strong>{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</strong>
       </div>
     </div>
   </h2>
@@ -20,23 +20,27 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="edit icon"></i> Edit Event', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   <div class="two fields">
     <div class="field">
       {!! Form::label('show', 'Show') !!}
-      {!! Form::select('show_id', $shows, null, ['placeholder' => 'Select a show']) !!}
+      {!! Form::select('show_id', $shows, null, ['placeholder' => 'Select a show', 'class' => 'ui search dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('type', 'Type') !!}
-      {!! Form::select('type',
-        [
-        'matinee'       => 'matinee',
-        'weekend'       => 'weekend',
-        'special event' => 'special event',
-        'ctc event'     => 'ctc event',
-      ], null, ['placeholder' => 'Select a show type']) !!}
+      <div class="ui selection dropdown">
+        {!! Form::hidden('type', null) !!}
+        <i class="dropdown icon"></i>
+        <div class="default text">Select a show type</div>
+        <div class="menu">
+          <div class="item" data-value="matinee">matinee</div>
+          <div class="item" data-value="weekend">weekend</div>
+          <div class="item" data-value="special event">special event</div>
+          <div class="item" data-value="ctc event">ctc event</div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="two fields">
@@ -44,7 +48,7 @@
       {!! Form::label('start', 'Start Date') !!}
       <div class="ui left icon input">
         {!! Form::text('start',
-                       Date::parse($event->start)->format('l, F j, Y H:i A'),
+                       Date::parse($event->start)->format('l, F j, Y g:i A'),
                        ['placeholder' => 'Event Date and Time', 'id' => 'start'])
         !!}
         <i class="calendar icon"></i>
@@ -101,7 +105,7 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="edit icon"></i> Edit Event', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   {!! Form::close() !!}

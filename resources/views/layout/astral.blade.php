@@ -84,7 +84,7 @@
   <div class="pusher" style="padding-top: 2.5rem">
 
     <!-- Top Fixed Menu -->
-    @include('partial._menu')
+    <!-- @ include('partial._menu') -->
 
     <!-- Messages -->
 

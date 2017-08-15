@@ -31,8 +31,12 @@
       {!! Form::number('seats', null, ['placeholder' => 'Number of Seats']) !!}
     </div>
     <div class="field">
-      {!! Form::label('tax', 'Tax') !!}
-      {!! Form::number('tax', null, ['placeholder' => 'Tax %', 'step' => '0.01']) !!}
+      {!! Form::label('tax', 'Tax (%)') !!}
+      <div class="ui right labeled input">
+        {!! Form::number('tax', null, ['placeholder' => 'Tax %', 'step' => '0.01']) !!}
+        <div class="ui label">%</div>
+      </div>
+
     </div>
   </div>
 </div>

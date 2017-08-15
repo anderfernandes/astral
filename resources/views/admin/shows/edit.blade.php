@@ -16,7 +16,7 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.shows.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="save icon"></i> Save Changes', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="save icon"></i> Save Changes', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   <div class="three fields">
@@ -26,7 +26,10 @@
     </div>
     <div class="field">
       {!! Form::label('type', 'Type') !!}
-      {!! Form::select('type', ['Planetarium' => 'Planetarium', 'Laser Light' => 'Laser Light'], ['placeholder' => 'Planetarium or Laser?']) !!}
+      {!! Form::select('type',
+        ['Planetarium' => 'Planetarium', 'Laser Light' => 'Laser Light'],
+        null,
+        ['placeholder' => 'Planetarium or Laser?', 'class' => 'ui dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('duration', 'Duration') !!}
@@ -44,7 +47,7 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.shows.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="save icon"></i> Save Changes', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="save icon"></i> Save Changes', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   {!! Form::close() !!}

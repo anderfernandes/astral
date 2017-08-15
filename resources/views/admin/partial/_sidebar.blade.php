@@ -1,7 +1,7 @@
 <div class="ui sidebar vertical inverted menu">
   <div class="item" style="text-align:center">
-    <img class="ui tiny avatar image" src="https://semantic-ui.com/images/wireframe/square-image.png">
-    <br /><br />
+    <h1 class="ui inverted icon header"><i class="user circle outline large icon"></i></h1>
+    <br />
     {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
     <br /><br />
     <div class="ui tiny buttons">
@@ -22,10 +22,13 @@
     <i class="large film icon"></i> Shows
   </a>
   <a class="item" href="{{ route('admin.events.index') }}">
-    <i class="large calendar icon"></i> Calendar
+    <i class="large calendar icon"></i> Events
   </a>
   <a href="{{ route('admin.users.index') }}" class="item">
     <i class="large users icon"></i> Users
+  </a>
+  <a href="{{ route('cashier.index') }}" class="item" target="_blank">
+    <i class="large dollar icon"></i> Cashier
   </a>
   <a href="{{ route('admin.settings.index') }}" class="item">
     <i class="large setting icon"></i> Settings

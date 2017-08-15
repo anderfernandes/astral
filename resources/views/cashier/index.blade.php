@@ -146,7 +146,7 @@
               </div>
             </div>
             <div class="field">
-              {!! Form::label('reference', 'Check / Credit Card Reference') !!}
+              {!! Form::label('reference', 'Reference') !!}
               {!! Form::text('reference', null, ['placeholder' => 'Last 4 for cards or check #. Leave blank for cash']) !!}
             </div>
           </div>
@@ -181,7 +181,7 @@
         .form({
           fields: {
             payment_method : 'empty',
-            tendered       : ['is[' + document.querySelector("#total").innerHTML + ']', 'empty'],
+            //tendered       : ['is[' + document.querySelector("#total").innerHTML + ']', 'empty'],
           }
       });
       $('form#cashier.ui.form').removeClass('error');

@@ -1,7 +1,7 @@
 <div class="ui sidebar vertical menu">
   <div class="item" style="text-align:center">
-    <img class="ui tiny avatar image" src="https://semantic-ui.com/images/wireframe/square-image.png">
-    <br /><br />
+    <h1 class="ui icon header"><i class="user circle outline large icon"></i></h1>
+    <br />
     {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
     <br /><br />
     <div class="ui tiny buttons">
@@ -16,13 +16,16 @@
   </div>
   <!-- Pending loop to automatically pull all menu items -->
   <a class="{{ Request::routeIs('cashier.index') ? "active " : ""}}item" href="{{ route('cashier.index') }}">
-    <i class="money icon"></i> Cashier
+    <i class="dollar icon"></i> Cashier
   </a>
-  <a class="item" href="{{ route('admin.index') }}" target="_blank">
-    <i class="file text outline icon"></i> Sales Report
-  </a>
-  <a class="item" href="javascript:$('#find-sale-modal').modal('show')" target="_blank">
+  <a class="item" href="javascript:$('#find-sale-modal').modal('show')">
     <i class="search icon"></i> Find Sale
+  </a>
+  <a class="item" href="{{ route('cashier.reports', 'closeout') }}" target="_blank">
+    <i class="file text icon"></i> Closeout Report
+  </a>
+  <a class="item" href="{{ route('cashier.reports', 'transaction-detail') }}" target="_blank">
+    <i class="file text outline icon"></i> Transaction Detail Report
   </a>
 </div>
 
@@ -60,7 +63,7 @@
               <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
               <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
               <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
-              <div class="item" data-value="american"><i class="american express icon"></i>American Express</div>
+              <div class="item" data-value="american express"><i class="american express icon"></i>American Express</div>
             </div>
           </div>
         </div>
@@ -72,6 +75,10 @@
     </div>
   </div>
   <div class="actions">
+    <div class="ui blue inverted button" onclick="$('#find-sale-modal').modal('hide')">
+      <i class="cancel icon"></i>
+      Close
+    </div>
     <div class="ui standard inverted button">
       <i class="eraser icon"></i>
       Clear Form

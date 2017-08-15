@@ -9,7 +9,7 @@
       <strong><i class="calendar icon"></i>{{ Date::now()->format('l, F j, Y')}}</strong>
     </div>
     <a class="item">
-      <img class="ui avatar image" src="https://semantic-ui.com/images/wireframe/square-image.png">
+      <i class="user circle outline large icon"></i>
       {!! Auth::user()->firstname !!} &nbsp;
     </a>
   </div>

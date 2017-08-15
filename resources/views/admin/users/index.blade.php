@@ -14,8 +14,8 @@
 
   <div class="ui secondary menu">
     <div class="item">
-      <a class="ui primary button" href="{{ route('admin.users.create') }}">
-        <i class="plus icon"></i> New User
+      <a class="ui secondary button" href="{{ route('admin.users.create') }}">
+        <i class="add user icon"></i> Add User
       </a>
     </div>
     <div class="right item">
@@ -33,8 +33,8 @@
       @foreach($users as $user)
         <tr>
           <td>
-            <h4 class="ui image header">
-              <img src="https://semantic-ui.com/images/wireframe/square-image.png" class="ui mini rounded image">
+            <h4 class="ui header">
+              <i class="user circle outline icon"></i>
               <div class="content">
                 {{ $user->firstname }} {{ $user->lastname }}
                 <div class="sub header">{{ $user->role }}</div>

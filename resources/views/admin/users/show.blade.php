@@ -19,7 +19,7 @@
     <a href="{{ route('admin.users.edit', $user) }}" class="ui primary button">
       <i class="edit icon"></i> Edit User
     </a>
-
+    <a href="{{ route('admin.users.create') }}" class="ui secondary button"><i class="add user icon"></i> Add User</a>
     {!! Form::open(['route' => ['admin.users.destroy', $user], 'method' => 'DELETE']) !!}
       {!! Form::button('<i class="trash icon"></i> Delete User', ['type' => 'submit', 'class' => 'ui negative button']) !!}
     {!! Form::close() !!}

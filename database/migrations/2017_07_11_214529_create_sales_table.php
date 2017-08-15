@@ -26,6 +26,7 @@ class CreateSalesTable extends Migration
             $table->string('source');
             $table->text('memo')->nullable();
             $table->boolean('refund');
+            $table->integer('customer_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

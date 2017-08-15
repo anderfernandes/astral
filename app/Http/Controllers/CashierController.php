@@ -32,6 +32,47 @@ class CashierController extends Controller
       return view('cashier.index')->withUser($user)->withEvents($events);
     }
 
+    public function reports($type) {
+
+      $today = Date::now()->startOfDay();
+      // REPORT STARTING POINT MUST BE GREATER THAN TODAY!!!
+      $sales = Sale::where('created_at', '>=', $today);
+      $sales = $sales->where('cashier_id', Auth::user()->id)->get();
+
+      if ($type == 'closeout')
+      {
+
+        // Cash Sales
+        $cashSales = Sale::where([
+          ['created_at', '>=', $today],
+          ['cashier_id', '=', Auth::user()->id],
+          ['payment_method', '=', 'cash'],
+          ['refund', '=', false],
+          ])->get();
+        // Card Sales
+        $cardSales = Sale::where([
+          ['created_at', '>=', $today],
+          ['cashier_id', '=', Auth::user()->id],
+          ['payment_method', '<>', 'cash'],
+          ['refund', '=', false],
+          ]);
+        $cardSales = $cardSales->where('payment_method', '<>', 'check')->get();
+        // Check Sales
+        $checkSales = Sale::where([
+          ['created_at', '>=', $today],
+          ['cashier_id', '=', Auth::user()->id],
+          ['payment_method', '=', 'check'],
+          ['refund', '=', false],
+          ])->get();
+
+        return view('cashier.reports.closeout')->with('cashSales', $cashSales)->with('cardSales', $cardSales)->with('checkSales', $checkSales);
+      }
+      if ($type == 'transaction-detail')
+      {
+        return view('cashier.reports.transaction-detail')->withSales($sales);
+      }
+    }
+
     public function store(Request $request)
     {
 
@@ -57,6 +98,7 @@ class CashierController extends Controller
       $sale->change_due     = $request->tendered - $request->total;
       $sale->source         = "cashier";
       $sale->refund         = false;
+      $sale->customer_id     = 2; // this assigns all cashier sales to walk ups
 
       $sale->save();
 
@@ -110,7 +152,7 @@ class CashierController extends Controller
         else
           $results;
 
-        return view('cashier.query')->withResults($results->get());
+        return view('cashier.query')->withResults($results->where('created_at', '>=', Date::now('America/Chicago')->startOfDay())->get());
       }
     }
 }

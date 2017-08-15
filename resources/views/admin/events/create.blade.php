@@ -16,23 +16,27 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="plus icon"></i> Add Event', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="plus icon"></i> Add Event', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   <div class="two fields">
     <div class="field">
       {!! Form::label('show', 'Show') !!}
-      {!! Form::select('show', $shows, null, ['placeholder' => 'Select a show']) !!}
+      {!! Form::select('show', $shows, null, ['placeholder' => 'Select a show', 'class' => 'ui search dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('type', 'Type') !!}
-      {!! Form::select('type',
-        [
-        'matinee'       => 'matinee',
-        'weekend'       => 'weekend',
-        'special event' => 'special event',
-        'ctc event'     => 'ctc event',
-      ], null, ['placeholder' => 'Select a show type']) !!}
+      <div class="ui selection dropdown">
+        {!! Form::hidden('type', null) !!}
+        <i class="dropdown icon"></i>
+        <div class="default text">Select a show type</div>
+        <div class="menu">
+          <div class="item" data-value="matinee">matinee</div>
+          <div class="item" data-value="weekend">weekend</div>
+          <div class="item" data-value="special event">special event</div>
+          <div class="item" data-value="ctc event">ctc event</div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="two fields">
@@ -91,7 +95,7 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="plus icon"></i> Add Event', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="plus icon"></i> Add Event', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   {!! Form::close() !!}

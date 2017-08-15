@@ -9,7 +9,7 @@
     <div class="content">
       Astral
       <div class="sub header">
-      Mayborn Science Theater
+      {{ App\Setting::find(1)->organization }}
       </div>
     </div>
     </h2>
@@ -26,7 +26,7 @@
 
               <label for="name">First Name</label>
               <div class="ui left icon input">
-                <input id="firstname" type="text" name="firstname" value="{{ old('firstname') }}" required autofocus>
+                <input id="firstname" placeholder="First Name" type="text" name="firstname" value="{{ old('firstname') }}" required autofocus>
                 <i class="user icon"></i>
               </div>
 
@@ -41,7 +41,7 @@
 
               <label for="name">Last Name</label>
               <div class="ui left icon input">
-                <input id="lastname" type="text" name="lastname" value="{{ old('lastname') }}" required autofocus>
+                <input id="lastname" placeholder="Last Name" type="text" name="lastname" value="{{ old('lastname') }}" required autofocus>
                 <i class="user icon"></i>
               </div>
 
@@ -56,7 +56,7 @@
         <div class="field{{ $errors->has('email') ? ' error' : '' }}">
             <label for="email" class="col-md-4 control-label">Email</label>
               <div class="ui left icon input">
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+                <input id="email" placeholder="Email" type="email" name="email" value="{{ old('email') }}" required>
                 <i class="mail icon"></i>
               </div>
 
@@ -73,7 +73,7 @@
             <label for="password">Password</label>
 
               <div class="ui left icon input">
-                <input id="password" type="password" name="password" required>
+                <input id="password" placeholder="Password" type="password" name="password" required>
                 <i class="key icon"></i>
               </div>
 
@@ -89,15 +89,18 @@
             <label for="password-confirm">Confirm Password</label>
 
             <div class="ui left icon input">
-                <input id="password-confirm" type="password" name="password_confirmation" required>
+                <input id="password-confirm" placeholder="Confirm Password" type="password" name="password_confirmation" required>
                 <i class="key icon"></i>
             </div>
         </div>
 
         <div class="field">
-          <button type="submit" class="ui primary button">
-              <i class="sign in icon"></i> Register
-          </button>
+          <div class="ui two buttons">
+            <button type="submit" class="ui primary button">
+                <i class="sign in icon"></i> Register
+            </button>
+            <div class="ui secondary button" onclick="$('form').form('clear')"><i class="eraser icon"></i> Clear</div>
+          </div>
         </div>
     </form>
   </div>

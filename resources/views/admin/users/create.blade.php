@@ -16,7 +16,7 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.users.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="plus icon"></i> Add User', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="add user icon"></i> Add User', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   <div class="two fields">
@@ -32,7 +32,10 @@
   <div class="two fields">
     <div class="field">
       {!! Form::label('role', 'Role') !!}
-      {!! Form::select('role', ['admin' => 'admin', 'teacher' => 'teacher']) !!}
+      {!! Form::select('role',
+        ['admin' => 'admin', 'teacher' => 'teacher'],
+        null,
+        ['placeholder' => 'Role', 'class' => 'ui dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('email', 'Email') !!}
@@ -46,13 +49,13 @@
     </div>
     <div class="field">
       {!! Form::label('password_confirmation', 'Confirm Password') !!}
-      {!! Form::password('password_confirmation', null, ['placeholder' => 'Last Name']) !!}
+      {!! Form::password('password_confirmation', null, ['placeholder' => 'Confirm Password']) !!}
     </div>
   </div>
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.users.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="plus icon"></i> Add User', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+      {!! Form::button('<i class="add user icon"></i> Add User', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   {!! Form::close() !!}

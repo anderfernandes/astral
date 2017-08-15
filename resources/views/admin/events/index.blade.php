@@ -14,7 +14,7 @@
 
   <div class="ui secondary menu">
     <div class="item">
-      <a class="ui primary button" href="{{ route('admin.events.create') }}">
+      <a class="ui secondary button" href="{{ route('admin.events.create') }}">
         <i class="calendar plus icon"></i> Create Event
       </a>
     </div>

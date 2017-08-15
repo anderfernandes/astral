@@ -260,11 +260,15 @@
       </div>
     </div>
     <div class="actions">
-      <div class="ui standard inverted button">
+      <div class="ui blue inverted button" onclick="$('#refund-modal').modal('hide')">
+        <i class="cancel icon"></i>
+        Close
+      </div>
+      <div class="ui standard inverted button" onclick="$('form').form('clear')">
         <i class="eraser icon"></i>
         Clear Form
       </div>
-      {!! Form::button('<i class="refresh icon"></i> Refund', ['type' => 'submit', 'class' => 'ui yellow inverted button', 'id' => 'submit-refund']) !!}
+      {!! Form::button('<i class="refresh icon"></i> Refund', ['type' => 'submit', 'class' => 'ui red inverted button', 'id' => 'submit-refund']) !!}
     </div>
     {!! Form::close() !!}
   </div>

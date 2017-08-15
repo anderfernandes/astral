@@ -6,7 +6,7 @@
   <a href="{{ route('admin.users.index') }}" class="item"><i class="users large icon"></i></a>
   <div class="right menu">
     <a class="item">
-      <img class="ui avatar image" src="https://semantic-ui.com/images/wireframe/square-image.png">
+      <i class="user circle outline large inverted icon"></i>
       {!! Auth::user()->firstname !!} &nbsp;
     </a>
   </div>

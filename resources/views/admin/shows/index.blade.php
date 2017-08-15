@@ -14,7 +14,7 @@
 
   <div class="ui secondary menu">
     <div class="item">
-      <a class="ui primary button" href="{{ route('admin.shows.create') }}">
+      <a class="ui secondary button" href="{{ route('admin.shows.create') }}">
         <i class="plus icon"></i> New Show
       </a>
     </div>
