@@ -8,9 +8,13 @@
     <div class="active header item">
       <strong><i class="calendar icon"></i>{{ Date::now()->format('l, F j, Y')}}</strong>
     </div>
-    <a class="item">
+    <div class="ui dropdown item">
       <i class="user circle outline large icon"></i>
-      {!! Auth::user()->firstname !!} &nbsp;
-    </a>
+      {!! Auth::user()->firstname !!} <i class="dropdown icon"></i>
+      <div class="menu">
+        <a href="{{ route('account') }}" class="item"><i class="user icon"></i> My Account</a>
+        <a class="item"><i class="sign out icon"></i> Logout</a>
+      </div>
+    </div>
   </div>
 </div>

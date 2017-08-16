@@ -18,7 +18,7 @@ class UserController extends Controller
     {
         $users = User::where('role', '<>', 'walk-up')
                  ->orderBy('id', 'desc')->paginate(10);
-                 
+
         return view('admin.users.index')->withUsers($users);
     }
 
@@ -110,15 +110,28 @@ class UserController extends Controller
         $user->lastname  = $request->input('lastname');
         $user->email     = $request->input('email');
         $user->role      = $request->input('role');
-        $user->password  = bcrypt($request->input('password'));
 
-        $user->save();
+        if ($request->password == null) {
 
-        Session::flash('success',
-          ''.$user->firstname.' '.$user->lastname.
-          '\'s account information has been updated successfully!');
+          $user->save();
 
-        return redirect()->route('admin.users.show', $user);
+          Session::flash('success',
+            ''.$user->firstname.' '.$user->lastname.
+            '\'s account information has been updated successfully!');
+
+          return redirect()->route('admin.users.show', $user);
+        }
+        else {
+          $user->password = bcrypt($request->input('password'));
+          $user->save();
+
+          Session::flash('success',
+            ''.$user->firstname.' '.$user->lastname.
+            '\'s account information has been updated successfully!');
+
+          return redirect()->route('admin.users.show', $user);
+        }
+
     }
 
     /**
@@ -139,4 +152,39 @@ class UserController extends Controller
 
       return redirect()->route('admin.users.index');
     }
+
+    public function selfupdate(Request $request, User $user)
+    {
+      $this->validate($request, [
+        'email'                 => 'required',
+        'password'              => 'nullable|same:password_confirmation|min:6',
+        'password_confirmation' => 'nullable|min:6',
+      ]);
+
+      $user = User::find(\Auth::id());
+
+      $user->email = $request->email;
+
+      if ($request->password == null) {
+
+        $user->save();
+
+        Session::flash('success',
+          ''.$user->firstname.' '.$user->lastname.
+          '\'s account information has been updated successfully!');
+
+        return redirect()->route('admin.users.show', $user);
+      }
+      else {
+        $user->password = bcrypt($request->input('password'));
+        $user->save();
+
+        Session::flash('success',
+          ''.$user->firstname.' '.$user->lastname.
+          '\'s account information has been updated successfully!');
+
+        return redirect()->route('account')->withUser($user);
+      }
+    }
+
 }

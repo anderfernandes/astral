@@ -37,6 +37,8 @@ Route::group(
 
 Auth::routes();
 
+Route::put('account/selfupdate', 'Admin\UserController@selfupdate')->middleware('auth')->name('selfupdate');
+
 // Cashier Route
 Route::get('cashier', 'CashierController@index')->name('cashier.index')->middleware('auth');
 

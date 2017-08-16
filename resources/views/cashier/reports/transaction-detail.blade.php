@@ -1,6 +1,6 @@
 @extends('layout.report')
 
-@section('title', Auth::user()->firstname.' '.Auth::user()->lastname.'s Closeout Report')
+@section('title', Auth::user()->firstname.' '.Auth::user()->lastname.'s Payment Transaction Detail Report')
 
 @section('content')
 

@@ -1,13 +1,14 @@
 <div class="ui borderless inverted fixed top menu">
   <a class="header toc item"><i class="sidebar large icon"></i></a>
-  <a href="{{ route('admin.index')}}" class="item"><i class="dashboard large icon"></i></a>
-  <a href="{{ route('admin.shows.index')}}" class="item"><i class="film large icon"></i></a>
-  <a href="{{ route('admin.events.index') }}" class="item"><i class="large calendar icon"></i></a>
-  <a href="{{ route('admin.users.index') }}" class="item"><i class="users large icon"></i></a>
+  <div class="header item"><i class="sun large icon"></i></div>
   <div class="right menu">
-    <a class="item">
+    <div class="ui dropdown item">
       <i class="user circle outline large inverted icon"></i>
-      {!! Auth::user()->firstname !!} &nbsp;
-    </a>
+      {!! Auth::user()->firstname !!} <i class="dropdown icon"></i>
+      <div class="menu">
+        <a href="{{ route('account') }}" class="item"><i class="user icon"></i> My Account</a>
+        <a class="item"><i class="sign out icon"></i> Logout</a>
+      </div>
+    </div>
   </div>
 </div>
