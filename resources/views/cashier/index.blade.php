@@ -63,7 +63,7 @@
                       <div onclick="changeAmount({{ $loop->index }}*3+2, 1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon inverted green button"><i class="plus icon"></i></div>
                       <div onclick="changeAmount({{ $loop->index }}*3+2,-1, 'member', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type }}', {{ number_format($event->member_price, 2) }}, {{ $event->id }})" class="ui icon inverted red button"><i class="minus icon"></i></div>
                       <input class="number-of-tickets" readonly min="0" value="0" type="text" placeholder="0">
-                      <div class="ui price label">at $ {{ number_format($event->member_price, 2) }} / member</div>
+                      <div class="ui price label">at $ {{ number_format($event->members_price, 2) }} / member</div>
                     </div>
                   </div>
                 </div>
