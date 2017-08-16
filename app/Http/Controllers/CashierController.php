@@ -87,34 +87,44 @@ class CashierController extends Controller
         'ticket.*.customer_id'  => 'required',
       ]);
 
-      $sale = new Sale;
-
-      $sale->cashier_id     = Auth::user()->id;
-      $sale->payment_method = $request->payment_method;
-      $sale->reference      = $request->reference;
-      $sale->subtotal       = $request->subtotal;
-      $sale->total          = $request->total;
-      $sale->tendered       = $request->tendered;
-      $sale->change_due     = $request->tendered - $request->total;
-      $sale->source         = "cashier";
-      $sale->refund         = false;
-      $sale->customer_id     = 2; // this assigns all cashier sales to walk ups
-
-      $sale->save();
-
       $ticketsInput = $request->get('ticket');
 
       $tickets = [];
 
-      foreach($ticketsInput as $ticket){
-        $tickets[] = new Ticket($ticket);
+      if (count($ticketsInput) <= 0) {
+        Session::flash('error', 'You cannot sell 0 tickets, silly!');
+        return redirect()->route('cashier.index');
       }
 
-      $sale->tickets()->saveMany($tickets);
+      else {
 
-      Session::flash('success', count($request->input('ticket')). ' ticket(s) sold successfully');
+        $sale = new Sale;
 
-      return redirect()->route('cashier.index');
+        $sale->cashier_id     = Auth::user()->id;
+        $sale->payment_method = $request->payment_method;
+        $sale->reference      = $request->reference;
+        $sale->subtotal       = $request->subtotal;
+        $sale->total          = $request->total;
+        $sale->tendered       = $request->tendered;
+        $sale->change_due     = $request->tendered - $request->total;
+        $sale->source         = "cashier";
+        $sale->refund         = false;
+        $sale->customer_id     = 2; // this assigns all cashier sales to walk ups
+
+        $sale->save();
+
+
+
+        foreach($ticketsInput as $ticket) {
+          $tickets[] = new Ticket($ticket);
+        }
+
+        $sale->tickets()->saveMany($tickets);
+
+        Session::flash('success', count($request->input('ticket')). ' ticket(s) sold successfully');
+
+        return redirect()->route('cashier.index');
+      }
 
     }
 

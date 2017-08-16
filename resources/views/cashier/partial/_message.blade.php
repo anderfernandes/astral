@@ -9,6 +9,17 @@
     <p>{{ Session::get('success') }}</p>
   </div>
 </div>
+@elseif (Session::has('error'))
+<div class="ui error icon message">
+  <i class="info circle icon"></i>
+  <i class="close icon"></i>
+  <div class="content">
+    <div class="header">
+      Error!
+    </div>
+    <p>{{ Session::get('error') }}</p>
+  </div>
+</div>
 @endif
 
 @if (count($errors) > 0)
