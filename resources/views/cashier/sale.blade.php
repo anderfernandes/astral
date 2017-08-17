@@ -1,4 +1,4 @@
-@extends('layout.admin')
+@extends('layout.cashier')
 
 @section('title', 'Sale Information | Sale #'.$sale->id)
 

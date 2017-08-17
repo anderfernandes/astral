@@ -165,4 +165,11 @@ class CashierController extends Controller
         return view('cashier.query')->withResults($results->where('created_at', '>=', Date::now('America/Chicago')->startOfDay())->get());
       }
     }
+    
+    // This controller will return a view with sale information
+    
+    public function sale(Sale $sale)
+    {
+        return view('cashier.sale')->withSale($sale);
+    }
 }

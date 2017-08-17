@@ -48,10 +48,10 @@ class EventController extends Controller
             'type'           => 'required',
             'start'          => 'required',
             'end'            => 'required',
-            'adults_price'   => 'required',
-            'children_price' => 'required',
-            'members_price'  => 'required',
-            'seats'          => 'required',
+            'adults_price'   => 'required|min:0',
+            'children_price' => 'required|min:0',
+            'members_price'  => 'required|min:0',
+            'seats'          => 'required|min:0',
             'memo'           => 'nullable',
         ]);
 

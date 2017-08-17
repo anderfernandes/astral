@@ -64,6 +64,7 @@
               <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
               <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
               <div class="item" data-value="american express"><i class="american express icon"></i>American Express</div>
+              <div class="item" data-value="check"><i class="check icon"></i>Check</div>
             </div>
           </div>
         </div>

@@ -20,7 +20,7 @@
       <i class="edit icon"></i> Edit Show
     </a>
     <a href="{{ route('admin.shows.create') }}" class="ui secondary button">
-      <i class="plus icon"></i> Add Show
+      <i class="plus icon"></i> Add Another Show
     </a>
     {!! Form::open(['route' => ['admin.shows.destroy', $show], 'method' => 'DELETE']) !!}
       {!! Form::button('<i class="trash icon"></i> Delete Show', ['type' => 'submit', 'class' => 'ui negative button']) !!}
@@ -42,20 +42,5 @@
       </div>
     </div>
   </div>
-
-  <div class="ui buttons">
-    <a href="{{ route('admin.shows.index') }}" class="ui default button">
-      <i class="left chevron icon"></i> Back
-    </a>
-    <a href="{{ route('admin.shows.edit', $show) }}" class="ui primary button">
-      <i class="edit icon"></i> Edit Show
-    </a>
-    <a href="{{ route('admin.shows.create') }}" class="ui secondary button">
-      <i class="plus icon"></i> Add Show
-    </a>
-    {!! Form::open(['route' => ['admin.shows.destroy', $show], 'method' => 'DELETE']) !!}
-      {!! Form::button('<i class="trash icon"></i> Delete Show', ['type' => 'submit', 'class' => 'ui negative button']) !!}
-    {!! Form::close() !!}
-  </div>
-
+  
 @endsection

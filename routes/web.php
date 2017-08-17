@@ -34,19 +34,24 @@ Route::group(
   Route::resource('settings', 'SettingController');
   Route::put('settings', 'SettingController@update');
 });
+// Cashier Routes
+Route::group(['prefix' => 'cashier', 'as' => 'cashier', 'middleware' => 'auth'],
+  function() {
+    // Index
+    Route::get('/', 'CashierController@index')->name('.index');
+    // Store Sale
+    Route::post('/', 'CashierController@store')->name('.store');
+    // Reports
+    Route::get('reports/{type}', 'CashierController@reports')->name('.reports');
+    // Find Sale
+    Route::post('query', 'CashierController@query')->name('.query');
+    // Sale Details
+    Route::get('sale/{sale}', 'CashierController@sale')->name('.sale');
+  });
 
 Auth::routes();
 
 Route::put('account/selfupdate', 'Admin\UserController@selfupdate')->middleware('auth')->name('selfupdate');
-
-// Cashier Route
-Route::get('cashier', 'CashierController@index')->name('cashier.index')->middleware('auth');
-
-Route::post('cashier', 'CashierController@store')->name('cashier.store')->middleware('auth');
-
-Route::get('cashier/reports/{type}', 'CashierController@reports')->name('cashier.reports')->middleware('auth');
-
-Route::post('cashier/query', 'CashierController@query')->name('cashier.query')->middleware('auth');
 
 Route::get('/home', 'HomeController@index')->name('home');
 

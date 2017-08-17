@@ -62,7 +62,7 @@
         <div class="ui label">
           $
         </div>
-        {!! Form::number('adults_price', null, ['placeholder' => 'Adult Ticket Price', 'step' => '0.01']) !!}
+        {!! Form::number('adults_price', null, ['placeholder' => 'Adult Ticket Price', 'step' => '0.50', 'min' => 0]) !!}
       </div>
     </div>
     <div class="field">
@@ -71,7 +71,7 @@
         <div class="ui label">
           $
         </div>
-        {!! Form::number('children_price', null, ['placeholder' => 'Adult Ticket Price', 'step' => '0.01']) !!}
+        {!! Form::number('children_price', null, ['placeholder' => 'Adult Ticket Price', 'step' => '0.50', 'min' => 0]) !!}
       </div>
     </div>
     <div class="field">
@@ -80,12 +80,12 @@
         <div class="ui label">
           $
         </div>
-        {!! Form::number('members_price', null, ['placeholder' => 'Member Ticket Price', 'step' => '0.01']) !!}
+        {!! Form::number('members_price', null, ['placeholder' => 'Member Ticket Price', 'step' => '0.50', 'min' => 0]) !!}
       </div>
     </div>
     <div class="field">
       {!! Form::label('seats', 'Number of Seats Available') !!}
-      {!! Form::number('seats', App\Setting::find(1)->seats, ['placeholder' => 'Number of Seats Available']) !!}
+      {!! Form::number('seats', App\Setting::find(1)->seats, ['placeholder' => 'Number of Seats Available', 'min' => 0]) !!}
     </div>
   </div>
   <div class="field">
