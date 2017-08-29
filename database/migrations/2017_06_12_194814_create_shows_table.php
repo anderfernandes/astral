@@ -19,6 +19,7 @@ class CreateShowsTable extends Migration
             $table->string('type');
             $table->integer('duration');
             $table->text('description');
+            $table->string('cover')->default('https://semantic-ui.com/images/wireframe/image.png')->nullable();
             $table->timestamps();
         });
     }

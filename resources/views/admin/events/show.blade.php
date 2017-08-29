@@ -2,15 +2,11 @@
 
 @section('title', 'Event Information')
 
-@section('content')
+@section('subtitle', $event->show->name)
 
-  <h2 class="ui dividing header">
-    <i class="book icon"></i>
-    <div class="content">
-      Event Information
-      <div class="sub header">{{ App\Show::find($event->show_id)->name }}</div>
-    </div>
-  </h2>
+@section('icon', 'calendar')
+
+@section('content')
 
   <div class="ui buttons">
     <a href="{{ route('admin.events.index') }}" class="ui default button">
@@ -30,7 +26,7 @@
   <div class="ui unstackable items">
     <div class="item">
       <div class="image">
-        <img src="https://semantic-ui.com/images/wireframe/image.png" alt="">
+        <img src="{{ $event->show->cover }}" alt="">
       </div>
       <div class="content">
         <div class="meta">

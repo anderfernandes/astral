@@ -52,6 +52,10 @@
   <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
   <script src="https://unpkg.com/flatpickr"></script>
 
+  <script src="{{ asset('js/vendor.js') }}"></script>
+
+  <link rel="stylesheet" href="{{ asset('css/vendor.css') }}">
+
 </head>
 <script>
   $(document)
@@ -81,6 +85,8 @@
     });
 
 </script>
+
+<style> textarea { font:inherit } </style>
 
 <body>
   <!-- Load Facebook SDK for JavaScript -->
@@ -112,9 +118,9 @@
     <div class="ui basic segment">
 
       @include('admin.partial._message')
-
+    
       @yield('content')
-
+      
     </div>
 
   </div>

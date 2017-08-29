@@ -11,5 +11,10 @@ const { mix } = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+mix.scripts([
+    'node_modules/simplemde/dist/simplemde.min.js'
+], 'public/js/vendor.js');
+
+mix.styles([
+    'node_modules/simplemde/dist/simplemde.min.css'
+], 'public/css/vendor.css');

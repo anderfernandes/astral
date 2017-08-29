@@ -5,7 +5,7 @@
     {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
     <br /><br />
     <div class="ui tiny buttons">
-      <a href="{{ route('account') }}" class="ui red button"><i class="user icon"> </i>Account</a>
+      <a href="{{ route('account') }}" class="ui blue button"><i class="user icon"> </i>Account</a>
       {!! Form::open(['route' => ['logout'], 'method' => 'POST']) !!}
         {{ csrf_field() }}
         {!! Form::button('<i class="sign out icon"></i> Logout',
@@ -33,4 +33,7 @@
   <a href="{{ route('admin.settings.index') }}" class="item">
     <i class="large setting icon"></i> Settings
   </a>
+  <div class="item">
+    <img class="ui centered tiny image" src="{{ '/'.App\Setting::find(1)->logo }}" alt="">
+  </div>
 </div>

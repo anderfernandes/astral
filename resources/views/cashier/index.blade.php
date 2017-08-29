@@ -17,7 +17,7 @@
       <div class="ui unstackable divided items">
         <div class="item">
           <div class="ui small image">
-            <img src="https://semantic-ui.com/images/wireframe/square-image.png">
+            <img src="{{ $event->show->cover }}">
           </div>
           <div class="content">
             <div class="meta">

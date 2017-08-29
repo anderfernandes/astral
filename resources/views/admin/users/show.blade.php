@@ -2,15 +2,11 @@
 
 @section('title', 'User Information')
 
-@section('content')
+@section('subtitle', $user->firstname.' '.$user->lastname)
 
-  <h2 class="ui dividing header">
-    <i class="book icon"></i>
-    <div class="content">
-      User Information
-      <div class="sub header">{{ $user->firstname }} {{ $user->lastname }}</div>
-    </div>
-  </h2>
+@section('icon', 'user')
+
+@section('content')
 
   <div class="ui buttons">
     <a href="{{ route('admin.users.index') }}" class="ui default button">
@@ -27,9 +23,7 @@
 
   <div class="ui unstackable items">
     <div class="item">
-      <div class="image">
-        <img src="https://semantic-ui.com/images/wireframe/image.png" alt="">
-      </div>
+      <i class="user circle outline massive icon"></i>
       <div class="content">
         <h1 class="ui huge header">
           {{ $user->firstname }} {{ $user->lastname }}

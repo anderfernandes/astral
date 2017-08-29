@@ -1,4 +1,4 @@
-@extends('layout.astral')
+@extends('layout.auth')
 
 @section('content')
 

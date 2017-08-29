@@ -1,16 +1,12 @@
 @extends('layout.admin')
 
-@section('title', 'Add Shows')
+@section('title', 'Add Show')
+
+@section('subtitle', 'New Show')
+
+@section('icon', 'plus')
 
 @section('content')
-
-  <h2 class="ui dividing header">
-    <i class="edit icon"></i>
-    <div class="content">
-      Add Show
-      <div class="sub header"></div>
-    </div>
-  </h2>
 
   {!! Form::open(['route' => 'admin.shows.store', 'class' => 'ui form']) !!}
   <div class="field">
@@ -19,7 +15,7 @@
       {!! Form::button('<i class="plus icon"></i> Add Show', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
-  <div class="three fields">
+  <div class="two fields">
     <div class="field">
       {!! Form::label('name', 'Name') !!}
       {!! Form::text('name', null, ['placeholder' => 'What\'s the name of the show?']) !!}
@@ -31,13 +27,18 @@
         null,
         ['placeholder' => 'Planetarium or Laser?', 'class' => 'ui dropdown']) !!}
     </div>
+  </div>
+  <div class="two fields">
     <div class="field">
-      {!! Form::label('duration', 'Duration') !!}
-      <div class="ui right labeled input">
-        {!! Form::text('duration', null, ['placeholder' => 'How many minutes long is the show?']) !!}
-        <div class="ui label">minutes</div>
+        {!! Form::label('duration', 'Duration') !!}
+        <div class="ui right labeled input">
+          {!! Form::text('duration', null, ['placeholder' => 'How long is the show?']) !!}
+          <div class="ui label">minutes</div>
+        </div>
       </div>
-
+      <div class="field">
+      {!! Form::label('cover', 'Cover') !!}
+      {!! Form::text('cover', null, ['placeholder' => 'URL of the cover (PNG or JPEG)']) !!}
     </div>
   </div>
   <div class="field">
@@ -51,5 +52,12 @@
     </div>
   </div>
   {!! Form::close() !!}
+
+  <script>
+    var simplemde = new SimpleMDE({
+      element: document.getElementById('description'),
+      toolbar: false
+    })
+  </script>
 
 @endsection

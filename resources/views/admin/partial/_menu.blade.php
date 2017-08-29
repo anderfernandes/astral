@@ -1,6 +1,10 @@
 <div class="ui borderless inverted fixed top menu">
   <a class="header toc item"><i class="sidebar large icon"></i></a>
-  <div class="header item"><i class="sun large icon"></i></div>
+  <div class="header item"><i class="sun large icon"></i>Astral</div>
+  <div class="header active item">
+    <i class="@yield('icon') icon"></i>
+    @yield('title') | @yield('subtitle')
+  </div>
   <div class="right menu">
     <div class="ui dropdown item">
       <i class="user circle outline large inverted icon"></i>

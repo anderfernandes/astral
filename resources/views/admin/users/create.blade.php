@@ -2,15 +2,11 @@
 
 @section('title', 'Add User')
 
-@section('content')
+@section('subtitle', 'New User')
 
-  <h2 class="ui dividing header">
-    <i class="users icon"></i>
-    <div class="content">
-      Add User
-      <div class="sub header"></div>
-    </div>
-  </h2>
+@section('icon', 'add user')
+
+@section('content')
 
   {!! Form::open(['route' => 'admin.users.store', 'class' => 'ui form']) !!}
   <div class="field">

@@ -2,15 +2,12 @@
 
 @section('title', 'Add Event')
 
-@section('content')
+@section('subtitle', 'New Event')
 
-  <h2 class="ui dividing header">
-    <i class="calendar icon"></i>
-    <div class="content">
-      Add Event
-      <div class="sub header"></div>
-    </div>
-  </h2>
+@section('icon', 'calendar')
+
+
+@section('content')
 
   {!! Form::open(['route' => 'admin.events.store', 'class' => 'ui form']) !!}
   <div class="field">
@@ -101,6 +98,12 @@
   {!! Form::close() !!}
 
   <script>
+
+    var simplemde = new SimpleMDE({
+        element: document.getElementById('memo'),
+        toolbar: false
+    });
+
     $('#start').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K'});
     $('#end').flatpickr({enableTime:true, minDate: function() {$('#start').val()}, dateFormat: 'l, F j, Y h:i K'});
 

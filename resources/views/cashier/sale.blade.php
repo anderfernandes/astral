@@ -2,12 +2,16 @@
 
 @section('title', 'Sale Information | Sale #'.$sale->id)
 
+@section('icon', 'dollar')
+
+@section('name', 'Sale Information | Sale #'.$sale->id)
+
 @section('content')
 
   @if ($sale->refund)
-  <h2 class="ui red dividing header">
+  <h3 class="ui red dividing header">
   @else
-  <h2 class="ui dividing header">
+  <h3 class="ui dividing header">
   @endif
     <i class="dollar icon"></i>
     <div class="content">
@@ -26,7 +30,7 @@
       </div>
       @endif
     </div>
-  </h2>
+  </h3>
 
   @if (! $sale->refund)
   <div class="ui right floated buttons">
@@ -44,58 +48,63 @@
   <div class="ui two column grid">
     <div class="column">
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Sale #</div>
         {{ $sale->id }}
-      </h2>
+      </h3>
 
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Source</div>
-        {{ $sale->source }}
-      </h2>
+        @if ($sale->source == "cashier")
+          {{ $sale->source }} ({{ $sale->cashier->firstname }} {{ $sale->cashier->lastname }})
+        @else 
+          {{ $sale->source }} ({{ $sale->cashier->firstname }} {{ $sale->cashier->lastname }})
+        @endif
+        
+      </h3>
 
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Created on</div>
         {{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}
         ({{ Date::parse($sale->created_at)->diffForHumans() }})
-      </h2>
+      </h3>
 
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Updated on</div>
         {{ Date::parse($sale->updated_at)->format('l, F j, Y \a\t g:i A') }}
         ({{ Date::parse($sale->updated_at)->diffForHumans() }})
-      </h2>
+      </h3>
 
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Memo</div>
         {{ $sale->memo }}
-      </h2>
+      </h3>
 
     </div>
     <div class="column">
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Payment Method</div>
         @if ($sale->payment_method == 'visa')
@@ -109,63 +118,63 @@
         @else
           <i class="money icon"></i>
         @endif
-      </h2>
+      </h3>
 
       @if ($sale->reference)
         @if ($sale->refund)
-        <h2 class="ui red header">
+        <h3 class="ui red header">
         @else
-        <h2 class="ui header">
+        <h3 class="ui header">
         @endif
         <div class="sub header">Reference</div>
         {{ $sale->reference }}
-      </h2>
+      </h3>
       @endif
 
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Subtotal</div>
         $ {{ number_format($sale->subtotal, 2) }}
-      </h2>
+      </h3>
 
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Tax</div>
         $ {{ number_format($sale->total - $sale->subtotal, 2) }}
-      </h2>
+      </h3>
 
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Total</div>
         $ {{ number_format($sale->total, 2) }}
-      </h2>
+      </h3>
 
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Tendered</div>
         $ {{ number_format($sale->tendered, 2) }}
-      </h2>
+      </h3>
 
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
         <div class="sub header">Change Due</div>
         $ {{ number_format($sale->change_due, 2) }}
-      </h2>
+      </h3>
 
     </div>
   </div>
@@ -193,7 +202,11 @@
       <tbody>
         @foreach ($sale->tickets as $ticket)
         <tr>
-          <th><h3 class="ui inverted center aligned header">{{ $ticket->id }}</h3></th>
+          @if ($sale->refund)
+            <th><h3 class="ui center inverted aligned header">{{ $ticket->id }}</h3></th>
+          @else 
+            <th><h3 class="ui center aligned header">{{ $ticket->id }}</h3></th>
+          @endif
           <th>{{ $ticket->type }}</th>
           <th>{{ App\Event::find($ticket->event_id)->show->name }}</th>
           <th>{{ Date::parse($ticket->created_at)->format('l, F j, Y \a\t g:i A') }}</th>

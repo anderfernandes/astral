@@ -17,6 +17,7 @@ class ShowsTableSeeder extends Seeder
           'type'        => 'Planetarium',
           'duration'    => 25,
           'description' => 'Write a description here.',
+          'cover'       => 'https://semantic-ui.com/images/wireframe/image.png',
         ]);
 
         // Laser Light example show seed
@@ -24,7 +25,8 @@ class ShowsTableSeeder extends Seeder
           'name'        => 'Space Laser',
           'type'        => 'Laser Light',
           'duration'    => 45,
-          'description' => 'Write a description here.'
+          'description' => 'Write a description here.',
+          'cover'       => 'https://semantic-ui.com/images/wireframe/image.png',
         ]);
     }
 }

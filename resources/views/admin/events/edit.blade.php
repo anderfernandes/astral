@@ -2,19 +2,11 @@
 
 @section('title', 'Edit Event')
 
-@section('content')
+@section('subtitle', $event->show->name)
 
-  <h2 class="ui dividing header">
-    <i class="calendar icon"></i>
-    <div class="content">
-      Edit Event
-      <div class="ui label">{{ $event->type }}</div>
-      <div class="sub header">
-        <strong>{{ App\Show::find($event->show_id)->name }}</strong> on
-        <strong>{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</strong>
-      </div>
-    </div>
-  </h2>
+@section('icon', 'calendar')
+
+@section('content')
 
   {!! Form::model($event, ['route' => ['admin.events.update', $event], 'class' => 'ui form', 'method' => 'PUT']) !!}
   <div class="field">
@@ -111,6 +103,12 @@
   {!! Form::close() !!}
 
   <script>
+
+    var simplemde = new SimpleMDE({
+        element: document.getElementById('memo'),
+        toolbar: false
+    });
+
     $('#start').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K'});
     $('#end').flatpickr({enableTime:true, minDate: function() {$('#start').val()}, dateFormat: 'l, F j, Y h:i K'});
 

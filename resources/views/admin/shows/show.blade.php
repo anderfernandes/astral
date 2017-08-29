@@ -2,15 +2,11 @@
 
 @section('title', 'Show Information')
 
-@section('content')
+@section('subtitle', $show->name)
 
-  <h2 class="ui dividing header">
-    <i class="book icon"></i>
-    <div class="content">
-      Show Information
-      <div class="sub header">{{ $show->name }}</div>
-    </div>
-  </h2>
+@section('icon', 'book')
+
+@section('content')
 
   <div class="ui buttons">
     <a href="{{ route('admin.shows.index') }}" class="ui default button">
@@ -29,15 +25,15 @@
 
   <div class="ui unstackable items">
     <div class="item">
-      <div class="image">
-        <img src="https://semantic-ui.com/images/wireframe/image.png" alt="">
+      <div class="ui rounded image">
+        <img src="{{ $show->cover }}" alt="">
       </div>
       <div class="content">
         <div class="header">{{ $show->name }}</div>
         <div class="meta">
           <div class="ui label">{{ $show->type }}</div>
           <i class="clock icon"></i> {{ $show->duration }} minutes</div>
-        <div class="description"><p>{{ $show->description }}</p></div>
+        <div class="description">{!! \Illuminate\Mail\Markdown::parse($show->description) !!}</div>
         <div class="extra"></div>
       </div>
     </div>

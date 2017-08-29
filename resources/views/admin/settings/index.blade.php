@@ -1,14 +1,12 @@
 @extends('layout.admin')
 
-@section('content')
+@section('title', 'Settings')
 
-<h2 class="ui dividing header">
-  <i class="setting icon"></i>
-  <div class="content">
-    Settings
-    <div class="sub header">Change global values</div>
-  </div>
-</h2>
+@section('subtitle', 'Change global values')
+
+@section('icon', 'setting')
+
+@section('content')
 
 {!! Form::model($setting, ['route' => ['admin.settings.update', $setting], 'class' => 'ui form', 'method' => 'PUT']) !!}
 <div class="field">
@@ -18,7 +16,7 @@
 </div>
 <div class="ui top attached tabular menu">
   <a class="item active" data-tab="general"><i class="setting icon"></i>General</a>
-  <a class="item" data-tab="tickets"><i class="ticket icon"></i>Tickets</a>
+  <!--<a class="item" data-tab="tickets"><i class="ticket icon"></i>Tickets</a>-->
 </div>
 <div class="ui bottom attached tab segment active" data-tab="general">
   <div class="three fields">
@@ -39,8 +37,29 @@
 
     </div>
   </div>
+  <div class="two fields">
+    <div class="field">
+      {!! Form::label('logo', 'Logo (URL)') !!}
+      {!! Form::text('logo', null, ['placeholder' => 'URL to a PNG or JPEG']) !!}
+      <br /><br />
+      
+    </div>
+    <div class="field">
+      {!! Form::label('cover', 'Cover (URL)') !!}
+      {!! Form::text('cover', null, ['placeholder' => 'URL to a PNG or JPEG']) !!}
+      <br /><br />
+    </div>
+  </div>
+  <div class="ui two column grid">
+    <div class="column">
+      <div class="ui basic segment"><img src="{{ '/'.App\Setting::find(1)->logo }}" alt="" class="ui small image"></div>
+    </div>
+    <div class="column">
+      <div class="ui basic segment"><img src="{{ '/'.App\Setting::find(1)->cover }}" alt="" class="ui medium image"></div>
+    </div>
+  </div>
 </div>
-<div class="ui bottom attached tab segment" data-tab="tickets">
+<!--<div class="ui bottom attached tab segment" data-tab="tickets">
   <h3 class="ui dividing header">Adults Ticket Settings</h3>
   <div class="two fields">
     <div class="field">
@@ -86,13 +105,14 @@
       {!! Form::text('members_special_event', null, ['placeholder' => 'Members Special Event Price']) !!}
     </div>
   </div>
-</div>
+</div>-->
 <div class="field">
   <div class="ui buttons">
     {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui primary button']) !!}
   </div>
 </div>
 {!! Form::close() !!}
+
 <script>
   $('.menu .item').tab();
 </script>

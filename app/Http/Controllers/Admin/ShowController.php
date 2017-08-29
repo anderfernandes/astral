@@ -51,6 +51,7 @@ class ShowController extends Controller
         $show->description = $request->description;
         $show->type        = $request->type;
         $show->duration    = $request->duration;
+        $show->cover       = $request->cover;
 
         $show->save();
 
@@ -101,6 +102,7 @@ class ShowController extends Controller
       $show->description = $request->input('description');
       $show->type        = $request->input('type');
       $show->duration    = $request->input('duration');
+      $show->cover       = $request->input('cover');
 
       $show->save();
 

@@ -2,15 +2,11 @@
 
 @section('title', 'Edit User')
 
-@section('content')
+@section('subtitle', $user->firstname.' '.$user->lastname)
 
-  <h2 class="ui dividing header">
-    <i class="users icon"></i>
-    <div class="content">
-      Edit User
-      <div class="sub header">{{ $user->firstname }} {{ $user->lastname }}</div>
-    </div>
-  </h2>
+@section('icon', 'user')
+
+@section('content')
 
   {!! Form::model($user, ['route' => ['admin.users.update', $user], 'class' => 'ui form', 'method' => 'PUT']) !!}
   <div class="field">
@@ -32,7 +28,7 @@
   <div class="two fields">
     <div class="field">
       {!! Form::label('role', 'Role') !!}
-      {!! Form::select('role', ['admin' => 'admin', 'teacher' => 'teacher']) !!}
+      {!! Form::select('role', ['admin' => 'admin', 'teacher' => 'teacher'], null, ['class' => 'ui dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('email', 'Email') !!}

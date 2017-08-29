@@ -17,6 +17,8 @@ class CreateSettingsTable extends Migration
             $table->increments('id');
             $table->string('organization')->nullable();
             $table->integer('seats');
+            $table->string('logo')->nullable()->default('logo.png');
+            $table->string('cover')->nullable()->default('cover.jpg');
             $table->decimal('adults_weekend')->nullable();
             $table->decimal('adults_matinee')->nullable();
             $table->decimal('adults_special_event')->nullable();
