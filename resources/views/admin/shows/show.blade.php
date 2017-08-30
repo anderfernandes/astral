@@ -23,13 +23,13 @@
     {!! Form::close() !!}
   </div>
 
-  <div class="ui unstackable items">
+  <div class="ui items">
     <div class="item">
-      <div class="ui rounded image">
+      <div class="ui rounded medium image">
         <img src="{{ $show->cover }}" alt="">
       </div>
       <div class="content">
-        <div class="header">{{ $show->name }}</div>
+        <div class="ui header">{{ $show->name }}</div>
         <div class="meta">
           <div class="ui label">{{ $show->type }}</div>
           <i class="clock icon"></i> {{ $show->duration }} minutes</div>
@@ -38,5 +38,5 @@
       </div>
     </div>
   </div>
-  
+
 @endsection
