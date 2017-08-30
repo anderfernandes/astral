@@ -3,22 +3,18 @@
 @section('content')
 
 <div class="ui centered grid">
-  <div class="sixteen wide mobile eight wide computer column">
-    <h2 class="ui center aligned icon header">
-    <i class="sun icon"></i>
-    <div class="content">
-      Astral
-      <div class="sub header">
-      {{ App\Setting::find(1)->organization }}
-      </div>
-    </div>
-    </h2>
-  </div>
-</div>
-
-<div class="ui centered grid">
   <div class="sixteen wide mobile four wide computer column">
-    <form class="ui form <?php if (count($errors) > 0) echo 'error'?>" role="form" method="POST" action="{{ route('login') }}">
+    <div class="ui raised segment">
+      <h2 class="ui center aligned icon header">
+      <i class="sun icon"></i>
+      <div class="content">
+        Astral
+        <div class="sub header">
+        {{ App\Setting::find(1)->organization }}
+        </div>
+      </div>
+      </h2>
+      <form class="ui form <?php if (count($errors) > 0) echo 'error'?>" role="form" method="POST" action="{{ route('login') }}">
         {{ csrf_field() }}
 
         <div class="field{{ $errors->has('email') ? ' error' : '' }}">
@@ -73,6 +69,7 @@
 
         </div>
     </form>
+    </div>
   </div>
 </div>
 @endsection

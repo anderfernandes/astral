@@ -8,48 +8,60 @@
 
 @section('content')
 
-  
   <a class="ui secondary button" href="{{ route('admin.shows.create') }}">
     <i class="plus icon"></i> New Show
   </a>
   <div class="ui right icon input">
-    <input type="text" placeholder="Search...">
+    <input type="text" placeholder="Show Name">
     <i class="search link icon"></i>
   </div>
-  
+  <select name="type" id="" class="ui dropdown">
+    <option value="">All Types</option>
+    <option value="Planetarium">Planetarium</option>
+    <<option value="Laser Light">Laser Light</option>
+  </select>
+  <!--<select name="grade" id="grade" class="ui dropdown">
+    <option value="">All Grades</option>
+    <option value="Pre-K">Pre-K</option>
+    <option value="Kindergarten">Kindergarten</option>
+    <option value="Elementary">Elementary</option>
+    <option value="Middle School">Middle School</option>
+    <option value="High School">High School</option>
+    <option value="College">College</option>
+  </select>-->
+
   <br /><br />
 
   <div class="ui five doubling link cards">
     @foreach($shows as $show)
     <div class="card">
-      <a href="{{ route('admin.shows.show', $show) }}" class="image">
-        
-        <img src="{{ $show->cover }}">
-        <div class="ui top right attached label">{{ $show->type }}</div>
-        <div class="ui top left attached label">{{ $show->duration }} min.</div>
-      </a>
-      
       <div class="content">
-        <a class="header">{{ $show->name }}</a>
-      </div>
-      <div class="extra content">
-        {!! Form::open(['route' => ['admin.shows.destroy', $show], 'method' => 'DELETE']) !!}
-          {!! Form::button('<i class="trash icon"></i>', ['type' => 'submit', 'class' => 'ui right floated red icon button']) !!}
-        {!! Form::close() !!}
-        <div class="ui buttons">
-          <a href="{{ route('admin.shows.show', $show) }}" class="ui basic blue icon button">
-            <i class="book icon"></i>
-          </a>
-          <a href="{{ route('admin.shows.edit', $show ) }}" class="ui basic black icon button">
-            <i class="edit icon"></i>
-          </a>
+        <div class="right floated ui inline top right pointing dropdown">
+          <i class="sidebar icon"></i>
+          <div class="menu">
+            <a href="{{ route('admin.shows.show', $show) }}" class="item">
+              <i class="book icon"></i> View
+            </a>
+            <a href="{{ route('admin.shows.edit', $show ) }}" class="item">
+              <i class="edit icon"></i> Edit
+            </a>
+          </div>
+        </div>
+        <div class="header">
+          {{ $show->name }}
+        </div>
+        <div class="meta">
+          <div class="ui label">{{ $show->type }}</div><div class="ui label">{{ $show->duration }} minutes</div>
         </div>
       </div>
+      <a href="{{ route('admin.shows.show', $show) }}" class="image">
+        <img src="{{ $show->cover }}">
+      </a>
     </div>
     @endforeach
   </div>
-  
 
-  
+
+
 
 @endsection

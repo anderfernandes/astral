@@ -8,6 +8,8 @@
 
 @section('content')
 
+<style>.ui.segments{display:none}</style>
+
   <div class="ui icon message">
     <i class="sun icon"></i>
     <div class="content">
@@ -136,8 +138,8 @@
         <div class="ui inverted center aligned segment">
           <div class="ui inverted huge statistic">
             <!-- Pending sale paid for tru or false field -->
-            <div class="value">$ 
-              <?php 
+            <div class="value">$
+              <?php
 
                 $salesTotalToday = 0;
 
@@ -155,8 +157,8 @@
           <div class="ui two column grid">
             <div class="column">
               <div class="ui mini inverted statistic">
-                <div class="value">$ 
-                  <?php 
+                <div class="value">$
+                  <?php
 
                     $salesTotalYesterday = 0;
 
@@ -174,8 +176,8 @@
             </div>
             <div class="column">
               <div class="ui mini inverted statistic">
-                <div class="value">$ 
-                  <?php 
+                <div class="value">$
+                  <?php
 
                     $salesTotalWeek = 0;
 
@@ -203,7 +205,7 @@
           <div class="ui three column grid">
             <div class="column">
               <div class="ui mini inverted statistic">
-                <div class="value"> 
+                <div class="value">
                 <?php
 
                   $totalSalesToday = \App\Sale::where('created_at','>=', Date::now('America/Chicago')->startOfDay()->toDateTimeString())->where('created_at','<=', Date::now('America/Chicago')->endOfDay())->count();
@@ -228,7 +230,7 @@
               <div class="ui mini inverted statistic">
                 <div class="value">
                 <?php
-                  
+
                   $cashSales = \App\Sale::where('created_at','>=', Date::now('America/Chicago')->startOfDay())
                                         ->where('created_at','<=', Date::now('America/Chicago')->endOfDay())
                                         ->where('payment_method', '=', 'cash')
@@ -237,7 +239,7 @@
                    if ($cashSales <= 0)
                     echo $cashSales;
                   else
-                    echo (($cashSales / $totalSalesToday) * 100);                     
+                    echo (($cashSales / $totalSalesToday) * 100);
 
                 ?> %
                 </div>
@@ -248,7 +250,7 @@
               <div class="ui mini inverted statistic">
                 <div class="value">
                 <?php
-                  
+
                   $checkSales = \App\Sale::where('created_at','>=', Date::now('America/Chicago')->startOfDay())
                                         ->where('created_at','<=', Date::now('America/Chicago')->endOfDay())
                                         ->where('payment_method', '=', 'check')
@@ -267,7 +269,21 @@
           </div>
         </div>
       </div>
-    </div>   
+    </div>
   </div>
+
+  <script>
+
+
+      $('.ui.segments').transition({
+        animation: 'vertical flip',
+        duration: '2000',
+        interval: '1000'
+      })
+
+
+
+
+  </script>
 
 @endsection

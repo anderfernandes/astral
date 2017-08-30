@@ -62,11 +62,11 @@
     });
 </script>
 
-<style>   
+<style>
     .pusher {
-        padding-top: 2.5rem; 
-        background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.75)), url('{{ App\Setting::find(1)->cover }}'); 
-        background-size: cover; 
+        padding-top: 2.5rem;
+        background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,0)), url('{{ App\Setting::find(1)->cover }}');
+        background-size: cover;
         min-height: 100vh
     }
 </style>
@@ -99,8 +99,6 @@
 
 
     <div class="ui basic segment">
-
-      @include('partial._message')
 
       @yield('content')
 
