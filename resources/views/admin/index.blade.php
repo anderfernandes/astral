@@ -141,11 +141,11 @@
 
                 $salesTotalToday = 0;
 
-                $salesToday = \App\Sale::where('created_at','>=', Date::today('America/Chicago')->toDateTimeString())
-                                        ->where('created_at','<=', Date::today('America/Chicago')->endOfDay())
+                $salesToday = \App\Sale::where('created_at','>=', Date::now('America/Chicago')->startofDay())
+                                        ->where('created_at','<=', Date::now('America/Chicago')->endOfDay())
                                         ->get();
                 foreach ($salesToday as $sale) {
-                  $salesTotalToday = ++$sale->total;
+                  $salesTotalToday += $sale->total;
                 }
                 echo number_format($salesTotalToday, 2);
               ?>
@@ -161,10 +161,10 @@
                     $salesTotalYesterday = 0;
 
                     $salesYesterday = \App\Sale::where('created_at','>=', Date::yesterday('America/Chicago')->startOfDay())
-                                            ->where('created_at','<=', Date::yesterday('America/Chicago')->endOfDay())
-                                            ->get();
+                                               ->where('created_at','<=', Date::yesterday('America/Chicago')->endOfDay())
+                                               ->get();
                     foreach ($salesYesterday as $sale) {
-                      $salesTotalYesterday = ++$sale->total;
+                      $salesTotalYesterday += $sale->total;
                     }
                     echo number_format($salesTotalYesterday, 2);
                   ?>
@@ -180,10 +180,10 @@
                     $salesTotalWeek = 0;
 
                     $salesWeek = \App\Sale::where('created_at','>=', Date::now('America/Chicago')->startOfWeek())
-                                            ->where('created_at','<=', Date::now('America/Chicago')->endOfWeek())
-                                            ->get();
+                                          ->where('created_at','<=', Date::now('America/Chicago')->endOfWeek())
+                                          ->get();
                     foreach ($salesWeek as $sale) {
-                      $salesTotalWeek = ++$sale->total;
+                      $salesTotalWeek += $sale->total;
                     }
                     echo number_format($salesTotalWeek, 2);
                   ?>
