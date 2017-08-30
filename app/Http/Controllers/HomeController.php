@@ -24,8 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        return view('home')->withUser($user);
+        //$user = Auth::user();
+        //return view('home')->withUser($user);
+        return redirect()->route('admin.index');
     }
     public function account()
     {
