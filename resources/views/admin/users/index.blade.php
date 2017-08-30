@@ -8,7 +8,6 @@
 
 @section('content')
 
-
   <a class="ui secondary button" href="{{ route('admin.users.create') }}">
     <i class="add user icon"></i> Add User
   </a>
@@ -26,6 +25,9 @@
       <div class="content">
         <i class="user circle outline huge right floated icon"></i>
         <div class="header">{{ $user->firstname }} {{ $user->lastname }}</div>
+        <div class="meta">
+          <i class="mail icon"></i>{{ $user->email }}
+        </div>
         <div class="meta">
           <div class="ui label">{{ $user->role }}</div>
         </div>

@@ -11,7 +11,7 @@
   <a class="ui secondary button" href="{{ route('admin.events.create') }}">
     <i class="calendar plus icon"></i> Create Event
   </a>
-  
+
   <div class="ui right icon input">
     <input type="text" placeholder="Search...">
     <i class="search link icon"></i>
@@ -49,10 +49,10 @@
                 {!! Form::open(['route' => ['admin.events.destroy', $event], 'method' => 'DELETE']) !!}
                   {!! Form::button('<i class="trash icon"></i> Delete', ['type' => 'submit', 'class' => 'ui right floated red button']) !!}
                 {!! Form::close() !!}
-                <a href="{{ route('admin.events.show', $event) }}" class="ui basic primary button">
+                <a href="{{ route('admin.events.show', $event) }}" class="ui secondary button">
                   <i class="book icon"></i> View
                 </a>
-                <a href="{{ route('admin.events.edit', $event) }}" class="ui basic secondary button">
+                <a href="{{ route('admin.events.edit', $event) }}" class="ui primary button">
                   <i class="edit icon"></i> Edit
                 </a>
               </div>

@@ -29,7 +29,7 @@
         <img src="{{ $show->cover }}" alt="">
       </div>
       <div class="content">
-        <div class="ui header">{{ $show->name }}</div>
+        <div class="ui large header">{{ $show->name }}</div>
         <div class="meta">
           <div class="ui label">{{ $show->type }}</div>
           <i class="clock icon"></i> {{ $show->duration }} minutes</div>

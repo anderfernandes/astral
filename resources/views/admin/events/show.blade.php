@@ -23,9 +23,9 @@
     {!! Form::close() !!}
   </div>
 
-  <div class="ui unstackable items">
+  <div class="ui items">
     <div class="item">
-      <div class="image">
+      <div class="ui rounded medium image">
         <img src="{{ $event->show->cover }}" alt="">
       </div>
       <div class="content">
@@ -34,7 +34,7 @@
           <div class="ui label">{{ App\Show::find($event->show_id)->type }}</div>
           <div class="ui label">{{ App\Show::find($event->show_id)->duration }} minutes</div>
         </div>
-        <h1 class="ui huge header">
+        <h1 class="ui large header">
           {{ App\Show::find($event->show_id)->name }}
           <div class="sub header">
             <i class="calendar icon"></i>
