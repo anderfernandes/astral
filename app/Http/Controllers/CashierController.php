@@ -36,7 +36,7 @@ class CashierController extends Controller
 
       $today = Date::now()->startOfDay();
       // REPORT STARTING POINT MUST BE GREATER THAN TODAY!!!
-      $sales = Sale::where('created_at', '>=', $today);
+      $sales = Sale::where('created_at', '>=', $today)->orderBy('created_at', 'asc');
       $sales = $sales->where('cashier_id', Auth::user()->id)->get();
 
       if ($type == 'closeout')
@@ -165,9 +165,9 @@ class CashierController extends Controller
         return view('cashier.query')->withResults($results->where('created_at', '>=', Date::now('America/Chicago')->startOfDay())->get());
       }
     }
-    
+
     // This controller will return a view with sale information
-    
+
     public function sale(Sale $sale)
     {
         return view('cashier.sale')->withSale($sale);

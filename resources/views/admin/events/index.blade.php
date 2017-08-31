@@ -17,7 +17,9 @@
     <i class="search link icon"></i>
   </div>
 
-  <div class="ui segment">
+  @if (!isset($events) || count($events) > 0)
+
+    <div class="ui segment">
       @foreach($events as $event)
         <div class="ui unstackable items">
           <div class="item">
@@ -47,7 +49,7 @@
               </div>
               <div class="description">
                 {!! Form::open(['route' => ['admin.events.destroy', $event], 'method' => 'DELETE']) !!}
-                  {!! Form::button('<i class="trash icon"></i> Delete', ['type' => 'submit', 'class' => 'ui right floated red button']) !!}
+                {!! Form::button('<i class="trash icon"></i> Delete', ['type' => 'submit', 'class' => 'ui right floated red button']) !!}
                 {!! Form::close() !!}
                 <a href="{{ route('admin.events.show', $event) }}" class="ui secondary button">
                   <i class="book icon"></i> View
@@ -61,5 +63,19 @@
         </div>
       @endforeach
     </div>
+  @else
+    <div class="ui info icon message">
+      <i class="info circle icon"></i>
+      <i class="close icon"></i>
+      <div class="content">
+        <div class="header">
+          No events!
+        </div>
+        <p>It looks like there are no events going on today.</p>
+      </div>
+    </div>
+  @endif
+
+
 
 @endsection

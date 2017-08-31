@@ -7,7 +7,6 @@
     <div class="ui tiny buttons">
       <a href="{{ route('account') }}" class="ui blue button"><i class="user icon"> </i>Account</a>
       {!! Form::open(['route' => ['logout'], 'method' => 'POST']) !!}
-        {{ csrf_field() }}
         {!! Form::button('<i class="sign out icon"></i> Logout',
           ['type' => 'submit', 'class' => 'ui button'])
         !!}

@@ -27,19 +27,30 @@
   <tbody>
     @foreach ($sales as $sale)
 
-    @if ($sale->refund)
+      <tr>
+        <td>{{ $sale->created_at->format('m/d/Y H:i:s a') }}</td>
+        <td>{{ $sale->id }}</td>
+        <td>{{ $sale->customer->firstname }} {{ $sale->customer->lastname }}</td>
+        <td>{{ $sale->payment_method }}</td>
+        <td>{{ $sale->reference }}</td>
+        <td>$ {{ number_format($sale->tendered, 2) }}</td>
+        <td>$ {{ number_format($sale->change_due, 2) }}</td>
+        <td>$ {{ number_format($sale->total, 2) }}</td>
+      </tr>
+
+    @if ($sale->refund == true)
     <tr class="negative">
-    @else
-    <tr>
-    @endif
       <td>{{ $sale->created_at->format('m/d/Y H:i:s a') }}</td>
       <td>{{ $sale->id }}</td>
       <td>{{ $sale->customer->firstname }} {{ $sale->customer->lastname }}</td>
       <td>{{ $sale->payment_method }}</td>
       <td>{{ $sale->reference }}</td>
-      <td>$ {{ number_format($sale->tendered, 2) }}</td>
-      <td>$ {{ number_format($sale->change_due, 2) }}</td>
-      <td>$ {{ number_format($sale->total, 2) }}</td>
+      <td></td>
+      <td></td>
+      <td>($ {{ number_format($sale->total, 2) }})</td>
+    </tr>
+    @endif
+      
     </tr>
     @endforeach
   </tbody>

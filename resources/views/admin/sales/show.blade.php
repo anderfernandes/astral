@@ -1,6 +1,10 @@
 @extends('layout.admin')
 
-@section('title', 'Sale Information | Sale #'.$sale->id)
+@section('title', 'Sale Information')
+
+@section('subtitle', 'Sale #'.$sale->id)
+
+@section('icon', 'dollar')
 
 @section('content')
 

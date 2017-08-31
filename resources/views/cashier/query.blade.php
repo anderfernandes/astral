@@ -60,8 +60,12 @@
         <td class="selectable">
           <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ $result->reference }}</a>
         </td>
-        <td  class="selectable">
-          <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">$ {{ number_format($result->total, 2) }}</a>
+        <td class="selectable">
+          @if ($result->refund == true)
+            <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">($ {{ number_format($result->total, 2) }})</a>
+          @else
+            <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">$ {{ number_format($result->total, 2) }}</a>
+          @endif
         </td>
         <td class="selectable"><a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ $result->source }}</a></td>
         <td class="selectable"><a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ App\User::find($result->cashier_id)->firstname }} {{ App\User::find($result->cashier_id)->lastname }}</a></td>

@@ -13,7 +13,7 @@
       {!! Auth::user()->firstname !!} <i class="dropdown icon"></i>
       <div class="menu">
         <a href="{{ route('account') }}" class="item"><i class="user icon"></i> My Account</a>
-        <a class="item"><i class="sign out icon"></i> Logout</a>
+        <a href="/logout" class="item"><i class="sign out icon"></i> Logout</a>
       </div>
     </div>
   </div>
