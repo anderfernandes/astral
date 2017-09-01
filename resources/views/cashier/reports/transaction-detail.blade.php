@@ -50,7 +50,7 @@
       <td>($ {{ number_format($sale->total, 2) }})</td>
     </tr>
     @endif
-      
+
     </tr>
     @endforeach
   </tbody>
@@ -58,7 +58,14 @@
     <tr>
       <th colspan="8" class="right aligned">
         <strong>Totals for {{ Auth::user()->firstname }}: $
-          <?php $totals = 0; foreach ($sales as $sale) { $totals += $sale['total']; } echo number_format($totals, 2)?>
+          <?php
+            $totals = 0; foreach ($sales as $sale)
+            {
+              if ($sale->refund == false)
+                $totals += $sale['total']; 
+            }
+            echo number_format($totals, 2)
+            ?>
         </strong>
       </th>
     </tr>
