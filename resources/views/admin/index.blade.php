@@ -301,7 +301,7 @@ function getSalesTotalsRange($start, $end)
           </div>
           <div class="ui inverted mini statistic">
             <div class="value">$
-              {{ App\Sale::select('total')->where('cashier_id', Auth::user()->id)->whereBetween('created_at', [Date::now()->subMonth()->startOfMonth(), Date::now()->subMonth()->endOfMonth()])->sum('total') }}
+              {{ App\Sale::select('total')->where('cashier_id', Auth::user()->id)->whereBetween('created_at', [Date::now()->subWeek()->startOfWeek(), Date::now()->subWeek()->endOfWeek()])->sum('total') }}
             </div>
             <div class="label">Last</div>
           </div>
