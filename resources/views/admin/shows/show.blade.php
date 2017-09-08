@@ -32,7 +32,15 @@
         <div class="ui large header">{{ $show->name }}</div>
         <div class="meta">
           <div class="ui label">{{ $show->type }}</div>
-          <i class="clock icon"></i> {{ $show->duration }} minutes</div>
+          <i class="clock icon"></i> {{ $show->duration }} minutes
+        </div>
+        <div class="meta">
+          Created by <i class="user circle outline icon"></i> {{ $show->creator->firstname }} {{ $show->creator->lastname }}
+          on {{ Date::parse($show->created_at)->format('l, F j, Y \a\t g:i A') }}
+        </div>
+        <div class="meta">
+          Updated on {{ Date::parse($show->updated_at)->format('l, F j, Y \a\t g:i A') }}
+        </div>
         <div class="description">{!! \Illuminate\Mail\Markdown::parse($show->description) !!}</div>
         <div class="extra"></div>
       </div>

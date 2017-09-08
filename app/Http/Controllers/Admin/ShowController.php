@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Show;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
 use Session;
+Use Illuminate\Support\Facades\Auth;
 
 class ShowController extends Controller
 {
@@ -52,6 +54,7 @@ class ShowController extends Controller
         $show->type        = $request->type;
         $show->duration    = $request->duration;
         $show->cover       = $request->cover;
+        $show->creator_id  = Auth::user()->id;
 
         $show->save();
 
