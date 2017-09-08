@@ -6,6 +6,9 @@
     @yield('title') | @yield('subtitle')
   </div>
   <div class="right menu">
+    <div class="item">
+      <a href="{{ route('cashier.index') }}" target="_blank" class="ui inverted button"> <i class="inbox icon"></i> Cashier</a>
+    </div>
     <div class="ui dropdown item">
       <i class="user circle outline large inverted icon"></i>
       {!! Auth::user()->firstname !!} <i class="dropdown icon"></i>
