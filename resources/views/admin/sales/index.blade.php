@@ -40,7 +40,7 @@
       <tr>
         <td><h3 class="ui center aligned header">{{ $sale->id }}</h3></td>
         <td>{{ $sale->customer->firstname }} {{ $sale->customer->firstname }}</td>
-        <td>$ {{ $sale->total }}</td>
+        <td>$ {{ number_format($sale->total, 2) }}</td>
         <td>
           @if ($sale->status == 'complete')
             <span class="ui green label"><i class="checkmark icon"></i>
