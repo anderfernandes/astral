@@ -19,7 +19,7 @@
 
   <br /><br />
 
-  <div class="ui link cards">
+  <div class="ui four doubling link cards">
     @foreach($users as $user)
     <div class="card">
       <div class="content">

@@ -19,7 +19,7 @@
 
 @if (!isset($organizations) || count($organizations) > 0)
   <br /><br />
-  <div class="ui link cards">
+  <div class="ui four doubling link cards">
     @foreach($organizations as $organization)
     <div class="card">
       <div class="content">
