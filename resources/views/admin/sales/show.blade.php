@@ -104,13 +104,13 @@
       </h2>
 
       @if ($sale->refund)
-      <h2 class="ui red header">
+      <h3 class="ui red header">
       @else
-      <h2 class="ui header">
+      <h3 class="ui header">
       @endif
-        <div class="sub header">Memo</div>
-        {{ $sale->memo }}
-      </h2>
+        <div class="sub header">Number of Tickets Sold</div>
+        {{ count($sale->tickets) }}
+      </h3>
 
     </div>
     <div class="column">
@@ -190,6 +190,20 @@
       </h2>
 
     </div>
+
+    @if (isset($sale->memo))
+    <div class="column">
+      @if ($sale->refund)
+      <h3 class="ui red header">
+      @else
+      <h3 class="ui header">
+      @endif
+        <div class="sub header">Memo</div>
+        {{ $sale->memo }}
+      </h3>
+    </div>
+    @endif
+    
   </div>
 
   <div class="ui horizontal divider header">

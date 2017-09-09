@@ -19,6 +19,20 @@
       @if ($sale->refund)
         <div class="ui red label"><i class="refresh icon"></i> Refund</div>
       @endif
+      @if ($sale->status == 'complete')
+        <span class="ui green label"><i class="checkmark icon"></i>
+      @elseif ($sale->status == 'no show')
+        <span class="ui orange label"><i class="thumbs outline down icon"></i>
+      @elseif ($sale->status == 'open')
+        <span class="ui violet label"><i class="unlock icon"></i>
+      @elseif ($sale->status == 'tentative')
+        <span class="ui yellow label"><i class="help icon"></i>
+      @elseif ($sale->status == 'canceled')
+        <span class="ui red label"><i class="remove icon"></i>
+      @else
+        <span class="ui label">
+      @endif
+      {{ $sale->status }}</span>
       <div class="sub header">
         by {{ $sale->cashier->firstname }} {{ $sale->cashier->lastname }}
         on {{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}
@@ -88,15 +102,6 @@
         <div class="sub header">Updated on</div>
         {{ Date::parse($sale->updated_at)->format('l, F j, Y \a\t g:i A') }}
         ({{ Date::parse($sale->updated_at)->diffForHumans() }})
-      </h3>
-
-      @if ($sale->refund)
-      <h3 class="ui red header">
-      @else
-      <h3 class="ui header">
-      @endif
-        <div class="sub header">Memo</div>
-        {{ $sale->memo }}
       </h3>
 
     </div>
@@ -177,6 +182,19 @@
       </h3>
 
     </div>
+
+    @if (isset($sale->memo))
+    <div class="column">
+      @if ($sale->refund)
+      <h3 class="ui red header">
+      @else
+      <h3 class="ui header">
+      @endif
+        <div class="sub header">Memo</div>
+        {{ $sale->memo }}
+      </h3>
+    </div>
+    @endif
   </div>
 
   <div class="ui horizontal divider header">

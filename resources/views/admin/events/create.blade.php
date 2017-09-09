@@ -26,7 +26,7 @@
       <div class="ui selection dropdown">
         {!! Form::hidden('type', null) !!}
         <i class="dropdown icon"></i>
-        <div class="default text">Select a show type</div>
+        <div class="default text">Select an event type</div>
         <div class="menu">
           <div class="item" data-value="matinee">matinee</div>
           <div class="item" data-value="weekend">weekend</div>
