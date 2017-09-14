@@ -2,13 +2,13 @@
 
 @section('title', 'Sales')
 
-@section ('subtitle', 'Manage Sales')
+@section ('subtitle', 'Manage Sale')
 
 @section ('icon', 'dollar')
 
 @section('content')
 
-  <a class="ui secondary button" href="{{ route('admin.shows.create') }}">
+  <a class="ui secondary button" href="{{ route('admin.sales.create') }}">
     <i class="plus icon"></i> New Sale
   </a>
   <div class="ui right icon input">
@@ -39,7 +39,12 @@
     @foreach($sales as $sale)
       <tr>
         <td><h3 class="ui center aligned header">{{ $sale->id }}</h3></td>
+        @if ($sale->customer->firstname == "Walk-up")
+        <td>{{ $sale->customer->firstname }}</td>
+        @else
         <td>{{ $sale->customer->firstname }} {{ $sale->customer->firstname }}</td>
+        @endif
+
         <td>$ {{ number_format($sale->total, 2) }}</td>
         <td>
           @if ($sale->status == 'complete')

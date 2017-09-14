@@ -25,10 +25,14 @@
       {!! Form::text('lastname', null, ['placeholder' => 'Last Name']) !!}
     </div>
   </div>
-  <div class="two fields">
+  <div class="two three fields">
     <div class="field">
-      {!! Form::label('role', 'Role') !!}
-      {!! Form::select('role', ['admin' => 'admin', 'teacher' => 'teacher'], null, ['class' => 'ui dropdown']) !!}
+      {!! Form::label('role_id', 'Role') !!}
+      {!! Form::select('role_id', $roles, null, ['class' => 'ui dropdown']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('organization_id', 'Organization') !!}
+      {!! Form::select('organization_id', $organizations, null, ['class' => 'ui dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('email', 'Email') !!}

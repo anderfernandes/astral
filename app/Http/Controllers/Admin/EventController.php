@@ -48,9 +48,6 @@ class EventController extends Controller
             'type'           => 'required',
             'start'          => 'required',
             'end'            => 'required',
-            'adults_price'   => 'required|min:0',
-            'children_price' => 'required|min:0',
-            'members_price'  => 'required|min:0',
             'seats'          => 'required|min:0',
             'memo'           => 'nullable',
         ]);
@@ -61,9 +58,6 @@ class EventController extends Controller
         $event->type           = $request->type;
         $event->start          = new Date($request->start);
         $event->end            = new Date($request->end);
-        $event->adults_price   = number_format($request->adults_price, 2);
-        $event->children_price = number_format($request->children_price, 2);
-        $event->members_price  = number_format($request->members_price, 2);
         $event->seats          = $request->seats;
         $event->memo           = $request->memo;
         $event->creator_id     = Auth::user()->id;
@@ -112,9 +106,6 @@ class EventController extends Controller
           'type'           => 'required',
           'start'          => 'required',
           'end'            => 'required',
-          'adults_price'   => 'required',
-          'children_price' => 'required',
-          'members_price'  => 'required',
           'seats'          => 'required',
           'memo'           => 'nullable',
       ]);
@@ -123,9 +114,6 @@ class EventController extends Controller
       $event->type           = $request->type;
       $event->start          = new Date($request->start);
       $event->end            = new Date($request->end);
-      $event->adults_price   = round($request->adults_price, 2);
-      $event->children_price = round($request->children_price, 2);
-      $event->members_price  = round($request->members_price, 2);
       $event->seats          = $request->seats;
       $event->memo           = $request->memo;
       $event->creator_id     = Auth::user()->id;

@@ -24,4 +24,9 @@ class Sale extends Model
       return $this->belongsTo('App\User');
     }
 
+    public function events()
+    {
+      return $this->belongsToMany('App\Event');
+    }
+
 }

@@ -26,7 +26,7 @@
         <i class="user circle outline huge right floated icon"></i>
         <div class="header">{{ $user->firstname }} {{ $user->lastname }}</div>
         <div class="meta">
-          <div class="ui label">{{ $user->role }}</div>
+          <div class="ui label">{{ $user->role->name }}</div>
         </div>
         <div class="meta">
           <i class="mail icon"></i> {{ $user->email }}

@@ -11,8 +11,11 @@
 <div class="ui top attached tabular menu">
   <a class="item active" data-tab="general"><i class="setting icon"></i>General</a>
   <a class="item" data-tab="organization-types"><i class="university icon"></i>Organization Types</a>
-  <!--<a class="item" data-tab="tickets"><i class="ticket icon"></i>Tickets</a>-->
+  <a class="item" data-tab="ticket-types"><i class="ticket icon"></i>Ticket Types</a>
+  <a class="item" data-tab="payment-methods"><i class="money icon"></i>Payment Methods</a>
 </div>
+
+<!--- General --->
 <div class="ui bottom attached tab segment active" data-tab="general">
   {!! Form::model($setting, ['route' => ['admin.settings.update', $setting], 'class' => 'ui form', 'method' => 'PUT']) !!}
   <div class="field">
@@ -64,116 +67,212 @@
   </div>
   {!! Form::close() !!}
 </div>
-<div class="ui bottom attached tab segment" data-tab="organization-types">
-  {!! Form::open(['route' => 'admin.settings.addOrganizationType', 'class' => 'ui form']) !!}
-  <div class="two fields">
-    <div class="field">
-      {!! Form::label('name', 'Type') !!}
-      {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
-    </div>
-    <div class="field">
-      {!! Form::label('taxable', 'Taxable') !!}
-      {!! Form::select('taxable',
-        [1 => 'Yes', 0 => 'No'],
-        null,
-        ['placeholder' => 'Taxable?', 'class' => 'ui dropdown']) !!}
-    </div>
-  </div>
-  <div class="field">
-    {!! Form::label('description', 'Description') !!}
-    {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
-  </div>
-  <div class="field">
-    {!! Form::button('<i class="plus icon"></i> Add Organization Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
-  </div>
-  {!! Form::close() !!}
-  <div class="ui divider"></div>
-  <table class="ui very basic collapsing celled table">
-    <thead>
-      <tr>
-        <th>Available Types</th>
-        <th>Number of Organizations</th>
-        <th>Taxable</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach($organizationTypes as $organizationType)
-      <tr>
-        <td>
-          <h4 class="ui header">
-            <i class="university icon"></i>
-            <div class="content">
-              {{ $organizationType->name }}
-              <div class="sub header">{{ $organizationType->description }}</div>
-            </div>
-          </h4>
-        </td>
-        <td>
-          {{ App\Organization::where('type_id', $organizationType->id)->count() }}
-        </td>
-        <td>
-          @if ($organizationType->taxable)
-            <div class="ui label">Yes</div>
-          @else
-            <div class="ui label">No</div>
-          @endif
-        </td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
-</div>
-<!--<div class="ui bottom attached tab segment" data-tab="tickets">
-  <h3 class="ui dividing header">Adults Ticket Settings</h3>
-  <div class="two fields">
-    <div class="field">
-      {!! Form::label('adults-weekend-price', 'Adults Weekend Price') !!}
-      {!! Form::number('adults_weekend', null, ['placeholder' => 'Adults Weekend Price', 'step' => '0.01']) !!}
-    </div>
-    <div class="field">
-      {!! Form::label('adult-matinee-price', 'Adults Matinee Price') !!}
-      {!! Form::text('adults_matinee', null, ['placeholder' => 'Adults Matinee Price']) !!}
-    </div>
-    <div class="field">
-      {!! Form::label('adult-special-event-price', 'Adults Special Event Price') !!}
-      {!! Form::text('adults_special_event', null, ['placeholder' => 'Adults Special Event Price']) !!}
-    </div>
-  </div>
-  <h3 class="ui dividing header">Children Ticket Settings</h3>
-  <div class="three fields">
-    <div class="field">
-      {!! Form::label('children-weekend-price', 'Children Weekend Price') !!}
-      {!! Form::text('children_weekend', null, ['placeholder' => 'Children Weekend Price']) !!}
-    </div>
-    <div class="field">
-      {!! Form::label('children-matinee-price', 'Children Matinee Price') !!}
-      {!! Form::text('children_matinee', null, ['placeholder' => 'Children Matinee Price']) !!}
-    </div>
-    <div class="field">
-      {!! Form::label('children-special-event-price', 'Children Special Event Price') !!}
-      {!! Form::text('children_special_event', null, ['placeholder' => 'Children Special Event Price']) !!}
-    </div>
-  </div>
-  <h3 class="ui dividing header">Members Ticket Settings</h3>
-  <div class="three fields">
-    <div class="field">
-      {!! Form::label('members-weekend-price', 'Members Weekend Price') !!}
-      {!! Form::text('members_weekend', null, ['placeholder' => 'Members Weekend Price']) !!}
-    </div>
-    <div class="field">
-      {!! Form::label('members-matinee-price', 'Members Matinee Price') !!}
-      {!! Form::text('members_matinee', null, ['placeholder' => 'Members Matinee Price']) !!}
-    </div>
-    <div class="field">
-      {!! Form::label('members-special-event-price', 'Members Special Event Price') !!}
-      {!! Form::text('members_special_event', null, ['placeholder' => 'Members Special Event Price']) !!}
-    </div>
-  </div>
-</div>-->
 
+<!--- Organization Types --->
+<div class="ui bottom attached tab segment" data-tab="organization-types">
+  <div class="ui two column doubling grid">
+    <div class="column">
+      <table class="ui very basic striped selectable celled table">
+        <thead>
+          <tr>
+            <th>Available Types</th>
+            <th>Number of Organizations</th>
+            <th>Taxable</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($organizationTypes as $organizationType)
+          <tr>
+            <td>
+              <h4 class="ui header">
+                <i class="university icon"></i>
+                <div class="content">
+                  {{ $organizationType->name }}
+                  <div class="sub header">{{ $organizationType->description }}</div>
+                </div>
+              </h4>
+            </td>
+            <td>
+              {{ App\Organization::where('type_id', $organizationType->id)->count() }}
+            </td>
+            <td>
+              @if ($organizationType->taxable)
+                <div class="ui label">Yes</div>
+              @else
+                <div class="ui label">No</div>
+              @endif
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="column">
+      {!! Form::open(['route' => 'admin.settings.addOrganizationType', 'class' => 'ui form']) !!}
+      <div class="two fields">
+        <div class="field">
+          {!! Form::label('name', 'Name') !!}
+          {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
+        </div>
+        <div class="field">
+          {!! Form::label('taxable', 'Taxable') !!}
+          {!! Form::select('taxable',
+            [1 => 'Yes', 0 => 'No'],
+            null,
+            ['placeholder' => 'Taxable?', 'class' => 'ui dropdown']) !!}
+        </div>
+      </div>
+      <div class="field">
+        {!! Form::label('description', 'Description') !!}
+        {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
+      </div>
+      <div class="field">
+        {!! Form::button('<i class="plus icon"></i> Add Organization Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+      </div>
+      {!! Form::close() !!}
+    </div>
+  </div>
+</div>
+
+<!--- Ticket Types --->
+<div class="ui bottom attached tab segment" data-tab="ticket-types">
+  <div class="ui icon info message">
+    <i class="info circle icon"></i>
+    <i class="close icon"></i>
+    <div class="content">
+      <div class="header">
+        About ticket price updates
+      </div>
+      <p>
+        Once you create a ticket type and attached a price, you won't be able
+        to change it. Also, it will only delete if no tickets of that type are sold.
+        This will prevent you changing the value of tickets previously sold and delete
+        ticket types that were created by mistake.
+      </p>
+    </div>
+  </div>
+  <div class="ui icon info message">
+    <i class="info circle icon"></i>
+    <i class="close icon"></i>
+    <div class="content">
+      <div class="header">
+        If you need to update a ticket price
+      </div>
+      <p>How about create a new ticket type with a different name and the new price?</p>
+    </div>
+  </div>
+  <div class="ui two column doubling grid">
+    <div class="column">
+      <table class="ui very basic striped selectable celled table">
+        <thead>
+          <tr>
+            <th>Available Ticket Types</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($ticketTypes as $ticketType)
+          <tr>
+            <td>
+              <h4 class="ui header">
+                <i class="ticket icon"></i>
+                <div class="content">
+                  {{ $ticketType->name }}
+                  <div class="sub header">{{ $ticketType->description }}</div>
+                </div>
+              </h4>
+            </td>
+            <td>
+              $ {{ number_format($ticketType->price, 2) }}
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="column">
+      {!! Form::open(['route' => 'admin.settings.addTicketType', 'class' => 'ui form']) !!}
+      <div class="two fields">
+        <div class="field">
+          {!! Form::label('name', 'Name of Ticket Type') !!}
+          {!! Form::text('name', null, ['placeholder' => 'Name']) !!}
+        </div>
+        <div class="field">
+          {!! Form::label('taxable', 'Price') !!}
+          <div class="ui labeled input">
+            <div class="ui label">$ </div>
+            {!! Form::text('price', null, ['placeholder' => 'Price of the ticket']) !!}
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        {!! Form::label('description', 'Description') !!}
+        {!! Form::text('description', null, ['placeholder' => 'Describe this ticket type']) !!}
+      </div>
+      <div class="field">
+        {!! Form::button('<i class="plus icon"></i> Add Ticket Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+      </div>
+      {!! Form::close() !!}
+    </div>
+  </div>
+</div>
+
+<!--- Payment Methods --->
+<div class="ui bottom attached tab segment" data-tab="payment-methods">
+  <div class="ui two column doubling grid">
+    <div class="column">
+      <table class="ui very basic striped selectable celled table">
+        <thead>
+          <tr>
+            <th>Available Payment Methods</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($paymentMethods as $paymentMethod)
+          <tr>
+            <td>
+              <h4 class="ui header">
+                <i class="{{ $paymentMethod->icon }} icon"></i>
+                <div class="content">
+                  {{ $paymentMethod->name }}
+                  <div class="sub header">{{ $paymentMethod->description }}</div>
+                </div>
+              </h4>
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="column">
+      {!! Form::open(['route' => 'admin.settings.addPaymentMethod', 'class' => 'ui form']) !!}
+      <div class="two fields">
+        <div class="field">
+          {!! Form::label('name', 'Payment Method Name') !!}
+          {!! Form::text('name', null, ['placeholder' => 'Payment Method name']) !!}
+        </div>
+        <div class="field">
+          {!! Form::label('taxable', 'Icon') !!}
+          {!! Form::text('icon', null, ['placeholder' => 'Font Awesome icon class name']) !!}
+        </div>
+      </div>
+      <div class="field">
+        {!! Form::label('description', 'Description') !!}
+        {!! Form::text('description', null, ['placeholder' => 'Describe this payment method']) !!}
+      </div>
+      <div class="field">
+        {!! Form::button('<i class="plus icon"></i> Add Payment Method', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+      </div>
+      {!! Form::close() !!}
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
 
 <script>
-  $('.menu .item').tab();
+  $('.menu .item').tab({ history: true });
+  $('.ui.form').form({ fields: { price: ['number', 'empty'] } });
 </script>
 
 @endsection

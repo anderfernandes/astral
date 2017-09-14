@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
 use Session;
+
+use App\Role;
+use App\Organization;
 
 class UserController extends Controller
 {
@@ -16,7 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('role', '<>', 'walk-up')
+        $users = User::where('type', '=', 'individual')
                  ->orderBy('id', 'desc')->paginate(10);
 
         return view('admin.users.index')->withUsers($users);
@@ -29,7 +33,12 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
+        $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
+
+        return view('admin.users.create')
+          ->withRoles($roles)
+          ->withOrganizations($organizations);
     }
 
     /**
@@ -43,19 +52,21 @@ class UserController extends Controller
         $this->validate($request, [
           'firstname'             => 'required',
           'lastname'              => 'required',
-          'email'                 => 'required',
-          'role'                  => 'required',
+          'email'                 => 'required|email|unique:users,email',
+          'role_id'               => 'required',
           'password'              => 'nullable|same:password_confirmation',
           'password_confirmation' => 'nullable'
         ]);
 
         $user = new User;
 
-        $user->firstname = $request->firstname;
-        $user->lastname  = $request->lastname;
-        $user->email     = $request->email;
-        $user->role      = $request->role;
-        $user->password  = bcrypt($request->password);
+        $user->firstname       = $request->firstname;
+        $user->lastname        = $request->lastname;
+        $user->email           = $request->email;
+        $user->role_id         = $request->role_id;
+        $user->type            = 'individual';
+        $user->organization_id = $request->organization_id;
+        $user->password        = bcrypt($request->password);
 
         $user->save();
 
@@ -85,7 +96,12 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit')->withUser($user);
+        $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
+        $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
+        return view('admin.users.edit')
+          ->withUser($user)
+          ->withRoles($roles)
+          ->withOrganizations($organizations);
     }
 
     /**
@@ -100,16 +116,18 @@ class UserController extends Controller
         $this->validate($request, [
           'firstname'             => 'required',
           'lastname'              => 'required',
-          'email'                 => 'required',
-          'role'                  => 'required',
+          'email'                 => 'required|email|unique:users,email',
+          'role_id'               => 'required',
           'password'              => 'nullable|same:password_confirmation|min:6',
           'password_confirmation' => 'nullable|min:6'
         ]);
 
-        $user->firstname = $request->input('firstname');
-        $user->lastname  = $request->input('lastname');
-        $user->email     = $request->input('email');
-        $user->role      = $request->input('role');
+        $user->firstname            = $request->input('firstname');
+        $user->lastname             = $request->input('lastname');
+        $user->email                = $request->input('email');
+        $user->role_id              = $request->input('role_id');
+        $user->organization_id      = $request->input('organization_id');
+        $user->type                 = 'individual';
 
         if ($request->password == null) {
 

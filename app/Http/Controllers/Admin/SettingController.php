@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Setting;
-use App\Organization;
-use App\OrganizationType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Session;
+
+use App\Organization;
+use App\OrganizationType;
+use App\Role;
+use App\TicketType;
+use App\PaymentMethod;
 
 class SettingController extends Controller
 {
@@ -20,17 +24,21 @@ class SettingController extends Controller
     public function index()
     {
         $setting = Setting::find(1);
-        $organizationTypes = OrganizationType::all();
+        $organizationTypes = OrganizationType::orderBy('created_at', 'desc')->where('name', '!=', 'System')->get();
+        $ticketTypes = TicketType::orderBy('created_at', 'desc')->get();
+        $paymentMethods = PaymentMethod::all();
 
         return view('admin.settings.index')
           ->withSetting($setting)
-          ->withOrganizationTypes($organizationTypes);
+          ->withOrganizationTypes($organizationTypes)
+          ->withTicketTypes($ticketTypes)
+          ->withPaymentMethods($paymentMethods);
     }
 
     public function addOrganizationType(Request $request)
     {
       $this->validate($request, [
-        'name'        => 'required',
+        'name'        => 'required|unique:organization_types,name',
         'description' => 'required|max:255',
         'taxable'     => 'required'
       ]);
@@ -43,7 +51,59 @@ class SettingController extends Controller
 
       $organizationType->save();
 
+      // Create user Role to go with an organization account
+      $role = new Role;
+
+      $role->name        = $request->input('name');
+      $role->type        = 'organizations';
+      $role->description = $request->input('description');
+
+      $role->save();
+
       Session::flash('success', 'Organization Type '. $organizationType->name .' added successfully!');
+
+      return redirect()->route('admin.settings.index');
+
+    }
+
+    public function addTicketType(Request $request)
+    {
+      $this->validate($request, [
+        'name'        => 'required|unique:ticket_types,name',
+        'price'       => 'required|numeric',
+        'description' => 'required|max:255'
+      ]);
+
+      $ticketType = new TicketType;
+
+      $ticketType->name        = $request->name;
+      $ticketType->price       = number_format($request->price, 2);
+      $ticketType->description = $request->description;
+
+      $ticketType->save();
+
+      Session::flash('success', 'Ticket Type '. $ticketType->name .' added successfully!');
+
+      return redirect()->route('admin.settings.index');
+    }
+
+    public function addPaymentMethod(Request $request)
+    {
+      $this->validate($request, [
+        'name'        => 'required',
+        'description' => 'required|max:255',
+        'icon'        => 'required'
+      ]);
+
+      $paymentMethod =  new paymentMethod;
+
+      $paymentMethod->name        = $request->name;
+      $paymentMethod->description = $request->description;
+      $paymentMethod->icon        = $request->icon;
+
+      $paymentMethod->save();
+
+      Session::flash('success', 'Payment Method '. $paymentMethod->name .' added successfully!');
 
       return redirect()->route('admin.settings.index');
 

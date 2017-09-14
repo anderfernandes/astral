@@ -19,6 +19,7 @@ class ShowsTableSeeder extends Seeder
         'description' => 'Write a description here.',
         'cover'       => 'http://www.starsatnight.org/sciencetheater/assets/File/200x300_blackholes.png',
         'creator_id'  => 2,
+        'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
 
       // Laser Light example show seed
@@ -29,6 +30,7 @@ class ShowsTableSeeder extends Seeder
         'description' => 'Write a description here.',
         'cover'       => 'http://www.starsatnight.org/sciencetheater/assets/File/200x300_daftpunk.png',
         'creator_id'  => 2,
+        'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
     }
 }

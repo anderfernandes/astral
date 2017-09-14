@@ -16,6 +16,7 @@ class SettingsTableSeeder extends Seeder
         'organization' => 'Mayborn Science Theater',
         'seats'        => 180,
         'tax'          => 8.25,
+        'created_at'   => Date::now('America/Chicago')->toDateTimeString(),
       ]);
     }
 }

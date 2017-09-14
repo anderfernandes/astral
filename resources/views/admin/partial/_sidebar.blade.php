@@ -14,31 +14,30 @@
     </div>
   </div>
   <!-- Pending loop to automatically pull all menu items -->
-  <a class="item" href="{{ route('admin.index') }}">
+  <a class="item {{ Request::routeIs('admin.index') ? 'active' : '' }}" href="{{ route('admin.index') }}">
     <i class="large dashboard icon"></i> Dashboard
   </a>
-
-  @if (Auth::user()->role == 'admin')
-  <a class="item" href="{{ route('admin.shows.index') }}">
+  @if (Auth::user()->role->name == 'Senior Staff' || Auth::user()->role->name == 'Planetarium Lead Assistant')
+  <a class="item {{ Request::routeIs('admin.shows.index') ? 'active' : '' }}" href="{{ route('admin.shows.index') }}">
     <i class="large film icon"></i> Shows
   </a>
-  <a class="item" href="{{ route('admin.events.index') }}">
+  <a class="item {{ Request::routeIs('admin.events.index') ? 'active' : '' }}" href="{{ route('admin.events.index') }}">
     <i class="large calendar icon"></i> Events
   </a>
-  <a class="item" href="{{ route('admin.sales.index') }}">
+  <a class="item {{ Request::routeIs('admin.sales.index') ? 'active' : '' }}" href="{{ route('admin.sales.index') }}">
     <i class="large dollar icon"></i> Sales
   </a>
-  <a href="{{ route('admin.users.index') }}" class="item">
+  <a class="item {{ Request::routeIs('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
     <i class="large users icon"></i> Users
   </a>
-  <a href="{{ route('admin.organizations.index') }}" class="item">
+  <a class="item {{ Request::routeIs('admin.organizations.index') ? 'active' : '' }}" href="{{ route('admin.organizations.index') }}">
     <i class="large university icon"></i> Organizations
   </a>
-  <a href="{{ route('admin.settings.index') }}" class="item">
+  <a class="item {{ Request::routeIs('admin.settings.index') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}" >
     <i class="large setting icon"></i> Settings
   </a>
   @endif
-  <a href="{{ route('cashier.index') }}" class="item" target="_blank">
+  <a class="item {{ Request::routeIs('cashier.index') ? 'active' : '' }}" href="{{ route('cashier.index') }}" target="_blank">
     <i class="large inbox icon"></i> Cashier
   </a>
 

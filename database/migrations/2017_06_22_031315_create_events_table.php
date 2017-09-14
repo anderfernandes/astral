@@ -21,9 +21,6 @@ class CreateEventsTable extends Migration
             $table->text('memo')->nullable();
             $table->integer('show_id')->unsigned();
             $table->foreign('show_id')->references('id')->on('shows');
-            $table->decimal('adults_price')->nullable();
-            $table->decimal('children_price')->nullable();
-            $table->decimal('members_price')->nullable();
             $table->integer('seats');
             $table->integer('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users');

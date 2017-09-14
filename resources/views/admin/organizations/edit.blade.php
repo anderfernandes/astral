@@ -1,18 +1,18 @@
 @extends('layout.admin')
 
-@section('title', 'Organizations')
+@section('title', 'Edit Organization')
 
-@section('subtitle', 'New Organization')
+@section('subtitle', $organization->name)
 
 @section('icon', 'university')
 
 @section('content')
 
-  {!! Form::open(['route' => 'admin.organizations.store', 'class' => 'ui form']) !!}
+  {!! Form::model($organization, ['route' => ['admin.organizations.update', $organization], 'class' => 'ui form', 'method' => 'PUT']) !!}
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.organizations.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="plus icon"></i> Add Organization', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+      {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   <div class="two fields">
@@ -62,7 +62,7 @@
   <div class="two fields">
     <div class="field">
       {!! Form::label('email', 'Email') !!}
-      {!! Form::text('email', null, ['placeholder' => 'Enter organization\'s email. If none, use organization.name@website.com']) !!}
+      {!! Form::text('email', null, ['placeholder' => 'Enter organization\'s email']) !!}
     </div>
     <div class="field">
       {!! Form::label('website', 'Website') !!}
@@ -75,7 +75,7 @@
   <div class="field">
     <div class="ui buttons">
       <a href="{{ route('admin.organizations.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('<i class="plus icon"></i> Add Organization', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+      {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
   {!! Form::close() !!}

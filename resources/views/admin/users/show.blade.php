@@ -30,8 +30,13 @@
           <div class="sub header">{{ $user->email }}</div>
         </h1>
         <div class="meta">
-          <div class="ui label">{{ $user->role }}</div>
+          <div class="ui label">{{ $user->role->name }}</div>
         </div>
+        @if ($user->organization->name != 'No Organization')
+        <div class="meta">
+          <div class="ui label">{{ $user->organization->name }}</div>
+        </div>
+        @endif
         <div class="description">
           <p>Created on {{ Date::parse($user->created_at)->format('l, F j, Y \a\t h:i:s A') }} ({{ Date::parse($user->created_at)->diffForHumans()}})</p>
           <p>Updated on {{ Date::parse($user->updated_at)->format('l, F j, Y \a\t h:i:s A') }} ({{ Date::parse($user->updated_at)->diffForHumans()}})</p>

@@ -15,7 +15,7 @@
       {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
-  <div class="two fields">
+  <div class="three fields">
     <div class="field">
       {!! Form::label('show', 'Show') !!}
       {!! Form::select('show_id', $shows, null, ['placeholder' => 'Select a show', 'class' => 'ui search dropdown']) !!}
@@ -33,6 +33,10 @@
           <div class="item" data-value="ctc event">ctc event</div>
         </div>
       </div>
+    </div>
+    <div class="field">
+      {!! Form::label('seats', 'Seats') !!}
+      {!! Form::text('seats', App\Setting::find(1)->seats, ['placeholder' => 'Number of seats']) !!}
     </div>
   </div>
   <div class="two fields">
@@ -57,39 +61,6 @@
       </div>
     </div>
   </div>
-  <div class="four fields">
-    <div class="field">
-      {!! Form::label('adults_price', 'Adult Ticket Price') !!}
-      <div class="ui labeled input">
-        <div class="ui label">
-          $
-        </div>
-        {!! Form::number('adults_price', null, ['placeholder' => 'Adult Ticket Price', 'step' => '0.01']) !!}
-      </div>
-    </div>
-    <div class="field">
-      {!! Form::label('children_price', 'Children Ticket Price') !!}
-      <div class="ui labeled input">
-        <div class="ui label">
-          $
-        </div>
-        {!! Form::number('children_price', null, ['placeholder' => 'Adult Ticket Price', 'step' => '0.01']) !!}
-      </div>
-    </div>
-    <div class="field">
-      {!! Form::label('members_price', 'Member Ticket Price') !!}
-      <div class="ui labeled input">
-        <div class="ui label">
-          $
-        </div>
-        {!! Form::number('members_price', null, ['placeholder' => 'Adult Ticket Price', 'step' => '0.01']) !!}
-      </div>
-    </div>
-    <div class="field">
-      {!! Form::label('seats', 'Number of Seats Available') !!}
-      {!! Form::number('seats', null, ['placeholder' => 'Number of Seats Available']) !!}
-    </div>
-  </div>
   <div class="field">
     {!! Form::label('memo', 'Memo') !!}
     {!! Form::textarea('memo', null, ['placeholder' => 'Write a memo here']) !!}
@@ -103,6 +74,8 @@
   {!! Form::close() !!}
 
   <script>
+
+    $('.ui.form').form({ fields: { seats: ['number', 'empty'] }});
 
     var simplemde = new SimpleMDE({
         element: document.getElementById('memo'),

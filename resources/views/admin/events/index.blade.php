@@ -39,11 +39,6 @@
                   {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
                 </div>
               </div>
-              <div class="meta">
-                <span class="ui tag label">$ {{ $event->adults_price }} / adult</span>
-                <span class="ui tag label">$ {{ $event->children_price }} / child</span>
-                <span class="ui tag label">$ {{ $event->members_price }} / member</span>
-              </div>
               <div class="extra">
                 Created by {{ $event->creator->firstname }} {{ $event->creator->lastname }} on {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i A') }}
               </div>
