@@ -24,14 +24,15 @@
 
 @if (!isset($sales) || count($sales) > 0)
 <br /><br />
-<table class="ui selectable striped celled table">
+<table class="ui selectable striped single line table">
   <thead>
     <tr>
       <th>Sale #</th>
       <th>Customer</th>
       <th>Total</th>
       <th>Status</th>
-      <th>Created at</th>
+      <th>Created On</th>
+      <th>Created By</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -42,7 +43,7 @@
         @if ($sale->customer->firstname == "Walk-up")
         <td>{{ $sale->customer->firstname }}</td>
         @else
-        <td>{{ $sale->customer->firstname }} {{ $sale->customer->firstname }}</td>
+        <td>{{ $sale->customer->firstname }} {{ $sale->customer->lastname }}</td>
         @endif
 
         <td>$ {{ number_format($sale->total, 2) }}</td>
@@ -63,6 +64,7 @@
           {{ $sale->status }}</span>
         </td>
         <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
+        <td>{{ $sale->creator->firstname }}</td>
         <td>
           <div class="ui buttons">
             <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="book icon"></i>View</a>

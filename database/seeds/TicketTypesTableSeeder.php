@@ -21,14 +21,14 @@ class TicketTypesTableSeeder extends Seeder
       // 2
       DB::table('ticket_types')->insert([
         'name' => 'Children Weekend',
-        'description' => 'Adult Weekend ticket',
+        'description' => 'Children Weekend ticket',
         'price' => 6.00,
         'created_at' => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 3
       DB::table('ticket_types')->insert([
         'name' => 'Matinee',
-        'description' => 'Adult Weekend ticket',
+        'description' => 'Matinee ticket',
         'price' => 5.00,
         'created_at' => Date::now('America/Chicago')->toDateTimeString(),
       ]);

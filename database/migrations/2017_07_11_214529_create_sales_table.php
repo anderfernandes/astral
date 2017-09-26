@@ -17,12 +17,12 @@ class CreateSalesTable extends Migration
             $table->increments('id');
             $table->integer('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users');
-            $table->text('memo')->nullable();
+            $table->enum('status', ['open', 'tentative', 'no show', 'complete', 'canceled']);
             $table->decimal('total');
             $table->boolean('refund');
             $table->integer('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('users');
-            $table->enum('status', ['open', 'tentative', 'no show', 'complete', 'canceled']);
+            $table->text('memo')->nullable();
             $table->timestamps();
         });
     }

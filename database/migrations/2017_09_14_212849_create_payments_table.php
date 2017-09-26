@@ -19,12 +19,12 @@ class CreatePaymentsTable extends Migration
             $table->foreign('cashier_id')->references('id')->on('users');
             $table->integer('payment_method_id')->unsigned();
             $table->foreign('payment_method_id')->references('id')->on('payment_methods');
-            $table->decimal('tendered', 4, 2);
-            $table->decimal('subtotal', 4, 2);
-            $table->decimal('total', 4, 2);
-            $table->decimal('change_due', 4, 2);
+            $table->decimal('tendered', 4, 2)->nullable();
+            $table->decimal('subtotal', 4, 2)->nullable();
+            $table->decimal('total', 4, 2)->nullable();
+            $table->decimal('change_due', 4, 2)->nullable();
             $table->string('reference')->nullable();
-            $table->string('source');
+            $table->enum('source', ['cashier', 'back office']);
             $table->integer('sale_id')->unsigned();
             $table->foreign('sale_id')->references('id')->on('sales');
             $table->timestamps();

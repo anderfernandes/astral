@@ -35,15 +35,15 @@
         'complete'  => 'Complete',
         'canceled'  => 'Canceled'
       ],
-      null,
+      'open',
       ['placeholder' => 'Sales status', 'class' => 'ui dropdown'])
     !!}
   </div>
 </div>
 <div class="two fields">
   <div class="field">
-    {!! Form::label('event_id', 'First Show') !!}
-    {!! Form::select('event_id', $events, null,
+    {!! Form::label('first_event_id', 'First Show') !!}
+    {!! Form::select('first_event_id', $events, null,
       [
         'placeholder' => 'Select the event',
         'class'       => 'ui search dropdown'
@@ -51,10 +51,10 @@
     !!}
   </div>
   <div class="field">
-    {!! Form::label('event_id', 'Second Event') !!}
-    {!! Form::select('event_id', $events, null,
+    {!! Form::label('second_event_id', 'Second Show') !!}
+    {!! Form::select('second_event_id', $events, null,
       [
-        'placeholder' => 'Leave blank if they are watching only one show',
+        'placeholder' => 'Leave blank if group is watching only one show',
         'class'       => 'ui search dropdown'
       ])
     !!}
@@ -83,7 +83,7 @@
             </td>
             <td>
               <div class="ui right labeled input">
-                {!! Form::text('ticket['. $ticketType->id .']', 0, ['placeholder' => 'Amount of '. $ticketType->name . ' tickets', 'size' => 1]) !!}
+                {!! Form::text('ticket['. $ticketType->id .']', 0, ['placeholder' => 'Amount of '. $ticketType->name . ' tickets', 'size' => 1, 'class' => 'ticket-type']) !!}
                 <div class="ui tag label">$ {{ number_format($ticketType->price, 2) }} each</div>
               </div>
             </td>
@@ -93,6 +93,33 @@
       </table>
     </div>
     <div class="column">
+      <div class="field">
+        {!! Form::label('taxable', 'Taxable') !!}
+        {!! Form::select('taxable', [true => 'Yes', false => 'No'], true, ['placeholder' => 'Is group taxable?', 'class' => 'ui dropdown']) !!}
+      </div>
+      <div class="three fields">
+        <div class="field">
+          {!! Form::label('subtotal', 'Subtotal' ) !!}
+          <div class="ui labeled input">
+            <div class="ui label">$ </div>
+            {!! Form::text('subtotal', 0.00, ['placeholder' => 'Subtotal']) !!}
+          </div>
+        </div>
+        <div class="field">
+          {!! Form::label('tax', 'Tax ('. App\Setting::find(1)->tax .'%)') !!}
+          <div class="ui labeled input">
+            <div class="ui label">$ </div>
+            {!! Form::text('tax', 0.00, ['placeholder' => 'Tax']) !!}
+          </div>
+        </div>
+        <div class="field">
+          {!! Form::label('total', 'Total') !!}
+          <div class="ui labeled input">
+            <div class="ui label">$ </div>
+            {!! Form::text('total', 0.00, ['placeholder' => 'Total']) !!}
+          </div>
+        </div>
+      </div>
       <div class="three fields">
         <div class="field">
           {!! Form::label('payment_method_id', 'Payment Method') !!}
@@ -121,12 +148,39 @@
           {!! Form::text('reference', null, ['placeholder' => 'Credit Card or Check reference.']) !!}
         </div>
       </div>
-      <div class="field">
-        {!! Form::label('memo', 'Memo') !!}
-        {!! Form::textarea('memo', null, ['placeholder' => 'Write a memo here']) !!}
-      </div>
     </div>
   </div>
+  <div class="field">
+    {!! Form::label('memo', 'Memo') !!}
+    {!! Form::textarea('memo', null, ['placeholder' => 'Write a memo here']) !!}
+  </div>
 {!! Form::close() !!}
+
+<script>
+  var ticketTypeBoxes = document.querySelectorAll('.ticket-type')
+  // ui.tag.label
+  var ticketPrice = document.querySelectorAll('.ui.tag.label')
+  var subtotalBox = document.querySelector('#subtotal')
+  var subtotalArray = [];
+  var subtotal = 0;
+  var taxBox = document.querySelector('#tax')
+  var tax = 0
+  var totalBox = document.querySelector('#total')
+  var total = 0
+
+  $('.ticket-type').keyup(function() {
+    ticketTypeBoxes.forEach(function(item, index) {
+      subtotalArray[index] = ticketTypeBoxes[index].value * parseFloat(ticketPrice[index].innerHTML.split(" ")[1])
+    })
+
+    subtotal = subtotalArray.reduce(function(total, num) {
+      return total + num
+    })
+
+    subtotalBox.value = subtotal.toFixed(2)
+
+  })
+
+</script>
 
 @endsection

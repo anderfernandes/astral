@@ -17,7 +17,7 @@ class CreateTicketTypesTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('description');
-            $table->decimal('price');
+            $table->decimal('price', 6, 2);
             $table->timestamps();
         });
     }

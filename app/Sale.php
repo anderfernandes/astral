@@ -14,7 +14,7 @@ class Sale extends Model
       return $this->belongsToMany('App\Ticket');
     }
 
-    public function cashier()
+    public function creator()
     {
       return $this->belongsTo('App\User');
     }
