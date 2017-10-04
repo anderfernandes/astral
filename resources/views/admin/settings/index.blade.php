@@ -145,9 +145,8 @@
       </div>
       <p>
         Once you create a ticket type and attached a price, you won't be able
-        to change it. Also, it will only delete if no tickets of that type are sold.
-        This will prevent you changing the value of tickets previously sold and delete
-        ticket types that were created by mistake.
+        to change or delete it. This will prevent you changing the value of
+        tickets previously sold and delete ticket types that were created by mistake.
       </p>
     </div>
   </div>

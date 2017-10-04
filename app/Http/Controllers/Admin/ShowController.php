@@ -18,7 +18,7 @@ class ShowController extends Controller
      */
     public function index()
     {
-        $shows = Show::orderBy('id', 'desc')->paginate(10);
+        $shows = Show::where('id', '<>', 1)->orderBy('id', 'desc')->paginate(10);
         return view('admin.shows.index')->withShows($shows);
     }
 

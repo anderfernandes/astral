@@ -20,4 +20,5 @@ class Event extends Model
     {
       $this->belongsToMany('App\Sale', 'sale_event');
     }
+
 }

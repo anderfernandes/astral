@@ -13,6 +13,16 @@ class ShowsTableSeeder extends Seeder
     {
       // Planetarium example show seed
       DB::table('shows')->insert([
+        'name'        => 'No Show',
+        'type'        => 'system',
+        'duration'    => 1,
+        'description' => 'Write a description here.',
+        'cover'       => 'https://semantic-ui.com/images/wireframe/image.png',
+        'creator_id'  => 1,
+        'created_at'  => Date::createFromDate(1970, 1, 1, 'America/Chicago')->toDateTimeString(),
+      ]);
+      // Planetarium example show seed
+      DB::table('shows')->insert([
         'name'        => 'Black Holes: The Other Side of Infinity',
         'type'        => 'Planetarium',
         'duration'    => 25,

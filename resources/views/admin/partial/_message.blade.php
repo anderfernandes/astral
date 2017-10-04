@@ -1,14 +1,14 @@
 @if (Session::has('success'))
-<div class="ui success icon message">
-  <i class="info circle icon"></i>
-  <i class="close icon"></i>
-  <div class="content">
-    <div class="header">
-      Success!
+  <div class="ui success icon message">
+    <i class="info circle icon"></i>
+    <i class="close icon"></i>
+    <div class="content">
+      <div class="header">
+        Success!
+      </div>
+      <p>{{ Session::get('success') }}</p>
     </div>
-    <p>{{ Session::get('success') }}</p>
   </div>
-</div>
 @endif
 
 @if (count($errors) > 0)

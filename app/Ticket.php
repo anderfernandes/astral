@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ticket extends Model
 {
 
-    protected $fillable = ['type', 'price', 'event_id', 'customer_id', 'cashier_id', 'sale_id'];
+    protected $fillable = ['ticket_type_id', 'event_id', 'customer_id', 'cashier_id'];
 
     public function sale()
     {
@@ -16,6 +16,6 @@ class Ticket extends Model
 
     public function event()
     {
-      $this->belongsTo('App\Event');
+      return $this->belongsTo('App\Event');
     }
 }

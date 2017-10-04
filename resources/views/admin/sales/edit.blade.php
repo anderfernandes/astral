@@ -2,21 +2,19 @@
 
 @section('title', 'Sales')
 
-@section ('subtitle', 'New Sales')
+@section ('subtitle', 'Sale #'.$sale->id)
 
 @section ('icon', 'dollar')
 
 @section('content')
 
-
-
-{!! Form::open(['route' => 'admin.sales.store', 'class' => 'ui form']) !!}
+{!! Form::model($sale, ['route' => ['admin.sales.update', $sale], 'class' => 'ui form', 'method' => 'PUT']) !!}
 <div class="two fields">
   <div class="inline required field">
     {!! Form::label('status', 'Status') !!}
     <div class="ui selection dropdown">
       @if (old('status') == null)
-        <input type="hidden" id="status" name="status" value="open">
+        <input type="hidden" id="status" name="status" value="{{ $sale->status }}">
       @else
         <input type="hidden" id="status" name="status" value="{{ old('status') }}">
       @endif
@@ -43,35 +41,35 @@
     {!! Form::label('subtotal', 'Subtotal' ) !!}
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      {!! Form::text('subtotal', number_format(0, 2), ['placeholder' => 'Subtotal', 'readonly' => true]) !!}
+      {!! Form::text('subtotal', number_format($sale->subtotal, 2), ['placeholder' => 'Subtotal', 'readonly' => true]) !!}
     </div>
   </div>
   <div class="field">
     {!! Form::label('tax', 'Tax ('. App\Setting::find(1)->tax .'%)') !!}
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      {!! Form::text('tax', number_format(0, 2), ['placeholder' => 'Tax', 'readonly' => true]) !!}
+      {!! Form::text('tax', number_format($sale->tax, 2), ['placeholder' => 'Tax', 'readonly' => true]) !!}
     </div>
   </div>
   <div class="field">
     {!! Form::label('total', 'Total') !!}
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      {!! Form::text('total', number_format(0, 2), ['placeholder' => 'Total', 'readonly' => true]) !!}
+      {!! Form::text('total', number_format($sale->total, 2), ['placeholder' => 'Total', 'readonly' => true]) !!}
     </div>
   </div>
   <div class="field">
     <label for="paid">Paid</label>
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      <input type="text" id="paid" name="paid" value="{{ number_format(0, 2) }}" readonly>
+      <input type="text" id="paid" name="paid" value="{{ number_format($sale->payments->sum('tendered'), 2) }}" readonly>
     </div>
   </div>
   <div class="field">
     <label for="paid">Balance</label>
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      <input type="text" id="balance" name="balance" value="{{ number_format(0, 2) }}" readonly>
+      <input type="text" id="balance" name="balance" value="{{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}" readonly>
     </div>
   </div>
 </div>
@@ -82,7 +80,7 @@
       <div class="two fields">
         <div class="field">
           {!! Form::label('organization_id', 'Organization') !!}
-          {!! Form::select('organization_id', $organizations, 1,
+          {!! Form::select('organization_id', $organizations, null,
             [
               'placeholder' => 'Select an organization',
               'class'       => 'ui search dropdown'
@@ -103,7 +101,7 @@
         {{ Form::label('first_event_id', 'First Show') }}
         <div class="ui selection search scrolling dropdown">
           @if (old('first_event_id') == null)
-            <input type="hidden" id="first_event_id" name="first_event_id" value="0">
+            <input type="hidden" id="first_event_id" name="first_event_id" value="{{ $sale->first_event_id }}">
           @else
             <input type="hidden" id="first_event_id" name="first_event_id" value="{{ old('first_event_id') }}">
           @endif
@@ -129,7 +127,7 @@
         {{ Form::label('second_event_id', 'Second Show') }}
         <div class="ui selection search scrolling dropdown">
           @if (old('second_event_id') == null)
-            <input type="hidden" id="second_event_id" name="second_event_id" value="1">
+            <input type="hidden" id="second_event_id" name="second_event_id" value="{{ $sale->second_event_id }}">
           @else
             <input type="hidden" id="second_event_id" name="second_event_id" value="{{ old('second_event_id') }}">
           @endif
@@ -171,7 +169,7 @@
             </td>
             <td>
               <div class="ui right labeled input">
-                {!! Form::text('ticket['. $ticketType->id .']', 0, ['placeholder' => 'Amount of '. $ticketType->name . ' tickets', 'size' => 1, 'class' => 'ticket-type']) !!}
+                {!! Form::text('ticket['. $ticketType->id .']', $sale->tickets->where('event_id', $sale->first_event_id)->where('ticket_type_id', $ticketType->id)->count(), ['placeholder' => 'Amount of '. $ticketType->name . ' tickets', 'size' => 1, 'class' => 'ticket-type']) !!}
                 <div class="ui tag label">$ {{ number_format($ticketType->price, 2) }} each</div>
               </div>
             </td>
@@ -186,7 +184,7 @@
       <div class="ui dividing header"><i class="info circle icon"></i>Payment Information</div>
       <div class="field">
         {!! Form::label('taxable', 'Taxable') !!}
-        {!! Form::select('taxable', [true => 'Yes', false => 'No'], true, ['placeholder' => 'Is group taxable?', 'class' => 'ui dropdown']) !!}
+        {!! Form::select('taxable', [true => 'Yes', false => 'No'], null, ['placeholder' => 'Is group taxable?', 'class' => 'ui dropdown']) !!}
       </div>
       <div class="three fields">
         <div class="field">
@@ -215,7 +213,7 @@
           {!! Form::label('change_due') !!}
           <div class="ui labeled input">
             <div class="ui label">$ </div>
-            {!! Form::text('change_due', 0, ['placeholder' => 'Change due', 'readonly' => true]) !!}
+            {!! Form::text('change_due', number_format(0, 2), ['placeholder' => 'Change due', 'readonly' => true]) !!}
           </div>
         </div>
       </div>
@@ -234,9 +232,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="warning center aligned">
-            <td colspan="5"><i class="info circle icon"></i> No payments have been received so far</td>
-          </tr>
+          @if(count($sale->payments) > 0)
+            @foreach($sale->payments as $payment)
+              <tr>
+                <td><div class="ui header">{{ $payment->id }}</div></td>
+                <td>{{ $payment->method->name }}</td>
+                <td>{{ number_format($payment->tendered, 2) }}</td>
+                <td>{{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
+                <td>{{ $payment->cashier->firstname }}</td>
+              </tr>
+            @endforeach
+          @else
+            <tr class="warning center aligned">
+              <td colspan="5"><i class="info circle icon"></i> No payments have been received so far</td>
+            </tr>
+          @endif
         </tbody>
       </table>
     </div>
@@ -251,7 +261,7 @@
 
 <script>
 
-  $('.menu .item').tab();
+  $('.menu .item').tab({history: true});
 
   function calculateTotals() {
 
@@ -264,17 +274,18 @@
     var taxBox = document.querySelector('#tax')
     var tax = 0
     var totalBox = document.querySelector('#total')
-    var total = 0
+    var total = {{ $sale->total }}
     var taxable = document.querySelector('#taxable')
     var secondShow = document.querySelector('#second_event_id')
     var changeDue = 0
     var changeDueBox = document.querySelector('#change_due')
     var tenderedBox = document.querySelector('#tendered')
     var tendered = parseFloat(tenderedBox.value)
-    var paid = 0
+    var paid = {{ number_format($sale->payments->sum('tendered'), 2) }}
     var paidBox = document.querySelector('#paid')
-    var balance = 0
+    var balance = {{ number_format($sale->payments->sum('total') - $sale->payments->sum('tendered'), 2) }}
     var balanceBox = document.querySelector('#balance')
+
 
     ticketTypeBoxes.forEach(function(item, index) {
       subtotalArray[index] = ticketTypeBoxes[index].value * parseFloat(ticketPrice[index].innerHTML.split(" ")[1])
@@ -297,11 +308,15 @@
     balance = total - (paid + tendered)
     balanceBox.value = balance <= 0 ? (0).toFixed(2) : balance.toFixed(2)
 
-    changeDue = tendered - total
+    changeDue = tendered - {{ number_format($sale->payments->sum('total') - $sale->payments->sum('tendered'), 2) }}
     changeDueBox.value = changeDue <= 0 ? (0).toFixed(2) : changeDue.toFixed(2)
     //changeDueBox.value = changeDue.toFixed(2) == "-0.00" ? "0.00" : changeDue.toFixed(2)
   }
 
+  $(document).ready(function(){
+    var balanceBox = document.querySelector('#balance').value
+    balanceBox < 0 ? $('#balance').css('color', '#9f3a38').css('background-color', '#fff6f6').css('border-color', '#e0b4b4') : $('#balance').css('color', 'rgba(0,0,0,.87)').css('background-color', '#fff').css('border-color', 'rgba(34, 36, 38,.15)')
+  })
   $('.ticket-type').keyup(calculateTotals)
   $('#taxable').change(calculateTotals)
   $('#first_event_id').change(calculateTotals)

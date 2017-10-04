@@ -55,5 +55,16 @@ class UsersTableSeeder extends Seeder
         'type'            => 'organization',
         'created_at'      => Date::now('America/Chicago'),
       ]);
+      // 5
+      DB::table('users')->insert([
+        'firstname'       => 'Donald',
+        'lastname'        => 'Hubbs',
+        'email'           => 'dhubbs@stu.ctcd.edu',
+        'password'        =>  '$2y$10$2sq9LcPg2W6/iIKQ20J19OwDFxZmrhCgU0Z/MPY6EQw0qbGJuQImO',
+        'role_id'         => 2,
+        'organization_id' => 2,
+        'type'            => 'individual',
+        'created_at'      => Date::now('America/Chicago'),
+      ]);
     }
 }

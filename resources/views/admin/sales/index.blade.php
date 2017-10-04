@@ -67,8 +67,8 @@
         <td>{{ $sale->creator->firstname }}</td>
         <td>
           <div class="ui buttons">
-            <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="book icon"></i>View</a>
-            <div class="ui primary button"><i class="pencil icon"></i>Edit</div>
+            <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i>View</a>
+            <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
           </div>
         </td>
       </tr>

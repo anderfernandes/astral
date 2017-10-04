@@ -18,40 +18,44 @@
   </div>
 
   @if (!isset($events) || count($events) > 0)
-
-    <div class="ui segment">
+    <br /><br />
+    <div class="ui doubling stackable grid">
       @foreach($events as $event)
-        <div class="ui unstackable items">
-          <div class="item">
-            <div class="ui small image">
-              <img src="{{ $event->show->cover }}">
-            </div>
-            <div class="content">
-              <div class="meta">
-                <span class="ui label">{{ $event->type }}</span>
-                <span class="ui label">{{ App\Show::find($event->show_id)->type }}</span>
-                <span class="ui label">{{ App\Show::find($event->show_id)->duration }} minutes</span>
-              </div>
-              <div class="ui header">
-                {{ App\Show::find($event->show_id)->name }}
-                <div class="sub header">
-                  <i class="calendar icon"></i>
-                  {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+        <div class="ui eight wide column">
+          <div class="ui segment">
+            <div class="ui unstackable items">
+              <div class="item">
+                <div class="ui small image">
+                  <img src="{{ $event->show->cover }}">
                 </div>
-              </div>
-              <div class="extra">
-                Created by {{ $event->creator->firstname }} {{ $event->creator->lastname }} on {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i A') }}
-              </div>
-              <div class="description">
-                {!! Form::open(['route' => ['admin.events.destroy', $event], 'method' => 'DELETE']) !!}
-                {!! Form::button('<i class="trash icon"></i> Delete', ['type' => 'submit', 'class' => 'ui right floated red button']) !!}
-                {!! Form::close() !!}
-                <a href="{{ route('admin.events.show', $event) }}" class="ui secondary button">
-                  <i class="book icon"></i> View
-                </a>
-                <a href="{{ route('admin.events.edit', $event) }}" class="ui primary button">
-                  <i class="edit icon"></i> Edit
-                </a>
+                <div class="content">
+                  <div class="meta">
+                    <span class="ui label">{{ $event->type }}</span>
+                    <span class="ui label">{{ App\Show::find($event->show_id)->type }}</span>
+                    <span class="ui label">{{ App\Show::find($event->show_id)->duration }} minutes</span>
+                  </div>
+                  <div class="ui header">
+                    {{ App\Show::find($event->show_id)->name }}
+                    <div class="sub header">
+                      <i class="calendar icon"></i>
+                      {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+                    </div>
+                  </div>
+                  <div class="extra">
+                    Created by {{ $event->creator->firstname }} {{ $event->creator->lastname }} on {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i A') }}
+                  </div>
+                  <div class="description">
+                    {!! Form::open(['route' => ['admin.events.destroy', $event], 'method' => 'DELETE']) !!}
+                    {!! Form::button('<i class="trash icon"></i> Delete', ['type' => 'submit', 'class' => 'ui right floated red button']) !!}
+                    {!! Form::close() !!}
+                    <a href="{{ route('admin.events.show', $event) }}" class="ui secondary button">
+                      <i class="book icon"></i> View
+                    </a>
+                    <a href="{{ route('admin.events.edit', $event) }}" class="ui primary button">
+                      <i class="edit icon"></i> Edit
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -66,7 +70,7 @@
         <div class="header">
           No events!
         </div>
-        <p>It looks like there are no events going on today.</p>
+        <p>It looks like there are no events in the database.</p>
       </div>
     </div>
   @endif
