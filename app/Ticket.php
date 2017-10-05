@@ -11,11 +11,16 @@ class Ticket extends Model
 
     public function sale()
     {
-      $this->belongsToMany('App\Sale', 'sale_ticket');
+      $this->belongsToMany('App\Sale');
     }
 
     public function event()
     {
       return $this->belongsTo('App\Event');
+    }
+
+    public function type()
+    {
+      return $this->hasOne('App\TicketType', 'id', 'ticket_type_id');
     }
 }

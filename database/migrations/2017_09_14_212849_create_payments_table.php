@@ -23,7 +23,7 @@ class CreatePaymentsTable extends Migration
             $table->decimal('tendered', 4, 2)->nullable();
             $table->decimal('change_due', 4, 2)->nullable();
             $table->string('reference')->nullable();
-            $table->enum('source', ['cashier', 'back office']);
+            $table->enum('source', ['admin', 'cashier']);
             $table->integer('sale_id')->unsigned();
             $table->foreign('sale_id')->references('id')->on('sales');
             $table->timestamps();

@@ -12,15 +12,27 @@
     <i class="plus icon"></i> New Sale
   </a>
   <div class="ui right icon input">
-    <input type="text" placeholder="Sale Number">
+    <input type="text" name="search" placeholder="Sale Number">
     <i class="search link icon"></i>
   </div>
-  <select name="type" id="" class="ui dropdown">
-    <option value="">All Types</option>
-    <option value="Planetarium">Cash</option>
-    <option value="Laser Light">Credit Card</option>
+  <select name="payment_type" id="payment_type" class="ui dropdown">
+    <option value="">All Payment Types</option>
+    <option value="Cash">Cash</option>
+    <option value="Visa">Visa</option>
   </select>
-</select>
+  <div class="ui selection dropdown">
+    <input type="hidden" id="status" name="status">
+    <i class="dropdown icon"></i>
+    <div class="default text">All Sale Status</div>
+    <div class="menu">
+      <div class="item" data-value="open"><i class="unlock icon"></i>Open</div>
+      <div class="item" data-value="complete"><i class="checkmark icon"></i>Complete</div>
+      <div class="item" data-value="canceled"><i class="remove icon"></i>Canceled</div>
+      <div class="item" data-value="tentative"><i class="help icon"></i>Tentative</div>
+      <div class="item" data-value="no show"><i class="thumbs outline down icon"></i>No Show</div>
+    </div>
+  </div>
+
 
 @if (!isset($sales) || count($sales) > 0)
 <br /><br />
@@ -30,6 +42,8 @@
       <th>Sale #</th>
       <th>Customer</th>
       <th>Total</th>
+      <th>Paid</th>
+      <th>Balance</th>
       <th>Status</th>
       <th>Created On</th>
       <th>Created By</th>
@@ -47,6 +61,8 @@
         @endif
 
         <td>$ {{ number_format($sale->total, 2) }}</td>
+        <td>$ {{ number_format($sale->payments->sum('tendered'), 2) }}</td>
+        <td>$ {{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}</td>
         <td>
           @if ($sale->status == 'complete')
             <span class="ui green label"><i class="checkmark icon"></i>

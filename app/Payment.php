@@ -8,7 +8,7 @@ class Payment extends Model
 {
   public function method()
   {
-    return $this->hasOne('App\PaymentMethod', 'id');
+    return $this->hasOne('App\PaymentMethod', 'id', 'payment_method_id');
   }
 
   public function cashier()

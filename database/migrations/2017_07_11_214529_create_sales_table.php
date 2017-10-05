@@ -18,6 +18,7 @@ class CreateSalesTable extends Migration
             $table->integer('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users');
             $table->enum('status', ['open', 'tentative', 'no show', 'complete', 'canceled']);
+            $table->enum('source', ['admin', 'cashier']);
             $table->boolean('taxable');
             $table->decimal('subtotal', 4, 2)->nullable();
             $table->decimal('tax', 4, 2)->nullable();

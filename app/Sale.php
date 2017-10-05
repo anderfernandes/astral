@@ -11,7 +11,7 @@ class Sale extends Model
 
     public function tickets()
     {
-      return $this->belongsToMany('App\Ticket');
+      return $this->hasMany('App\Ticket');
     }
 
     public function creator()
@@ -32,6 +32,11 @@ class Sale extends Model
     public function customer()
     {
       return $this->belongsTo('App\User');
+    }
+
+    public function organization()
+    {
+      return $this->belongsTo('App\Organization');
     }
 
     public function events()

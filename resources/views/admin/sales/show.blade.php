@@ -34,7 +34,7 @@
       @endif
       {{ $sale->status }}</span>
       <div class="sub header">
-        by {{ $sale->cashier->firstname }} {{ $sale->cashier->lastname }}
+        by {{ $sale->creator->firstname }} {{ $sale->creator->lastname }}
         on {{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}
         ({{ Date::parse($sale->created_at)->diffForHumans() }})
       </div>
@@ -46,7 +46,7 @@
     </div>
   </h2>
 
-  @if (! $sale->refund)
+  @if (!$sale->refund)
   <div class="ui right floated buttons">
     <a href="javascript:$('#refund-modal').modal('show')" class="ui red button"><i class="refresh icon"></i> Refund</a>
   </div>
@@ -56,9 +56,7 @@
       <i class="left chevron icon"></i>
       Back
     </a>
-    <a href="javascript:window.close()" class="ui default button">
-      <i class="remove icon"></i> Close
-    </a>
+    <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
   </div>
 
   <br /><br /><br />
@@ -72,6 +70,24 @@
       @endif
         <div class="sub header">Sale #</div>
         {{ $sale->id }}
+      </h2>
+
+      @if ($sale->refund)
+      <h2 class="ui red header">
+      @else
+      <h2 class="ui header">
+      @endif
+        <div class="sub header">Customer</div>
+        {{ $sale->customer->firstname.' '.$sale->customer->lastname }}
+      </h2>
+
+      @if ($sale->refund)
+      <h2 class="ui red header">
+      @else
+      <h2 class="ui header">
+      @endif
+        <div class="sub header">Organization</div>
+        {{ $sale->organization->name }}
       </h2>
 
       @if ($sale->refund)
@@ -114,25 +130,6 @@
 
     </div>
     <div class="column">
-      @if ($sale->refund)
-      <h2 class="ui red header">
-      @else
-      <h2 class="ui header">
-      @endif
-        <div class="sub header">Payment Method</div>
-        @if ($sale->payment_method == 'visa')
-          <i class="visa icon"></i>
-        @elseif ($sale->payment_method == 'mastercard')
-          <i class="mastercard icon"></i>
-        @elseif ($sale->payment_method == 'discover')
-          <i class="discover icon"></i>
-        @elseif ($sale->payment_method == 'american express')
-          <i class="american express icon"></i>
-        @else
-          <i class="money icon"></i>
-        @endif
-      </h2>
-
       @if ($sale->reference)
         @if ($sale->refund)
         <h2 class="ui red header">
@@ -176,8 +173,8 @@
       @else
       <h2 class="ui header">
       @endif
-        <div class="sub header">Tendered</div>
-        $ {{ number_format($sale->tendered, 2) }}
+        <div class="sub header">Balance</div>
+        $ {{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}
       </h2>
 
       @if ($sale->refund)
@@ -185,9 +182,38 @@
       @else
       <h2 class="ui header">
       @endif
-        <div class="sub header">Change Due</div>
-        $ {{ number_format($sale->change_due, 2) }}
+        <div class="sub header">Paid</div>
+        $ {{ number_format($sale->payments->sum('tendered'), 2) }}
       </h2>
+
+      <table class="ui selectable single line table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Method</th>
+            <th>Amount Paid</th>
+            <th>Date</th>
+            <th>Cashier</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if(count($sale->payments) > 0)
+            @foreach($sale->payments as $payment)
+              <tr>
+                <td><div class="ui header">{{ $payment->id }}</div></td>
+                <td>{{ $payment->method->name }}</td>
+                <td>{{ number_format($payment->tendered, 2) }}</td>
+                <td>{{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
+                <td>{{ $payment->cashier->firstname }}</td>
+              </tr>
+            @endforeach
+          @else
+            <tr class="warning center aligned">
+              <td colspan="5"><i class="info circle icon"></i> No payments have been received so far</td>
+            </tr>
+          @endif
+        </tbody>
+      </table>
 
     </div>
 
@@ -203,7 +229,7 @@
       </h3>
     </div>
     @endif
-    
+
   </div>
 
   <div class="ui horizontal divider header">
@@ -234,9 +260,9 @@
           @else
             <th><h3 class="ui center aligned header">{{ $ticket->id }}</h3></th>
           @endif
-          <th>{{ $ticket->type }}</th>
-          <th>{{ App\Event::find($ticket->event_id)->show->name }}</th>
-          <th>{{ Date::parse($ticket->created_at)->format('l, F j, Y \a\t g:i A') }}</th>
+          <th>{{ $ticket->type->name }}</th>
+          <th>{{ $ticket->event->show->name }}</th>
+          <th>{{ Date::parse($ticket->event->start)->format('l, F j, Y \a\t g:i A') }}</th>
           <th>{{ $sale->id }}</th>
         </tr>
         @endforeach

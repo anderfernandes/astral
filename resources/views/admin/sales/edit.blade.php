@@ -22,10 +22,10 @@
       <div class="default text">Sale Status</div>
       <div class="menu">
         <div class="item" data-value="open"><i class="unlock icon"></i>Open</div>
-        <div class="item" data-value="tentative"><i class="help icon"></i>Tentative</div>
-        <div class="item" data-value="no show"><i class="thumbs outline down icon"></i>No Show</div>
         <div class="item" data-value="complete"><i class="checkmark icon"></i>Complete</div>
         <div class="item" data-value="canceled"><i class="remove icon"></i>Canceled</div>
+        <div class="item" data-value="tentative"><i class="help icon"></i>Tentative</div>
+        <div class="item" data-value="no show"><i class="thumbs outline down icon"></i>No Show</div>
       </div>
     </div>
   </div>
@@ -78,7 +78,7 @@
     <div class="ui segment">
       <div class="ui dividing header"><i class="dollar sign icon"></i>Sale Information</div>
       <div class="two fields">
-        <div class="field">
+        <div class="required field">
           {!! Form::label('organization_id', 'Organization') !!}
           {!! Form::select('organization_id', $organizations, null,
             [
@@ -87,7 +87,7 @@
             ])
           !!}
         </div>
-        <div class="field">
+        <div class="required field">
           {!! Form::label('customer_id', 'Customer') !!}
           {!! Form::select('customer_id', $customers, null,
             [
@@ -97,7 +97,7 @@
           !!}
         </div>
       </div>
-      <div class="field">
+      <div class="required field">
         {{ Form::label('first_event_id', 'First Show') }}
         <div class="ui selection search scrolling dropdown">
           @if (old('first_event_id') == null)
@@ -114,7 +114,6 @@
           <div class="menu">
             @foreach($events as $event)
               <div class="item" data-value="{{ $event->id }}">
-                <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }} cover" class="ui mini avatar image">
                 <strong>{{ $event->show->name }}</strong>
                 on <em>{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</em>
                 <span class="ui label" style="padding-top: 0; padding-bottom: 0">{{ $event->type }}</span>
@@ -139,7 +138,6 @@
             </div>
             @foreach($events as $event)
               <div class="item" data-value="{{ $event->id }}">
-                <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }} cover" class="ui mini avatar image">
                 <strong>{{ $event->show->name }}</strong>
                 on {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
                 <span class="ui label" style="padding-top: 0; padding-bottom: 0">{{ $event->type }}</span>
@@ -182,7 +180,7 @@
   <div class="column">
     <div class="ui segment">
       <div class="ui dividing header"><i class="info circle icon"></i>Payment Information</div>
-      <div class="field">
+      <div class="required field">
         {!! Form::label('taxable', 'Taxable') !!}
         {!! Form::select('taxable', [true => 'Yes', false => 'No'], null, ['placeholder' => 'Is group taxable?', 'class' => 'ui dropdown']) !!}
       </div>
@@ -283,7 +281,7 @@
     var tendered = parseFloat(tenderedBox.value)
     var paid = {{ number_format($sale->payments->sum('tendered'), 2) }}
     var paidBox = document.querySelector('#paid')
-    var balance = {{ number_format($sale->payments->sum('total') - $sale->payments->sum('tendered'), 2) }}
+    var balance = parseFloat(document.querySelector('#balance').value)
     var balanceBox = document.querySelector('#balance')
 
 
@@ -301,6 +299,8 @@
 
     tax = taxable.value == '1' ? subtotal * ({{ App\Setting::find(1)->tax }} / 100) : 0
 
+    tax = Number(Math.round(tax+'e2')+'e-2')
+
     taxBox.value = tax.toFixed(2)
     total = subtotal + tax
     totalBox.value = total.toFixed(2)
@@ -308,7 +308,7 @@
     balance = total - (paid + tendered)
     balanceBox.value = balance <= 0 ? (0).toFixed(2) : balance.toFixed(2)
 
-    changeDue = tendered - {{ number_format($sale->payments->sum('total') - $sale->payments->sum('tendered'), 2) }}
+    changeDue = tendered - (total - parseFloat(document.querySelector('#balance').value))
     changeDueBox.value = changeDue <= 0 ? (0).toFixed(2) : changeDue.toFixed(2)
     //changeDueBox.value = changeDue.toFixed(2) == "-0.00" ? "0.00" : changeDue.toFixed(2)
   }

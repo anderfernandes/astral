@@ -8,8 +8,6 @@
 
 @section('content')
 
-
-
 {!! Form::open(['route' => 'admin.sales.store', 'class' => 'ui form']) !!}
 <div class="two fields">
   <div class="inline required field">
@@ -24,10 +22,10 @@
       <div class="default text">Sale Status</div>
       <div class="menu">
         <div class="item" data-value="open"><i class="unlock icon"></i>Open</div>
-        <div class="item" data-value="tentative"><i class="help icon"></i>Tentative</div>
-        <div class="item" data-value="no show"><i class="thumbs outline down icon"></i>No Show</div>
         <div class="item" data-value="complete"><i class="checkmark icon"></i>Complete</div>
         <div class="item" data-value="canceled"><i class="remove icon"></i>Canceled</div>
+        <div class="item" data-value="tentative"><i class="help icon"></i>Tentative</div>
+        <div class="item" data-value="no show"><i class="thumbs outline down icon"></i>No Show</div>
       </div>
     </div>
   </div>
@@ -80,7 +78,7 @@
     <div class="ui segment">
       <div class="ui dividing header"><i class="dollar sign icon"></i>Sale Information</div>
       <div class="two fields">
-        <div class="field">
+        <div class="required field">
           {!! Form::label('organization_id', 'Organization') !!}
           {!! Form::select('organization_id', $organizations, 1,
             [
@@ -89,9 +87,9 @@
             ])
           !!}
         </div>
-        <div class="field">
+        <div class="required field">
           {!! Form::label('customer_id', 'Customer') !!}
-          {!! Form::select('customer_id', $customers, null,
+          {!! Form::select('customer_id', $customers, 1,
             [
               'placeholder' => 'Select a customer',
               'class'       => 'ui search dropdown'
@@ -99,7 +97,7 @@
           !!}
         </div>
       </div>
-      <div class="field">
+      <div class="required field">
         {{ Form::label('first_event_id', 'First Show') }}
         <div class="ui selection search scrolling dropdown">
           @if (old('first_event_id') == null)
@@ -116,7 +114,6 @@
           <div class="menu">
             @foreach($events as $event)
               <div class="item" data-value="{{ $event->id }}">
-                <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }} cover" class="ui mini avatar image">
                 <strong>{{ $event->show->name }}</strong>
                 on <em>{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</em>
                 <span class="ui label" style="padding-top: 0; padding-bottom: 0">{{ $event->type }}</span>
@@ -141,7 +138,6 @@
             </div>
             @foreach($events as $event)
               <div class="item" data-value="{{ $event->id }}">
-                <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }} cover" class="ui mini avatar image">
                 <strong>{{ $event->show->name }}</strong>
                 on {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
                 <span class="ui label" style="padding-top: 0; padding-bottom: 0">{{ $event->type }}</span>
@@ -184,7 +180,7 @@
   <div class="column">
     <div class="ui segment">
       <div class="ui dividing header"><i class="info circle icon"></i>Payment Information</div>
-      <div class="field">
+      <div class="required field">
         {!! Form::label('taxable', 'Taxable') !!}
         {!! Form::select('taxable', [true => 'Yes', false => 'No'], true, ['placeholder' => 'Is group taxable?', 'class' => 'ui dropdown']) !!}
       </div>
@@ -205,17 +201,17 @@
           </div>
         </div>
         <div class="field">
-          {!! Form::label('tendered') !!}
+          {!! Form::label('tendered', 'Tendered') !!}
           <div class="ui labeled input">
             <div class="ui label">$ </div>
             {!! Form::text('tendered', number_format(0, 2), ['placeholder' => 'Tendered']) !!}
           </div>
         </div>
         <div class="field">
-          {!! Form::label('change_due') !!}
+          {!! Form::label('change_due', 'Change Due') !!}
           <div class="ui labeled input">
             <div class="ui label">$ </div>
-            {!! Form::text('change_due', 0, ['placeholder' => 'Change due', 'readonly' => true]) !!}
+            {!! Form::text('change_due', number_format(0, 2), ['placeholder' => 'Change due', 'readonly' => true]) !!}
           </div>
         </div>
       </div>
@@ -289,6 +285,8 @@
     subtotalBox.value = subtotal.toFixed(2)
 
     tax = taxable.value == '1' ? subtotal * ({{ App\Setting::find(1)->tax }} / 100) : 0
+
+    tax = Number(Math.round(tax+'e2')+'e-2')
 
     taxBox.value = tax.toFixed(2)
     total = subtotal + tax
