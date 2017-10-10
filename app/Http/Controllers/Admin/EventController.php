@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Event;
+use App\EventType;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -21,6 +23,7 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::where('id', '<>', 1)->orderBy('start', 'desc')->paginate(10);
+
         return view('admin.events.index')->withEvents($events);
     }
 
@@ -32,7 +35,8 @@ class EventController extends Controller
     public function create()
     {
         $shows = Show::pluck('name', 'id');
-        return view('admin.events.create', compact('shows'));
+        $eventTypes = EventType::where('id', '<>', 1)->pluck('name', 'id');
+        return view('admin.events.create', compact('shows'), compact('eventTypes'));
     }
 
     /**
@@ -45,7 +49,7 @@ class EventController extends Controller
     {
         $this->validate($request, [
             'show_id'        => 'required',
-            'type'           => 'required',
+            'type_id'        => 'required',
             'start'          => 'required',
             'end'            => 'required',
             'seats'          => 'required|min:0',
@@ -55,7 +59,7 @@ class EventController extends Controller
         $event = new Event;
 
         $event->show_id        = $request->show_id;
-        $event->type           = $request->type;
+        $event->type_id        = $request->type_id;
         $event->start          = new Date($request->start);
         $event->end            = new Date($request->end);
         $event->seats          = $request->seats;
@@ -65,7 +69,7 @@ class EventController extends Controller
         $event->save();
 
         Session::flash('success',
-            'The event '.$event->type.' '.Show::find($event->show_id)->name.' on '.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').' has been added successfully!');
+            'The event <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> on <strong>'.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').'</strong> has been added successfully!');
         return redirect()->route('admin.events.show', $event);
     }
 
@@ -89,7 +93,8 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $shows = Show::pluck('name', 'id');
-        return view('admin.events.edit', compact('shows'))->withEvent($event);
+        $eventTypes = EventType::where('id', '<>', 1)->pluck('name', 'id');
+        return view('admin.events.edit', compact('shows'), compact('eventTypes'))->withEvent($event);
     }
 
     /**
@@ -103,7 +108,7 @@ class EventController extends Controller
     {
       $this->validate($request, [
           'show_id'        => 'required',
-          'type'           => 'required',
+          'type_id'        => 'required',
           'start'          => 'required',
           'end'            => 'required',
           'seats'          => 'required',
@@ -111,7 +116,7 @@ class EventController extends Controller
       ]);
 
       $event->show_id        = $request->show_id;
-      $event->type           = $request->type;
+      $event->type_id        = $request->type_id;
       $event->start          = new Date($request->start);
       $event->end            = new Date($request->end);
       $event->seats          = $request->seats;
@@ -121,7 +126,7 @@ class EventController extends Controller
       $event->save();
 
       Session::flash('success',
-          'The '.$event->type.' '.Show::find($event->show_id)->name.' on '.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').' has been updated successfully!');
+          'The <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> on <strong>'.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').'</strong> has been updated successfully!');
 
       return redirect()->route('admin.events.show', $event);
     }
@@ -138,7 +143,7 @@ class EventController extends Controller
         $event->delete();
 
         Session::flash('success',
-            'The '.$event->type.' '.Show::find($event->show_id)->name.' on '.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').' has been deleted successfully!');
+            'The <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> on <strong>'.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').'</strong> has been deleted successfully!');
         return redirect()->route('admin.events.index');
     }
 }

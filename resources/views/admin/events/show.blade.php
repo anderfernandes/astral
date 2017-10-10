@@ -30,7 +30,7 @@
       </div>
       <div class="content">
         <div class="meta">
-          <div class="ui label">{{ $event->type }}</div>
+          <div class="ui label">{{ $event->type->name }}</div>
           <div class="ui label">{{ App\Show::find($event->show_id)->type }}</div>
           <div class="ui label">{{ App\Show::find($event->show_id)->duration }} minutes</div>
         </div>

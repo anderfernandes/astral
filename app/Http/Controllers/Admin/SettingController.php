@@ -13,6 +13,7 @@ use App\OrganizationType;
 use App\Role;
 use App\TicketType;
 use App\PaymentMethod;
+use App\EventType;
 
 class SettingController extends Controller
 {
@@ -27,12 +28,14 @@ class SettingController extends Controller
         $organizationTypes = OrganizationType::orderBy('created_at', 'desc')->where('name', '!=', 'System')->get();
         $ticketTypes = TicketType::orderBy('created_at', 'desc')->get();
         $paymentMethods = PaymentMethod::all();
+        $eventTypes = EventType::where('name', '!=', 'system')->get();
 
         return view('admin.settings.index')
           ->withSetting($setting)
           ->withOrganizationTypes($organizationTypes)
           ->withTicketTypes($ticketTypes)
-          ->withPaymentMethods($paymentMethods);
+          ->withPaymentMethods($paymentMethods)
+          ->withEventTypes($eventTypes);
     }
 
     public function addOrganizationType(Request $request)
@@ -62,7 +65,7 @@ class SettingController extends Controller
 
       Session::flash('success', 'Organization Type '. $organizationType->name .' added successfully!');
 
-      return redirect()->route('admin.settings.index');
+      return redirect()->to(route('admin.settings.index').'#organization-types');
 
     }
 
@@ -84,7 +87,7 @@ class SettingController extends Controller
 
       Session::flash('success', 'Ticket Type '. $ticketType->name .' added successfully!');
 
-      return redirect()->route('admin.settings.index');
+      return redirect()->to(route('admin.settings.index').'#ticket-types');
     }
 
     public function addPaymentMethod(Request $request)
@@ -103,10 +106,29 @@ class SettingController extends Controller
 
       $paymentMethod->save();
 
-      Session::flash('success', 'Payment Method '. $paymentMethod->name .' added successfully!');
+      Session::flash('success', 'Payment Method <strong>'. $paymentMethod->name .'</strong> added successfully!');
 
-      return redirect()->route('admin.settings.index');
+      return redirect()->to(route('admin.settings.index').'#payment-methods');
 
+    }
+
+    public function addEventType(Request $request)
+    {
+      $this->validate($request, [
+        'name'        => 'required',
+        'description' => 'required',
+      ]);
+
+      $eventType = new eventType;
+
+      $eventType->name        = $request->name;
+      $eventType->description = $request->description;
+
+      $eventType->save();
+
+      Session::flash('success', 'Event Type <strong>'. $eventType->name .'</strong> added successfully!');
+
+      return redirect()->to(route('admin.settings.index').'#event-types');
     }
 
     /**

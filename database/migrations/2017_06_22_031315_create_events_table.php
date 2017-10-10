@@ -17,7 +17,8 @@ class CreateEventsTable extends Migration
             $table->increments('id');
             $table->datetime('start');
             $table->datetime('end');
-            $table->string('type');
+            $table->integer('type_id')->unsigned();
+            $table->foreign('type_id')->references('id')->on('event_types');
             $table->text('memo')->nullable();
             $table->integer('show_id')->unsigned();
             $table->foreign('show_id')->references('id')->on('shows');

@@ -22,17 +22,7 @@
     </div>
     <div class="field">
       {!! Form::label('type', 'Type') !!}
-      <div class="ui selection dropdown">
-        {!! Form::hidden('type', null) !!}
-        <i class="dropdown icon"></i>
-        <div class="default text">Select an event type</div>
-        <div class="menu">
-          <div class="item" data-value="matinee">matinee</div>
-          <div class="item" data-value="weekend">weekend</div>
-          <div class="item" data-value="special event">special event</div>
-          <div class="item" data-value="ctc event">ctc event</div>
-        </div>
-      </div>
+      {!! Form::select('type_id', $eventTypes, null, ['placeholder' => 'Select event type', 'class' => 'ui dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('seats', 'Seats') !!}

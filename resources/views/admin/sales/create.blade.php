@@ -116,7 +116,7 @@
               <div class="item" data-value="{{ $event->id }}">
                 <strong>{{ $event->show->name }}</strong>
                 on <em>{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</em>
-                <span class="ui label" style="padding-top: 0; padding-bottom: 0">{{ $event->type }}</span>
+                <span class="ui mini label">{{ $event->type->name }}</span>
               </div>
             @endforeach
           </div>
@@ -140,7 +140,7 @@
               <div class="item" data-value="{{ $event->id }}">
                 <strong>{{ $event->show->name }}</strong>
                 on {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-                <span class="ui label" style="padding-top: 0; padding-bottom: 0">{{ $event->type }}</span>
+                <span class="ui mini label">{{ $event->type->name }}</span>
               </div>
             @endforeach
           </div>

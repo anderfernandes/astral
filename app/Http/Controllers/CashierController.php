@@ -9,6 +9,8 @@ use App\Event;
 use Jenssegers\Date\Date;
 use App\Sale;
 use App\Ticket;
+use App\PaymentMethod;
+use App\User;
 use Session;
 
 class CashierController extends Controller
@@ -29,7 +31,18 @@ class CashierController extends Controller
                   ->where('start','<=', Date::now('America/Chicago')->endOfDay())
                   ->orderBy('start', 'asc')
                   ->get();
-      return view('cashier.index')->withUser($user)->withEvents($events);
+      // Get Available Payment Methods
+      $paymentMethods = PaymentMethod::all();
+      $allCustomers = User::all();
+
+      $customers = $allCustomers->mapWithKeys(function ($item) {
+        return [ $item['id'] => $item['firstname'].' '.$item['lastname']];
+      });
+
+      return view('cashier.index')->withUser($user)
+                                  ->withPaymentMethods($paymentMethods)
+                                  ->withCustomers($customers)
+                                  ->withEvents($events);
     }
 
     public function reports($type) {

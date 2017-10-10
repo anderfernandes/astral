@@ -13,6 +13,7 @@
   <a class="item" data-tab="organization-types"><i class="university icon"></i>Organization Types</a>
   <a class="item" data-tab="ticket-types"><i class="ticket icon"></i>Ticket Types</a>
   <a class="item" data-tab="payment-methods"><i class="money icon"></i>Payment Methods</a>
+  <a class="item" data-tab="event-types"><i class="calendar icon"></i>Event Types</a>
 </div>
 
 <!--- General --->
@@ -267,6 +268,50 @@
   </div>
 </div>
 
+<!-- Event Types -->
+<div class="ui bottom attached tab segment" data-tab="event-types">
+  <div class="ui two column doubling grid">
+    <div class="column">
+      <table class="ui very basic striped selectable celled table">
+        <thead>
+          <tr>
+            <th>Event Types</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($eventTypes as $eventType)
+          <tr>
+            <td>
+              <h4 class="ui header">
+                <i class="university icon"></i>
+                <div class="content">
+                  {{ $eventType->name }}
+                  <div class="sub header">{{ $eventType->description }}</div>
+                </div>
+              </h4>
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="column">
+      {!! Form::open(['route' => 'admin.settings.addEventType', 'class' => 'ui form']) !!}
+      <div class="field">
+        {!! Form::label('name', 'Name') !!}
+        {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
+      </div>
+      <div class="field">
+        {!! Form::label('description', 'Description') !!}
+        {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
+      </div>
+      <div class="field">
+        {!! Form::button('<i class="plus icon"></i> Add Event Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+      </div>
+      {!! Form::close() !!}
+    </div>
+  </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
 
 <script>

@@ -11,17 +11,17 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
+mix.react('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');
 
 // Vendor stufff
 
 mix.scripts([
-  'node_modules/simplemde/dist/simplemde.min.js',
-  'node_modules/flatpickr/dist/flatpickr.min.js'
+ 'node_modules/simplemde/dist/simplemde.min.js',
+ 'node_modules/flatpickr/dist/flatpickr.min.js'
 ], 'public/js/vendor.js');
 
 mix.styles([
-  'node_modules/simplemde/dist/simplemde.min.css',
-  'node_modules/flatpickr/dist/flatpickr.min.css'
+ 'node_modules/simplemde/dist/simplemde.min.css',
+ 'node_modules/flatpickr/dist/flatpickr.min.css'
 ], 'public/css/vendor.css');

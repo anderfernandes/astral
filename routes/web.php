@@ -42,6 +42,8 @@ Route::group(
   Route::post('settings/addTicketType', 'SettingController@addTicketType')->name('settings.addTicketType');
   // HTTP PUT route for adding managing Payment Methods
   Route::post('settings/addPaymentMethod', 'SettingController@addPaymentMethod')->name('settings.addPaymentMethod');
+  // HTTP PUT route for adding managing Event Types
+  Route::post('settings/addEventType', 'SettingController@addEventType')->name('settings.addEventType');
 });
 // Cashier Routes
 Route::group(['prefix' => 'cashier', 'as' => 'cashier', 'middleware' => 'auth'],

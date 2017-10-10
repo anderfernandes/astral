@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 
+use App\Event;
+use App\Setting;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +17,33 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('events', function() {
+  // Get today's date for the query that will show today's events
+  $today = Date::now('America/Chicago')->addMinutes(-30)->toDateTimeString();
+  $events = Event::where('start','>=', $today)
+              ->where('start','<=', Date::now('America/Chicago')->endOfDay())
+              ->orderBy('start', 'desc')
+              ->get();
+  $eventsArray = [];
+  foreach ($events as $event) {
+    $eventsArray = array_prepend($eventsArray, [
+      'id'       => $event->id,
+      'type'     => $event->type->name,
+      'start'    => $event->start,
+      'end'      => $event->end,
+      'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
+      'show'     => [
+        'name'  => $event->show->name,
+        'type'  => $event->show->type,
+        'cover' => $event->show->cover
+        ],
+    ]);
+  }
+  return $eventsArray;
+});
+
+Route::get('settings', function() {
+  $settings = Setting::find(1)->get();
+
+  return $settings;
 });
