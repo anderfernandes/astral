@@ -168,31 +168,51 @@
           <tr>
             <th>Available Ticket Types</th>
             <th>Price</th>
+            <th>Allowed In</th>
+            <th>Active?</th>
           </tr>
         </thead>
         <tbody>
-          @foreach($ticketTypes as $ticketType)
-          <tr>
-            <td>
-              <h4 class="ui header">
-                <i class="ticket icon"></i>
-                <div class="content">
-                  {{ $ticketType->name }}
-                  <div class="sub header">{{ $ticketType->description }}</div>
-                </div>
-              </h4>
-            </td>
-            <td>
-              $ {{ number_format($ticketType->price, 2) }}
-            </td>
-          </tr>
-          @endforeach
+          @if( $ticketTypes->count() > 0)
+            @foreach($ticketTypes as $ticketType)
+            <tr>
+              <td>
+                <h4 class="ui header">
+                  <i class="ticket icon"></i>
+                  <div class="content">
+                    {{ $ticketType->name }}
+                    <div class="sub header">{{ $ticketType->description }}</div>
+                  </div>
+                </h4>
+              </td>
+              <td>
+                $ {{ number_format($ticketType->price, 2) }}
+              </td>
+              <td>
+                @foreach($ticketType->allowedEvents as $eventType)
+                  <div class="ui label">{{ $eventType->name }}</div>
+                @endforeach
+              </td>
+              <td>
+                @if ($ticketType->active)
+                  Yes
+                @else
+                  No
+                @endif
+              </td>
+            </tr>
+            @endforeach
+          @else
+            <tr class="warning center aligned">
+              <td colspan="2"><i class="info circle icon"></i>You have not added any ticket types yet.</td>
+            </tr>
+          @endif
         </tbody>
       </table>
     </div>
     <div class="column">
       {!! Form::open(['route' => 'admin.settings.addTicketType', 'class' => 'ui form']) !!}
-      <div class="two fields">
+      <div class="three fields">
         <div class="field">
           {!! Form::label('name', 'Name of Ticket Type') !!}
           {!! Form::text('name', null, ['placeholder' => 'Name']) !!}
@@ -204,10 +224,21 @@
             {!! Form::text('price', null, ['placeholder' => 'Price of the ticket']) !!}
           </div>
         </div>
+        <div class="field">
+          {!! Form::label('active', 'Active?') !!}
+          {!! Form::select('active', [true => 'Yes', false => 'No'], true, ['class' => 'ui dropdown']) !!}
+        </div>
       </div>
       <div class="field">
         {!! Form::label('description', 'Description') !!}
         {!! Form::text('description', null, ['placeholder' => 'Describe this ticket type']) !!}
+      </div>
+      <div class="field">
+        {!! Form::label('Allow in Events', 'Allow in these Events Types') !!}
+        {!! Form::select('allow_in_events[]',
+          $eventTypes->pluck('name', 'id'),
+          null,
+          ['id' => 'allow_in_events','placeholder' => 'Choose all that apply', 'class' => 'ui dropdown', 'multiple' => true]) !!}
       </div>
       <div class="field">
         {!! Form::button('<i class="plus icon"></i> Add Ticket Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
