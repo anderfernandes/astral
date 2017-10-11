@@ -113,7 +113,7 @@ class OrganizationController extends Controller
      */
     public function edit(Organization $organization)
     {
-        $organizationTypes = OrganizationType::pluck('name', 'id');
+        $organizationTypes = OrganizationType::where('id', '!=', 1)->pluck('name', 'id');
         return view('admin.organizations.edit')
           ->withOrganizationTypes($organizationTypes)
           ->withOrganization($organization);
@@ -129,16 +129,16 @@ class OrganizationController extends Controller
     public function update(Request $request, Organization $organization)
     {
         $this->validate($request, [
-          'name'    => 'required|unique:organizations,name',
+          'name'    => 'required',
           'type_id' => 'required|integer',
-          'address' => 'required|unique:organizations,address',
+          'address' => 'required',
           'city'    => 'required',
           'country' => 'required',
           'state'   => 'required',
           'zip'     => 'required|numeric',
-          'phone'   => 'required|unique:organizations,phone',
+          'phone'   => 'required',
           'fax'     => 'nullable',
-          'email'   => 'required|email|unique:organizations,email',
+          'email'   => 'required|email',
           'website' => 'nullable',
         ]);
 

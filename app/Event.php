@@ -23,7 +23,7 @@ class Event extends Model
 
     public function type()
     {
-      return $this->belongsTo('App\EventType', 'id');
+      return $this->belongsTo('App\EventType');
     }
 
 }

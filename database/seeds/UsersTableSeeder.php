@@ -20,7 +20,7 @@ class UsersTableSeeder extends Seeder
         'role_id'         => 1,
         'organization_id' => 1,
         'type'            => 'walk-up',
-        'created_at'      => Date::now('America/Chicago'),
+        'created_at'      => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
       ]);
       // 2
       DB::table('users')->insert([

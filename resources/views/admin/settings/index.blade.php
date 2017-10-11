@@ -190,7 +190,7 @@
               </td>
               <td>
                 @foreach($ticketType->allowedEvents as $eventType)
-                  <div class="ui label">{{ $eventType->name }}</div>
+                  <div class="ui mini label">{{ $eventType->name }}</div>
                 @endforeach
               </td>
               <td>
@@ -204,7 +204,7 @@
             @endforeach
           @else
             <tr class="warning center aligned">
-              <td colspan="2"><i class="info circle icon"></i>You have not added any ticket types yet.</td>
+              <td colspan="4"><i class="info circle icon"></i>You have not added any ticket types yet.</td>
             </tr>
           @endif
         </tbody>

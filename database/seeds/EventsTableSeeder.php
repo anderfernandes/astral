@@ -12,13 +12,13 @@ class EventsTableSeeder extends Seeder
     public function run()
     {
         DB::table('events')->insert([
-          'start'      => Date::createFromDate(1970, 1, 1, 'America/Chicago')->toDateTimeString(),
-          'end'        => Date::createFromDate(1970, 1, 1, 'America/Chicago')->toDateTimeString(),
+          'start'      => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
+          'end'        => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
           'type_id'    => 1,
           'show_id'    => 1,
           'seats'      => 0,
           'creator_id' => 1,
-          'created_at' => Date::createFromDate(1970, 1, 1, 'America/Chicago')->toDateTimeString(),
+          'created_at' => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
         ]);
     }
 }

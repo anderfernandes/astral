@@ -41,13 +41,13 @@ class SaleController extends Controller
      */
     public function create()
     {
-        $organizations = Organization::pluck('name', 'id');
-        $allCustomers = User::all();
+        $organizations = Organization::all();
+        $customers = User::all();
         $events    = Event::where('start', '>', Date::now()->toDateTimeString())->get();
         $paymentMethods = PaymentMethod::all();
         $ticketTypes = TicketType::all();
 
-        $customers = $allCustomers->mapWithKeys(function ($item) {
+        /*$customers = $allCustomers->mapWithKeys(function ($item) {
           return [ $item['id'] => $item['firstname'].' '.$item['lastname']];
         });
 
@@ -58,7 +58,7 @@ class SaleController extends Controller
         });*/
 
         return view('admin.sales.create')
-          ->withCustomers($customers->all())
+          ->withCustomers($customers)
           ->withEvents($events->all())
           ->withTicketTypes($ticketTypes)
           ->withPaymentMethods($paymentMethods)

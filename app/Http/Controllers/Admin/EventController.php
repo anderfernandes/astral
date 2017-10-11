@@ -50,7 +50,7 @@ class EventController extends Controller
         $this->validate($request, [
             'show_id'        => 'required',
             'type_id'        => 'required',
-            'start'          => 'required',
+            'start'          => 'required|unique:events,start',
             'end'            => 'required',
             'seats'          => 'required|min:0',
             'memo'           => 'nullable',
@@ -109,7 +109,7 @@ class EventController extends Controller
       $this->validate($request, [
           'show_id'        => 'required',
           'type_id'        => 'required',
-          'start'          => 'required',
+          'start'          => 'required|unique:events,start',
           'end'            => 'required',
           'seats'          => 'required',
           'memo'           => 'nullable',

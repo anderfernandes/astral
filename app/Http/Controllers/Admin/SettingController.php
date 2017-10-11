@@ -72,9 +72,9 @@ class SettingController extends Controller
     public function addTicketType(Request $request)
     {
       $this->validate($request, [
-        'name'              => 'required|unique:ticket_types,name',
+        'name'              => 'required',
         'price'             => 'required|numeric',
-        'allowed_in_events' => 'required',
+        'allowed_in_events.*' => 'required',
         'active'            => 'required',
         'description'       => 'required|max:255'
       ]);

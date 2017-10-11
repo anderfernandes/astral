@@ -19,7 +19,7 @@ class ShowsTableSeeder extends Seeder
         'description' => 'Write a description here.',
         'cover'       => 'https://semantic-ui.com/images/wireframe/image.png',
         'creator_id'  => 1,
-        'created_at'  => Date::createFromDate(1970, 1, 1, 'America/Chicago')->toDateTimeString(),
+        'created_at'  => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
       ]);
       // Planetarium example show seed
       DB::table('shows')->insert([

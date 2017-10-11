@@ -21,7 +21,7 @@
       {!! Form::select('show_id', $shows, null, ['placeholder' => 'Select a show', 'class' => 'ui search dropdown']) !!}
     </div>
     <div class="field">
-      {!! Form::label('type', 'Type') !!}
+      {!! Form::label('type_id', 'Type') !!}
       {!! Form::select('type_id', $eventTypes, null, ['placeholder' => 'Select event type', 'class' => 'ui dropdown']) !!}
     </div>
     <div class="field">

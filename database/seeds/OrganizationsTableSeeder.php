@@ -22,7 +22,7 @@ class OrganizationsTableSeeder extends Seeder
           'phone'       => '(254) 526-7161',
           'email'       => 'astral@astral.com',
           'type_id'     => 1,
-          'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
+          'created_at'  => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
         ]);
 
         DB::table('organizations')->insert([
