@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 
 use App\Event;
 use App\Setting;
+use App\User;
 
 
 /*
@@ -37,6 +38,7 @@ Route::get('events', function() {
         'type'  => $event->show->type,
         'cover' => $event->show->cover
         ],
+      'allowedTickets' => $event->type->allowedTickets,
     ]);
   }
   return $eventsArray;
@@ -46,4 +48,9 @@ Route::get('settings', function() {
   $settings = Setting::find(1)->get();
 
   return $settings;
+});
+
+Route::get('customers', function() {
+  $customers = User::all();
+  return $customers;
 });

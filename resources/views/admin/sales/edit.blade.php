@@ -77,24 +77,49 @@
   <div class="column">
     <div class="ui segment">
       <div class="ui dividing header"><i class="dollar sign icon"></i>Sale Information</div>
-      <div class="two fields">
-        <div class="required field">
-          {!! Form::label('organization_id', 'Organization') !!}
-          {!! Form::select('organization_id', $organizations, null,
-            [
-              'placeholder' => 'Select an organization',
-              'class'       => 'ui search dropdown'
-            ])
-          !!}
+      <div class="required field">
+        {!! Form::label('organization_id', 'Organization') !!}
+        <div class="ui selection search scrolling dropdown">
+          @if (old('organization_id') == null)
+            <input type="hidden" id="organization_id" name="organization_id" value="1">
+          @else
+            <input type="hidden" id="organization_id" name="organization_id" value="{{ old('organization_id') }}">
+          @endif
+          <div class="default text">Select an Organization</div>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            @foreach ($organizations as $organization)
+              <div class="item" data-value="{{ $organization->id }}">
+                {{ $organization->name }}
+                @if ($organization->id != 1)
+                  <div class="ui mini label">{{ $organization->type->name }}</div>
+                  <input type="hidden" id="istaxable" name="istaxable" value="{{ $organization->type->taxable }}">
+                @endif
+              </div>
+            @endforeach
+          </div>
         </div>
-        <div class="required field">
-          {!! Form::label('customer_id', 'Customer') !!}
-          {!! Form::select('customer_id', $customers, null,
-            [
-              'placeholder' => 'Select a customer',
-              'class'       => 'ui search dropdown'
-            ])
-          !!}
+      </div>
+      <div class="required field">
+        {!! Form::label('customer_id', 'Customer') !!}
+        <div class="ui selection search scrolling dropdown">
+          @if (old('organization_id') == null)
+            <input type="hidden" id="customer_id" name="customer_id" value="1">
+          @else
+            <input type="hidden" id="customer_id" name="customer_id" value="{{ old('customer_id') }}">
+          @endif
+          <div class="default text">Select an Organization</div>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            @foreach ($customers as $customer)
+              <div class="item" data-value="{{ $customer->id }}">
+                {{ $customer->firstname . ' ' . $customer->lastname }}
+                @if ($customer->id != 1)
+                  <span class="ui mini label">{{ $customer->organization->name }}</span>
+                @endif
+              </div>
+            @endforeach
+          </div>
         </div>
       </div>
       <div class="required field">
@@ -107,7 +132,8 @@
           @endif
           <i class="dropdown icon"></i>
           @if(count($events) == 0)
-            <div class="default text"><i class="info circle icon"></i>No events were found! You need to create an event for your sale =)</div>
+            <div class="default text">
+              <i class="info circle icon"></i>No events were found! You need to create an event for your sale =)</div>
           @else
             <div class="default text">Select the first event</div>
           @endif
@@ -116,7 +142,7 @@
               <div class="item" data-value="{{ $event->id }}">
                 <strong>{{ $event->show->name }}</strong>
                 on <em>{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</em>
-                <span class="ui mini label">{{ $event->type->name }}</span>
+                <span class="ui mini label" id="firstshow">{{ $event->type->name }}</span>
               </div>
             @endforeach
           </div>
@@ -140,7 +166,7 @@
               <div class="item" data-value="{{ $event->id }}">
                 <strong>{{ $event->show->name }}</strong>
                 on {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-                <span class="ui mini label">{{ $event->type->name }}</span>
+                <span class="ui mini label" id="secondshow">{{ $event->type->name }}</span>
               </div>
             @endforeach
           </div>
@@ -148,14 +174,14 @@
       </div>
       <table class="ui selectable single line very compact table">
         <thead>
-          <tr>
+          <tr class="header">
             <th>Ticket Type</th>
             <th>Amount / Price</th>
           </tr>
         </thead>
         <tbody>
           @foreach ($ticketTypes as $ticketType)
-          <tr>
+          <tr style="display:none" class="<?php foreach($ticketType->allowedEvents as $eventType){ echo "$eventType->name ";} ?>">
             <td>
               <h4 class="ui header">
                 <i class="ticket icon"></i>
@@ -221,7 +247,7 @@
       </div>
       <table class="ui selectable single line table">
         <thead>
-          <tr>
+          <tr class="payments">
             <th>#</th>
             <th>Method</th>
             <th>Amount Paid</th>
@@ -232,7 +258,7 @@
         <tbody>
           @if(count($sale->payments) > 0)
             @foreach($sale->payments as $payment)
-              <tr>
+              <tr class="payments">
                 <td><div class="ui header">{{ $payment->id }}</div></td>
                 <td>{{ $payment->method->name }}</td>
                 <td>{{ number_format($payment->tendered, 2) }}</td>
@@ -258,6 +284,29 @@
 {!! Form::close() !!}
 
 <script>
+
+  // Auto Select Taxable
+  function autoSelectTaxable() {
+    var taxable = document.querySelector('#istaxable').value
+    $('#taxable').val(taxable).change()
+  }
+
+  $('#organization_id').change(autoSelectTaxable)
+
+  // Hide Unwanted Ticket Types
+  function hideUnwantedTicketTypes() {
+    // This function reads the text inside the label in the first and second show boxes
+    var firstEventType = document.querySelector('#firstshow').innerHTML
+    var secondEventType = document.querySelector('#secondshow').innerHTML
+
+    $('tr.' + firstEventType + ', tr.'+ secondEventType + ', tr.payments').css('display', 'table-row')
+    $('tr').not('.' + firstEventType).not('.'+ secondEventType).not('tr.payments').css('display', 'none')
+    $('tr.header').css('display', 'table-row')
+  }
+
+  $(document).ready(hideUnwantedTicketTypes)
+  $('#first_event_id').change(hideUnwantedTicketTypes)
+  $('#second_event_id').change(hideUnwantedTicketTypes)
 
   $('.menu .item').tab({history: true});
 

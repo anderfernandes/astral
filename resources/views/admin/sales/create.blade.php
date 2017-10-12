@@ -248,7 +248,7 @@
       </div>
       <table class="ui selectable single line table">
         <thead>
-          <tr>
+          <tr class="payments">
             <th>#</th>
             <th>Method</th>
             <th>Amount Paid</th>
@@ -257,7 +257,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="warning center aligned">
+          <tr class="warning center aligned payments">
             <td colspan="5"><i class="info circle icon"></i> No payments have been received so far</td>
           </tr>
         </tbody>
@@ -288,8 +288,8 @@
     var firstEventType = document.querySelector('#firstshow').innerHTML
     var secondEventType = document.querySelector('#secondshow').innerHTML
 
-    $('tr.' + firstEventType + ', tr.'+ secondEventType).css('display', 'table-row')
-    $('tr').not('.' + firstEventType).not('.'+ secondEventType).css('display', 'none')
+    $('tr.' + firstEventType + ', tr.'+ secondEventType + ', tr.payments').css('display', 'table-row')
+    $('tr').not('.' + firstEventType).not('.'+ secondEventType).not('tr.payments').css('display', 'none')
     $('tr.header').css('display', 'table-row')
   }
 
