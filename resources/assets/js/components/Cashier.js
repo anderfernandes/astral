@@ -49,7 +49,7 @@ export default class Cashier extends Component {
             </div>
             </div>
             <div className="sixteen wide mobile four wide computer column">
-              <SaleCard />
+              <SaleCard tickets={this.state.allTickets} />
             </div>
           </div>
         )

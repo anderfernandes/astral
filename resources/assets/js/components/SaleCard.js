@@ -39,8 +39,22 @@ export default class SaleCard extends Component {
       this.setState({ tendered: event.target.value })
     }
 
+    componentDidUpdate(prevProps, prevState) {
+      if (prevProps.tickets != this.props.tickets) {
+        let subtotal = 0
+        this.props.tickets.map(function(t, i) {
+          let ticketPrice = parseFloat(t.price)
+          subtotal = subtotal + ticketPrice
+        }, this)
+        let tax = (this.state.settings.tax / 100) * subtotal
+        let total = subtotal + tax
+        this.setState({ tax: tax, subtotal: subtotal, tax: tax})
+      }
+    }
+
     render() {
-        return (
+      let change = (this.state.tendered - (this.state.subtotal + this.state.tax)) <= 0 ? 0 : (this.state.tendered - (this.state.subtotal + parseFloat(this.state.tax.toFixed(2))))
+      return (
           <div className="ui segments">
             <div className="ui top attached segment">
               <div className="ui form">
@@ -66,11 +80,16 @@ export default class SaleCard extends Component {
             <div className="ui attached clearing segment">
               <h4 className="ui right floated header">
                 Subtotal = $ <span id="subtotal">{ parseFloat(this.state.subtotal).toFixed(2) }</span>
-                <div className="sub header">{ this.state.settings.tax }% Tax = $ <span id="tax">{ parseFloat(this.state.tax).toFixed(2) }</span></div>
+                <div className="sub header">
+                  { this.state.settings.tax }% Tax = $ <span id="tax">{ parseFloat(this.state.tax).toFixed(2) }</span>
+                </div>
               </h4>
               <h4 className="ui left floated header">
                 <div className="sub header">Change Due</div>
-                <span id="dollar-sign">$</span> <span id="change-due">{ parseFloat(this.state.tendered - (this.state.subtotal + this.state.tax)).toFixed(2) }</span>
+                <span id="dollar-sign">$</span>
+                  <span id="change-due">
+                    { (change).toFixed(2) }
+                  </span>
               </h4>
             </div>
             <div className="ui attached clearing segment">
@@ -79,7 +98,7 @@ export default class SaleCard extends Component {
                   <i className="cancel icon"></i> Cancel
                 </div>
                 <div className="ui green button">
-                  <i className="check icon"></i> Charge $ <span id="total">{ parseFloat(this.state.subtotal + this.state.tax).toFixed(2) }</span>
+                  <i className="check icon"></i> Charge $ <span id="total">{ parseFloat(this.state.subtotal + parseFloat(this.state.tax.toFixed(2))).toFixed(2) }</span>
                 </div>
               </div>
             </div>
