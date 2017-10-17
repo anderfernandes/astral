@@ -10,20 +10,21 @@ export default class EventCard extends Component {
   }
 
     // Get information on all the tickets for this event and sends it to the parent Cashier component
-    getEventTickets(dataFromChild) {
+    addOrRemoveEventTicket(dataFromChild) {
       this.setState({ eventTickets: dataFromChild })
     }
 
     // Send this event's ticket information to parent Cashier component whenever tickets are added or removed
     componentDidUpdate(prevProps, prevState) {
       if (prevState.eventTickets != this.state.eventTickets)
-        this.props.callbackFromCashier(this.state.eventTickets)
+        this.props.addOrRemoveTicket(this.state.eventTickets)
+
     }
 
     loadAllowedTickets() {
       return this.props.event.allowedTickets.map(function(t, i) {
         return (
-          <TicketButton event={this.props.event} ticket={t} key={i} callbackFromEventCard={this.getEventTickets.bind(this)} />
+          <TicketButton event={this.props.event} ticket={t} key={i} addOrRemoveEventTicket={this.addOrRemoveEventTicket.bind(this)} />
         )
       }, this)
     }
@@ -59,34 +60,35 @@ export default class EventCard extends Component {
 
 class TicketButton extends Component {
 
-
   // Sends ticket information to parent component. In this case, EventCard
-  sendTicketInformation() {
+  sendTicketInformation(action) {
     // Send and array of ticket objects
-    this.props.callbackFromEventCard([{
+    this.props.addOrRemoveEventTicket([{
       ticketId: this.props.ticket.id,
       ticketType: this.props.ticket.name,
       showName: this.props.event.show.name,
       showType: this.props.event.show.type,
       start: this.props.event.start,
-      price: this.props.ticket.price
+      price: this.props.ticket.price,
+      action: action
     }])
   }
 
-  handleClick(e) {
-    this.sendTicketInformation()
+  addOrRemoveTicket(e) {
+    this.sendTicketInformation('add')
+  }
+
+  removeTicket(e) {
+    this.sendTicketInformation('remove')
   }
 
   render() {
-    //console.log("Amount:", this.state.amount)
-    //console.log("Ticket Type:", this.props.ticket.name)
-    //console.log("Total:", parseInt(this.state.amount * this.props.ticket.price).toFixed(2))
     return(
       <div className="ui buttons">
-        <div className="ui inverted green button" onClick={ (e) => this.handleClick(e) }>
+        <div className="ui inverted green button" onClick={ (e) => this.addOrRemoveTicket(e) }>
           {this.props.ticket.name}
         </div>
-        <div className="ui inverted red icon button">
+        <div className="ui inverted red icon button" onClick={ (e)=> this.removeTicket(e) }>
           <i className="minus icon"></i>
         </div>
       </div>

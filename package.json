@@ -22,6 +22,8 @@
     "simplemde": "^1.11.2"
   },
   "dependencies": {
-    "moment": "^2.18.1"
+    "immutability-helper": "^2.4.0",
+    "moment": "^2.18.1",
+    "semantic-ui-react": "^0.75.0"
   }
 }
