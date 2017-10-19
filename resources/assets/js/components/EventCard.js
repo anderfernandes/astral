@@ -64,12 +64,13 @@ class TicketButton extends Component {
   sendTicketInformation(action) {
     // Send and array of ticket objects
     this.props.addOrRemoveEventTicket([{
-      ticketId: this.props.ticket.id,
+      ticketTypeId: this.props.ticket.id,
       ticketType: this.props.ticket.name,
       showName: this.props.event.show.name,
       showType: this.props.event.show.type,
       start: this.props.event.start,
       price: this.props.ticket.price,
+      eventId: this.props.event.id,
       action: action
     }])
   }

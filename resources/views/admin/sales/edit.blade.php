@@ -81,7 +81,7 @@
         {!! Form::label('organization_id', 'Organization') !!}
         <div class="ui selection search scrolling dropdown">
           @if (old('organization_id') == null)
-            <input type="hidden" id="organization_id" name="organization_id" value="1">
+            <input type="hidden" id="organization_id" name="organization_id" value="{{ $sale->organization_id }}">
           @else
             <input type="hidden" id="organization_id" name="organization_id" value="{{ old('organization_id') }}">
           @endif
@@ -104,7 +104,7 @@
         {!! Form::label('customer_id', 'Customer') !!}
         <div class="ui selection search scrolling dropdown">
           @if (old('organization_id') == null)
-            <input type="hidden" id="customer_id" name="customer_id" value="1">
+            <input type="hidden" id="customer_id" name="customer_id" value="{{ $sale->customer_id }}">
           @else
             <input type="hidden" id="customer_id" name="customer_id" value="{{ old('customer_id') }}">
           @endif
@@ -126,7 +126,7 @@
         {{ Form::label('first_event_id', 'First Show') }}
         <div class="ui selection search scrolling dropdown">
           @if (old('first_event_id') == null)
-            <input type="hidden" id="first_event_id" name="first_event_id" value="{{ $sale->first_event_id }}">
+            <input type="hidden" id="first_event_id" name="first_event_id" value="{{ $sale->events[0]->id }}">
           @else
             <input type="hidden" id="first_event_id" name="first_event_id" value="{{ old('first_event_id') }}">
           @endif
@@ -152,7 +152,7 @@
         {{ Form::label('second_event_id', 'Second Show') }}
         <div class="ui selection search scrolling dropdown">
           @if (old('second_event_id') == null)
-            <input type="hidden" id="second_event_id" name="second_event_id" value="{{ $sale->second_event_id }}">
+            <input type="hidden" id="second_event_id" name="second_event_id" value="{{ $sale->events[1]->id }}">
           @else
             <input type="hidden" id="second_event_id" name="second_event_id" value="{{ old('second_event_id') }}">
           @endif
@@ -193,7 +193,7 @@
             </td>
             <td>
               <div class="ui right labeled input">
-                {!! Form::text('ticket['. $ticketType->id .']', $sale->tickets->where('event_id', $sale->first_event_id)->where('ticket_type_id', $ticketType->id)->count(), ['placeholder' => 'Amount of '. $ticketType->name . ' tickets', 'size' => 1, 'class' => 'ticket-type']) !!}
+                {!! Form::text('ticket['. $ticketType->id .']', $sale->tickets->where('event_id', $sale->events[0]->id)->where('ticket_type_id', $ticketType->id)->count(), ['placeholder' => 'Amount of '. $ticketType->name . ' tickets', 'size' => 1, 'class' => 'ticket-type']) !!}
                 <div class="ui tag label">$ {{ number_format($ticketType->price, 2) }} each</div>
               </div>
             </td>

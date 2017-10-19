@@ -105,11 +105,13 @@ class SaleController extends Controller
           $sale->total             = number_format($request->total, 2);
           $sale->refund            = false;
           $sale->memo              = $request->memo;
-          $sale->first_event_id    = $request->first_event_id;
-          $sale->second_event_id   = $request->second_event_id;
+          //$sale->first_event_id    = $request->first_event_id;
+          //$sale->second_event_id   = $request->second_event_id;
           $sale->source            = "admin";
 
           $sale->save();
+
+          $sale->events()->attach([$request->first_event_id, $request->second_event_id]);
 
           if (isSet($request->payment_method_id) && ($request->tendered > 0)) {
 
@@ -141,9 +143,9 @@ class SaleController extends Controller
           foreach($request->ticket as $key => $value) {
             for($i = 1; $i <= $value; $i++) {
               $array['ticket_type_id'] = $key;
-              $array['event_id'] = $request->first_event_id;
-              $array['customer_id'] = $request->customer_id;
-              $array['cashier_id'] = Auth::user()->id;
+              $array['event_id']       = $request->first_event_id;
+              $array['customer_id']    = $request->customer_id;
+              $array['cashier_id']     = Auth::user()->id;
 
               $firstShowTickets = array_prepend($firstShowTickets, $array);
             }
@@ -186,7 +188,7 @@ class SaleController extends Controller
           Session::flash('success', 'Sale #'. $sale->id .' created successfully!');
 
           return redirect()->route('admin.sales.index');
-        }
+        } // end of else that checks if user belongs to organization
 
     }
 
@@ -265,10 +267,12 @@ class SaleController extends Controller
         $sale->total             = number_format($request->total, 2);
         $sale->refund            = false;
         $sale->memo              = $request->memo;
-        $sale->first_event_id    = $request->first_event_id;
-        $sale->second_event_id   = $request->second_event_id;
+        //$sale->first_event_id    = $request->first_event_id;
+        //$sale->second_event_id   = $request->second_event_id;
 
         $sale->save();
+
+        $sale->events()->attach([$request->first_event_id, $request->second_event_id]);
 
         if (isSet($request->payment_method_id) && ($request->tendered > 0)) {
 
@@ -305,9 +309,9 @@ class SaleController extends Controller
           foreach($request->ticket as $key => $value) {
             for($i = 1; $i <= $value; $i++) {
               $array['ticket_type_id'] = $key;
-              $array['event_id'] = $request->first_event_id;
-              $array['customer_id'] = $request->customer_id;
-              $array['cashier_id'] = Auth::user()->id;
+              $array['event_id']       = $request->first_event_id;
+              $array['customer_id']    = $request->customer_id;
+              $array['cashier_id']     = Auth::user()->id;
 
               $firstShowTickets = array_prepend($firstShowTickets, $array);
             }

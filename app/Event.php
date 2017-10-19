@@ -16,9 +16,9 @@ class Event extends Model
       return $this->belongsTo('App\User');
     }
 
-    public function sale()
+    public function sales()
     {
-      $this->belongsToMany('App\Sale', 'sale_event');
+      return $this->hasMany('App\Sale');
     }
 
     public function type()

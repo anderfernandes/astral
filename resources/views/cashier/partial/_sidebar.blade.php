@@ -27,6 +27,7 @@
   <a class="item" href="{{ route('cashier.reports', 'transaction-detail') }}" target="_blank">
     <i class="file text outline icon"></i> Transaction Detail Report
   </a>
+  
 </div>
 
 <!-- Find Sale Modal -->
@@ -55,16 +56,13 @@
         <div class="field">
           {!! Form::label('query_payment_method', 'Sale Payment Method') !!}
           <div class="ui selection dropdown">
-            <input type="hidden" name="query_payment_method">
+            <input type="hidden" name="query_payment_method" >
             <i class="dropdown icon"></i>
             <div class="default text">Payment Method</div>
             <div class="menu">
-              <div class="item" data-value="cash"><i class="money icon"></i>Cash</div>
-              <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
-              <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
-              <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
-              <div class="item" data-value="american express"><i class="american express icon"></i>American Express</div>
-              <div class="item" data-value="check"><i class="check icon"></i>Check</div>
+              @foreach (App\PaymentMethod::all() as $paymentMethod)
+                <div class="item" data-value="{{ $paymentMethod->id}}"><i class="{{ $paymentMethod->icon }} icon"></i>{{ $paymentMethod->name }}</div>
+              @endforeach
             </div>
           </div>
         </div>

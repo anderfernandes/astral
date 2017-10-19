@@ -34,6 +34,7 @@
     </thead>
     <tbody>
     @foreach($results as $result)
+      <?php $result = App\Sale::find($result->id) ?>
       @if ($result->refund)
       <tr class="negative">
       @else
@@ -43,22 +44,10 @@
           <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank"><h2 class="ui center aligned header">{{ $result->id }}</h2></a>
         </td>
         <td class="selectable">
-          @if ($result->payment_method == 'visa')
-            <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="visa icon"></i></h2></a>
-          @elseif ($result->payment_method == 'mastercard')
-            <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="mastercard icon"></i></h2></a>
-          @elseif ($result->payment_method == 'discover')
-            <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="discover icon"></i></h2></a>
-          @elseif ($result->payment_method == 'american express')
-            <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="american express icon"></i></h2></a>
-          @elseif ($result->payment_method == 'check')
-            <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="check icon"></i></h2></a>
-          @else
-            <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="money icon"></i></h2></a>
-          @endif
+          <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="{{ $result->payments->first()->method->icon . ' icon' }}"></i></h2></a>
         </td>
         <td class="selectable">
-          <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ $result->reference }}</a>
+          <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ $result->payments->first()->reference }}</a>
         </td>
         <td class="selectable">
           @if ($result->refund == true)
@@ -68,7 +57,7 @@
           @endif
         </td>
         <td class="selectable"><a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ $result->source }}</a></td>
-        <td class="selectable"><a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ App\User::find($result->cashier_id)->firstname }} {{ App\User::find($result->cashier_id)->lastname }}</a></td>
+        <td class="selectable"><a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ App\User::find($result->creator_id)->firstname }} {{ App\User::find($result->creator_id)->lastname }}</a></td>
         <td class="selectable"><a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ Date::parse($result->created_at)->format('l, F j, Y \a\t g:i A') }}</a></td>
       </tr>
     @endforeach

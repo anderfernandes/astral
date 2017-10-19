@@ -28,10 +28,6 @@ class CreateSalesTable extends Migration
             $table->foreign('customer_id')->references('id')->on('users');
             $table->integer('organization_id')->unsigned();
             $table->foreign('organization_id')->references('id')->on('organizations');
-            $table->integer('first_event_id');
-            $table->foreign('first_event_id')->references('id')->on('events');
-            $table->integer('second_event_id');
-            $table->foreign('second_event_id')->references('id')->on('events');
             $table->text('memo')->nullable();
             $table->timestamps();
         });

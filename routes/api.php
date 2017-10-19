@@ -5,7 +5,9 @@ use Illuminate\Http\Request;
 use App\Event;
 use App\Setting;
 use App\User;
+use App\PaymentMethod;
 
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,11 +48,54 @@ Route::get('events', function() {
 
 Route::get('settings', function() {
   $settings = Setting::find(1)->get();
-
   return $settings;
 });
 
 Route::get('customers', function() {
   $customers = User::all();
   return $customers;
+});
+
+Route::get('payment-methods', function() {
+  $paymentMethods = PaymentMethod::all();
+  return $paymentMethods;
+});
+
+Route::middleware('auth:api')->get('user', function (Request $request) {
+    return $request->user()->id;
+});
+
+Route::post('new-sale', function(Request $request) {
+  // New Sale
+  /*$sale = new Sale;
+
+  $sale->creator_id        = Auth::user()->id;
+  $sale->organization_id   = User::find($request->sale->customerId)->organization_id;
+  $sale->customer_id       = $request->sale->customer_id;
+  $sale->status            = "complete";
+  $sale->taxable           = User::find($request->sale->customerId)->organization->type->taxable;
+  $sale->subtotal          = number_format($request->sale->subtotal, 2);
+  $sale->tax               = number_format($request->sale->tax, 2);
+  $sale->total             = number_format($request->sale->total, 2);
+  $sale->refund            = false;
+  $sale->memo              = "";
+  //$sale->first_event_id    = $request->first_event_id;
+  //$sale->second_event_id   = $request->second_event_id;
+
+
+
+  $sale->source            = "cashier";
+
+  //$sale->save();
+
+  //$sale->events()->attach([$request->first_event_id, $request->second_event_id]);
+
+
+  // New Payment
+
+  // Store tickets in the database
+
+*/
+
+  return response()->json($request);
 });

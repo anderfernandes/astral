@@ -41,7 +41,7 @@ class Sale extends Model
 
     public function events()
     {
-      return $this->belongsToMany('App\Event');
+      return $this->belongsToMany('App\Event', 'sale_event', 'sale_id', 'event_id');
     }
 
 }
