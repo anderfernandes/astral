@@ -69,7 +69,11 @@
     <label for="paid">Balance</label>
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      <input type="text" id="balance" name="balance" value="{{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}" readonly>
+      @if (number_format($sale->total - $sale->payments->sum('tendered'), 2) > 2)
+        <input type="text" id="balance" name="balance" value="{{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}" readonly>
+      @else
+        <input type="text" id="balance" name="balance" value="{{ number_format(0, 2) }}" readonly>
+      @endif
     </div>
   </div>
 </div>

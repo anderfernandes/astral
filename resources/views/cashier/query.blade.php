@@ -8,6 +8,10 @@
 
 @section('content')
 
+  <a class="ui default button" href="{{ route('cashier.index') }}">
+    <i class="left chevron icon"></i> Back
+  </a>
+
   @if (count($results) < 1)
     <div class="ui info icon message">
       <i class="info circle icon"></i>
@@ -34,7 +38,6 @@
     </thead>
     <tbody>
     @foreach($results as $result)
-      <?php $result = App\Sale::find($result->id) ?>
       @if ($result->refund)
       <tr class="negative">
       @else

@@ -184,12 +184,31 @@ class CashierController extends Controller
       }
       else
       {
+        /*
+        Payment information and Sale information come from two different tables,
+        thus the need for the code below. Also, I want to return them as an instance
+        of Eloquent, which allows Astral to query relationships.
+        */
 
         if ($request->query_payment_method)
         {
           $sales = \DB::table('payments')->where('payment_method_id', $request->query_payment_method)->get(['sale_id'])->toArray();
           $results = \DB::table('sales')->whereIn('id', array_pluck($sales, 'sale_id'));
         }
+
+        else if ($request->query_reference)
+        {
+          $sales = \DB::table('payments')->where('reference', $request->query_reference)->get(['sale_id'])->toArray();
+          $results = \DB::table('sales')->whereIn('id', array_pluck($sales, 'sale_id'));
+        }
+
+        else if ($request->query_payment_method && $request->query_reference) {
+          $sales = \DB::table('payments')
+            ->where('payment_method_id', $request->query_payment_method)
+            ->where('reference', $request->query_reference);
+          $results = \DB::table('sales')->whereIn('id', array_pluck($sales, 'sale_id'));
+        }
+
         else
         {
           $results = \DB::table('sales');
@@ -202,12 +221,12 @@ class CashierController extends Controller
             $results = $results->where('total', $request->query_total);
           else
             $results;
-
-          if ($request->query_reference)
-            $results = $results->where('reference', $request->query_reference);
-          else
-            $results;
         }
+
+        $results = $results->get();
+        $resultsSalesIds = array_pluck($results, 'id');
+        $results = Sale::whereIn('id', $resultsSalesIds);
+
         return view('cashier.query')->withResults($results->where('created_at', '>=', Date::now('America/Chicago')->startOfDay())->get());
 
       }
