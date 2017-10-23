@@ -46,44 +46,52 @@ class CashierController extends Controller
                                   ->withEvents($events);
     }
 
-    public function reports($type) {
+    public function reports($type)
+    {
 
       $today = Date::now()->startOfDay();
-      // REPORT STARTING POINT MUST BE GREATER THAN TODAY!!!
-      $sales = Sale::where('created_at', '>=', $today)->orderBy('created_at', 'asc');
-      $sales = $sales->where('creator_id', Auth::user()->id)->get();
+
+      $sales = Sale::where([
+        ['created_at', '>=', $today],
+        ['creator_id', '=', Auth::user()->id],
+        ['refund', '=', false],
+      ])->orderBy('created_at', 'asc')->get();
+
+      // Get Card Sales IDs
+      $salesIds = array_pluck($sales, 'id');
+      // Find all payments for the IDs we retrieved
+      $payments = Payment::whereIn('sale_id', $salesIds)->get();
 
       if ($type == 'closeout')
       {
 
-        // Cash Sales
-        $cashSales = Sale::where([
-          ['created_at', '>=', $today],
-          ['cashier_id', '=', Auth::user()->id],
-          ['payment_method', '=', 'cash'],
-          ['refund', '=', false],
-          ])->get();
-        // Card Sales
-        $cardSales = Sale::where([
-          ['created_at', '>=', $today],
-          ['cashier_id', '=', Auth::user()->id],
-          ['payment_method', '<>', 'cash'],
-          ['refund', '=', false],
-          ]);
-        $cardSales = $cardSales->where('payment_method', '<>', 'check')->get();
-        // Check Sales
-        $checkSales = Sale::where([
-          ['created_at', '>=', $today],
-          ['cashier_id', '=', Auth::user()->id],
-          ['payment_method', '=', 'check'],
-          ['refund', '=', false],
-          ])->get();
+        $cashPayments = [];
+        $cardPayments = [];
+        $checkPayments = [];
+        $otherPayments = [];
 
-        return view('cashier.reports.closeout')->with('cashSales', $cashSales)->with('cardSales', $cardSales)->with('checkSales', $checkSales);
+        // Get payments of a particular payment_method type
+        foreach ($payments as $payment) {
+          if ($payment->method->type == 'cash')
+            array_unshift($cashPayments, $payment);
+          else if ($payment->method->type == 'card')
+            array_unshift($cardPayments, $payment);
+          else if ($payment->method->type == 'check')
+            array_unshift($checkPayments, $payment);
+          else
+            array_unshift($otherPayments, $payment);
+        }
+
+        return view('cashier.reports.closeout')->with('cashPayments', $cashPayments)
+                                               ->with('cardPayments', $cardPayments)
+                                               ->with('checkPayments', $checkPayments)
+                                               ->with('otherPayments', $otherPayments);
       }
       if ($type == 'transaction-detail')
       {
-        return view('cashier.reports.transaction-detail')->withSales($sales);
+        // REPORT STARTING POINT MUST BE GREATER THAN TODAY!!!
+
+        return view('cashier.reports.transaction-detail')->withPayments($payments);
       }
     }
 
@@ -93,7 +101,7 @@ class CashierController extends Controller
       $this->validate($request, [
         'payment_method'           => 'required',
         'reference'                => 'nullable|integer',
-        'tendered'                 => 'required|numeric',
+        //'tendered'                 => 'required|numeric',
         'customer_id'              => 'required|integer',
         'ticket.*.event_id'        => 'required',
         'ticket.*.cashier_id'      => 'required',
@@ -136,7 +144,7 @@ class CashierController extends Controller
         // payment = total - tendered (precision set to two decimal places)
         $payment->change_due        = number_format($request->tendered - $request->total, 2);
         $payment->reference         = $request->reference;
-        $payment->source            = 'admin';
+        $payment->source            = 'cashier';
         $payment->sale_id           = $sale->id;
 
         $payment->save();

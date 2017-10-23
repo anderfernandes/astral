@@ -60,7 +60,18 @@ class UsersTableSeeder extends Seeder
         'firstname'       => 'Donald',
         'lastname'        => 'Hubbs',
         'email'           => 'dhubbs@stu.ctcd.edu',
-        'password'        =>  '$2y$10$2sq9LcPg2W6/iIKQ20J19OwDFxZmrhCgU0Z/MPY6EQw0qbGJuQImO',
+        'password'        => '$2y$10$2sq9LcPg2W6/iIKQ20J19OwDFxZmrhCgU0Z/MPY6EQw0qbGJuQImO',
+        'role_id'         => 2,
+        'organization_id' => 2,
+        'type'            => 'individual',
+        'created_at'      => Date::now('America/Chicago'),
+      ]);
+      // 6
+      DB::table('users')->insert([
+        'firstname'       => 'David',
+        'lastname'        => 'Cantwell',
+        'email'           => 'somethingsomething@gmail.com',
+        'password'        => '$2y$10$RMa8J6rGq1VfoA9jMFPH0.QO3e5bvaRU/S2p0/eqGKVy1Uta518tu',
         'role_id'         => 2,
         'organization_id' => 2,
         'type'            => 'individual',

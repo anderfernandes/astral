@@ -38,5 +38,56 @@ class TicketTypesTableSeeder extends Seeder
         'price'         => 5.00,
         'created_at'    => Date::now('America/Chicago')->toDateTimeString(),
       ]); */
+
+
+      $member = new App\TicketType;
+
+      $member->name        = "Member";
+      $member->price       = 0;
+      $member->active      = true;
+      $member->description = "Member tickets for all event types";
+
+      $member->save();
+
+      $member->allowedEvents()->attach([2, 3, 4]);
+
+      /************************************************************************/
+
+      $matinee = new App\TicketType;
+
+      $matinee->name        = "Matinee";
+      $matinee->price       = 5;
+      $matinee->active      = true;
+      $matinee->description = "Matinee unique price ticket, adult or child";
+
+      $matinee->save();
+
+      $matinee->allowedEvents()->attach([2]);
+
+      /************************************************************************/
+
+      $adult = new App\TicketType;
+
+      $adult->name        = "Adult";
+      $adult->price       = 7;
+      $adult->active      = true;
+      $adult->description = "Adult tickets for Weekend shows";
+
+      $adult->save();
+
+      $adult->allowedEvents()->attach([3]);
+
+      /************************************************************************/
+
+      $child = new App\TicketType;
+
+      $child->name        = "Child";
+      $child->price       = 6;
+      $child->active      = true;
+      $child->description = "Adult tickets for Weekend shows";
+
+      $child->save();
+
+      $child->allowedEvents()->attach([3]);
     }
 }

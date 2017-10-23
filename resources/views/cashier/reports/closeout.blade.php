@@ -12,7 +12,7 @@
   </div>
 
   <table class="ui very basic collapsing celled table">
-  @if (count($cashSales) > 0)
+  @if (count($cashPayments) > 0)
 
       <tr>
         <td><strong>Quantity</strong></td>
@@ -21,36 +21,36 @@
       </tr>
 
       <tr>
-        <td>{{ count($cashSales) }}</td>
+        <td>{{ count($cashPayments) }}</td>
         <td>Cash</td>
         <td class="right aligned">$
           <?php
-            $cashSalesTotal = 0;
-            foreach ($cashSales as $cashSale)
+            $cashPaymentsTotal = 0;
+            foreach ($cashPayments as $cashPayment)
             {
-              $cashSalesTotal += $cashSale['total'];
+              $cashPaymentsTotal += $cashPayment['total'];
             }
-            echo number_format($cashSalesTotal, 2)
+            echo number_format($cashPaymentsTotal, 2)
             ?>
         </td>
       </tr>
 
       <tr>
         <td colspan="3">
-          <strong>User Totals: <span style="float:right">$ {{ number_format($cashSalesTotal, 2) }}</span></strong>
+          <strong>User Totals: <span style="float:right">$ {{ number_format($cashPaymentsTotal, 2) }}</span></strong>
         </td>
       </tr>
 
       <tr>
         <td colspan="3">
-          Transactions: {{ count($cashSales) }}
+          Transactions: {{ count($cashPayments) }}
         </td>
       </tr>
   @else
-      <?php $cashSalesTotal = 0 ?>
+      <?php $cashPaymentsTotal = 0 ?>
   @endif
 
-  @if (count($cardSales) > 0)
+  @if (count($cardPayments) > 0)
 
       <tr>
         <td><strong>Quantity</strong></td>
@@ -59,35 +59,35 @@
       </tr>
 
       <tr>
-        <td>{{ count($cardSales) }}</td>
+        <td>{{ count($cardPayments) }}</td>
         <td>Credit Card</td>
         <td class="right aligned">$
           <?php
-            $cardSalesTotal = 0;
-            foreach ($cardSales as $cardSale)
+            $cardPaymentsTotal = 0;
+            foreach ($cardPayments as $cardPayment)
             {
-              $cardSalesTotal += $cardSale['total'];
+              $cardPaymentsTotal += $cardPayment['total'];
             }
-            echo number_format($cardSalesTotal, 2)
+            echo number_format($cardPaymentsTotal, 2)
             ?>
         </td>
       </tr>
 
       <tr>
         <td colspan="3">
-          <strong>User Totals: <span style="float:right">$ {{ number_format($cardSalesTotal, 2) }}</span></strong>
+          <strong>User Totals: <span style="float:right">$ {{ number_format($cardPaymentsTotal, 2) }}</span></strong>
         </td>
       </tr>
       <tr>
         <td colspan="3">
-          Transactions: {{ count($cardSales) }}
+          Transactions: {{ count($cardPayments) }}
         </td>
       </tr>
   @else
-      <?php $cardSalesTotal = 0 ?>
+      <?php $cardPaymentsTotal = 0 ?>
   @endif
 
-  @if (count($checkSales) > 0)
+  @if (count($checkPayments) > 0)
 
       <tr>
         <td><strong>Quantity</strong></td>
@@ -96,39 +96,39 @@
       </tr>
 
       <tr>
-        <td>{{ count($checkSales) }}</td>
+        <td>{{ count($checkPayments) }}</td>
         <td>Check</td>
         <td>$
           <?php
-            $checkSalesTotal = 0;
-            foreach ($checkSales as $checkSale)
+            $checkPaymentsTotal = 0;
+            foreach ($checkPayments as $checkPayment)
             {
-              $checkSalesTotal += $checkSale['total'];
+              $checkPaymentsTotal += $checkPayment['total'];
             }
-            echo number_format($checkSalesTotal, 2)
+            echo number_format($checkPaymentsTotal, 2)
           ?>
         </td>
       </tr>
 
       <tr>
         <td colspan="3">
-          User Totals: <span style="float:right">$ {{ number_format($checkSalesTotal, 2) }}</span>
+          User Totals: <span style="float:right">$ {{ number_format($checkPaymentsTotal, 2) }}</span>
         </td>
       </tr>
 
       <tr>
         <td colspan="3">
-          Transactions: {{ count($checkSales) }}
+          Transactions: {{ count($checkPayments) }}
         </td>
       </tr>
   @else
-    <?php $checkSalesTotal = 0 ?>
+    <?php $checkPaymentsTotal = 0 ?>
   @endif
 
       <tr>
         <td colspan="3">
           {{ Date::now()->format('m/d/Y') }}
-          Totals: <span style="float:right">$ {{ $cashSalesTotal + $cardSalesTotal + $checkSalesTotal }}
+          Totals: <span style="float:right">$ {{ number_format($cashPaymentsTotal + $cardPaymentsTotal + $checkPaymentsTotal, 2) }}
         </td>
       </tr>
 

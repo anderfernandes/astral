@@ -18,6 +18,7 @@ class CreatePaymentMethodsTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('icon');
+            $table->enum('type', ['cash', 'card', 'check', 'money order', 'other']);
             $table->timestamps();
         });
     }

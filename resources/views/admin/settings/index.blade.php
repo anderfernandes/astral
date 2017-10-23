@@ -256,6 +256,7 @@
         <thead>
           <tr>
             <th>Available Payment Methods</th>
+            <th>Type</th>
           </tr>
         </thead>
         <tbody>
@@ -270,6 +271,7 @@
                 </div>
               </h4>
             </td>
+            <td><div class="ui label">{{ $paymentMethod->type }}</div></td>
           </tr>
           @endforeach
         </tbody>
@@ -277,7 +279,7 @@
     </div>
     <div class="column">
       {!! Form::open(['route' => 'admin.settings.addPaymentMethod', 'class' => 'ui form']) !!}
-      <div class="two fields">
+      <div class="three fields">
         <div class="field">
           {!! Form::label('name', 'Payment Method Name') !!}
           {!! Form::text('name', null, ['placeholder' => 'Payment Method name']) !!}
@@ -285,6 +287,17 @@
         <div class="field">
           {!! Form::label('taxable', 'Icon') !!}
           {!! Form::text('icon', null, ['placeholder' => 'Font Awesome icon class name']) !!}
+        </div>
+        <div class="field">
+          {!! Form::label('type', 'Type') !!}
+          {!! Form::select('type',
+            [
+              'cash'        => 'Cash',
+              'card'        => 'Card',
+              'check'       => 'Check',
+              'money order' => 'Money Order',
+              'other'       => 'Other',
+            ], 'card', ['placeholder' => 'Taxable?', 'class' => 'ui dropdown']) !!}
         </div>
       </div>
       <div class="field">

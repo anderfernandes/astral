@@ -174,7 +174,7 @@
       <h2 class="ui header">
       @endif
         <div class="sub header">Balance</div>
-        @if (number_format($sale->total - $sale->payments->sum('tendered'), 2) > 2)
+        @if (number_format($sale->total - $sale->payments->sum('tendered'), 2) > 0)
           $ {{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}
         @else
           $ 0.00

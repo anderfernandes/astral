@@ -71,7 +71,7 @@
               {!! Form::label('tendered', 'Tendered') !!}
               <div class="ui huge labeled input">
                 <div class="ui label">$</div>
-                {!! Form::text('tendered', number_format(0, 2), ['placeholder' => 'Tendered', 'id' => 'tendered', 'autofocus' => true, 'size' => 1]) !!}
+                {!! Form::text('tendered', number_format(0, 2), ['placeholder' => 'Tendered', 'id' => 'tendered', 'autofocus' => true, 'size' => 1, 'disabled' => true]) !!}
               </div>
             </div>
           </div>
@@ -89,7 +89,7 @@
         <div class="ui attached clearing segment">
           <div class="ui large two buttons">
             <a href="{{ route('cashier.index') }}" class="ui negative button"><i class="remove icon"></i>Cancel</a>
-            {!! Form::button('<i class="check icon"></i>Charge $ <span id="total">0.00</span>', ['type' => 'submit', 'class' => 'ui green button disabled', 'id' => 'submit-sale']) !!}
+            {!! Form::button('<i class="check icon"></i>Charge $ <span id="total">0.00</span>', ['type' => 'submit', 'class' => 'ui green button', 'id' => 'submit-sale', 'disabled' => true]) !!}
             <input type="hidden" name="subtotal" value="0">
             <input type="hidden" name="total" value="0">
           </div>
@@ -141,13 +141,19 @@
         .form({
           fields: {
             reference      : 'empty',
-            tendered       : ['is[' + document.querySelector("#total").innerHTML + ']', 'empty'],
+            tendered       : ['is[' + document.querySelector("#total").innerHTML + ']', 'empty', 'number'],
           }
         });
       } else if (tendered < total) {
         event.preventDefault();
         $('.field#tendered-input').addClass('error');
       } else {
+        $('#cashier.ui.form')
+        .form({
+          fields: {
+            tendered       : ['empty', 'number'],
+          }
+        });
         $('form#cashier.ui.form').removeClass('error');
         $('.field.error').removeClass('error');
       }
@@ -190,7 +196,8 @@
         }
       }
 
-      ticketsArray.length > 0 ? $('#submit-sale').removeClass('disabled') : $('#submit-sale').addClass('disabled')
+      ticketsArray.length > 0 ? $('#submit-sale').attr('disabled', false) : $('#submit-sale').attr('disabled', true)
+
 
       // sum = ticketsArray.map(item => item.price).reduce((prev, next) => { prev + next})
 
@@ -213,6 +220,8 @@
       // Set subtotal and total in the hidden input to send to the server
       document.querySelector('input[name="subtotal"]').value = subtotal;
       document.querySelector('input[name="total"]').value = total;
+
+      parseInt(document.querySelector("#total").innerHTML) <= 0 ? $('#tendered').attr('disabled', true) : $('#tendered').attr('disabled', false)
 
       if (show)
         var showTrimmed = show.replace(/\s+/g, "").replace(":", "");

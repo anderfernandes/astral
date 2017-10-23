@@ -44,7 +44,7 @@ class ShowController extends Controller
           'name'        => 'required',
           'description' => 'required',
           'type'        => 'required',
-          'duration'    => 'required',
+          'duration'    => 'required|integer',
         ]);
 
         $show = new Show;
@@ -53,7 +53,12 @@ class ShowController extends Controller
         $show->description = $request->description;
         $show->type        = $request->type;
         $show->duration    = $request->duration;
-        $show->cover       = $request->cover;
+
+        if ($request->cover == "")
+          $show->cover = "/default.png";
+        else
+          $show->cover       = $request->cover;
+
         $show->creator_id  = Auth::user()->id;
 
         $show->save();
@@ -98,14 +103,18 @@ class ShowController extends Controller
         'name'        => 'required',
         'description' => 'required',
         'type'        => 'required',
-        'duration'    => 'required',
+        'duration'    => 'required|integer',
       ]);
 
       $show->name        = $request->input('name');
       $show->description = $request->input('description');
       $show->type        = $request->input('type');
       $show->duration    = $request->input('duration');
-      $show->cover       = $request->input('cover');
+
+      if ($request->cover == "")
+        $show->cover = "/default.png";
+      else
+        $show->cover       = $request->cover;
 
       $show->save();
 

@@ -25,29 +25,29 @@
     </tr>
   </thead>
   <tbody>
-    @foreach ($sales as $sale)
+    @foreach ($payments as $payment)
 
       <tr>
-        <td>{{ $sale->created_at->format('m/d/Y H:i:s a') }}</td>
-        <td>{{ $sale->id }}</td>
-        <td>{{ $sale->customer->firstname }} {{ $sale->customer->lastname }}</td>
-        <td>{{ $sale->payment_method }}</td>
-        <td>{{ $sale->reference }}</td>
-        <td>$ {{ number_format($sale->tendered, 2) }}</td>
-        <td>$ {{ number_format($sale->change_due, 2) }}</td>
-        <td>$ {{ number_format($sale->total, 2) }}</td>
+        <td>{{ $payment->created_at->format('m/d/Y H:i:s a') }}</td>
+        <td>{{ $payment->sale->id }}</td>
+        <td>{{ $payment->sale->customer->firstname }} {{ $payment->sale->customer->lastname }}</td>
+        <td>{{ $payment->method->name }}</td>
+        <td>{{ $payment->reference }}</td>
+        <td>$ {{ number_format($payment->tendered, 2) }}</td>
+        <td>$ {{ number_format($payment->change_due, 2) }}</td>
+        <td>$ {{ number_format($payment->total, 2) }}</td>
       </tr>
 
-    @if ($sale->refund == true)
+    @if ($payment->refund == true)
     <tr class="negative">
-      <td>{{ $sale->created_at->format('m/d/Y H:i:s a') }}</td>
-      <td>{{ $sale->id }}</td>
-      <td>{{ $sale->customer->firstname }} {{ $sale->customer->lastname }}</td>
-      <td>{{ $sale->payment_method }}</td>
-      <td>{{ $sale->reference }}</td>
+      <td>{{ $payment->created_at->format('m/d/Y H:i:s a') }}</td>
+      <td>{{ $payment->id }}</td>
+      <td>{{ $payment->customer->firstname }} {{ $payment->customer->lastname }}</td>
+      <td>{{ $payment->payment_method }}</td>
+      <td>{{ $payment->reference }}</td>
       <td></td>
       <td></td>
-      <td>($ {{ number_format($sale->total, 2) }})</td>
+      <td>($ {{ number_format($payment->total, 2) }})</td>
     </tr>
     @endif
 
@@ -59,10 +59,10 @@
       <th colspan="8" class="right aligned">
         <strong>Totals for {{ Auth::user()->firstname }}: $
           <?php
-            $totals = 0; foreach ($sales as $sale)
+            $totals = 0; foreach ($payments as $payment)
             {
-              if ($sale->refund == false)
-                $totals += $sale['total']; 
+              if ($payment->refund == false)
+                $totals += $payment['total'];
             }
             echo number_format($totals, 2)
             ?>
