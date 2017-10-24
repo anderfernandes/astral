@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('events', function() {
+/*Route::get('events', function() {
   // Get today's date for the query that will show today's events
   $today = Date::now('America/Chicago')->addMinutes(-30)->toDateTimeString();
   $events = Event::where('start','>=', $today)
@@ -41,6 +41,26 @@ Route::get('events', function() {
         'cover' => $event->show->cover
         ],
       'allowedTickets' => $event->type->allowedTickets,
+    ]);
+  }
+  return $eventsArray;
+});*/
+
+Route::get('calendar', function() {
+  // Get today's date for the query that will show today's events
+
+  $events = Event::all();
+  $eventsArray = [];
+  foreach ($events as $event) {
+    $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
+    $eventsArray = array_prepend($eventsArray, [
+      'id'       => $event->id,
+      'type'     => $event->type->name,
+      'start'    => Date::parse($event->start)->toDateTimeString(),
+      'end'      => Date::parse($event->end)->toDateTimeString(),
+      'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
+      'title'    => $event->show->name . ' - ' . $seats . ' seats left',
+      'url'      => '/admin/events/' . $event->id,
     ]);
   }
   return $eventsArray;

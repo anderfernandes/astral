@@ -30,25 +30,13 @@
 
   </script>-->
 
-  <script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"></script>
-
-  <link rel="stylesheet" href="{{ asset('semantic/semantic.min.css') }}">
-
-  <script src="{{ asset('semantic/semantic.min.js') }}"></script>
-
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.0/fullcalendar.min.css" rel="stylesheet" />
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.0/fullcalendar.min.js"></script>
-
   <!-- Libraries -->
   <link rel="stylesheet" href="{{ asset('css/vendor.css')}}">
   <script src="{{asset('js/vendor.js')}}"></script>
 
+  <link rel="stylesheet" href="{{ asset('semantic/semantic.min.css') }}">
+
+  <script src="{{ asset('semantic/semantic.min.js') }}"></script>
 
 </head>
 <script>

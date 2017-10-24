@@ -182,7 +182,7 @@
         </thead>
         <tbody>
           @foreach ($ticketTypes as $ticketType)
-          <tr style="display:none" class="<?php foreach($ticketType->allowedEvents as $eventType){ echo "$eventType->name ";} ?>">
+          <tr style="display:none" class="<?php foreach($ticketType->allowedEvents as $eventType){ echo preg_replace('/\s+/', '', $eventType->name).' ' ;} ?>">
             <td>
               <h4 class="ui header">
                 <i class="ticket icon"></i>
@@ -285,8 +285,8 @@
   // Hide Unwanted Ticket Types
   function hideUnwantedTicketTypes() {
     // This function reads the text inside the label in the first and second show boxes
-    var firstEventType = document.querySelector('#firstshow').innerHTML
-    var secondEventType = document.querySelector('#secondshow').innerHTML
+    var firstEventType = document.querySelector('#firstshow').innerHTML.replace(/\s+/g, "").replace(":", "").replace(" ", "")
+    var secondEventType = document.querySelector('#secondshow').innerHTML.replace(/\s+/g, "").replace(":", "").replace(" ", "")
 
     $('tr.' + firstEventType + ', tr.'+ secondEventType + ', tr.payments').css('display', 'table-row')
     $('tr').not('.' + firstEventType).not('.'+ secondEventType).not('tr.payments').css('display', 'none')

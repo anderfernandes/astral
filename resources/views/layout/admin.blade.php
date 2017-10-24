@@ -16,29 +16,14 @@
   <meta name="keywords" content="mayborn science theater, ctc planetarium, field trip,
   field trips, reservation, @yield('meta_keywords')" />
 
-  <!-- MomentJS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-
-  <script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"></script>
+  <!-- Libraries -->
+  <link rel="stylesheet" href="{{ asset('css/vendor.css')}}">
+  <script src="{{asset('js/vendor.js')}}"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.js"></script>
 
   <link rel="stylesheet" href="{{ asset('semantic/semantic.min.css') }}">
-
   <script src="{{ asset('semantic/semantic.min.js') }}"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.0/fullcalendar.min.css" rel="stylesheet" />
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.0/fullcalendar.min.js"></script>
-
-  <!-- Libraries -->
-  <link rel="stylesheet" href="{{ asset('css/vendor.css')}}">
-  <script src="{{asset('js/vendor.js')}}"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
 

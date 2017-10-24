@@ -88,7 +88,7 @@
         </div>
         <div class="ui attached clearing segment">
           <div class="ui large two buttons">
-            <a href="{{ route('cashier.index') }}" class="ui negative button"><i class="remove icon"></i>Cancel</a>
+            <a href="{{ route('cashier.index') }}" id="cancel" class="ui negative button"><i class="remove icon"></i>Cancel</a>
             {!! Form::button('<i class="check icon"></i>Charge $ <span id="total">0.00</span>', ['type' => 'submit', 'class' => 'ui green button', 'id' => 'submit-sale', 'disabled' => true]) !!}
             <input type="hidden" name="subtotal" value="0">
             <input type="hidden" name="total" value="0">
@@ -157,6 +157,12 @@
         $('form#cashier.ui.form').removeClass('error');
         $('.field.error').removeClass('error');
       }
+      // Disable Charge button after it has been clicked once
+      $('#submit-sale').attr('disabled', true)
+      $('#submit-sale').addClass('loading')
+      $('#cancel').addClass('loading')
+      $('#cancel').attr('disabled', true)
+      $('#cashier').submit()
     });
 
     var ticketId = 0;
@@ -197,7 +203,6 @@
       }
 
       ticketsArray.length > 0 ? $('#submit-sale').attr('disabled', false) : $('#submit-sale').attr('disabled', true)
-
 
       // sum = ticketsArray.map(item => item.price).reduce((prev, next) => { prev + next})
 
