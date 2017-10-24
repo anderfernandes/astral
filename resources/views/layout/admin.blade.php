@@ -20,12 +20,8 @@
   <link rel="stylesheet" href="{{ asset('css/vendor.css')}}">
   <script src="{{asset('js/vendor.js')}}"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.js"></script>
-
   <link rel="stylesheet" href="{{ asset('semantic/semantic.min.css') }}">
   <script src="{{ asset('semantic/semantic.min.js') }}"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
 
 </head>
 <script>

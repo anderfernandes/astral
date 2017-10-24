@@ -35,7 +35,6 @@
   <script src="{{asset('js/vendor.js')}}"></script>
 
   <link rel="stylesheet" href="{{ asset('semantic/semantic.min.css') }}">
-
   <script src="{{ asset('semantic/semantic.min.js') }}"></script>
 
   <style>textarea {font: inherit}</style>
