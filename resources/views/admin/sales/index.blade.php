@@ -42,7 +42,6 @@
       <th>Sale #</th>
       <th>Customer</th>
       <th>Total</th>
-      <th>Paid</th>
       <th>Balance</th>
       <th>Status</th>
       <th>Created On</th>
@@ -61,7 +60,6 @@
         @endif
 
         <td>$ {{ number_format($sale->total, 2) }}</td>
-        <td>$ {{ number_format($sale->payments->sum('tendered'), 2) }}</td>
         <td>
           @if (number_format($sale->total - $sale->payments->sum('tendered'), 2) > 2)
             $ {{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}
@@ -110,5 +108,11 @@
     </div>
   </div>
 @endif
+
+<br />
+
+<div class="ui centered grid">
+  {{ $sales->links('vendor.pagination.semantic-ui') }}
+</div>
 
 @endsection

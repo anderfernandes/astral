@@ -6,6 +6,7 @@ use App\Event;
 use App\Setting;
 use App\User;
 use App\PaymentMethod;
+use App\Sale;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -47,8 +48,29 @@ use Illuminate\Support\Facades\Auth;
 });*/
 
 Route::get('calendar', function() {
-  // Get today's date for the query that will show today's events
+  // Gets all events
 
+  $sales = Sale::whereNotIn('customer_id', [1])->where('status', '!=', 'canceled')->get();
+  $eventsArray = [];
+  foreach ($sales as $sale) {
+    $events = $sale->events->where('type_id', '!=', 1);
+    foreach ($events as $event) {
+      $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
+      $eventsArray = array_prepend($eventsArray, [
+        'id'       => $event->id,
+        'type'     => $event->type->name,
+        'start'    => Date::parse($event->start)->toDateTimeString(),
+        'end'      => Date::parse($event->end)->toDateTimeString(),
+        'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
+        'title'    => $event->show->name . ' - ' . $sale->customer->firstname . ' ' . $sale->customer->lastname . ' - Sale #' . $sale->id,
+        'url'      => '/admin/sales/' . $sale->id,
+      ]);
+    }
+  }
+  return $eventsArray;
+});
+
+Route::get('events', function() {
   $events = Event::all();
   $eventsArray = [];
   foreach ($events as $event) {
@@ -59,7 +81,25 @@ Route::get('calendar', function() {
       'start'    => Date::parse($event->start)->toDateTimeString(),
       'end'      => Date::parse($event->end)->toDateTimeString(),
       'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-      'title'    => $event->show->name . ' - ' . $seats . ' seats left',
+      'title'    => $event->show->name .' - ' . $event->type->name . ' - ' . $seats . ' seats left',
+      'url'      => '/admin/events/' . $event->id,
+    ]);
+  }
+  return $eventsArray;
+});
+
+Route::get('events?start={start}&end={end}', function($start, $end) {
+  $events = Event::whereDate('start', $start)->whereDate('end', $end)->get();
+  $eventsArray = [];
+  foreach ($events as $event) {
+    $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
+    $eventsArray = array_prepend($eventsArray, [
+      'id'       => $event->id,
+      'type'     => $event->type->name,
+      'start'    => Date::parse($event->start)->toDateTimeString(),
+      'end'      => Date::parse($event->end)->toDateTimeString(),
+      'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
+      'title'    => $event->show->name .' - ' . $event->type->name . ' - ' . $seats . ' seats left',
       'url'      => '/admin/events/' . $event->id,
     ]);
   }

@@ -139,10 +139,10 @@ class CashierController extends Controller
         $payment->cashier_id        = Auth::user()->id;
         $payment->payment_method_id = $request->payment_method;
         // Tendered may be nullable if the customer hasn't paid
-        $payment->tendered          = number_format($request->tendered, 2);
-        $payment->total             = number_format($request->total, 2);
+        $payment->tendered          = round($request->tendered, 2);
+        $payment->total             = round($request->total, 2);
         // payment = total - tendered (precision set to two decimal places)
-        $payment->change_due        = number_format($request->tendered - $request->total, 2);
+        $payment->change_due        = round($request->tendered - $request->total, 2);
         $payment->reference         = $request->reference;
         $payment->source            = 'cashier';
         $payment->sale_id           = $sale->id;

@@ -18,11 +18,14 @@
     <i class="large dashboard icon"></i> Dashboard
   </a>
   @if (Auth::user()->role->name == 'Senior Staff' || Auth::user()->role->name == 'Planetarium Lead Assistant')
+  <a class="item {{ Request::routeIs('admin.calendar.index') ? 'active' : '' }}" href="{{ route('admin.calendar.index') }}">
+    <i class="large calendar icon"></i> Calendar
+  </a>
   <a class="item {{ Request::routeIs('admin.shows.index') ? 'active' : '' }}" href="{{ route('admin.shows.index') }}">
     <i class="large film icon"></i> Shows
   </a>
   <a class="item {{ Request::routeIs('admin.events.index') ? 'active' : '' }}" href="{{ route('admin.events.index') }}">
-    <i class="large calendar icon"></i> Events
+    <i class="large calendar check icon"></i> Events
   </a>
   <a class="item {{ Request::routeIs('admin.sales.index') ? 'active' : '' }}" href="{{ route('admin.sales.index') }}">
     <i class="large dollar icon"></i> Sales

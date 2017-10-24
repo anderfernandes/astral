@@ -4,7 +4,7 @@
 
 @section('subtitle', 'New Event')
 
-@section('icon', 'calendar')
+@section('icon', 'calendar check')
 
 
 @section('content')

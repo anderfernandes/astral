@@ -4,7 +4,7 @@
 
 @section('subtitle', $event->show->name)
 
-@section('icon', 'calendar')
+@section('icon', 'calendar check')
 
 @section('content')
 

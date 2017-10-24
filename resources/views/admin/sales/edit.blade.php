@@ -127,7 +127,7 @@
         </div>
       </div>
       <div class="required field">
-        {{ Form::label('first_event_id', 'First Show') }}
+        {{ Form::label('first_event_id', 'First Event') }}
         <div class="ui selection search scrolling dropdown">
           @if (old('first_event_id') == null)
             <input type="hidden" id="first_event_id" name="first_event_id" value="{{ $sale->events[0]->id }}">
@@ -153,12 +153,14 @@
         </div>
       </div>
       <div class="field">
-        {{ Form::label('second_event_id', 'Second Show') }}
+        {{ Form::label('second_event_id', 'Second Event') }}
         <div class="ui selection search scrolling dropdown">
-          @if (old('second_event_id') == null)
-            <input type="hidden" id="second_event_id" name="second_event_id" value="{{ $sale->events[1]->id }}">
-          @else
-            <input type="hidden" id="second_event_id" name="second_event_id" value="{{ old('second_event_id') }}">
+          @if (isSet($sale->events[1]->id))
+            @if (old('second_event_id') == null)
+              <input type="hidden" id="second_event_id" name="second_event_id" value="{{ $sale->events[1]->id }}">
+            @else
+              <input type="hidden" id="second_event_id" name="second_event_id" value="{{ old('second_event_id') }}">
+            @endif
           @endif
           <i class="dropdown icon"></i>
           <div class="default text">Select the second event (optional)</div>
@@ -185,7 +187,7 @@
         </thead>
         <tbody>
           @foreach ($ticketTypes as $ticketType)
-          <tr style="display:none" class="<?php foreach($ticketType->allowedEvents as $eventType){ echo "$eventType->name ";} ?>">
+          <tr style="display:none" class="<?php foreach($ticketType->allowedEvents as $eventType){ echo preg_replace('/\s+/', '', $eventType->name).' ' ;} ?>">
             <td>
               <h4 class="ui header">
                 <i class="ticket icon"></i>
@@ -295,13 +297,14 @@
     $('#taxable').val(taxable).change()
   }
 
+  // Hide Unwanted Ticket Types
   $('#organization_id').change(autoSelectTaxable)
 
   // Hide Unwanted Ticket Types
   function hideUnwantedTicketTypes() {
     // This function reads the text inside the label in the first and second show boxes
-    var firstEventType = document.querySelector('#firstshow').innerHTML
-    var secondEventType = document.querySelector('#secondshow').innerHTML
+    var firstEventType = document.querySelector('#firstshow').innerHTML.replace(/\s+/g, "").replace(":", "").replace(" ", "")
+    var secondEventType = document.querySelector('#secondshow').innerHTML.replace(/\s+/g, "").replace(":", "").replace(" ", "")
 
     $('tr.' + firstEventType + ', tr.'+ secondEventType + ', tr.payments').css('display', 'table-row')
     $('tr').not('.' + firstEventType).not('.'+ secondEventType).not('tr.payments').css('display', 'none')
@@ -309,6 +312,7 @@
   }
 
   $(document).ready(hideUnwantedTicketTypes)
+  $(document).ready(autoSelectTaxable)
   $('#first_event_id').change(hideUnwantedTicketTypes)
   $('#second_event_id').change(hideUnwantedTicketTypes)
 

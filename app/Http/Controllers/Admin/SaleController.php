@@ -43,7 +43,7 @@ class SaleController extends Controller
     {
         $organizations = Organization::all();
         $customers = User::all();
-        $events    = Event::where('start', '>', Date::now()->toDateTimeString())->get();
+        $events    = Event::where('start', '>', Date::now()->toDateTimeString())->orderBy('start', 'desc')->get();
         $paymentMethods = PaymentMethod::all();
         $ticketTypes = TicketType::all();
 
@@ -100,9 +100,9 @@ class SaleController extends Controller
           $sale->customer_id       = $request->customer_id;
           $sale->status            = $request->status;
           $sale->taxable           = $request->taxable;
-          $sale->subtotal          = number_format($request->subtotal, 2);
-          $sale->tax               = number_format($request->tax, 2);
-          $sale->total             = number_format($request->total, 2);
+          $sale->subtotal          = round($request->subtotal, 2);
+          $sale->tax               = round($request->tax, 2);
+          $sale->total             = round($request->total, 2);
           $sale->refund            = false;
           $sale->memo              = $request->memo;
           //$sale->first_event_id    = $request->first_event_id;
@@ -121,10 +121,10 @@ class SaleController extends Controller
             $payment->cashier_id        = Auth::user()->id;
             $payment->payment_method_id = $request->payment_method_id;
             // Tendered may be nullable if the customer hasn't paid
-            $payment->tendered          = number_format($request->tendered, 2);
-            $payment->total             = number_format($request->total, 2);
+            $payment->tendered          = round($request->tendered, 2);
+            $payment->total             = round($request->total, 2);
             // payment = total - tendered (precision set to two decimal places)
-            $payment->change_due        = number_format($request->change_due, 2);
+            $payment->change_due        = round($request->change_due, 2);
             $payment->reference         = $request->reference;
             $payment->source            = 'admin';
             $payment->sale_id           = $sale->id;
@@ -213,7 +213,7 @@ class SaleController extends Controller
     {
         $organizations = Organization::all();
         $customers = User::all();
-        $events    = Event::where('start', '>', Date::now()->toDateTimeString())->get();
+        $events    = Event::where('type_id', '!=', 1)->orderBy('start', 'desc')->get();
         $paymentMethods = PaymentMethod::all();
         $ticketTypes = TicketType::all();
 
@@ -262,9 +262,9 @@ class SaleController extends Controller
         $sale->customer_id       = $request->customer_id;
         $sale->status            = $request->status;
         $sale->taxable           = $request->taxable;
-        $sale->subtotal          = number_format($request->subtotal, 2);
-        $sale->tax               = number_format($request->tax, 2);
-        $sale->total             = number_format($request->total, 2);
+        $sale->subtotal          = round($request->subtotal, 2);
+        $sale->tax               = round($request->tax, 2);
+        $sale->total             = round($request->total, 2);
         $sale->refund            = false;
         $sale->memo              = $request->memo;
         //$sale->first_event_id    = $request->first_event_id;
@@ -282,10 +282,10 @@ class SaleController extends Controller
           $payment->cashier_id        = Auth::user()->id;
           $payment->payment_method_id = $request->payment_method_id;
           // Tendered may be nullable if the customer hasn't paid
-          $payment->tendered          = number_format($request->tendered, 2);
-          $payment->total             = number_format($request->total, 2);
+          $payment->tendered          = round($request->tendered, 2);
+          $payment->total             = round($request->total, 2);
           // payment = total - tendered (precision set to two decimal places)
-          $payment->change_due        = number_format($request->change_due, 2);
+          $payment->change_due        = round($request->change_due, 2);
           $payment->reference         = $request->reference;
           $payment->source            = 'admin';
           $payment->sale_id           = $sale->id;
@@ -371,6 +371,7 @@ class SaleController extends Controller
 
       $sale->refund = true;
       $sale->memo   = $request->memo;
+      $sale->status = "complete";
 
       $sale->save();
 

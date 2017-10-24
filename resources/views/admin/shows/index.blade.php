@@ -73,7 +73,10 @@
   </div>
 @endif
 
+<br />
 
-
+<div class="ui centered grid">
+  {{ $shows->links('vendor.pagination.semantic-ui') }}
+</div>
 
 @endsection

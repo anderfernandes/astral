@@ -123,7 +123,7 @@
         </div>
       </div>
       <div class="required field">
-        {{ Form::label('first_event_id', 'First Show') }}
+        {{ Form::label('first_event_id', 'First Event') }}
         <div class="ui selection search scrolling dropdown">
           @if (old('first_event_id') == null)
             <input type="hidden" id="first_event_id" name="first_event_id" value="0">
@@ -150,7 +150,7 @@
         </div>
       </div>
       <div class="field">
-        {{ Form::label('second_event_id', 'Second Show') }}
+        {{ Form::label('second_event_id', 'Second Event') }}
         <div class="ui selection search scrolling dropdown">
           @if (old('second_event_id') == null)
             <input type="hidden" id="second_event_id" name="second_event_id" value="1">
@@ -280,6 +280,7 @@
     $('#taxable').val(taxable).change()
   }
 
+  // Hide Unwanted Ticket Types
   $('#organization_id').change(autoSelectTaxable)
 
   // Hide Unwanted Ticket Types

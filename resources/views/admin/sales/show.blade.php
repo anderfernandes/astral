@@ -54,7 +54,11 @@
   <div class="ui left floated buttons">
     <a href="{{ route('admin.sales.index') }}" class="ui default button">
       <i class="left chevron icon"></i>
-      Back
+      Back to Sales
+    </a>
+    <a href="{{ route('admin.calendar.index') }}" class="ui default button">
+      <i class="left chevron icon"></i>
+      Back to Calendar
     </a>
     <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
   </div>
@@ -236,43 +240,6 @@
 
   </div>
 
-  <div class="ui horizontal divider header">
-    <i class="ticket icon"></i>
-    Tickets
-  </div>
-
-  <div class="ui basic segment">
-    @if ($sale->refund)
-    <table class="ui celled selectable inverted red padded striped table">
-    @else
-    <table class="ui celled selectable padded striped table">
-    @endif
-      <thead>
-        <tr>
-          <th class="single line">Ticket Number</th>
-          <th>Type</th>
-          <th>Show Name</th>
-          <th>Show Date</th>
-          <th>Sale #</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach ($sale->tickets as $ticket)
-        <tr>
-          @if ($sale->refund)
-            <th><h3 class="ui inverted center aligned header">{{ $ticket->id }}</h3></th>
-          @else
-            <th><h3 class="ui center aligned header">{{ $ticket->id }}</h3></th>
-          @endif
-          <th>{{ $ticket->type->name }}</th>
-          <th>{{ $ticket->event->show->name }}</th>
-          <th>{{ Date::parse($ticket->event->start)->format('l, F j, Y \a\t g:i A') }}</th>
-          <th>{{ $sale->id }}</th>
-        </tr>
-        @endforeach
-      </tbody>
-    </table>
-  </div>
   <!-- Refund Modal -->
   <div class="ui basic modal" id="refund-modal">
     <div class="ui icon header">
@@ -283,11 +250,7 @@
     <div class="content">
       {!! Form::open(['route' => ['admin.sales.refund', $sale], 'class' => 'ui form', 'id' => 'refund']) !!}
       <div class="inverted segment">
-        @if ($sale->reference)
-        <div class="four fields">
-        @else
-        <div class="three fields">
-        @endif
+        <div class="two fields">
           <div class="field">
             {!! Form::label('id', 'Sale Number') !!}
             {!! Form::text('id', null, ['placeholder' => 'Sale Number']) !!}
@@ -298,30 +261,7 @@
               <div class="ui label">$</div>
               {!! Form::text('total', null, ['placeholder' => 'Sale Total']) !!}
             </div>
-
           </div>
-          <div class="field">
-            {!! Form::label('payment_method', 'Sale Payment Method') !!}
-            <div class="ui selection dropdown">
-              {!! Form::hidden('payment_method', null, ['id' => 'payment_method']) !!}
-              <i class="dropdown icon"></i>
-              <div class="default text">Payment Method</div>
-              <div class="menu">
-                <div class="item" data-value="cash"><i class="money icon"></i>Cash</div>
-                <div class="item" data-value="visa"><i class="visa icon"></i>Visa</div>
-                <div class="item" data-value="mastercard"><i class="mastercard icon"></i>Mastercard</div>
-                <div class="item" data-value="discover"><i class="discover icon"></i>Discover</div>
-                <div class="item" data-value="american express"><i class="american express icon"></i>American Express</div>
-                <div class="item" data-value="check"><i class="check icon"></i>Check</div>
-              </div>
-            </div>
-          </div>
-          @if ($sale->reference)
-          <div class="field">
-            {!! Form::label('reference', 'Reference') !!}
-            {!! Form::text('reference', null, ['placeholder' => 'Check or Credit Card #']) !!}
-          </div>
-          @endif
         </div>
         <div class="field">
           {!! Form::label('memo', 'Memo') !!}
@@ -350,11 +290,7 @@
       .form({
         fields: {
           id             : ['is[{{ $sale->id }}]', 'empty'],
-          total          : ['is[{{ $sale->total }}]', 'empty'],
-          payment_method : ['is[{{ $sale->payment_method }}]', 'empty'],
-          @if ($sale->reference)
-          reference      : ['is[{{ $sale->reference }}]', 'empty'],
-          @endif
+          total          : ['is[{{ number_format($sale->total, 2) }}]', 'empty'],
           memo           : ['minLength[10]', 'empty']
         }
     });

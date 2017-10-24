@@ -21,6 +21,8 @@ Route::group(
   function() {
   // Index
   Route::get('/', 'AdminController@index')->name('index');
+  // Calendar
+  Route::get('calendar', function(){ return view('admin.calendar.index'); })->name('calendar.index');
   // Shows resource
   Route::resource('shows', 'ShowController');
   // Users resource

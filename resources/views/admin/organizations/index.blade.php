@@ -63,5 +63,10 @@
   </div>
 @endif
 
+<br />
+
+<div class="ui centered grid">
+  {{ $organizations->links('vendor.pagination.semantic-ui') }}
+</div>
 
 @endsection

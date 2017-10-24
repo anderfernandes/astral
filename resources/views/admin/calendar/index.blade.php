@@ -1,8 +1,8 @@
 @extends('layout.admin')
 
-@section('title', 'Events')
+@section('title', 'Calendar')
 
-@section('subtitle', 'Manage Events')
+@section('subtitle', App\Setting::find(1)->organization)
 
 @section('icon', 'calendar')
 
@@ -11,11 +11,9 @@
   <a class="ui secondary button" href="{{ route('admin.events.create') }}">
     <i class="calendar plus icon"></i> Create Event
   </a>
-
-  <!--<div class="ui right icon input">
-    <input type="text" placeholder="Search...">
-    <i class="search link icon"></i>
-  </div>-->
+  <a class="ui secondary button" href="{{ route('admin.sales.create') }}">
+    <i class="dollar sign icon"></i> Create Sale
+  </a>
 
   @if (!isset($events) || count($events) > 0)
     <br /><br />
@@ -42,14 +40,14 @@
       header: {
         left: 'prev,next today',
         center: 'title',
-        right: 'listDay,listWeek,listMonth'
+        right: 'agendaDay,agendaWeek,month'
       },
       views: {
-        listDay: {buttonText: 'Single Day View'},
-        listWeek: {buttonText: 'Week View'},
-        listMonth: {buttonText: 'Month View'},
+        agendaDay: {buttonText: 'Single Day View'},
+        agendaWeek: {buttonText: 'Week View'},
+        month: {buttonText: 'Month View'},
       },
-      defaultView: 'listWeek',
+      defaultView: 'agendaWeek',
       defaultDate: moment().format('YYYY-MM-DD'),
       contentHeight: 'auto',
       hiddenDays: [0],
@@ -57,8 +55,8 @@
       editable: false,
       eventLimit: true,
       minTime: '07:00:00',
-      eventColor: '#1b1c1d',
-      events: '/api/events'
+      eventColor: '#000',
+      events: '/api/calendar'
     })
     console.log(events)
   }
