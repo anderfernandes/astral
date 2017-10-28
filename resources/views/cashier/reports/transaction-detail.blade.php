@@ -47,7 +47,7 @@
       <td>{{ $payment->reference }}</td>
       <td>$ {{ number_format($payment->tendered, 2) }}</td>
       <td>$ {{ number_format($payment->change_due, 2) }}</td>
-      <td>$ {{ number_format($payment->total, 2) }}</td>
+      <td>($ {{ number_format($payment->total, 2) }})</td>
     </tr>
     @endif
 
