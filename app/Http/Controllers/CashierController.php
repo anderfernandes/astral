@@ -88,7 +88,7 @@ class CashierController extends Controller
       }
       if ($type == 'transaction-detail')
       {
-        
+
         $sales = Sale::where([
           ['created_at', '>=', $today],
           ['creator_id', '=', Auth::user()->id],
@@ -98,7 +98,16 @@ class CashierController extends Controller
         $salesIds = array_pluck($sales, 'id');
         // Find all payments for the IDs we retrieved
         $payments = Payment::whereIn('sale_id', $salesIds)->get();
-        return view('cashier.reports.transaction-detail')->withPayments($payments);
+
+        $totals = 0;
+        foreach ($payments as $payment) {
+          if ($payment->sale->refund == false)
+            $totals += $payment['total'];
+        }
+
+        $totals = number_format($totals, 2);
+
+        return view('cashier.reports.transaction-detail')->withPayments($payments)->withTotals($totals);
       }
     }
 

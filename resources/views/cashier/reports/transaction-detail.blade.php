@@ -57,16 +57,7 @@
   <tfoot>
     <tr>
       <th colspan="8" class="right aligned">
-        <strong>Totals for {{ Auth::user()->firstname }}: $
-          <?php
-            $totals = 0; foreach ($payments as $payment)
-            {
-              if ($payment->refund == false)
-                $totals += $payment['total'];
-            }
-            echo number_format($totals, 2)
-            ?>
-        </strong>
+        <strong>Totals for {{ Auth::user()->firstname }}: $ {{ $totals }}</strong>
       </th>
     </tr>
   </tfoot>
