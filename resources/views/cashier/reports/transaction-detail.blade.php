@@ -38,16 +38,16 @@
         <td>$ {{ number_format($payment->total, 2) }}</td>
       </tr>
 
-    @if ($payment->refund == true)
+    @if ($payment->sale->refund)
     <tr class="negative">
       <td>{{ $payment->created_at->format('m/d/Y H:i:s a') }}</td>
-      <td>{{ $payment->id }}</td>
-      <td>{{ $payment->customer->firstname }} {{ $payment->customer->lastname }}</td>
-      <td>{{ $payment->payment_method }}</td>
+      <td>{{ $payment->sale->id }}</td>
+      <td>{{ $payment->sale->customer->firstname }} {{ $payment->sale->customer->lastname }}</td>
+      <td>{{ $payment->method->name }}</td>
       <td>{{ $payment->reference }}</td>
-      <td></td>
-      <td></td>
-      <td>($ {{ number_format($payment->total, 2) }})</td>
+      <td>$ {{ number_format($payment->tendered, 2) }}</td>
+      <td>$ {{ number_format($payment->change_due, 2) }}</td>
+      <td>$ {{ number_format($payment->total, 2) }}</td>
     </tr>
     @endif
 

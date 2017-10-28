@@ -48,22 +48,21 @@ class CashierController extends Controller
 
     public function reports($type)
     {
-
       $today = Date::now()->startOfDay();
-
-      $sales = Sale::where([
-        ['created_at', '>=', $today],
-        ['creator_id', '=', Auth::user()->id],
-        ['refund', '=', false],
-      ])->orderBy('created_at', 'asc')->get();
-
-      // Get Card Sales IDs
-      $salesIds = array_pluck($sales, 'id');
-      // Find all payments for the IDs we retrieved
-      $payments = Payment::whereIn('sale_id', $salesIds)->get();
 
       if ($type == 'closeout')
       {
+
+        $sales = Sale::where([
+          ['created_at', '>=', $today],
+          ['creator_id', '=', Auth::user()->id],
+          ['refund', '=', false],
+        ])->orderBy('created_at', 'asc')->get();
+
+        // Get Card Sales IDs
+        $salesIds = array_pluck($sales, 'id');
+        // Find all payments for the IDs we retrieved
+        $payments = Payment::whereIn('sale_id', $salesIds)->get();
 
         $cashPayments = [];
         $cardPayments = [];
@@ -89,8 +88,16 @@ class CashierController extends Controller
       }
       if ($type == 'transaction-detail')
       {
-        // REPORT STARTING POINT MUST BE GREATER THAN TODAY!!!
+        
+        $sales = Sale::where([
+          ['created_at', '>=', $today],
+          ['creator_id', '=', Auth::user()->id],
+        ])->orderBy('created_at', 'asc')->get();
 
+        // Get Card Sales IDs
+        $salesIds = array_pluck($sales, 'id');
+        // Find all payments for the IDs we retrieved
+        $payments = Payment::whereIn('sale_id', $salesIds)->get();
         return view('cashier.reports.transaction-detail')->withPayments($payments);
       }
     }
