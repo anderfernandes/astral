@@ -131,10 +131,11 @@ class ReportController extends Controller
             array_unshift($otherPayments, $payment);
         }
 
-        return view('cashier.reports.closeout')->with('cashPayments', $cashPayments)
+        return view('admin.reports.closeout')->with('cashPayments', $cashPayments)
                                                ->with('cardPayments', $cardPayments)
                                                ->with('checkPayments', $checkPayments)
-                                               ->with('otherPayments', $otherPayments);
+                                               ->with('otherPayments', $otherPayments)
+                                               ->with('paymentUser', $user);
       }
       if ($type == 'transaction-detail')
       {
@@ -157,7 +158,7 @@ class ReportController extends Controller
 
         $totals = number_format($totals, 2);
 
-        return view('cashier.reports.transaction-detail')->withPayments($payments)->withTotals($totals);
+        return view('admin.reports.transaction-detail')->withPayments($payments)->withTotals($totals);
       }
     }
 }
