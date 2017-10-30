@@ -16,17 +16,16 @@
 
 function getSalesTotals($day)
 {
-  $dailySales = \App\Sale::whereDate('created_at','=', $day->format('Y-m-d'))
-  ->where('refund', false)
+  $dailySales = \App\Payment::whereDate('created_at','=', $day->format('Y-m-d'))
   ->sum('total');
 
-  return number_format($dailySales, 2);
+  return round($dailySales, 2);
 }
 
 function getSalesTotalsRange($start, $end)
 {
   $rangeTotal = 0;
-  $rangeSales = \App\Sale::where([['created_at','>=', $start], ['created_at','<=', $end], ['refund', false]])
+  $rangeSales = \App\Payment::where([['created_at','>=', $start], ['created_at','<=', $end]])
   ->sum('total');
 
   return number_format($rangeSales, 2);
@@ -89,11 +88,11 @@ function getSalesTotalsRange($start, $end)
       <div class="ui three column grid">
         <div class="column" style="padding-left: 0 !important; padding-right: 0 !important">
           <div class="ui mini inverted statistic">
-            <div class="value">0</div>
-            <div class="label">Org.</div>
+            <div class="value">{{ \App\Organization::all()->count() - 1 }}</div>
+            <div class="label">Organizations</div>
           </div>
         </div>
-        <div class="column" style="padding-left: 0 !important; padding-right: 0 !important">
+        <!--<div class="column" style="padding-left: 0 !important; padding-right: 0 !important">
           <div class="ui mini inverted statistic">
             <div class="value">0</div>
             <div class="label">Visitors</div>
@@ -104,7 +103,7 @@ function getSalesTotalsRange($start, $end)
             <div class="value">0</div>
             <div class="label">Members</div>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
@@ -186,7 +185,7 @@ function getSalesTotalsRange($start, $end)
         </div>
         <div class="label">Earned Today</div>
       </div>
-      <div class="ui two column grid">
+      <div class="ui three column grid">
         <div class="column">
           <div class="ui mini inverted statistic">
             <div class="value">$
@@ -201,6 +200,14 @@ function getSalesTotalsRange($start, $end)
               {{ getSalesTotalsRange(Date::now()->startOfWeek(), Date::now()->endOfWeek()) }}
             </div>
             <div class="label">This Week</div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="ui mini inverted statistic">
+            <div class="value">$
+              {{ getSalesTotalsRange(Date::today()->subDays(6), Date::today()) }}
+            </div>
+            <div class="label">Last 7 Days</div>
           </div>
         </div>
       </div>
@@ -367,22 +374,24 @@ var myChart = new Chart(ctx, {
   type: 'line',
   data: {
     labels: [
-             '{{ Date::now()->startOfWeek()->format('l, F j') }}',
-             '{{ Date::now()->startOfWeek()->addDay()->format('l, F j') }}',
-             '{{ Date::now()->startOfWeek()->addDays(2)->format('l, F j') }}',
-             '{{ Date::now()->startOfWeek()->addDays(3)->format('l, F j') }}',
-             '{{ Date::now()->startOfWeek()->addDays(4)->format('l, F j') }}',
-             '{{ Date::now()->startOfWeek()->addDays(5)->format('l, F j') }}'
+             '{{ Date::today()->subDays(6)->format('l, F j') }}',
+             '{{ Date::today()->subDays(5)->format('l, F j') }}',
+             '{{ Date::today()->subDays(4)->format('l, F j') }}',
+             '{{ Date::today()->subDays(3)->format('l, F j') }}',
+             '{{ Date::today()->subDays(2)->format('l, F j') }}',
+             '{{ Date::today()->subDays(1)->format('l, F j') }}',
+             '{{ Date::today()->format('l, F j') }}'
            ],
     datasets: [{
-      label: 'Earnings This Week',
+      label: '{{ App\Setting::find(1)->organization }}\'s Overall Earnings - Last 7 Days',
       data: [
-        {{ getSalesTotals(Date::now()->startOfWeek()) }},
-        {{ getSalesTotals(Date::now()->startOfWeek()->addDay()) }},
-        {{ getSalesTotals(Date::now()->startOfWeek()->addDays(2)) }},
-        {{ getSalesTotals(Date::now()->startOfWeek()->addDays(3)) }},
-        {{ getSalesTotals(Date::now()->startOfWeek()->addDays(4)) }},
-        {{ getSalesTotals(Date::now()->startOfWeek()->addDays(5)) }},
+        {{ getSalesTotals(Date::today()->subDays(6)) }},
+        {{ getSalesTotals(Date::today()->subDays(5)) }},
+        {{ getSalesTotals(Date::today()->subDays(4)) }},
+        {{ getSalesTotals(Date::today()->subDays(3)) }},
+        {{ getSalesTotals(Date::today()->subDays(2)) }},
+        {{ getSalesTotals(Date::today()->subDays(1)) }},
+        {{ getSalesTotals(Date::today()) }},
       ],
       backgroundColor: "rgba(27, 28, 29, 0.5)",
       borderColor: "rgba(21, 28, 29, 1)",
@@ -396,7 +405,7 @@ var myChart = new Chart(ctx, {
               ticks: {
                   beginAtZero:true,
                   callback: function(value, index, values){
-                    return '$ ' + value;
+                    return value
                   }
               }
           }]
