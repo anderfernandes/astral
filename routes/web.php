@@ -32,9 +32,9 @@ Route::group(
   // Events resource
   Route::resource('events', 'EventController');
   // Events resource
-  Route::resource('reports', 'ReportController');
+  Route::get('reports', 'ReportController@index')->name('report.index');
   // Reports
-  Route::get('report/{type}/{user}/{date}', 'ReportController@reports');
+  Route::get('reports/{type}/{user}/{date}', 'ReportController@reports');
   // Sales Resource
   Route::resource('sales', 'SaleController');
   Route::post('sales/refund/{sale}', 'SaleController@refund')->name('sales.refund');
