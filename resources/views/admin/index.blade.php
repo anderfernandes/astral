@@ -9,7 +9,7 @@
 @section('content')
 
 <style>
-.ui.inverted.raised.center.aligned.segment {display: none}
+/*.ui..raised.center.aligned.segment {display: none}*/
 </style>
 
 <?php
@@ -31,346 +31,203 @@ function getSalesTotalsRange($start, $end)
   return number_format($rangeSales, 2);
 }
 
+function getAttendance($date) {
+  $events = App\Event::whereDate('start', $date->format('Y-m-d'))->pluck('id');
+  $tickets = App\Ticket::whereIn('event_id', $events)->count();
+  return $tickets;
+}
+
+function getAttendanceByType($ticketTypeID) {
+  $today = Date::today();
+  $tickets = App\Ticket::where('created_at', '>=', $today->subDays(6)->toDateTimeString())
+                        ->where('ticket_type_id', $ticketTypeID)
+                        ->count();
+
+  return $tickets;
+}
+
 ?>
 
-<div class="ui icon message" style="margin-top:0">
-  <i class="sun icon"></i>
-  <div class="content">
-    <div class="header">
-      Welcome, {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}!
-    </div>
-    <p>Why don't you start by clicking the menu button at the top left of the screen?</p>
-  </div>
-</div>
-
 <div class="ui grid">
-  <div class="column">
-    <div class="ui segment">
-      <canvas height="400" id="myChart"></canvas>
-    </div>
-  </div>
-</div>
-<div class="ui grid">
-  <div class="four wide computer sixteen wide mobile column">
-    <div class="ui inverted raised center aligned segment">
-      <div class="ui inverted large centered statistic">
-        <div class="value"><i class="film icon"></i></div>
-      </div>
-      <div class="ui inverted large centered statistic">
-        <div class="value">{{ \App\Show::all()->count() }}</div>
-        <div class="label">Shows</div>
-      </div>
-      <div class="ui two column grid">
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">{{ \App\Show::where('type', 'Planetarium')->count() }}</div>
-            <div class="label">Planetarium</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">{{ \App\Show::where('type', 'Laser Light')->count() }}</div>
-            <div class="label">Laser Light</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="four wide computer sixteen wide mobile column">
-    <div class="ui inverted raised center aligned segment">
-      <div class="ui inverted large centered statistic">
-        <div class="value"><i class="users icon"></i></div>
-      </div>
-      <div class="ui inverted large centered statistic">
-        <div class="value">{{ \App\User::all()->count() - 1 }}</div>
-        <div class="label">Users</div>
-      </div>
-      <div class="ui three column grid">
-        <div class="column" style="padding-left: 0 !important; padding-right: 0 !important">
-          <div class="ui mini inverted statistic">
-            <div class="value">{{ \App\Organization::all()->count() - 1 }}</div>
-            <div class="label">Organizations</div>
-          </div>
-        </div>
-        <!--<div class="column" style="padding-left: 0 !important; padding-right: 0 !important">
-          <div class="ui mini inverted statistic">
-            <div class="value">0</div>
-            <div class="label">Visitors</div>
-          </div>
-        </div>
-        <div class="column" style="padding-left: 0 !important; padding-right: 0 !important">
-          <div class="ui mini inverted statistic">
-            <div class="value">0</div>
-            <div class="label">Members</div>
-          </div>
-        </div>-->
-      </div>
-    </div>
-  </div>
-  <div class="four wide computer sixteen wide mobile column">
-    <div class="ui inverted raised center aligned segment">
-      <div class="ui inverted large centered statistic">
-        <div class="value"><i class="calendar icon"></i></div>
-      </div>
-      <div class="ui inverted large centered statistic">
-        <div class="value">
-          {{ \App\Event::where('start','>=', Date::now('America/Chicago')->toDateTimeString())->where('start','<=', Date::now('America/Chicago')->endOfDay())->count()}}
-        </div>
-        <div class="label">Events Today</div>
-      </div>
-      <div class="ui two column grid">
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">
-              {{ \App\Event::where('start','>=', Date::yesterday('America/Chicago')->toDateTimeString())->where('start','<=', Date::yesterday('America/Chicago')->endOfDay())->count()}}
-            </div>
-            <div class="label">Yesterday</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">{{ \App\Event::where('start','>=', Date::tomorrow('America/Chicago')->toDateTimeString())->where('start','<=', Date::tomorrow('America/Chicago')->endOfDay())->count()}}</div>
-            <div class="label">Tomorrow</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="four wide computer sixteen wide mobile column">
-    <div class="ui inverted raised center aligned segment">
-      <div class="ui inverted large centered statistic">
-        <div class="value"><i class="child icon"></i></div>
-      </div>
-      <div class="ui inverted large centered statistic">
-        <div class="value">{{ \App\Ticket::where('created_at','>=', Date::now('America/Chicago')->startOfDay()->toDateTimeString())->where('created_at','<=', Date::now('America/Chicago')->endOfDay())->count()}}</div>
-        <div class="label">Attendance Today</div>
-      </div>
-      <div class="ui three column grid">
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">
-              {{ \App\Ticket::where('created_at','>=', Date::yesterday('America/Chicago')->startOfDay()->toDateTimeString())->where('created_at','<=', Date::yesterday('America/Chicago')->endOfDay())->count()}}
-            </div>
-            <div class="label">Yesterday</div>
-          </div>
-        </div>
-        <div class="column" style="padding-left: 0 !important; padding-right: 0 !important">
-          <div class="ui mini inverted statistic">
-            <div class="value">
-              {{ \App\Ticket::where('created_at','>=', Date::now('America/Chicago')->startOfWeek()->toDateTimeString())->where('created_at','<=', Date::now('America/Chicago')->endOfWeek())->count()}}
-            </div>
-            <div class="label">This Week</div>
-          </div>
-        </div>
-        <div class="column" style="padding-left: 0 !important; padding-right: 0 !important">
-          <div class="ui mini inverted statistic">
-            <div class="value">{{ \App\Ticket::where('created_at','>=', Date::now('America/Chicago')->startOfMonth()->toDateTimeString())->where('created_at','<=', Date::now('America/Chicago')->endOfMonth())->count()}}</div>
-            <div class="label">This Month</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="ui grid">
-  <div class="four wide computer sixteen wide mobile column">
-    <div class="ui inverted raised center aligned segment">
-      <div class="ui inverted large centered statistic">
-        <div class="value"><i class="dollar icon"></i></div>
-      </div>
-      <div class="ui inverted large centered statistic">
-        <!-- Pending sale paid for true or false field -->
-        <div class="value">
-          {{ getSalesTotals(Date::now()) }}
-        </div>
-        <div class="label">Earned Today</div>
-      </div>
-      <div class="ui three column grid">
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">$
-              {{ getSalesTotals(Date::yesterday()) }}
-            </div>
-            <div class="label">Yesterday</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">$
-              {{ getSalesTotalsRange(Date::now()->startOfWeek(), Date::now()->endOfWeek()) }}
-            </div>
-            <div class="label">This Week</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">$
-              {{ getSalesTotalsRange(Date::today()->subDays(6), Date::today()) }}
-            </div>
-            <div class="label">Last 7 Days</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="four wide computer sixteen wide mobile column">
-    <div class="ui inverted raised center aligned segment">
-      <div class="ui inverted large centered statistic">
-        <div class="value"><i class="ticket icon"></i></div>
-      </div>
-      <div class="ui inverted large centered statistic">
-        <div class="value">{{ \App\Sale::where('created_at','>=', Date::now('America/Chicago')->startOfDay()->toDateTimeString())->where('created_at','<=', Date::now('America/Chicago')->endOfDay())->count() }}</div>
-        <div class="label">Sales Today</div>
-      </div>
-      <div class="ui three column grid">
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">
-              <?php
-
-              $totalSalesToday = \App\Sale::where('created_at','>=', Date::now('America/Chicago')->startOfDay()->toDateTimeString())->where('created_at','<=', Date::now('America/Chicago')->endOfDay())->count();
-
-              $cardSales = \App\Sale::where('created_at','>=', Date::now('America/Chicago')->startOfDay())
-              ->where('created_at','<=', Date::now('America/Chicago')->endOfDay())
-              ->where('payment_method', '!=', 'cash')
-              ->where('payment_method', '!=', 'check')
-              ->count();
-
-              if ($cardSales <= 0)
-              echo $cardSales;
-              else
-              echo number_format((($cardSales / $totalSalesToday) * 100), 2);
-              ?> %
-
-            </div>
-            <div class="label">Card</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">
-              <?php
-
-              $cashSales = \App\Sale::where('created_at','>=', Date::now('America/Chicago')->startOfDay())
-              ->where('created_at','<=', Date::now('America/Chicago')->endOfDay())
-              ->where('payment_method', '=', 'cash')
-              ->count();
-
-              if ($cashSales <= 0)
-              echo $cashSales;
-              else
-              echo number_format((($cashSales / $totalSalesToday) * 100), 2);
-
-              ?> %
-            </div>
-            <div class="label">Cash</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui mini inverted statistic">
-            <div class="value">
-              <?php
-
-              $checkSales = \App\Sale::where('created_at','>=', Date::now('America/Chicago')->startOfDay())
-              ->where('created_at','<=', Date::now('America/Chicago')->endOfDay())
-              ->where('payment_method', '=', 'check')
-              ->count();
-
-              if ($checkSales <= 0)
-              echo $checkSales;
-              else
-              echo number_format((($checkSales / $totalSalesToday)* 100), 2);
-
-              ?> %
-            </div>
-            <div class="label">Check</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Overall Earnings -->
   <div class="eight wide computer sixteen wide mobile column">
-    <div class="ui inverted raised center aligned segment">
-      <h3 class="ui dividing inverted left aligned header">
-        <div class="content">
-          <i class="user outline icon"></i> {{ Auth::user()->firstname.' '.Auth::user()->lastname }}'s Sales
-        </div>
-      </h3>
-      <div class="ui four column grid">
-        <div class="column">
-          <div class="ui mini inverted header">Week</div>
-          <div class="ui inverted mini statistic">
-            <div class="value">$
-              {{ App\Sale::select('total')->where('cashier_id', Auth::user()->id)->whereBetween('created_at', [Date::now()->startOfWeek(), Date::now()->endOfWeek()])->sum('total') }}
-            </div>
-            <div class="label">This</div>
-          </div>
-          <div class="ui inverted mini statistic">
-            <div class="value">$
-              {{ App\Sale::select('total')->where('cashier_id', Auth::user()->id)->whereBetween('created_at', [Date::now()->subWeek()->startOfWeek(), Date::now()->subWeek()->endOfWeek()])->sum('total') }}
-            </div>
-            <div class="label">Last</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui mini inverted header">Month</div>
-          <div class="ui inverted mini statistic">
-            <div class="value">$
-              {{ App\Sale::select('total')->where('cashier_id', Auth::user()->id)->whereBetween('created_at', [Date::now()->startOfMonth(), Date::now()->endOfMonth()])->sum('total') }}
-            </div>
-            <div class="label">This</div>
-          </div>
-          <div class="ui inverted mini statistic">
-            <div class="value">$
-              {{ App\Sale::select('total')->where('cashier_id', Auth::user()->id)->whereBetween('created_at', [Date::now()->subMonth()->startOfMonth(), Date::now()->subMonth()->endOfMonth()])->sum('total') }}
-            </div>
-            <div class="label">Last</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui mini inverted header">Year</div>
-          <div class="ui inverted mini statistic">
-            <div class="value">$
-              {{ App\Sale::select('total')->where('cashier_id', Auth::user()->id)->whereBetween('created_at', [Date::now()->startOfYear(), Date::now()->endOfYear()])->sum('total') }}
-            </div>
-            <div class="label">This</div>
-          </div>
-          <div class="ui inverted mini statistic">
-            <div class="value">$
-              {{ App\Sale::select('total')->where('cashier_id', Auth::user()->id)->whereBetween('created_at', [Date::now()->subYear()->startOfYear(), Date::now()->subYear()->endOfYear()])->sum('total') }}
-            </div>
-            <div class="label">Last</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui mini inverted header">Fiscal Year</div>
-          <div class="ui inverted mini statistic">
-            <div class="value">$
-              {{
-                App\Sale::select('total')->where('cashier_id', Auth::user()->id)
-                ->whereBetween('created_at', [Date::now()->format('Y').' 09-01 00:00:00', Date::now()->format('Y').'08-31 23:59:59'])
-                ->sum('total')
-              }}
-            </div>
-            <div class="label">This</div>
-          </div>
-          <div class="ui inverted mini statistic">
-            <div class="value">$
-              {{ App\Sale::select('total')->where('cashier_id', Auth::user()->id)->whereBetween('created_at', [Date::now()->subYear()->format('Y').' 09-01 00:00:00', Date::now()->subYear()->format('Y').'08-31 23:59:59'])->sum('total') }}
-            </div>
-            <div class="label">Last</div>
-          </div>
+    <div class="ui dividing header">
+      <i class="money icon"></i>
+      <div class="content">
+        Overall Earnings
+        <div class="sub header">
+          Last 7 Days
         </div>
       </div>
     </div>
+    <div>
+      <canvas height="200" id="earningsChart"></canvas>
+    </div>
   </div>
-</div>
+
+  <!-- Attendance -->
+  <div class="eight wide computer sixteen wide mobile column">
+    <div class="ui dividing header">
+      <i class="money icon"></i>
+      <div class="content">
+        Attendance
+        <div class="sub header">
+          Last 7 Days
+        </div>
+      </div>
+    </div>
+    <div class="ui two column grid">
+      <div class="column">
+        <canvas height="200" id="attendanceChart"></canvas>
+      </div>
+      <div class="column">
+        <canvas height="200" id="secondAttendanceChart"></canvas>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Events and Calendar -->
+  <div class="eight wide computer sixteen wide mobile column">
+    <div class="ui grid">
+      <div class="eight wide computer sixteen wide mobile column">
+        <div class="ui dividing header">
+          <i class="calendar check icon"></i>
+          <div class="content">
+            Events
+            <div class="sub header">
+              Past and Upcoming
+            </div>
+          </div>
+        </div>
+        <div id="events"></div>
+      </div>
+      <div class="eight wide computer sixteen wide mobile column">
+        <div class="ui dividing header">
+          <i class="calendar icon"></i>
+          <div class="content">
+            Calendar
+            <div class="sub header">
+            {{ App\Setting::find(1)->organization }}
+            </div>
+          </div>
+        </div>
+        <div id="calendar"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Calendar -->
+  <div class="eight wide computer sixteen wide mobile column">
+    <!-- Shows -->
+    <div class="ui statistics">
+      <div class="statistic">
+        <div class="value">
+          <i class="film icon"></i>
+          {{ App\Show::all()->count() - 1 }}
+        </div>
+        <div class="label">
+          Shows
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          <i class="users icon"></i>
+          {{ App\User::all()->count() - 1 }}
+        </div>
+        <div class="label">
+          Users
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          <i class="university icon"></i>
+          {{ App\Organization::all()->count() - 1 }}
+        </div>
+        <div class="label">
+          Organizations
+        </div>
+      </div>
+    </div>
+    <div class="ui dividing header">
+      <i class="calendar check icon"></i>
+      <div class="content">
+        Feed
+        <div class="sub header">
+          Latest Sales
+        </div>
+      </div>
+    </div>
+    <div class="ui feed">
+      <?php $lastSales = App\Sale::latest()->take(5)->get() ?>
+      @foreach ($lastSales as $lastSale)
+        <div class="event">
+          <div class="label">
+            <i class="user circle outline icon"></i>
+          </div>
+          <div class="content">
+            <div class="summary">
+              <a href="#" class="user">
+                {{ $lastSale->creator->firstname }} {{ $lastSale->creator->lastname }}</a>
+                sold {{ $lastSale->tickets->count() }} tickets
+            </div>
+            <div class="date">
+              {{ Date::parse($lastSale->created_at)->ago() }}
+            </div>
+          </div>
+        </div>
+      @endforeach
+    </div>
+  </div>
 </div>
 
 <script>
 
-var ctx = document.getElementById("myChart").getContext("2d");
-var myChart = new Chart(ctx, {
+function loadCalendars() {
+  $('#events').fullCalendar({
+    header: {
+      left: 'prev,next today',
+      right: ''
+    },
+    defaultView: 'listDay',
+    defaultDate: moment().format('YYYY-MM-DD'),
+    contentHeight: 200,
+    hiddenDays: [0],
+    navLinks: true,
+    editable: false,
+    eventLimit: true,
+    minTime: '07:00:00',
+    eventColor: '#1b1c1d',
+    events: '/api/events'
+  })
+  $('#calendar').fullCalendar({
+    header: {
+      left: 'prev,next today',
+      right: ''
+    },
+    defaultView: 'basicDay',
+    defaultDate: moment().format('YYYY-MM-DD'),
+    contentHeight: 200,
+    hiddenDays: [0],
+    navLinks: true,
+    editable: false,
+    eventLimit: true,
+    minTime: '09:00:00',
+    eventColor: '#1b1c1d',
+    events: '/api/calendar'
+  })
+}
+
+function refetchEvents() {
+  $('#events').fullCalendar('refetchEvents')
+  $('#calendar').fullCalendar('refetchEvents')
+}
+
+$(document).ready(loadCalendars)
+
+setInterval(refetchEvents, 5000)
+
+var earningsCanvas = document.getElementById("earningsChart").getContext("2d");
+var earningsChart = new Chart(earningsCanvas, {
   type: 'line',
   data: {
     labels: [
@@ -383,7 +240,7 @@ var myChart = new Chart(ctx, {
              '{{ Date::today()->format('l, F j') }}'
            ],
     datasets: [{
-      label: '{{ App\Setting::find(1)->organization }}\'s Overall Earnings - Last 7 Days',
+      label: 'Earnings ',
       data: [
         {{ getSalesTotals(Date::today()->subDays(6)) }},
         {{ getSalesTotals(Date::today()->subDays(5)) }},
@@ -399,24 +256,121 @@ var myChart = new Chart(ctx, {
     }]
   },
   options: {
+      responsive: true,
+      legend: { display: false },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            return '$ ' + tooltipItem.yLabel.toFixed(2)
+          }
+        }
+      },
+      title: { display: false },
       maintainAspectRatio: false,
       scales: {
           yAxes: [{
               ticks: {
-                  beginAtZero:true,
-                  callback: function(value, index, values){
-                    return value
+                  beginAtZero: true,
+                  callback: function(value, index, values) {
+                    return '$ ' + value
                   }
               }
+          }],
+          xAxes: [{
+            display: false
           }]
       }
     }
 });
 
-$('.ui.inverted.raised.center.aligned.segment')
-.transition({animation:'vertical flip', duration: 2000, interval: 1000 })
+var attendanceCanvas = document.getElementById("attendanceChart").getContext("2d");
+var attendanceChart = new Chart(attendanceCanvas, {
+  type: 'doughnut',
+  data: {
+    labels: [
+            '{{ Date::today()->subDays(6)->format('l, F j') }}',
+            '{{ Date::today()->subDays(5)->format('l, F j') }}',
+            '{{ Date::today()->subDays(4)->format('l, F j') }}',
+            '{{ Date::today()->subDays(3)->format('l, F j') }}',
+            '{{ Date::today()->subDays(2)->format('l, F j') }}',
+            'Yesterday',
+            'Today'
+           ],
+    datasets: [{
+      label: 'Attendance ',
+      data: [
+        {{ getAttendance(Date::today()->subDays(6)) }},
+        {{ getAttendance(Date::today()->subDays(5)) }},
+        {{ getAttendance(Date::today()->subDays(4)) }},
+        {{ getAttendance(Date::today()->subDays(3)) }},
+        {{ getAttendance(Date::today()->subDays(2)) }},
+        {{ getAttendance(Date::today()->subDays(1)) }},
+        {{ getAttendance(Date::today()) }},
+      ],
+      backgroundColor: [
+        '#fea142',
+        '#fdce57',
+        '#4bbebf',
+        '#e03997',
+        '#cf3534',
+        '#002e5d',
+        '#1b1c1d',
+      ]
+    }]
+  },
+  options: {
+      animation: { animateScale: true, animateRotate: true },
+      responsive: true,
+      legend: { display: false, position: 'right' },
+      title: { display: true, text: 'by Tickets Sold' },
+      maintainAspectRatio: false
+    }
+});
 
+var secondAttendanceCanvas = document.getElementById("secondAttendanceChart").getContext("2d");
+var secondAttendanceChart = new Chart(secondAttendanceCanvas, {
+  type: 'pie',
+  data: {
+    labels: [
+            '{{ App\TicketType::find(1)->name }}',
+            '{{ App\TicketType::find(2)->name }}',
+            '{{ App\TicketType::find(3)->name }}',
+            '{{ App\TicketType::find(4)->name }}',
+            '{{ App\TicketType::find(5)->name }}',
+            '{{ App\TicketType::find(6)->name }}',
+           ],
+    datasets: [{
+      label: 'Attendance ',
+      data: [
+        {{ getAttendanceByType(1) }},
+        {{ getAttendanceByType(2) }},
+        {{ getAttendanceByType(3) }},
+        {{ getAttendanceByType(4) }},
+        {{ getAttendanceByType(5) }},
+        {{ getAttendanceByType(6) }},
+      ],
+      backgroundColor: [
+        '#fea142',
+        '#fdce57',
+        '#4bbebf',
+        '#e03997',
+        '#cf3534',
+        '#002e5d',
+        '#1b1c1d',
+      ]
+    }]
+  },
+  options: {
+      animation: { animateScale: true, animateRotate: true },
+      responsive: true,
+      legend: { display: false, position: 'right' },
+      title: { display: true, text: 'by Demographics' },
+      maintainAspectRatio: false
+    }
+});
 
+//$('.ui..raised.center.aligned.segment')
+//.transition({animation:'vertical flip', duration: 2000, interval: 1000 })
 
 </script>
 

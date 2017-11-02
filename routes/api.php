@@ -62,7 +62,7 @@ Route::get('calendar', function() {
         'start'    => Date::parse($event->start)->toDateTimeString(),
         'end'      => Date::parse($event->end)->toDateTimeString(),
         'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-        'title'    => $event->show->name . ' - ' . $sale->customer->firstname . ' ' . $sale->customer->lastname . ' - Sale #' . $sale->id,
+        'title'    => $event->show->name . ' - ' . $sale->organization->name . ' - Sale #' . $sale->id,
         'url'      => '/admin/sales/' . $sale->id,
       ]);
     }
