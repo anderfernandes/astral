@@ -30,11 +30,18 @@ class User extends Authenticatable
     // Guard 'role' attribute
     protected $guarded = ['role_id'];
 
-    public function role() {
+    public function role()
+    {
       return $this->belongsTo('App\Role');
     }
 
-    public function organization() {
+    public function organization()
+    {
       return $this->belongsTo('App\Organization');
+    }
+
+    public function member()
+    {
+      return $this->hasOne('App\Member', 'user_id');
     }
 }

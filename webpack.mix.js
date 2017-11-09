@@ -18,7 +18,7 @@ mix.react('resources/assets/js/app.js', 'public/js')
 
 mix.scripts([
  'node_modules/jquery/dist/jquery.min.js',
- 'node_modules/jquery-address/src/jquery.address',
+ 'node_modules/jquery-address/src/jquery.address.js',
  'node_modules/moment/min/moment.min.js',
  'node_modules/simplemde/dist/simplemde.min.js',
  'node_modules/flatpickr/dist/flatpickr.min.js',

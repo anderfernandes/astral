@@ -30,6 +30,9 @@
   <a class="item {{ Request::routeIs('admin.sales.index') ? 'active' : '' }}" href="{{ route('admin.sales.index') }}">
     <i class="large dollar icon"></i> Sales
   </a>
+  <a class="item {{ Request::routeIs('admin.members.index') ? 'active' : '' }}" href="{{ route('admin.members.index') }}">
+    <i class="large address card icon"></i> Members
+  </a>
   <a class="item {{ Request::routeIs('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
     <i class="large users icon"></i> Users
   </a>

@@ -10,10 +10,12 @@
 
 <div class="ui top attached tabular menu">
   <a class="item active" data-tab="general"><i class="setting icon"></i>General</a>
-  <a class="item" data-tab="organization-types"><i class="university icon"></i>Organization Types</a>
-  <a class="item" data-tab="ticket-types"><i class="ticket icon"></i>Ticket Types</a>
-  <a class="item" data-tab="payment-methods"><i class="money icon"></i>Payment Methods</a>
-  <a class="item" data-tab="event-types"><i class="calendar icon"></i>Event Types</a>
+  <a class="item" data-tab="organization-types"><i class="university icon"></i>Organizations</a>
+  <a class="item" data-tab="ticket-types"><i class="ticket icon"></i>Tickets</a>
+  <a class="item" data-tab="payment-methods"><i class="money icon"></i>Payments</a>
+  <a class="item" data-tab="event-types"><i class="calendar icon"></i>Events</a>
+  <a class="item" data-tab="user-roles"><i class="users icon"></i>Users</a>
+  <a class="item" data-tab="member-types"><i class="address card outline icon"></i>Membership</a>
 </div>
 
 <!--- General --->
@@ -356,7 +358,127 @@
     </div>
   </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
+
+<!-- User Roles -->
+<div class="ui bottom attached tab segment" data-tab="user-roles">
+  <div class="ui two column doubling grid">
+    <div class="column">
+      <table class="ui very basic striped selectable celled table">
+        <thead>
+          <tr>
+            <th>Roles</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($roles as $role)
+          <tr>
+            <td>
+              <h4 class="ui header">
+                <i class="user icon"></i>
+                <div class="content">
+                  {{ $role->name }}
+                  <div class="sub header">{{ $role->description }}</div>
+                </div>
+              </h4>
+            </td>
+            <td>
+              <a href="{{ route('admin.roles.edit', $role->id) }}" class="ui basic icon button">
+                <i class="edit icon"></i>
+              </a>
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="column">
+      {!! Form::open(['route' => 'admin.roles.store', 'class' => 'ui form']) !!}
+      <div class="field">
+        {!! Form::label('name', 'Name') !!}
+        {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
+      </div>
+      <div class="field">
+        {!! Form::label('description', 'Description') !!}
+        {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
+      </div>
+      <div class="field">
+        {!! Form::button('<i class="plus icon"></i> Add User Role', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+      </div>
+      {!! Form::close() !!}
+    </div>
+  </div>
+</div>
+
+<!-- Member Types -->
+<div class="ui bottom attached tab segment" data-tab="member-types">
+  <div class="ui two column doubling grid">
+    <div class="column">
+      <table class="ui very basic striped selectable celled table">
+        <thead>
+          <tr>
+            <th>Membership</th>
+            <th>Price</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($memberTypes as $memberType)
+          <tr>
+            <td>
+              <h4 class="ui header">
+                <i class="address card outline icon"></i>
+                <div class="content">
+                  {{ $memberType->name }}
+                  <div class="sub header">{{ $memberType->description }}</div>
+                </div>
+              </h4>
+            </td>
+            <td>
+              $ {{ $memberType->price }}
+            </td>
+            <td>
+              {{ $memberType->duration }} days
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="column">
+      {!! Form::open(['route' => 'admin.settings.addMemberType', 'class' => 'ui form']) !!}
+      <div class="field">
+        {!! Form::label('name', 'Name') !!}
+        {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
+      </div>
+      <div class="field">
+        {!! Form::label('description', 'Description') !!}
+        {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
+      </div>
+      <div class="two fields">
+        <div class="field">
+          {!! Form::label('price', 'Price') !!}
+          <div class="ui labeled input">
+            <div class="ui label">$</div>
+            {!! Form::text('price', null, ['placeholder' => 'How much is this membership going to cost?']) !!}
+          </div>
+        </div>
+        <div class="field">
+          {!! Form::label('duration', 'Duration') !!}
+          <div class="ui right labeled input">
+            {!! Form::text('duration', null, ['placeholder' => 'Enter the duration in days']) !!}
+            <div class="ui label">days</div>
+          </div>
+
+        </div>
+      </div>
+      <div class="field">
+        {!! Form::button('<i class="plus icon"></i> Add Member Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+      </div>
+      {!! Form::close() !!}
+    </div>
+  </div>
+</div>
 
 <script>
   $('.menu .item').tab({ history: true });

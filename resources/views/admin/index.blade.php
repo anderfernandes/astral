@@ -147,9 +147,18 @@ function getAttendanceByType($ticketTypeID) {
           Organizations
         </div>
       </div>
+      <div class="statistic">
+        <div class="value">
+          <i class="address card icon"></i>
+          {{ App\Member::all()->count() - 1 }}
+        </div>
+        <div class="label">
+          Members
+        </div>
+      </div>
     </div>
     <div class="ui dividing header">
-      <i class="calendar check icon"></i>
+      <i class="feed icon"></i>
       <div class="content">
         Feed
         <div class="sub header">
@@ -332,22 +341,20 @@ var secondAttendanceChart = new Chart(secondAttendanceCanvas, {
   type: 'pie',
   data: {
     labels: [
-            '{{ App\TicketType::find(1)->name }}',
-            '{{ App\TicketType::find(2)->name }}',
-            '{{ App\TicketType::find(3)->name }}',
-            '{{ App\TicketType::find(4)->name }}',
-            '{{ App\TicketType::find(5)->name }}',
-            '{{ App\TicketType::find(6)->name }}',
+            <?php
+              foreach (App\TicketType::all() as $ticketType) {
+                echo "'" . $ticketType->name . "',";
+              }
+            ?>
            ],
     datasets: [{
       label: 'Attendance ',
       data: [
-        {{ getAttendanceByType(1) }},
-        {{ getAttendanceByType(2) }},
-        {{ getAttendanceByType(3) }},
-        {{ getAttendanceByType(4) }},
-        {{ getAttendanceByType(5) }},
-        {{ getAttendanceByType(6) }},
+        <?php
+          foreach (App\TicketType::all() as $ticketType) {
+            echo getAttendanceByType($ticketType->id) . ",";
+          }
+        ?>
       ],
       backgroundColor: [
         '#fea142',

@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Role;
 use Illuminate\Http\Request;
 
-class UserRoleController extends Controller
+use Session;
+
+use App\Http\Controllers\Controller;
+
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,16 +39,31 @@ class UserRoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+          'name'        => 'required|unique:roles,name',
+          'description' => 'required',
+        ]);
+
+        $role = new Role;
+
+        $role->name        = $request->name;
+        $role->description = $request->description;
+        $role->type        = 'individuals';
+
+        $role->save();
+
+        Session::flash('success', 'The <strong>User Role ' . $role->name . '</strong> has been created successfully!');
+
+        return redirect()->to(route('admin.settings.index').'#user-roles');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\UserRole  $userRole
+     * @param  \App\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function show(UserRole $userRole)
+    public function show(Role $role)
     {
         //
     }
@@ -52,33 +71,44 @@ class UserRoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\UserRole  $userRole
+     * @param  \App\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserRole $userRole)
+    public function edit(Role $role)
     {
-        //
+        return view('admin.roles.edit')->withRole($role);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\UserRole  $userRole
+     * @param  \App\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserRole $userRole)
+    public function update(Request $request, Role $role)
     {
-        //
+        $this->validate($request, [
+          'name' => 'required',
+        ]);
+
+        $role->name        = $request->name;
+        $role->description = $request->description;
+
+        $role->save();
+
+        Session::flash('success', 'The <strong>User Role ' . $role->name . '</strong> has been updated successfully!');
+
+        return redirect()->to(route('admin.settings.index').'#user-roles');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\UserRole  $userRole
+     * @param  \App\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UserRole $userRole)
+    public function destroy(Role $role)
     {
         //
     }

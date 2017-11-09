@@ -25,6 +25,8 @@ Route::group(
   Route::get('calendar', function(){ return view('admin.calendar.index'); })->name('calendar.index');
   // Shows resource
   Route::resource('shows', 'ShowController');
+  // Members Resource
+  Route::resource('members', 'MemberController');
   // Users resource
   Route::resource('users', 'UserController');
   // Organizations resource
@@ -40,6 +42,8 @@ Route::group(
   Route::post('sales/refund/{sale}', 'SaleController@refund')->name('sales.refund');
   // Setting resource
   Route::resource('settings', 'SettingController');
+  // Roles
+  Route::resource('roles', 'RoleController');
   // HTTP PUT route for updating general settings
   Route::put('settings', 'SettingController@update');
   // HTTP PUT route for adding managing Organization Types
@@ -50,6 +54,8 @@ Route::group(
   Route::post('settings/addPaymentMethod', 'SettingController@addPaymentMethod')->name('settings.addPaymentMethod');
   // HTTP PUT route for adding managing Event Types
   Route::post('settings/addEventType', 'SettingController@addEventType')->name('settings.addEventType');
+  // HTTP PUT route for adding managing Member Types
+  Route::post('settings/addMemberType', 'SettingController@addMemberType')->name('settings.addMemberType');
 });
 // Cashier Routes
 Route::group(['prefix' => 'cashier', 'as' => 'cashier', 'middleware' => 'auth'],

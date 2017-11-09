@@ -1,6 +1,6 @@
 @extends('layout.report')
 
-@section('title', Auth::user()->firstname.' '.Auth::user()->lastname.'s Payment Transaction Detail Report')
+@section('title', $paymentUser->firstname.' '.$paymentUser->lastname.'s Payment Transaction Detail Report')
 
 @section('content')
 
@@ -57,7 +57,7 @@
   <tfoot>
     <tr>
       <th colspan="8" class="right aligned">
-        <strong>Totals for {{ Auth::user()->firstname }}: $ {{ $totals }}</strong>
+        <strong>Totals for {{ $paymentUser->firstname }}: $ {{ $totals }}</strong>
       </th>
     </tr>
   </tfoot>

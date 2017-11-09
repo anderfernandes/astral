@@ -40,6 +40,13 @@ class RolesTableSeeder extends Seeder
       ]);
       // 5
       DB::table('roles')->insert([
+        'name'        => 'Member',
+        'description' => 'Member accounts',
+        'type'        => 'members',
+        'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
+      ]);
+      // 6
+      DB::table('roles')->insert([
         'name'        => 'Community College',
         'description' => 'Community College accounts.',
         'type'        => 'organizations',

@@ -116,7 +116,7 @@ class CashierController extends Controller
 
       $this->validate($request, [
         'payment_method'           => 'required',
-        'reference'                => 'nullable|integer',
+        'reference'                => 'nullable|numeric',
         //'tendered'                 => 'required|numeric',
         'customer_id'              => 'required|integer',
         'ticket.*.event_id'        => 'required',

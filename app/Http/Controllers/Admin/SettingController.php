@@ -14,6 +14,7 @@ use App\Role;
 use App\TicketType;
 use App\PaymentMethod;
 use App\EventType;
+use App\MemberType;
 
 class SettingController extends Controller
 {
@@ -25,16 +26,20 @@ class SettingController extends Controller
     public function index()
     {
         $setting = Setting::find(1);
+        $roles = Role::all()->where('type', 'individuals');
         $organizationTypes = OrganizationType::orderBy('created_at', 'desc')->where('name', '!=', 'System')->get();
         $ticketTypes = TicketType::orderBy('created_at', 'desc')->get();
         $paymentMethods = PaymentMethod::all();
         $eventTypes = EventType::where('name', '!=', 'system')->get();
+        $memberTypes = MemberType::where('id', '!=', 1)->get();
 
         return view('admin.settings.index')
           ->withSetting($setting)
           ->withOrganizationTypes($organizationTypes)
           ->withTicketTypes($ticketTypes)
           ->withPaymentMethods($paymentMethods)
+          ->withRoles($roles)
+          ->withMemberTypes($memberTypes)
           ->withEventTypes($eventTypes);
     }
 
@@ -136,6 +141,31 @@ class SettingController extends Controller
       Session::flash('success', 'Event Type <strong>'. $eventType->name .'</strong> added successfully!');
 
       return redirect()->to(route('admin.settings.index').'#event-types');
+    }
+
+    // Add Roles has its own controler
+
+    public function addMemberType(Request $request)
+    {
+      $this->validate($request, [
+        'name'        => 'required',
+        'description' => 'required',
+        'price'       => 'required|numeric',
+        'duration'    => 'required|numeric'
+      ]);
+
+      $memberType = new MemberType;
+
+      $memberType->name        = $request->name;
+      $memberType->description = $request->description;
+      $memberType->price       = $request->price;
+      $memberType->duration    = $request->duration;
+
+      $memberType->save();
+
+      Session::flash('success', '<strong>'. $memberType->name .'</strong> added successfully!');
+
+      return redirect()->to(route('admin.settings.index').'#member-types');
     }
 
     /**

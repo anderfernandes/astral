@@ -257,7 +257,6 @@ class SaleController extends Controller
           'memo'              => 'max:255',
         ]);
 
-        $sale->creator_id        = Auth::user()->id;
         $sale->organization_id   = $request->organization_id;
         $sale->customer_id       = $request->customer_id;
         $sale->status            = $request->status;

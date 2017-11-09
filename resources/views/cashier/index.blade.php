@@ -37,10 +37,10 @@
                   <div class="extra content">
                     @foreach ($event->type->allowedTickets as $ticket)
                       <div class="ui buttons">
-                        <div class="ui inverted green button" onclick="changeAmount(1, '{{ $ticket->name }}', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type->name }}', {{ number_format($ticket->price, 2) }}, {{ $event->id }}, {{ $ticket->pivot->ticket_type_id }}, '{{ $event->show->type }}')">
+                        <div class="ui inverted green button" onclick="changeAmount(1, '{{ $ticket->name }}', {{ $event->show_id }}, `{{ $event->show->name }}`, '{{ $event->type->name }}', {{ number_format($ticket->price, 2) }}, {{ $event->id }}, {{ $ticket->pivot->ticket_type_id }}, '{{ $event->show->type }}')">
                           {{ $ticket->name }}
                         </div>
-                        <div class="ui inverted red icon button" onclick="changeAmount(-1, '{{ $ticket->name }}', {{ $event->show_id }}, '{{ $event->show->name }}', '{{ $event->type->name }}', {{ number_format($ticket->price, 2) }}, {{ $event->id }}, {{ $ticket->pivot->ticket_type_id }}, '{{ $event->show->type }}')">
+                        <div class="ui inverted red icon button" onclick="changeAmount(-1, '{{ $ticket->name }}', {{ $event->show_id }}, `{{ $event->show->name }}`, '{{ $event->type->name }}', {{ number_format($ticket->price, 2) }}, {{ $event->id }}, {{ $ticket->pivot->ticket_type_id }}, '{{ $event->show->type }}')">
                           <i class="minus icon"></i>
                         </div>
                       </div>
@@ -229,10 +229,10 @@
       parseInt(document.querySelector("#total").innerHTML) <= 0 ? $('#tendered').attr('disabled', true) : $('#tendered').attr('disabled', false)
 
       if (show)
-        var showTrimmed = show.replace(/\s+/g, "").replace(":", "");
+        var showTrimmed = show.replace(/\s+/g, "").replace(":", "").replace("\'", "");
 
       if (event_type)
-        var event_typeTrimmed = event_type.replace(/\s+/g, "").replace(":", "");
+        var event_typeTrimmed = event_type.replace(/\s+/g, "").replace(":", "").replace("\'", "");
 
       if(operator == 1) {
         $('#tickets').append(
@@ -261,19 +261,19 @@
 
     }
     </script>
-@else
-  <div class="sixteen wide column">
-    <div class="ui info icon message">
-      <i class="info circle icon"></i>
-      <i class="close icon"></i>
-      <div class="content">
-        <div class="header">
-          No shows!
+  @else
+    <div class="sixteen wide column">
+      <div class="ui info icon message">
+        <i class="info circle icon"></i>
+        <i class="close icon"></i>
+        <div class="content">
+          <div class="header">
+            No shows!
+          </div>
+          <p>It looks like there are no shows going on today.</p>
         </div>
-        <p>It looks like there are no shows going on today.</p>
       </div>
     </div>
-  </div>
-@endif
+  @endif
 
 @endsection

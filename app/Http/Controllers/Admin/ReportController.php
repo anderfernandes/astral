@@ -158,7 +158,7 @@ class ReportController extends Controller
 
         $totals = number_format($totals, 2);
 
-        return view('admin.reports.transaction-detail')->withPayments($payments)->withTotals($totals);
+        return view('admin.reports.transaction-detail')->withPayments($payments)->withTotals($totals)->withPaymentUser($user);
       }
     }
 }

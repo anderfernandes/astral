@@ -20,6 +20,7 @@ class UsersTableSeeder extends Seeder
         'role_id'         => 1,
         'organization_id' => 1,
         'type'            => 'walk-up',
+        'membership_id'   => 1,
         'created_at'      => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
       ]);
       // 2
@@ -31,6 +32,7 @@ class UsersTableSeeder extends Seeder
         'role_id'         => 2,
         'organization_id' => 2,
         'type'            => 'individual',
+        'membership_id'   => 1,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 3
@@ -39,9 +41,10 @@ class UsersTableSeeder extends Seeder
         'lastname'        => '',
         'email'           => 'planetarium@ctcd.edu',
         'password'        =>  bcrypt('Mayborn152'),
-        'role_id'         => 5,
+        'role_id'         => 6,
         'organization_id' => 2,
         'type'            => 'organization',
+        'membership_id'   => 1,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 4
@@ -50,9 +53,10 @@ class UsersTableSeeder extends Seeder
         'lastname'        => '',
         'email'           => 'contact@ctcd.edu',
         'password'        =>  bcrypt('Mayborn152'),
-        'role_id'         => 5,
+        'role_id'         => 6,
         'organization_id' => 3,
         'type'            => 'organization',
+        'membership_id'   => 1,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 5
@@ -64,6 +68,7 @@ class UsersTableSeeder extends Seeder
         'role_id'         => 2,
         'organization_id' => 2,
         'type'            => 'individual',
+        'membership_id'   => 1,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 6
@@ -75,6 +80,7 @@ class UsersTableSeeder extends Seeder
         'role_id'         => 2,
         'organization_id' => 2,
         'type'            => 'individual',
+        'membership_id'   => 1,
         'created_at'      => Date::now('America/Chicago'),
       ]);
     }

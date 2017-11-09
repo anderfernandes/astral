@@ -20,8 +20,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('type', '=', 'individual')
-                 ->orderBy('id', 'desc')->paginate(10);
+        $users = User::where('type', 'individual')->where('role_id', '!=', 5)
+                 ->orderBy('id', 'desc')->paginate(12);
 
         return view('admin.users.index')->withUsers($users);
     }
@@ -67,6 +67,7 @@ class UserController extends Controller
         $user->type            = 'individual';
         $user->organization_id = $request->organization_id;
         $user->password        = bcrypt($request->password);
+        $user->membership_id   = 1;
 
         $user->save();
 

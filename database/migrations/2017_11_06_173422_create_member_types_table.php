@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRolesTable extends Migration
+class CreateMemberTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('member_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            // Types here refer to roles assigned for individual accounts or organization accounts
-            $table->enum('type', ['organizations', 'individuals', 'walk-up', 'members']);
             $table->string('description');
+            $table->unsignedSmallInteger('duration');
+            $table->decimal('price', 4, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('member_types');
     }
 }
