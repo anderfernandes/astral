@@ -52,5 +52,19 @@ class RolesTableSeeder extends Seeder
         'type'        => 'organizations',
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
+      // 7
+      DB::table('roles')->insert([
+        'name'        => 'Visitor',
+        'description' => 'Visitor accounts.',
+        'type'        => 'individuals',
+        'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
+      ]);
+      // 8
+      DB::table('roles')->insert([
+        'name'        => 'Teacher',
+        'description' => 'Teacher accounts.',
+        'type'        => 'individuals',
+        'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
+      ]);
     }
 }

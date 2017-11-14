@@ -69,9 +69,10 @@ class RegisterController extends Controller
             'email'           => $data['email'],
             'password'        => bcrypt($data['password']),
             // Defining standard role for registered users
-            'role_id'         => 4,
+            'role_id'         => 7,
             'organization_id' => 1,
             'type'            => 'individual',
+            'membership_id'   => '1',
         ]);
     }
 }

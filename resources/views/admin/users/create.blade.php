@@ -28,11 +28,11 @@
   <div class="two three fields">
     <div class="field">
       {!! Form::label('role_id', 'Role') !!}
-      {!! Form::select('role_id', $roles, null, ['class' => 'ui dropdown']) !!}
+      {!! Form::select('role_id', $roles, 7, ['class' => 'ui dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('organization_id', 'Organization') !!}
-      {!! Form::select('organization_id', $organizations, null, ['class' => 'ui dropdown']) !!}
+      {!! Form::select('organization_id', $organizations, 1, ['class' => 'ui dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('email', 'Email') !!}
