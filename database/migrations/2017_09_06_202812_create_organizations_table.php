@@ -25,8 +25,8 @@ class CreateOrganizationsTable extends Migration
             $table->string('fax')->nullable();
             $table->string('email')->unique();
             $table->string('website')->nullable();
-            $table->integer('type_id')->unsigned();
-            $table->foreign('type_id')->references('id')->on('organization_types');
+            //$table->integer('type_id')->unsigned();
+            //$table->foreign('type_id')->references('id')->on('organization_types');
             $table->timestamps();
         });
     }

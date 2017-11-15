@@ -19,12 +19,12 @@ class CreateUsersTable extends Migration
             $table->string('lastname', 48)->nullable();
             $table->string('email', 64)->unique();
             $table->string('password');
-            $table->integer('role_id')->unsigned();
-            $table->foreign('role_id')->references('id')->on('roles');
-            $table->integer('organization_id')->unsigned();
-            $table->foreign('organization_id')->references('id')->on('organizations');
-            $table->integer('membership_id')->unsigned();
-            $table->foreign('membership_id')->references('id')->on('members');
+            //$table->integer('role_id')->unsigned();
+            //$table->foreign('role_id')->references('id')->on('roles');
+            //$table->integer('organization_id')->unsigned();
+            //$table->foreign('organization_id')->references('id')->on('organizations');
+            //$table->integer('membership_id')->unsigned();
+            //$table->foreign('membership_id')->references('id')->on('members');
             $table->enum('type', ['organization', 'individual', 'walk-up']);
             $table->rememberToken();
             $table->timestamps();

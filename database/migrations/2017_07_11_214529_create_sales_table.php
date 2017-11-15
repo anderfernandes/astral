@@ -26,8 +26,8 @@ class CreateSalesTable extends Migration
             $table->boolean('refund');
             $table->integer('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('users');
-            $table->integer('organization_id')->unsigned();
-            $table->foreign('organization_id')->references('id')->on('organizations');
+            //$table->integer('organization_id')->unsigned();
+            //$table->foreign('organization_id')->references('id')->on('organizations');
             $table->text('memo')->nullable();
             $table->timestamps();
         });

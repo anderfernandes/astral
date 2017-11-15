@@ -15,8 +15,8 @@ class CreateTicketsTable extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('ticket_type_id')->unsigned();
-            $table->foreign('ticket_type_id')->references('id')->on('ticket_types');
+            //$table->integer('ticket_type_id')->unsigned();
+            //$table->foreign('ticket_type_id')->references('id')->on('ticket_types');
             $table->integer('event_id')->unsigned();
             $table->foreign('event_id')->references('id')->on('events');
             $table->integer('sale_id')->unsigned();

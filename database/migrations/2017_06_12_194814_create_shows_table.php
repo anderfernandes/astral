@@ -19,7 +19,7 @@ class CreateShowsTable extends Migration
             $table->string('type');
             $table->integer('duration');
             $table->text('description');
-            $table->string('cover')->default('https://semantic-ui.com/images/wireframe/image.png')->nullable();
+            $table->string('cover')->default('/default.png')->nullable();
             $table->integer('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users');
             $table->timestamps();
