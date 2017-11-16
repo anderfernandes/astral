@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Sale;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 use Session;
 use Jenssegers\Date\Date;
 Use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use Illuminate\Validation\Rule;
 
+use App\Sale;
 use App\User;
 use App\Organization;
 use App\Event;

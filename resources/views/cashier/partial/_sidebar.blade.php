@@ -1,4 +1,4 @@
-<div class="ui sidebar vertical menu">
+<div class="ui sidebar vertical menu" style="overflow: visible !important">
   <div class="item" style="text-align:center">
     <h1 class="ui icon header"><i class="user circle outline large icon"></i></h1>
     <br />
@@ -16,18 +16,32 @@
   </div>
   <!-- Pending loop to automatically pull all menu items -->
   <a class="{{ Request::routeIs('cashier.index') ? "active " : ""}}item" href="{{ route('cashier.index') }}">
-    <i class="dollar icon"></i> Cashier
+    <i class="inbox icon"></i> Cashier
   </a>
-  <a class="item" href="javascript:$('#find-sale-modal').modal('show')">
-    <i class="search icon"></i> Find Sale
-  </a>
-  <a class="item" href="{{ route('cashier.reports', 'closeout') }}" target="_blank">
-    <i class="file text icon"></i> Closeout Report
-  </a>
-  <a class="item" href="{{ route('cashier.reports', 'transaction-detail') }}" target="_blank">
-    <i class="file text outline icon"></i> Transaction Detail Report
-  </a>
-  
+  <div class="ui dropdown item">
+    <i class="right chevron icon"></i>
+    Reports
+    <div class="menu">
+      <a class="item" href="{{ route('cashier.reports', 'closeout') }}" target="_blank">
+        <i class="file text icon"></i> Closeout Report
+      </a>
+      <a class="item" href="{{ route('cashier.reports', 'transaction-detail') }}" target="_blank">
+        <i class="file text outline icon"></i> Transaction Detail Report
+      </a>
+    </div>
+  </div>
+  <div class="ui dropdown item">
+    <i class="right chevron icon"></i>
+    Sales
+    <div class="menu">
+      <a href="{{ route('cashier.sales.index') }}" class="item">
+        <i class="dollar icon"></i> All Sales</a>
+      <a class="item" href="javascript:$('#find-sale-modal').modal('show')">
+        <i class="search icon"></i> Find
+      </a>
+    </div>
+  </div>
+  <a href="{{ route('cashier.members.index') }}" class="item"> <i class="address card icon"></i> Members</a>
 </div>
 
 <!-- Find Sale Modal -->

@@ -6,7 +6,7 @@
     <div class="header">
       Success!
     </div>
-    <p>{{ Session::get('success') }}</p>
+    <p>{!! Session::get('success') !!}</p>
   </div>
 </div>
 @elseif (Session::has('error'))

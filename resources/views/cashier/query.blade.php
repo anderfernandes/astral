@@ -4,7 +4,7 @@
 
 @section('icon', 'inbox')
 
-@section('name', 'Cashier | Query | '.Auth::user()->firstname.' '.Auth::user()->lastname)
+@section('name', 'Cashier | Query')
 
 @section('content')
 
@@ -44,24 +44,24 @@
       <tr>
       @endif
         <td class="single line selectable">
-          <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank"><h2 class="ui center aligned header">{{ $result->id }}</h2></a>
+          <a href="{{ route ('cashier.sales.show', $result->id) }}" target="_blank"><h2 class="ui center aligned header">{{ $result->id }}</h2></a>
         </td>
         <td class="selectable">
-          <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="{{ $result->payments->first()->method->icon . ' icon' }}"></i></h2></a>
+          <a href="{{ route ('cashier.sales.show', $result->id) }}" target="_blank"><h2 class="ui center aligned header"><i class="{{ $result->payments->first()->method->icon . ' icon' }}"></i></h2></a>
         </td>
         <td class="selectable">
-          <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ $result->payments->first()->reference }}</a>
+          <a href="{{ route ('cashier.sales.show', $result->id) }}" target="_blank">{{ $result->payments->first()->reference }}</a>
         </td>
         <td class="selectable">
           @if ($result->refund == true)
-            <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">($ {{ number_format($result->total, 2) }})</a>
+            <a href="{{ route ('cashier.sales.show', $result->id) }}" target="_blank">($ {{ number_format($result->total, 2) }})</a>
           @else
-            <a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">$ {{ number_format($result->total, 2) }}</a>
+            <a href="{{ route ('cashier.sales.show', $result->id) }}" target="_blank">$ {{ number_format($result->total, 2) }}</a>
           @endif
         </td>
-        <td class="selectable"><a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ $result->source }}</a></td>
-        <td class="selectable"><a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ App\User::find($result->creator_id)->firstname }} {{ App\User::find($result->creator_id)->lastname }}</a></td>
-        <td class="selectable"><a href="{{ route ('cashier.sale', $result->id) }}" target="_blank">{{ Date::parse($result->created_at)->format('l, F j, Y \a\t g:i A') }}</a></td>
+        <td class="selectable"><a href="{{ route ('cashier.sales.show', $result->id) }}" target="_blank">{{ $result->source }}</a></td>
+        <td class="selectable"><a href="{{ route ('cashier.sales.show', $result->id) }}" target="_blank">{{ App\User::find($result->creator_id)->firstname }} {{ App\User::find($result->creator_id)->lastname }}</a></td>
+        <td class="selectable"><a href="{{ route ('cashier.sales.show', $result->id) }}" target="_blank">{{ Date::parse($result->created_at)->format('l, F j, Y \a\t g:i A') }}</a></td>
       </tr>
     @endforeach
     </tbody>

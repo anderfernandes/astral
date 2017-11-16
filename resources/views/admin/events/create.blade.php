@@ -71,7 +71,7 @@
     $('#end').flatpickr({enableTime:true, minDate: function() {$('#start').val()}, dateFormat: 'l, F j, Y h:i K'});
 
     document.querySelector('#start').onchange = function() {
-      document.querySelector('#end').value = moment(this.value, 'dddd, MMMM DD, YYYY h:mm A').add(1, 'hours').format('dddd, MMMM DD, YYYY h:mm A');
+      document.querySelector('#end').value = moment(this.value, 'dddd, MMMM D, YYYY h:mm A').add(1, 'hours').format('dddd, MMMM D, YYYY h:mm A');
     }
 
   </script>

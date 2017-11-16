@@ -2,7 +2,10 @@
   <a class="header toc item"><i class="sidebar large icon"></i></a>
   <div class="header item"><i class="sun large icon"></i></div>
   <div class="active header item">
-    <strong><i class="@yield('icon') icon"></i> @yield('name')</strong>
+    <strong>
+      <i class="@yield('icon') icon"></i> @yield('name') |
+      {{ Auth::user()->firstname . ' ' . Auth::user()->lastname }}
+    </strong>
   </div>
   <div class="right menu">
     <div class="active header item">

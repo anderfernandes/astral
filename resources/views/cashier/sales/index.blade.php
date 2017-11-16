@@ -1,0 +1,120 @@
+@extends('layout.cashier')
+
+@section('title', 'Sales')
+
+@section ('name', 'Manage Sales')
+
+@section ('icon', 'dollar')
+
+@section('content')
+
+  <a class="ui secondary button" href="{{ route('cashier.sales.create') }}">
+    <i class="plus icon"></i> New Sale
+  </a>
+  <!--
+  <div class="ui right icon input">
+    <input type="text" name="search" placeholder="Sale Number">
+    <i class="search link icon"></i>
+  </div>
+  <select name="payment_type" id="payment_type" class="ui dropdown">
+    <option value="">All Payment Types</option>
+    <option value="Cash">Cash</option>
+    <option value="Visa">Visa</option>
+  </select>
+  <div class="ui selection dropdown">
+    <input type="hidden" id="status" name="status">
+    <i class="dropdown icon"></i>
+    <div class="default text">All Sale Status</div>
+    <div class="menu">
+      <div class="item" data-value="open"><i class="unlock icon"></i>Open</div>
+      <div class="item" data-value="complete"><i class="checkmark icon"></i>Complete</div>
+      <div class="item" data-value="canceled"><i class="remove icon"></i>Canceled</div>
+      <div class="item" data-value="tentative"><i class="help icon"></i>Tentative</div>
+      <div class="item" data-value="no show"><i class="thumbs outline down icon"></i>No Show</div>
+    </div>
+  </div>
+  -->
+
+
+@if (!isset($sales) || count($sales) > 0)
+<br /><br />
+<table class="ui selectable striped single line table">
+  <thead>
+    <tr>
+      <th>Sale #</th>
+      <th>Customer</th>
+      <th>Total</th>
+      <th>Balance</th>
+      <th>Status</th>
+      <th>Created On</th>
+      <th>Created By</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach($sales as $sale)
+      <tr>
+        <td><h3 class="ui center aligned header">{{ $sale->id }}</h3></td>
+        @if ($sale->customer->firstname == "Walk-up")
+        <td>{{ $sale->customer->firstname }}</td>
+        @else
+        <td>{{ $sale->customer->firstname }} {{ $sale->customer->lastname }}</td>
+        @endif
+
+        <td>$ {{ number_format($sale->total, 2) }}</td>
+        <td>
+          @if (number_format($sale->total - $sale->payments->sum('tendered'), 2) > 2)
+            $ {{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}
+          @else
+            $ 0.00
+          @endif
+        </td>
+        <td>
+          @if ($sale->status == 'complete')
+            <span class="ui green label"><i class="checkmark icon"></i>
+          @elseif ($sale->status == 'no show')
+            <span class="ui orange label"><i class="thumbs outline down icon"></i>
+          @elseif ($sale->status == 'open')
+            <span class="ui violet label"><i class="unlock icon"></i>
+          @elseif ($sale->status == 'tentative')
+            <span class="ui yellow label"><i class="help icon"></i>
+          @elseif ($sale->status == 'canceled')
+            <span class="ui red label"><i class="remove icon"></i>
+          @else
+            <span class="ui label">
+          @endif
+          {{ $sale->status }}</span>
+        </td>
+        <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
+        <td>{{ $sale->creator->firstname }}</td>
+        <td>
+          <div class="ui buttons">
+            <a href="{{ route('cashier.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i>View</a>
+            <a href="{{ route('cashier.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
+          </div>
+        </td>
+      </tr>
+    @endforeach
+  </tbody>
+
+</table>
+@else
+  <div class="ui info icon message">
+    <i class="info circle icon"></i>
+    <i class="close icon"></i>
+    <div class="content">
+      <div class="header">
+        No sales!
+      </div>
+      <p>It looks like there are no sales in the database.</p>
+    </div>
+  </div>
+@endif
+
+<br />
+
+<div class="ui centered grid">
+  {{ $sales->links('vendor.pagination.semantic-ui') }}
+</div>
+
+@endsection

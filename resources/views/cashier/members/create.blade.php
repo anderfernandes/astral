@@ -1,10 +1,10 @@
-@extends('layout.admin')
+@extends('layout.cashier')
 
 @section('title', 'Members')
 
-@section('subtitle', 'Add Member')
+@section ('name', 'Add Member')
 
-@section('icon', 'address card')
+@section ('icon', 'address card')
 
 @section('content')
 
@@ -23,7 +23,7 @@
 
   <br />
 
-  {!! Form::open(['route' => 'admin.members.store', 'class' => 'ui form']) !!}
+  {!! Form::open(['route' => 'cashier.members.store', 'class' => 'ui form']) !!}
   <div class="five fields">
     <div class="field">
       {!! Form::label('subtotal', 'Subtotal' ) !!}
@@ -129,7 +129,7 @@
   <br /><br />
   <div class="field">
     <div class="ui buttons">
-      <a href="{{ route('admin.members.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
+      <a href="{{ route('cashier.members.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
       {!! Form::button('<i class="plus icon"></i> Add Member', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>

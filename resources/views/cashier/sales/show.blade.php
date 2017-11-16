@@ -1,10 +1,10 @@
-@extends('layout.admin')
+@extends('layout.cashier')
 
-@section('title', 'Sale Information')
+@section('title', 'Sales')
 
-@section('subtitle', 'Sale #' . $sale->id)
+@section ('name', 'Sales #' . $sale->id)
 
-@section('icon', 'dollar')
+@section ('icon', 'dollar')
 
 @section('content')
 
@@ -52,13 +52,9 @@
   </div>
   @endif
   <div class="ui left floated buttons">
-    <a href="{{ route('admin.sales.index') }}" class="ui default button">
+    <a href="{{ route('cashier.sales.index') }}" class="ui default button">
       <i class="left chevron icon"></i>
-      Back to Sales
-    </a>
-    <a href="{{ route('admin.calendar.index') }}" class="ui default button">
-      <i class="left chevron icon"></i>
-      Back to Calendar
+      Back
     </a>
     <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
   </div>

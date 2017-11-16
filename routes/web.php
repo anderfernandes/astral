@@ -58,18 +58,20 @@ Route::group(
   Route::post('settings/addMemberType', 'SettingController@addMemberType')->name('settings.addMemberType');
 });
 // Cashier Routes
-Route::group(['prefix' => 'cashier', 'as' => 'cashier', 'middleware' => 'auth'],
+Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier', 'middleware' => 'auth'],
   function() {
     // Index
-    Route::get('/', 'CashierController@index')->name('.index');
-    // Store Sale
-    Route::post('/', 'CashierController@store')->name('.store');
+    Route::get('/', 'CashierController@index')->name('index');
+    // Store Cashier Sale
+    Route::post('/', 'CashierController@store')->name('store');
     // Reports
-    Route::get('reports/{type}', 'CashierController@reports')->name('.reports');
+    Route::get('reports/{type}', 'ReportController@reports')->name('reports');
     // Find Sale
-    Route::post('query', 'CashierController@query')->name('.query');
-    // Sale Details
-    Route::get('sale/{sale}', 'CashierController@sale')->name('.sale');
+    Route::post('query', 'SaleController@query')->name('query');
+    // Sales
+    Route::resource('sales', 'SaleController');
+    // Members
+    Route::resource('members', 'MemberController');
   });
 
 Auth::routes();

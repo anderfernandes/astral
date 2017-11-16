@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Cashier;
 
 use App\Member;
 use Illuminate\Http\Request;
@@ -26,9 +26,9 @@ class MemberController extends Controller
      */
     public function index()
     {
-        // member role_id is 5
-        $members = User::all()->where('role_id', '5');
-        return view('admin.members.index')->withMembers($members);
+      // member role_id is 5
+      $members = User::all()->where('role_id', '5');
+      return view('cashier.members.index')->withMembers($members);
     }
 
     /**
@@ -38,20 +38,20 @@ class MemberController extends Controller
      */
     public function create()
     {
-        $users = User::all()->where('type', 'individual')->where('role_id', '!=', 5);
-        $users = $users->mapWithKeys(function($item) {
-          return [$item['id'] => $item['firstname'] . ' ' . $item['lastname']];
-        });
+      $users = User::all()->where('type', 'individual')->where('role_id', '!=', 5);
+      $users = $users->mapWithKeys(function($item) {
+        return [$item['id'] => $item['firstname'] . ' ' . $item['lastname']];
+      });
 
-        $memberTypes = MemberType::all()->where('id', '!=', 1);
-        $memberTypes = $memberTypes->mapWithKeys(function($item) {
-          return [$item['id'] => $item['name'] . ' - $ ' . number_format($item['price'], 2)];
-        });
+      $memberTypes = MemberType::all()->where('id', '!=', 1);
+      $memberTypes = $memberTypes->mapWithKeys(function($item) {
+        return [$item['id'] => $item['name'] . ' - $ ' . number_format($item['price'], 2)];
+      });
 
-        $paymentMethods = PaymentMethod::all();
-        return view('admin.members.create')->withUsers($users)
-                                           ->withPaymentMethods($paymentMethods)
-                                           ->withMemberTypes($memberTypes);
+      $paymentMethods = PaymentMethod::all();
+      return view('cashier.members.create')->withUsers($users)
+                                         ->withPaymentMethods($paymentMethods)
+                                         ->withMemberTypes($memberTypes);
     }
 
     /**
@@ -63,9 +63,10 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-          'user_id'        => 'required|integer',
-          'member_type_id' => 'required|integer',
-          'tendered'       => 'numeric',
+          'user_id'           => 'required|integer',
+          'member_type_id'    => 'required|integer',
+          'tendered'          => 'numeric',
+          'payment_method_id' => 'required',
         ]);
 
         $user = User::find($request->user_id);
@@ -121,7 +122,7 @@ class MemberController extends Controller
 
         Session::flash('success','<strong>' . $user->firstname .' ' . $user->lastname .', Member # '. $user->member->id .' ('. $user->member->type->name .')</strong> added successfully!');
 
-        return redirect()->route('admin.members.index');
+        return redirect()->route('cashier.members.index');
     }
 
     /**

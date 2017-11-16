@@ -4,7 +4,7 @@
 
 @section('icon', 'inbox')
 
-@section('name', 'Cashier | '.Auth::user()->firstname.' '.Auth::user()->lastname)
+@section('name', 'Cashier')
 
 @section('content')
 

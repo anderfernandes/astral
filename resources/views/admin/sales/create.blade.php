@@ -2,7 +2,7 @@
 
 @section('title', 'Sales')
 
-@section ('subtitle', 'New Sales')
+@section ('subtitle', 'New Sale')
 
 @section ('icon', 'dollar')
 
