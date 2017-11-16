@@ -53,6 +53,6 @@
     "Wyoming"              => "Wyoming",
     "Foreign Country"      => "Foreign Country"
   ],
-  null,
+  "Texas",
   ['placeholder' => 'Select a State', 'class' => 'ui search dropdown'])
 !!}

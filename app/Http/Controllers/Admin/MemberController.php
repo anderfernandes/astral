@@ -27,7 +27,7 @@ class MemberController extends Controller
     public function index()
     {
         // member role_id is 5
-        $members = User::all()->where('role_id', '5');
+        $members = Member::all()->where('id', '!=', 1);
         return view('admin.members.index')->withMembers($members);
     }
 
@@ -65,7 +65,7 @@ class MemberController extends Controller
         $this->validate($request, [
           'user_id'        => 'required|integer',
           'member_type_id' => 'required|integer',
-          'tendered'       => 'numeric',
+          'tendered'       => 'numeric|min:' . $request->total,
         ]);
 
         $user = User::find($request->user_id);
@@ -108,7 +108,6 @@ class MemberController extends Controller
 
         $member = new Member([
           'member_type_id' => $request->member_type_id,
-          'user_id'        => $request->user_id,
           'start'          => Date::parse($request->start)->toDateTimeString(),
           'end'            => Date::parse($request->end)->toDateTimeString(),
         ]);
@@ -119,7 +118,7 @@ class MemberController extends Controller
         $user->membership_id = $member->id;
         $user->save();
 
-        Session::flash('success','<strong>' . $user->firstname .' ' . $user->lastname .', Member # '. $user->member->id .' ('. $user->member->type->name .')</strong> added successfully!');
+        Session::flash('success','<strong>' . $member->users[0]->firstname .' ' . $member->users[0]->lastname .', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
 
         return redirect()->route('admin.members.index');
     }

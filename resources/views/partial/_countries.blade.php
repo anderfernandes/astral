@@ -194,7 +194,7 @@
     "Zambia"=>"Zambia",
     "Zimbabwe"=>"Zimbabwe"
   ],
-  null,
+  "United States",
   ['placeholder' => 'Select a Country', 'class' => 'ui search dropdown'])
 !!}
 

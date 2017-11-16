@@ -6,6 +6,8 @@ use App\Member;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\Role;
+use App\Organization;
 use App\User;
 use App\MemberType;
 use App\PaymentMethod;
@@ -27,7 +29,7 @@ class MemberController extends Controller
     public function index()
     {
       // member role_id is 5
-      $members = User::all()->where('role_id', '5');
+      $members = Member::all()->where('id', '!=', 1);
       return view('cashier.members.index')->withMembers($members);
     }
 
@@ -38,20 +40,18 @@ class MemberController extends Controller
      */
     public function create()
     {
-      $users = User::all()->where('type', 'individual')->where('role_id', '!=', 5);
-      $users = $users->mapWithKeys(function($item) {
-        return [$item['id'] => $item['firstname'] . ' ' . $item['lastname']];
-      });
-
+      $roles = Role::where('type', '=', 'members')->pluck('name', 'id');
+      $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
       $memberTypes = MemberType::all()->where('id', '!=', 1);
       $memberTypes = $memberTypes->mapWithKeys(function($item) {
-        return [$item['id'] => $item['name'] . ' - $ ' . number_format($item['price'], 2)];
+        return [$item['id'] => $item['name'] . ' - ' . $item['duration'] .' days' . ' - $ '  . number_format($item['price'], 2)];
       });
 
       $paymentMethods = PaymentMethod::all();
-      return view('cashier.members.create')->withUsers($users)
-                                         ->withPaymentMethods($paymentMethods)
-                                         ->withMemberTypes($memberTypes);
+      return view('cashier.members.create')->withPaymentMethods($paymentMethods)
+                                           ->withRoles($roles)
+                                           ->withOrganizations($organizations)
+                                           ->withMemberTypes($memberTypes);
     }
 
     /**
@@ -63,19 +63,55 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-          'user_id'           => 'required|integer',
+          'firstname'         => 'required',
+          'lastname'          => 'required',
           'member_type_id'    => 'required|integer',
-          'tendered'          => 'numeric',
+          // tendered must be minimum of the lowest membership price
+          'tendered'          => 'numeric|min:' . $request->total,
           'payment_method_id' => 'required',
+          'start'             => 'required|date',
+          'end'               => 'required|date',
+          'address'           => 'required',
+          'city'              => 'required',
+          'country'           => 'required',
+          'state'             => 'required',
+          'zip'               => 'required',
+          'phone'             => 'required',
+          'role_id'           => 'required',
+          'organization_id'   => 'required',
+          'email'             => 'required|email',
         ]);
 
-        $user = User::find($request->user_id);
+        $user = new User;
+
+        $user->firstname       = $request->firstname;
+        $user->lastname        = $request->lastname;
+        $user->email           = $request->email;
+        $user->role_id         = $request->role_id;
+        $user->type            = 'individual';
+        $user->organization_id = $request->organization_id;
+        $user->password        = bcrypt('Mayborn152');
+        $user->active          = true;
+        $user->role_id         = 5;
+        //$user->membership_id   = $member->id;
+
+        //$user->save();
+
+        // Create membership
+        $membershipDuration = MemberType::find($request->member_type_id)->duration;
+        $member = new Member([
+          'member_type_id' => $request->member_type_id,
+          'start'          => Date::parse($request->start)->toDateTimeString(),
+          'end'            => Date::parse($request->end)->toDateTimeString(),
+        ]);
+        $member->save();
+        $member->users()->save($user);
 
         // Create Sale
         $sale = new Sale;
         $sale->creator_id        = Auth::user()->id;
         $sale->organization_id   = $user->organization_id;
-        $sale->customer_id       = $user->id;
+        $sale->customer_id       = $member->users->first->id;
         $sale->status            = "complete";
         $sale->taxable           = false;
         $sale->subtotal          = round($request->subtotal, 2);
@@ -102,25 +138,7 @@ class MemberController extends Controller
 
         $payment->save();
 
-        // Create membership
-        $membershipDuration = MemberType::find($request->member_type_id)->duration;
-
-
-
-        $member = new Member([
-          'member_type_id' => $request->member_type_id,
-          'user_id'        => $request->user_id,
-          'start'          => Date::parse($request->start)->toDateTimeString(),
-          'end'            => Date::parse($request->end)->toDateTimeString(),
-        ]);
-
-        $member->save();
-
-        $user->role_id = 5;
-        $user->membership_id = $member->id;
-        $user->save();
-
-        Session::flash('success','<strong>' . $user->firstname .' ' . $user->lastname .', Member # '. $user->member->id .' ('. $user->member->type->name .')</strong> added successfully!');
+        Session::flash('success','<strong>' . $member->users[0]->firstname .' ' . $member->users[0]->lastname .', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
 
         return redirect()->route('cashier.members.index');
     }

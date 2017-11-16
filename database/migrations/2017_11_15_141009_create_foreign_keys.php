@@ -75,6 +75,46 @@ class CreateForeignKeys extends Migration
      */
     public function down()
     {
-        //
+      if (Schema::hasTable('users'))
+      {
+        Schema::table('users', function (Blueprint $table){
+          $table->dropColumn(['role_id', 'organization_id', 'membership_id']);
+        });
+      }
+      // Events
+      if (Schema::hasTable('events'))
+      {
+        Schema::table('events', function (Blueprint $table){
+          $table->dropColumn('type_id');
+        });
+      }
+      // Sales
+      if (Schema::hasTable('sales'))
+      {
+        Schema::table('sales', function (Blueprint $table){
+          $table->dropColumn('organization_id');
+        });
+      }
+      // Tickets
+      if (Schema::hasTable('tickets'))
+      {
+        Schema::table('tickets', function (Blueprint $table){
+          $table->dropColumn('ticket_type_id');
+        });
+      }
+      // Organizations
+      if (Schema::hasTable('organizations'))
+      {
+        Schema::table('organizations', function (Blueprint $table){
+          $table->dropColumn('type_id');
+        });
+      }
+      // Organizations
+      if (Schema::hasTable('members'))
+      {
+        Schema::table('members', function (Blueprint $table){
+          $table->dropColumn('member_type_id');
+        });
+      }
     }
 }

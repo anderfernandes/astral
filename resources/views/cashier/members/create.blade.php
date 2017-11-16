@@ -64,12 +64,14 @@
   <div class="ui two column grid">
     <div class="column">
       <div class="field">
-        {!! Form::label('user_id', 'Name') !!}
-        {!! Form::select('user_id', $users, null, ['placeholder' => 'Who do you want to turn into a member?', 'class' => 'ui search dropdown']) !!}
+        <div class="ui dividing header">
+          <i class="address card icon"></i>
+          Membership Information
+        </div>
       </div>
       <div class="field">
         {!! Form::label('member_type_id', 'Membership Type') !!}
-        {!! Form::select('member_type_id', $memberTypes, null, ['placeholder' => 'What membership type?', 'class' => 'ui search dropdown']) !!}
+        {!! Form::select('member_type_id', $memberTypes, 3, ['placeholder' => 'What membership type?', 'class' => 'ui search dropdown']) !!}
       </div>
       <div class="two fields">
         <div class="field">
@@ -89,6 +91,12 @@
       </div>
     </div>
     <div class="column">
+      <div class="field">
+        <div class="ui dividing header">
+          <i class="dollar icon"></i>
+          Payment Information
+        </div>
+      </div>
       <div class="three fields">
         <div class="field">
           {!! Form::label('payment_method_id', 'Payment Method') !!}
@@ -126,6 +134,70 @@
       </div>
     </div>
   </div>
+  <div class="field">
+    <div class="ui dividing header">
+      <i class="user circle icon"></i>
+      User Information
+    </div>
+  </div>
+  <div class="two fields">
+    <div class="field">
+      {!! Form::label('firstname', 'First Name') !!}
+      {!! Form::text('firstname', null, ['placeholder' => 'First Name']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('lastname', 'Last Name') !!}
+      {!! Form::text('lastname', null, ['placeholder' => 'Last Name']) !!}
+    </div>
+  </div>
+  <div class="two three fields">
+    <div class="field">
+      {!! Form::label('role_id', 'Role') !!}
+      {!! Form::select('role_id', $roles, 7, ['class' => 'ui disabled dropdown']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('organization_id', 'Organization') !!}
+      {!! Form::select('organization_id', $organizations, 1, ['class' => 'ui dropdown']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('email', 'Email') !!}
+      {!! Form::text('email', null, ['placeholder' => 'Email']) !!}
+    </div>
+  </div>
+  <div class="two fields">
+    <div class="field">
+      {!! Form::label('address', 'Address') !!}
+      {!! Form::text('address', null, ['placeholder' => 'Enter full organization address']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('city', 'City') !!}
+      {!! Form::text('city', null, ['placeholder' => 'Enter organization\'s city']) !!}
+    </div>
+  </div>
+  <div class="three fields">
+    <div class="field">
+      {!! Form::label('country', 'Country') !!}
+      @include('partial._countries')
+    </div>
+    <div class="field">
+      {!! Form::label('state', 'State') !!}
+      @include('partial._states')
+    </div>
+    <div class="field">
+      {!! Form::label('zip', 'ZIP') !!}
+      {!! Form::text('zip', null, ['placeholder' => 'ZIP']) !!}
+    </div>
+  </div>
+  <div class="two fields">
+    <div class="field">
+      {!! Form::label('phone', 'Phone') !!}
+      {!! Form::tel('phone', null, ['placeholder' => 'Enter organization\'s phone number']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('fax', 'Fax') !!}
+      {!! Form::tel('fax', null, ['placeholder' => 'Enter organization\'s fax number']) !!}
+    </div>
+  </div>
   <br /><br />
   <div class="field">
     <div class="ui buttons">
@@ -136,10 +208,13 @@
   {!! Form::close() !!}
 
   <script>
-    $('#member_type_id').change(function() {
+    function calculateTotals() {
       var price = $('#member_type_id option:selected').text()
       price = price.split(" ")
       var indexOfPrice = price.length - 1
+      var indexOfMembershipDuration = price.length - 5
+      var membershipDurationString = price[indexOfMembershipDuration]
+      var membershipDuration = parseInt(membershipDurationString)
       price = parseFloat(price[indexOfPrice])
       priceString = price.toFixed(2)
       var tax = (({{ App\Setting::find(1)->tax }}/100) * price).toFixed(2)
@@ -150,8 +225,8 @@
       $('#subtotal').val(priceString)
       $('#tax').val(taxString)
       $('#total').val(totalString)
-
-    })
+    }
+    $('#member_type_id').change(calculateTotals)
 
     $('#tendered').keyup(function() {
       var totalString = document.querySelector('#total').value
@@ -173,13 +248,27 @@
     $('#start').flatpickr({defaultDate: 'today', dateFormat: 'l, F j, Y'});
 
     function setMembershipEndDate() {
+      var membershipDuration = $('#member_type_id option:selected').text().split(" ")
+      var indexOfMembershipDuration = membershipDuration.length - 5
+      membershipDuration = parseInt(membershipDuration[indexOfMembershipDuration])
       var start = document.querySelector('#start').value
-      var end = moment(start, 'dddd, MMMM DD, YYYY h:mm A').add(365, 'days').format('dddd, MMMM D, YYYY')
+      var end = moment(start, 'dddd, MMMM DD, YYYY h:mm A').add(membershipDuration, 'days').format('dddd, MMMM D, YYYY')
       document.querySelector('#end').value = end
     }
 
     $('#start').change(setMembershipEndDate)
-    $(document).ready(setMembershipEndDate)
+    $(document).ready(function() {
+      setMembershipEndDate()
+      calculateTotals()
+    })
+
+    var tel = document.querySelectorAll('[type="tel"]');
+    for (var i = 0; i < tel.length; i++) {
+      tel[i].addEventListener('input', function(e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+      })
+    }
 
   </script>
 

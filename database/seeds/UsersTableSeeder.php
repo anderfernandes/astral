@@ -21,6 +21,13 @@ class UsersTableSeeder extends Seeder
         'organization_id' => 1,
         'type'            => 'walk-up',
         'membership_id'   => 1,
+        'address'         => '6200 W Central Texas Expwy',
+        'city'            => 'Killeen',
+        'state'           => 'Texas',
+        'zip'             => '76549',
+        'country'         => 'United States',
+        'phone'           => '(254) 526-7161',
+        'active'          => false,
         'created_at'      => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
       ]);
       // 2
@@ -33,6 +40,13 @@ class UsersTableSeeder extends Seeder
         'organization_id' => 2,
         'type'            => 'individual',
         'membership_id'   => 1,
+        'address'         => '6200 W Central Texas Expwy',
+        'city'            => 'Killeen',
+        'state'           => 'Texas',
+        'zip'             => '76549',
+        'country'         => 'United States',
+        'phone'           => '(254) 526-7161',
+        'active'          => false,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 3
@@ -45,6 +59,13 @@ class UsersTableSeeder extends Seeder
         'organization_id' => 2,
         'type'            => 'organization',
         'membership_id'   => 1,
+        'address'         => '6200 W Central Texas Expwy',
+        'city'            => 'Killeen',
+        'state'           => 'Texas',
+        'zip'             => '76549',
+        'country'         => 'United States',
+        'phone'           => '(254) 526-7161',
+        'active'          => false,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 4
@@ -57,6 +78,13 @@ class UsersTableSeeder extends Seeder
         'organization_id' => 3,
         'type'            => 'organization',
         'membership_id'   => 1,
+        'address'         => '6200 W Central Texas Expwy',
+        'city'            => 'Killeen',
+        'state'           => 'Texas',
+        'zip'             => '76549',
+        'country'         => 'United States',
+        'phone'           => '(254) 526-7161',
+        'active'          => false,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 5
@@ -69,6 +97,13 @@ class UsersTableSeeder extends Seeder
         'organization_id' => 2,
         'type'            => 'individual',
         'membership_id'   => 1,
+        'address'         => '6200 W Central Texas Expwy',
+        'city'            => 'Killeen',
+        'state'           => 'Texas',
+        'zip'             => '76549',
+        'country'         => 'United States',
+        'phone'           => '(254) 526-7161',
+        'active'          => false,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 6
@@ -81,6 +116,13 @@ class UsersTableSeeder extends Seeder
         'organization_id' => 2,
         'type'            => 'individual',
         'membership_id'   => 1,
+        'address'         => '6200 W Central Texas Expwy',
+        'city'            => 'Killeen',
+        'state'           => 'Texas',
+        'zip'             => '76549',
+        'country'         => 'United States',
+        'phone'           => '(254) 526-7161',
+        'active'          => false,
         'created_at'      => Date::now('America/Chicago'),
       ]);
     }
