@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Member extends Model
 {
-    protected $fillable = ['member_type_id', 'user_id', 'start', 'end'];
+    protected $fillable = ['member_type_id', 'start', 'end'];
 
     public function type()
     {

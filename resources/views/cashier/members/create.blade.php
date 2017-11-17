@@ -193,10 +193,6 @@
       {!! Form::label('phone', 'Phone') !!}
       {!! Form::tel('phone', null, ['placeholder' => 'Enter organization\'s phone number']) !!}
     </div>
-    <div class="field">
-      {!! Form::label('fax', 'Fax') !!}
-      {!! Form::tel('fax', null, ['placeholder' => 'Enter organization\'s fax number']) !!}
-    </div>
   </div>
   <br /><br />
   <div class="field">

@@ -101,8 +101,8 @@ class MemberController extends Controller
         $membershipDuration = MemberType::find($request->member_type_id)->duration;
         $member = new Member([
           'member_type_id' => $request->member_type_id,
-          'start'          => Date::parse($request->start)->toDateTimeString(),
-          'end'            => Date::parse($request->end)->toDateTimeString(),
+          'start'          => Date::parse($request->start)->startOfDay()->toDateTimeString(),
+          'end'            => Date::parse($request->end)->startOfDay()->toDateTimeString(),
         ]);
         $member->save();
         $member->users()->save($user);
