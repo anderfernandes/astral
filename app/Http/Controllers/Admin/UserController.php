@@ -55,7 +55,13 @@ class UserController extends Controller
           'email'                 => 'required|email|unique:users,email',
           'role_id'               => 'required',
           'password'              => 'nullable|same:password_confirmation',
-          'password_confirmation' => 'nullable'
+          'password_confirmation' => 'nullable',
+          'address'               => 'required',
+          'city'                  => 'required',
+          'country'               => 'required',
+          'state'                 => 'required',
+          'zip'                   => 'required|numeric',
+          'phone'                 => 'required|unique:organizations,phone',
         ]);
 
         $user = new User;
@@ -68,12 +74,19 @@ class UserController extends Controller
         $user->organization_id = $request->organization_id;
         $user->password        = bcrypt($request->password);
         $user->membership_id   = 1;
+        $user->address         = $request->address;
+        $user->city            = $request->city;
+        $user->country         = $request->country;
+        $user->state           = $request->state;
+        $user->zip             = $request->zip;
+        $user->phone           = $request->phone;
+        $user->active          = true;
 
         $user->save();
 
         Session::flash('success',
           ''.$user->firstname.' '.$user->lastname.
-          '\'s account information has been added successfully!');
+          '\'s account created successfully!');
 
         return redirect()->route('admin.users.show', $user);
     }

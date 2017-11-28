@@ -111,7 +111,7 @@ class MemberController extends Controller
         $sale = new Sale;
         $sale->creator_id        = Auth::user()->id;
         $sale->organization_id   = $user->organization_id;
-        $sale->customer_id       = $member->users->first->id;
+        $sale->customer_id       = $member->users[0]->id;
         $sale->status            = "complete";
         $sale->taxable           = false;
         $sale->subtotal          = round($request->subtotal, 2);

@@ -8,7 +8,7 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>{{ config('app.name', 'Astral') }} - Mayborn Science Theater | @yield('title')</title>
+  <title>{{ config('app.name', 'Astral') }} - {{ App\Setting::find(1)->organization }} | @yield('title')</title>
 
   <!-- Meta -->
   <meta name="description" content="@yield('meta_description')">

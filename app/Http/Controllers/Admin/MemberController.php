@@ -131,7 +131,7 @@ class MemberController extends Controller
      */
     public function show(Member $member)
     {
-        //
+        return view('admin.members.show')->withMember($member);
     }
 
     /**
@@ -166,5 +166,10 @@ class MemberController extends Controller
     public function destroy(Member $member)
     {
         //
+    }
+
+    public function card(Member $member)
+    {
+      return view('admin.members.card')->withMember($member);
     }
 }

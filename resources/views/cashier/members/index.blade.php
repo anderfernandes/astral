@@ -25,6 +25,7 @@
       <div class="card">
         <div class="content">
           <img src="/{{ App\Setting::find(1)->logo }}" alt="" class="left floated mini ui image">
+          <div class="right floated meta"># {{ $member->id }}</div>
           <div class="header"># {{ $member->id }}</div>
           <div class="header">{{ $member->users[0]->firstname }} {{ $member->users[0]->lastname }}</div>
           <div class="meta">
@@ -34,12 +35,9 @@
             <i class="checked calendar icon"></i>
             Expires {{ Date::parse($member->end)->format('l, F j, Y') }}
           </div>
-          <div class="meta">
-            <i class="mail icon"></i> {{ $member->users[0]->email }}
-          </div>
         </div>
-        <div class="ui secondary bottom attached button">
-          <i class="edit icon"></i> Edit
+        <div class="ui primary bottom attached button">
+          <i class="eye icon"></i> View
         </div>
       </div>
       @endforeach

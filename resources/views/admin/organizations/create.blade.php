@@ -16,55 +16,55 @@
     </div>
   </div>
   <div class="two fields">
-    <div class="field">
+    <div class="required field">
       {!! Form::label('name', 'Organization Name') !!}
       {!! Form::text('name', null, ['placeholder' => 'Enter full name of the organization']) !!}
     </div>
-    <div class="field">
+    <div class="required field">
       {!! Form::label('type_id', 'Organization Type') !!}
       {!! Form::select('type_id', $organizationTypes, null, ['placeholder' => 'Select an Organization Type', 'class' => 'ui search dropdown']) !!}
     </div>
   </div>
   <div class="two fields">
-    <div class="field">
+    <div class="required field">
       {!! Form::label('address', 'Address') !!}
       {!! Form::text('address', null, ['placeholder' => 'Enter full organization address']) !!}
     </div>
-    <div class="field">
+    <div class="required field">
       {!! Form::label('city', 'City') !!}
       {!! Form::text('city', null, ['placeholder' => 'Enter organization\'s city']) !!}
     </div>
   </div>
   <div class="three fields">
-    <div class="field">
+    <div class="required field">
       {!! Form::label('country', 'Country') !!}
       @include('partial._countries')
     </div>
-    <div class="field">
+    <div class="required field">
       {!! Form::label('state', 'State') !!}
       @include('partial._states')
     </div>
-    <div class="field">
+    <div class="required field">
       {!! Form::label('zip', 'ZIP') !!}
       {!! Form::text('zip', null, ['placeholder' => 'ZIP']) !!}
     </div>
   </div>
   <div class="two fields">
-    <div class="field">
+    <div class="required field">
       {!! Form::label('phone', 'Phone') !!}
       {!! Form::tel('phone', null, ['placeholder' => 'Enter organization\'s phone number']) !!}
     </div>
-    <div class="field">
+    <div class="required field">
       {!! Form::label('fax', 'Fax') !!}
       {!! Form::tel('fax', null, ['placeholder' => 'Enter organization\'s fax number']) !!}
     </div>
   </div>
   <div class="two fields">
-    <div class="field">
+    <div class="required field">
       {!! Form::label('email', 'Email') !!}
       {!! Form::text('email', null, ['placeholder' => 'Enter organization\'s email. If none, use organization.name@website.com']) !!}
     </div>
-    <div class="field">
+    <div class="required field">
       {!! Form::label('website', 'Website') !!}
       <div class="ui labeled input">
         <div class="ui label">http://</div>

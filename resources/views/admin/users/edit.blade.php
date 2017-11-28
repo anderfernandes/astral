@@ -16,13 +16,43 @@
     </div>
   </div>
   <div class="two fields">
-    <div class="field">
+    <div class="required field">
       {!! Form::label('firstname', 'First Name') !!}
       {!! Form::text('firstname', null, ['placeholder' => 'First Name']) !!}
     </div>
-    <div class="field">
+    <div class="required field">
       {!! Form::label('lastname', 'Last Name') !!}
       {!! Form::text('lastname', null, ['placeholder' => 'Last Name']) !!}
+    </div>
+  </div>
+  <div class="two fields">
+    <div class="required field">
+      {!! Form::label('address', 'Address') !!}
+      {!! Form::text('address', null, ['placeholder' => 'Enter full organization address']) !!}
+    </div>
+    <div class="required field">
+      {!! Form::label('city', 'City') !!}
+      {!! Form::text('city', null, ['placeholder' => 'Enter organization\'s city']) !!}
+    </div>
+  </div>
+  <div class="three fields">
+    <div class="required field">
+      {!! Form::label('country', 'Country') !!}
+      @include('partial._countries')
+    </div>
+    <div class="required field">
+      {!! Form::label('state', 'State') !!}
+      @include('partial._states')
+    </div>
+    <div class="required field">
+      {!! Form::label('zip', 'ZIP') !!}
+      {!! Form::text('zip', null, ['placeholder' => 'ZIP']) !!}
+    </div>
+  </div>
+  <div class="three fields">
+    <div class="required field">
+      {!! Form::label('phone', 'Phone') !!}
+      {!! Form::tel('phone', null, ['placeholder' => 'Enter user\'s phone number']) !!}
     </div>
   </div>
   <div class="two three fields">
