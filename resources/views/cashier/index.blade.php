@@ -37,10 +37,10 @@
                   <div class="extra content">
                     @foreach ($event->type->allowedTickets as $ticket)
                       <div class="ui buttons">
-                        <div class="ui inverted green button" onclick="changeAmount(1, '{{ $ticket->name }}', {{ $event->show_id }}, `{{ $event->show->name }}`, '{{ $event->type->name }}', {{ number_format($ticket->price, 2) }}, {{ $event->id }}, {{ $ticket->pivot->ticket_type_id }}, '{{ $event->show->type }}')">
+                        <div class="ui inverted green button" onclick="changeAmount(1, `{{ $ticket->name }}`, {{ $event->show_id }}, `{{ $event->show->name }}`, '{{ $event->type->name }}', {{ number_format($ticket->price, 2) }}, {{ $event->id }}, {{ $ticket->pivot->ticket_type_id }}, '{{ $event->show->type }}')">
                           {{ $ticket->name }}
                         </div>
-                        <div class="ui inverted red icon button" onclick="changeAmount(-1, '{{ $ticket->name }}', {{ $event->show_id }}, `{{ $event->show->name }}`, '{{ $event->type->name }}', {{ number_format($ticket->price, 2) }}, {{ $event->id }}, {{ $ticket->pivot->ticket_type_id }}, '{{ $event->show->type }}')">
+                        <div class="ui inverted red icon button" onclick="changeAmount(-1, `{{ $ticket->name }}`, {{ $event->show_id }}, `{{ $event->show->name }}`, '{{ $event->type->name }}', {{ number_format($ticket->price, 2) }}, {{ $event->id }}, {{ $ticket->pivot->ticket_type_id }}, '{{ $event->show->type }}')">
                           <i class="minus icon"></i>
                         </div>
                       </div>
@@ -234,9 +234,12 @@
       if (event_type)
         var event_typeTrimmed = event_type.replace(/\s+/g, "").replace(":", "").replace("\'", "");
 
+      if (type)
+        var typeTrimmed = type.replace(/\s+/g, "").replace(":", "").replace("\'", "");
+
       if(operator == 1) {
         $('#tickets').append(
-          '<h5 class="ui header '+ type + showTrimmed + event_typeTrimmed + price +'">' +
+          '<h5 class="ui header '+ typeTrimmed + showTrimmed + event_typeTrimmed + price +'">' +
             '<i class="ticket icon"></i>' +
               '<div class="content" style="width:100%">'+
               '<div class="ui mini label" style="margin-left:0">' + show_type +'</div>'+
@@ -253,10 +256,10 @@
         $('form.ui.form#cashier').append('<input class="'+ type + showTrimmed + event_typeTrimmed + price +'" type="hidden" name="ticket['+ currentTicketId +'][cashier_id]" value="{{ Auth::user()->id }}">');
       }
       if (operator == -1) {
-        $('#tickets h5.ui.header.'+ type + showTrimmed + event_typeTrimmed + price + '').first().remove();
-        $('form.ui.form#cashier input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
-        $('form.ui.form#cashier input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
-        $('form.ui.form#cashier input.'+ type + showTrimmed + event_typeTrimmed + price +'').first().remove();
+        $('#tickets h5.ui.header.'+ typeTrimmed + showTrimmed + event_typeTrimmed + price + '').first().remove();
+        $('form.ui.form#cashier input.'+ typeTrimmed + showTrimmed + event_typeTrimmed + price +'').first().remove();
+        $('form.ui.form#cashier input.'+ typeTrimmed + showTrimmed + event_typeTrimmed + price +'').first().remove();
+        $('form.ui.form#cashier input.'+ typeTrimmed + showTrimmed + event_typeTrimmed + price +'').first().remove();
       }
 
     }

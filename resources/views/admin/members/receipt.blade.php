@@ -9,6 +9,9 @@
       .ui.icon.buttons {
         display: none !important;
       }
+      p, h4.ui.header, table, thead, tbody, ul, li, h4.ui.header .sub.header {
+        font-size: 0.78rem !important;
+      }
     }
   </style>
 
@@ -27,11 +30,17 @@
   {{ Date::now()->format('l, F j, Y') }}
 </h4>
 
-<h4 class="ui header">
-  {{ $member->users[0]->firstname . ' ' . $member->users[0]->lastname }} <br />
-  {{ $member->users[0]->address }} </br>
-  {{ $member->users[0]->city }}, {{ $member->users[0]->state }} {{ $member->users[0]->zip }}
-</h4>
+<div class="ui clearing basic segment" style="padding:0 0 0 0">
+  <h4 class="ui right floated header">
+    Sale # {{ $sale->id }}
+  </h4>
+
+  <h4 class="ui left floated header">
+    {{ $member->users[0]->firstname . ' ' . $member->users[0]->lastname }}<br />
+    {{ $member->users[0]->address }} </br>
+    {{ $member->users[0]->city }}, {{ $member->users[0]->state }} {{ $member->users[0]->zip }}
+  </h4>
+</div>
 
 <p>Dear {{ $member->users[0]->firstname . ' ' . $member->users[0]->lastname }},</p>
 
@@ -40,7 +49,7 @@
   We are pleased to confirm your membership as follows:
 </p>
 
-<table class="ui very basic unstackable table">
+<table class="ui very basic compact unstackable table">
   <thead>
     <tr>
       <th>Member #</th>
@@ -73,72 +82,64 @@
       <td>$ {{ number_format($member->type->price, 2) }}</td>
       @endforeach
     </tr>
-  </tbody>
-  <?php
-    $sale = App\Sale::where('customer_id', $member->users[0]->id)->where('subtotal', $member->type->price)->get();
-    $sale = $sale[count($sale) - 1]
-  ?>
-  <tfoot>
     <tr>
       <td></td>
       <td></td>
       <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><strong>Subtotal</strong></td>
-      <td>$ {{ number_format($sale->subtotal, 2) }}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><strong>Tax</strong></td>
-      <td>$ {{ number_format($sale->tax, 2) }}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><strong>Total</strong></td>
-      <td>$ {{ number_format($sale->payments[0]->total, 2) }}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><strong>Amount Paid</strong></td>
-      <td>$ {{ number_format($sale->payments[0]->tendered, 2) }}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><strong>Change</strong></td>
-      <td>$ {{ number_format($sale->payments[0]->change_due, 2) }}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><strong>Balance</strong></td>
       <td>
-        <?php
-          $total = number_format($sale->payments[0]->total, 2);
-          $paid = number_format($sale->payments[0]->tendered, 2);
-          $change = number_format($sale->payments[0]->change_due, 2);
+        <table class="ui very basic compact collapsing unstackable table" style="margin-left:auto; margin-right:0; width:auto">
+          <tbody>
+            <tr>
+              <td class="right aligned"><strong>Tax</strong></td>
+            </tr>
+            <tr>
+              <td class="right aligned"><strong>Total</strong></td>
+            </tr>
+            <tr>
+              <td class="right aligned"><strong>Amount Paid</strong></td>
+            </tr>
+            <tr>
+              <td class="right aligned"><strong>Change</strong></td>
+            </tr>
+            <tr>
+              <td class="right aligned"><strong>Balance</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+      <td>
+        <table class="ui very basic compact unstackable table">
+          <tbody>
+            <tr>
+              <td>$ {{ number_format($sale->tax, 2) }}</td>
+            </tr>
+            <tr>
+              <td>$ {{ number_format($sale->payments[0]->total, 2) }}</td>
+            </tr>
+            <tr>
+              <td style="color:#cf3534"><strong>-$ {{ number_format($sale->payments[0]->tendered, 2) }}</strong></td>
+            </tr>
+            <tr>
+              <td>
+                <?php
+                  $total = number_format($sale->payments[0]->total, 2);
+                  $paid = number_format($sale->payments[0]->tendered, 2);
+                  $change = number_format($sale->payments[0]->change_due, 2);
 
-          $balance = $total - ($paid - $change);
+                  $balance = $total - ($paid - $change);
 
-          echo  '$ ' . number_format($balance, 2);
-        ?>
+                  echo  '$ ' . number_format($change, 2);
+                ?>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>{{ '$ ' . number_format($balance, 2) }}</strong></td>
+            </tr>
+          </tbody>
+        </table>
       </td>
     </tr>
-  </tfoot>
+  </tbody>
 </table>
 
 {!! \Illuminate\Mail\Markdown::parse(App\Setting::find(1)->membership_text) !!}
@@ -147,7 +148,9 @@
   <div class="content">
     {{ App\Setting::find(1)->organization }} <br /> {{ App\Setting::find(1)->address }}
     <div class="sub header">
-      {{ App\Setting::find(1)->phone }} - {{ App\Setting::find(1)->email }} - {{ App\Setting::find(1)->website }}
+      <i class="phone icon"></i>{{ App\Setting::find(1)->phone }} |
+      <i class="at icon"></i>{{ App\Setting::find(1)->email }} |
+      <i class="globe icon"></i><a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> | <i class="sun icon"></i>Astral
     </div>
   </div>
 </h4>

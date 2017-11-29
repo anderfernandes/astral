@@ -175,6 +175,9 @@ class MemberController extends Controller
 
     public function receipt(Member $member)
     {
-      return view('admin.members.receipt')->withMember($member);
+      $sale = Sale::where('customer_id', $member->users[0]->id)->where('subtotal', $member->type->price)->get();
+      $sale = $sale[count($sale) - 1];
+
+      return view('admin.members.receipt')->withMember($member)->withsale($sale);
     }
 }
