@@ -122,6 +122,8 @@ class MemberController extends Controller
 
         $sale->save();
 
+      
+
         // Create Payment
         $payment = new Payment;
 

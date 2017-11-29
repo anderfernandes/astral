@@ -9,14 +9,14 @@
 @section('content')
 
   <div class="ui buttons">
-    <a href="{{ route('admin.users.index') }}" class="ui default button">
+    <a href="{{ route('admin.members.index') }}" class="ui default button">
       <i class="left chevron icon"></i> Back
     </a>
-    <a href="{{ route('admin.users.edit', $member) }}" class="ui primary button">
+    <a href="{{ route('admin.members.edit', $member) }}" class="ui primary button">
       <i class="edit icon"></i> Edit Member
     </a>
     <a href="{{ route('admin.members.create') }}" class="ui secondary button"><i class="plus icon"></i> Add Another Member</a>
-    {!! Form::open(['route' => ['admin.users.destroy', $member], 'method' => 'DELETE']) !!}
+    {!! Form::open(['route' => ['admin.members.destroy', $member], 'method' => 'DELETE']) !!}
       {!! Form::button('<i class="close icon"></i> Cancel Membership', ['type' => 'submit', 'class' => 'ui negative button']) !!}
     {!! Form::close() !!}
   </div>
@@ -47,13 +47,13 @@
   </div>
 
   <div class="ui buttons">
-    <a href="{{ route('admin.users.index') }}" class="ui default button">
+    <a href="{{ route('admin.members.index') }}" class="ui default button">
       <i class="plus icon"></i> Add a Dependent
     </a>
-    <a href="{{ route('admin.users.edit', $member) }}" class="ui primary button">
+    <a href="{{ route('admin.members.edit', $member) }}" class="ui primary button">
       <i class="refresh icon"></i> Renew Membership
     </a>
-    <a href="{{ route('admin.users.edit', $member) }}" class="ui secondary button">
+    <a href="{{ route('admin.members.receipt', $member) }}" target="_blank" class="ui secondary button">
       <i class="file text icon"></i> View Membership Receipt
       <i class="right chevron icon"></i>
     </a>
@@ -63,7 +63,7 @@
     </a>
   </div>
 
-  <table class="ui very basic celled table">
+  <table class="ui very basic unstackable table">
     <thead>
       <tr>
         <th>Name</th>

@@ -56,8 +56,10 @@ Route::group(
   Route::post('settings/addEventType', 'SettingController@addEventType')->name('settings.addEventType');
   // HTTP PUT route for adding managing Member Types
   Route::post('settings/addMemberType', 'SettingController@addMemberType')->name('settings.addMemberType');
-  // Show Member Card
+  // Member Card
   Route::get('members/{member}/card', 'MemberController@card')->name('members.card');
+  // Membership Receipt
+  Route::get('members/{member}/receipt', 'MemberController@receipt')->name('members.receipt');
 });
 // Cashier Routes
 Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier', 'middleware' => 'auth'],

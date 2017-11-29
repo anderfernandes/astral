@@ -86,6 +86,7 @@ class OrganizationController extends Controller
         $user->role_id         = OrganizationType::find($request->type_id)->id;
         $user->organization_id = $organization->id;
         $user->type            = 'organization';
+        $user->membership_id   = 1;
 
         $user->save();
 

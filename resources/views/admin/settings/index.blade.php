@@ -26,10 +26,14 @@
       {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui primary button']) !!}
     </div>
   </div>
-  <div class="three fields">
+  <div class="four fields">
     <div class="field">
       {!! Form::label('organization', 'Organization Name') !!}
       {!! Form::text('organization', null, ['placeholder' => 'Organization Name']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('astc', 'Member of ASTC?') !!}
+      {!! Form::select('astc', [true => 'Yes', false => 'No'], null, ['placeholder' => 'Select an Organization Type', 'class' => 'ui search dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('seats', 'Number of Seats') !!}
@@ -40,6 +44,33 @@
       <div class="ui right labeled input">
         {!! Form::number('tax', null, ['placeholder' => 'Tax %', 'step' => '0.01']) !!}
         <div class="ui label">%</div>
+      </div>
+    </div>
+  </div>
+  <div class="three fields">
+    <div class="field">
+      {!! Form::label('address', 'Address') !!}
+      {!! Form::text('address', null, ['placeholder' => 'Full address']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('phone', 'Phone') !!}
+      {!! Form::tel('phone', null, ['placeholder' => 'Phone']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('fax', 'Fax') !!}
+      {!! Form::tel('fax', null, ['placeholder' => 'Fax']) !!}
+    </div>
+  </div>
+  <div class="two fields">
+    <div class="field">
+      {!! Form::label('email', 'Email') !!}
+      {!! Form::text('email', null, ['placeholder' => 'Email']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('website', 'Website') !!}
+      <div class="ui labeled input">
+        <div class="ui label">http://</div>
+        {!! Form::text('website', null, ['placeholder' => 'Enter organization\'s website']) !!}
       </div>
     </div>
   </div>
@@ -62,6 +93,10 @@
     <div class="column">
       <div class="ui basic segment"><img src="{{ '/'.App\Setting::find(1)->cover }}" alt="" class="ui medium image"></div>
     </div>
+  </div>
+  <div class="field">
+    {!! Form::label('membership_text', 'Membership Receipt Text') !!}
+    {!! Form::textarea('membership_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
   </div>
   <div class="field">
     <div class="ui buttons">
@@ -483,6 +518,19 @@
 <script>
   $('.menu .item').tab({ history: true });
   $('.ui.form').form({ fields: { price: ['number', 'empty'] } });
+
+  var simplemde = new SimpleMDE({
+    element: document.getElementById('membership_text'),
+    hideIcons: ["quote", "image", "guide"]
+  })
+
+  var tel = document.querySelectorAll('[type="tel"]');
+  for (var i = 0; i < tel.length; i++) {
+    tel[i].addEventListener('input', function(e) {
+      var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+      e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    })
+  }
 </script>
 
 @endsection

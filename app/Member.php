@@ -16,4 +16,8 @@ class Member extends Model
     {
       return $this->hasMany('App\User', 'membership_id');
     }
+    public function sale()
+    {
+      return $this->belongsTo('App\Sale');
+    }
 }

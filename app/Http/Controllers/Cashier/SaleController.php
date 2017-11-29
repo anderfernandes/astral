@@ -42,7 +42,7 @@ class SaleController extends Controller
     {
         $organizations = Organization::all();
         $customers = User::all();
-        $events    = Event::where('start', '>', Date::now()->toDateTimeString())->orderBy('start', 'desc')->get();
+        $events    = Event::where('start', '>', Date::now()->toDateTimeString())->orderBy('start', 'asc')->get();
         $paymentMethods = PaymentMethod::all();
         $ticketTypes = TicketType::all();
 

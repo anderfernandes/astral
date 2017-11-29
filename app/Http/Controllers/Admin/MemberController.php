@@ -172,4 +172,9 @@ class MemberController extends Controller
     {
       return view('admin.members.card')->withMember($member);
     }
+
+    public function receipt(Member $member)
+    {
+      return view('admin.members.receipt')->withMember($member);
+    }
 }

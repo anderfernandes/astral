@@ -16,19 +16,18 @@ class CreateSettingsTable extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->increments('id');
             $table->string('organization')->nullable();
+            $table->boolean('astc')->default(true);
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('fax')->nullable();
+            $table->string('email')->nullable();
+            $table->string('website')->nullable();
             $table->integer('seats');
             $table->string('logo')->nullable()->default('logo.png');
             $table->string('cover')->nullable()->default('cover.jpg');
-            $table->decimal('adults_weekend')->nullable();
-            $table->decimal('adults_matinee')->nullable();
-            $table->decimal('adults_special_event')->nullable();
-            $table->decimal('children_weekend')->nullable();
-            $table->decimal('children_matinee')->nullable();
-            $table->decimal('children_special_event')->nullable();
-            $table->decimal('members_weekend')->nullable();
-            $table->decimal('members_matinee')->nullable();
-            $table->decimal('members_special_event')->nullable();
             $table->float('tax')->nullable()->default(8.25);
+            $table->string('membership_text')->nullable();
+
             $table->timestamps();
         });
     }

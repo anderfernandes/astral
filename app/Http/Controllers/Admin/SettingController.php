@@ -223,25 +223,22 @@ class SettingController extends Controller
 
       $this->validate($request, [
         'organization' => 'required|min:5',
+        'address'      => 'required',
+        'phone'        => 'required',
+        'email'        => 'required',
         'seats'        => 'required',
       ]);
 
       $setting->organization         = $request->organization;
+      $setting->address              = $request->address;
+      $setting->phone                = $request->phone;
+      $setting->fax                  = $request->fax;
+      $setting->email                = $request->email;
+      $setting->website              = $request->website;
       $setting->seats                = $request->seats;
-
-      $setting->adults_weekend       = $request->adults_weekend;
-      $setting->adults_matinee       = $request->adults_matinee;
-      $setting->adults_special_event = $request->adults_special_event;
-
-      $setting->children_weekend       = $request->children_weekend;
-      $setting->children_matinee       = $request->children_matinee;
-      $setting->children_special_event = $request->children_special_event;
-
-      $setting->members_weekend       = $request->members_weekend;
-      $setting->members_matinee       = $request->members_matinee;
-      $setting->members_special_event = $request->members_special_event;
-
-      $setting->tax                   = $request->tax;
+      $setting->tax                  = $request->tax;
+      $setting->astc                 = $request->astc;
+      $setting->membership_text      = $request->membership_text;
 
       $setting->save();
 
