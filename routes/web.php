@@ -85,3 +85,5 @@ Route::put('account/selfupdate', 'Admin\UserController@selfupdate')->middleware(
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/account', 'HomeController@account')->name('account')->middleware('auth');
+
+Route::get('/logout', 'Auth\LoginController@logout');

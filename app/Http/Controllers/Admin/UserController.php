@@ -130,18 +130,33 @@ class UserController extends Controller
         $this->validate($request, [
           'firstname'             => 'required',
           'lastname'              => 'required',
-          'email'                 => 'required|email',
+          'email'                 => 'required|email|unique:users,email',
           'role_id'               => 'required',
-          'password'              => 'nullable|same:password_confirmation|min:6',
-          'password_confirmation' => 'nullable|min:6'
+          'password'              => 'nullable|same:password_confirmation',
+          'password_confirmation' => 'nullable',
+          'address'               => 'required',
+          'city'                  => 'required',
+          'country'               => 'required',
+          'state'                 => 'required',
+          'zip'                   => 'required|numeric',
+          'phone'                 => 'required|unique:organizations,phone',
         ]);
 
-        $user->firstname            = $request->input('firstname');
-        $user->lastname             = $request->input('lastname');
-        $user->email                = $request->input('email');
-        $user->role_id              = $request->input('role_id');
-        $user->organization_id      = $request->input('organization_id');
-        $user->type                 = 'individual';
+        $user->firstname       = $request->firstname;
+        $user->lastname        = $request->lastname;
+        $user->email           = $request->email;
+        $user->role_id         = $request->role_id;
+        $user->type            = 'individual';
+        $user->organization_id = $request->organization_id;
+        $user->password        = bcrypt($request->password);
+        $user->membership_id   = 1;
+        $user->address         = $request->address;
+        $user->city            = $request->city;
+        $user->country         = $request->country;
+        $user->state           = $request->state;
+        $user->zip             = $request->zip;
+        $user->phone           = $request->phone;
+        $user->active          = true;
 
         if ($request->password == null) {
 
@@ -191,11 +206,25 @@ class UserController extends Controller
         'email'                 => 'required',
         'password'              => 'nullable|same:password_confirmation|min:6',
         'password_confirmation' => 'nullable|min:6',
+        'address'               => 'required',
+        'city'                  => 'required',
+        'country'               => 'required',
+        'state'                 => 'required',
+        'zip'                   => 'required|numeric',
+        'phone'                 => 'required|unique:organizations,phone',
       ]);
 
       $user = User::find(\Auth::id());
 
-      $user->email = $request->email;
+      $user->email           = $request->email;
+      $user->type            = 'individual';
+      $user->address         = $request->address;
+      $user->city            = $request->city;
+      $user->country         = $request->country;
+      $user->state           = $request->state;
+      $user->zip             = $request->zip;
+      $user->phone           = $request->phone;
+      $user->active          = true;
 
       if ($request->password == null) {
 
@@ -205,7 +234,7 @@ class UserController extends Controller
           ''.$user->firstname.' '.$user->lastname.
           '\'s account information has been updated successfully!');
 
-        return redirect()->route('admin.users.show', $user);
+        return redirect()->route('account');
       }
       else {
         $user->password = bcrypt($request->input('password'));
@@ -215,7 +244,7 @@ class UserController extends Controller
           ''.$user->firstname.' '.$user->lastname.
           '\'s account information has been updated successfully!');
 
-        return redirect()->route('account')->withUser($user);
+        return redirect()->route('account');
       }
     }
 

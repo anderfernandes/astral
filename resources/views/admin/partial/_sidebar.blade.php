@@ -5,12 +5,7 @@
     {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
     <br /><br />
     <div class="ui tiny buttons">
-      <a href="{{ route('account') }}" class="ui blue button"><i class="user icon"> </i>Account</a>
-      {!! Form::open(['route' => ['logout'], 'method' => 'POST']) !!}
-        {!! Form::button('<i class="sign out icon"></i> Logout',
-          ['type' => 'submit', 'class' => 'ui button'])
-        !!}
-      {!! Form::close() !!}
+      <span class="ui basic label">{{ Auth::user()->role->name }}</span>
     </div>
   </div>
   <!-- Pending loop to automatically pull all menu items -->

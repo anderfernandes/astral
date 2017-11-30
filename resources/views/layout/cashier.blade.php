@@ -37,7 +37,15 @@
   <link rel="stylesheet" href="{{ asset('semantic/semantic.min.css') }}">
   <script src="{{ asset('semantic/semantic.min.js') }}"></script>
 
-  <style>textarea {font: inherit}</style>
+  <style>
+    textarea { font:inherit }
+
+    @media only screen and (max-width:700px) {
+      .hide-on-mobile {
+        display:none !important;
+      }
+    }
+  </style>
 
 </head>
 <script>

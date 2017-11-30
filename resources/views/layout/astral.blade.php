@@ -37,6 +37,34 @@
   <link rel="stylesheet" href="{{ asset('semantic/semantic.min.css') }}">
   <script src="{{ asset('semantic/semantic.min.js') }}"></script>
 
+  <script>
+  $(document)
+    .ready(function() {
+      // create sidebar and attach to menu open
+      $('.ui.sidebar')
+      .sidebar('setting', 'transition', 'overlay')
+      .sidebar('setting', 'dimPage', false)
+      .sidebar('attach events', '.toc.item');
+
+      // close message alerts
+      $('.message .close').on('click', function() {
+        $(this).closest('.message').transition('fade');
+      });
+
+      // Initialize Semantic UI components
+      $('.ui.radio.checkbox').checkbox();
+      $('.ui.dropdown').dropdown();
+
+      /*jQuery('.datetimepicker').datetimepicker({
+        format:'dddd, MMMM DD, YYYY H:mm',
+        formatTime:'H:mm',
+        formatDate:'dddd, MMMM DD, YYYY',
+        minTime: '08:00',
+        maxTime: '24:00'
+      });*/
+    });
+  </script>
+
 </head>
 <script>
   $(document)

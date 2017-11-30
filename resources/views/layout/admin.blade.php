@@ -53,7 +53,16 @@
 
 </script>
 
-<style> textarea { font:inherit } </style>
+<style>
+
+  textarea { font:inherit }
+
+  @media only screen and (max-width:700px) {
+    .hide-on-mobile {
+      display:none !important;
+    }
+  }
+</style>
 
 <body>
   <!-- Load Facebook SDK for JavaScript -->

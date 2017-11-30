@@ -5,13 +5,7 @@
     {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
     <br /><br />
     <div class="ui tiny buttons">
-      <a href="{{ route('account') }}" class="ui secondary button"><i class="user icon"> </i>Account</a>
-      {!! Form::open(['route' => ['logout'], 'method' => 'POST']) !!}
-        {{ csrf_field() }}
-        {!! Form::button('<i class="sign out icon"></i> Logout',
-          ['type' => 'submit', 'class' => 'ui button'])
-        !!}
-      {!! Form::close() !!}
+      <span class="ui black label">{{ Auth::user()->role->name }}</span>
     </div>
   </div>
   <!-- Pending loop to automatically pull all menu items -->
@@ -41,7 +35,10 @@
       </a>
     </div>
   </div>
-  <a href="{{ route('cashier.members.index') }}" class="item"> <i class="address card icon"></i> Members</a>
+  <a class="item" href="{{ route('cashier.members.index') }}"> <i class="address card icon"></i> Members</a>
+  <div class="item">
+    <img class="ui centered tiny image" src="{{ '/'.App\Setting::find(1)->logo }}" alt="">
+  </div>
 </div>
 
 <!-- Find Sale Modal -->
