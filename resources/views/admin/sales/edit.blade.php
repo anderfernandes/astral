@@ -161,6 +161,8 @@
             @else
               <input type="hidden" id="second_event_id" name="second_event_id" value="{{ old('second_event_id') }}">
             @endif
+          @else
+            <input type="hidden" id="second_event_id" name="second_event_id" value="0">
           @endif
           <i class="dropdown icon"></i>
           <div class="default text">Select the second event (optional)</div>

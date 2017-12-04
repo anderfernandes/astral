@@ -12,13 +12,10 @@
     <a href="{{ route('admin.members.index') }}" class="ui default button">
       <i class="left chevron icon"></i> Back
     </a>
-    <a href="{{ route('admin.members.edit', $member) }}" class="ui primary button">
+    <a href="{{ route('admin.users.edit', $member->users[0]) }}" class="ui primary button">
       <i class="edit icon"></i> Edit Member
     </a>
     <a href="{{ route('admin.members.create') }}" class="ui secondary button"><i class="plus icon"></i> Add Another Member</a>
-    {!! Form::open(['route' => ['admin.members.destroy', $member], 'method' => 'DELETE']) !!}
-      {!! Form::button('<i class="close icon"></i> Cancel Membership', ['type' => 'submit', 'class' => 'ui negative button']) !!}
-    {!! Form::close() !!}
   </div>
 
   <div class="ui unstackable items">
@@ -47,7 +44,7 @@
   </div>
 
   <div class="ui buttons">
-    <a href="{{ route('admin.members.index') }}" class="ui default button">
+    <a href="javascript:$('.ui.basic.modal').modal('show')" class="ui default button">
       <i class="plus icon"></i> Add a Dependent
     </a>
     <a href="{{ route('admin.members.edit', $member) }}" class="ui primary button">
@@ -71,20 +68,51 @@
       </tr>
     </thead>
     <tbody>
+      @foreach($member->users as $key => $user)
       <tr>
-        @foreach($member->users as $user)
         <td>
           <h4 class="ui header">
             <i class="address card icon"></i>
             <div class="content">
               {{ $user->firstname . ' ' . $user->lastname }}
-              <div class="sub header">{{ $member->type->name }}</div>
+              <div class="sub header">
+                {{ $member->type->name }}
+                @if ($key != 0)
+                  (Dependent)
+                @endif
+              </div>
             </div>
           </h4>
         </td>
-        @endforeach
+        <td></td>
       </tr>
+      @endforeach
+
     </tbody>
   </table>
+
+  <div class="ui basic modal">
+    <div class="ui icon header">
+      <i class="address card icon"></i>
+      Add Dependent
+    </div>
+    {!! Form::model($member, ['route' => ['admin.members.addDependent', $member], 'class' => 'ui form', 'method' => 'PUT']) !!}
+    <div class="content">
+      <p style="text-align:center">Who do you want to make a dependent for this membership?</p>
+      <div class="field">
+        {!! Form::select('user_id', $users, null, ['placeholder' => 'Who do you want to turn into a member?', 'class' => 'ui search dropdown']) !!}
+      </div>
+      <div class="field">
+        {!! Form::button('<i class="checkmark icon"></i> Add Dependent', ['type' => 'submit', 'class' => 'ui green ok inverted button']) !!}
+      </div>
+    </div>
+    {!! Form::close() !!}
+    <div class="actions">
+      <div class="ui red basic cancel inverted button">
+        <i class="remove icon"></i>
+        Cancel
+      </div>
+    </div>
+  </div>
 
 @endsection

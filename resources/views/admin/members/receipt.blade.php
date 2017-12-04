@@ -60,28 +60,37 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      @foreach($member->users as $user)
-      <td>
-        <h4 class="ui header">
-          {{ $member->id }}
-        </h4>
-      </td>
-      <td>
-        <h4 class="ui header">
-          <div class="content">
-            {{ $member->users[0]->firstname . ' ' . $member->users[0]->lastname }}
-            <div class="sub header">
-              {{ $member->type->name }}
+      @foreach($member->users as $key => $user)
+      <tr>
+        <td>
+          <h4 class="ui header">
+            {{ $member->id }}
+          </h4>
+        </td>
+        <td>
+          <h4 class="ui header">
+            <div class="content">
+              {{ $user->firstname . ' ' . $user->lastname }}
+              <div class="sub header">
+                {{ $member->type->name }}
+                @if ($key != 0)
+                  (Dependent)
+                @endif
+              </div>
             </div>
-          </div>
-        </h4>
-      </td>
-      <td>{{ Date::parse($member->start)->format('l, F j, Y') }}</td>
-      <td>{{ Date::parse($member->end)->format('l, F j, Y') }}</td>
-      <td>$ {{ number_format($member->type->price, 2) }}</td>
+          </h4>
+        </td>
+        <td>{{ Date::parse($member->start)->format('l, F j, Y') }}</td>
+        <td>{{ Date::parse($member->end)->format('l, F j, Y') }}</td>
+        <td>
+          @if ($key != 0)
+            $ 0.00
+          @else
+            $ {{ number_format($member->type->price, 2) }}
+          @endif
+        </td>
+      </tr>
       @endforeach
-    </tr>
     <tr>
       <td></td>
       <td></td>

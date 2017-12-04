@@ -110,7 +110,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
+        $roles = Role::where('type', '!=', 'walk-up')->where('type', '!=', 'organizations')->pluck('name', 'id');
         $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
         return view('admin.users.edit')
           ->withUser($user)
