@@ -100,7 +100,7 @@
             <div class="field">
               {!! Form::label('Payment Method') !!}
               <div class="ui selection dropdown">
-                <input type="hidden" name="payment_method" value="1">
+                <input type="hidden" name="payment_method" value="1" id="payment_method">
                 <i class="dropdown icon"></i>
                 <div class="default text">Payment Method</div>
                 <div class="menu">
@@ -110,7 +110,7 @@
                 </div>
               </div>
             </div>
-            <div class="field">
+            <div class="field" id="reference-input">
               {!! Form::label('reference', 'Reference') !!}
               {!! Form::text('reference', null, ['placeholder' => 'Card or Check reference']) !!}
             </div>
@@ -136,34 +136,52 @@
       // Returns true if tendered is less than total
       var checkCashSale = (tendered < total) ? true : false;
 
-      if ( payment_method != 1) {
-        $('#cashier.ui.form')
-        .form({
-          fields: {
-            reference      : 'empty',
-            tendered       : ['is[' + document.querySelector("#total").innerHTML + ']', 'empty', 'number'],
-          }
-        });
-      } else if (tendered < total) {
-        event.preventDefault();
-        $('.field#tendered-input').addClass('error');
+      // Non-cash payments must have a reference and a tendered greater than total
+      if (payment_method != 1) {
+        if (reference == '') {
+          event.preventDefault()
+          $('.field#reference-input').addClass('error')
+        } else if (tendered < total || tendered == '') {
+          event.preventDefault()
+          $('.field#tendered-input').addClass('error')
+        }
+        else {
+          $('form#cashier.ui.form').removeClass('error')
+          $('.field.error').removeClass('error')
+          $('#submit-sale').attr('disabled', true)
+          $('#submit-sale').addClass('loading')
+          $('#cancel').addClass('loading')
+          $('#cancel').attr('disabled', true)
+          $('#cashier').submit()
+        }
       } else {
-        $('#cashier.ui.form')
-        .form({
-          fields: {
-            tendered       : ['empty', 'number'],
-          }
-        });
-        $('form#cashier.ui.form').removeClass('error');
-        $('.field.error').removeClass('error');
+        if (tendered < total) {
+          event.preventDefault();
+          $('.field#tendered-input').addClass('error');
+        }
+        else {
+          $('form#cashier.ui.form').removeClass('error')
+          $('.field.error').removeClass('error')
+          $('#submit-sale').attr('disabled', true)
+          $('#submit-sale').addClass('loading')
+          $('#cancel').addClass('loading')
+          $('#cancel').attr('disabled', true)
+          $('#cashier').submit()
+        }
+
       }
-      // Disable Charge button after it has been clicked once
-      $('#submit-sale').attr('disabled', true)
-      $('#submit-sale').addClass('loading')
-      $('#cancel').addClass('loading')
-      $('#cancel').attr('disabled', true)
-      $('#cashier').submit()
     });
+
+    function setTenderedOnNonCashPayments() {
+      var payment_method = document.querySelector('input[name="payment_method"]').value
+      var total = parseFloat(document.querySelector("#total").innerHTML).toFixed(2);
+      if (payment_method != 1)
+        document.querySelector('input#tendered').value = total
+      else
+        document.querySelector('input#tendered').value = parseFloat(0).toFixed(2)
+    }
+
+    $('#payment_method').change(setTenderedOnNonCashPayments)
 
     var ticketId = 0;
     var sum = 0;
@@ -262,6 +280,15 @@
         $('form.ui.form#cashier input.'+ typeTrimmed + showTrimmed + event_typeTrimmed + price +'').first().remove();
       }
 
+    }
+
+    function showSpinner() {
+      $('[type="submit"]').click(function() {
+        $('.ui.button').addClass('loading')
+        $('button.ui.button').attr('disabled', true)
+        $('a.ui.button').addClass('disabled')
+        //this.form.submit()
+      })
     }
     </script>
   @else

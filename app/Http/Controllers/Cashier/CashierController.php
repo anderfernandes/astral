@@ -49,7 +49,7 @@ class CashierController extends Controller
       $this->validate($request, [
         'payment_method'           => 'required',
         'reference'                => 'nullable|numeric',
-        //'tendered'                 => 'required|numeric',
+        'tendered'                 => 'numeric|min:'.$request->total,
         'customer_id'              => 'required|integer',
         'ticket.*.event_id'        => 'required',
         'ticket.*.cashier_id'      => 'required',

@@ -28,7 +28,7 @@ class ReportController extends Controller
     {
 
       $sales = Sale::where([
-        ['created_at', '>=', $today],
+        ['updated_at', '>=', $today],
         ['creator_id', '=', Auth::user()->id],
         ['refund', '=', false],
       ])->orderBy('created_at', 'asc')->get();
@@ -64,7 +64,7 @@ class ReportController extends Controller
     {
 
       $sales = Sale::where([
-        ['created_at', '>=', $today],
+        ['updated_at', '>=', $today],
         ['creator_id', '=', Auth::user()->id],
       ])->orderBy('created_at', 'asc')->get();
 
@@ -76,7 +76,7 @@ class ReportController extends Controller
       $totals = 0;
       foreach ($payments as $payment) {
         if ($payment->sale->refund == false)
-          $totals += $payment['total'];
+          $totals += $payment['tendered'] - $payment['change_due'];
       }
 
       $totals = number_format($totals, 2);
