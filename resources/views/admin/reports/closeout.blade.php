@@ -28,7 +28,7 @@
             $cashPaymentsTotal = 0;
             foreach ($cashPayments as $cashPayment)
             {
-              $cashPaymentsTotal += $cashPayment['total'];
+              $cashPaymentsTotal += $cashPayment['tendered'] - $cashPayment['change_due'];
             }
             echo number_format($cashPaymentsTotal, 2)
             ?>
@@ -66,7 +66,7 @@
             $cardPaymentsTotal = 0;
             foreach ($cardPayments as $cardPayment)
             {
-              $cardPaymentsTotal += $cardPayment['total'];
+              $cardPaymentsTotal += $cardPayment['tendered'] - $cardPayment['change_due'];
             }
             echo number_format($cardPaymentsTotal, 2)
             ?>
@@ -103,7 +103,7 @@
             $checkPaymentsTotal = 0;
             foreach ($checkPayments as $checkPayment)
             {
-              $checkPaymentsTotal += $checkPayment['total'];
+              $checkPaymentsTotal += $checkPayment['tendered'] - $checkPayment['change_due'];
             }
             echo number_format($checkPaymentsTotal, 2)
           ?>
