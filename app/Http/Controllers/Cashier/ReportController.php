@@ -27,16 +27,22 @@ class ReportController extends Controller
     if ($type == 'closeout')
     {
 
+      /*
       $sales = Sale::where([
-        ['created_at', '>=', $today],
+        ['updated_at', '>=', $today],
         ['creator_id', '=', Auth::user()->id],
         ['refund', '=', false],
       ])->orderBy('created_at', 'asc')->get();
 
       // Get Card Sales IDs
       $salesIds = array_pluck($sales, 'id');
+      */
+
       // Find all payments for the IDs we retrieved
-      $payments = Payment::whereIn('sale_id', $salesIds)->get();
+      $payments = Payment::where([
+        ['updated_at', '>=', $today],
+        ['cashier_id', Auth::user()->id],
+        ])->orderBy('updated_at', 'asc')->get();
 
       $cashPayments = [];
       $cardPayments = [];
