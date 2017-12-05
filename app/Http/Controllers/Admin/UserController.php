@@ -130,7 +130,7 @@ class UserController extends Controller
         $this->validate($request, [
           'firstname'             => 'required',
           'lastname'              => 'required',
-          'email'                 => 'required|email|unique:users,email',
+          'email'                 => 'required',
           'role_id'               => 'required',
           'password'              => 'nullable|same:password_confirmation',
           'password_confirmation' => 'nullable',
@@ -139,7 +139,7 @@ class UserController extends Controller
           'country'               => 'required',
           'state'                 => 'required',
           'zip'                   => 'required|numeric',
-          'phone'                 => 'required|unique:organizations,phone',
+          'phone'                 => 'required',
         ]);
 
         $user->firstname       = $request->firstname;

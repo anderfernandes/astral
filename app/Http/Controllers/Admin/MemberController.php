@@ -256,7 +256,7 @@ class MemberController extends Controller
 
       $member->users()->save($user);
 
-      Session::flash('success','<strong>' . $member->users[1]->firstname .' ' . $member->users[1]->lastname .'has been added as a dependent to Member # '. $member->id .' (' . $member->users[0]->firstname .' ' . $member->users[1]->lastname . ' ' . $member->type->name .')</strong> successfully!');
+      Session::flash('success','<strong>' . $member->users[1]->firstname .' ' . $member->users[1]->lastname .' has been added as a dependent to Member # '. $member->id .' (' . $member->users[0]->firstname .' ' . $member->users[1]->lastname . ' ' . $member->type->name .')</strong> successfully!');
 
       return redirect()->route('admin.members.show', $member);
     }

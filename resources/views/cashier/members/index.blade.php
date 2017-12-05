@@ -36,9 +36,9 @@
             Expires {{ Date::parse($member->end)->format('l, F j, Y') }}
           </div>
         </div>
-        <div class="ui primary bottom attached button">
+        <a href="{{ route('cashier.members.show', $member) }}" class="ui primary bottom attached button">
           <i class="eye icon"></i> View
-        </div>
+        </a>
       </div>
       @endforeach
     </div>

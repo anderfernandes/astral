@@ -93,6 +93,13 @@ class MemberController extends Controller
         $user->password        = bcrypt('Mayborn152');
         $user->active          = true;
         $user->role_id         = 5;
+        $user->address         = $request->address;
+        $user->city            = $request->city;
+        $user->country         = $request->country;
+        $user->state           = $request->state;
+        $user->zip             = $request->zip;
+        $user->phone           = $request->phone;
+        $user->active          = true;
         //$user->membership_id   = $member->id;
 
         //$user->save();
@@ -122,7 +129,7 @@ class MemberController extends Controller
 
         $sale->save();
 
-      
+
 
         // Create Payment
         $payment = new Payment;
@@ -153,7 +160,12 @@ class MemberController extends Controller
      */
     public function show(Member $member)
     {
-        //
+        $users = User::all()->where('type', 'individual')->where('role_id', '!=', 5);
+        $users = $users->mapWithKeys(function($item) {
+          return [$item['id'] => $item['firstname'] . ' ' . $item['lastname']];
+        });
+
+        return view('cashier.members.show')->withMember($member)->withUsers($users);
     }
 
     /**
@@ -164,7 +176,16 @@ class MemberController extends Controller
      */
     public function edit(Member $member)
     {
-        //
+        $memberTypes = MemberType::all()->where('id', '!=', 1);
+        $memberTypes = $memberTypes->mapWithKeys(function($item) {
+          return [$item['id'] => $item['name'] . ' - $ ' . number_format($item['price'], 2)];
+        });
+
+        $paymentMethods = PaymentMethod::all();
+
+        return view ('cashier.members.edit')->withMember($member)
+                                          ->withMemberTypes($memberTypes)
+                                          ->withPaymentMethods($paymentMethods);
     }
 
     /**
@@ -176,7 +197,61 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-        //
+        $this->validate($request, [
+          'user_id'        => 'required|integer',
+          'member_type_id' => 'required|integer',
+          'tendered'       => 'numeric|min:' . $request->total,
+        ]);
+
+        $user = User::find($member->users[0]->id);
+
+        // Create Sale
+        $sale = new Sale;
+        $sale->creator_id        = Auth::user()->id;
+        $sale->organization_id   = $user->organization_id;
+        $sale->customer_id       = $user->id;
+        $sale->status            = "complete";
+        $sale->taxable           = false;
+        $sale->subtotal          = round($request->subtotal, 2);
+        $sale->tax               = round($request->tax, 2);
+        $sale->total             = round($request->total, 2);
+        $sale->refund            = false;
+        $sale->source            = "admin";
+
+        $sale->save();
+
+        // Create Payment
+        $payment = new Payment;
+
+        $payment->cashier_id        = Auth::user()->id;
+        $payment->payment_method_id = $request->payment_method_id;
+        // Tendered may be nullable if the customer hasn't paid
+        $payment->tendered          = round($request->tendered, 2);
+        $payment->total             = round($request->total, 2);
+        // payment = total - tendered (precision set to two decimal places)
+        $payment->change_due        = round($request->change_due, 2);
+        $payment->reference         = $request->reference;
+        $payment->source            = 'admin';
+        $payment->sale_id           = $sale->id;
+
+        $payment->save();
+
+        // Create membership
+        $membershipDuration = MemberType::find($request->member_type_id)->duration;
+
+        // Update Membership
+        $member->member_type_id = $request->member_type_id;
+        $member->start          = Date::parse($request->start)->startOfDay()->toDateTimeString();
+        $member->end            = Date::parse($request->end)->startOfDay()->toDateTimeString();
+
+        $member->save();
+
+        $user->role_id = 5;
+        $user->save();
+
+        Session::flash('success','<strong>' . $member->users[0]->firstname .' ' . $member->users[0]->lastname .', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
+
+        return redirect()->route('cashier.members.show', $member);
     }
 
     /**
@@ -188,5 +263,30 @@ class MemberController extends Controller
     public function destroy(Member $member)
     {
         //
+    }
+
+    public function card(Member $member)
+    {
+      return view('cashier.members.card')->withMember($member);
+    }
+
+    public function receipt(Member $member)
+    {
+      $sale = Sale::where('customer_id', $member->users[0]->id)->where('subtotal', $member->type->price)->get();
+      $sale = $sale[count($sale) - 1];
+
+      return view('cashier.members.receipt')->withMember($member)->withsale($sale);
+    }
+
+    public function addDependent(Request $request, Member $member)
+    {
+      $user = User::find($request->user_id);
+      $user->role_id = 5;
+
+      $member->users()->save($user);
+
+      Session::flash('success','<strong>' . $member->users[1]->firstname .' ' . $member->users[1]->lastname .' has been added as a dependent to Member # '. $member->id .' (' . $member->users[0]->firstname .' ' . $member->users[1]->lastname . ' ' . $member->type->name .')</strong> successfully!');
+
+      return redirect()->route('cashier.members.show', $member);
     }
 }
