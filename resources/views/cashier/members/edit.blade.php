@@ -177,4 +177,6 @@
 
   </script>
 
+  @include('cashier.partial._spinner')
+
 @endsection

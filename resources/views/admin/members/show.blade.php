@@ -44,9 +44,17 @@
   </div>
 
   <div class="ui buttons">
-    <a href="javascript:$('.ui.basic.modal').modal('show')" class="ui default button">
-      <i class="plus icon"></i> Add a Dependent
-    </a>
+
+    @if ($member->users->count() >= 2)
+      <a href="javascript:$('#dependent').modal('show')" class="ui default disabled button">
+        <i class="plus icon"></i> Add a Dependent
+      </a>
+    @else
+      <a href="javascript:$('#dependent').modal('show')" class="ui default button">
+        <i class="plus icon"></i> Add a Dependent
+      </a>
+    @endif
+
     <a href="{{ route('admin.members.edit', $member) }}" class="ui primary button">
       <i class="refresh icon"></i> Renew Membership
     </a>
@@ -91,7 +99,7 @@
     </tbody>
   </table>
 
-  <div class="ui basic modal">
+  <div class="ui basic modal" id="dependent">
     <div class="ui icon header">
       <i class="address card icon"></i>
       Add Dependent

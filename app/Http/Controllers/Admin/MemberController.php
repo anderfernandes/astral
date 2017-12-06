@@ -63,9 +63,10 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-          'user_id'        => 'required|integer',
-          'member_type_id' => 'required|integer',
-          'tendered'       => 'numeric|min:' . $request->total,
+          'user_id'           => 'required|integer',
+          'member_type_id'    => 'required|integer',
+          'tendered'          => 'numeric|min:' . $request->total,
+          'payment_method_id' => 'required',
         ]);
 
         $user = User::find($request->user_id);

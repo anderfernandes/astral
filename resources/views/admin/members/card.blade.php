@@ -9,7 +9,18 @@
       background: linear-gradient(rgba(255,255,255,1), rgba(255,255,255,0.5)), url('{{ asset(App\Setting::find(1)->cover) }}') !important;
       background-size: contain !important;
     }
+
+    @media print {
+      .ui.icon.buttons {
+        display: none !important;
+      }
+    }
   </style>
+
+  <div class="ui icon right floated buttons">
+    <div onclick="window.print()" class="ui primary button"><i class="print icon"></i></div>
+    <div onclick="window.close()" class="ui secondary button"><i class="close icon"></i></div>
+  </div>
 
   <div class="ui two doubling raised stackable cards">
     <div class="blue card">

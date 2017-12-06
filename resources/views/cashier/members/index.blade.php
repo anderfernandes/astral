@@ -57,4 +57,6 @@
     </div>
   @endif
 
+  @include('cashier.partial._spinner')
+
 @endsection

@@ -44,9 +44,16 @@
   </div>
 
   <div class="ui buttons">
-    <a href="javascript:$('#dependent').modal('show')" class="ui default button">
-      <i class="plus icon"></i> Add a Dependent
-    </a>
+    @if ($member->users->count() >= 2)
+      <a href="javascript:$('#dependent').modal('show')" class="ui default disabled button">
+        <i class="plus icon"></i> Add a Dependent
+      </a>
+    @else
+      <a href="javascript:$('#dependent').modal('show')" class="ui default button">
+        <i class="plus icon"></i> Add a Dependent
+      </a>
+    @endif
+
     <a href="{{ route('cashier.members.edit', $member) }}" class="ui primary button">
       <i class="refresh icon"></i> Renew Membership
     </a>
@@ -114,5 +121,7 @@
       </div>
     </div>
   </div>
+
+  @include('cashier.partial._spinner')
 
 @endsection

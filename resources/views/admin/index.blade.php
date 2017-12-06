@@ -16,8 +16,13 @@
 
 function getSalesTotals($day)
 {
-  $dailySales = \App\Payment::whereDate('created_at','=', $day->format('Y-m-d'))
-  ->sum('total');
+  $dailySalesTendered = \App\Payment::whereDate('created_at','=', $day->format('Y-m-d'))
+  ->sum('tendered');
+
+  $dailySalesChangeDue = \App\Payment::whereDate('created_at','=', $day->format('Y-m-d'))
+  ->sum('change_due');
+
+  $dailySales = $dailySalesTendered - $dailySalesChangeDue;
 
   return round($dailySales, 2);
 }
@@ -25,8 +30,14 @@ function getSalesTotals($day)
 function getSalesTotalsRange($start, $end)
 {
   $rangeTotal = 0;
-  $rangeSales = \App\Payment::where([['created_at','>=', $start], ['created_at','<=', $end]])
-  ->sum('total');
+
+  $rangeTotalTendered = \App\Payment::where([['created_at','>=', $start], ['created_at','<=', $end]])
+  ->sum('tendered');
+
+  $rangeTotalChangeDue = \App\Payment::where([['created_at','>=', $start], ['created_at','<=', $end]])
+  ->sum('change_due');
+
+  $rangeSales = $rangeTotalTendered - $rangeTotalChangeDue;
 
   return number_format($rangeSales, 2);
 }
@@ -169,6 +180,7 @@ function getAttendanceByType($ticketTypeID) {
     <div class="ui feed">
       <?php $lastSales = App\Sale::latest()->take(5)->get() ?>
       @foreach ($lastSales as $lastSale)
+        @if ($lastSale->tickets->count() > 0)
         <div class="event">
           <div class="label">
             <i class="user circle outline icon"></i>
@@ -177,13 +189,40 @@ function getAttendanceByType($ticketTypeID) {
             <div class="summary">
               <a href="#" class="user">
                 {{ $lastSale->creator->firstname }} {{ $lastSale->creator->lastname }}</a>
-                sold {{ $lastSale->tickets->count() }} tickets
+                sold {{ $lastSale->tickets->count() }}
+                @if ($lastSale->tickets->count() == 1)
+                  ticket to {{ $lastSale->tickets[0]->event->show->name }} ({{ $lastSale->tickets[0]->event->type->name }})
+                @else
+                  tickets {{ $lastSale->tickets[0]->event->show->name }} ({{ $lastSale->tickets[0]->event->type->name }})
+                @endif
             </div>
             <div class="date">
               {{ Date::parse($lastSale->created_at)->ago() }}
             </div>
           </div>
         </div>
+        @else
+          <div class="event">
+            <div class="label">
+              <i class="user circle outline icon"></i>
+            </div>
+            <div class="content">
+              <div class="summary">
+                <a href="#" class="user">
+                  {{ $lastSale->creator->firstname }} {{ $lastSale->creator->lastname }}</a>
+                  sold a
+                  @foreach (\App\MemberType::where('id', '!=', 1)->get() as $membershipType)
+                    @if ($membershipType->price == $lastSale->subtotal)
+                      {{ $membershipType->name }} to {{ $lastSale->customer->firstname }} {{ $lastSale->customer->lastname }}
+                    @endif
+                  @endforeach
+              </div>
+              <div class="date">
+                {{ Date::parse($lastSale->created_at)->ago() }}
+              </div>
+            </div>
+          </div>
+        @endif
       @endforeach
     </div>
   </div>

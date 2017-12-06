@@ -382,7 +382,8 @@
     $('#second_event_id').change(calculateTotals)
     $('#tendered').keyup(calculateTotals)
 
-
   </script>
+
+  @include('cashier.partial._spinner')
 
 @endsection
