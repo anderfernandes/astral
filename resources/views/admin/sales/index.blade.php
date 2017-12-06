@@ -45,6 +45,7 @@
       <th>Balance</th>
       <th>Status</th>
       <th>Created On</th>
+      <th>Event</th>
       <th>Created By</th>
       <th>Actions</th>
     </tr>
