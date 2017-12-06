@@ -132,6 +132,29 @@
         {{ count($sale->tickets) }}
       </h3>
 
+      <h3 class="ui header">
+        <div class="sub header">
+          Events
+        </div>
+      </h3>
+
+      @foreach($sale->events as $event)
+        @if($event->show->id != 1)
+          @if ($sale->refund)
+            <h3 class="ui red header">
+          @endif
+        <h3 class="ui header">
+          <img src="{{ $event->show->cover }}" alt="" class="ui mini image">
+          <div class="content">
+            {{ $event->show->name }} <div class="ui black circular label">{{ $event->type->name }}</div>
+            <div class="sub header">
+              {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+            </div>
+          </div>
+        </h3>
+        @endif
+      @endforeach
+
     </div>
     <div class="column">
       @if ($sale->reference)

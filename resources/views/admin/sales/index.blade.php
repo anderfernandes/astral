@@ -84,11 +84,26 @@
           {{ $sale->status }}</span>
         </td>
         <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
+        <td>
+          @foreach($sale->events as $event)
+            @if($event->show->id != 1)
+            <h4 class="ui header">
+              <img src="{{ $event->show->cover }}" alt="" class="ui mini image">
+              <div class="content">
+                {{ $event->show->name }} <div class="ui black circular label">{{ $event->type->name }}</div>
+                <div class="sub header">
+                  {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+                </div>
+              </div>
+            </h4>
+            @endif
+          @endforeach
+        </td>
         <td>{{ $sale->creator->firstname }}</td>
         <td>
-          <div class="ui buttons">
-            <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i>View</a>
-            <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
+          <div class="ui icon buttons">
+            <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
+            <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
           </div>
         </td>
       </tr>

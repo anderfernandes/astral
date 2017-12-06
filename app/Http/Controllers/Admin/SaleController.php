@@ -270,6 +270,8 @@ class SaleController extends Controller
 
         $sale->save();
 
+        $sale->events()->detach();
+
         $sale->events()->attach([$request->first_event_id, $request->second_event_id]);
 
         if (isSet($request->payment_method_id) && ($request->tendered > 0)) {

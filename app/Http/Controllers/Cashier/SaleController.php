@@ -28,9 +28,19 @@ class SaleController extends Controller
      */
     public function index()
     {
-        // Return open sales
-        $sales = Sale::where('status', '!=', 'complete')->orderBy('id', 'desc')->paginate(10);
+        $today = Date::now();
+        // Return open sales who are coming for an event happening today
+        $events = Event::whereDate('start', $today->format('Y-m-d'))->get();
+        $todaySalesIds = [];
+        foreach($events as $event) {
+          foreach($event->sales as $sale) {
+              array_push($todaySalesIds, $sale->id);
+              $todaySalesIds = array_unique($todaySalesIds);
+          }
+        }
+        $sales = Sale::whereIn('id', $todaySalesIds)->get();
         return view('cashier.sales.index')->withSales($sales);
+        //dd($sales);
     }
 
     /**
@@ -268,6 +278,8 @@ class SaleController extends Controller
 
         $sale->save();
 
+        $sale->events()->detach();
+
         $sale->events()->attach([$request->first_event_id, $request->second_event_id]);
 
         if (isSet($request->payment_method_id) && ($request->tendered > 0)) {
@@ -342,7 +354,7 @@ class SaleController extends Controller
           }
         }
 
-        Session::flash('success', 'Sale #'. $sale->id .' updated successfully!');
+        Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> updated successfully!');
 
         return redirect()->route('cashier.sales.index');
 
