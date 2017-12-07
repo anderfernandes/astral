@@ -54,7 +54,7 @@
       // Create sidebar and attach to menu open
       $('.ui.sidebar')
       .sidebar('setting', 'transition', 'overlay')
-      .sidebar('setting', 'dimPage', false)
+      .sidebar('setting', 'dimPage', true)
       .sidebar('attach events', '.toc.item');
 
       // close message alerts

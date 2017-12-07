@@ -193,7 +193,7 @@ function getAttendanceByType($ticketTypeID) {
                 @if ($lastSale->tickets->count() == 1)
                   ticket to {{ $lastSale->tickets[0]->event->show->name }} ({{ $lastSale->tickets[0]->event->type->name }})
                 @else
-                  tickets {{ $lastSale->tickets[0]->event->show->name }} ({{ $lastSale->tickets[0]->event->type->name }})
+                  tickets to {{ $lastSale->tickets[0]->event->show->name }} ({{ $lastSale->tickets[0]->event->type->name }})
                 @endif
             </div>
             <div class="date">

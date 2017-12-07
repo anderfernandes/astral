@@ -56,7 +56,7 @@
       eventLimit: true,
       minTime: '07:00:00',
       eventColor: '#000',
-      events: '/api/calendar'
+      events: '/api/calendar',
     })
     console.log(events)
   }
