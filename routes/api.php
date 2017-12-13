@@ -94,8 +94,10 @@ Route::get('events', function() {
   return $eventsArray;
 });
 
-Route::get('events?start={start}&end={end}', function($start, $end) {
-  $events = Event::whereDate('start', $start)->whereDate('end', $end)->get();
+Route::get('events/{start}/{end}', function($start, $end) {
+  $start = Date::parse($start)->startOfDay()->toDateTimeString();
+  $end = Date::parse($end)->endOfDay()->toDateTimeString();
+  $events = Event::where('start', '>=', $start)->whereDate('end', '<', $end)->orderBy('start', 'desc')->get();
   $eventsArray = [];
   foreach ($events as $event) {
     $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
@@ -113,6 +115,7 @@ Route::get('events?start={start}&end={end}', function($start, $end) {
         'cover' => $event->show->cover
         ],
       'allowedTickets' => $event->type->allowedTickets,
+      'date' => $start,
     ]);
   }
   return $eventsArray;
