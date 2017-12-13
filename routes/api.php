@@ -83,6 +83,12 @@ Route::get('events', function() {
       'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
       'title'    => $event->show->name .' - ' . $event->type->name . ' - ' . $seats . ' seats left',
       'url'      => '/admin/events/' . $event->id,
+      'show'     => [
+        'name'  => $event->show->name,
+        'type'  => $event->show->type,
+        'cover' => $event->show->cover
+        ],
+      'allowedTickets' => $event->type->allowedTickets,
     ]);
   }
   return $eventsArray;
@@ -101,6 +107,12 @@ Route::get('events?start={start}&end={end}', function($start, $end) {
       'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
       'title'    => $event->show->name .' - ' . $event->type->name . ' - ' . $seats . ' seats left',
       'url'      => '/admin/events/' . $event->id,
+      'show'     => [
+        'name'  => $event->show->name,
+        'type'  => $event->show->type,
+        'cover' => $event->show->cover
+        ],
+      'allowedTickets' => $event->type->allowedTickets,
     ]);
   }
   return $eventsArray;
