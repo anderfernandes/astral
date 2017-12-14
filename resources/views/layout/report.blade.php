@@ -73,8 +73,6 @@
 
     <div class="ui basic segment">
 
-      @include('cashier.partial._message')
-
       @yield('content')
 
     </div>
