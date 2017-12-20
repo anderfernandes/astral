@@ -107,7 +107,8 @@ class SettingController extends Controller
       $this->validate($request, [
         'name'        => 'required',
         'description' => 'required|max:255',
-        'icon'        => 'required'
+        'icon'        => 'required',
+        'type'        => 'required',
       ]);
 
       $paymentMethod =  new paymentMethod;
@@ -115,6 +116,7 @@ class SettingController extends Controller
       $paymentMethod->name        = $request->name;
       $paymentMethod->description = $request->description;
       $paymentMethod->icon        = $request->icon;
+      $paymentMethod->type        = $request->type;
 
       $paymentMethod->save();
 

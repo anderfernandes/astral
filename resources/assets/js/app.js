@@ -14,3 +14,4 @@ require('./bootstrap');
  */
 
 require('./components/Upcoming/Upcoming');
+require('./components/Calendar/Calendar');

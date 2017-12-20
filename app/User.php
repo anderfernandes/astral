@@ -44,4 +44,9 @@ class User extends Authenticatable
     {
       return $this->belongsTo('App\Member', 'membership_id');
     }
+
+    public function getFullnameAttribute()
+    {
+      return "{$this->firstname} {$this->lastname}";
+    }
 }

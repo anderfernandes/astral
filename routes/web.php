@@ -99,3 +99,5 @@ Route::get('/account', 'HomeController@account')->name('account')->middleware('a
 Route::get('/logout', 'Auth\LoginController@logout');
 
 Route::get('/upcoming', function() { return view('upcoming'); })->name('upcoming');
+
+Route::get('/calendar', function() { return view('calendar'); })->name('upcoming');

@@ -64,10 +64,72 @@ Route::get('calendar', function() {
         'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
         'title'    => $event->show->name . ' - ' . $sale->organization->name . ' - Sale #' . $sale->id,
         'url'      => '/admin/sales/' . $sale->id,
+        'show'     => [
+          'name'  => $event->show->name,
+          'type'  => $event->show->type,
+          'cover' => $event->show->cover
+        ],
       ]);
     }
   }
   return $eventsArray;
+});
+
+Route::get('sales', function() {
+  $today = Date::parse()->format('Y-m-d');
+  $todaysEvents = Event::whereDate('start', '>=', $today)->orderBy('start', 'desc')->get();
+  //$todaysEventsIds = array_pluck($todaysEvents, 'id');
+  $salesArray = [];
+  $eventsArray = [];
+  $ticketsArray = [];
+  // Loop through all of today's events
+  foreach ($todaysEvents as $todaysEvent) {
+    // Get all sales for each event
+    $sales = $todaysEvent->sales;
+  }
+  // Loop trough all sales from today's events
+  foreach ($sales as $sale) {
+    // Loop through the events of this sale and get desired data
+    $events = $sale->events;
+    foreach ($events as $event) {
+      $eventsArray = array_prepend($eventsArray, [
+        'id'    => $event->id,
+        'type'  => $event->type->name,
+        'start' => $event->start,
+        'end'   => $event->end,
+        'show'  => [
+          'name'     => $event->show->name,
+          'type'     => $event->show->type,
+          'duration' => $event->show->duration,
+          'cover'    => $event->show->cover,
+        ]
+      ]);
+    }
+    // Loop through tickets for this sale, get type and quantity for each type
+    $tickets = $sale->tickets->unique('ticket_type_id');
+    foreach ($tickets as $ticket) {
+      $ticketsArray = array_prepend($ticketsArray, [
+        'type'     => $ticket->type->name,
+        'price'    => $ticket->type->price,
+        'quantity' => $sale->tickets->where('ticket_type_id', $ticket->type->id)->count()
+      ]);
+    }
+
+    //$ticketsArray = array_unique($ticketsArray);
+    // Get desired data
+    $salesArray = array_prepend($salesArray, [
+      'id'       => $sale->id,
+      'start'    => $sale->events[0]->start,
+      'total'    => $sale->total,
+      'customer' => [
+        'name'         => $sale->customer->fullname,
+        'organization' => $sale->customer->organization->name,
+      ],
+      'events'  => $eventsArray,
+      'tickets' => $ticketsArray,
+    ]);
+  }
+  return $salesArray;
 });
 
 Route::get('events', function() {
@@ -88,7 +150,6 @@ Route::get('events', function() {
         'type'  => $event->show->type,
         'cover' => $event->show->cover
         ],
-      'allowedTickets' => $event->type->allowedTickets,
     ]);
   }
   return $eventsArray;

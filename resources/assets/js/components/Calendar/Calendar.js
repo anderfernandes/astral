@@ -4,33 +4,29 @@ import { Grid, Dimmer, Loader, Header, Icon } from 'semantic-ui-react'
 import moment from 'moment'
 import ReactDOM from 'react-dom'
 
-class Upcoming extends Component {
+class Calendar extends Component {
   constructor() {
     super()
     this.state = {
       isLoading: true,
-      events: []
+      sales: []
     }
   }
 
-  getEvents() {
-    console.log("Up")
-    let today = moment()
-    let start = today.format('YYYY-MM-DD')
-    let end = today.add(7, 'days').format('YYYY-MM-DD')
-    fetch('/api/events/' + start +'/' + end)
+  getSales() {
+    fetch('/api/sales')
       .then((response) => response.json())
-      .then((events) => this.setState({ events: events, isLoading: false }))
+      .then((sales) => this.setState({ sales: sales, isLoading: false }))
       .catch((error) => console.log(error))
   }
 
   componentDidMount() {
-    this.getEvents()
-    setInterval(() => this.getEvents(), 10000)
+    this.getSales()
+    setInterval(() => this.getSales(), 10000)
   }
 
   render() {
-    let events = this.state.events
+    let sales = this.state.sales
     let isLoading = this.state.isLoading
     if (isLoading) {
       return (
@@ -40,12 +36,12 @@ class Upcoming extends Component {
       )
     }
     else {
-      if (this.state.events.length < 1 ) {
+      if (this.state.sales.length < 1 ) {
         return(
           <div>
-            <img className="ui tiny centered image" src="/logo.png" />
+            <img className="ui tiny centered image" src="http://mayborntheaterticketing.campus.ctcd.org/logo.png" />
             <h2 className="ui centered blue header">
-              Upcoming Show Times
+              Upcoming Events
             </h2>
             <div className="ui info icon floating massive message">
               <i className="info circle icon"></i>
@@ -61,10 +57,10 @@ class Upcoming extends Component {
           <div>
             <img className="ui tiny centered image" src="http://mayborntheaterticketing.campus.ctcd.org/logo.png" />
             <h2 className="ui centered blue header">
-              Upcoming Show Times
+              Upcoming Events
             </h2>
-            <Grid columns={4} divided>
-              { events.map((e) => <EventItem data={e} key={e.id} />) }
+            <Grid columns={4}>
+              { sales.map((sale) => <EventItem data={sale} key={sale.id} />) }
             </Grid>
           </div>
         )
@@ -73,6 +69,6 @@ class Upcoming extends Component {
   }
 }
 
-if (document.getElementById('root')) {
-    ReactDOM.render(<Upcoming />, document.getElementById('root'))
+if (document.getElementById('calendar')) {
+    ReactDOM.render(<Calendar />, document.getElementById('calendar'))
 }

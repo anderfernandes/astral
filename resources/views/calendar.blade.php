@@ -1,6 +1,6 @@
 @extends('layout.report')
 
-@section('title', 'Upcoming Events')
+@section('title', 'Calendar')
 
 @section('content')
 
@@ -13,7 +13,7 @@
       }
     </style>
 
-  <div id="root"></div>
+  <div id="calendar"></div>
 
   <script src="/js/app.js"></script>
 
