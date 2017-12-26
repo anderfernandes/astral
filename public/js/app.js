@@ -95826,7 +95826,7 @@ var EventItem = function (_Component) {
                     data.creator
                   ),
                   ' on ',
-                  __WEBPACK_IMPORTED_MODULE_2_moment___default()(data.created_at).format("dddd, MMMM d, YYYY")
+                  __WEBPACK_IMPORTED_MODULE_2_moment___default()(data.created_at).format("dddd, MMMM D, YYYY")
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["a" /* Card */].Description,

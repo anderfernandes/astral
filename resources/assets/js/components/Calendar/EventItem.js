@@ -41,7 +41,7 @@ export default class EventItem extends Component {
                     <i className="phone icon"></i>{ data.customer.phone }
                   </Card.Meta>
                   <Card.Description>
-                  Created by <strong>{ data.creator }</strong> on { moment(data.created_at).format("dddd, MMMM d, YYYY") }
+                  Created by <strong>{ data.creator }</strong> on { moment(data.created_at).format("dddd, MMMM D, YYYY") }
                   </Card.Description>
                   <Card.Description>
                     {
