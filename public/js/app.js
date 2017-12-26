@@ -10569,7 +10569,7 @@ module.exports = emptyObject;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__collections_Form_FormTextArea__ = __webpack_require__(394);
 /* unused harmony reexport FormTextArea */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__collections_Grid__ = __webpack_require__(955);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_21__collections_Grid__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_21__collections_Grid__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__collections_Grid_GridColumn__ = __webpack_require__(218);
 /* unused harmony reexport GridColumn */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__collections_Grid_GridRow__ = __webpack_require__(396);
@@ -10631,13 +10631,13 @@ module.exports = emptyObject;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_51__elements_Icon_IconGroup__ = __webpack_require__(334);
 /* unused harmony reexport IconGroup */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_52__elements_Image__ = __webpack_require__(76);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_52__elements_Image__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_52__elements_Image__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__elements_Image_ImageGroup__ = __webpack_require__(363);
 /* unused harmony reexport ImageGroup */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_54__elements_Input__ = __webpack_require__(217);
 /* unused harmony reexport Input */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_55__elements_Label__ = __webpack_require__(147);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_55__elements_Label__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_55__elements_Label__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__elements_Label_LabelDetail__ = __webpack_require__(364);
 /* unused harmony reexport LabelDetail */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_57__elements_Label_LabelGroup__ = __webpack_require__(365);
@@ -10657,7 +10657,7 @@ module.exports = emptyObject;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_64__elements_List_ListList__ = __webpack_require__(411);
 /* unused harmony reexport ListList */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_65__elements_Loader__ = __webpack_require__(977);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_65__elements_Loader__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_65__elements_Loader__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_66__elements_Rail__ = __webpack_require__(979);
 /* unused harmony reexport Rail */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_67__elements_Reveal__ = __webpack_require__(981);
@@ -10689,7 +10689,7 @@ module.exports = emptyObject;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_80__modules_Checkbox__ = __webpack_require__(146);
 /* unused harmony reexport Checkbox */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_81__modules_Dimmer__ = __webpack_require__(336);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_81__modules_Dimmer__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_81__modules_Dimmer__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_82__modules_Dimmer_DimmerDimmable__ = __webpack_require__(362);
 /* unused harmony reexport DimmerDimmable */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_83__modules_Dropdown__ = __webpack_require__(216);
@@ -10755,7 +10755,7 @@ module.exports = emptyObject;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_113__views_Advertisement__ = __webpack_require__(1012);
 /* unused harmony reexport Advertisement */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_114__views_Card_Card__ = __webpack_require__(431);
-/* unused harmony reexport Card */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_114__views_Card_Card__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_115__views_Card_CardContent__ = __webpack_require__(432);
 /* unused harmony reexport CardContent */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_116__views_Card_CardDescription__ = __webpack_require__(227);
@@ -64136,10 +64136,10 @@ var Upcoming = function (_Component) {
       var isLoading = this.state.isLoading;
       if (isLoading) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["a" /* Dimmer */],
+          __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["b" /* Dimmer */],
           { active: true, inverted: true },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["e" /* Loader */],
+            __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["f" /* Loader */],
             { size: 'massive', inline: 'centered' },
             'Loading'
           )
@@ -64186,7 +64186,7 @@ var Upcoming = function (_Component) {
               'Upcoming Show Times'
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["b" /* Grid */],
+              __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["c" /* Grid */],
               { columns: 4, divided: true },
               events.map(function (e) {
                 return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__EventItem__["a" /* default */], { data: e, key: e.id });
@@ -66154,9 +66154,9 @@ var EventCard = function (_Component) {
     value: function render() {
       var data = this.props.data;
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["b" /* Grid */].Column,
+        __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["c" /* Grid */].Column,
         null,
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["c" /* Image */], { src: data.show.cover, rounded: true, size: 'medium', centered: true }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["d" /* Image */], { src: data.show.cover, rounded: true, size: 'medium', centered: true }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'h3',
           { className: 'ui centered header' },
@@ -66168,12 +66168,12 @@ var EventCard = function (_Component) {
               'div',
               { className: 'sub header' },
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["d" /* Label */],
+                __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["e" /* Label */],
                 { color: 'blue' },
                 data.show.type
               ),
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["d" /* Label */],
+                __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["e" /* Label */],
                 { color: 'red' },
                 data.type
               )
@@ -66183,7 +66183,7 @@ var EventCard = function (_Component) {
               { className: 'sub header' },
               data.allowedTickets.map(function (ticket) {
                 return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                  __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["d" /* Label */],
+                  __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["e" /* Label */],
                   { key: ticket.id },
                   '$ ',
                   ticket.price,
@@ -95645,10 +95645,10 @@ var Calendar = function (_Component) {
       var isLoading = this.state.isLoading;
       if (isLoading) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["a" /* Dimmer */],
+          __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["b" /* Dimmer */],
           { active: true, inverted: true },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["e" /* Loader */],
+            __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["f" /* Loader */],
             { size: 'massive', inline: 'centered' },
             'Loading'
           )
@@ -95695,8 +95695,8 @@ var Calendar = function (_Component) {
               'Upcoming Events'
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              __WEBPACK_IMPORTED_MODULE_2_semantic_ui_react__["b" /* Grid */],
-              { columns: 4 },
+              'div',
+              { className: 'ui grid' },
               sales.map(function (sale) {
                 return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__EventItem__["a" /* default */], { data: sale, key: sale.id });
               })
@@ -95753,51 +95753,110 @@ var EventItem = function (_Component) {
     value: function render() {
       var data = this.props.data;
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["b" /* Grid */].Row,
-        null,
+        'div',
+        { className: 'eight wide column' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["b" /* Grid */].Column,
-          null,
+          'div',
+          { className: 'ui grid' },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["b" /* Grid */],
-            { columns: 2 },
+            'div',
+            { className: 'eight wide column' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["b" /* Grid */].Row,
-              null,
+              'div',
+              { className: 'ui grid' },
               data.events.map(function (e, i) {
                 return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                  __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["b" /* Grid */].Column,
-                  { key: i },
-                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["c" /* Image */], { src: e.show.cover, size: 'medium', centered: true }),
+                  'div',
+                  { className: 'eight wide column', key: i },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["d" /* Image */], { src: e.show.cover, size: 'medium', centered: true }),
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    { className: 'ui label' },
-                    e.show.type
+                    'h3',
+                    { className: 'ui centered header', style: { marginTop: '0.5rem' } },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'div',
+                      { className: 'ui blue label' },
+                      e.show.type
+                    )
                   )
                 );
               })
             )
-          )
-        ),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["b" /* Grid */].Column,
-          null,
+          ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'h4',
-            { className: 'ui centered huge header' },
+            'div',
+            { className: 'eight wide column' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              'div',
-              { className: 'content' },
-              data.customer.name
-            ),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              'div',
-              { className: 'content' },
-              data.customer.organization,
+              __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["a" /* Card */],
+              null,
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'sub header' },
-                __WEBPACK_IMPORTED_MODULE_2_moment___default()(data.start).calendar()
+                __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["a" /* Card */].Content,
+                null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["a" /* Card */].Header,
+                  null,
+                  data.customer.name,
+                  ' (#',
+                  data.id,
+                  ')'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["a" /* Card */].Meta,
+                  null,
+                  data.customer.organization
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["a" /* Card */].Meta,
+                  null,
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'at icon' }),
+                  data.customer.email
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["a" /* Card */].Meta,
+                  null,
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'phone icon' }),
+                  data.customer.phone
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["a" /* Card */].Description,
+                  null,
+                  'Created by ',
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'strong',
+                    null,
+                    data.creator
+                  ),
+                  ' on ',
+                  __WEBPACK_IMPORTED_MODULE_2_moment___default()(data.created_at).format("dddd, MMMM d, YYYY")
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["a" /* Card */].Description,
+                  null,
+                  data.tickets.map(function (ticket, i) {
+                    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'div',
+                      { className: 'ui label' },
+                      ticket.type,
+                      ' (',
+                      ticket.quantity,
+                      ')'
+                    );
+                  })
+                )
+              ),
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                __WEBPACK_IMPORTED_MODULE_1_semantic_ui_react__["a" /* Card */].Content,
+                { extra: true },
+                __WEBPACK_IMPORTED_MODULE_2_moment___default()(data.start).calendar(),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'div',
+                  { className: 'right floated meta' },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'ui green tag label' },
+                    '$ ',
+                    parseFloat(data.total).toFixed(2)
+                  )
+                )
               )
             )
           )

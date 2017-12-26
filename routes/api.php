@@ -77,34 +77,48 @@ Route::get('calendar', function() {
 
 Route::get('sales', function() {
   $today = Date::parse()->format('Y-m-d');
-  $todaysEvents = Event::whereDate('start', '>=', $today)->orderBy('start', 'desc')->get();
-  //$todaysEventsIds = array_pluck($todaysEvents, 'id');
+  $todaysEvents = Event::whereDate('start', '>=', $today)->orderBy('start', 'asc')->get();
+  $todaysEventsIds = [];
+  $salesIds = [];
+
+  foreach ($todaysEvents as $todaysEvent) {
+    foreach ($todaysEvent->sales as $todaysEventSale) {
+      array_push($salesIds, $todaysEventSale->id);
+    }
+  }
+
+  $salesIds = array_unique($salesIds);
+
   $salesArray = [];
   $eventsArray = [];
   $ticketsArray = [];
-  // Loop through all of today's events
-  foreach ($todaysEvents as $todaysEvent) {
-    // Get all sales for each event
-    $sales = $todaysEvent->sales;
-  }
-  // Loop trough all sales from today's events
+
+  // Get all sales not assigned to walkups
+  $sales = Sale::where('customer_id', '!=', 1)->whereIn('id', $salesIds)->get();
+
   foreach ($sales as $sale) {
-    // Loop through the events of this sale and get desired data
-    $events = $sale->events;
+    // Get id of today's events based on today's sales
+    $eventIds = array_pluck($sale->events, 'id');
+    // Get all events that are not "no events"
+    $events = Event::where('id', '!=', 1)->whereIn('id', $eventIds)->get();
     foreach ($events as $event) {
       $eventsArray = array_prepend($eventsArray, [
-        'id'    => $event->id,
-        'type'  => $event->type->name,
-        'start' => $event->start,
-        'end'   => $event->end,
-        'show'  => [
+        'id'      => $event->id,
+        'start'   => $event->start,
+        'end'     => $event->end,
+        'seats'   => $event->seats,
+        'type'    => $event->type->name,
+        'creator' => $event->creator->fullname,
+        'show' => [
+          'id'       => $event->show->id,
           'name'     => $event->show->name,
           'type'     => $event->show->type,
           'duration' => $event->show->duration,
           'cover'    => $event->show->cover,
-        ]
+        ],
       ]);
     }
+
     // Loop through tickets for this sale, get type and quantity for each type
     $tickets = $sale->tickets->unique('ticket_type_id');
     foreach ($tickets as $ticket) {
@@ -115,20 +129,28 @@ Route::get('sales', function() {
       ]);
     }
 
-    //$ticketsArray = array_unique($ticketsArray);
-    // Get desired data
     $salesArray = array_prepend($salesArray, [
-      'id'       => $sale->id,
-      'start'    => $sale->events[0]->start,
-      'total'    => $sale->total,
-      'customer' => [
+      'id'         => $sale->id,
+      'creator'    => $sale->creator->fullname,
+      'created_at' => Date::parse($sale->created_at)->toDateTimeString(),
+      'start'      => $sale->events[0]->start,
+      'status'     => $sale->status,
+      'source'     => $sale->source,
+      'total'      => $sale->total,
+      'memo'       => $sale->memo,
+      'customer'   => [
         'name'         => $sale->customer->fullname,
         'organization' => $sale->customer->organization->name,
+        'phone'        => $sale->customer->phone,
+        'email'        => $sale->customer->email,
       ],
-      'events'  => $eventsArray,
-      'tickets' => $ticketsArray,
+      'events'    => $eventsArray,
+      'tickets'   => $ticketsArray,
     ]);
+    $eventsArray = [];
+    $ticketsArray = [];
   }
+
   return $salesArray;
 });
 

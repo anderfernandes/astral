@@ -59,9 +59,9 @@ class Calendar extends Component {
             <h2 className="ui centered blue header">
               Upcoming Events
             </h2>
-            <Grid columns={4}>
-              { sales.map((sale) => <EventItem data={sale} key={sale.id} />) }
-            </Grid>
+            <div className="ui grid">
+                { sales.map((sale) => <EventItem data={sale} key={sale.id} />) }
+            </div>
           </div>
         )
       }
