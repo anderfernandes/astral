@@ -97,7 +97,7 @@
                 {{ $organization->name }}
                 @if ($organization->id != 1)
                   <div class="ui mini label">{{ $organization->type->name }}</div>
-                  <input type="hidden" id="istaxable" name="istaxable" value="{{ $organization->type->taxable }}">
+                  <input type="hidden" id="istaxable" name="istaxable" value="{{ $sale->taxable }}">
                 @endif
               </div>
             @endforeach

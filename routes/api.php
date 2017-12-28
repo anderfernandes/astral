@@ -50,19 +50,21 @@ use Illuminate\Support\Facades\Auth;
 Route::get('calendar', function() {
   // Gets all events
 
-  $sales = Sale::where('customer_id', '!=', 1)->where('status', '!=', 'canceled')->where('customer_id', '!=', 1)->get();
+  $sales = Sale::where('customer_id', '!=', 1)->where('status', '!=', 'canceled')->where('customer_id', '!=', 1)->orderBy('start', 'asc')->get();
   $eventsArray = [];
   foreach ($sales as $sale) {
     $events = $sale->events->where('type_id', '!=', 1);
+    $customer = ($sale->customer->firstname == $sale->organization->name) ? null : ' - ' . $sale->customer->fullname;
     foreach ($events as $event) {
       $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
+      $title = $event->show->name . ' - ' . $sale->organization->name . $customer . ' - Sale #' . $sale->id;
       $eventsArray = array_prepend($eventsArray, [
         'id'       => $event->id,
         'type'     => $event->type->name,
         'start'    => Date::parse($event->start)->toDateTimeString(),
         'end'      => Date::parse($event->end)->toDateTimeString(),
         'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-        'title'    => $event->show->name . ' - ' . $sale->organization->name . ' - Sale #' . $sale->id,
+        'title'    => $title,
         'url'      => '/admin/sales/' . $sale->id,
         'show'     => [
           'name'  => $event->show->name,

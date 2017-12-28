@@ -24,20 +24,19 @@ class ReportController extends Controller
   {
     $today = Date::now()->startOfDay();
 
+    $sales = Sale::where([
+      ['updated_at', '>=', $today],
+      ['refund', '=', false],
+    ])->orderBy('created_at', 'asc')->get();
+
+    // Get Card Sales IDs
+    $salesIds = array_pluck($sales, 'id');
+    // Find all payments for the IDs we retrieved
+    $payments = Payment::where('cashier_id', Auth::user()->id)->whereIn('sale_id', $salesIds)->get();
+
     if ($type == 'closeout')
     {
-
-      $sales = Sale::where([
-        ['updated_at', '>=', $today],
-        ['creator_id', '=', Auth::user()->id],
-        ['refund', '=', false],
-      ])->orderBy('created_at', 'asc')->get();
-
-      // Get Card Sales IDs
-      $salesIds = array_pluck($sales, 'id');
-      // Find all payments for the IDs we retrieved
-      $payments = Payment::whereIn('sale_id', $salesIds)->get();
-
+      
       $cashPayments = [];
       $cardPayments = [];
       $checkPayments = [];
@@ -62,16 +61,6 @@ class ReportController extends Controller
     }
     if ($type == 'transaction-detail')
     {
-
-      $sales = Sale::where([
-        ['updated_at', '>=', $today],
-        ['creator_id', '=', Auth::user()->id],
-      ])->orderBy('created_at', 'asc')->get();
-
-      // Get Card Sales IDs
-      $salesIds = array_pluck($sales, 'id');
-      // Find all payments for the IDs we retrieved
-      $payments = Payment::whereIn('sale_id', $salesIds)->get();
 
       $totals = 0;
       foreach ($payments as $payment) {

@@ -294,6 +294,12 @@ class SaleController extends Controller
 
         }
 
+        // Mark sale as completed if it has been paid in full
+        if ($sale->payments->sum('tendered') >= $sale->total) {
+          $sale->status = "complete";
+          $sale->save();
+        }
+
         // Update tickets only if its number changes
         if (count($request->tickets) != count($sale->tickets)) {
           // Delete old tickets created

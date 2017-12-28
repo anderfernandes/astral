@@ -97,7 +97,7 @@
                   {{ $organization->name }}
                   @if ($organization->id != 1)
                     <div class="ui mini label">{{ $organization->type->name }}</div>
-                    <input type="hidden" id="istaxable" name="istaxable" value="{{ $organization->type->taxable }}">
+                    <input type="hidden" id="istaxable" name="istaxable" value="{{ $sale->taxable }}">
                   @endif
                 </div>
               @endforeach
@@ -216,7 +216,7 @@
         <div class="ui dividing header"><i class="info circle icon"></i>Payment Information</div>
         <div class="required field">
           {!! Form::label('taxable', 'Taxable') !!}
-          {!! Form::select('taxable', [true => 'Yes', false => 'No'], null, ['placeholder' => 'Is group taxable?', 'class' => 'ui dropdown']) !!}
+          {!! Form::select('taxable', [true => 'Yes', false => 'No'], $sale->taxable, ['placeholder' => 'Is group taxable?', 'class' => 'ui dropdown']) !!}
         </div>
         <div class="three fields">
           <div class="field">
