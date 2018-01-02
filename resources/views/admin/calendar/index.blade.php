@@ -35,7 +35,7 @@
   </div>
 
   @if (!isset($events) || count($events) > 0)
-    <br /><br />
+    <br /><br /><br />
     <div class="ui doubling stackable grid">
       <div id="calendar" style="min-width:100%; max-width:100%; padding-bottom: 2rem"></div>
     </div>
