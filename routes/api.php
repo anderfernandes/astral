@@ -7,6 +7,7 @@ use App\Setting;
 use App\User;
 use App\PaymentMethod;
 use App\Sale;
+use App\Organization;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -204,6 +205,18 @@ Route::get('events/{start}/{end}', function($start, $end) {
     ]);
   }
   return $eventsArray;
+});
+
+Route::get('organizations/{organization}', function(Organization $organization) {
+  $users = [];
+  foreach ($organization->users as $user) {
+    $users = array_prepend($users, [
+      'id'      => $user->id,
+      'name'    => $user->firstname . ' ' . $user->lastname,
+      'taxable' => $organization->type->taxable,
+    ]);
+  }
+  return $users;
 });
 
 Route::get('settings', function() {

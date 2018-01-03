@@ -2,7 +2,7 @@
 
 @section('title', 'Sales')
 
-@section ('name', 'New Sale')
+@section ('name', 'New Sale | ' . $eventType->name)
 
 @section ('icon', 'dollar')
 

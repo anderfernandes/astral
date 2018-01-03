@@ -8,9 +8,19 @@
 
 @section('content')
 
-  <a class="ui secondary button" href="{{ route('cashier.sales.create') }}">
-    <i class="plus icon"></i> New Sale
-  </a>
+  <div class="ui secondary buttons">
+    <div class="ui button"><i class="plus icon"></i> New Sale</div>
+    <div class="ui floating dropdown icon button">
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        @foreach ($eventTypes as $eventType)
+          <a href={{ route('cashier.sales.create', $eventType) }} class="item">{{ $eventType->name }}</a>
+        @endforeach
+      </div>
+    </div>
+  </div>
+
+
   <!--
   <div class="ui right icon input">
     <input type="text" name="search" placeholder="Sale Number">

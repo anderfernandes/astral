@@ -76,6 +76,7 @@ Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier
     Route::post('query', 'SaleController@query')->name('query');
     // Sales
     Route::resource('sales', 'SaleController');
+    Route::get('sales/create/{eventType}', 'SaleController@create')->name('sales.create');
     // Members
     Route::resource('members', 'MemberController');
     // Users (edit member only)

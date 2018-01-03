@@ -72,8 +72,8 @@
         toolbar: false
     });
 
-    $('#start').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K'});
-    $('#end').flatpickr({enableTime:true, minDate: function() {$('#start').val()}, dateFormat: 'l, F j, Y h:i K'});
+    $('#start').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', defaultHour:8, defaultMin:0});
+    $('#end').flatpickr({enableTime:true, minDate: "today", dateFormat: 'l, F j, Y h:i K'});
 
     document.querySelector('#start').onchange = function() {
       document.querySelector('#end').value = moment(this.value, 'dddd, MMMM DD, YYYY h:mm A').add(1, 'hours').format('dddd, MMMM DD, YYYY h:mm A');

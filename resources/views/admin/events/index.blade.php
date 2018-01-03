@@ -68,7 +68,6 @@
       eventColor: '#1b1c1d',
       events: '/api/events'
     })
-    console.log(events)
   }
 
   function refetchEvents() {

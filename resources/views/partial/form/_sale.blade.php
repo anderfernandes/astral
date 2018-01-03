@@ -69,46 +69,16 @@
       <div class="ui dividing header"><i class="dollar sign icon"></i>Sale Information</div>
       <div class="required field">
         {!! Form::label('organization_id', 'Organization') !!}
-        <div class="ui selection search scrolling dropdown">
-          @if (old('organization_id') == null)
-            <input type="hidden" id="organization_id" name="organization_id" value="1">
-          @else
-            <input type="hidden" id="organization_id" name="organization_id" value="{{ old('organization_id') }}">
-          @endif
-          <div class="default text">Select an Organization</div>
-          <i class="dropdown icon"></i>
-          <div class="menu">
-            @foreach ($organizations as $organization)
-              <div class="item" data-value="{{ $organization->id }}">
-                {{ $organization->name }}
-                @if ($organization->id != 1)
-                  <div class="ui mini label">{{ $organization->type->name }}</div>
-                  <input type="hidden" id="istaxable" name="istaxable" value="{{ $organization->type->taxable }}">
-                @endif
-              </div>
-            @endforeach
-          </div>
-        </div>
+        {!! Form::select('organization_id', $organizations, 1, ['class' => 'ui selection search scrolling dropdown']) !!}
       </div>
       <div class="required field">
         {!! Form::label('customer_id', 'Customer') !!}
-        <div class="ui selection search scrolling dropdown">
-          @if (old('organization_id') == null)
+        <div class="ui selection search scrolling dropdown" id="customers">
             <input type="hidden" id="customer_id" name="customer_id" value="1">
-          @else
-            <input type="hidden" id="customer_id" name="customer_id" value="{{ old('customer_id') }}">
-          @endif
-          <div class="default text">Select an Organization</div>
+          <div class="default text">Select a Customer</div>
           <i class="dropdown icon"></i>
-          <div class="menu">
-            @foreach ($customers as $customer)
-              <div class="item" data-value="{{ $customer->id }}">
-                {{ $customer->firstname . ' ' . $customer->lastname }}
-                @if ($customer->id != 1)
-                  <span class="ui mini label">{{ $customer->organization->name }}</span>
-                @endif
-              </div>
-            @endforeach
+          <div class="menu" id="users">
+            <div class="item" data-value="0">Test</div>
           </div>
         </div>
       </div>
@@ -133,7 +103,6 @@
               <div class="item" data-value="{{ $event->id }}">
                 <strong>{{ $event->show->name }}</strong>
                 on <em>{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</em>
-                <span class="ui mini label" id="firstshow">{{ $event->type->name }}</span>
               </div>
             @endforeach
           </div>
@@ -157,7 +126,6 @@
               <div class="item" data-value="{{ $event->id }}">
                 <strong>{{ $event->show->name }}</strong>
                 on {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-                <span class="ui mini label" id="secondshow">{{ $event->type->name }}</span>
               </div>
             @endforeach
           </div>
@@ -172,7 +140,7 @@
         </thead>
         <tbody>
           @foreach ($ticketTypes as $ticketType)
-          <tr style="display:none" class="<?php foreach($ticketType->allowedEvents as $eventType){ echo preg_replace('/\s+/', '', $eventType->name).' ' ;} ?>">
+          <tr>
             <td>
               <h4 class="ui header">
                 <i class="ticket icon"></i>
@@ -185,7 +153,7 @@
             <td>
               <div class="ui right labeled input">
                 {!! Form::text('ticket['. $ticketType->id .']', 0, ['placeholder' => 'Amount of '. $ticketType->name . ' tickets', 'size' => 1, 'class' => 'ticket-type']) !!}
-                <div class="ui tag label">$ {{ number_format($ticketType->price, 2) }} each</div>
+                <div class="ui label" id="ticket-price">$ {{ number_format($ticketType->price, 2) }} each</div>
               </div>
             </td>
           </tr>
@@ -199,7 +167,7 @@
       <div class="ui dividing header"><i class="info circle icon"></i>Payment Information</div>
       <div class="required field">
         {!! Form::label('taxable', 'Taxable') !!}
-        {!! Form::select('taxable', [true => 'Yes', false => 'No'], true, ['placeholder' => 'Is group taxable?', 'class' => 'ui dropdown']) !!}
+        {!! Form::select('taxable', [false => 'No', true => 'Yes'], false, ['class' => 'ui dropdown']) !!}
       </div>
       <div class="three fields">
         <div class="field">
@@ -270,22 +238,26 @@
     $('#taxable').val(taxable).change()
   }
 
-  // Hide Unwanted Ticket Types
-  $('#organization_id').change(autoSelectTaxable)
-
-  // Hide Unwanted Ticket Types
-  function hideUnwantedTicketTypes() {
-    // This function reads the text inside the label in the first and second show boxes
-    var firstEventType = document.querySelector('#firstshow').innerHTML.replace(/\s+/g, "").replace(":", "").replace(" ", "")
-    var secondEventType = document.querySelector('#secondshow').innerHTML.replace(/\s+/g, "").replace(":", "").replace(" ", "")
-
-    $('tr.' + firstEventType + ', tr.'+ secondEventType + ', tr.payments').css('display', 'table-row')
-    $('tr').not('.' + firstEventType).not('.'+ secondEventType).not('tr.payments').css('display', 'none')
-    $('tr.header').css('display', 'table-row')
+  function fetchUsers() {
+    var organization_id = document.querySelector("#organization_id").value
+    $("#users").empty()
+    $("#customers").dropdown('clear')
+    fetch('/api/organizations/' + organization_id)
+      .then((response) => response.json())
+      .then((users) => {
+        users.map((user, index) => {
+          $("#users").append("<div class='item' data-value=" + user.id + ">" + user.name + "</div>")
+          $('#taxable').dropdown('set selected', user.taxable)
+        })
+      })
+      .catch((error) => console.log(error))
   }
 
-  $('#first_event_id').change(hideUnwantedTicketTypes)
-  $('#second_event_id').change(hideUnwantedTicketTypes)
+  // Hide Unwanted Ticket Types
+  //$('#organization_id').change(autoSelectTaxable)
+
+  $("#organization_id").change(fetchUsers)
+  $(document).ready(fetchUsers)
 
   $('.menu .item').tab();
 
@@ -295,7 +267,7 @@
 
     var ticketTypeBoxes = document.querySelectorAll('.ticket-type')
     // ui.tag.label
-    var ticketPrice = document.querySelectorAll('.ui.tag.label')
+    var ticketPrice = document.querySelectorAll('#ticket-price')
     var subtotalBox = document.querySelector('#subtotal')
     var subtotalArray = [];
     var subtotal = 0;
@@ -339,7 +311,7 @@
 
     changeDue = tendered - total
     changeDueBox.value = changeDue <= 0 ? (0).toFixed(2) : changeDue.toFixed(2)
-    //changeDueBox.value = changeDue.toFixed(2) == "-0.00" ? "0.00" : changeDue.toFixed(2)
+
   }
 
   $('.ticket-type').keyup(calculateTotals)
