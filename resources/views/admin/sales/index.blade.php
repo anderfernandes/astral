@@ -8,18 +8,28 @@
 
 @section('content')
 
-  <a class="ui secondary button" href="{{ route('admin.sales.create') }}">
-    <i class="plus icon"></i> New Sale
-  </a>
+
+  <div class="ui floating secondary dropdown button">
+    <i class="plus icon"></i> New Sale<i class="dropdown icon"></i>
+    <div class="menu">
+      @foreach ($eventTypes as $eventType)
+        <a href={{ route('admin.sales.create', $eventType) }} class="item">{{ $eventType->name }}</a>
+      @endforeach
+    </div>
+  </div>
+
+
   <div class="ui right icon input">
     <input type="text" name="search" placeholder="Sale Number">
     <i class="search link icon"></i>
   </div>
+
   <select name="payment_type" id="payment_type" class="ui dropdown">
     <option value="">All Payment Types</option>
     <option value="Cash">Cash</option>
     <option value="Visa">Visa</option>
   </select>
+
   <div class="ui selection dropdown">
     <input type="hidden" id="status" name="status">
     <i class="dropdown icon"></i>
@@ -130,5 +140,7 @@
 <div class="ui centered grid">
   {{ $sales->links('vendor.pagination.semantic-ui') }}
 </div>
+
+<br /> <br />
 
 @endsection

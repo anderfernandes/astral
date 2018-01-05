@@ -18,6 +18,7 @@ use App\Payment;
 use App\PaymentMethod;
 use App\Ticket;
 use App\TicketType;
+use App\EventType;
 
 
 class SaleController extends Controller
@@ -30,7 +31,8 @@ class SaleController extends Controller
     public function index()
     {
         $sales = Sale::orderBy('id', 'desc')->paginate(10);
-        return view('admin.sales.index')->withSales($sales);
+        $eventTypes = EventType::where('id', '!=', 1)->get();
+        return view('admin.sales.index')->withSales($sales)->withEventTypes($eventTypes);
     }
 
     /**
@@ -38,13 +40,12 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(EventType $eventType)
     {
-        $organizations = Organization::all();
-        $customers = User::all();
-        $events    = Event::where('start', '>', Date::now()->toDateTimeString())->orderBy('start', 'desc')->get();
+        $organizations = Organization::pluck('name', 'id');
+        $events    = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $eventType->id)->orderBy('start', 'asc')->get();
         $paymentMethods = PaymentMethod::all();
-        $ticketTypes = TicketType::all();
+        $ticketTypes = $eventType->allowedTickets;
 
         /*$customers = $allCustomers->mapWithKeys(function ($item) {
           return [ $item['id'] => $item['firstname'].' '.$item['lastname']];
@@ -57,10 +58,10 @@ class SaleController extends Controller
         });*/
 
         return view('admin.sales.create')
-          ->withCustomers($customers)
-          ->withEvents($events->all())
+          ->withEvents($events)
           ->withTicketTypes($ticketTypes)
           ->withPaymentMethods($paymentMethods)
+          ->withEventType($eventType)
           ->withOrganizations($organizations);
     }
 
@@ -210,19 +211,17 @@ class SaleController extends Controller
      */
     public function edit(Sale $sale)
     {
-        $organizations = Organization::all();
-        $customers = User::all();
-        $events    = Event::where('type_id', '!=', 1)->orderBy('start', 'desc')->get();
+        $organizations = Organization::pluck('name', 'id');
+        $events    = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $sale->events[0]->type->id)->orderBy('start', 'asc')->get();
         $paymentMethods = PaymentMethod::all();
-        $ticketTypes = TicketType::all();
+        $ticketTypes = $sale->events[0]->type->allowedTickets;
 
         // $customers = $allCustomers->mapWithKeys(function ($item) {
         //   return [ $item['id'] => $item['firstname'].' '.$item['lastname']];
         // });
 
         return view('admin.sales.edit')
-          ->withCustomers($customers)
-          ->withEvents($events->all())
+          ->withEvents($events)
           ->withTicketTypes($ticketTypes)
           ->withPaymentMethods($paymentMethods)
           ->withOrganizations($organizations)

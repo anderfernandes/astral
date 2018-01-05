@@ -18,19 +18,23 @@
   <a class="ui secondary button" href="{{ route('admin.events.create') }}">
     <i class="calendar plus icon"></i> Create Event
   </a>
-  <a class="ui secondary button" href="{{ route('admin.sales.create') }}">
-    <i class="dollar sign icon"></i> Create Sale
-  </a>
 
-  <div class="ui right floated buttons">
-    <div class="ui black button"><i class="eye icon"></i>View</div>
-    <div class="ui black floating dropdown icon button">
-      <i class="dropdown icon"></i>
-      <div class="menu">
-        <div onclick="$('#calendar').fullCalendar('changeView', 'agendaDay')" class="item">Single Day</div>
-        <div onclick="$('#calendar').fullCalendar('changeView', 'agendaWeek')" class="active item">Week</div>
-        <div onclick="$('#calendar').fullCalendar('changeView', 'month')" class="item">Month</div>
-      </div>
+  <div class="ui floating secondary dropdown button">
+    <i class="plus icon"></i> Create Sale<i class="dropdown icon"></i>
+    <div class="menu">
+      @foreach (App\EventType::where('id', '!=', 1)->get() as $eventType)
+        <a href={{ route('admin.sales.create', $eventType) }} class="item">{{ $eventType->name }}</a>
+      @endforeach
+    </div>
+  </div>
+
+  <div class="ui right floated secondary floating dropdown labeled icon button">
+    <i class="eye icon"></i>
+    <span class="text">Week</span>
+    <div class="menu">
+      <div onclick="$('#calendar').fullCalendar('changeView', 'agendaDay')" class="item">Single Day</div>
+      <div onclick="$('#calendar').fullCalendar('changeView', 'agendaWeek')" class="active item">Week</div>
+      <div onclick="$('#calendar').fullCalendar('changeView', 'month')" class="item">Month</div>
     </div>
   </div>
 

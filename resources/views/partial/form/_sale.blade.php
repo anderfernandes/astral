@@ -1,10 +1,12 @@
-{!! Form::open(['route' => 'cashier.sales.store', 'class' => 'ui form']) !!}
+
 <div class="two fields">
   <div class="inline required field">
     {!! Form::label('status', 'Status') !!}
-    <div class="ui selection dropdown">
+    <div class="ui selection dropdown" id="sale-status">
       @if (old('status') == null)
         <input type="hidden" id="status" name="status" value="open">
+      @elseif (isSet($sale))
+        <input type="hidden" id="status" name="status" value={{ $sale->status }}>
       @else
         <input type="hidden" id="status" name="status" value="{{ old('status') }}">
       @endif
@@ -31,35 +33,47 @@
     {!! Form::label('subtotal', 'Subtotal' ) !!}
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      {!! Form::text('subtotal', number_format(0, 2), ['placeholder' => 'Subtotal', 'readonly' => true]) !!}
+      @if (isSet($sale))
+        {!! Form::text('subtotal', number_format($sale->subtotal, 2), ['placeholder' => 'Subtotal', 'readonly' => true]) !!}
+      @else
+        {!! Form::text('subtotal', number_format(0, 2), ['placeholder' => 'Subtotal', 'readonly' => true]) !!}
+      @endif
     </div>
   </div>
   <div class="field">
     {!! Form::label('tax', 'Tax ('. App\Setting::find(1)->tax .'%)') !!}
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      {!! Form::text('tax', number_format(0, 2), ['placeholder' => 'Tax', 'readonly' => true]) !!}
+      @if (isSet($sale))
+        {!! Form::text('tax', number_format($sale->tax, 2), ['placeholder' => 'Tax', 'readonly' => true]) !!}
+      @else
+        {!! Form::text('tax', number_format(0, 2), ['placeholder' => 'Tax', 'readonly' => true]) !!}
+      @endif
     </div>
   </div>
   <div class="field">
     {!! Form::label('total', 'Total') !!}
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      {!! Form::text('total', number_format(0, 2), ['placeholder' => 'Total', 'readonly' => true]) !!}
+      @if (isSet($sale))
+        {!! Form::text('total', number_format($sale->total, 2), ['placeholder' => 'Total', 'readonly' => true]) !!}
+      @else
+        {!! Form::text('total', number_format(0, 2), ['placeholder' => 'Total', 'readonly' => true]) !!}
+      @endif
     </div>
   </div>
   <div class="field">
     <label for="paid">Paid</label>
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      <input type="text" id="paid" name="paid" value="{{ number_format(0, 2) }}" readonly>
+      <input type="text" id="paid" name="paid" value="{{ isSet($sale) ? number_format($sale->payments->sum('tendered'), 2) : number_format(0, 2) }}" readonly>
     </div>
   </div>
   <div class="field">
     <label for="paid">Balance</label>
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      <input type="text" id="balance" name="balance" value="{{ number_format(0, 2) }}" readonly>
+      <input type="text" id="balance" name="balance" value="{{ isSet($sale) ? number_format($sale->total - $sale->payments->sum('tendered'), 2) : number_format(0, 2) }}" readonly>
     </div>
   </div>
 </div>
@@ -69,22 +83,40 @@
       <div class="ui dividing header"><i class="dollar sign icon"></i>Sale Information</div>
       <div class="required field">
         {!! Form::label('organization_id', 'Organization') !!}
-        {!! Form::select('organization_id', $organizations, 1, ['class' => 'ui selection search scrolling dropdown']) !!}
+        @if (isSet($sale))
+          {!! Form::select('organization_id', $organizations, $sale->organization->id, ['class' => 'ui selection search scrolling dropdown']) !!}
+        @else
+          {!! Form::select('organization_id', $organizations, 1, ['class' => 'ui selection search scrolling dropdown']) !!}
+        @endif
+
       </div>
       <div class="required field">
         {!! Form::label('customer_id', 'Customer') !!}
         <div class="ui selection search scrolling dropdown" id="customers">
+          @if (isSet($sale))
+            <input type="hidden" id="customer_id" name="customer_id" value="{{ $sale->customer_id }}">
+          @else
             <input type="hidden" id="customer_id" name="customer_id" value="1">
+          @endif
+
           <div class="default text">Select a Customer</div>
           <i class="dropdown icon"></i>
           <div class="menu" id="users">
-            <div class="item" data-value="0">Test</div>
+            @if (isSet($sale))
+              @foreach ($sale->organization->users as $customer)
+                <div class="item" data-value="{{ $customer->id }}">
+                  {{ $customer->firstname . ' ' . $customer->lastname }}
+                </div>
+              @endforeach
+            @else
+              <div class="item" data-value="1">Walk-up</div>
+            @endif
           </div>
         </div>
       </div>
       <div class="required field">
         {{ Form::label('first_event_id', 'First Event') }}
-        <div class="ui selection search scrolling dropdown">
+        <div class="ui selection search scrolling dropdown" id="first-event">
           @if (old('first_event_id') == null)
             <input type="hidden" id="first_event_id" name="first_event_id" value="0">
           @else
@@ -110,7 +142,7 @@
       </div>
       <div class="field">
         {{ Form::label('second_event_id', 'Second Event') }}
-        <div class="ui selection search scrolling dropdown">
+        <div class="ui selection search scrolling dropdown" id="second-event">
           @if (old('second_event_id') == null)
             <input type="hidden" id="second_event_id" name="second_event_id" value="1">
           @else
@@ -125,7 +157,7 @@
             @foreach($events as $event)
               <div class="item" data-value="{{ $event->id }}">
                 <strong>{{ $event->show->name }}</strong>
-                on {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+                on <em>{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</em>
               </div>
             @endforeach
           </div>
@@ -152,7 +184,11 @@
             </td>
             <td>
               <div class="ui right labeled input">
-                {!! Form::text('ticket['. $ticketType->id .']', 0, ['placeholder' => 'Amount of '. $ticketType->name . ' tickets', 'size' => 1, 'class' => 'ticket-type']) !!}
+                @if (isSet($sale))
+                  {!! Form::text('ticket['. $ticketType->id .']', $sale->tickets->where('event_id', $sale->events[0]->id)->where('ticket_type_id', $ticketType->id)->count(), ['placeholder' => 'Amount of '. $ticketType->name . ' tickets', 'size' => 1, 'class' => 'ticket-type']) !!}
+                @else
+                  {!! Form::text('ticket['. $ticketType->id .']', 0, ['placeholder' => 'Amount of '. $ticketType->name . ' tickets', 'size' => 1, 'class' => 'ticket-type']) !!}
+                @endif
                 <div class="ui label" id="ticket-price">$ {{ number_format($ticketType->price, 2) }} each</div>
               </div>
             </td>
@@ -167,7 +203,11 @@
       <div class="ui dividing header"><i class="info circle icon"></i>Payment Information</div>
       <div class="required field">
         {!! Form::label('taxable', 'Taxable') !!}
-        {!! Form::select('taxable', [false => 'No', true => 'Yes'], false, ['class' => 'ui dropdown']) !!}
+        @if (isSet($sale))
+          {!! Form::select('taxable', [false => 'No', true => 'Yes'], $sale->taxable, ['class' => 'ui dropdown']) !!}
+        @else
+          {!! Form::select('taxable', [false => 'No', true => 'Yes'], true, ['class' => 'ui dropdown']) !!}
+        @endif
       </div>
       <div class="three fields">
         <div class="field">
@@ -216,7 +256,27 @@
         </thead>
         <tbody>
           <tr class="warning center aligned payments">
-            <td colspan="5"><i class="info circle icon"></i> No payments have been received so far</td>
+            @if (isSet($sale))
+              @if(count($sale->payments) > 0)
+                @foreach($sale->payments as $payment)
+                  <tr class="payments">
+                    <td><div class="ui header">{{ $payment->id }}</div></td>
+                    <td>{{ $payment->method->name }}</td>
+                    <td>{{ number_format($payment->tendered, 2) }}</td>
+                    <td>{{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
+                    <td>{{ $payment->cashier->firstname }}</td>
+                  </tr>
+                @endforeach
+              @else
+                <tr class="warning center aligned">
+                  <td colspan="5"><i class="info circle icon"></i> No payments have been received so far</td>
+                </tr>
+              @endif
+            @else
+              <tr class="warning center aligned">
+                <td colspan="5"><i class="info circle icon"></i> No payments have been received so far</td>
+              </tr>
+            @endif
           </tr>
         </tbody>
       </table>
@@ -228,7 +288,7 @@
   {!! Form::label('memo', 'Memo') !!}
   {!! Form::textarea('memo', null, ['placeholder' => 'Write a memo here']) !!}
 </div>
-{!! Form::close() !!}
+
 
 <script>
 
@@ -256,10 +316,10 @@
   // Hide Unwanted Ticket Types
   //$('#organization_id').change(autoSelectTaxable)
 
-  $("#organization_id").change(fetchUsers)
-  $(document).ready(fetchUsers)
-
-  $('.menu .item').tab();
+  $("#organization_id").change(function() {
+    fetchUsers()
+    calculateTotals()
+  })
 
   // Calculating Totals
 
@@ -281,7 +341,13 @@
     var changeDueBox = document.querySelector('#change_due')
     var tenderedBox = document.querySelector('#tendered')
     var tendered = parseFloat(tenderedBox.value)
-    var paid = 0
+
+    @if (isSet($sale))
+      var paid = {{ number_format($sale->payments->sum('tendered'), 2) }}
+    @else
+      var paid = 0
+    @endif
+
     var paidBox = document.querySelector('#paid')
     var balance = 0
     var balanceBox = document.querySelector('#balance')
@@ -313,6 +379,19 @@
     changeDueBox.value = changeDue <= 0 ? (0).toFixed(2) : changeDue.toFixed(2)
 
   }
+
+  $(document).ready(function() {
+    calculateTotals()
+    fetchUsers()
+    @if (isSet($sale))
+      $("#customers").dropdown('set selected', {{ $sale->customer_id }})
+      $("#first-event").dropdown('set selected', {{ $sale->events[0]->id }})
+      $("#second-event").dropdown('set selected', {{ $sale->events[1]->id }})
+      $("#sale-status").dropdown('set selected', '{{ $sale->status }}')
+    @else
+      $("#customers").dropdown('set selected', 1)
+    @endif
+  })
 
   $('.ticket-type').keyup(calculateTotals)
   $('#taxable').change(calculateTotals)

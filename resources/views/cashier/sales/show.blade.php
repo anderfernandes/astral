@@ -56,7 +56,7 @@
       <i class="left chevron icon"></i>
       Back
     </a>
-    <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
+    <a href="{{ route('cashier.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
   </div>
 
   <br /><br /><br />

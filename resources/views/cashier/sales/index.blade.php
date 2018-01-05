@@ -8,15 +8,12 @@
 
 @section('content')
 
-  <div class="ui secondary buttons">
-    <div class="ui button"><i class="plus icon"></i> New Sale</div>
-    <div class="ui floating dropdown icon button">
-      <i class="dropdown icon"></i>
-      <div class="menu">
-        @foreach ($eventTypes as $eventType)
-          <a href={{ route('cashier.sales.create', $eventType) }} class="item">{{ $eventType->name }}</a>
-        @endforeach
-      </div>
+  <div class="ui floating secondary dropdown button">
+    <i class="plus icon"></i> New Sale<i class="dropdown icon"></i>
+    <div class="menu">
+      @foreach (App\EventType::where('id', '!=', 1)->get() as $eventType)
+        <a href={{ route('admin.sales.create', $eventType) }} class="item">{{ $eventType->name }}</a>
+      @endforeach
     </div>
   </div>
 

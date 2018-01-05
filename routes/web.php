@@ -38,8 +38,9 @@ Route::group(
   // Reports
   Route::get('reports/{type}/{user}/{date}', 'ReportController@reports');
   // Sales Resource
-  Route::resource('sales', 'SaleController');
+  Route::resource('sales', 'SaleController', ['except' => ['create']]);
   Route::post('sales/refund/{sale}', 'SaleController@refund')->name('sales.refund');
+  Route::get('sales/create/{eventType}', 'SaleController@create')->name('sales.create');
   // Setting resource
   Route::resource('settings', 'SettingController');
   // Roles
@@ -75,7 +76,7 @@ Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier
     // Find Sale
     Route::post('query', 'SaleController@query')->name('query');
     // Sales
-    Route::resource('sales', 'SaleController');
+    Route::resource('sales', 'SaleController', ['except' => ['create']]);
     Route::get('sales/create/{eventType}', 'SaleController@create')->name('sales.create');
     // Members
     Route::resource('members', 'MemberController');

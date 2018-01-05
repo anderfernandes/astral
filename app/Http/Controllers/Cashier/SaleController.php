@@ -40,11 +40,9 @@ class SaleController extends Controller
           }
         }
 
-        $sales = Sale::whereIn('id', $todaySalesIds)->get();
+        $sales = Sale::whereIn('id', $todaySalesIds)->orderBy('id', 'desc')->get();
 
-        $eventTypes = EventType::where('id', '!=', 1)->get();
-
-        return view('cashier.sales.index')->withSales($sales)->withEventTypes($eventTypes);
+        return view('cashier.sales.index')->withSales($sales);
         //dd($sales);
     }
 
@@ -56,7 +54,6 @@ class SaleController extends Controller
     public function create(EventType $eventType)
     {
         $organizations = Organization::pluck('name', 'id');
-        $customers = User::all();
         $events    = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $eventType->id)->orderBy('start', 'asc')->get();
         $paymentMethods = PaymentMethod::all();
         $ticketTypes = $eventType->allowedTickets;
@@ -72,7 +69,6 @@ class SaleController extends Controller
         });*/
 
         return view('cashier.sales.create')
-          ->withCustomers($customers)
           ->withEvents($events)
           ->withTicketTypes($ticketTypes)
           ->withPaymentMethods($paymentMethods)
@@ -224,19 +220,17 @@ class SaleController extends Controller
      */
     public function edit(Sale $sale)
     {
-      $organizations = Organization::all();
-      $customers = User::all();
-      $events    = Event::where('type_id', '!=', 1)->orderBy('start', 'desc')->get();
+      $organizations = Organization::pluck('name', 'id');
+      $events    = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $sale->events[0]->type->id)->orderBy('start', 'asc')->get();
       $paymentMethods = PaymentMethod::all();
-      $ticketTypes = TicketType::all();
+      $ticketTypes = $sale->events[0]->type->allowedTickets;
 
       // $customers = $allCustomers->mapWithKeys(function ($item) {
       //   return [ $item['id'] => $item['firstname'].' '.$item['lastname']];
       // });
 
       return view('cashier.sales.edit')
-        ->withCustomers($customers)
-        ->withEvents($events->all())
+        ->withEvents($events)
         ->withTicketTypes($ticketTypes)
         ->withPaymentMethods($paymentMethods)
         ->withOrganizations($organizations)

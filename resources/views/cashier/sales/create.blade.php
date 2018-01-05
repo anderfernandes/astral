@@ -8,7 +8,9 @@
 
 @section('content')
 
-  @include('partial.form._sale')
+  {!! Form::open(['route' => 'cashier.sales.store', 'class' => 'ui form']) !!}
+    @include('partial.form._sale')
+  {!! Form::close() !!}
 
   @include('cashier.partial._spinner')
 
