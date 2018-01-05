@@ -309,7 +309,7 @@ class SaleController extends Controller
         }
 
         // Update tickets only if its number changes
-        if (count($request->tickets) != count($sale->tickets)) {
+        if (count($request->ticket) != count($sale->tickets)) {
           // Delete old tickets created
           $sale->tickets()->delete();
 
