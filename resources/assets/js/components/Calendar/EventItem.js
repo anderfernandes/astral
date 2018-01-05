@@ -26,37 +26,34 @@ export default class EventItem extends Component {
               </div>
             </div>
             <div className="eight wide column">
-              <Card>
+              <Card fluid>
                 <Card.Content>
                   <Card.Header>
-                    { data.customer.name } (#{ data.id })
+                    <i className="calendar outline icon"></i>
+                    { moment(data.start).calendar(null, { nextWeek: "dddd, MMMM D, YYYY", sameElse: "dddd, MMMM D, YYYY"}) }
                   </Card.Header>
-                  <Card.Meta>
-                    { data.customer.organization  }
-                  </Card.Meta>
-                  <Card.Meta>
-                    <i className="at icon"></i>{ data.customer.email }
-                  </Card.Meta>
-                  <Card.Meta>
-                    <i className="phone icon"></i>{ data.customer.phone }
-                  </Card.Meta>
                   <Card.Description>
-                  Created by <strong>{ data.creator }</strong> on { moment(data.created_at).format("dddd, MMMM D, YYYY") }
+                    { data.customer.name } (#{ data.id }) <br />
+                    { data.customer.organization } <br />
+                    <i className="at icon"></i>{ data.customer.email } <br />
+                    <i className="phone icon"></i>{ data.customer.phone } <br />
+                  </Card.Description>
+                  <Card.Description>
+                    Created by <strong>{ data.creator }</strong> <br />
+                    on { moment(data.created_at).format("dddd, MMMM D, YYYY") }
                   </Card.Description>
                   <Card.Description>
                     {
                       data.tickets.map((ticket, i) =>
-                        <div className="ui label">{ ticket.type } ({ ticket.quantity })</div>
+                        <div className="ui label" key={i}>{ ticket.type } ({ ticket.quantity })</div>
                       )
                     }
                   </Card.Description>
                 </Card.Content>
                 <Card.Content extra>
-                  { moment(data.start).calendar() }
                   <div className="right floated meta">
                     <div className="ui green tag label">$ { parseFloat(data.total).toFixed(2) }</div>
                   </div>
-
                 </Card.Content>
               </Card>
             </div>

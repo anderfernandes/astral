@@ -55,10 +55,15 @@ class Calendar extends Component {
       } else {
         return (
           <div>
-            <img className="ui tiny centered image" src="http://mayborntheaterticketing.campus.ctcd.org/logo.png" />
-            <h2 className="ui centered blue header">
-              Upcoming Events
-            </h2>
+
+              <h2 className="ui centered blue header">
+                <img className="ui image" src="http://mayborntheaterticketing.campus.ctcd.org/logo.png" />
+                <div className="content">
+                  Upcoming Events
+                  <div className="sub header">Next 7 days</div>
+                </div>
+              </h2>
+
             <div className="ui grid">
                 { sales.map((sale) => <EventItem data={sale} key={sale.id} />) }
             </div>

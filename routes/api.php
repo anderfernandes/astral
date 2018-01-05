@@ -125,10 +125,12 @@ Route::get('sales', function() {
     // Loop through tickets for this sale, get type and quantity for each type
     $tickets = $sale->tickets->unique('ticket_type_id');
     foreach ($tickets as $ticket) {
+      $q = $sale->tickets->where('ticket_type_id', $ticket->type->id)->count();
+      $quantity = $sale->events[1]->show_id == 1 ? $q : $q/2;
       $ticketsArray = array_prepend($ticketsArray, [
         'type'     => $ticket->type->name,
         'price'    => $ticket->type->price,
-        'quantity' => $sale->tickets->where('ticket_type_id', $ticket->type->id)->count()
+        'quantity' => $quantity,
       ]);
     }
 
