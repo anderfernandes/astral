@@ -98,7 +98,7 @@ class ReportController extends Controller
     {
       $user = User::find($id);
       $date = new Date($date);
-      $date = $date->toDateTimeString()
+      $date = $date->toDateTimeString();
       $today = Date::now()->startOfDay();
 
       $sales = Sale::where([
