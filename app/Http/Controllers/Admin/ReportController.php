@@ -109,7 +109,7 @@ class ReportController extends Controller
       // Get Card Sales IDs
       $salesIds = array_pluck($sales, 'id');
       // Find all payments for the IDs we retrieved
-      $payments = Payment::where('cashier_id', Auth::user()->id)->whereIn('sale_id', $salesIds)->get();
+      $payments = Payment::where('cashier_id', $id)->whereIn('sale_id', $salesIds)->get();
 
       if ($type == 'closeout')
       {
