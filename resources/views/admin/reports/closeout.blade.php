@@ -7,7 +7,7 @@
   <div class="ui header">
     Closeout Report
     <div class="sub header">Run: {{ Date::now()->format('l, F j, Y \a\t g:i:s A') }}</div>
-    <div class="sub header">Payment Date: {{ Date::now()->format('l, F j, Y') }}</div>
+    <div class="sub header">Payment Date: {{ $date->format('l, F j, Y') }}</div>
     <div class="sub header">Payment User: {{ $paymentUser->firstname }} {{ $paymentUser->lastname }}</div>
   </div>
 
@@ -127,7 +127,7 @@
 
       <tr>
         <td colspan="3">
-          {{ Date::now()->format('m/d/Y') }}
+          {{ $date->format('m/d/Y') }}
           Totals: <span style="float:right">$ {{ number_format($cashPaymentsTotal + $cardPaymentsTotal + $checkPaymentsTotal, 2) }}
         </td>
       </tr>

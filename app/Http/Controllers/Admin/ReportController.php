@@ -98,6 +98,7 @@ class ReportController extends Controller
     {
       $user = User::find($id);
       $date = new Date($date);
+      $date = $date->toDateTimeString()
       $today = Date::now()->startOfDay();
 
       $sales = Sale::where([
@@ -131,10 +132,11 @@ class ReportController extends Controller
         }
 
         return view('admin.reports.closeout')->with('cashPayments', $cashPayments)
-                                               ->with('cardPayments', $cardPayments)
-                                               ->with('checkPayments', $checkPayments)
-                                               ->with('otherPayments', $otherPayments)
-                                               ->with('paymentUser', $user);
+                                             ->with('cardPayments', $cardPayments)
+                                             ->with('checkPayments', $checkPayments)
+                                             ->with('otherPayments', $otherPayments)
+                                             ->with('paymentUser', $user)
+                                             ->withDate($date);
       }
       if ($type == 'transaction-detail')
       {
@@ -147,7 +149,10 @@ class ReportController extends Controller
 
         $totals = number_format($totals, 2);
 
-        return view('admin.reports.transaction-detail')->withPayments($payments)->withTotals($totals)->withPaymentUser($user);
+        return view('admin.reports.transaction-detail')->withPayments($payments)
+                                                       ->withTotals($totals)
+                                                       ->withPaymentUser($user)
+                                                       ->withDate($date);
       }
     }
 }
