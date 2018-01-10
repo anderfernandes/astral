@@ -23,6 +23,7 @@ class RolesTableSeeder extends Seeder
         'name'        => 'Senior Staff',
         'description' => 'Senior Staff accounts.',
         'type'        => 'individuals',
+        'staff'       => true,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 3
@@ -30,6 +31,7 @@ class RolesTableSeeder extends Seeder
         'name'        => 'Planetarium Lead Assistant',
         'description' => 'Planetarium Lead Assistant accounts.',
         'type'        => 'individuals',
+        'staff'       => true,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 4
@@ -37,12 +39,15 @@ class RolesTableSeeder extends Seeder
         'name'        => 'Planetarium Assistant',
         'description' => 'Planetarium Assistant accounts.',
         'type'        => 'individuals',
+        'staff'       => true,
+        'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 5
       DB::table('roles')->insert([
         'name'        => 'Member',
         'description' => 'Member accounts',
         'type'        => 'members',
+        'staff'       => false,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 6
@@ -50,6 +55,7 @@ class RolesTableSeeder extends Seeder
         'name'        => 'Community College',
         'description' => 'Community College accounts.',
         'type'        => 'organizations',
+        'staff'       => false,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 7
@@ -57,6 +63,7 @@ class RolesTableSeeder extends Seeder
         'name'        => 'Visitor',
         'description' => 'Visitor accounts.',
         'type'        => 'individuals',
+        'staff'       => false,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 8
@@ -64,6 +71,7 @@ class RolesTableSeeder extends Seeder
         'name'        => 'Teacher',
         'description' => 'Teacher accounts.',
         'type'        => 'individuals',
+        'staff'       => false,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
     }

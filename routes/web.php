@@ -33,10 +33,9 @@ Route::group(
   Route::resource('organizations', 'OrganizationController');
   // Events resource
   Route::resource('events', 'EventController');
-  // Events resource
-  Route::get('reports', 'ReportController@index')->name('report.index');
   // Reports
-  Route::get('reports/{type}/{user}/{date}', 'ReportController@reports');
+  Route::get('reports/{type}/{user}/{date}', 'ReportController@reports')->name('reports');
+  Route::get('reports', 'ReportController@index')->name('reports.index');
   // Sales Resource
   Route::resource('sales', 'SaleController', ['except' => ['create']]);
   Route::post('sales/refund/{sale}', 'SaleController@refund')->name('sales.refund');

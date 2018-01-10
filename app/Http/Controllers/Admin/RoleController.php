@@ -42,6 +42,7 @@ class RoleController extends Controller
         $this->validate($request, [
           'name'        => 'required|unique:roles,name',
           'description' => 'required',
+          'staff'       => 'required',
         ]);
 
         $role = new Role;
@@ -49,6 +50,7 @@ class RoleController extends Controller
         $role->name        = $request->name;
         $role->description = $request->description;
         $role->type        = 'individuals';
+        $role->staff       = $request->staff;
 
         $role->save();
 
@@ -89,11 +91,13 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $this->validate($request, [
-          'name' => 'required',
+          'name'  => 'required',
+          'staff' => 'required',
         ]);
 
         $role->name        = $request->name;
         $role->description = $request->description;
+        $role->staff       = $request->staff;
 
         $role->save();
 

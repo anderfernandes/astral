@@ -72,7 +72,9 @@ class RegisterController extends Controller
             'role_id'         => 7,
             'organization_id' => 1,
             'type'            => 'individual',
-            'membership_id'   => '1',
+            'membership_id'   => 1,
+            'active'          => true,
+            'staff'           => true,
         ]);
     }
 }

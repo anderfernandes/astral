@@ -25,7 +25,8 @@ class ReportController extends Controller
      */
     public function index()
     {
-        return view('admin.reports.index');
+        $users = User::where('id', '!=', 1)->where('staff', true)->pluck('firstname', 'id');
+        return view('admin.reports.index')->withUsers($users);
     }
 
     /**

@@ -402,6 +402,7 @@
         <thead>
           <tr>
             <th>Roles</th>
+            <th>Staff</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -418,6 +419,15 @@
               </h4>
             </td>
             <td>
+              <div class="ui label">
+                @if ($role->staff)
+                  Yes
+                @else
+                  No
+                @endif
+              </div>
+            </td>
+            <td>
               <a href="{{ route('admin.roles.edit', $role->id) }}" class="ui basic icon button">
                 <i class="edit icon"></i>
               </a>
@@ -429,9 +439,15 @@
     </div>
     <div class="column">
       {!! Form::open(['route' => 'admin.roles.store', 'class' => 'ui form']) !!}
-      <div class="field">
-        {!! Form::label('name', 'Name') !!}
-        {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
+      <div class="two fields">
+        <div class="required field">
+          {!! Form::label('name', 'Name') !!}
+          {!! Form::text('name', null, ['placeholder' => 'Role Name']) !!}
+        </div>
+        <div class="required field">
+          {!! Form::label('staff', 'Staff') !!}
+          {!! Form::select('staff', [false => 'No', true => 'Yes'], false, ['class' => 'ui dropdown']) !!}
+        </div>
       </div>
       <div class="field">
         {!! Form::label('description', 'Description') !!}

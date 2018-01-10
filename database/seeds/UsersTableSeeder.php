@@ -28,6 +28,7 @@ class UsersTableSeeder extends Seeder
         'country'         => 'United States',
         'phone'           => '(254) 526-7161',
         'active'          => false,
+        'staff'           => false,
         'created_at'      => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
       ]);
       // 2
@@ -47,6 +48,7 @@ class UsersTableSeeder extends Seeder
         'country'         => 'United States',
         'phone'           => '(254) 526-7161',
         'active'          => false,
+        'staff'           => true,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 3
@@ -66,6 +68,7 @@ class UsersTableSeeder extends Seeder
         'country'         => 'United States',
         'phone'           => '(254) 526-7161',
         'active'          => false,
+        'staff'           => false,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 4
@@ -85,6 +88,7 @@ class UsersTableSeeder extends Seeder
         'country'         => 'United States',
         'phone'           => '(254) 526-7161',
         'active'          => false,
+        'staff'           => false,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 5
@@ -104,6 +108,7 @@ class UsersTableSeeder extends Seeder
         'country'         => 'United States',
         'phone'           => '(254) 526-7161',
         'active'          => false,
+        'staff'           => true,
         'created_at'      => Date::now('America/Chicago'),
       ]);
       // 6
@@ -123,6 +128,7 @@ class UsersTableSeeder extends Seeder
         'country'         => 'United States',
         'phone'           => '(254) 526-7161',
         'active'          => false,
+        'staff'           => true,
         'created_at'      => Date::now('America/Chicago'),
       ]);
     }

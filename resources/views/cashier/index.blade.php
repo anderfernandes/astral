@@ -56,7 +56,7 @@
 
     <div class="sixteen wide mobile five wide computer column">
       {!! Form::open(['route' => 'cashier.store', 'class' => 'ui form', 'id' => 'cashier']) !!}
-      <div class="ui segments" style="margin-top:0">
+      <div class="ui raised segments" style="margin-top:0">
         <div class="ui attached segment">
           <div class="ui form">
             <div class="field">
@@ -97,23 +97,27 @@
         <div class="ui attached segment">
           <div class="ui form">
             <div class="two fields">
-            <div class="field">
-              {!! Form::label('Payment Method') !!}
-              <div class="ui selection dropdown">
-                <input type="hidden" name="payment_method" value="1" id="payment_method">
-                <i class="dropdown icon"></i>
-                <div class="default text">Payment Method</div>
-                <div class="menu">
-                  @foreach ($paymentMethods as $paymentMethod)
-                    <div class="item" data-value="{{ $paymentMethod->id}}"><i class="{{ $paymentMethod->icon }} icon"></i>{{ $paymentMethod->name }}</div>
-                  @endforeach
+              <div class="field">
+                {!! Form::label('Payment Method') !!}
+                <div class="ui selection dropdown">
+                  <input type="hidden" name="payment_method" value="1" id="payment_method">
+                  <i class="dropdown icon"></i>
+                  <div class="default text">Payment Method</div>
+                  <div class="menu">
+                    @foreach ($paymentMethods as $paymentMethod)
+                      <div class="item" data-value="{{ $paymentMethod->id}}"><i class="{{ $paymentMethod->icon }} icon"></i>{{ $paymentMethod->name }}</div>
+                    @endforeach
+                  </div>
                 </div>
               </div>
+              <div class="field" id="reference-input">
+                {!! Form::label('reference', 'Reference') !!}
+                {!! Form::text('reference', null, ['placeholder' => 'Card or Check reference']) !!}
+              </div>
             </div>
-            <div class="field" id="reference-input">
-              {!! Form::label('reference', 'Reference') !!}
-              {!! Form::text('reference', null, ['placeholder' => 'Card or Check reference']) !!}
-            </div>
+            <div class="field">
+              {!! Form::label('memo', 'Memo') !!}
+              {!! Form::text('memo', null, ['placeholder' => 'Memo']) !!}
             </div>
           </div>
           {!! Form::close() !!}
@@ -172,20 +176,28 @@
       }
     });
 
-    function setTenderedOnNonCashPayments() {
-      var payment_method = document.querySelector('input[name="payment_method"]').value
-      var total = parseFloat(document.querySelector("#total").innerHTML).toFixed(2);
-      if (payment_method != 1)
-        document.querySelector('input#tendered').value = total
-      else
-        document.querySelector('input#tendered').value = parseFloat(0).toFixed(2)
-    }
-
-    $('#payment_method').change(setTenderedOnNonCashPayments)
-
     var ticketId = 0;
     var sum = 0;
     var ticketsArray = [];
+
+    function setTenderedOnNonCashPayments() {
+      var payment_method = document.querySelector('input[name="payment_method"]').value
+      var total = parseFloat(document.querySelector("#total").innerHTML).toFixed(2)
+      var tendered = parseFloat(document.querySelector('input#tendered').value)
+
+      // if payment is not cash
+      if (payment_method != 1)
+        document.querySelector('input#tendered').value = total
+      else {
+        document.querySelector('input#tendered').value = parseFloat(0).toFixed(2)
+        document.getElementById('change-due').innerHTML = parseFloat(0).toFixed(2)
+        document.getElementById('change-due').style.color = 'black'
+        document.getElementById('dollar-sign').style.color = 'black'
+      }
+
+    }
+
+    $('#payment_method').change(setTenderedOnNonCashPayments)
 
     $('input#tendered').keyup(function(){
        var tendered = 0;

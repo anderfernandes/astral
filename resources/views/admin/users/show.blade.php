@@ -26,7 +26,7 @@
       <i class="user circle outline massive icon"></i>
       <div class="content">
         <h1 class="ui huge header">
-          {{ $user->firstname }} {{ $user->lastname }}
+          {{ $user->fullname }} @if ($user->staff) <i style="display:inline-block" class="empty star icon"></i>@endif
           <div class="sub header">{{ $user->email }}</div>
         </h1>
         <div class="meta">

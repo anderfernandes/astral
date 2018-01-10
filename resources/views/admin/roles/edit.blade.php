@@ -15,10 +15,14 @@
       {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
-  <div class="two fields">
+  <div class="three fields">
     <div class="field">
       {!! Form::label('name', 'Role Name') !!}
       {!! Form::text('name', null, ['placeholder' => 'Enter role name']) !!}
+    </div>
+    <div class="field">
+      {!! Form::label('staff', 'Staff?') !!}
+      {!! Form::select('staff', [true => 'Yes', false => 'No'], $role->staff, ['class' => 'ui dropdown']) !!}
     </div>
     <div class="field">
       {!! Form::label('description', 'Role Description') !!}
