@@ -41,9 +41,6 @@
     <i class="large setting icon"></i> Settings
   </a>
   @endif
-  <a class="item {{ Request::routeIs('cashier.index') ? 'active' : '' }}" href="{{ route('cashier.index') }}" target="_blank">
-    <i class="large inbox icon"></i> Cashier
-  </a>
   <a class="item" href="http://astral.anderfernandes.com/docs/1.0.0-alpha1/" target="_blank">
     <i class="large help circle icon"></i> Help
   </a>

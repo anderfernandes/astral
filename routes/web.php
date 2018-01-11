@@ -60,8 +60,8 @@ Route::group(
   Route::get('members/{member}/card', 'MemberController@card')->name('members.card');
   // Membership Receipt
   Route::get('members/{member}/receipt', 'MemberController@receipt')->name('members.receipt');
-  // Membersihp Dependent
-  Route::put('members/{member}/addDependent', 'MemberController@addDependent')->name('members.addDependent');
+  // Membersihp Secondary
+  Route::put('members/{member}/addSecondary', 'MemberController@addSecondary')->name('members.addSecondary');
 });
 // Cashier Routes
 Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier', 'middleware' => 'auth'],
@@ -85,8 +85,8 @@ Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier
     Route::get('members/{member}/card', 'MemberController@card')->name('members.card');
     // Membership Receipt
     Route::get('members/{member}/receipt', 'MemberController@receipt')->name('members.receipt');
-    // Membersihp Dependent
-    Route::put('members/{member}/addDependent', 'MemberController@addDependent')->name('members.addDependent');
+    // Membersihp Secondary
+    Route::put('members/{member}/addSecondary', 'MemberController@addSecondary')->name('members.addSecondary');
   });
 
 Auth::routes();

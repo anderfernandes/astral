@@ -147,7 +147,7 @@ class MemberController extends Controller
 
         $payment->save();
 
-        Session::flash('success','<strong>' . $member->users[0]->firstname .' ' . $member->users[0]->lastname .', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
+        Session::flash('success','<strong>' . $member->users[0]->fullname . ', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
 
         return redirect()->route('cashier.members.index');
     }
@@ -249,7 +249,7 @@ class MemberController extends Controller
         $user->role_id = 5;
         $user->save();
 
-        Session::flash('success','<strong>' . $member->users[0]->firstname .' ' . $member->users[0]->lastname .', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
+        Session::flash('success','<strong>' . $member->users[0]->fullname .', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
 
         return redirect()->route('cashier.members.show', $member);
     }
@@ -278,14 +278,14 @@ class MemberController extends Controller
       return view('cashier.members.receipt')->withMember($member)->withsale($sale);
     }
 
-    public function addDependent(Request $request, Member $member)
+    public function addSecondary(Request $request, Member $member)
     {
       $user = User::find($request->user_id);
       $user->role_id = 5;
 
       $member->users()->save($user);
 
-      Session::flash('success','<strong>' . $member->users[1]->firstname .' ' . $member->users[1]->lastname .' has been added as a dependent to Member # '. $member->id .' (' . $member->users[0]->firstname .' ' . $member->users[1]->lastname . ' ' . $member->type->name .')</strong> successfully!');
+      Session::flash('success','<strong>' . $member->users[1]->fullname .' has been added as a secondary to Member # '. $member->id .' (' . $member->users[0]->fullname . ' / ' . $member->type->name .')</strong> successfully!');
 
       return redirect()->route('cashier.members.show', $member);
     }

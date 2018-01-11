@@ -46,12 +46,12 @@
   <div class="ui buttons">
 
     @if ($member->users->count() >= 2)
-      <a href="javascript:$('#dependent').modal('show')" class="ui default disabled button">
-        <i class="plus icon"></i> Add a Dependent
+      <a href="javascript:$('#secondary').modal('show')" class="ui default disabled button">
+        <i class="plus icon"></i> Add a Secondary
       </a>
     @else
-      <a href="javascript:$('#dependent').modal('show')" class="ui default button">
-        <i class="plus icon"></i> Add a Dependent
+      <a href="javascript:$('#secondary').modal('show')" class="ui default button">
+        <i class="plus icon"></i> Add a Secondary
       </a>
     @endif
 
@@ -86,7 +86,7 @@
               <div class="sub header">
                 {{ $member->type->name }}
                 @if ($key != 0)
-                  (Dependent)
+                  (Secondary)
                 @endif
               </div>
             </div>
@@ -99,19 +99,19 @@
     </tbody>
   </table>
 
-  <div class="ui basic modal" id="dependent">
+  <div class="ui basic modal" id="secondary">
     <div class="ui icon header">
       <i class="address card icon"></i>
-      Add Dependent
+      Add Secondary
     </div>
-    {!! Form::model($member, ['route' => ['admin.members.addDependent', $member], 'class' => 'ui form', 'method' => 'PUT']) !!}
+    {!! Form::model($member, ['route' => ['admin.members.addSecondary', $member], 'class' => 'ui form', 'method' => 'PUT']) !!}
     <div class="content">
-      <p style="text-align:center">Who do you want to make a dependent for this membership?</p>
+      <p style="text-align:center">Who do you want to make a secondary for this membership?</p>
       <div class="field">
         {!! Form::select('user_id', $users, null, ['placeholder' => 'Who do you want to turn into a member?', 'class' => 'ui search dropdown']) !!}
       </div>
       <div class="field">
-        {!! Form::button('<i class="checkmark icon"></i> Add Dependent', ['type' => 'submit', 'class' => 'ui green ok inverted button']) !!}
+        {!! Form::button('<i class="checkmark icon"></i> Add Secondary', ['type' => 'submit', 'class' => 'ui green ok inverted button']) !!}
       </div>
     </div>
     {!! Form::close() !!}

@@ -74,7 +74,7 @@
                 <div class="sub header">
                   {{ $member->type->name }}
                   @if ($key != 0)
-                    (Dependent)
+                    (Secondary)
                   @endif
                 </div>
               </div>

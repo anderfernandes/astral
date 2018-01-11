@@ -29,7 +29,8 @@
     Sales
     <div class="menu">
       <a href="{{ route('cashier.sales.index') }}" class="item">
-        <i class="dollar icon"></i> All Sales</a>
+        <i class="dollar icon"></i> All Sales
+      </a>
       <a class="item" href="javascript:$('#find-sale-modal').modal('show')">
         <i class="search icon"></i> Find
       </a>
