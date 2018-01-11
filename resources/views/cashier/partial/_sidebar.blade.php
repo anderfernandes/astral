@@ -41,7 +41,7 @@
       <i class="large sun icon"></i> Admin
     </a>
   @endif
-  <a class="item" href="http://astral.anderfernandes.com/docs/{{ env('VERSION') }}/" target="_blank">
+  <a class="item" href="http://astral.anderfernandes.com/docs/1.0.0-alpha1/" target="_blank">
     <i class="large help circle icon"></i> Help
   </a>
   <div class="item">
