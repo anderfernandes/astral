@@ -13,35 +13,39 @@ class MemberTypesTableSeeder extends Seeder
     {
       // 1
       DB::table('member_types')->insert([
-        'name'          => 'No Membership',
-        'description'   => 'No membership',
-        'price'         => 0,
-        'duration'      => 0,
-        'created_at'    => Date::now('America/Chicago')->toDateTimeString(),
+        'name'            => 'No Membership',
+        'description'     => 'No membership',
+        'price'           => 0,
+        'duration'        => 0,
+        'max_secondaries' => 0,
+        'created_at'      => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 1
       DB::table('member_types')->insert([
-        'name'          => 'Individual Membership',
-        'description'   => 'Individual Membership',
-        'price'         => 50,
-        'duration'      => 365,
-        'created_at'    => Date::now('America/Chicago')->toDateTimeString(),
+        'name'            => 'Individual Membership',
+        'description'     => 'Individual Membership',
+        'price'           => 50,
+        'duration'        => 365,
+        'max_secondaries' => 0,
+        'created_at'      => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 2
       DB::table('member_types')->insert([
-        'name'          => 'Family Membership',
-        'description'   => 'Family Membership',
-        'price'         => 100,
-        'duration'      => 365,
-        'created_at'    => Date::now('America/Chicago')->toDateTimeString(),
+        'name'            => 'Family Membership',
+        'description'     => 'Family Membership',
+        'price'           => 100,
+        'duration'        => 365,
+        'max_secondaries' => 2,
+        'created_at'      => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 3
       DB::table('member_types')->insert([
-        'name'          => 'Sponsor Membership',
-        'description'   => 'Sponsor Membership',
-        'price'         => 135,
-        'duration'      => 365,
-        'created_at'    => Date::now('America/Chicago')->toDateTimeString(),
+        'name'            => 'Sponsor Membership',
+        'description'     => 'Sponsor Membership',
+        'price'           => 135,
+        'duration'        => 365,
+        'max_secondaries' => 4,
+        'created_at'      => Date::now('America/Chicago')->toDateTimeString(),
       ]);
     }
 }

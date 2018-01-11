@@ -471,6 +471,7 @@
             <th>Membership</th>
             <th>Price</th>
             <th>Duration</th>
+            <th>Max Secondaries</th>
           </tr>
         </thead>
         <tbody>
@@ -491,6 +492,9 @@
             <td>
               {{ $memberType->duration }} days
             </td>
+            <td>
+              {{ $memberType->max_secondaries }}
+            </td>
           </tr>
           @endforeach
         </tbody>
@@ -498,15 +502,15 @@
     </div>
     <div class="column">
       {!! Form::open(['route' => 'admin.settings.addMemberType', 'class' => 'ui form']) !!}
-      <div class="field">
+      <div class="required field">
         {!! Form::label('name', 'Name') !!}
-        {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
+        {!! Form::text('name', null, ['placeholder' => 'Membership Type Name']) !!}
       </div>
-      <div class="field">
+      <div class="required field">
         {!! Form::label('description', 'Description') !!}
         {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
       </div>
-      <div class="two fields">
+      <div class="three required fields">
         <div class="field">
           {!! Form::label('price', 'Price') !!}
           <div class="ui labeled input">
@@ -520,7 +524,10 @@
             {!! Form::text('duration', null, ['placeholder' => 'Enter the duration in days']) !!}
             <div class="ui label">days</div>
           </div>
-
+        </div>
+        <div class="field">
+          {!! Form::label('max_secondaries', 'Maximum Number of Secondaries') !!}
+          {!! Form::text('max_secondaries', null, ['placeholder' => 'Limit of secondaries for a membership']) !!}
         </div>
       </div>
       <div class="field">

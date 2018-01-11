@@ -23,7 +23,7 @@
       <i class="address card massive icon"></i>
       <div class="content">
         <h1 class="ui huge header">
-          {{ $member->users[0]->firstname }} {{ $member->users[0]->lastname }}
+          {{ $member->users[0]->fullname }}
           <div class="sub header"># {{ $member->id }}</div>
           <div class="sub header">{{ $member->users[0]->email }}</div>
         </h1>
@@ -45,7 +45,7 @@
 
   <div class="ui buttons">
 
-    @if ($member->users->count() >= 2)
+    @if ($member->users->count() >= $member->type->max_secondaries)
       <a href="javascript:$('#secondary').modal('show')" class="ui default disabled button">
         <i class="plus icon"></i> Add a Secondary
       </a>
