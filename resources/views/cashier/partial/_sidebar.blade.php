@@ -2,7 +2,7 @@
   <div class="item" style="text-align:center">
     <h1 class="ui icon header"><i class="user circle outline large icon"></i></h1>
     <br />
-    {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
+    {{ Auth::user()->fullname }}
     <br /><br />
     <div class="ui tiny buttons">
       <span class="ui black label">{{ Auth::user()->role->name }}</span>
@@ -10,10 +10,10 @@
   </div>
   <!-- Pending loop to automatically pull all menu items -->
   <a class="{{ Request::routeIs('cashier.index') ? "active " : ""}}item" href="{{ route('cashier.index') }}">
-    <i class="inbox icon"></i> Cashier
+    <i class="large inbox icon"></i> Cashier
   </a>
   <div class="ui dropdown item">
-    <i class="right chevron icon"></i>
+    <i class="large right chevron icon"></i>
     Reports
     <div class="menu">
       <a class="item" href="{{ route('cashier.reports', 'closeout') }}" target="_blank">
@@ -25,7 +25,7 @@
     </div>
   </div>
   <div class="ui dropdown item">
-    <i class="right chevron icon"></i>
+    <i class="large right chevron icon"></i>
     Sales
     <div class="menu">
       <a href="{{ route('cashier.sales.index') }}" class="item">
@@ -35,7 +35,15 @@
       </a>
     </div>
   </div>
-  <a class="item" href="{{ route('cashier.members.index') }}"> <i class="address card icon"></i> Members</a>
+  <a class="item" href="{{ route('cashier.members.index') }}"> <i class="large address card icon"></i> Members</a>
+  @if (Auth::user()->role->name == 'Senior Staff' || Auth::user()->role->name == 'Planetarium Lead Assistant')
+    <a class="inverted item" href="{{ route('admin.index') }}" target="_blank" style="color: rgba(255,255,255,0.9); background-color: rgba(0,0,0,.87)">
+      <i class="large sun icon"></i> Admin
+    </a>
+  @endif
+  <a class="item" href="http://astral.anderfernandes.com/docs/{{ env('version') }}" target="_blank">
+    <i class="large help circle icon"></i> Help
+  </a>
   <div class="item">
     <img class="ui centered tiny image" src="{{ '/'.App\Setting::find(1)->logo }}" alt="">
   </div>

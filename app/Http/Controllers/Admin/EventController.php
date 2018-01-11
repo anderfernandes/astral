@@ -50,26 +50,31 @@ class EventController extends Controller
         $this->validate($request, [
             'show_id'        => 'required',
             'type_id'        => 'required',
-            'start'          => 'required|unique:events,start',
-            'end'            => 'required',
+            'dates.*.start'  => 'required|unique:events,start',
+            'dates.*.end'    => 'required',
             'seats'          => 'required|min:0',
             'memo'           => 'nullable',
         ]);
 
-        $event = new Event;
+        foreach ($request->dates as $date) {
 
-        $event->show_id        = $request->show_id;
-        $event->type_id        = $request->type_id;
-        $event->start          = new Date($request->start);
-        $event->end            = new Date($request->end);
-        $event->seats          = $request->seats;
-        $event->memo           = $request->memo;
-        $event->creator_id     = Auth::user()->id;
+          $event = new Event;
 
-        $event->save();
+          $event->show_id        = $request->show_id;
+          $event->type_id        = $request->type_id;
+          $event->start          = new Date($date['start']);
+          $event->end            = new Date($date['end']);
+          $event->seats          = $request->seats;
+          $event->memo           = $request->memo;
+          $event->creator_id     = Auth::user()->id;
+
+          $event->save();
+        }
+
+
 
         Session::flash('success',
-            'The event <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> on <strong>'.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').'</strong> has been added successfully!');
+            'The event(s) <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> been added successfully!');
         return redirect()->route('admin.events.show', $event);
     }
 

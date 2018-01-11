@@ -16,7 +16,7 @@
       {!! Form::button('<i class="plus icon"></i> Add Event', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
-  <div class="three fields">
+  <div class="three required fields">
     <div class="field">
       {!! Form::label('show_id', 'Show') !!}
       {!! Form::select('show_id', $shows, null, ['placeholder' => 'Select a show', 'class' => 'ui search dropdown']) !!}
@@ -30,23 +30,27 @@
       {!! Form::text('seats', App\Setting::find(1)->seats, ['placeholder' => 'Number of seats']) !!}
     </div>
   </div>
-  <div class="two fields">
+  <div class="two required fields">
     <div class="field">
         {!! Form::label('start', 'Start Date and Time') !!}
         <div class="ui left icon input">
-          {!! Form::text('start', null, ['placeholder' => 'Event Date and Time', 'id' => 'start']) !!}
-        <i class="calendar icon"></i>
+          <input placeholder="Event Date and Time" name="dates[0][start]" type="text" readonly="readonly">
+          <i class="calendar icon"></i>
       </div>
     </div>
     <div class="field">
       {!! Form::label('end', 'End Date and Time') !!}
       <div class="ui left icon input">
-        {!! Form::text('end', null, ['placeholder' => 'Event End Date and Time', 'id' =>'end']) !!}
+        <input placeholder="Event Date and Time" name="dates[0][end]" type="text" readonly="readonly">
         <i class="calendar icon"></i>
       </div>
     </div>
   </div>
+  <div id="extra-dates"></div>
   <div class="field">
+    <div class="ui button" id="add-another-date"><i class="plus icon"></i>Add Another Date</div>
+  </div>
+  <div class="required field">
     {!! Form::label('memo', 'Memo') !!}
     {!! Form::textarea('memo', null, ['placeholder' => 'Write a memo here']) !!}
   </div>
@@ -67,12 +71,58 @@
         toolbar: false
     });
 
-    $('#start').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', defaultHour:8, defaultMin:0});
-    $('#end').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K'});
+    $('[name="dates[0][start]"]').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', defaultHour:8, defaultMin:0});
+    $('[name="dates[0][end]"]').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K'});
 
-    document.querySelector('#start').onchange = function() {
-      document.querySelector('#end').value = moment(this.value, 'dddd, MMMM D, YYYY h:mm A').add(1, 'hours').format('dddd, MMMM D, YYYY h:mm A');
+    $('[name="dates[0][start]"]').change(function() {
+      document.querySelector('[name="dates[0][end]"]').value = moment(this.value, 'dddd, MMMM D, YYYY h:mm A').add(1, 'hours').format('dddd, MMMM D, YYYY h:mm A');
+    })
+
+    var index = 0
+
+    $('#add-another-date').click(function() {
+      if (document.querySelector('[name="dates[' + index + '][start]"]').value == "") {
+        alert("Please select a date and time for the event before adding a new one.")
+      } else {
+        index++
+        $('#extra-dates').append(
+        '<div class="two required fields">' +
+          '<div class="field">' +
+              '{!! Form::label("start", "Start Date and Time") !!}' +
+              '<div class="ui left icon input">' +
+                '<input placeholder="Event Date and Time" name="dates['+ index +'][start]" type="text" readonly="readonly">' +
+              '<i class="calendar icon"></i>' +
+            '</div>' +
+          '</div>' +
+          '<div class="field">' +
+            '{!! Form::label("end", "End Date and Time") !!}' +
+            '<div class="ui left icon input">' +
+              '<input placeholder="Event Date and Time" name="dates['+ index +'][end]" type="text" readonly="readonly">' +
+              '<i class="calendar icon"></i>' +
+            '</div>' +
+          '</div>' +
+        '</div>'
+      )
+
+      $('[name="dates[' + index + '][start]"]').flatpickr({
+        enableTime:true,
+        minDate: 'today',
+        dateFormat: 'l, F j, Y h:i K',
+        defaultHour:8,
+        defaultMin:0,
+        onChange: function(selectedDates, dateStr, instance) {
+          document.querySelector('[name="dates[' + index + '][end]"]').value = moment(dateStr, 'dddd, MMMM D, YYYY h:mm A').add(1, 'hours').format('dddd, MMMM D, YYYY h:mm A')
+        }
+      })
+
+      $('[name="dates[' + index + '][end]"]').flatpickr({
+        enableTime: true,
+        minDate:    'today',
+        dateFormat: 'l, F j, Y h:i K'
+      })
     }
+  })
+
 
   </script>
 
