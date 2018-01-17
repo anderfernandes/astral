@@ -57,7 +57,7 @@ class Calendar extends Component {
           <div>
 
               <h2 className="ui centered blue header">
-                <img className="ui image" src="http://mayborntheaterticketing.campus.ctcd.org/logo.png" />
+                <img className="ui image" src="/logo.png" />
                 <div className="content">
                   Upcoming Events
                   <div className="sub header">Next 7 days</div>

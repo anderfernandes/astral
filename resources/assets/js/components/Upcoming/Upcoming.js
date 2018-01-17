@@ -59,7 +59,7 @@ class Upcoming extends Component {
       } else {
         return (
           <div>
-            <img className="ui tiny centered image" src="http://mayborntheaterticketing.campus.ctcd.org/logo.png" />
+            <img className="ui tiny centered image" src="/logo.png" />
             <h2 className="ui centered blue header">
               Upcoming Show Times
             </h2>
