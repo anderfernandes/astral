@@ -1,6 +1,12 @@
 @extends('layout.report')
 
-@section('title', $member->users[0]->firstname . ' ' . $member->users[0]->lastname.'\'s Membership Receipt')
+<?php
+
+$title = $sale->organization->name != $sale->customer->fullname ? $sale->organization->name . '\'s' : $sale->organization->name . '\'s ' . $sale->customer->fullname
+
+?>
+
+@section('title', $title . ' Reservation Confirmation')
 
 @section('content')
 
@@ -23,75 +29,69 @@
   <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
 
   <h2 class="ui center aligned icon header" style="margin-top:8px">
-    <div class="content">Membership Receipt</div>
+    <div class="content">Cancelation Receipt</div>
   </h2>
 
-  <h4 class="ui header">
-    {{ Date::now()->format('l, F j, Y') }}
-  </h4>
-
   <div class="ui clearing basic segment" style="padding:0 0 0 0">
-    <h4 class="ui right floated header">
-      Sale # {{ $sale->id }}
-    </h4>
 
     <h4 class="ui left floated header">
-      {{ $member->users[0]->firstname . ' ' . $member->users[0]->lastname }}<br />
-      {{ $member->users[0]->address }} </br>
-      {{ $member->users[0]->city }}, {{ $member->users[0]->state }} {{ $member->users[0]->zip }}
+      Date: {{ Date::now()->format('l, F j, Y') }}
     </h4>
+
+    <h4 class="ui right floated header">
+      Receipt # {{ $sale->id }}
+    </h4>
+
   </div>
 
-  <p>Dear {{ $member->users[0]->firstname . ' ' . $member->users[0]->lastname }},</p>
+  <div class="ui clearing basic segment" style="padding:0 0 0 0">
 
-  <p>
-    Thank you very much for purchasing a membership at the {{ App\Setting::find(1)->organization }}.
-    We are pleased to confirm your membership as follows:
-  </p>
+    <h4 class="ui left floated header">
+      {{ $sale->organization->name }}<br />
+      {{ $sale->customer->fullname }}<br />
+      {{ $sale->customer->address }} </br>
+      {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
+    </h4>
+  </div>
 
   <table class="ui very basic compact unstackable table">
     <thead>
       <tr>
-        <th>Member #</th>
-        <th>Name</th>
-        <th>Start Date</th>
-        <th>Expiration Date</th>
+        <th>Date and Time</th>
+        <th>Event</th>
+        <th>Ticket Type</th>
         <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
       </tr>
     </thead>
     <tbody>
-        @foreach($member->users as $key => $user)
-        <tr>
-          <td>
-            <h4 class="ui header">
-              {{ $member->id }}
-            </h4>
-          </td>
-          <td>
-            <h4 class="ui header">
-              <div class="content">
-                {{ $user->firstname . ' ' . $user->lastname }}
-                <div class="sub header">
-                  {{ $member->type->name }}
-                  @if ($key != 0)
-                    (Secondary)
-                  @endif
-                </div>
-              </div>
-            </h4>
-          </td>
-          <td>{{ Date::parse($member->start)->format('l, F j, Y') }}</td>
-          <td>{{ Date::parse($member->end)->format('l, F j, Y') }}</td>
-          <td>
-            @if ($key != 0)
-              $ 0.00
-            @else
-              $ {{ number_format($member->type->price, 2) }}
-            @endif
-          </td>
-        </tr>
-        @endforeach
+      @foreach($sale->events as $event)
+        @if ($event->id != 1)
+          @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
+              <tr>
+                <td>
+                  <h4 class="ui header">
+                    {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+                  </h4>
+                </td>
+                <td>
+                  <h4 class="ui header">
+                    <div class="content">
+                      {{ $event->show->name }}
+                    </div>
+                  </h4>
+                </td>
+                <td>{{ $ticket->type->name }}</td>
+                <td>$ {{ number_format($ticket->type->price, 2) }}</td>
+                <td>{{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}</td>
+                <td>$ {{ number_format($ticket->type->price * $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count(), 2) }}</td>
+              </tr>
+          @endforeach
+        @endif
+      @endforeach
       <tr>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -123,32 +123,22 @@
           <table class="ui very basic compact unstackable table">
             <tbody>
               <tr>
-                <td>$ {{ number_format($sale->subtotal, 2) }}</td>
+                <td>{{ number_format($sale->subtotal, 2) }}</td>
               </tr>
               <tr>
                 <td>$ {{ number_format($sale->tax, 2) }}</td>
               </tr>
               <tr>
-                <td>$ {{ number_format($sale->payments[0]->total, 2) }}</td>
+                <td>$ {{ number_format($sale->total, 2) }}</td>
               </tr>
               <tr>
-                <td style="color:#cf3534"><strong>-$ {{ number_format($sale->payments[0]->tendered, 2) }}</strong></td>
+                <td style="color:#cf3534"><strong>-$ {{ number_format($sale->payments->sum('tendered'), 2) }}</strong></td>
               </tr>
               <tr>
-                <td>
-                  <?php
-                    $total = number_format($sale->payments[0]->total, 2);
-                    $paid = number_format($sale->payments[0]->tendered, 2);
-                    $change = number_format($sale->payments[0]->change_due, 2);
-
-                    $balance = $total - ($paid - $change);
-
-                    echo  '$ ' . number_format($change, 2);
-                  ?>
-                </td>
+                <td>$ {{ number_format($sale->payments->sum('change_due'), 2) }}</td>
               </tr>
               <tr>
-                <td><strong>{{ '$ ' . number_format($balance, 2) }}</strong></td>
+                <td><strong>{{ '$ ' . number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}</strong></td>
               </tr>
             </tbody>
           </table>
@@ -157,7 +147,14 @@
     </tbody>
   </table>
 
-  {!! \Illuminate\Mail\Markdown::parse(App\Setting::find(1)->membership_text) !!}
+  <p>
+    Thank you very much for choosing us. Your shows are cancelled. Please come
+    back and visit us, we really missed you and wish for you to reschedule!
+  </p>
+
+  <p>Sincerely,</p>
+
+  <p>Visitor Services <br /> {{ App\Setting::find(1)->organization }}</p>
 
   <h4 class="ui center aligned header">
     <div class="content">

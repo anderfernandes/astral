@@ -13,10 +13,10 @@ class AddMaxSecondariesToMemberTypes extends Migration
      */
     public function up()
     {
-      if (Schema::hasTable('member_types')) {
-        Schema::table('member_types', function (Blueprint $table) {
-          $table->smallInteger('max_secondaries')->default(1);
-        });
+        if (Schema::hasTable('member_types')) {
+          Schema::table('member_types', function (Blueprint $table) {
+            $table->smallInteger('max_secondaries')->default(1);
+          });
       }
     }
 
@@ -30,6 +30,6 @@ class AddMaxSecondariesToMemberTypes extends Migration
         if (Schema::hasTable('member_types'))
           Schema::table('member_types', function (Blueprint $table) {
               $table->dropColumn('max_secondaries');
-          });
+        });
     }
 }

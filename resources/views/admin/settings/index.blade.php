@@ -99,6 +99,14 @@
     {!! Form::textarea('membership_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
   </div>
   <div class="field">
+    {!! Form::label('confirmation_text', 'Confirmation Text') !!}
+    {!! Form::textarea('confirmation_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
+  </div>
+  <div class="field">
+    {!! Form::label('invoice_text', 'Invoice Text') !!}
+    {!! Form::textarea('invoice_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
+  </div>
+  <div class="field">
     <div class="ui buttons">
       {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui primary button']) !!}
     </div>
@@ -542,9 +550,21 @@
   $('.menu .item').tab({ history: true });
   $('.ui.form').form({ fields: { price: ['number', 'empty'] } });
 
+  var hideIcons = ["quote", "image", "guide"]
+
   var simplemde = new SimpleMDE({
     element: document.getElementById('membership_text'),
-    hideIcons: ["quote", "image", "guide"]
+    hideIcons: hideIcons
+  })
+
+  var simplemde = new SimpleMDE({
+    element: document.getElementById('confirmation_text'),
+    hideIcons: hideIcons
+  })
+
+  var simplemde = new SimpleMDE({
+    element: document.getElementById('invoice_text'),
+    hideIcons: hideIcons
   })
 
   var tel = document.querySelectorAll('[type="tel"]');

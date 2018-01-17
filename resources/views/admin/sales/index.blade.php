@@ -45,8 +45,10 @@
 
 
 @if (!isset($sales) || count($sales) > 0)
+
 <br /><br />
-<table class="ui selectable striped single line table">
+
+<table class="ui selectable striped single line very compact table">
   <thead>
     <tr>
       <th>Sale #</th>
@@ -54,9 +56,7 @@
       <th>Total</th>
       <th>Balance</th>
       <th>Status</th>
-      <th>Created On</th>
-      <th>Event</th>
-      <th>Created By</th>
+      <th>Created by</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -67,7 +67,7 @@
         @if ($sale->customer->firstname == "Walk-up")
         <td>{{ $sale->customer->firstname }}</td>
         @else
-        <td>{{ $sale->customer->firstname }} {{ $sale->customer->lastname }}</td>
+        <td>{{ $sale->customer->fullname }}</td>
         @endif
 
         <td>$ {{ number_format($sale->total, 2) }}</td>
@@ -94,27 +94,29 @@
           @endif
           {{ $sale->status }}</span>
         </td>
-        <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
-        <td>
-          @foreach($sale->events as $event)
-            @if($event->show->id != 1)
-            <h4 class="ui header">
-              <img src="{{ $event->show->cover }}" alt="" class="ui mini image">
-              <div class="content">
-                {{ $event->show->name }} <div class="ui black circular label">{{ $event->type->name }}</div>
-                <div class="sub header">
-                  {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-                </div>
-              </div>
-            </h4>
-            @endif
-          @endforeach
-        </td>
         <td>{{ $sale->creator->firstname }}</td>
         <td>
           <div class="ui icon buttons">
             <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
             <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
+            <div class="ui icon top left pointing dropdown secondary button">
+              <i class="copy icon"></i>
+              <div class="menu">
+                @if ($sale->events->count() > 0)
+                  @if ($sale->status != "canceled")
+                    <a class="item" target="_blank" href="{{ route('admin.sales.confirmation', $sale) }}">Reservation Confirmation</a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.invoice', $sale) }}">Invoice</a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.receipt', $sale) }}">Receipt</a>
+                  @else
+                    <a class="item" target="_blank" href="{{ route('admin.sales.cancelation', $sale) }}">Cancelation Receipt</a>
+                  @endif
+                @else
+                  <a class="item" href="{{ route('cashier.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>
+                @endif
+
+              </div>
+            </div>
+
           </div>
         </td>
       </tr>
@@ -135,7 +137,7 @@
   </div>
 @endif
 
-<br />
+<br /><br />
 
 <div class="ui centered grid">
   {{ $sales->links('vendor.pagination.semantic-ui') }}

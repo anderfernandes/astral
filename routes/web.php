@@ -40,6 +40,10 @@ Route::group(
   Route::resource('sales', 'SaleController', ['except' => ['create']]);
   Route::post('sales/refund/{sale}', 'SaleController@refund')->name('sales.refund');
   Route::get('sales/create/{eventType}', 'SaleController@create')->name('sales.create');
+  Route::get('sales/{sale}/confirmation', 'SaleController@confirmation')->name('sales.confirmation');
+  Route::get('sales/{sale}/invoice', 'SaleController@invoice')->name('sales.invoice');
+  Route::get('sales/{sale}/receipt', 'SaleController@receipt')->name('sales.receipt');
+  Route::get('sales/{sale}/cancelation', 'SaleController@cancelation')->name('sales.cancelation');
   // Setting resource
   Route::resource('settings', 'SettingController');
   // Roles

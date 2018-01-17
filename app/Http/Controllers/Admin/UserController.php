@@ -227,7 +227,6 @@ class UserController extends Controller
       $user->zip             = $request->zip;
       $user->phone           = $request->phone;
       $user->active          = true;
-      $user->staff           = Role::find($request->role_id)->staff;
 
       if ($request->password == null) {
 

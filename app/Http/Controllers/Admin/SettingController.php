@@ -77,11 +77,11 @@ class SettingController extends Controller
     public function addTicketType(Request $request)
     {
       $this->validate($request, [
-        'name'              => 'required',
-        'price'             => 'required|numeric',
+        'name'                => 'required',
+        'price'               => 'required|numeric',
         'allowed_in_events.*' => 'required',
-        'active'            => 'required',
-        'description'       => 'required|max:255'
+        'active'              => 'required',
+        'description'         => 'required|max:255'
       ]);
 
       $allowed_in_events = [];
@@ -243,6 +243,8 @@ class SettingController extends Controller
       $setting->tax                  = $request->tax;
       $setting->astc                 = $request->astc;
       $setting->membership_text      = $request->membership_text;
+      $setting->confirmation_text    = $request->confirmation_text;
+      $setting->invoice_text         = $request->invoice_text;
 
       $setting->save();
 

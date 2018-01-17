@@ -54,7 +54,7 @@
       {!! Form::label('phone', 'Phone') !!}
       {!! Form::tel('phone', null, ['placeholder' => 'Enter organization\'s phone number']) !!}
     </div>
-    <div class="required field">
+    <div class="field">
       {!! Form::label('fax', 'Fax') !!}
       {!! Form::tel('fax', null, ['placeholder' => 'Enter organization\'s fax number']) !!}
     </div>
@@ -64,7 +64,7 @@
       {!! Form::label('email', 'Email') !!}
       {!! Form::text('email', null, ['placeholder' => 'Enter organization\'s email. If none, use organization.name@website.com']) !!}
     </div>
-    <div class="required field">
+    <div class="field">
       {!! Form::label('website', 'Website') !!}
       <div class="ui labeled input">
         <div class="ui label">http://</div>

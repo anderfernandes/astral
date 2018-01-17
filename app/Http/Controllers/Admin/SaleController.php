@@ -386,4 +386,25 @@ class SaleController extends Controller
 
       return redirect()->route('admin.sales.show', $sale);
     }
+
+    public function confirmation(Sale $sale)
+    {
+      return view('admin.sales.confirmation')->withSale($sale);
+    }
+
+    public function invoice(Sale $sale)
+    {
+      return view('admin.sales.invoice')->withSale($sale);
+    }
+
+    public function receipt(Sale $sale)
+    {
+      return view('admin.sales.receipt')->withSale($sale);
+    }
+
+    public function cancelation(Sale $sale)
+    {
+      return view('admin.sales.cancelation')->withSale($sale);
+    }
+
 }

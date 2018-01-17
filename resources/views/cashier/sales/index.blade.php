@@ -45,7 +45,7 @@
 
 @if (!isset($sales) || count($sales) > 0)
 <br /><br />
-<table class="ui selectable striped single line table">
+<table class="ui selectable striped single line very compact table">
   <thead>
     <tr>
       <th>Sale #</th>
@@ -53,8 +53,6 @@
       <th>Total</th>
       <th>Balance</th>
       <th>Status</th>
-      <th>Created On</th>
-      <th>Event</th>
       <th>Created By</th>
       <th>Actions</th>
     </tr>
@@ -92,22 +90,6 @@
             <span class="ui label">
           @endif
           {{ $sale->status }}</span>
-        </td>
-        <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
-        <td>
-          @foreach($sale->events as $event)
-            @if($event->show->id != 1)
-            <h4 class="ui header">
-              <img src="{{ $event->show->cover }}" alt="" class="ui mini image">
-              <div class="content">
-                {{ $event->show->name }} <div class="ui black circular label">{{ $event->type->name }}</div>
-                <div class="sub header">
-                  {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-                </div>
-              </div>
-            </h4>
-            @endif
-          @endforeach
         </td>
         <td>{{ $sale->creator->firstname }}</td>
         <td>

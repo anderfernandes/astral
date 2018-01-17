@@ -61,6 +61,22 @@
       Back to Calendar
     </a>
     <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
+    <div class="ui floating secondary dropdown button">
+      <i class="copy icon"></i> Invoices <i class="dropdown icon"></i>
+      <div class="menu">
+        @if ($sale->events->count() > 0)
+          @if ($sale->status != "canceled")
+            <a class="item" target="_blank" href="{{ route('admin.sales.confirmation', $sale) }}">Reservation Confirmation</a>
+            <a class="item" target="_blank" href="{{ route('admin.sales.invoice', $sale) }}">Invoice</a>
+            <a class="item" target="_blank" href="{{ route('admin.sales.receipt', $sale) }}">Receipt</a>
+          @else
+            <a class="item" target="_blank" href="{{ route('admin.sales.cancelation', $sale) }}">Cancelation Receipt</a>
+          @endif
+        @else
+          <a class="item" href="{{ route('cashier.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>
+        @endif
+      </div>
+    </div>
   </div>
 
   <br /><br /><br />
@@ -130,6 +146,13 @@
       @endif
         <div class="sub header">Number of Tickets Sold</div>
         {{ count($sale->tickets) }}
+        @foreach($sale->events as $event)
+          @if ($event->id != 1)
+            @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
+              <div class="ui black label">{{ $ticket->type->name }} ({{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }})</div>
+            @endforeach
+          @endif
+        @endforeach
       </h3>
 
       <h3 class="ui header">

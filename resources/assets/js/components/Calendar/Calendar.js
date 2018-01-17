@@ -39,7 +39,7 @@ class Calendar extends Component {
       if (this.state.sales.length < 1 ) {
         return(
           <div>
-            <img className="ui tiny centered image" src="http://mayborntheaterticketing.campus.ctcd.org/logo.png" />
+            <img className="ui tiny centered image" src="/logo.png" />
             <h2 className="ui centered blue header">
               Upcoming Events
             </h2>

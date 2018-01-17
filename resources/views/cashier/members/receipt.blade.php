@@ -99,6 +99,9 @@
           <table class="ui very basic compact collapsing unstackable table" style="margin-left:auto; margin-right:0; width:auto">
             <tbody>
               <tr>
+                <td class="right aligned"><strong>Subtotal</strong></td>
+              </tr>
+              <tr>
                 <td class="right aligned"><strong>Tax</strong></td>
               </tr>
               <tr>
@@ -119,6 +122,9 @@
         <td>
           <table class="ui very basic compact unstackable table">
             <tbody>
+              <tr>
+                <td>$ {{ number_format($sale->subtotal, 2) }}</td>
+              </tr>
               <tr>
                 <td>$ {{ number_format($sale->tax, 2) }}</td>
               </tr>
