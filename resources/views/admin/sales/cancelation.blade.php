@@ -6,7 +6,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
 
 ?>
 
-@section('title', $title . ' Reservation Confirmation')
+@section('title', $title . ' Cancellation Receipt')
 
 @section('content')
 
@@ -29,7 +29,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
   <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
 
   <h2 class="ui center aligned icon header" style="margin-top:8px">
-    <div class="content">Cancelation Receipt</div>
+    <div class="content">Cancellation Receipt</div>
   </h2>
 
   <div class="ui clearing basic segment" style="padding:0 0 0 0">

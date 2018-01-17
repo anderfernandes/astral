@@ -6,7 +6,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
 
 ?>
 
-@section('title', $title . ' Reservation Confirmation')
+@section('title', $title . ' Receipt')
 
 @section('content')
 
