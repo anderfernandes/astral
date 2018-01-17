@@ -49,9 +49,14 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
     <h4 class="ui left floated header">
       Bill to: <br />
       {{ $sale->organization->name }}<br />
-      {{ $sale->customer->fullname }}<br />
-      {{ $sale->customer->address }} </br>
-      {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
+      @if ($sale->customer->firstname == $sale->organization->name)
+        {{ $sale->organization->address }} </br>
+        {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}
+      @else
+        {{ $sale->customer->fullname }}<br />
+        {{ $sale->customer->address }} </br>
+        {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
+      @endif
     </h4>
 
     <h4 class="ui left floated header">

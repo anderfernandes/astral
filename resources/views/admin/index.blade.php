@@ -187,14 +187,15 @@ function getAttendanceByType($ticketTypeID) {
           </div>
           <div class="content">
             <div class="summary">
-              <a href="#" class="user">
-                {{ $lastSale->creator->firstname }} {{ $lastSale->creator->lastname }}</a>
-                sold {{ $lastSale->tickets->count() }}
+              <a target="_blank" href="{{ route('admin.users.show', $lastSale->creator) }}" class="user">
+                {{ $lastSale->creator->firstname }}</a>
+                sold <a target="_blank" href="{{ route('admin.sales.show', $lastSale) }}"> {{ $lastSale->tickets->count() }}
                 @if ($lastSale->tickets->count() == 1)
-                  ticket to {{ $lastSale->tickets[0]->event->show->name }} ({{ $lastSale->tickets[0]->event->type->name }})
+                  ticket</a> to <a target="_blank" href="{{ route('admin.shows.show', $lastSale->events[0]->show) }}">{{ $lastSale->tickets[0]->event->show->name }}</a> ({{ $lastSale->tickets[0]->event->type->name }})
                 @else
-                  tickets to {{ $lastSale->tickets[0]->event->show->name }} ({{ $lastSale->tickets[0]->event->type->name }})
+                  tickets</a> to <a target="_blank" href="{{ route('admin.shows.show', $lastSale->events[0]->show) }}">{{ $lastSale->tickets[0]->event->show->name }}</a> ({{ $lastSale->tickets[0]->event->type->name }})
                 @endif
+
             </div>
             <div class="date">
               {{ Date::parse($lastSale->created_at)->ago() }}
@@ -208,14 +209,11 @@ function getAttendanceByType($ticketTypeID) {
             </div>
             <div class="content">
               <div class="summary">
-                <a href="#" class="user">
-                  {{ $lastSale->creator->firstname }} {{ $lastSale->creator->lastname }}</a>
+                <a target="_blank" href="{{ route('admin.users.show', $lastSale->creator) }}" class="user">
+                  {{ $lastSale->creator->firstname }}</a>
                   sold a
-                  @foreach (\App\MemberType::where('id', '!=', 1)->get() as $membershipType)
-                    @if ($membershipType->price == $lastSale->subtotal)
-                      {{ $membershipType->name }} to {{ $lastSale->customer->firstname }} {{ $lastSale->customer->lastname }}
-                    @endif
-                  @endforeach
+                  <a target="_blank" href="{{ route('admin.members.show', $lastSale->customer->member) }}">{{ $lastSale->customer->member->type->name }}</a>
+                  to <a target="_blank" href="{{ route('admin.users.show', $lastSale->customer) }}">{{ $lastSale->customer->fullname }}</a>
               </div>
               <div class="date">
                 {{ Date::parse($lastSale->created_at)->ago() }}

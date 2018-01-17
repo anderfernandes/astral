@@ -61,14 +61,14 @@ class UserController extends Controller
           'country'               => 'required',
           'state'                 => 'required',
           'zip'                   => 'required|numeric',
-          'phone'                 => 'required|unique:organizations,phone',
+          'phone'                 => 'required',
         ]);
 
         $user = new User;
 
         $user->firstname       = $request->firstname;
         $user->lastname        = $request->lastname;
-        $user->email           = $request->email;
+        $user->email           = strtolower($request->email);
         $user->role_id         = $request->role_id;
         $user->type            = 'individual';
         $user->organization_id = $request->organization_id;
@@ -145,7 +145,7 @@ class UserController extends Controller
 
         $user->firstname       = $request->firstname;
         $user->lastname        = $request->lastname;
-        $user->email           = $request->email;
+        $user->email           = strtolower($request->email);
         $user->role_id         = $request->role_id;
         $user->type            = 'individual';
         $user->organization_id = $request->organization_id;
@@ -218,7 +218,7 @@ class UserController extends Controller
 
       $user = User::find(\Auth::id());
 
-      $user->email           = $request->email;
+      $user->email           = strtolower($request->email);
       $user->type            = 'individual';
       $user->address         = $request->address;
       $user->city            = $request->city;

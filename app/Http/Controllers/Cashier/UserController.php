@@ -97,7 +97,7 @@ class UserController extends Controller
 
         $user->firstname       = $request->firstname;
         $user->lastname        = $request->lastname;
-        $user->email           = $request->email;
+        $user->email           = strtolower($request->email);
         $user->role_id         = $request->role_id;
         $user->type            = 'individual';
         $user->organization_id = $request->organization_id;

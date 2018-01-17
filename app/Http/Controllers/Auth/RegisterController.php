@@ -66,7 +66,7 @@ class RegisterController extends Controller
         return User::create([
             'firstname'       => $data['firstname'],
             'lastname'        => $data['lastname'],
-            'email'           => $data['email'],
+            'email'           => strtolower($data['email']),
             'password'        => bcrypt($data['password']),
             // Defining standard role for registered users
             'role_id'         => 7,

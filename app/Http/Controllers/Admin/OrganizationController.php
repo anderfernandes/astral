@@ -72,7 +72,7 @@ class OrganizationController extends Controller
         $organization->zip     = $request->zip;
         $organization->phone   = $request->phone;
         $organization->fax     = $request->fax;
-        $organization->email   = $request->email;
+        $organization->email   = strtolower($request->email);
         $organization->website = $request->website;
 
         $organization->save();
@@ -152,7 +152,7 @@ class OrganizationController extends Controller
         $organization->zip     = $request->zip;
         $organization->phone   = $request->phone;
         $organization->fax     = $request->fax;
-        $organization->email   = $request->email;
+        $organization->email   = strtolower($request->email);
         $organization->website = $request->website;
 
         $organization->save();
