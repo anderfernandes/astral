@@ -129,7 +129,7 @@ class UserController extends Controller
         $this->validate($request, [
           'firstname'             => 'required|unique:users',
           'lastname'              => 'required',
-          'email'                 => 'required|unique:email',
+          'email'                 => 'required|email|unique:users',
           'role_id'               => 'required',
           'password'              => 'nullable|same:password_confirmation',
           'password_confirmation' => 'nullable',

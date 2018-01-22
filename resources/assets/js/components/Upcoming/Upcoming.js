@@ -14,7 +14,6 @@ class Upcoming extends Component {
   }
 
   getEvents() {
-    console.log("Up")
     let today = moment()
     let start = today.format('YYYY-MM-DD')
     let end = today.add(7, 'days').format('YYYY-MM-DD')

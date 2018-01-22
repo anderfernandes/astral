@@ -54,7 +54,7 @@ Route::get('calendar', function() {
   $sales = Sale::where('customer_id', '!=', 1)->where('status', '!=', 'canceled')->where('customer_id', '!=', 1)->orderBy('start', 'asc')->get();
   $eventsArray = [];
   foreach ($sales as $sale) {
-    $events = $sale->events->where('type_id', '!=', 1);
+    $events = $sale->events->where('type_id', '!=', 1)->orderBy('start', 'asc')->get();
     $customer = ($sale->customer->firstname == $sale->organization->name) ? null : ' - ' . $sale->customer->fullname;
     foreach ($events as $event) {
       $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
@@ -103,7 +103,7 @@ Route::get('sales', function() {
     // Get id of today's events based on today's sales
     $eventIds = array_pluck($sale->events, 'id');
     // Get all events that are not "no events"
-    $events = Event::where('id', '!=', 1)->whereIn('id', $eventIds)->get();
+    $events = Event::where('id', '!=', 1)->whereIn('id', $eventIds)->orderBy('start', 'asc')->get();
     foreach ($events as $event) {
       $eventsArray = array_prepend($eventsArray, [
         'id'      => $event->id,
@@ -218,7 +218,7 @@ Route::get('organizations/{organization}', function(Organization $organization) 
       'taxable' => $organization->type->taxable,
     ]);
   }
-  
+
   return $users;
 });
 
