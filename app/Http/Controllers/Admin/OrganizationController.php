@@ -168,7 +168,6 @@ class OrganizationController extends Controller
         $user->firstname       = $request->name;
         $user->lastname        = '';
         $user->email           = $request->email;
-        $user->password        = bcrypt($request->password);
         $user->role_id         = OrganizationType::find($request->type_id)->id;
         $user->organization_id = $organization->id;
         $user->type            = 'organization';
@@ -180,11 +179,22 @@ class OrganizationController extends Controller
         $user->zip             = $request->zip;
         $user->phone           = $request->phone;
 
-        $user->save();
+        if ($request->password == null) {
 
-        Session::flash('success', 'The organization '. $organization->name . ' has been updated successfully!');
+          $user->save();
 
-        return redirect()->route('admin.organizations.show', $organization);
+          Session::flash('success', 'The organization '. $organization->name . ' has been updated successfully!');
+
+          return redirect()->route('admin.organizations.show', $organization);
+        }
+        else {
+          $user->password = bcrypt($request->password);
+          $user->save();
+
+          Session::flash('success', 'The organization '. $organization->name . ' has been updated successfully!');
+
+          return redirect()->route('admin.organizations.show', $organization);
+        }
     }
 
     /**

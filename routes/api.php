@@ -156,7 +156,13 @@ Route::get('sales', function() {
     $ticketsArray = [];
   }
 
-  return $salesArray;
+  $salesCollect = collect($salesArray);
+
+  $sorted = $salesCollect->sortBy('start');
+
+  $sorted = $sorted->values()->all();
+
+  return $sorted;
 });
 
 Route::get('events', function() {

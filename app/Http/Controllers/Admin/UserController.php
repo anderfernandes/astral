@@ -147,7 +147,6 @@ class UserController extends Controller
         $user->role_id         = $request->role_id;
         $user->type            = 'individual';
         $user->organization_id = $request->organization_id;
-        $user->password        = bcrypt($request->password);
         $user->membership_id   = 1;
         $user->address         = $request->address;
         $user->city            = $request->city;
@@ -169,7 +168,7 @@ class UserController extends Controller
           return redirect()->route('admin.users.show', $user);
         }
         else {
-          $user->password = bcrypt($request->input('password'));
+          $user->password = bcrypt($request->password);
           $user->save();
 
           Session::flash('success',

@@ -90,7 +90,7 @@ class MemberController extends Controller
         $user->role_id         = $request->role_id;
         $user->type            = 'individual';
         $user->organization_id = $request->organization_id;
-        $user->password        = bcrypt('Mayborn152');
+        $user->password        = bcrypt(str_random(10));
         $user->active          = true;
         $user->role_id         = 5;
         $user->address         = $request->address;
