@@ -136,7 +136,7 @@
   <br /><br />
   <div class="field">
     <div class="ui buttons">
-      <a href="{{ route('admin.members.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
+      <a href="javascript:window.history.back()" class="ui default button"><i class="left chevron icon"></i> Back</a>
       {!! Form::button('<i class="refresh icon"></i> Renew Membership', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>

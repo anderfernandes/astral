@@ -8,7 +8,7 @@ Astral will be a system that will allow non-profit organizations (such as Planet
 
 ### Thanks
 
-I would like to thank Prof. Chad Burrows for his help with this project, as well as David Cantwell, Killian Brooks and Donald Hubbs for their ideas, and my mother, Debura Kosylak for hanging out with me while I work on this almost every single evening, while watching Ratinho.
+I would like to thank Prof. Chad Burrows for his help with this project, as well as Fed Chavez, Clifford Bailey, David Cantwell, Killian Brooks and Donald Hubbs for their ideas, my mother for hanging out with me while I work on this almost every evening while watching Ratinho and my girlfriend for her love and support.
 
 ### Contributing
 

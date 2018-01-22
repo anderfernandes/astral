@@ -84,22 +84,16 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-      if ($request->organization_id != User::find($request->customer_id)->organization_id) {
-
-        return redirect()->route('cashier.sales.create')
-          ->withErrors('User '.User::find($request->customer_id)->firstname.' '.User::find($request->customer_id)->lastname.' does not belong to organization '.Organization::find($request->organization_id)->name);
-      }
-
-      else {
 
         $this->validate($request, [
-          'organization_id'   => 'required',
-          'customer_id'       => 'required',
-          'status'            => 'required',
-          'first_event_id'    => 'required|different:second_event_id',
-          'tendered'          => 'numeric',
-          'ticket.*'          => 'numeric',
-          'memo'              => 'max:255',
+          'organization_id'      => 'required',
+          'customer_id'          => 'required',
+          'status'               => 'required',
+          'first_event_id'       => 'required|different:second_event_id',
+          'tendered'             => 'numeric',
+          'ticket.*'             => 'numeric',
+          'memo'                 => 'max:255',
+          'sell_to_organization' => 'required',
         ]);
 
         // Create new sale
@@ -115,9 +109,8 @@ class SaleController extends Controller
         $sale->total             = round($request->total, 2);
         $sale->refund            = false;
         $sale->memo              = $request->memo;
-        //$sale->first_event_id    = $request->first_event_id;
-        //$sale->second_event_id   = $request->second_event_id;
         $sale->source            = "admin";
+        $sale->sell_to_organization = $request->sell_to_organization;
 
         $sale->save();
 
@@ -198,7 +191,7 @@ class SaleController extends Controller
         Session::flash('success', 'Sale #'. $sale->id .' created successfully!');
 
         return redirect()->route('cashier.sales.index');
-      } // end of else that checks if user belongs to organization
+
     }
 
     /**
@@ -220,10 +213,10 @@ class SaleController extends Controller
      */
     public function edit(Sale $sale)
     {
-      $organizations = Organization::pluck('name', 'id');
-      $events    = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $sale->events[0]->type->id)->orderBy('start', 'asc')->get();
+      $organizations  = Organization::pluck('name', 'id');
+      $events         = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $sale->events[0]->type->id)->orderBy('start', 'asc')->get();
       $paymentMethods = PaymentMethod::all();
-      $ticketTypes = $sale->events[0]->type->allowedTickets;
+      $ticketTypes    = $sale->events[0]->type->allowedTickets;
 
       // $customers = $allCustomers->mapWithKeys(function ($item) {
       //   return [ $item['id'] => $item['firstname'].' '.$item['lastname']];
@@ -246,22 +239,16 @@ class SaleController extends Controller
      */
     public function update(Request $request, Sale $sale)
     {
-      if ($request->organization_id != User::find($request->customer_id)->organization_id) {
-
-        return redirect()->route('cashier.sales.create')
-          ->withErrors('User '.User::find($request->customer_id)->firstname.' '.User::find($request->customer_id)->lastname.' does not belong to organization '.Organization::find($request->organization_id)->name);
-      }
-
-      else {
 
         $this->validate($request, [
-          'organization_id'   => 'required',
-          'customer_id'       => 'required',
-          'status'            => 'required',
-          'first_event_id'    => 'required|different:second_event_id',
-          'tendered'          => 'numeric',
-          'ticket.*'          => 'numeric',
-          'memo'              => 'max:255',
+          'organization_id'      => 'required',
+          'customer_id'          => 'required',
+          'status'               => 'required',
+          'first_event_id'       => 'required|different:second_event_id',
+          'tendered'             => 'numeric',
+          'ticket.*'             => 'numeric',
+          'memo'                 => 'max:255',
+          'sell_to_organization' => 'required',
         ]);
 
         $sale->organization_id   = $request->organization_id;
@@ -273,8 +260,7 @@ class SaleController extends Controller
         $sale->total             = round($request->total, 2);
         $sale->refund            = false;
         $sale->memo              = $request->memo;
-        //$sale->first_event_id    = $request->first_event_id;
-        //$sale->second_event_id   = $request->second_event_id;
+        $sale->sell_to_organization = $request->sell_to_organization;
 
         $sale->save();
 
@@ -309,7 +295,7 @@ class SaleController extends Controller
         }
 
         // Update tickets only if its number changes
-        if (count($request->ticket) != count($sale->tickets)) {
+        if (array_sum($request->ticket) != $sale->tickets->count()) {
           // Delete old tickets created
           $sale->tickets()->delete();
 
@@ -334,37 +320,35 @@ class SaleController extends Controller
           // Update first show tickets to the database
           $sale->tickets()->createMany($firstShowTickets);
 
+        }
 
+        // Check if a second show exists
+        if ($request->second_event_id != 1) {
+          // If it does, create and array with all the tickets for the second
+          // show if the amount of tickets for a ticket type is not zero
 
-          // Check if a second show exists
-          if ($request->second_event_id != 1) {
-            // If it does, create and array with all the tickets for the second
-            // show if the amount of tickets for a ticket type is not zero
+          // Create array with second show tickets
+          $secondShowTickets = [];
 
-            // Create array with second show tickets
-            $secondShowTickets = [];
-
-            // Populate the array
-            foreach($request->ticket as $key => $value) {
-              for($i = 1; $i <= $value; $i++) {
-                $array['ticket_type_id'] = $key;
-                $array['event_id'] = $request->second_event_id;
-                $array['customer_id'] = $request->customer_id;
-                $array['cashier_id'] = Auth::user()->id;
-                $secondShowTickets = array_prepend($secondShowTickets, $array);
-              }
+          // Populate the array
+          foreach($request->ticket as $key => $value) {
+            for($i = 1; $i <= $value; $i++) {
+              $array['ticket_type_id'] = $key;
+              $array['event_id'] = $request->second_event_id;
+              $array['customer_id'] = $request->customer_id;
+              $array['cashier_id'] = Auth::user()->id;
+              $secondShowTickets = array_prepend($secondShowTickets, $array);
             }
-
-            // Save to the database
-            $sale->tickets()->createMany($secondShowTickets);
           }
+
+          // Save to the database
+          $sale->tickets()->createMany($secondShowTickets);
         }
 
         Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> updated successfully!');
 
         return redirect()->route('cashier.sales.index');
 
-      }
     }
 
     /**

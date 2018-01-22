@@ -11,7 +11,7 @@
   {!! Form::model($event, ['route' => ['admin.events.update', $event], 'class' => 'ui form', 'method' => 'PUT']) !!}
   <div class="field">
     <div class="ui buttons">
-      <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
+      <a href="javascript:window.history.back()" class="ui default button"><i class="left chevron icon"></i> Back</a>
       {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>

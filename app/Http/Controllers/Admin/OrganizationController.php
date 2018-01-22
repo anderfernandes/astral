@@ -53,7 +53,7 @@ class OrganizationController extends Controller
           'country' => 'required',
           'state'   => 'required',
           'zip'     => 'required|numeric',
-          'phone'   => 'required|unique:organizations,phone',
+          'phone'   => 'required',
           'fax'     => 'nullable',
           'email'   => 'required|email|unique:organizations,email',
           'website' => 'nullable',
@@ -82,15 +82,21 @@ class OrganizationController extends Controller
         $user->firstname       = $request->name;
         $user->lastname        = '';
         $user->email           = $request->email;
-        $user->password        = bcrypt('Mayborn152');
+        $user->password        = bcrypt(str_random(10));
         $user->role_id         = OrganizationType::find($request->type_id)->id;
         $user->organization_id = $organization->id;
         $user->type            = 'organization';
         $user->membership_id   = 1;
+        $user->address         = $request->address;
+        $user->city            = $request->city;
+        $user->country         = $request->country;
+        $user->state           = $request->state;
+        $user->zip             = $request->zip;
+        $user->phone           = $request->phone;
 
         $user->save();
 
-        Session::flash('success', 'The organization '. $organization->name . ' has been added successfully!');
+        Session::flash('success', '<strong>'. $organization->name . '</strong> has been added successfully!');
 
         return redirect()->route('admin.organizations.index');
     }
@@ -156,6 +162,25 @@ class OrganizationController extends Controller
         $organization->website = $request->website;
 
         $organization->save();
+
+        $user = User::where('firstname', $organization->name)->first();
+
+        $user->firstname       = $request->name;
+        $user->lastname        = '';
+        $user->email           = $request->email;
+        $user->password        = bcrypt($request->password);
+        $user->role_id         = OrganizationType::find($request->type_id)->id;
+        $user->organization_id = $organization->id;
+        $user->type            = 'organization';
+        $user->membership_id   = 1;
+        $user->address         = $request->address;
+        $user->city            = $request->city;
+        $user->country         = $request->country;
+        $user->state           = $request->state;
+        $user->zip             = $request->zip;
+        $user->phone           = $request->phone;
+
+        $user->save();
 
         Session::flash('success', 'The organization '. $organization->name . ' has been updated successfully!');
 

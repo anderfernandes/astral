@@ -48,8 +48,9 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
 
     <h4 class="ui left floated header">
       Bill to: <br />
-      {{ $sale->organization->name }}<br />
-      @if ($sale->customer->firstname == $sale->organization->name)
+      @if ($sale->sell_to_organization)
+        {{ $sale->organization->name }}<br />
+        {{ $sale->customer->fullname }}<br />
         {{ $sale->organization->address }} </br>
         {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}
       @else

@@ -79,4 +79,6 @@
   {{ $shows->links('vendor.pagination.semantic-ui') }}
 </div>
 
+<br /><br />
+
 @endsection

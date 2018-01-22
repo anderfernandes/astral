@@ -11,7 +11,7 @@
   {!! Form::open(['route' => 'admin.organizations.store', 'class' => 'ui form']) !!}
   <div class="field">
     <div class="ui buttons">
-      <a href="{{ route('admin.organizations.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
+      <a href="javascript:window.history.back()" class="ui default button"><i class="left chevron icon"></i> Back</a>
       {!! Form::button('<i class="plus icon"></i> Add Organization', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
@@ -62,7 +62,7 @@
   <div class="two fields">
     <div class="required field">
       {!! Form::label('email', 'Email') !!}
-      {!! Form::text('email', null, ['placeholder' => 'Enter organization\'s email. If none, use organization.name@website.com']) !!}
+      {!! Form::text('email', null, ['placeholder' => 'Enter organization\'s email. If none, use school secretary email or organization.name@website.com']) !!}
     </div>
     <div class="field">
       {!! Form::label('website', 'Website') !!}

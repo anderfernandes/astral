@@ -12,7 +12,7 @@
   {!! Form::open(['route' => 'admin.events.store', 'class' => 'ui form']) !!}
   <div class="field">
     <div class="ui buttons">
-      <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
+      <a href="javascript:window.history.back()" class="ui default button"><i class="left chevron icon"></i> Back</a>
       {!! Form::button('<i class="plus icon"></i> Add Event', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>

@@ -69,16 +69,6 @@
       {!! Form::text('email', null, ['placeholder' => 'Email']) !!}
     </div>
   </div>
-  <div class="two fields">
-    <div class="required field">
-      {!! Form::label('password', 'Password') !!}
-      {!! Form::password('password', null, ['placeholder' => 'Password']) !!}
-    </div>
-    <div class="required field">
-      {!! Form::label('password_confirmation', 'Confirm Password') !!}
-      {!! Form::password('password_confirmation', null, ['placeholder' => 'Confirm Password']) !!}
-    </div>
-  </div>
   <div class="required field">
     <div class="ui buttons">
       <a href="{{ route('admin.users.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>

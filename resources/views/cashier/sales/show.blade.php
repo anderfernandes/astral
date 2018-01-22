@@ -34,7 +34,7 @@
       @endif
       {{ $sale->status }}</span>
       <div class="sub header">
-        by {{ $sale->creator->firstname }} {{ $sale->creator->lastname }}
+        by {{ $sale->creator->fullname }}
         on {{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}
         ({{ Date::parse($sale->created_at)->diffForHumans() }})
       </div>
@@ -52,7 +52,7 @@
   </div>
   @endif
   <div class="ui left floated buttons">
-    <a href="{{ route('cashier.sales.index') }}" class="ui default button">
+    <a href="javascript:window.history.back()" class="ui default button">
       <i class="left chevron icon"></i>
       Back
     </a>
@@ -124,13 +124,13 @@
       @else
       <h3 class="ui header">
       @endif
-        <div class="sub header">Number of Tickets Sold</div>
+        <div class="sub header">Tickets</div>
         {{ count($sale->tickets) }}
       </h3>
 
       <h3 class="ui header">
         <div class="sub header">
-          Events
+          Events and Attendance
         </div>
       </h3>
 
@@ -142,9 +142,21 @@
         <h3 class="ui header">
           <img src="{{ $event->show->cover }}" alt="" class="ui mini image">
           <div class="content">
-            {{ $event->show->name }} <div class="ui black circular label">{{ $event->type->name }}</div>
             <div class="sub header">
               {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+              <div class="ui black circular label">{{ $event->type->name }}</div>
+            </div>
+            {{ $event->show->name }}
+            <div class="sub header">
+              @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
+                <div class="ui black label" style="margin-left:0">
+                  <i class="ticket icon"></i>
+                  {{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}
+                  <div class="detail">
+                    {{ $ticket->type->name }}
+                  </div>
+                </div>
+              @endforeach
             </div>
           </div>
         </h3>

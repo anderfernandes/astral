@@ -41,7 +41,7 @@ class ShowController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-          'name'        => 'required',
+          'name'        => 'required|unique:shows',
           'description' => 'required',
           'type'        => 'required',
           'duration'    => 'required|integer',
@@ -100,7 +100,7 @@ class ShowController extends Controller
     {
 
       $this->validate($request, [
-        'name'        => 'required',
+        'name'        => 'required|unique:shows',
         'description' => 'required',
         'type'        => 'required',
         'duration'    => 'required|integer',

@@ -214,10 +214,11 @@ Route::get('organizations/{organization}', function(Organization $organization) 
   foreach ($organization->users as $user) {
     $users = array_prepend($users, [
       'id'      => $user->id,
-      'name'    => $user->firstname . ' ' . $user->lastname,
+      'name'    => $user->fullname,
       'taxable' => $organization->type->taxable,
     ]);
   }
+  
   return $users;
 });
 

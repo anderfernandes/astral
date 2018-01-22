@@ -23,7 +23,10 @@
   </div>
   <div class="field">
     <div class="ui right floated buttons">
-      <a href="{{ route('cashier.sales.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
+      <a href="javascript:window.history.back()" class="ui default button">
+        <i class="left chevron icon"></i>
+        Back
+      </a>
       {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
@@ -81,6 +84,17 @@
   <div class="column">
     <div class="ui segment">
       <div class="ui dividing header"><i class="dollar sign icon"></i>Sale Information</div>
+      <div class="two fields">
+        <div class="required field">
+          {!! Form::label('sell_to_organization', 'Sell To:') !!}
+          @if (isSet($sale))
+            {!! Form::select('sell_to_organization', [true => 'Organization', false => 'Customer'], $sale->sell_to_organization, ['class' => 'ui dropdown']) !!}
+          @else
+            {!! Form::select('sell_to_organization', [true => 'Organization', false => 'Customer'], true, ['class' => 'ui dropdown']) !!}
+          @endif
+
+        </div>
+      </div>
       <div class="required field">
         {!! Form::label('organization_id', 'Organization') !!}
         @if (isSet($sale))
@@ -105,7 +119,7 @@
             @if (isSet($sale))
               @foreach ($sale->organization->users as $customer)
                 <div class="item" data-value="{{ $customer->id }}">
-                  {{ $customer->firstname . ' ' . $customer->lastname }}
+                  {{ $customer->fullname }}
                 </div>
               @endforeach
             @else

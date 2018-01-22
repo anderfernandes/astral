@@ -52,10 +52,8 @@ class UserController extends Controller
         $this->validate($request, [
           'firstname'             => 'required',
           'lastname'              => 'required',
-          'email'                 => 'required|email|unique:users,email',
+          'email'                 => 'required|email|unique:users',
           'role_id'               => 'required',
-          'password'              => 'nullable|same:password_confirmation',
-          'password_confirmation' => 'nullable',
           'address'               => 'required',
           'city'                  => 'required',
           'country'               => 'required',
@@ -72,7 +70,7 @@ class UserController extends Controller
         $user->role_id         = $request->role_id;
         $user->type            = 'individual';
         $user->organization_id = $request->organization_id;
-        $user->password        = bcrypt($request->password);
+        $user->password        = bcrypt(str_random(10));
         $user->membership_id   = 1;
         $user->address         = $request->address;
         $user->city            = $request->city;
@@ -129,9 +127,9 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $this->validate($request, [
-          'firstname'             => 'required',
+          'firstname'             => 'required|unique:users',
           'lastname'              => 'required',
-          'email'                 => 'required',
+          'email'                 => 'required|unique:email',
           'role_id'               => 'required',
           'password'              => 'nullable|same:password_confirmation',
           'password_confirmation' => 'nullable',
@@ -205,7 +203,7 @@ class UserController extends Controller
     public function selfupdate(Request $request, User $user)
     {
       $this->validate($request, [
-        'email'                 => 'required',
+        'email'                 => 'required|unique:users',
         'password'              => 'nullable|same:password_confirmation|min:6',
         'password_confirmation' => 'nullable|min:6',
         'address'               => 'required',
