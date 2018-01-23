@@ -79,6 +79,7 @@ class CashierController extends Controller
         $sale->customer_id     = $request->customer_id;
         $sale->status          = 'complete';
         $sale->memo            = $request->memo;
+        $sale->tax             = $request->total - $request->subtotal;
 
         $sale->save();
 

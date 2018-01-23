@@ -44,10 +44,12 @@
     @endforeach
   </div>
 
-  <br />
+  <br /><br />
 
   <div class="ui centered grid">
     {{ $users->links('vendor.pagination.semantic-ui') }}
   </div>
+
+  <br /><br />
 
 @endsection
