@@ -51,10 +51,10 @@ use Illuminate\Support\Facades\Auth;
 Route::get('calendar', function() {
   // Gets all events
 
-  $sales = Sale::where('customer_id', '!=', 1)->where('status', '!=', 'canceled')->where('customer_id', '!=', 1)->orderBy('start', 'asc')->get();
+  $sales = Sale::where('customer_id', '!=', 1)->where('status', '!=', 'canceled')->where('customer_id', '!=', 1)->get();
   $eventsArray = [];
   foreach ($sales as $sale) {
-    $events = $sale->events->where('type_id', '!=', 1)->orderBy('start', 'asc')->get();
+    $events = $sale->events->where('type_id', '!=', 1);
     $customer = ($sale->customer->firstname == $sale->organization->name) ? null : ' - ' . $sale->customer->fullname;
     foreach ($events as $event) {
       $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
@@ -80,7 +80,7 @@ Route::get('calendar', function() {
 
 Route::get('sales', function() {
   $today = Date::parse()->format('Y-m-d');
-  $todaysEvents = Event::whereDate('start', '>=', $today)->orderBy('start', 'asc')->get();
+  $todaysEvents = Event::whereDate('start', '>=', $today)->get();
   $todaysEventsIds = [];
   $salesIds = [];
 
@@ -103,7 +103,7 @@ Route::get('sales', function() {
     // Get id of today's events based on today's sales
     $eventIds = array_pluck($sale->events, 'id');
     // Get all events that are not "no events"
-    $events = Event::where('id', '!=', 1)->whereIn('id', $eventIds)->orderBy('start', 'asc')->get();
+    $events = Event::where('id', '!=', 1)->whereIn('id', $eventIds)->get();
     foreach ($events as $event) {
       $eventsArray = array_prepend($eventsArray, [
         'id'      => $event->id,
@@ -191,7 +191,7 @@ Route::get('events', function() {
 Route::get('events/{start}/{end}', function($start, $end) {
   $start = Date::parse($start)->startOfDay()->toDateTimeString();
   $end = Date::parse($end)->endOfDay()->toDateTimeString();
-  $events = Event::where('start', '>=', $start)->whereDate('end', '<', $end)->orderBy('start', 'desc')->get();
+  $events = Event::where('start', '>=', $start)->whereDate('end', '<', $end)->get();
   $eventsArray = [];
   foreach ($events as $event) {
     $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();

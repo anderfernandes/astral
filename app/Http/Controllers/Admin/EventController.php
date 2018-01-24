@@ -24,7 +24,7 @@ class EventController extends Controller
     {
         $events = Event::where('id', '<>', 1)->orderBy('start', 'desc')->paginate(10);
 
-        return view('admin.events.index')->withEvents($events);
+        return view('admin.events.index');
     }
 
     /**
@@ -75,7 +75,7 @@ class EventController extends Controller
 
         Session::flash('success',
             'The event(s) <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> been added successfully!');
-        return redirect()->route('admin.events.show', $event);
+        return view('admin.events.index');
     }
 
     /**

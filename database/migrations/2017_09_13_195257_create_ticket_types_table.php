@@ -15,7 +15,7 @@ class CreateTicketTypesTable extends Migration
     {
         Schema::create('ticket_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name');
             $table->string('description');
             $table->boolean('active');
             $table->decimal('price', 6, 2);

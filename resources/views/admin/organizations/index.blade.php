@@ -34,10 +34,6 @@
         <div class="meta">
           <i class="mail icon"></i> {{ $organization->email }}
         </div>
-        <div class="meta">
-          <i class="globe icon"></i>
-          <a href="http://{{ $organization->website }}" target="_blank"> {{ $organization->website }}</a>
-        </div>
       </div>
       <div class="ui two bottom attached buttons">
         <a href="{{ route('admin.organizations.show', $organization) }}" class="ui black button">
