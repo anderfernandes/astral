@@ -69,17 +69,18 @@ class CashierController extends Controller
 
         $sale = new Sale;
 
-        $sale->creator_id      = Auth::user()->id;
-        $sale->taxable         = User::find($request->customer_id)->organization->type->taxable;
-        $sale->subtotal        = $request->subtotal;
-        $sale->total           = $request->total;
-        $sale->organization_id = User::find($request->customer_id)->organization->id;
-        $sale->source          = "cashier";
-        $sale->refund          = false;
-        $sale->customer_id     = $request->customer_id;
-        $sale->status          = 'complete';
-        $sale->memo            = $request->memo;
-        $sale->tax             = $request->total - $request->subtotal;
+        $sale->creator_id           = Auth::user()->id;
+        $sale->taxable              = User::find($request->customer_id)->organization->type->taxable;
+        $sale->subtotal             = $request->subtotal;
+        $sale->total                = $request->total;
+        $sale->organization_id      = User::find($request->customer_id)->organization->id;
+        $sale->source               = "cashier";
+        $sale->refund               = false;
+        $sale->customer_id          = $request->customer_id;
+        $sale->status               = 'complete';
+        $sale->memo                 = $request->memo;
+        $sale->tax                  = $request->total - $request->subtotal;
+        $sale->sell_to_organization = false;
 
         $sale->save();
 

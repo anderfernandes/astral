@@ -31,8 +31,8 @@
     <i class="eye icon"></i>
     <span class="text">Week</span>
     <div class="menu">
-      <div onclick="$('#calendar').fullCalendar('changeView', 'agendaDay')" class="item">Single Day</div>
-      <div onclick="$('#calendar').fullCalendar('changeView', 'agendaWeek')" class="active item">Week</div>
+      <div onclick="$('#calendar').fullCalendar('changeView', 'listDay')" class="item">Single Day</div>
+      <div onclick="$('#calendar').fullCalendar('changeView', 'listWeek')" class="active item">Week</div>
       <div onclick="$('#calendar').fullCalendar('changeView', 'month')" class="item">Month</div>
     </div>
   </div>

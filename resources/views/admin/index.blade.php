@@ -303,7 +303,7 @@ var earningsChart = new Chart(earningsCanvas, {
   },
   options: {
       responsive: true,
-      legend: { display: false },
+      legend: { display: true },
       tooltips: {
         callbacks: {
           label: function(tooltipItem, data) {

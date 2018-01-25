@@ -35,6 +35,7 @@ Route::group(
   Route::resource('events', 'EventController');
   // Reports
   Route::get('reports/{type}/{user}/{date}', 'ReportController@reports')->name('reports');
+  Route::get('reports/royalty', 'ReportController@royalty')->name('reports.royalty');
   Route::get('reports', 'ReportController@index')->name('reports.index');
   // Sales Resource
   Route::resource('sales', 'SaleController', ['except' => ['create']]);

@@ -60,20 +60,24 @@
   <tbody>
     @foreach($sales as $sale)
       <tr>
-        <td><h3 class="ui center aligned header">{{ $sale->id }}</h3></td>
-        @if ($sale->customer->firstname == "Walk-up")
-        <td>{{ $sale->customer->firstname }}</td>
-        @else
-        <td>{{ $sale->customer->firstname }} {{ $sale->customer->lastname }}</td>
-        @endif
-
-        <td>$ {{ number_format($sale->total, 2) }}</td>
         <td>
-          @if (number_format($sale->total - $sale->payments->sum('tendered'), 2) > 2)
-            $ {{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}
-          @else
-            $ 0.00
-          @endif
+          <h4 class="ui header">
+            @if ($sale->customer->firstname == "Walk-up" or $sale->customer->firstname == $sale->organization->name)
+              {{ $sale->customer->firstname }}
+            @else
+              @if ($sale->sell_to_organization)
+                {{ $sale->customer->fullname }}
+                @if ($sale->organization->id != 1)
+                <div class="sub header">
+                  {{ $sale->organization->name }}
+                </div>
+                @endif
+              @else
+                {{ $sale->customer->fullname }}
+              @endif
+
+            @endif
+          </h3>
         </td>
         <td>
           @if ($sale->status == 'complete')

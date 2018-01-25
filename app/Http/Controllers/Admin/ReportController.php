@@ -12,6 +12,7 @@ use App\Ticket;
 use App\Payment;
 use App\PaymentMethod;
 use App\User;
+use App\Show;
 use Session;
 
 use Illuminate\Http\Request;
@@ -26,7 +27,8 @@ class ReportController extends Controller
     public function index()
     {
         $users = User::where('id', '!=', 1)->where('staff', true)->pluck('firstname', 'id');
-        return view('admin.reports.index')->withUsers($users);
+        $shows = Show::where('id', '!=', 1)->pluck('name', 'id');
+        return view('admin.reports.index')->withUsers($users)->withShows($shows);
     }
 
     /**
@@ -155,5 +157,35 @@ class ReportController extends Controller
                                                        ->withPaymentUser($user)
                                                        ->withDate($date);
       }
+    }
+
+    public function royalty(Request $request)
+    {
+      $show = Show::find($request->show);
+      $start = Date::createFromTimestamp($request->start)->toDateTimeString();
+      $end = Date::createFromTimestamp($request->end)->toDateTimeString();
+
+      $events = Event::where('show_id', $show->id)
+                              ->where('start', '>=', $start)
+                              ->where('end', '<=', $end)
+                              ->orderBy('start', 'asc')
+                              ->get();
+
+      $show->eventsIds = array_pluck($events, 'id');
+
+      $show->screenings     = $events->count();
+      $show->totalAttendance = Ticket::whereIn('event_id', $show->eventsIds)->count();
+
+      $show->subtotalRevenue = 0;
+      $show->totalRevenue = 0;
+
+      // Loop through each event, find how much money it made, sum it
+      foreach ($events as $event) {
+        $show->subtotalRevenue += round($event->sales->sum('subtotal'), 2);
+        $show->totalRevenue += round($event->sales->sum('total'), 2);
+      }
+
+      return view('admin.reports.royalty')->withShow($show)->withStart($start)->withEnd($end)->withEvents($events);
+
     }
 }

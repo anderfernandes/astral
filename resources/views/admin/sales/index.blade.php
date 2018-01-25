@@ -71,9 +71,11 @@
             @else
               @if ($sale->sell_to_organization)
                 {{ $sale->customer->fullname }}
+                @if ($sale->organization->id != 1)
                 <div class="sub header">
                   {{ $sale->organization->name }}
                 </div>
+                @endif
               @else
                 {{ $sale->customer->fullname }}
               @endif
