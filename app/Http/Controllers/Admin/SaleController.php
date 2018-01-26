@@ -43,7 +43,7 @@ class SaleController extends Controller
     public function create(EventType $eventType)
     {
         $organizations  = Organization::pluck('name', 'id');
-        $events         = Event::where('type_id', $eventType->id)->orderBy('start', 'asc')->get();
+        $events         = Event::where('type_id', $eventType->id)->where('start', '>=', Date::now()->toDateTimeString()->subDays(7))->orderBy('start', 'asc')->get();
         $paymentMethods = PaymentMethod::all();
         $ticketTypes    = $eventType->allowedTickets;
 
@@ -99,7 +99,7 @@ class SaleController extends Controller
           $sale->refund               = false;
           $sale->memo                 = $request->memo;
           $sale->source               = "admin";
-          $sale->sell_to_organization = $request->sell_to_organization;
+          $sale->sell_to_organization = ($request->organization_id == 1) ? false : true;
 
           $sale->save();
 
@@ -204,7 +204,7 @@ class SaleController extends Controller
     public function edit(Sale $sale)
     {
         $organizations = Organization::pluck('name', 'id');
-        $events    = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $sale->events[0]->type->id)->orderBy('start', 'asc')->get();
+        $events    = Event::where('type_id', $sale->events[0]->type->id)->orderBy('start', 'asc')->get();
         $paymentMethods = PaymentMethod::all();
         $ticketTypes = $sale->events[0]->type->allowedTickets;
 

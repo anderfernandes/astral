@@ -56,9 +56,10 @@ Route::get('calendar', function() {
   foreach ($sales as $sale) {
     $events = $sale->events->where('type_id', '!=', 1);
     $customer = ($sale->customer->firstname == $sale->organization->name) ? null : ' - ' . $sale->customer->fullname;
+    $organization = ($sale->organization->id == 1)? null : ' - ' . $sale->organization->name;
     foreach ($events as $event) {
       $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
-      $title = $event->show->name . ' - ' . $sale->organization->name . $customer . ' - Sale #' . $sale->id;
+      $title = $event->show->name .  $organization . $customer . ' - Sale #' . $sale->id;
       $eventsArray = array_prepend($eventsArray, [
         'id'       => $event->id,
         'type'     => $event->type->name,

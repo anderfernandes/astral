@@ -12,6 +12,13 @@
       p, h4.ui.header, table, thead, tbody, ul, li, h4.ui.header .sub.header {
         font-size: 0.78rem !important;
       }
+      canvas {
+        min-height: 100%;
+        max-height: 100%;
+        max-width: 100%;
+        height: auto !important;
+        width: auto !important;
+      }
     }
   </style>
 
@@ -42,9 +49,8 @@
           <div class="ui blue label">{{ $show->duration }} minutes</div>
         </div>
         <div class="description">
+          <div class="ui divider"></div>
           <!--- Overview --->
-          <h5 class="ui top attached segment">Overview</h5>
-          <div class="ui attached segment">
             <div class="ui mini statistics">
               <div class="statistic">
                 <div class="label">Screenings</div>
@@ -63,147 +69,103 @@
                 <div class="value">$ {{ number_format($show->totalRevenue, 2) }}</div>
               </div>
             </div>
-          </div>
+            <div class="ui divider"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!--- Screening Details --->
-  <h5 class="ui top attached segment">Screenings Breakdown</h5>
-  <div class="ui attached segment">
-    <table class="ui very basic collapsing celled table">
-      <thead>
-        <tr>
-          <th>Date and Time</th>
-          <th>Event Type</th>
-          <th>Tickets and Prices</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach ($events as $event)
+  <div class="ui segments">
+    <div class="ui segment">
+      <!--- Screening Details --->
+      <table class="ui very basic collapsing celled table">
+        <thead>
           <tr>
-            <td>{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</td>
-            <td><div class="ui black label">{{ $event->type->name }}</div></td>
-            <td>
-              @foreach ($event->type->allowedTickets as $ticket)
-                <div class="ui label">{{ $ticket->name }} $ {{ number_format($ticket->price, 2)}}</div>
-              @endforeach
-            </td>
+            <th>Date and Time</th>
+            <th>Event Type</th>
+            <th>Attendance Breakdown</th>
+            <th>Total Attendance</th>
           </tr>
-        @endforeach
-      </tbody>
-    </table>
-  </div>
-  <!--- Attendance Details --->
-  <h5 class="ui top attached segment">Attendance Breakdown</h5>
-  <div class="ui attached segment">
-    <canvas height="500" id="attendanceChart"></canvas>
+        </thead>
+        <tbody>
+          @foreach ($events as $event)
+            <tr>
+              <td>{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</td>
+              <td><div class="ui tiny black label">{{ $event->type->name }}</div></td>
+              <td>
+                @foreach ($event->type->allowedTickets as $ticket)
+                  <div class="ui tiny label">{{ $ticket->name }} $ {{ number_format($ticket->price, 2)}}</div>
+                @endforeach
+              </td>
+              <td>{{ App\Ticket::where('event_id', $event->id )->count() }}</td>
+            </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="ui segment">
+      <canvas height="350" id="attendanceChart"></canvas>
+    </div>
+    <div class="ui segment">
+      <canvas height="350" id="attendanceByTicketTypeChart"></canvas>
+    </div>
+    <div class="ui segment">
+      <canvas height="350" id="revenueChart"></canvas>
+    </div>
+    <div class="ui segment">
+      <canvas height="350" id="revenueTaxChart"></canvas>
+    </div>
   </div>
 
-  <!--- Attendance Details --->
-  <h5 class="ui top attached segment">Revenue Breakdown</h5>
-  <div class="ui attached segment">
-    <canvas height="500" id="revenueChart"></canvas>
-  </div>
 
   <script>
 
-  var chartSettings = {
-      animation: { animateScale: true, animateRotate: true },
-      responsive: true,
-      legend: { display: true, position: "right" },
-      title: { display: true, text: "{{ $show->name }}\'s Attendance" },
-      maintainAspectRatio: false
-    }
+  var attendanceBarChartData = {
+    labels: [
+      @foreach ($events as $event)
+        "{{ Date::parse($event->start)->format('m-d-Y g:i A') }}",
+      @endforeach
+    ],
+    datasets: [
+    @foreach ($events as $event)
+      @foreach ($event->type->allowedTickets as $ticket)
+      {
+        label: "{{ $ticket->name }}",
+        stack: "{{ Date::parse($event->start)->format('m-d-Y g:i A') }}",
+        backgroundColor: "rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(2, 6) / 10 }})",
+        data: [
+            {{ App\Ticket::where('event_id', $event->id)->where('ticket_type_id', $ticket->id)->count() }} // {{ $ticket->name }}
+        ],
+      },
+      @endforeach
+    @endforeach
+    ]
+  }
 
+  window.onload = function() {
     var attendanceCanvas = document.getElementById("attendanceChart").getContext("2d")
     var attendanceChart = new Chart(attendanceCanvas, {
-      type: "doughnut",
-      data: {
-        labels: [
-          @foreach ($events as $event)
-            @foreach ($event->type->allowedTickets as $ticket)
-              "{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A')  }} {{ $ticket->name }}",
-            @endforeach
-          @endforeach
-        ],
-        datasets: [{
-          label: "{{ $show->name }} Attendance",
-          data: [
-            @foreach ($events as $event)
-              @foreach ($event->type->allowedTickets as $ticket)
-                "{{ App\Ticket::where('event_id', $event->id)->where('ticket_type_id', $ticket->id)->count() }}",
-              @endforeach
-            @endforeach
-          ],
-          backgroundColor: [
-            @foreach ($events as $event)
-              @foreach ($event->type->allowedTickets as $ticket)
-              "rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(2, 6) / 10 }})",
-              @endforeach
-            @endforeach
-          ]
-        }]
-      },
-      options: chartSettings
-    })
-
-    var revenueCanvas = document.getElementById("revenueChart").getContext("2d")
-    var revenueChart = new Chart(revenueCanvas, {
       type: "bar",
-      data: {
-        labels: [
-          @foreach ($events as $event)
-            "{{ Date::parse($event->start)->format('m-d-Y g:i A')  }}",
-          @endforeach
-        ],
-        datasets: [{
-          label: "{{ $show->name }} Attendance",
-          data: [
-            @foreach ($events as $event)
-              "{{ number_format($event->sales->sum('total'), 2) }}",
-            @endforeach
-          ],
-          backgroundColor: [
-            @foreach ($events as $event)
-              "rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(2, 6) / 10 }})",
-            @endforeach
-          ]
-        }]
-      },
+      data: attendanceBarChartData,
       options: {
+
           animation: { animateScale: true, animateRotate: true },
           responsive: true,
-          legend: { display: false, position: "bottom" },
-          title: { display: false, text: "{{ $show->name }}\'s Revenue" },
+          legend: { display: false, position: "right" },
+          title: { display: true, text: "{{ $show->name }}\'s Attendance by Event and Ticket Type" },
           maintainAspectRatio: false,
-          tooltips: {
-            callbacks: {
-              label: function(tooltipItem, data) {
-                return '$ ' + tooltipItem.yLabel.toFixed(2)
-              }
-            }
-          },
+          //tooltips: { mode: "index", intersect: true},
           scales: {
-              yAxes: [{
-                  display: true,
-                  ticks: {
-                      beginAtZero: true,
-                      callback: function(value, index, values) {
-                        return '$ ' + value
-                      }
-                  }
-              }],
-              xAxes: [{
-                display: true,
-                ticks: {
-                  autoSkip: false,
-                }
-              }]
+            xAxes: [{
+              stacked: true,
+            }],
+            yAxes: [{
+              stacked: true
+            }]
           }
         }
     })
+  }
 
   </script>
 
