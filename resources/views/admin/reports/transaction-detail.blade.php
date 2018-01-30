@@ -27,7 +27,11 @@
   <tbody>
     @foreach ($payments as $payment)
 
+      @if ($payment->total < 0 or $payment->sale->refund)
+      <tr class="negative">
+      @else
       <tr>
+      @endif
         <td>{{ $payment->created_at->format('m/d/Y H:i:s a') }}</td>
         <td>{{ $payment->sale->id }}</td>
         <td>{{ $payment->sale->customer->firstname }} {{ $payment->sale->customer->lastname }}</td>
@@ -37,19 +41,6 @@
         <td>$ {{ number_format($payment->change_due, 2) }}</td>
         <td>$ {{ number_format($payment->tendered - $payment->change_due, 2) }}</td>
       </tr>
-
-    @if ($payment->sale->refund)
-    <tr class="negative">
-      <td>{{ $payment->created_at->format('m/d/Y H:i:s a') }}</td>
-      <td>{{ $payment->sale->id }}</td>
-      <td>{{ $payment->sale->customer->firstname }} {{ $payment->sale->customer->lastname }}</td>
-      <td>{{ $payment->method->name }}</td>
-      <td>{{ $payment->reference }}</td>
-      <td>$ {{ number_format($payment->tendered, 2) }}</td>
-      <td>$ {{ number_format($payment->change_due, 2) }}</td>
-      <td>($ {{ number_format($payment->tendered - $payment->change_due, 2) }})</td>
-    </tr>
-    @endif
 
     </tr>
     @endforeach

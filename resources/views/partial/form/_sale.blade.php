@@ -266,6 +266,13 @@
             <th>Amount Paid</th>
             <th>Date</th>
             <th>Cashier</th>
+            @isset($sale)
+              @if (!$sale->refund)
+                @if ($sale->payments->sum('total') > 0)
+                <th>Actions</th>
+                @endif
+              @endif
+            @endisset
           </tr>
         </thead>
         <tbody>
@@ -273,12 +280,29 @@
             @if (isSet($sale))
               @if(count($sale->payments) > 0)
                 @foreach($sale->payments as $payment)
-                  <tr class="payments">
+                  @if ($payment->total < 0)
+                  <tr class="negative">
+                  @else
+                  <tr>
+                  @endif
                     <td><div class="ui header">{{ $payment->id }}</div></td>
                     <td>{{ $payment->method->name }}</td>
                     <td>{{ number_format($payment->tendered, 2) }}</td>
                     <td>{{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
                     <td>{{ $payment->cashier->firstname }}</td>
+                    @if (!$sale->refund)
+                      @if ($sale->payments->sum('total') > 0)
+                        @if ($payment->total > 0)
+                          @if ($loop->last)
+                          <td>
+                            {!! Form::open(['route' => ['admin.sales.refundPayment', $payment], 'class' => 'ui form', 'id' => 'refundPayment']) !!}
+                              {!! Form::button('<i class="reply icon"></i>', ['type' => 'submit', 'class' => 'ui mini basic icon button']) !!}
+                            {!! Form::close() !!}
+                          </td>
+                          @endif
+                        @endif
+                      @endif
+                    @endif
                   </tr>
                 @endforeach
               @else

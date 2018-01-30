@@ -151,7 +151,7 @@
 
           animation: { animateScale: true, animateRotate: true },
           responsive: true,
-          legend: { display: false, position: "right" },
+          legend: { display: false, position: "left" },
           title: { display: true, text: "{{ $show->name }}\'s Attendance by Event and Ticket Type" },
           maintainAspectRatio: false,
           //tooltips: { mode: "index", intersect: true},

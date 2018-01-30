@@ -126,6 +126,14 @@
 
     $('.menu .item').tab({ history: true });
 
+    $('#closeout-start').change(function() {
+      document.querySelector('#closeout-end').value = moment(this.value, 'dddd, MMMM D, YYYY h:mm A').add(23, 'hours').add(59, 'minutes').format('dddd, MMMM D, YYYY h:mm A');
+    })
+
+    $('#transaction-detail-start').change(function() {
+      document.querySelector('#transaction-detail-end').value = moment(this.value, 'dddd, MMMM D, YYYY h:mm A').add(23, 'hours').add(59, 'minutes').format('dddd, MMMM D, YYYY h:mm A');
+    })
+
     $('#closeout-start').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:0, defaultMinute:0});
     $('#closeout-end').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:23, defaultMinute:59});
 
@@ -138,14 +146,14 @@
     $('#closeout-submit').click(function() {
       var user = document.querySelector('#closeout-user').value
       var start = document.querySelector('#closeout-start').value
-      start = moment(start).format('Y-M-D')
+      start = moment(start, 'dddd, MMMM D, YYYY h:mm A').format('Y-M-D')
       window.open('/admin/reports/closeout/' + user + '/' + start, '_blank')
     })
 
     $('#transaction-detail-submit').click(function() {
       var user = document.querySelector('#transaction-detail-user').value
       var start = document.querySelector('#transaction-detail-start').value
-      start = moment(start).format('Y-M-D')
+      start = moment(start, 'dddd, MMMM D, YYYY h:mm A').format('Y-M-D')
       window.open('/admin/reports/transaction-detail/' + user + '/' + start, '_blank')
     })
 

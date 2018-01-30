@@ -40,6 +40,7 @@ Route::group(
   // Sales Resource
   Route::resource('sales', 'SaleController', ['except' => ['create']]);
   Route::post('sales/refund/{sale}', 'SaleController@refund')->name('sales.refund');
+  Route::post('sales/refundPayment/{payment}', 'SaleController@refundPayment')->name('sales.refundPayment');
   Route::get('sales/create/{eventType}', 'SaleController@create')->name('sales.create');
   Route::get('sales/{sale}/confirmation', 'SaleController@confirmation')->name('sales.confirmation');
   Route::get('sales/{sale}/invoice', 'SaleController@invoice')->name('sales.invoice');

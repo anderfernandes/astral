@@ -17,7 +17,7 @@
     <div class="content">
       Sale # {{ $sale->id }}
       @if ($sale->refund)
-        <div class="ui red label"><i class="refresh icon"></i> Refund</div>
+        <div class="ui red label"><i class="reply icon"></i> Refund</div>
       @endif
       @if ($sale->status == 'complete')
         <span class="ui green label"><i class="checkmark icon"></i>
@@ -47,12 +47,14 @@
   </h3>
 
   @if (!$sale->refund)
-  <div class="ui right floated buttons">
-    <a href="javascript:$('#refund-modal').modal('show')" class="ui red button"><i class="refresh icon"></i> Refund</a>
-  </div>
+    @if ($sale->payments->sum('total') > 0)
+    <div class="ui right floated buttons">
+      <a href="javascript:$('#refund-modal').modal('show')" class="ui red button"><i class="reply icon"></i> Refund</a>
+    </div>
+    @endif
   @endif
   <div class="ui left floated buttons">
-    <a href="javascript:window.history.back()" class="ui default button">
+    <a href="{{ route('admin.sales.index') }}" class="ui default button">
       <i class="left chevron icon"></i>
       Back
     </a>
@@ -94,7 +96,7 @@
       <h3 class="ui header">
       @endif
         <div class="sub header">Customer</div>
-        {{ $sale->customer->firstname.' '.$sale->customer->lastname }}
+        {{ $sale->customer->fullname }}
       </h3>
 
       @if ($sale->refund)
@@ -249,17 +251,39 @@
             <th>Amount Paid</th>
             <th>Date</th>
             <th>Cashier</th>
+            @if (!$sale->refund)
+              @if ($sale->payments->sum('total') > 0)
+              <th>Actions</th>
+              @endif
+            @endif
           </tr>
         </thead>
         <tbody>
           @if(count($sale->payments) > 0)
             @foreach($sale->payments as $payment)
+              @if ($payment->total < 0)
+              <tr class="negative">
+              @else
               <tr>
+              @endif
                 <td><div class="ui header">{{ $payment->id }}</div></td>
                 <td>{{ $payment->method->name }}</td>
                 <td>{{ number_format($payment->tendered, 2) }}</td>
                 <td>{{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
                 <td>{{ $payment->cashier->firstname }}</td>
+                @if (!$sale->refund)
+                  @if ($sale->payments->sum('total') > 0)
+                    @if ($payment->total > 0)
+                      @if ($loop->last)
+                      <td>
+                        {!! Form::open(['route' => ['admin.sales.refundPayment', $payment], 'class' => 'ui form', 'id' => 'refundPayment']) !!}
+                          {!! Form::button('<i class="reply icon"></i>', ['type' => 'submit', 'class' => 'ui mini basic icon button']) !!}
+                        {!! Form::close() !!}
+                      </td>
+                      @endif
+                    @endif
+                  @endif
+                @endif
               </tr>
             @endforeach
           @else
@@ -267,6 +291,7 @@
               <td colspan="5"><i class="info circle icon"></i> No payments have been received so far</td>
             </tr>
           @endif
+
         </tbody>
       </table>
 

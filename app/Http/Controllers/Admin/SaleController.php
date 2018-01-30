@@ -43,7 +43,10 @@ class SaleController extends Controller
     public function create(EventType $eventType)
     {
         $organizations  = Organization::pluck('name', 'id');
-        $events         = Event::where('type_id', $eventType->id)->where('start', '>=', Date::now()->toDateTimeString()->subDays(7))->orderBy('start', 'asc')->get();
+        $events         = Event::where('type_id', $eventType->id)
+                               ->where('start', '>=', Date::now()->subDays(7)->toDateTimeString())
+                               ->orderBy('start', 'asc')
+                               ->get();
         $paymentMethods = PaymentMethod::all();
         $ticketTypes    = $eventType->allowedTickets;
 
@@ -370,6 +373,31 @@ class SaleController extends Controller
           'Sale # '.$sale->id.' has been refunded successfully!');
 
       return redirect()->route('admin.sales.show', $sale);
+    }
+
+    public function refundPayment(Payment $payment)
+    {
+
+      $refund = new Payment;
+
+      $refund->cashier_id        = Auth::user()->id;
+      $refund->payment_method_id = $payment->payment_method_id;
+      // Tendered may be nullable if the customer hasn't paid
+      $refund->tendered          = - round($payment->total, 2);
+      $refund->total             = - round($payment->total, 2);
+      // payment = total - tendered (precision set to two decimal places)
+      $refund->change_due        = - round($payment->change_due, 2);
+      $refund->reference         = $payment->reference;
+      $refund->source            = 'admin';
+      $refund->sale_id           = $payment->sale_id;
+
+      $refund->save();
+
+      Session::flash('success',
+          'Payment # ' . $refund->id . ' has been refunded successfully!');
+
+      return redirect()->route('admin.sales.show', $payment->sale_id);
+
     }
 
     public function confirmation(Sale $sale)
