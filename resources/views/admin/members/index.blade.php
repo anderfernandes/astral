@@ -26,7 +26,7 @@
           <div class="content">
             <img src="/{{ App\Setting::find(1)->logo }}" alt="" class="left floated mini ui image">
             <div class="right floated meta"># {{ $member->id }}</div>
-            <div class="header">{{ $member->users[0]->firstname }} {{ $member->users[0]->lastname }}</div>
+            <div class="header">{{ $member->users[0]->fullname }}</div>
             <div class="meta">
               <div class="ui label">{{ $member->type->name }}</div>
             </div>
@@ -55,5 +55,13 @@
       </div>
     </div>
   @endif
+
+  <br />
+
+  <div class="ui centered grid">
+    {{ $members->links('vendor.pagination.semantic-ui') }}
+  </div>
+
+  <br /><br />
 
 @endsection

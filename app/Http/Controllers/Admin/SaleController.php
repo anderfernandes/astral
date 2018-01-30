@@ -380,11 +380,13 @@ class SaleController extends Controller
 
       $refund = new Payment;
 
+      $sale = Sale::find($payment->sale_id);
+
       $refund->cashier_id        = Auth::user()->id;
       $refund->payment_method_id = $payment->payment_method_id;
       // Tendered may be nullable if the customer hasn't paid
-      $refund->tendered          = - round($payment->total, 2);
-      $refund->total             = - round($payment->total, 2);
+      $refund->tendered          = - round($sale->payments->sum('tendered'), 2);
+      $refund->total             = - round($sale->payments->sum('total'), 2);
       // payment = total - tendered (precision set to two decimal places)
       $refund->change_due        = - round($payment->change_due, 2);
       $refund->reference         = $payment->reference;

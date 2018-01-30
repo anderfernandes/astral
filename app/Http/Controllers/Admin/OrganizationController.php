@@ -21,7 +21,8 @@ class OrganizationController extends Controller
     public function index()
     {
       $organizations = Organization::where('type_id', '!=', 1)
-        ->orderBy('id', 'desc')->paginate(10);
+                                   ->orderBy('id', 'desc')
+                                   ->paginate(12);
 
       return view('admin.organizations.index')->withOrganizations($organizations);
     }
