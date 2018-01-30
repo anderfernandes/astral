@@ -130,7 +130,7 @@ function getAttendanceByType($ticketTypeID) {
   <!-- Calendar -->
   <div class="eight wide computer sixteen wide mobile column">
     <!-- Shows -->
-    <div class="ui statistics">
+    <div class="ui small statistics">
       <div class="statistic">
         <div class="value">
           <i class="film icon"></i>

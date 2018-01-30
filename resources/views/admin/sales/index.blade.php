@@ -62,7 +62,11 @@
   </thead>
   <tbody>
     @foreach($sales as $sale)
-      <tr>
+      @if($sale->refund)
+        <tr class="negative">
+      @else
+        <tr>
+      @endif
         <td><h3 class="ui center aligned header">{{ $sale->id }}</h3></td>
         <td>
           <h4 class="ui header">
@@ -106,6 +110,9 @@
             <span class="ui label">
           @endif
           {{ $sale->status }}</span>
+          @if($sale->refund)
+            <span class="ui red label"><i class="reply icon"></i>refund</span>
+          @endif
         </td>
         <td>{{ $sale->creator->firstname }}</td>
         <td>

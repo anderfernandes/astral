@@ -400,7 +400,9 @@
     @if (isSet($sale))
       $("#customers").dropdown('set selected', {{ $sale->customer_id }})
       $("#first-event").dropdown('set selected', {{ $sale->events[0]->id }})
-      $("#second-event").dropdown('set selected', {{ $sale->events[1]->id }})
+      @isset($sale->events[1])
+        $("#second-event").dropdown('set selected', {{ $sale->events[1]->id }})
+      @endisset
       $("#sale-status").dropdown('set selected', '{{ $sale->status }}')
     @else
       $("#customers").dropdown('set selected', 1)
