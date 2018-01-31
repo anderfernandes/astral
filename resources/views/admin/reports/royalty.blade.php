@@ -125,8 +125,6 @@
       </div>
     </div>
   
-
-
   <script>
 
   var attendanceBarChartData = {

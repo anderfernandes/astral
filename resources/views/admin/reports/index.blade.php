@@ -113,6 +113,12 @@
                 <i class="calendar icon"></i>
               </div>
             </div>
+            <div class="field">
+              <div class="ui checkbox">
+                {!! Form::checkbox('free', 0, false, ['id' => 'free']) !!}
+                <label for="free">Show free tickets</label>
+              </div>
+            </div>
           </div>
         </div>
         <div id="royalty-submit" class="ui bottom attached black button">Get Royalty Report <i class="right chevron icon"></i></div>
@@ -161,10 +167,11 @@
       var show = document.querySelector('#royalty-show').value
       var start = document.querySelector('#royalty-start').value
       var end = document.querySelector('#royalty-end').value
+      var free = document.querySelector('#free').checked
       start = moment(start, 'dddd, MMM D, YYYY h:mm A').format('X')
       end = moment(end, 'dddd, MMM D, YYYY h:mm A').format('X')
 
-      window.open('/admin/reports/royalty?show=' + show + '&start=' + start + '&end=' + end, '_blank')
+      window.open('/admin/reports/royalty?show=' + show + '&free=' + free + '&start=' + start + '&end=' + end, '_blank')
     })
 
   </script>

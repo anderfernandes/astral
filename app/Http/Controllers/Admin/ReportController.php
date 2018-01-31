@@ -13,6 +13,7 @@ use App\Payment;
 use App\PaymentMethod;
 use App\User;
 use App\Show;
+use App\TicketType;
 use Session;
 
 use Illuminate\Http\Request;
@@ -173,8 +174,19 @@ class ReportController extends Controller
 
       $show->eventsIds = array_pluck($events, 'id');
 
-      $show->screenings     = $events->count();
-      $show->totalAttendance = Ticket::whereIn('event_id', $show->eventsIds)->count();
+      $show->screenings = $events->count();
+
+      // Find non free tickets
+      $nonFreeTickets = TicketType::where('price', '!=', 0)->pluck('id');
+
+      // Should free tickets be included in the report?
+      if ($request->free) {
+        $show->totalAttendance = Ticket::whereIn('event_id', $show->eventsIds)->count();
+      }
+      else {
+        // Find tickets that belong to this event and are not free
+        $show->totalAttendance = Ticket::whereIn('event_id', $show->eventsIds)->whereIn('ticket_type_id', $nonFreeTickets)->count();
+      }
 
       $show->subtotalRevenue = 0;
       $show->totalRevenue = 0;
@@ -186,6 +198,6 @@ class ReportController extends Controller
       }
 
       return view('admin.reports.royalty')->withShow($show)->withStart($start)->withEnd($end)->withEvents($events);
-
+      //dd($request->free);
     }
 }

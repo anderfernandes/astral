@@ -160,7 +160,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
 
   <ul>
     <li>
-      We reserved {{ $sale->tickets->count() / $sale->events->count() }} seats per show for you. If more than {{ $sale->tickets->count() }} people show up,
+      We reserved {{ $sale->tickets->count() / $sale->events->count() }} seats per show for you. If more than {{ $sale->tickets->count() / $sale->events->count() }} people show up,
       we admit them space available (up to our capacity of {{ App\Setting::find(1)->seats }}) for the same price you paid. You may
       choose, include them in your payment or they may buy their own tickets at show time.
     </li>
