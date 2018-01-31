@@ -167,7 +167,7 @@
       var show = document.querySelector('#royalty-show').value
       var start = document.querySelector('#royalty-start').value
       var end = document.querySelector('#royalty-end').value
-      var free = document.querySelector('#free').checked
+      var free = document.querySelector('#free').checked ? 1 : 0
       start = moment(start, 'dddd, MMM D, YYYY h:mm A').format('X')
       end = moment(end, 'dddd, MMM D, YYYY h:mm A').format('X')
 

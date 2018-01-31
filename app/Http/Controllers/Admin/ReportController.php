@@ -177,16 +177,17 @@ class ReportController extends Controller
       $show->screenings = $events->count();
 
       // Find non free tickets
-      $nonFreeTickets = TicketType::where('price', '!=', 0)->pluck('id');
+      $nonFreeTickets = TicketType::where('price', '!=', 0)->get();
+      $nonFreeTickets = array_pluck($nonFreeTickets, 'id');
+
+      $show->totalAttendance = Ticket::whereIn('event_id', $show->eventsIds);
 
       // Should free tickets be included in the report?
-      if ($request->free) {
-        $show->totalAttendance = Ticket::whereIn('event_id', $show->eventsIds)->count();
-      }
-      else {
-        // Find tickets that belong to this event and are not free
-        $show->totalAttendance = Ticket::whereIn('event_id', $show->eventsIds)->whereIn('ticket_type_id', $nonFreeTickets)->count();
-      }
+
+      $show->totalAttendance = $request->free ? $show->totalAttendance : $show->totalAttendance->whereIn('ticket_type_id', $nonFreeTickets);
+
+
+      $show->totalAttendance = $show->totalAttendance->count();
 
       $show->subtotalRevenue = 0;
       $show->totalRevenue = 0;
@@ -197,7 +198,10 @@ class ReportController extends Controller
         $show->totalRevenue += round($event->sales->sum('total'), 2);
       }
 
-      return view('admin.reports.royalty')->withShow($show)->withStart($start)->withEnd($end)->withEvents($events);
-      //dd($request->free);
+      return view('admin.reports.royalty')->withShow($show)
+                                          ->withStart($start)
+                                          ->withEnd($end)
+                                          ->withEvents($events);
+
     }
 }
