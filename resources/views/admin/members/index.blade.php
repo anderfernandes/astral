@@ -56,7 +56,7 @@
     </div>
   @endif
 
-  <br />
+  <br /><br />
 
   <div class="ui centered grid">
     {{ $members->links('vendor.pagination.semantic-ui') }}

@@ -75,8 +75,8 @@
     </div>
   </div>
 
-  <div class="ui segments">
-    <div class="ui segment">
+
+
       <!--- Screening Details --->
       <table class="ui very basic collapsing celled table">
         <thead>
@@ -94,7 +94,12 @@
               <td><div class="ui tiny black label">{{ $event->type->name }}</div></td>
               <td>
                 @foreach ($event->type->allowedTickets as $ticket)
-                  <div class="ui tiny label">{{ $ticket->name }} $ {{ number_format($ticket->price, 2)}}</div>
+                  <div class="ui tiny label">
+                    {{ App\Ticket::where('ticket_type_id', $ticket->id)->count() }}
+                    {{ $ticket->name }}
+                    <span class="detail">
+                      $ {{ number_format($ticket->price, 2)}}</span>
+                    </div>
                 @endforeach
               </td>
               <td>{{ App\Ticket::where('event_id', $event->id )->count() }}</td>
@@ -102,20 +107,24 @@
           @endforeach
         </tbody>
       </table>
+
+    <div class="ui grid">
+      <div class="eight wide column">
+        <canvas height="350" id="attendanceChart"></canvas>
+      </div>
+      <div class="eight wide column">
+        <canvas height="350" id="attendanceByTicketTypeChart"></canvas>
+      </div>
     </div>
-    <div class="ui segment">
-      <canvas height="350" id="attendanceChart"></canvas>
+    <div class="ui grid">
+      <div class="eight wide column">
+        <canvas height="350" id="revenueChart"></canvas>
+      </div>
+      <div class="eight wide column">
+        <canvas height="350" id="revenueTaxChart"></canvas>
+      </div>
     </div>
-    <div class="ui segment">
-      <canvas height="350" id="attendanceByTicketTypeChart"></canvas>
-    </div>
-    <div class="ui segment">
-      <canvas height="350" id="revenueChart"></canvas>
-    </div>
-    <div class="ui segment">
-      <canvas height="350" id="revenueTaxChart"></canvas>
-    </div>
-  </div>
+  
 
 
   <script>
@@ -127,20 +136,21 @@
       @endforeach
     ],
     datasets: [
-    @foreach ($events as $event)
-      @foreach ($event->type->allowedTickets as $ticket)
+      @foreach (App\TicketType::all() as $ticket)
       {
         label: "{{ $ticket->name }}",
-        stack: "{{ Date::parse($event->start)->format('m-d-Y g:i A') }}",
         backgroundColor: "rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(2, 6) / 10 }})",
         data: [
-            {{ App\Ticket::where('event_id', $event->id)->where('ticket_type_id', $ticket->id)->count() }} // {{ $ticket->name }}
+        @foreach ($events as $event)
+           { x: "{{ Date::parse($event->start)->format('m-d-Y g:i A') }}", y: {{ App\Ticket::where('ticket_type_id', $ticket->id)->where('event_id', $event->id)->count() }} },
+        @endforeach
         ],
       },
       @endforeach
-    @endforeach
     ]
   }
+
+
 
   window.onload = function() {
     var attendanceCanvas = document.getElementById("attendanceChart").getContext("2d")
@@ -151,13 +161,13 @@
 
           animation: { animateScale: true, animateRotate: true },
           responsive: true,
-          legend: { display: false, position: "left" },
+          legend: { display: true, position: "right" },
           title: { display: true, text: "{{ $show->name }}\'s Attendance by Event and Ticket Type" },
           maintainAspectRatio: false,
           //tooltips: { mode: "index", intersect: true},
           scales: {
             xAxes: [{
-              stacked: true,
+              stacked: true
             }],
             yAxes: [{
               stacked: true
@@ -166,6 +176,152 @@
         }
     })
   }
+
+  var attendanceByTicketTypeCanvas = document.getElementById("attendanceByTicketTypeChart").getContext("2d")
+    var attendanceByTicketTypeChart = new Chart(attendanceByTicketTypeCanvas, {
+      type: "doughnut",
+      data: {
+        labels: [
+          @foreach (App\TicketType::all() as $ticket)
+            "{{ $ticket->name }}",
+          @endforeach
+        ],
+        datasets: [{
+          label: "{{ $show->name }} Attendance by Ticket Type",
+          data: [
+            @foreach (App\TicketType::all() as $ticket)
+              "{{ App\Ticket::whereIn('event_id', $show->eventsIds)->where('ticket_type_id', $ticket->id)->count() }}",
+            @endforeach
+          ],
+          backgroundColor: [
+            @foreach (App\TicketType::all() as $ticket)
+              "rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(2, 6) / 10 }})",
+            @endforeach
+          ]
+        }]
+      },
+      options: {
+          animation: { animateScale: true, animateRotate: true },
+          responsive: true,
+          legend: { display: true, position: "right" },
+          title: { display: true, text: "{{ $show->name }}\'s Attendance by Ticket Type" },
+          maintainAspectRatio: false
+        }
+    })
+
+    var revenueCanvas = document.getElementById("revenueChart").getContext("2d")
+    var revenueChart = new Chart(revenueCanvas, {
+      type: "bar",
+      data: {
+        labels: [
+          @foreach ($events as $event)
+            "{{ Date::parse($event->start)->format('m-d-Y g:i A') }}",
+          @endforeach
+        ],
+        datasets: [
+            {
+              backgroundColor: [
+                @foreach ($events as $event)
+                "rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(2, 6) / 10 }})",
+                @endforeach
+              ],
+              data: [
+                @foreach ($events as $event)
+                  {{ number_format(App\Event::find($event->id)->sales->sum('subtotal'), 2) }},
+                @endforeach
+              ],
+            },
+        ]
+    },
+    options: {
+        animation: { animateScale: true, animateRotate: true },
+        responsive: true,
+        legend: { display: false, position: "right" },
+        title: { display: true, text: "{{ $show->name }}\'s Revenue Before Tax" },
+        maintainAspectRatio: false,
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              return '$ ' + tooltipItem.yLabel.toFixed(2)
+            }
+          }
+        },
+        scales: {
+            yAxes: [{
+                display: true,
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                      return '$ ' + value
+                    }
+                }
+            }],
+            xAxes: [{
+              display: true,
+              ticks: {
+                autoSkip: false,
+              }
+            }]
+        }
+      }
+    })
+
+    var revenueTaxCanvas = document.getElementById("revenueTaxChart").getContext("2d")
+    var revenueTaxChart = new Chart(revenueTaxCanvas, {
+      type: "bar",
+      data: {
+        labels: [
+          @foreach ($events as $event)
+            "{{ Date::parse($event->start)->format('m-d-Y g:i A') }}",
+          @endforeach
+        ],
+        datasets: [
+          {
+            backgroundColor: [
+              @foreach ($events as $event)
+              "rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(2, 6) / 10 }})",
+              @endforeach
+            ],
+            data: [
+              @foreach ($events as $event)
+                {{ number_format(App\Event::find($event->id)->sales->sum('total'), 2) }},
+              @endforeach
+            ],
+          },
+        ]
+      },
+      options: {
+          animation: { animateScale: true, animateRotate: true },
+          responsive: true,
+          legend: { display: false, position: "right" },
+          title: { display: true, text: "{{ $show->name }}\'s Revenue After Tax" },
+          maintainAspectRatio: false,
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                return '$ ' + tooltipItem.yLabel.toFixed(2)
+              }
+            }
+          },
+          scales: {
+              yAxes: [{
+                  display: true,
+                  ticks: {
+                      beginAtZero: true,
+                      callback: function(value, index, values) {
+                        return '$ ' + value
+                      }
+                  }
+              }],
+              xAxes: [{
+                display: true,
+                ticks: {
+                  autoSkip: false,
+                }
+              }]
+          }
+        }
+    })
 
   </script>
 
