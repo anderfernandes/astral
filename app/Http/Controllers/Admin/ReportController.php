@@ -176,31 +176,43 @@ class ReportController extends Controller
 
       $show->screenings = $events->count();
 
-      // Find non free tickets
-      $nonFreeTickets = TicketType::where('price', '!=', 0)->get();
-      $nonFreeTickets = array_pluck($nonFreeTickets, 'id');
-
       $show->totalAttendance = Ticket::whereIn('event_id', $show->eventsIds);
 
+      $allTicketTypes = TicketType::all();
+
       // Should free tickets be included in the report?
-
-      $show->totalAttendance = $request->free ? $show->totalAttendance : $show->totalAttendance->whereIn('ticket_type_id', $nonFreeTickets);
-
+      $nonFreeTickets = [];
+      if (!$request->free) {
+        // Find non free tickets
+        $nonFreeTickets = TicketType::where('price', '!=', 0)->pluck('id');
+        $allTicketTypes = TicketType::whereIn('id', $nonFreeTickets)->get();
+        $show->totalAttendance = $show->totalAttendance->whereIn('ticket_type_id', $nonFreeTickets);
+      }
 
       $show->totalAttendance = $show->totalAttendance->count();
 
       $show->subtotalRevenue = 0;
       $show->totalRevenue = 0;
+      $allowedTicketsIds = [];
 
       // Loop through each event, find how much money it made, sum it
       foreach ($events as $event) {
+
         $show->subtotalRevenue += round($event->sales->sum('subtotal'), 2);
         $show->totalRevenue += round($event->sales->sum('total'), 2);
+
+        // If we don't want free tickets in the report, take them out
+        if (!$request->free) {
+          $event->type->allowedTickets = $event->type->allowedTickets->where('price', '!=', 0);
+        }
+
       }
 
       return view('admin.reports.royalty')->withShow($show)
                                           ->withStart($start)
                                           ->withEnd($end)
+                                          ->with('nonFreeTicketsIds', $nonFreeTickets)
+                                          ->with('allTicketTypes', $allTicketTypes)
                                           ->withEvents($events);
 
     }

@@ -95,14 +95,19 @@
               <td>
                 @foreach ($event->type->allowedTickets as $ticket)
                   <div class="ui tiny label">
-                    {{ App\Ticket::where('ticket_type_id', $ticket->id)->count() }}
+                    {{ App\Ticket::where('ticket_type_id', $ticket->id)->where('event_id', $event->id)->count() }}
                     {{ $ticket->name }}
                     <span class="detail">
                       $ {{ number_format($ticket->price, 2)}}</span>
                     </div>
                 @endforeach
               </td>
-              <td>{{ App\Ticket::where('event_id', $event->id )->count() }}</td>
+              @if (count($nonFreeTicketsIds) > 0)
+                <td>{{ App\Ticket::where('event_id', $event->id )->whereIn('ticket_type_id', $nonFreeTicketsIds)->count() }}</td>
+              @else
+                <td>{{ App\Ticket::where('event_id', $event->id )->count() }}</td>
+              @endif
+
             </tr>
           @endforeach
         </tbody>
@@ -124,7 +129,7 @@
         <canvas height="350" id="revenueTaxChart"></canvas>
       </div>
     </div>
-  
+
   <script>
 
   var attendanceBarChartData = {
@@ -134,7 +139,7 @@
       @endforeach
     ],
     datasets: [
-      @foreach (App\TicketType::all() as $ticket)
+      @foreach ($allTicketTypes as $ticket)
       {
         label: "{{ $ticket->name }}",
         backgroundColor: "rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(2, 6) / 10 }})",
@@ -180,19 +185,19 @@
       type: "doughnut",
       data: {
         labels: [
-          @foreach (App\TicketType::all() as $ticket)
+          @foreach ($allTicketTypes as $ticket)
             "{{ $ticket->name }}",
           @endforeach
         ],
         datasets: [{
           label: "{{ $show->name }} Attendance by Ticket Type",
           data: [
-            @foreach (App\TicketType::all() as $ticket)
+            @foreach ($allTicketTypes as $ticket)
               "{{ App\Ticket::whereIn('event_id', $show->eventsIds)->where('ticket_type_id', $ticket->id)->count() }}",
             @endforeach
           ],
           backgroundColor: [
-            @foreach (App\TicketType::all() as $ticket)
+            @foreach ($allTicketTypes as $ticket)
               "rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(2, 6) / 10 }})",
             @endforeach
           ]
@@ -225,7 +230,7 @@
               ],
               data: [
                 @foreach ($events as $event)
-                  {{ number_format(App\Event::find($event->id)->sales->sum('subtotal'), 2) }},
+                  {{ number_format($event->sales->sum('subtotal'), 2) }},
                 @endforeach
               ],
             },
