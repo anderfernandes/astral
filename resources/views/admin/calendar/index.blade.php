@@ -73,7 +73,6 @@
       eventColor: '#000',
       events: '/api/calendar',
     })
-    console.log(events)
   }
 
   function refetchEvents() {

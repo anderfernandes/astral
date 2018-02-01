@@ -18,7 +18,7 @@ class ShowController extends Controller
      */
     public function index()
     {
-        $shows = Show::where('id', '<>', 1)->orderBy('id', 'desc')->paginate(10);
+        $shows = Show::where('id', '<>', 1)->orderBy('name', 'asc')->paginate(10);
         return view('admin.shows.index')->withShows($shows);
     }
 
@@ -139,4 +139,5 @@ class ShowController extends Controller
 
         return redirect()->route('admin.shows.index');
     }
+
 }

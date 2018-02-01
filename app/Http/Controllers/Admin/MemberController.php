@@ -28,7 +28,7 @@ class MemberController extends Controller
     {
         // member role_id is 5
         $members = Member::where('id', '!=', 1)
-                         ->orderBy('id', 'desc')
+                         ->orderBy('firstname', 'asc')
                          ->paginate(12);
 
         return view('admin.members.index')->withMembers($members);

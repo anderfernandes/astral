@@ -5,7 +5,7 @@
     {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
     <br /><br />
     <div class="ui tiny buttons">
-      <span class="ui basic label">{{ Auth::user()->role->name }}</span>
+      <span class="ui basic tiny label">{{ Auth::user()->role->name }}</span>
     </div>
   </div>
   <!-- Pending loop to automatically pull all menu items -->
