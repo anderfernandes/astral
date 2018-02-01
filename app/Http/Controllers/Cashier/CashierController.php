@@ -26,9 +26,9 @@ class CashierController extends Controller
       $today = Date::now('America/Chicago')->addMinutes(-30)->toDateTimeString();
       // Get all events going on today
       $events = Event::where('start','>=', $today)
-                  ->where('start','<=', Date::now('America/Chicago')->endOfDay())
-                  ->orderBy('start', 'asc')
-                  ->get();
+                     ->where('start','<=', Date::now('America/Chicago')->endOfDay())
+                     ->orderBy('start', 'asc')
+                     ->get();
       // Get Available Payment Methods
       $paymentMethods = PaymentMethod::all();
       $allCustomers = User::all();

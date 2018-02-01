@@ -53,13 +53,18 @@
       <th>Total</th>
       <th>Balance</th>
       <th>Status</th>
-      <th>Created By</th>
+      <th>Created by</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     @foreach($sales as $sale)
-      <tr>
+      @if($sale->refund)
+        <tr class="negative">
+      @else
+        <tr>
+      @endif
+        <td><h3 class="ui center aligned header">{{ $sale->id }}</h3></td>
         <td>
           <h4 class="ui header">
             @if ($sale->customer->firstname == "Walk-up" or $sale->customer->firstname == $sale->organization->name)
@@ -79,6 +84,14 @@
             @endif
           </h3>
         </td>
+        <td>$ {{ number_format($sale->total, 2) }}</td>
+        <td>
+          @if (number_format($sale->total - $sale->payments->sum('tendered'), 2) > 2)
+            $ {{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}
+          @else
+            $ 0.00
+          @endif
+        </td>
         <td>
           @if ($sale->status == 'complete')
             <span class="ui green label"><i class="checkmark icon"></i>
@@ -94,12 +107,33 @@
             <span class="ui label">
           @endif
           {{ $sale->status }}</span>
+          @if($sale->refund)
+            <span class="ui red label"><i class="reply icon"></i>refund</span>
+          @endif
         </td>
         <td>{{ $sale->creator->firstname }}</td>
         <td>
           <div class="ui icon buttons">
-            <a href="{{ route('cashier.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
-            <a href="{{ route('cashier.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
+            <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
+            <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
+            <div class="ui icon top left pointing dropdown secondary button">
+              <i class="copy icon"></i>
+              <div class="menu">
+                @if ($sale->events->count() > 0)
+                  @if ($sale->status != "canceled")
+                    <a class="item" target="_blank" href="{{ route('admin.sales.confirmation', $sale) }}">Reservation Confirmation</a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.invoice', $sale) }}">Invoice</a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.receipt', $sale) }}">Receipt</a>
+                  @else
+                    <a class="item" target="_blank" href="{{ route('admin.sales.cancelation', $sale) }}">Cancelation Receipt</a>
+                  @endif
+                @else
+                  <a class="item" href="{{ route('cashier.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>
+                @endif
+
+              </div>
+            </div>
+
           </div>
         </td>
       </tr>

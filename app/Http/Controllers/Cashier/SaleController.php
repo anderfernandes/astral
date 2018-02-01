@@ -214,7 +214,7 @@ class SaleController extends Controller
     public function edit(Sale $sale)
     {
       $organizations  = Organization::pluck('name', 'id');
-      $events         = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $sale->events[0]->type->id)->orderBy('start', 'asc')->get();
+      $events    = Event::where('type_id', $sale->events[0]->type->id)->orderBy('start', 'asc')->get();
       $paymentMethods = PaymentMethod::all();
       $ticketTypes    = $sale->events[0]->type->allowedTickets;
 
