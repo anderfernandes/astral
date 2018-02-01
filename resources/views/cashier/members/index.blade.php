@@ -57,6 +57,12 @@
     </div>
   @endif
 
+  <br /><br />
+
+  <div class="ui centered grid">
+    {{ $members->links('vendor.pagination.semantic-ui') }}
+  </div>
+
   @include('cashier.partial._spinner')
 
 @endsection
