@@ -29,7 +29,10 @@ class MemberController extends Controller
     public function index()
     {
       // member role_id is 5
-      $members = Member::all()->where('id', '!=', 1);
+      $members = Member::where('id', '!=', 1)
+                       ->orderBy('id', 'asc')
+                       ->paginate(12);
+                       
       return view('cashier.members.index')->withMembers($members);
     }
 
