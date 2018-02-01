@@ -8,7 +8,7 @@
 
 @section('content')
 
-  <a class="ui secondary button" href="{{ route('admin.users.create') }}">
+  <a class="ui secondary button" href="javascript:$('#add-user').modal('show')">
     <i class="add user icon"></i> Add User
   </a>
 
@@ -50,6 +50,15 @@
     {{ $users->links('vendor.pagination.semantic-ui') }}
   </div>
 
-  <br /><br />
+  {{-- Add Show Modal --}}
+  @component('admin.partial._modal', [
+    'id' => 'add-user',
+    'icon' => 'user plus',
+    'title' => 'Add User'
+  ])
+    @slot('content')
+      @include('admin.partial.users._create')
+    @endslot
+  @endcomponent
 
 @endsection

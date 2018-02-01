@@ -3,7 +3,7 @@
     @if (Auth::check())
       <img class="ui tiny avatar image" src="https://semantic-ui.com/images/wireframe/square-image.png">
       <br /><br />
-      {{ $user->firstname }} {{ $user->lastname }}
+      {{ $user->fullname }}
       <br /><br />
       <div class="ui tiny buttons">
         <a href="{{ route('account') }}" class="ui red button"><i class="user icon"> </i>Account</a>

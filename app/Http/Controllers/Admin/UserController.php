@@ -23,7 +23,12 @@ class UserController extends Controller
         $users = User::where('type', 'individual')->where('role_id', '!=', 5)
                  ->orderBy('firstname', 'asc')->paginate(12);
 
-        return view('admin.users.index')->withUsers($users);
+        $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
+        $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
+
+        return view('admin.users.index')->withUsers($users)
+                                        ->withRoles($roles)
+                                        ->withOrganizations($organizations);;
     }
 
     /**
@@ -36,9 +41,8 @@ class UserController extends Controller
         $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
         $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
 
-        return view('admin.users.create')
-          ->withRoles($roles)
-          ->withOrganizations($organizations);
+        return view('admin.users.create')->withRoles($roles)
+                                         ->withOrganizations($organizations);
     }
 
     /**

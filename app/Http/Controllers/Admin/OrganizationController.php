@@ -24,7 +24,10 @@ class OrganizationController extends Controller
                                    ->orderBy('name', 'asc')
                                    ->paginate(12);
 
-      return view('admin.organizations.index')->withOrganizations($organizations);
+      $organizationTypes = OrganizationType::where('name', '!=', 'System')->pluck('name', 'id');
+
+      return view('admin.organizations.index')->withOrganizations($organizations)
+                                              ->withOrganizationTypes($organizationTypes);
     }
 
     /**

@@ -8,9 +8,10 @@
 
 @section('content')
 
-  <a class="ui secondary button" href="{{ route('admin.shows.create') }}">
+  <a href="javascript:$('#add-show').modal('show')" href="#" class="ui secondary button">
     <i class="plus icon"></i> Add Show
   </a>
+
   <div class="ui right icon input">
     <input type="text" placeholder="Show Name">
     <i class="search link icon"></i>
@@ -79,6 +80,15 @@
   {{ $shows->links('vendor.pagination.semantic-ui') }}
 </div>
 
-<br /><br />
+{{-- Add Show Modal --}}
+@component('admin.partial._modal', [
+  'id' => 'add-show',
+  'icon' => 'plus',
+  'title' => 'Add Show'
+])
+  @slot('content')
+    @include('admin.partial.shows._create')
+  @endslot
+@endcomponent
 
 @endsection

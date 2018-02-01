@@ -22,9 +22,12 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::where('id', '<>', 1)->orderBy('start', 'desc')->paginate(10);
+        // $events = Event::where('id', '<>', 1)->orderBy('start', 'desc')->paginate(10);
 
-        return view('admin.events.index');
+        $shows = Show::pluck('name', 'id');
+        $eventTypes = EventType::where('id', '<>', 1)->pluck('name', 'id');
+
+        return view('admin.events.index', compact('shows'), compact('eventTypes'));
     }
 
     /**

@@ -8,7 +8,7 @@
 
 @section('content')
 
-  <a class="ui secondary button" href="{{ route('admin.organizations.create') }}">
+  <a class="ui secondary button" href="javascript:$('#add-organization').modal('show')">
     <i class="plus icon"></i> Add Organization
   </a>
 
@@ -64,5 +64,16 @@
 <div class="ui centered grid">
   {{ $organizations->links('vendor.pagination.semantic-ui') }}
 </div>
+
+{{-- Add Organization Modal --}}
+@component('admin.partial._modal', [
+  'id' => 'add-organization',
+  'icon' => 'plus',
+  'title' => 'Add Organization'
+])
+  @slot('content')
+    @include('admin.partial.organizations._create')
+  @endslot
+@endcomponent
 
 @endsection

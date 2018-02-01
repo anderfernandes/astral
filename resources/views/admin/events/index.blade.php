@@ -14,7 +14,7 @@
     <div onclick="$('#calendar').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
   </div>
 
-  <a class="ui secondary button" href="{{ route('admin.events.create') }}">
+  <a class="ui secondary button" href="javascript:$('#create-event').modal('show')">
     <i class="calendar plus icon"></i> Create Event
   </a>
 
@@ -55,6 +55,17 @@
     </div>
   @endif
 
+  {{-- Create Event Modal --}}
+  @component('admin.partial._modal', [
+    'id' => 'create-event',
+    'icon' => 'plus',
+    'title' => 'Create Show'
+  ])
+    @slot('content')
+      @include('admin.partial.events._create')
+    @endslot
+  @endcomponent
+
 <script>
 
   function loadCalendar(events) {
@@ -82,8 +93,6 @@
     var title = $('#calendar').fullCalendar('getView').title
     $('.header.active.item.hide-on-mobile').html('<i class="calendar icon"></i> Calendar | {{ App\Setting::find(1)->organization }} | <strong>' + title + '</strong>')
   }
-
-  //$(document).ready(loadCalendar)
 
   $(document).ready(function() {
     loadCalendar()
