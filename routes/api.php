@@ -213,7 +213,14 @@ Route::get('events/{start}/{end}', function($start, $end) {
       'date' => $start,
     ]);
   }
-  return $eventsArray;
+
+  $eventsCollect = collect($eventsArray);
+
+  $eventsCollect = $eventsCollect->sortBy('start');
+
+  $eventsCollect = $eventsCollect->values()->all();
+
+  return $eventsCollect;
 });
 
 Route::get('organizations/{organization}', function(Organization $organization) {
