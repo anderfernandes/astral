@@ -74,11 +74,10 @@ class EventController extends Controller
           $event->save();
         }
 
-
-
         Session::flash('success',
             'The event(s) <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> been added successfully!');
-        return view('admin.events.index');
+
+        return redirect()->route('admin.events.index');
     }
 
     /**
