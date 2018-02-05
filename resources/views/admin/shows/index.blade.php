@@ -37,17 +37,6 @@
     @foreach($shows as $show)
       <div class="card">
         <div class="content">
-          <div class="right floated ui inline top right pointing dropdown">
-            <i class="ellipsis vertical icon"></i>
-            <div class="menu">
-              <a href="{{ route('admin.shows.show', $show) }}" class="item">
-                <i class="book icon"></i> View
-              </a>
-              <a href="{{ route('admin.shows.edit', $show ) }}" class="item">
-                <i class="edit icon"></i> Edit
-              </a>
-            </div>
-          </div>
           <div class="header">
             {{ $show->name }}
           </div>
@@ -81,14 +70,6 @@
 </div>
 
 {{-- Add Show Modal --}}
-@component('admin.partial._modal', [
-  'id' => 'add-show',
-  'icon' => 'plus',
-  'title' => 'Add Show'
-])
-  @slot('content')
-    @include('admin.partial.shows._create')
-  @endslot
-@endcomponent
+@include('admin.partial.shows._create')
 
 @endsection

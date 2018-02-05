@@ -37,7 +37,7 @@
 
       <tr>
         <td colspan="3">
-          <strong>User Totals: <span style="float:right">$ {{ number_format($cashPaymentsTotal, 2) }}</span></strong>
+          <strong>Cash Totals: <span style="float:right">$ {{ number_format($cashPaymentsTotal, 2) }}</span></strong>
         </td>
       </tr>
 
@@ -75,7 +75,7 @@
 
       <tr>
         <td colspan="3">
-          <strong>User Totals: <span style="float:right">$ {{ number_format($cardPaymentsTotal, 2) }}</span></strong>
+          <strong>Card Totals: <span style="float:right">$ {{ number_format($cardPaymentsTotal, 2) }}</span></strong>
         </td>
       </tr>
       <tr>
@@ -112,7 +112,7 @@
 
       <tr>
         <td colspan="3">
-          User Totals: <span style="float:right">$ {{ number_format($checkPaymentsTotal, 2) }}</span>
+          Check Totals: <span style="float:right">$ {{ number_format($checkPaymentsTotal, 2) }}</span>
         </td>
       </tr>
 

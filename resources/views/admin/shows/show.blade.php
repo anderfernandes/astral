@@ -12,7 +12,7 @@
     <a href="{{ route('admin.shows.index') }}" class="ui default button">
       <i class="left chevron icon"></i> Back
     </a>
-    <a href="{{ route('admin.shows.edit', $show) }}" class="ui primary button">
+    <a href="javascript:$('#edit-show').modal('show')" class="ui primary button">
       <i class="edit icon"></i> Edit Show
     </a>
     <a href="{{ route('admin.shows.create') }}" class="ui secondary button">
@@ -46,5 +46,7 @@
       </div>
     </div>
   </div>
+
+  @include('admin.partial.shows._edit')
 
 @endsection
