@@ -192,7 +192,7 @@ class SaleController extends Controller
 
           Session::flash('success', 'Sale #'. $sale->id .' created successfully!');
 
-          return redirect()->route('admin.sales.index');
+          return redirect()->route('admin.sales.show', $sale);
 
 
     }
@@ -359,7 +359,7 @@ class SaleController extends Controller
 
         Session::flash('success', 'Sale #'. $sale->id .' updated successfully!');
 
-        return redirect()->route('admin.sales.index');
+        return redirect()->route('admin.sales.show', $sale);
 
         //dd(array_sum($request->ticket));
 
@@ -391,8 +391,6 @@ class SaleController extends Controller
 
       // Add a negative payment of the sum of payments for this sale to even out
 
-
-
       $refund =  new Payment([
         'cashier_id'        => Auth::user()->id,
         'payment_method_id' => $sale->payments[0]->payment_method_id,
@@ -401,6 +399,7 @@ class SaleController extends Controller
         'change_due'        => - round($sale->payments[0]->sum('change_due'), 2),
         'source'            => 'admin',
         'sale_id'           => $sale->payments[0]->sale_id,
+        'refunded'          => false,
       ]);
 
       $sale->payments()->save($refund);
@@ -427,15 +426,20 @@ class SaleController extends Controller
       $refund->cashier_id        = Auth::user()->id;
       $refund->payment_method_id = $payment->payment_method_id;
       // Tendered may be nullable if the customer hasn't paid
-      $refund->tendered          = - round($sale->payments->sum('tendered'), 2);
-      $refund->total             = - round($sale->payments->sum('total'), 2);
+      $refund->tendered          = - round($payment->tendered, 2);
+      $refund->total             = - round($payment->total, 2);
       // payment = total - tendered (precision set to two decimal places)
       $refund->change_due        = - round($payment->change_due, 2);
       $refund->reference         = $payment->reference;
       $refund->source            = 'admin';
       $refund->sale_id           = $payment->sale_id;
+      $refund->refunded          = false;
 
       $refund->save();
+
+      // Mark a payment that has been refunded and such
+      $payment->refunded = true;
+      $payment->save();
 
       Session::flash('success',
           'Payment # ' . $refund->id . ' has been refunded successfully!');

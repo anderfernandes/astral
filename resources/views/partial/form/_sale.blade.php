@@ -276,13 +276,15 @@
             <th>Amount Paid</th>
             <th>Date</th>
             <th>Cashier</th>
-            @isset($sale)
+            @if (isSet($sale))
               @if (!$sale->refund)
-                @if ($sale->payments->sum('total') > 0)
-                <th>Actions</th>
+                @if ($sale->payments->count() > 1)
+                  @if ($sale->payments->sum('total') > 0)
+                  <th>Actions</th>
+                  @endif
                 @endif
               @endif
-            @endisset
+            @endif
           </tr>
         </thead>
         <tbody>
@@ -299,16 +301,18 @@
                     <td>{{ $payment->method->name }}</td>
                     <td>{{ number_format($payment->tendered, 2) }}</td>
                     <td>{{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
-                    <td>{{ $payment->cashier->firstname }}</td>
+                    <td @if($payment->total < 0 or $payment->refunded) colspan="2" @endif>{{ $payment->cashier->firstname }}</td>
                     @if (!$sale->refund)
-                      @if ($sale->payments->sum('total') > 0)
-                        @if ($payment->total > 0)
-                          @if ($loop->last)
-                          <td>
-                            {!! Form::open(['route' => ['admin.sales.refundPayment', $payment], 'class' => 'ui form', 'id' => 'refundPayment']) !!}
-                              {!! Form::button('<i class="reply icon"></i>', ['type' => 'submit', 'class' => 'ui mini basic icon button']) !!}
-                            {!! Form::close() !!}
-                          </td>
+                      @if ($sale->payments->where('refunded', false)->where('total', '>', 0)->count() > 1)
+                        @if ($sale->payments->sum('total') > 0)
+                          @if ($payment->total > 0)
+                            @if (!$payment->refunded)
+                            <td>
+                              {!! Form::open(['route' => ['admin.sales.refundPayment', $payment], 'class' => 'ui form', 'id' => 'refundPayment']) !!}
+                                {!! Form::button('<i class="reply icon"></i>', ['type' => 'submit', 'class' => 'ui mini basic icon button']) !!}
+                              {!! Form::close() !!}
+                            </td>
+                            @endif
                           @endif
                         @endif
                       @endif
