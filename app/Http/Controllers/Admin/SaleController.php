@@ -81,7 +81,8 @@ class SaleController extends Controller
             'organization_id'      => 'required',
             'customer_id'          => 'required',
             'status'               => 'required',
-            'first_event_id'       => 'required|different:second_event_id',
+            'first_event_id'       => 'min:1|required|different:second_event_id',
+            'second_event_id'      => 'min:1',
             'tendered'             => 'numeric',
             'ticket.*'             => 'numeric',
             'memo'                 => 'max:255',
@@ -100,13 +101,22 @@ class SaleController extends Controller
           $sale->tax                  = round($request->tax, 2);
           $sale->total                = round($request->total, 2);
           $sale->refund               = false;
-          $sale->memo                 = $request->memo;
+          //$sale->memo                 = $request->memo;
           $sale->source               = "admin";
           $sale->sell_to_organization = ($request->organization_id == 1) ? false : true;
 
           $sale->save();
 
           $sale->events()->attach([$request->first_event_id, $request->second_event_id]);
+
+          if (isSet($request->memo))
+          {
+            $sale->memo()->create([
+              'author_id' => Auth::user()->id,
+              'message'   => $request->memo,
+              'sale_id'   => $sale->id,
+            ]);
+          }
 
           if (isSet($request->payment_method_id) && ($request->tendered > 0)) {
 
@@ -252,7 +262,7 @@ class SaleController extends Controller
         $sale->tax                  = round($request->tax, 2);
         $sale->total                = round($request->total, 2);
         $sale->refund               = false;
-        $sale->memo                 = $request->memo;
+        //$sale->memo                 = $request->memo;
         $sale->sell_to_organization = $request->sell_to_organization;
 
         $sale->save();
@@ -260,6 +270,15 @@ class SaleController extends Controller
         $sale->events()->detach();
 
         $sale->events()->attach([$request->first_event_id, $request->second_event_id]);
+
+        if (isSet($request->memo))
+        {
+          $sale->memo()->create([
+            'author_id' => Auth::user()->id,
+            'message'   => $request->memo,
+            'sale_id'   => $sale->id,
+          ]);
+        }
 
         if (isSet($request->payment_method_id) && ($request->tendered > 0)) {
 
@@ -363,7 +382,28 @@ class SaleController extends Controller
       // Pending server side validation
 
       $sale->refund = true;
-      $sale->memo   = $request->memo;
+      $sale->memo()->create([
+        'author_id' => Auth::user()->id,
+        'message'   => $request->memo,
+        'sale_id'   => $sale->id,
+      ]);
+
+      // Add a negative payment of the sum of payments for this sale to even out
+
+
+
+      $refund =  new Payment([
+        'cashier_id'        => Auth::user()->id,
+        'payment_method_id' => $sale->payments[0]->payment_method_id,
+        'tendered'          => - round($sale->payments[0]->sum('tendered'), 2),
+        'total'             => - round($sale->payments[0]->sum('total'), 2),
+        'change_due'        => - round($sale->payments[0]->sum('change_due'), 2),
+        'source'            => 'admin',
+        'sale_id'           => $sale->payments[0]->sale_id,
+      ]);
+
+      $sale->payments()->save($refund);
+
       $sale->status = "complete";
 
       $sale->save();

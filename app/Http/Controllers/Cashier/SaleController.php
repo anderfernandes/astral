@@ -108,13 +108,22 @@ class SaleController extends Controller
         $sale->tax               = round($request->tax, 2);
         $sale->total             = round($request->total, 2);
         $sale->refund            = false;
-        $sale->memo              = $request->memo;
+        //$sale->memo              = $request->memo;
         $sale->source            = "admin";
         $sale->sell_to_organization = $request->sell_to_organization;
 
         $sale->save();
 
         $sale->events()->attach([$request->first_event_id, $request->second_event_id]);
+
+        if (isSet($request->memo))
+        {
+          $sale->memo()->create([
+            'author_id' => Auth::user()->id,
+            'message'   => $request->memo,
+            'sale_id'   => $sale->id,
+          ]);
+        }
 
         if (isSet($request->payment_method_id) && ($request->tendered > 0)) {
 
@@ -259,7 +268,7 @@ class SaleController extends Controller
         $sale->tax               = round($request->tax, 2);
         $sale->total             = round($request->total, 2);
         $sale->refund            = false;
-        $sale->memo              = $request->memo;
+        //$sale->memo              = $request->memo;
         $sale->sell_to_organization = $request->sell_to_organization;
 
         $sale->save();
@@ -267,6 +276,15 @@ class SaleController extends Controller
         $sale->events()->detach();
 
         $sale->events()->attach([$request->first_event_id, $request->second_event_id]);
+
+        if (isSet($request->memo))
+        {
+          $sale->memo()->create([
+            'author_id' => Auth::user()->id,
+            'message'   => $request->memo,
+            'sale_id'   => $sale->id,
+          ]);
+        }
 
         if (isSet($request->payment_method_id) && ($request->tendered > 0)) {
 

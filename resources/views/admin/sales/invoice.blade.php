@@ -50,7 +50,9 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
       Bill to: <br />
       @if ($sale->sell_to_organization)
         {{ $sale->organization->name }}<br />
+        @if (!($sale->organization->name == $sale->customer->firstname))
         {{ $sale->customer->fullname }}<br />
+        @endif
         {{ $sale->organization->address }} </br>
         {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}
       @else
@@ -62,7 +64,9 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
 
     <h4 class="ui left floated header">
       Sold to:<br />
+      @if (!($sale->organization->name == $sale->customer->firstname))
       {{ $sale->customer->fullname }}<br />
+      @endif
       {{ $sale->organization->name }}
     </h4>
 
@@ -124,6 +128,11 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
               <tr>
                 <td class="right aligned"><strong>Amount Paid</strong></td>
               </tr>
+              @if ($sale->refund)
+                <tr>
+                  <td class="right aligned"><strong>Refund</strong></td>
+                </tr>
+              @endif
               <tr>
                 <td class="right aligned"><strong>Change</strong></td>
               </tr>
@@ -148,6 +157,11 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
               <tr>
                 <td style="color:#cf3534"><strong>-$ {{ number_format($sale->payments->sum('tendered'), 2) }}</strong></td>
               </tr>
+              @if ($sale->refund)
+                <tr>
+                  <td style="color:#cf3534"><strong>($ {{ number_format($sale->total, 2) }})</strong></td>
+                </tr>
+              @endif
               <tr>
                 <td>$ {{ number_format($sale->payments->sum('change_due'), 2) }}</td>
               </tr>

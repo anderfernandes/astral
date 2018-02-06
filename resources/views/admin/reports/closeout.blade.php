@@ -1,6 +1,6 @@
 @extends('layout.report')
 
-@section('title', $paymentUser->firstname.' '.$paymentUser->lastname.'\'s Closeout Report')
+@section('title', $paymentUser->fullname . '\'s Closeout Report')
 
 @section('content')
 
@@ -50,6 +50,44 @@
       <?php $cashPaymentsTotal = 0 ?>
   @endif
 
+  @if (count($cashRefunds) > 0)
+
+      <tr>
+        <td><strong>Quantity</strong></td>
+        <td><strong>Method</strong></td>
+        <td><strong>Amount</strong></td>
+      </tr>
+
+      <tr>
+        <td>{{ count($cashPayments) }}</td>
+        <td>Cash</td>
+        <td class="right aligned">$
+          <?php
+            $cashRefundsTotal = 0;
+            foreach ($cashRefunds as $cashRefund)
+            {
+              $cashRefundsTotal += $cashRefund['tendered'] - $cashRefund['change_due'];
+            }
+            echo '(' . number_format($cashRefundsTotal, 2) .')'
+            ?>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+          <strong>Cash Totals: <span style="float:right">$ ({{ number_format($cashRefundsTotal, 2) }})</span></strong>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+          Transactions: {{ count($cashRefunds) }}
+        </td>
+      </tr>
+  @else
+      <?php $cashRefundsTotal = 0 ?>
+  @endif
+
   @if (count($cardPayments) > 0)
 
       <tr>
@@ -85,6 +123,44 @@
       </tr>
   @else
       <?php $cardPaymentsTotal = 0 ?>
+  @endif
+
+  @if (count($cardRefunds) > 0)
+
+      <tr>
+        <td><strong>Quantity</strong></td>
+        <td><strong>Method</strong></td>
+        <td><strong>Amount</strong></td>
+      </tr>
+
+      <tr>
+        <td>{{ count($cardPayments) }}</td>
+        <td>Cash</td>
+        <td class="right aligned">$
+          <?php
+            $cardRefundsTotal = 0;
+            foreach ($cardRefunds as $cardRefund)
+            {
+              $cardRefundsTotal += $cardRefund['tendered'] - $cardRefund['change_due'];
+            }
+            echo '(' . number_format($cardRefundsTotal, 2) .')'
+            ?>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+          <strong>Card Totals: <span style="float:right">$ ({{ number_format($cardRefundsTotal, 2) }})</span></strong>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+          Transactions: {{ count($cardRefunds) }}
+        </td>
+      </tr>
+  @else
+      <?php $cardRefundsTotal = 0 ?>
   @endif
 
   @if (count($checkPayments) > 0)
@@ -125,10 +201,49 @@
     <?php $checkPaymentsTotal = 0 ?>
   @endif
 
+  @if (count($checkRefunds) > 0)
+
+      <tr>
+        <td><strong>Quantity</strong></td>
+        <td><strong>Method</strong></td>
+        <td><strong>Amount</strong></td>
+      </tr>
+
+      <tr>
+        <td>{{ count($checkPayments) }}</td>
+        <td>Cash</td>
+        <td class="right aligned">$
+          <?php
+            $checkRefundsTotal = 0;
+            foreach ($checkRefunds as $checkRefund)
+            {
+              $checkRefundsTotal += $checkRefund['tendered'] - $checkRefund['change_due'];
+            }
+            echo '(' . number_format($checkRefundsTotal, 2) .')'
+            ?>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+          <strong>Check Totals: <span style="float:right">$ ({{ number_format($checkRefundsTotal, 2) }})</span></strong>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+          Transactions: {{ count($checkRefunds) }}
+        </td>
+      </tr>
+  @else
+      <?php $checkRefundsTotal = 0 ?>
+  @endif
+
       <tr>
         <td colspan="3">
           {{ Date::parse($date)->format('m/d/Y') }}
-          Totals: <span style="float:right">$ {{ number_format($cashPaymentsTotal + $cardPaymentsTotal + $checkPaymentsTotal, 2) }}
+          Totals: <span style="float:right">
+            $ {{ number_format($cashPaymentsTotal + $cashRefundsTotal + $cardPaymentsTotal + $cardRefundsTotal + $checkPaymentsTotal + $checkRefundsTotal, 2) }}
         </td>
       </tr>
 

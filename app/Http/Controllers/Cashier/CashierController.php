@@ -124,6 +124,15 @@ class CashierController extends Controller
 
         $sale->tickets()->saveMany($tickets);
 
+        if (isSet($request->memo))
+        {
+          $sale->memo()->create([
+            'author_id' => Auth::user()->id,
+            'message'   => $request->memo,
+            'sale_id'   => $sale->id,
+          ]);
+        }
+
         Session::flash('success', count($request->input('ticket')). ' ticket(s) sold successfully');
 
         return redirect()->route('cashier.index');

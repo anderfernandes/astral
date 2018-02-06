@@ -8,8 +8,6 @@
 
 @section('content')
 
-  {!! Form::model($sale, ['route' => ['admin.sales.update', $sale], 'class' => 'ui form', 'method' => 'PUT']) !!}
-    @include('partial.form._sale')
-  {!! Form::close() !!}
+  @include('partial.form._sale')
 
 @endsection

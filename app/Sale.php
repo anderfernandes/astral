@@ -39,4 +39,14 @@ class Sale extends Model
       return $this->belongsToMany('App\Event', 'sale_event', 'sale_id', 'event_id');
     }
 
+    public function memos()
+    {
+      return $this->hasMany('App\SaleMemo');
+    }
+
+    public function memo()
+    {
+      return $this->hasMany('App\SaleMemo');
+    }
+
 }

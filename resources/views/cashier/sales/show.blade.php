@@ -256,19 +256,26 @@
 
     </div>
 
-    @if (isset($sale->memo))
-    <div class="column">
-      @if ($sale->refund)
-      <h3 class="ui red header">
-      @else
-      <h3 class="ui header">
-      @endif
-        <div class="sub header">Memo</div>
-        {{ $sale->memo }}
-      </h3>
-    </div>
-    @endif
+  </div>
 
+  <div class="ui comments">
+    <div class="ui dividing header">Memo</div>
+    @foreach(App\SaleMemo::where('sale_id', $sale->id)->orderBy('updated_at', 'desc')->get() as $memo)
+      <div class="comment">
+        <div class="avatar"><i class="user circle outline big icon"></i></div>
+        <div class="content">
+          <div class="author">
+            {{ $memo->author->fullname }}
+            <div class="metadata">
+              <span class="date">{{ Date::parse($memo->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($memo->created_at)->diffForHumans() }})</span>
+            </div>
+          </div>
+          <div class="text">
+            {{ $memo->message }}
+          </div>
+        </div>
+      </div>
+    @endforeach
   </div>
 
   <!-- Refund Modal -->

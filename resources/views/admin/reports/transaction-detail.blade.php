@@ -27,7 +27,7 @@
   <tbody>
     @foreach ($payments as $payment)
 
-      @if ($payment->total < 0 or $payment->sale->refund)
+      @if ($payment->total < 0)
       <tr class="negative">
       @else
       <tr>

@@ -114,26 +114,8 @@
         <td>{{ $sale->creator->firstname }}</td>
         <td>
           <div class="ui icon buttons">
-            <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
-            <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
-            <div class="ui icon top left pointing dropdown secondary button">
-              <i class="copy icon"></i>
-              <div class="menu">
-                @if ($sale->events->count() > 0)
-                  @if ($sale->status != "canceled")
-                    <a class="item" target="_blank" href="{{ route('admin.sales.confirmation', $sale) }}">Reservation Confirmation</a>
-                    <a class="item" target="_blank" href="{{ route('admin.sales.invoice', $sale) }}">Invoice</a>
-                    <a class="item" target="_blank" href="{{ route('admin.sales.receipt', $sale) }}">Receipt</a>
-                  @else
-                    <a class="item" target="_blank" href="{{ route('admin.sales.cancelation', $sale) }}">Cancelation Receipt</a>
-                  @endif
-                @else
-                  <a class="item" href="{{ route('cashier.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>
-                @endif
-
-              </div>
-            </div>
-
+            <a href="{{ route('cashier.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
+            <a href="{{ route('cashier.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
           </div>
         </td>
       </tr>

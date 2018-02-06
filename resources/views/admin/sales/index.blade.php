@@ -96,22 +96,23 @@
           @endif
         </td>
         <td>
-          @if ($sale->status == 'complete')
-            <span class="ui green label"><i class="checkmark icon"></i>
-          @elseif ($sale->status == 'no show')
-            <span class="ui orange label"><i class="thumbs outline down icon"></i>
-          @elseif ($sale->status == 'open')
-            <span class="ui violet label"><i class="unlock icon"></i>
-          @elseif ($sale->status == 'tentative')
-            <span class="ui yellow label"><i class="help icon"></i>
-          @elseif ($sale->status == 'canceled')
-            <span class="ui red label"><i class="remove icon"></i>
-          @else
-            <span class="ui label">
-          @endif
-          {{ $sale->status }}</span>
-          @if($sale->refund)
+          @if ($sale->refund)
             <span class="ui red label"><i class="reply icon"></i>refund</span>
+          @else
+            @if ($sale->status == 'complete')
+              <span class="ui green label"><i class="checkmark icon"></i>
+            @elseif ($sale->status == 'no show')
+              <span class="ui orange label"><i class="thumbs outline down icon"></i>
+            @elseif ($sale->status == 'open')
+              <span class="ui violet label"><i class="unlock icon"></i>
+            @elseif ($sale->status == 'tentative')
+              <span class="ui yellow label"><i class="help icon"></i>
+            @elseif ($sale->status == 'canceled')
+              <span class="ui red label"><i class="remove icon"></i>
+            @else
+              <span class="ui label">
+            @endif
+            {{ $sale->status }}</span>
           @endif
         </td>
         <td>{{ $sale->creator->firstname }}</td>

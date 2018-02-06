@@ -8,9 +8,8 @@
 
 @section('content')
 
-  {!! Form::model($sale, ['route' => ['cashier.sales.update', $sale], 'class' => 'ui form', 'method' => 'PUT']) !!}
-    @include('partial.form._sale')
-  {!! Form::close() !!}
+
+  @include('partial.form._sale')
 
   @include('cashier.partial._spinner')
 

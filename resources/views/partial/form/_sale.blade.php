@@ -1,4 +1,14 @@
+@if (Request::routeIs('admin.sales.create'))
+  {!! Form::open(['route' => 'admin.sales.store', 'class' => 'ui form']) !!}
+@elseif (Request::routeIs('cashier.sales.create'))
+  {!! Form::open(['route' => 'cashier.sales.store', 'class' => 'ui form']) !!}
+@elseif (Request::routeIs('admin.sales.edit'))
+  {!! Form::model($sale, ['route' => ['admin.sales.update', $sale], 'class' => 'ui form', 'method' => 'PUT']) !!}
+@elseif (Request::routeIs('cashier.sales.edit'))
+  {!! Form::model($sale, ['route' => ['cashier.sales.update', $sale], 'class' => 'ui form', 'method' => 'PUT']) !!}
+@else
 
+@endif
 <div class="two fields">
   <div class="inline required field">
     {!! Form::label('status', 'Status') !!}
@@ -132,7 +142,7 @@
         {{ Form::label('first_event_id', 'First Event') }}
         <div class="ui selection search scrolling dropdown" id="first-event">
           @if (old('first_event_id') == null)
-            <input type="hidden" id="first_event_id" name="first_event_id" value="0">
+            <input type="hidden" id="first_event_id" name="first_event_id">
           @else
             <input type="hidden" id="first_event_id" name="first_event_id" value="{{ old('first_event_id') }}">
           @endif
@@ -321,12 +331,43 @@
     </div>
   </div>
 </div>
-<br /><br />
-<div class="field">
-  {!! Form::label('memo', 'Memo') !!}
-  {!! Form::textarea('memo', null, ['placeholder' => 'Write a memo here']) !!}
+<h4 class="ui horizontal divider header">
+  <i class="comment outline icon"></i> Memo
+</h4>
+<div class="ui two column doubling stackable grid">
+  <div class="column">
+    @if (isSet($sale->memos))
+      <div class="ui comments">
+        <div class="ui dividing header">Memo</div>
+        @foreach($sale->memos as $memo)
+          <div class="comment">
+            <div class="avatar"><i class="user circle outline big icon"></i></div>
+            <div class="content">
+              <div class="author">
+                {{ $memo->author->fullname }}
+                <div class="metadata">
+                  <span class="date">{{ Date::parse($memo->created_at)->format('l, F j, Y \a\t g:i A') }}</span>
+                </div>
+              </div>
+              <div class="text">
+                {{ $memo->message }}
+              </div>
+            </div>
+          </div>
+        @endforeach
+      </div>
+    @endif
+  </div>
+
+  <div class="column">
+    <div class="field">
+      {!! Form::label('memo', 'Memo') !!}
+      {!! Form::textarea('memo', null, ['placeholder' => 'Write a memo here']) !!}
+    </div>
+  </div>
 </div>
 
+{!! Form::close() !!}
 
 <script>
 

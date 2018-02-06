@@ -107,7 +107,6 @@ class ReportController extends Controller
 
       $sales = Sale::where([
         ['updated_at', '>=', $date],
-        ['refund', '=', false],
       ])->orderBy('created_at', 'asc')->get();
 
       // Get Card Sales IDs
@@ -118,27 +117,44 @@ class ReportController extends Controller
       if ($type == 'closeout')
       {
 
-        $cashPayments = [];
-        $cardPayments = [];
+        $cashPayments  = [];
+        $cashRefunds   = [];
+        $cardPayments  = [];
+        $cardRefunds   = [];
         $checkPayments = [];
+        $checkRefunds  = [];
         $otherPayments = [];
+        $otherRefunds  = [];
 
         // Get payments of a particular payment_method type
         foreach ($payments as $payment) {
-          if ($payment->method->type == 'cash')
+          if ($payment->method->type == 'cash' and $payment->tendered > 0)
             array_unshift($cashPayments, $payment);
+          elseif ($payment->method->type == 'cash' and $payment->tendered < 0)
+              array_unshift($cashRefunds, $payment);
           else if ($payment->method->type == 'card')
             array_unshift($cardPayments, $payment);
+          elseif ($payment->method->type == 'card' and $payment->tendered < 0)
+              array_unshift($cardRefunds, $payment);
           else if ($payment->method->type == 'check')
             array_unshift($checkPayments, $payment);
+          elseif ($payment->method->type == 'check' and $payment->tendered < 0)
+              array_unshift($checkRefunds, $payment);
           else
-            array_unshift($otherPayments, $payment);
+            if ($payment->tendered > 0)
+              array_unshift($otherPayments, $payment);
+            else
+              array_unshift($otherRefunds, $payment);
         }
 
         return view('admin.reports.closeout')->with('cashPayments', $cashPayments)
+                                             ->with('cashRefunds', $cashRefunds)
                                              ->with('cardPayments', $cardPayments)
+                                             ->with('cardRefunds', $cardRefunds)
                                              ->with('checkPayments', $checkPayments)
+                                             ->with('checkRefunds', $checkRefunds)
                                              ->with('otherPayments', $otherPayments)
+                                             ->with('otherRefunds', $otherRefunds)
                                              ->with('paymentUser', $user)
                                              ->withDate($date);
       }

@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+
+  protected $fillable = ['cashier_id', 'payment_method_id', 'tendered', 'total', 'change_due', 'source', 'sale_id'];
+
+
   public function method()
   {
     return $this->hasOne('App\PaymentMethod', 'id', 'payment_method_id');
