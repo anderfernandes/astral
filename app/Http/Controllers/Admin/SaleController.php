@@ -377,6 +377,7 @@ class SaleController extends Controller
         //
     }
 
+    // THIS METHODS REFUNDS SALES, NOT PAYMENTS
     public function refund(Request $request, Sale $sale)
     {
       // Pending server side validation
@@ -415,6 +416,7 @@ class SaleController extends Controller
       return redirect()->route('admin.sales.show', $sale);
     }
 
+    // THIS METHOD REFUNDS INDIVIDUAL PAYMENTS, NOT SALES
     public function refundPayment(Payment $payment)
     {
 

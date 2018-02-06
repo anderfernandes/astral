@@ -132,11 +132,11 @@ class ReportController extends Controller
             array_unshift($cashPayments, $payment);
           elseif ($payment->method->type == 'cash' and $payment->tendered < 0)
               array_unshift($cashRefunds, $payment);
-          else if ($payment->method->type == 'card')
+          else if ($payment->method->type == 'card' and $payment->tendered > 0)
             array_unshift($cardPayments, $payment);
           elseif ($payment->method->type == 'card' and $payment->tendered < 0)
               array_unshift($cardRefunds, $payment);
-          else if ($payment->method->type == 'check')
+          else if ($payment->method->type == 'check' and $payment->tendered > 0)
             array_unshift($checkPayments, $payment);
           elseif ($payment->method->type == 'check' and $payment->tendered < 0)
               array_unshift($checkRefunds, $payment);

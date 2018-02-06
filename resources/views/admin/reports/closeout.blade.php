@@ -134,8 +134,8 @@
       </tr>
 
       <tr>
-        <td>{{ count($cardPayments) }}</td>
-        <td>Cash</td>
+        <td>{{ count($cardRefunds) }}</td>
+        <td>Credit Card</td>
         <td class="right aligned">$
           <?php
             $cardRefundsTotal = 0;
@@ -211,7 +211,7 @@
 
       <tr>
         <td>{{ count($checkPayments) }}</td>
-        <td>Cash</td>
+        <td>Check</td>
         <td class="right aligned">$
           <?php
             $checkRefundsTotal = 0;
