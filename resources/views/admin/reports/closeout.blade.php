@@ -59,7 +59,7 @@
       </tr>
 
       <tr>
-        <td>{{ count($cashPayments) }}</td>
+        <td>{{ count($cashRefunds) }}</td>
         <td>Cash</td>
         <td class="right aligned">$
           <?php
@@ -200,7 +200,7 @@
   @else
     <?php $checkPaymentsTotal = 0 ?>
   @endif
-
+  {{-- Check refunds --}}
   @if (count($checkRefunds) > 0)
 
       <tr>
@@ -210,7 +210,7 @@
       </tr>
 
       <tr>
-        <td>{{ count($checkPayments) }}</td>
+        <td>{{ count($checkRefunds) }}</td>
         <td>Check</td>
         <td class="right aligned">$
           <?php
