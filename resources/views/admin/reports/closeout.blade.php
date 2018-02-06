@@ -15,14 +15,14 @@
   @if (count($cashPayments) > 0)
 
       <tr>
-        <td><strong>Quantity</strong></td>
         <td><strong>Method</strong></td>
+        <td><strong>Transactions</strong></td>
         <td><strong>Amount</strong></td>
       </tr>
 
       <tr>
-        <td>{{ count($cashPayments) }}</td>
         <td>Cash</td>
+        <td>{{ count($cashPayments) }}</td>
         <td class="right aligned">$
           <?php
             $cashPaymentsTotal = 0;
@@ -41,11 +41,6 @@
         </td>
       </tr>
 
-      <tr>
-        <td colspan="3">
-          Transactions: {{ count($cashPayments) }}
-        </td>
-      </tr>
   @else
       <?php $cashPaymentsTotal = 0 ?>
   @endif
@@ -53,14 +48,14 @@
   @if (count($cashRefunds) > 0)
 
       <tr>
-        <td><strong>Quantity</strong></td>
         <td><strong>Method</strong></td>
+        <td><strong>Transactions</strong></td>
         <td><strong>Amount</strong></td>
       </tr>
 
       <tr>
-        <td>{{ count($cashRefunds) }}</td>
         <td>Cash</td>
+        <td>{{ count($cashRefunds) }}</td>
         <td class="right aligned">$
           <?php
             $cashRefundsTotal = 0;
@@ -79,11 +74,6 @@
         </td>
       </tr>
 
-      <tr>
-        <td colspan="3">
-          Transactions: {{ count($cashRefunds) }}
-        </td>
-      </tr>
   @else
       <?php $cashRefundsTotal = 0 ?>
   @endif
@@ -91,14 +81,14 @@
   @if (count($cardPayments) > 0)
 
       <tr>
-        <td><strong>Quantity</strong></td>
         <td><strong>Method</strong></td>
+        <td><strong>Transactions</strong></td>
         <td><strong>Amount</strong></td>
       </tr>
 
       <tr>
-        <td>{{ count($cardPayments) }}</td>
         <td>Credit Card</td>
+        <td>{{ count($cardPayments) }}</td>
         <td class="right aligned">$
           <?php
             $cardPaymentsTotal = 0;
@@ -116,11 +106,7 @@
           <strong>Card Totals: <span style="float:right">$ {{ number_format($cardPaymentsTotal, 2) }}</span></strong>
         </td>
       </tr>
-      <tr>
-        <td colspan="3">
-          Transactions: {{ count($cardPayments) }}
-        </td>
-      </tr>
+
   @else
       <?php $cardPaymentsTotal = 0 ?>
   @endif
@@ -128,14 +114,14 @@
   @if (count($cardRefunds) > 0)
 
       <tr>
-        <td><strong>Quantity</strong></td>
         <td><strong>Method</strong></td>
+        <td><strong>Transactions</strong></td>
         <td><strong>Amount</strong></td>
       </tr>
 
       <tr>
-        <td>{{ count($cardRefunds) }}</td>
         <td>Credit Card</td>
+        <td>{{ count($cardRefunds) }}</td>
         <td class="right aligned">$
           <?php
             $cardRefundsTotal = 0;
@@ -154,11 +140,6 @@
         </td>
       </tr>
 
-      <tr>
-        <td colspan="3">
-          Transactions: {{ count($cardRefunds) }}
-        </td>
-      </tr>
   @else
       <?php $cardRefundsTotal = 0 ?>
   @endif
@@ -166,14 +147,14 @@
   @if (count($checkPayments) > 0)
 
       <tr>
-        <td><strong>Quantity</strong></td>
         <td><strong>Method</strong></td>
+        <td><strong>Transactions</strong></td>
         <td><strong>Amount</strong></td>
       </tr>
 
       <tr>
-        <td>{{ count($checkPayments) }}</td>
         <td>Check</td>
+        <td>{{ count($checkPayments) }}</td>
         <td>$
           <?php
             $checkPaymentsTotal = 0;
@@ -192,11 +173,6 @@
         </td>
       </tr>
 
-      <tr>
-        <td colspan="3">
-          Transactions: {{ count($checkPayments) }}
-        </td>
-      </tr>
   @else
     <?php $checkPaymentsTotal = 0 ?>
   @endif
@@ -204,14 +180,14 @@
   @if (count($checkRefunds) > 0)
 
       <tr>
-        <td><strong>Quantity</strong></td>
         <td><strong>Method</strong></td>
+        <td><strong>Transactions</strong></td>
         <td><strong>Amount</strong></td>
       </tr>
 
       <tr>
-        <td>{{ count($checkRefunds) }}</td>
         <td>Check</td>
+        <td>{{ count($checkRefunds) }}</td>
         <td class="right aligned">$
           <?php
             $checkRefundsTotal = 0;
@@ -230,11 +206,6 @@
         </td>
       </tr>
 
-      <tr>
-        <td colspan="3">
-          Transactions: {{ count($checkRefunds) }}
-        </td>
-      </tr>
   @else
       <?php $checkRefundsTotal = 0 ?>
   @endif
