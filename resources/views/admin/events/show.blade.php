@@ -57,7 +57,7 @@
             <i class="dollar icon"></i> Sales
           </h4>
           @foreach ($event->sales as $sale)
-            @if (!$sale->refund)
+            @if (!$sale->refund and $sale->customer->id != 1)
             <h3 class="ui dividing header">
               <div class="content">
                 <div class="sub header">Sale # {{ $sale->id }}</div>
