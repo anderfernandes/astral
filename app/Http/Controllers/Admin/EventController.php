@@ -57,6 +57,7 @@ class EventController extends Controller
             'dates.*.end'    => 'required',
             'seats'          => 'required|min:0',
             'memo'           => 'nullable',
+            'public'         => 'required',
         ]);
 
         foreach ($request->dates as $date) {
@@ -70,6 +71,7 @@ class EventController extends Controller
           $event->seats          = $request->seats;
           $event->memo           = $request->memo;
           $event->creator_id     = Auth::user()->id;
+          $event->public         = $request->public;
 
           $event->save();
         }
@@ -88,7 +90,9 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return view('admin.events.show')->withEvent($event);
+        $shows = Show::pluck('name', 'id');
+        $eventTypes = EventType::where('id', '<>', 1)->pluck('name', 'id');
+        return view('admin.events.show', compact('shows'), compact('eventTypes'))->withEvent($event);
     }
 
     /**
@@ -116,19 +120,21 @@ class EventController extends Controller
       $this->validate($request, [
           'show_id'        => 'required',
           'type_id'        => 'required',
-          'start'          => 'required|unique:events,start',
-          'end'            => 'required',
+          'dates.*.start'  => 'required|unique:events,start',
+          'dates.*.end'    => 'required',
           'seats'          => 'required',
           'memo'           => 'nullable',
+          'public'         => 'required',
       ]);
 
       $event->show_id        = $request->show_id;
       $event->type_id        = $request->type_id;
-      $event->start          = new Date($request->start);
-      $event->end            = new Date($request->end);
+      $event->start          = new Date($request->dates[0]['start']);
+      $event->end            = new Date($request->dates[0]['end']);
       $event->seats          = $request->seats;
       $event->memo           = $request->memo;
       $event->creator_id     = Auth::user()->id;
+      $event->public         = $request->public;
 
       $event->save();
 

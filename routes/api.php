@@ -192,7 +192,7 @@ Route::get('events', function() {
 Route::get('events/{start}/{end}', function($start, $end) {
   $start = Date::parse($start)->startOfDay()->toDateTimeString();
   $end = Date::parse($end)->endOfDay()->toDateTimeString();
-  $events = Event::where('start', '>=', $start)->whereDate('end', '<', $end)->get();
+  $events = Event::where('start', '>=', $start)->whereDate('end', '<', $end)->where('public', true)->get();
   $eventsArray = [];
   foreach ($events as $event) {
     $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();

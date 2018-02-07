@@ -1,7 +1,7 @@
 {{-- Edit Show Modal --}}
 @component('admin.partial._modal', [
   'id'     => 'edit-show',
-  'icon'   => 'plus',
+  'icon'   => 'edit',
   'title'  => 'Edit Show',
 ])
   @slot('content')

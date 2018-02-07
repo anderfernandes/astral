@@ -13,7 +13,7 @@
     <i class="large inbox icon"></i> Cashier
   </a>
   <div class="ui dropdown item">
-    <i class="large right chevron icon"></i>
+    <i class="large file text icon"></i>
     Reports
     <div class="menu">
       <a class="item" href="{{ route('cashier.reports', 'closeout') }}" target="_blank">
@@ -25,7 +25,7 @@
     </div>
   </div>
   <div class="ui dropdown item">
-    <i class="large right chevron icon"></i>
+    <i class="large dollar icon"></i>
     Sales
     <div class="menu">
       <a href="{{ route('cashier.sales.index') }}" class="item">

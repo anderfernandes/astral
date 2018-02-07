@@ -1,13 +1,13 @@
 @extends('layout.admin')
 
-@section('title', 'Add Event')
+@section('title', 'Create Event')
 
 @section('subtitle', 'New Event')
 
-@section('icon', 'calendar check')
+@section('icon', 'plus')
 
 @section('content')
 
-  @include('admin.partial.events._create')
+  @include('admin.partial.events._form', ['type' => 'create'])
 
 @endsection

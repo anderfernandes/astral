@@ -59,6 +59,10 @@
 
   textarea { font:inherit }
 
+  .CodeMirror, .CodeMirror-scroll {
+    min-height: 100px;
+  }
+
   @media only screen and (max-width:700px) {
     .hide-on-mobile {
       display:none !important;
