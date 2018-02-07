@@ -41,8 +41,8 @@
     <i class="eye icon"></i>
     <span class="text">Reservations</span>
     <div class="menu">
-      <div onclick="$('#calendar').fullCalendar('removeEventSources');$('#calendar').fullCalendar('addEventSource', '/api/events')" class="item">Events</div>
-      <div onclick="$('#calendar').fullCalendar('removeEventSources');$('#calendar').fullCalendar('addEventSource', '/api/calendar')" class="active item">Reservations</div>
+      <div onclick="toggleCalendar('events')" class="item">Events</div>
+      <div onclick="toggleCalendar('calendar')" class="active item">Reservations</div>
     </div>
   </div>
 
@@ -83,11 +83,19 @@
       eventColor: '#000',
       @if (isSet($request->type))
       events: '/api/{{ $request->type }}',
+      eventColor: '{{ $request->type == 'calendar' ? '#1b1c1d' : '#002e5d' }}'
       @else
       events: '/api/calendar',
       @endif
 
     })
+  }
+
+  function toggleCalendar(type) {
+    $('#calendar').fullCalendar('removeEventSources')
+    var color = type == 'calendar' ? '#1b1c1d' : '#002e5d'
+    $('#calendar').fullCalendar('option', 'eventColor', color)
+    $('#calendar').fullCalendar('addEventSource', '/api/' + type)
   }
 
   function refetchEvents() {
