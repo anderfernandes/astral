@@ -12,7 +12,7 @@
     <i class="plus icon"></i> New Sale<i class="dropdown icon"></i>
     <div class="menu">
       @foreach (App\EventType::where('id', '!=', 1)->get() as $eventType)
-        <a href={{ route('admin.sales.create', $eventType) }} class="item">{{ $eventType->name }}</a>
+        <a href={{ route('cashier.sales.create', $eventType) }} class="item">{{ $eventType->name }}</a>
       @endforeach
     </div>
   </div>

@@ -9,7 +9,7 @@
 @section('content')
 
   <div class="ui buttons">
-    <a href="{{ route('admin.events.index') }}" class="ui default button">
+    <a href="{{ route('admin.calendar.index') }}/?type=events" class="ui default button">
       <i class="left chevron icon"></i> Back
     </a>
     <a href="javascript:$('#edit-event').modal('show')" class="ui primary button">

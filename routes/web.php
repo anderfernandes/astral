@@ -22,7 +22,7 @@ Route::group(
   // Index
   Route::get('/', 'AdminController@index')->name('index');
   // Calendar
-  Route::get('calendar', function(){ return view('admin.calendar.index'); })->name('calendar.index');
+  Route::get('calendar/', 'AdminController@calendar')->name('calendar.index');
   // Shows resource
   Route::get('shows/search', 'ShowController@search')->name('shows.search');
   Route::resource('shows', 'ShowController');

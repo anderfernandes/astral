@@ -27,17 +27,6 @@
   <a class="item {{ Request::routeIs('admin.calendar.index') ? 'active' : '' }}" href="{{ route('admin.calendar.index') }}">
     <i class="large calendar icon"></i> Calendar
   </a>
-  <div class="ui dropdown item">
-    <i class="large calendar check icon"></i> Events
-    <div class="menu">
-      <a class="item {{ Request::routeIs('admin.events.index') ? 'active' : '' }}" href="{{ route('admin.events.index') }}">
-        <i class="large calendar icon"></i> All Events
-      </a>
-      <a class="item {{ Request::routeIs('admin.events.create') ? 'active' : '' }}" href="{{ route('admin.events.create') }}">
-        <i class="large calendar plus icon"></i> Create Event
-      </a>
-    </div>
-  </div>
   <a class="item {{ Request::routeIs('admin.sales.index') ? 'active' : '' }}" href="{{ route('admin.sales.index') }}">
     <i class="large dollar icon"></i> Sales
   </a>

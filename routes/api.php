@@ -51,7 +51,7 @@ use Illuminate\Support\Facades\Auth;
 Route::get('calendar', function() {
   // Gets all events
 
-  $sales = Sale::where('customer_id', '!=', 1)->where('status', '!=', 'canceled')->where('customer_id', '!=', 1)->get();
+  $sales = Sale::where('customer_id', '!=', 1)->where('status', '!=', 'canceled')->where('refund', false)->get();
   $eventsArray = [];
   foreach ($sales as $sale) {
     $events = $sale->events->where('type_id', '!=', 1);

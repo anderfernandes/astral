@@ -8,14 +8,13 @@
 
 @section('content')
 
-
   <div class="ui black icon buttons">
     <div onclick="$('#calendar').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
     <div onclick="$('#calendar').fullCalendar('today')" class="ui button"><i class="checked calendar icon"></i></div>
     <div onclick="$('#calendar').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
   </div>
 
-  <a class="ui secondary button" href="{{ route('admin.events.create') }}">
+  <a class="ui secondary button" href="javascript:$('#create-event').modal('show')">
     <i class="calendar plus icon"></i> Create Event
   </a>
 
@@ -38,6 +37,15 @@
     </div>
   </div>
 
+  <div class="ui right floated secondary floating dropdown labeled icon button">
+    <i class="eye icon"></i>
+    <span class="text">Reservations</span>
+    <div class="menu">
+      <div onclick="$('#calendar').fullCalendar('removeEventSources');$('#calendar').fullCalendar('addEventSource', '/api/events')" class="item">Events</div>
+      <div onclick="$('#calendar').fullCalendar('removeEventSources');$('#calendar').fullCalendar('addEventSource', '/api/calendar')" class="active item">Reservations</div>
+    </div>
+  </div>
+
   @if (!isset($events) || count($events) > 0)
     <br /><br /><br />
     <div class="ui doubling stackable grid">
@@ -56,6 +64,8 @@
     </div>
   @endif
 
+  @include('admin.partial.events._create')
+
 <script>
 
   function loadCalendar(events) {
@@ -71,7 +81,12 @@
       eventLimit: true,
       minTime: '07:00:00',
       eventColor: '#000',
+      @if (isSet($request->type))
+      events: '/api/{{ $request->type }}',
+      @else
       events: '/api/calendar',
+      @endif
+
     })
   }
 

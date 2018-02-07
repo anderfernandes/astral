@@ -79,7 +79,7 @@ class EventController extends Controller
         Session::flash('success',
             'The event(s) <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> been added successfully!');
 
-        return redirect()->route('admin.events.index');
+        return redirect()->to(route('admin.calendar.index') . '/?type=events');
     }
 
     /**

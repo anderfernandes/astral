@@ -78,7 +78,7 @@
       <h2 class="ui header">
       @endif
         <div class="sub header">Customer</div>
-        {{ $sale->customer->firstname.' '.$sale->customer->lastname }}
+        {{ $sale->customer->fullname }}
       </h2>
 
       @if ($sale->refund)
