@@ -406,6 +406,8 @@ class SaleController extends Controller
 
       $sale->status = "complete";
 
+      $sale->tickets()->delete();
+
       $sale->save();
 
 
