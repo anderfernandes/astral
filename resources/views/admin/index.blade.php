@@ -202,7 +202,7 @@ function getAttendanceByType($ticketTypeID) {
             </div>
           </div>
         </div>
-        @else
+      @elseif ($lastSale->customer->role->name == "Member")
           <div class="event">
             <div class="label">
               <i class="user circle outline icon"></i>
