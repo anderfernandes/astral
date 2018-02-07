@@ -213,6 +213,14 @@
       <tr>
         <td colspan="3">
           {{ Date::parse($date)->format('m/d/Y') }}
+          Transactions: <span style="float:right">
+            {{ count($cashPayments) + count($cashRefunds) + count($cardPayments) + count($cardRefunds) + count($checkPayments) + count($checkRefunds) }}
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+          {{ Date::parse($date)->format('m/d/Y') }}
           Totals: <span style="float:right">
             $ {{ number_format($cashPaymentsTotal + $cashRefundsTotal + $cardPaymentsTotal + $cardRefundsTotal + $checkPaymentsTotal + $checkRefundsTotal, 2) }}
         </td>
