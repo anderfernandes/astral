@@ -24,7 +24,12 @@
 <div class="two required fields">
   <div class="field">
     {!! Form::label('public', 'Public') !!}
-    {!! Form::select('public', [true => 'Yes', false => 'No'], true, ['placeholder' => 'Is this a public event?', 'class' => 'ui dropdown']) !!}
+    @if (isSet($event))
+      {!! Form::select('public', [true => 'Yes', false => 'No'], $event->public, ['placeholder' => 'Is this a public event?', 'class' => 'ui dropdown']) !!}
+    @else
+      {!! Form::select('public', [true => 'Yes', false => 'No'], true, ['placeholder' => 'Is this a public event?', 'class' => 'ui dropdown']) !!}
+    @endif
+
   </div>
   <div class="field">
     {!! Form::label('seats', 'Seats') !!}
