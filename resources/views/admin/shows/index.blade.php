@@ -12,6 +12,7 @@
     <i class="plus icon"></i> Add Show
   </a>
 
+  <!--
   <div class="ui right icon input">
     <input type="text" placeholder="Show Name">
     <i class="search link icon"></i>
@@ -21,7 +22,7 @@
     <option value="Planetarium">Planetarium</option>
     <option value="Laser Light">Laser Light</option>
   </select>
-  <!--<select name="grade" id="grade" class="ui dropdown">
+  <select name="grade" id="grade" class="ui dropdown">
   <option value="">All Grades</option>
   <option value="Pre-K">Pre-K</option>
   <option value="Kindergarten">Kindergarten</option>
@@ -29,7 +30,8 @@
   <option value="Middle School">Middle School</option>
   <option value="High School">High School</option>
   <option value="College">College</option>
-</select>-->
+</select>
+-->
 
 @if (!isset($shows) || count($shows) > 0)
   <br /><br />

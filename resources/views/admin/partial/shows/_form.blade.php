@@ -64,7 +64,10 @@
     fields: {
       name: {
         identifier: 'name',
-        rules: [{ type: 'empty', prompt: 'Do not forget the show name!' }]
+        rules: [
+          { type: 'empty', prompt: 'Do not forget the show name!' },
+          { type: 'minLength[2]', prompt: '{name} should be at least {ruleValue} characters long'}
+        ]
       },
       type: {
         identifier: 'type',
@@ -74,19 +77,24 @@
         identifier: 'duration',
         rules: [
           { type: 'empty',   prompt: 'Enter the duration of the show in minutes' },
-          { type: 'integer', prompt: '{name} should be an integer' }
+          { type: 'integer', prompt: '{name} should be an integer' },
+          { type: 'maxLength[3]', prompt: '{name} should be at most {ruleValue} characters long'}
         ]
       },
       cover: {
         identifier: 'cover',
         rules: [
           { type: 'empty', prompt: 'Enter the link to the cover of the show' },
-          { type: 'url', prompt: 'The link to the show cover must be a public URL to a JPEG or PNG' }
+          { type: 'url', prompt: 'The link to the show cover must be a public URL to a JPEG or PNG' },
+          { type: 'minLength[5]', prompt: '{name} should be at least {ruleValue} characters long'}
         ]
       },
       description: {
         identifier: 'description',
-        rules: [{ type: 'empty', prompt: 'Enter a show description' }]
+        rules: [
+          { type: 'empty', prompt: 'Enter a show description' },
+          { type: 'minLength[10]', prompt: '{name} should be at least {ruleValue} characters long'}
+        ]
       },
     }
   })

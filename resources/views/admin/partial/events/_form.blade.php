@@ -3,14 +3,6 @@
 @else
   {!! Form::model($event, ['route' => ['admin.events.update', $event], 'class' => 'ui form', 'method' => 'PUT']) !!}
 @endif
-@if (Request::routeIs('admin.events.create') or Request::routeIs('admin.events.edit'))
-<div class="field">
-  <div class="ui buttons">
-    <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-    {!! Form::button('Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right labeled icon button']) !!}
-  </div>
-</div>
-@endif
 <div class="two required fields">
   <div class="field">
     {!! Form::label('show_id', 'Show') !!}
@@ -40,14 +32,14 @@
   <div class="field">
       {!! Form::label('start', 'Start Date and Time') !!}
       <div class="ui left icon input">
-        <input placeholder="Event Date and Time" name="dates[0][start]" type="text" readonly="readonly">
+        <input placeholder="Event Date and Time" data-validate="start_dates" name="dates[0][start]" type="text" readonly="readonly">
         <i class="calendar icon"></i>
     </div>
   </div>
   <div class="field">
     {!! Form::label('end', 'End Date and Time') !!}
     <div class="ui left icon input">
-      <input placeholder="Event Date and Time" name="dates[0][end]" type="text" readonly="readonly">
+      <input placeholder="Event Date and Time" data-validate="end_dates" name="dates[0][end]" type="text" readonly="readonly">
       <i class="calendar icon"></i>
     </div>
   </div>
@@ -66,10 +58,10 @@
   @if (Request::routeIs('admin.events.create') or Request::routeIs('admin.events.edit'))
   <div class="ui buttons">
     <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-    {!! Form::button('Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right labeled icon submit button']) !!}
+    <div class="ui positive right floated right labeled submit icon button" onclick="$('form').submit()">Save <i class="checkmark icon"></i></div>
   </div>
   @else
-    {!! Form::button(' Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right floated right labeled icon submit button']) !!}
+    <div class="ui positive right floated right labeled submit icon button" onclick="$('form').submit()">Save <i class="checkmark icon"></i></div>
   @endif
 </div>
 {!! Form::close() !!}
@@ -107,14 +99,14 @@
         '<div class="field">' +
             '{!! Form::label("start", "Start Date and Time") !!}' +
             '<div class="ui left icon input">' +
-              '<input placeholder="Event Date and Time" name="dates['+ index +'][start]" type="text" readonly="readonly">' +
+              '<input placeholder="Event Date and Time" data-validate="start_dates" name="dates['+ index +'][start]" type="text" readonly="readonly">' +
             '<i class="calendar icon"></i>' +
           '</div>' +
         '</div>' +
         '<div class="field">' +
           '{!! Form::label("end", "End Date and Time") !!}' +
           '<div class="ui left icon input">' +
-            '<input placeholder="Event Date and Time" name="dates['+ index +'][end]" type="text" readonly="readonly">' +
+            '<input placeholder="Event Date and Time" data-validate="end_dates" name="dates['+ index +'][end]" type="text" readonly="readonly">' +
             '<i class="calendar icon"></i>' +
           '</div>' +
         '</div>' +
@@ -140,5 +132,42 @@
   }
 })
 
-
+{{-- Client side form validation --}}
+$('form').form({
+  inline: true,
+  fields: {
+    show_id: {
+      identifier: 'show_id',
+      rules: [
+        { type: 'empty', prompt: 'Do not forget to select a show!' }
+      ]
+    },
+    type_id: {
+      identifier: 'type_id',
+      rules: [
+        { type: 'empty', prompt: 'Do not forget to select a show type!' }
+      ]
+    },
+    seats: {
+      identifier: 'seats',
+      rules: [
+        { type: 'empty', prompt: 'Do not forget to set the number of seats available for this event!' },
+        { type: 'integer', prompt: 'The number of seats should be an integer' },
+        { type: 'minLength[1]', prompt: 'The number of seats should be at least 1 character long' }
+      ]
+    },
+    start_dates: {
+      identifier: 'start_dates',
+      rules: [
+        { type: 'empty', prompt: 'Do not forget to set a start date and time for this event!' }
+      ]
+    },
+    end_dates: {
+      identifier: 'end_dates',
+      rules: [
+        { type: 'empty', prompt: 'Do not forget to set an end date and time for this event!' }
+      ]
+    }
+  }
+})
 </script>

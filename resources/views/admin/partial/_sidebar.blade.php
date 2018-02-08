@@ -24,9 +24,17 @@
     </div>
   </div>
   @if (Auth::user()->role->name == 'Senior Staff' || Auth::user()->role->name == 'Planetarium Lead Assistant')
-  <a class="item {{ Request::routeIs('admin.calendar.index') ? 'active' : '' }}" href="{{ route('admin.calendar.index') }}">
+  <div class="ui dropdown item" href="{{ route('admin.calendar.index') }}">
     <i class="large calendar icon"></i> Calendar
-  </a>
+    <div class="menu">
+      <a class="item" href="{{ route('admin.calendar.index') }}/?type=calendar">
+        <i class="large dollar icon"></i> Reservations
+      </a>
+      <a class="item" href="{{ route('admin.calendar.index') }}/?type=events">
+        <i class="large calendar check icon"></i> Events
+      </a>
+    </div>
+  </div>
   <a class="item {{ Request::routeIs('admin.sales.index') ? 'active' : '' }}" href="{{ route('admin.sales.index') }}">
     <i class="large dollar icon"></i> Sales
   </a>
