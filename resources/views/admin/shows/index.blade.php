@@ -71,6 +71,8 @@
   {{ $shows->links('vendor.pagination.semantic-ui') }}
 </div>
 
+<br /><br />
+
 {{-- Add Show Modal --}}
 @include('admin.partial.shows._create')
 

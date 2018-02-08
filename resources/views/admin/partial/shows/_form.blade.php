@@ -49,13 +49,19 @@
   if (document.querySelector('.ui.modal')) {
     $('.ui.modal').modal({
       onShow: function() {
-        if (!document.querySelector('#description')) {
-          var simplemde = new SimpleMDE({
+        if (!window.simplemde) {
+          window.simplemde = new SimpleMDE({
             element: document.querySelectorAll('#description')[0],
-            toolbar: false,
+            toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list'],
+
           })
         }
       }
+    })
+  } else {
+    window.simplemde = new SimpleMDE({
+      element: document.querySelectorAll('#description')[0],
+      toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list'],
     })
   }
   {{-- Client side Form Validation --}}
