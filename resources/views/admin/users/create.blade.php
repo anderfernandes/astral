@@ -8,6 +8,6 @@
 
 @section('content')
 
-  @include('admin.partial.users._create')
+  @include('admin.partial.users._form', ['type' => 'create'])
 
 @endsection

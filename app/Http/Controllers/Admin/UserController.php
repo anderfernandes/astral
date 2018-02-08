@@ -87,9 +87,7 @@ class UserController extends Controller
 
         $user->save();
 
-        Session::flash('success',
-          ''.$user->firstname.' '.$user->lastname.
-          '\'s account created successfully!');
+        Session::flash('success', '<strong>' . $user->fullname . '\'s</strong> account created successfully!');
 
         return redirect()->route('admin.users.show', $user);
     }
@@ -102,7 +100,12 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('admin.users.show')->withUser($user);
+      $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
+      $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
+
+      return view('admin.users.show')->withUser($user)
+                                     ->withRoles($roles)
+                                     ->withOrganizations($organizations);
     }
 
     /**
@@ -113,7 +116,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $roles = Role::where('type', '!=', 'walk-up')->where('type', '!=', 'organizations')->pluck('name', 'id');
+        $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
         $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
         return view('admin.users.edit')
           ->withUser($user)
@@ -175,9 +178,7 @@ class UserController extends Controller
           $user->password = bcrypt($request->password);
           $user->save();
 
-          Session::flash('success',
-            ''.$user->firstname.' '.$user->lastname.
-            '\'s account information has been updated successfully!');
+          Session::flash('success', '<strong>'. $user->fullname . '\'s</strong> account information has been updated successfully!');
 
           return redirect()->route('admin.users.show', $user);
         }
@@ -196,9 +197,7 @@ class UserController extends Controller
 
       $user->delete();
 
-      Session::flash('success',
-        'The '.$temp->role.' user '.$user->firstname.'
-        '.$user->lastname.' was successfully deleted.');
+      Session::flash('success', 'The <strong>'.$temp->role.'</strong> user '. $user->fullname .' was successfully deleted.');
 
       return redirect()->route('admin.users.index');
     }
@@ -233,9 +232,7 @@ class UserController extends Controller
 
         $user->save();
 
-        Session::flash('success',
-          ''.$user->firstname.' '.$user->lastname.
-          '\'s account information has been updated successfully!');
+        Session::flash('success', '<strong>' . $user->fullname . '\'s</strong> account information has been updated successfully!');
 
         return redirect()->route('account');
       }
@@ -243,9 +240,7 @@ class UserController extends Controller
         $user->password = bcrypt($request->input('password'));
         $user->save();
 
-        Session::flash('success',
-          ''.$user->firstname.' '.$user->lastname.
-          '\'s account information has been updated successfully!');
+        Session::flash('success', '<strong>' . $user->fullname. '\'s</strong> account information has been updated successfully!');
 
         return redirect()->route('account');
       }

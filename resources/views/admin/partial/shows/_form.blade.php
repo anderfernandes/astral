@@ -37,10 +37,10 @@
   @if (Request::routeIs('admin.shows.create') or Request::routeIs('admin.shows.edit'))
     <div class="ui buttons">
       <a href="{{ route('admin.shows.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      <div class="ui positive right floated right labeled submit icon button" onclick="$('form').submit()">Save <i class="checkmark icon"></i></div>
+      <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
     </div>
   @else
-    <div class="ui positive right floated right labeled submit icon button" onclick="$('form').submit()">Save <i class="checkmark icon"></i></div>
+    <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
   @endif
 </div>
 {!! Form::close() !!}

@@ -3,7 +3,7 @@
   <div class="header">
     <i class="{{ $icon }} icon"></i> {{ $title }}
   </div>
-  <div class="image content">
+  <div class="scrolling content">
     <div class="description" style="width: inherit !important">
       {{ $content }}
     </div>

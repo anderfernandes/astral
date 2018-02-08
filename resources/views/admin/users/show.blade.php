@@ -2,7 +2,7 @@
 
 @section('title', 'User Information')
 
-@section('subtitle', $user->firstname.' '.$user->lastname)
+@section('subtitle', $user->fullname)
 
 @section('icon', 'user')
 
@@ -12,7 +12,7 @@
     <a href="{{ route('admin.users.index') }}" class="ui default button">
       <i class="left chevron icon"></i> Back
     </a>
-    <a href="{{ route('admin.users.edit', $user) }}" class="ui primary button">
+    <a href="javascript:$('#edit-user').modal('show')" class="ui primary button">
       <i class="edit icon"></i> Edit User
     </a>
     <a href="{{ route('admin.users.create') }}" class="ui secondary button"><i class="add user icon"></i> Add User</a>
@@ -45,5 +45,7 @@
       </div>
     </div>
   </div>
+
+  @include('admin.partial.users._edit')
 
 @endsection
