@@ -39,10 +39,15 @@
 
   <div class="ui right floated secondary floating dropdown labeled icon button">
     <i class="eye icon"></i>
-    <span class="text">Reservations</span>
+    <span class="text">{{ $request->type == 'events' ? 'Events' : 'Reservations' }}</span>
     <div class="menu">
-      <div onclick="toggleCalendar('events')" class="item">Events</div>
-      <div onclick="toggleCalendar('calendar')" class="active item">Reservations</div>
+      @if (isSet($request))
+        <div onclick="toggleCalendar('events')" class="{{ $request->type == 'events' ? 'active' : null }} item">Events</div>
+        <div onclick="toggleCalendar('calendar')" class="{{ $request->type == 'calendar' ? 'active' : null }} item">Reservations</div>
+      @else
+        <div onclick="toggleCalendar('events')" class="item">Events</div>
+        <div onclick="toggleCalendar('calendar')" class="active item">Reservations</div>
+      @endif
     </div>
   </div>
 

@@ -66,17 +66,15 @@
   @if (Request::routeIs('admin.events.create') or Request::routeIs('admin.events.edit'))
   <div class="ui buttons">
     <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-    {!! Form::button('Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right labeled icon button']) !!}
+    {!! Form::button('Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right labeled icon submit button']) !!}
   </div>
   @else
-    {!! Form::button(' Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right floated right labeled icon button']) !!}
+    {!! Form::button(' Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right floated right labeled icon submit button']) !!}
   @endif
 </div>
 {!! Form::close() !!}
 
 <script>
-
-  $('.ui.form').form({ fields: { seats: ['number', 'empty'] }});
 
   var simplemde = new SimpleMDE({
       element: document.getElementById('memo'),

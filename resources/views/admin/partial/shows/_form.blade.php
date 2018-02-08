@@ -3,14 +3,6 @@
 @else
   {!! Form::model($show, ['route' => ['admin.shows.update', $show], 'class' => 'ui form', 'method' => 'PUT']) !!}
 @endif
-@if (Request::routeIs('admin.shows.create') or Request::routeIs('admin.shows.edit'))
-<div class="field">
-  <div class="ui buttons">
-    <a href="{{ route('admin.shows.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-    {!! Form::button('Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right labeled icon button']) !!}
-  </div>
-</div>
-@endif
 <div class="two fields">
   <div class="field">
     {!! Form::label('name', 'Name') !!}
@@ -45,12 +37,11 @@
   @if (Request::routeIs('admin.shows.create') or Request::routeIs('admin.shows.edit'))
     <div class="ui buttons">
       <a href="{{ route('admin.shows.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      {!! Form::button('Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right labeled icon button']) !!}
+      <div class="ui positive right floated right labeled submit icon button" onclick="$('form').submit()">Save <i class="checkmark icon"></i></div>
     </div>
   @else
-    {!! Form::button('Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right floated right labeled icon button']) !!}
+    <div class="ui positive right floated right labeled submit icon button" onclick="$('form').submit()">Save <i class="checkmark icon"></i></div>
   @endif
-
 </div>
 {!! Form::close() !!}
 
@@ -67,4 +58,36 @@
       }
     })
   }
+  {{-- Client side Form Validation --}}
+  $('form').form({
+    inline: true,
+    fields: {
+      name: {
+        identifier: 'name',
+        rules: [{ type: 'empty', prompt: 'Do not forget the show name!' }]
+      },
+      type: {
+        identifier: 'type',
+        rules: [{ type: 'empty', prompt: 'Select a show type!' }]
+      },
+      duration: {
+        identifier: 'duration',
+        rules: [
+          { type: 'empty',   prompt: 'Enter the duration of the show in minutes' },
+          { type: 'integer', prompt: '{name} should be an integer' }
+        ]
+      },
+      cover: {
+        identifier: 'cover',
+        rules: [
+          { type: 'empty', prompt: 'Enter the link to the cover of the show' },
+          { type: 'url', prompt: 'The link to the show cover must be a public URL to a JPEG or PNG' }
+        ]
+      },
+      description: {
+        identifier: 'description',
+        rules: [{ type: 'empty', prompt: 'Enter a show description' }]
+      },
+    }
+  })
 </script>
