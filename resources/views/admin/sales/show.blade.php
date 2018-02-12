@@ -168,7 +168,7 @@
           {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
           <div class="ui black circular label">{{ $event->type->name }}</div>
         </div>
-        {{ $event->show->name }}
+        <a href="{{ route('admin.events.edit', $event) }}" target="_blank">{{ $event->show->name }}</a>
         <div class="sub header">
           @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
             <div class="ui black label" style="margin-left:0">

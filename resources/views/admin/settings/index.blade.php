@@ -215,6 +215,7 @@
             <th>Price</th>
             <th>Allowed In</th>
             <th>Active?</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -245,6 +246,7 @@
                   No
                 @endif
               </td>
+              <td><a href="{{ route('admin.ticket-types.edit', $ticketType) }}" class="ui mini basic icon button"><i class="edit icon"></i></a></td>
             </tr>
             @endforeach
           @else

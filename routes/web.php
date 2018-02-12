@@ -51,12 +51,14 @@ Route::group(
   Route::resource('settings', 'SettingController');
   // Roles
   Route::resource('roles', 'RoleController');
+  Route::resource('ticket-types', 'TicketTypeController');
   // HTTP PUT route for updating general settings
   Route::put('settings', 'SettingController@update');
   // HTTP PUT route for adding managing Organization Types
   Route::post('settings/addOrganizationType', 'SettingController@addOrganizationType')->name('settings.addOrganizationType');
   // HTTP PUT route for adding managing Ticket Types
   Route::post('settings/addTicketType', 'SettingController@addTicketType')->name('settings.addTicketType');
+  Route::get('settings/{ticketType}/edit', 'SettingController@editTicketType')->name('settings.editTicketType');
   // HTTP PUT route for adding managing Payment Methods
   Route::post('settings/addPaymentMethod', 'SettingController@addPaymentMethod')->name('settings.addPaymentMethod');
   // HTTP PUT route for adding managing Event Types
