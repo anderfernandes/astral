@@ -74,34 +74,6 @@ class SettingController extends Controller
 
     }
 
-    public function addTicketType(Request $request)
-    {
-      $this->validate($request, [
-        'name'                => 'required',
-        'price'               => 'required|numeric',
-        'allowed_in_events.*' => 'required',
-        'active'              => 'required',
-        'description'         => 'required|max:255'
-      ]);
-
-      $allowed_in_events = [];
-
-      $ticketType = new TicketType;
-
-      $ticketType->name        = $request->name;
-      $ticketType->price       = number_format($request->price, 2);
-      $ticketType->active      = $request->active;
-      $ticketType->description = $request->description;
-
-      $ticketType->save();
-
-      $ticketType->allowedEvents()->attach($request->allow_in_events);
-
-      Session::flash('success', 'Ticket Type <strong>'. $ticketType->name .'</strong> added successfully!');
-
-      return redirect()->to(route('admin.settings.index').'#ticket-types');
-    }
-
     public function addPaymentMethod(Request $request)
     {
       $this->validate($request, [

@@ -377,7 +377,7 @@
 
   // Auto Select Taxable
   function autoSelectTaxable() {
-    var taxable = document.querySelector('#istaxable').value
+    var taxable = document.querySelector('#taxable').value
     $('#taxable').val(taxable).change()
   }
 
@@ -390,7 +390,10 @@
       .then((users) => {
         users.map((user, index) => {
           $("#users").append("<div class='item' data-value=" + user.id + ">" + user.name + "</div>")
-          $('#taxable').dropdown('set selected', user.taxable)
+          @if (!isSet($sale))
+            $('#taxable').dropdown('set selected', user.taxable)
+          @endif
+
         })
       })
       .catch((error) => console.log(error))
@@ -415,7 +418,11 @@
     var subtotalArray = [];
     var subtotal = 0;
     var taxBox = document.querySelector('#tax')
-    var tax = 0
+    @if (isSet($sale))
+      var tax = {{ $sale->taxable }}
+    @else
+      var tax = 0
+    @endif
     var totalBox = document.querySelector('#total')
     var total = 0
     var taxable = document.querySelector('#taxable')

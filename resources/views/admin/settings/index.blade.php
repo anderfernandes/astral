@@ -206,8 +206,10 @@
       <p>How about create a new ticket type with a different name and the new price?</p>
     </div>
   </div>
-  <div class="ui two column doubling grid">
+  <div class="ui one column doubling grid">
     <div class="column">
+      <div onclick="$('#add-ticket-type').modal('show')" class="ui black button"><i class="plus icon"></i>Add Ticket Type</div>
+      @include('admin.partial.ticket-types._create')
       <table class="ui very basic striped selectable celled table">
         <thead>
           <tr>
@@ -257,41 +259,7 @@
         </tbody>
       </table>
     </div>
-    <div class="column">
-      {!! Form::open(['route' => 'admin.settings.addTicketType', 'class' => 'ui form']) !!}
-      <div class="three fields">
-        <div class="field">
-          {!! Form::label('name', 'Name of Ticket Type') !!}
-          {!! Form::text('name', null, ['placeholder' => 'Name']) !!}
-        </div>
-        <div class="field">
-          {!! Form::label('taxable', 'Price') !!}
-          <div class="ui labeled input">
-            <div class="ui label">$ </div>
-            {!! Form::text('price', null, ['placeholder' => 'Price of the ticket']) !!}
-          </div>
-        </div>
-        <div class="field">
-          {!! Form::label('active', 'Active?') !!}
-          {!! Form::select('active', [true => 'Yes', false => 'No'], true, ['class' => 'ui dropdown']) !!}
-        </div>
-      </div>
-      <div class="field">
-        {!! Form::label('description', 'Description') !!}
-        {!! Form::text('description', null, ['placeholder' => 'Describe this ticket type']) !!}
-      </div>
-      <div class="field">
-        {!! Form::label('Allow in Events', 'Allow in these Events Types') !!}
-        {!! Form::select('allow_in_events[]',
-          $eventTypes->pluck('name', 'id'),
-          null,
-          ['id' => 'allow_in_events','placeholder' => 'Choose all that apply', 'class' => 'ui dropdown', 'multiple' => true]) !!}
-      </div>
-      <div class="field">
-        {!! Form::button('<i class="plus icon"></i> Add Ticket Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
-      </div>
-      {!! Form::close() !!}
-    </div>
+
   </div>
 </div>
 

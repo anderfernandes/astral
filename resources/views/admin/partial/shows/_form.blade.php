@@ -67,6 +67,7 @@
   {{-- Client side Form Validation --}}
   $('form').form({
     inline: true,
+    on: 'blur',
     fields: {
       name: {
         identifier: 'name',

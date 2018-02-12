@@ -8,6 +8,6 @@
 
 @section('content')
 
-  @include('admin.partial.ticket-types._form')
+  @include('admin.partial.ticket-types._edit')
 
 @endsection

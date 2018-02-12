@@ -135,6 +135,7 @@
 {{-- Client side form validation --}}
 $('form').form({
   inline: true,
+  on: 'blur',
   fields: {
     show_id: {
       identifier: 'show_id',

@@ -90,6 +90,7 @@
   {{-- Client Side Form Validation --}}
   $('form').form({
     inline: true,
+    on: 'blur',
     fields: {
       firstname: {
         identifier: 'firstname',
