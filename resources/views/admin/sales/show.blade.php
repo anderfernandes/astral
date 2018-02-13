@@ -332,7 +332,7 @@
     </div>
   </div>
 
-  <!-- Refund Modal -->
+  {{-- Refund Modal --}}
   <div class="ui basic modal" id="refund-modal">
     <div class="ui icon header">
       <i class="refresh icon"></i>
