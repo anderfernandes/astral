@@ -1,6 +1,8 @@
-@if ($sale->memos->count() > 0)
-  {!! Session::flash('info', 'You are editing a sale. Don\'t forget to  <a href="#memo">write a memo</a> explaining why.') !!}
-@endif
+@isset($sale)
+  @if ($sale->memos->count() > 0)
+    {!! Session::flash('info', 'You are editing a sale. Don\'t forget to  <a href="#memo">write a memo</a> explaining why.') !!}
+  @endif
+@endisset
 @if (Request::routeIs('admin.sales.create'))
   {!! Form::open(['route' => 'admin.sales.store', 'class' => 'ui form']) !!}
 @elseif (Request::routeIs('cashier.sales.create'))
