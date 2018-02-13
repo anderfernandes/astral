@@ -33,11 +33,11 @@
   </div>
   <div class="field">
     <div class="ui right floated buttons">
-      <a href="javascript:window.history.back()" class="ui default button">
+      <div onclick="window.history.back()" class="ui default button">
         <i class="left chevron icon"></i>
         Back
-      </a>
-      {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+      </div>
+      <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
     </div>
   </div>
 </div>
@@ -375,7 +375,7 @@
 
 <script>
 
-  // Auto Select Taxable
+  {{--Auto Select Taxable--}}
   function autoSelectTaxable() {
     var taxable = document.querySelector('#taxable').value
     $('#taxable').val(taxable).change()
@@ -399,7 +399,7 @@
       .catch((error) => console.log(error))
   }
 
-  // Hide Unwanted Ticket Types
+  {{--Hide Unwanted Ticket Types--}}
   //$('#organization_id').change(autoSelectTaxable)
 
   $("#organization_id").change(function() {
@@ -407,7 +407,7 @@
     calculateTotals()
   })
 
-  // Calculating Totals
+  {{-- Calculating Totals --}}
 
   function calculateTotals() {
 
@@ -490,5 +490,23 @@
   $('#first_event_id').change(calculateTotals)
   $('#second_event_id').change(calculateTotals)
   $('#tendered').keyup(calculateTotals)
+
+  {{-- Client Side Validation --}}
+  @if (Request::routeIs('*.sales.edit'))
+    $('form').form({
+      inline: true,
+      fields: {
+        memo: {
+          identifier: 'memo',
+          rules: [
+            { type: 'empty', prompt: 'Tell us in the memo field why you are changing this sale.'},
+            { type: 'minLength[10]', prompt: 'Your memo is too short. Please write more details.'}
+          ]
+        }
+      }
+    })
+  @else
+  $('form').form({inline: true})
+  @endif
 
 </script>

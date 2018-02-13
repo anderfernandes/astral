@@ -60,7 +60,7 @@ function getAttendanceByType($ticketTypeID) {
 ?>
 
 <div class="ui grid">
-  <div class="sixteen wide column">
+  <div class="sixteen wide column" style="margin-bottom: -1rem">
     <div class="ui icon message">
       <i class="announcement icon"></i>
       <div class="content">
@@ -95,6 +95,11 @@ function getAttendanceByType($ticketTypeID) {
           {{ App\Setting::find(1)->organization }}
           </div>
         </div>
+      </div>
+      <div class="ui black icon buttons">
+        <div onclick="$('#calendar').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
+        <div onclick="$('#calendar').fullCalendar('today')" class="ui button"><i class="checked calendar icon"></i></div>
+        <div onclick="$('#calendar').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
       </div>
       <div class="ui secondary floating dropdown labeled icon button" style="margin-bottom: 0.5rem">
         <i class="calendar outline icon"></i>
@@ -131,7 +136,7 @@ function getAttendanceByType($ticketTypeID) {
     </div>
     <div class="ui horizontal segments">
       <div class="ui center aligned segment">
-        <div class="ui statistic">
+        <div class="ui small statistic">
           <div class="value">
             <i class="film icon"></i>
             {{ App\Show::all()->count() - 1 }}
@@ -142,7 +147,7 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
       <div class="ui center aligned segment">
-        <div class="ui statistic">
+        <div class="ui small statistic">
           <div class="value">
             <i class="users icon"></i>
             {{ App\User::all()->count() - 1 }}
@@ -153,7 +158,7 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
       <div class="ui center aligned segment">
-        <div class="ui statistic">
+        <div class="ui small statistic">
           <div class="value">
             <i class="university icon"></i>
             {{ App\Organization::all()->count() - 1 }}
@@ -164,7 +169,7 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
       <div class="ui center aligned segment">
-        <div class="ui statistic">
+        <div class="ui small statistic">
           <div class="value">
             <i class="address card icon"></i>
             {{ App\Member::all()->count() - 1 }}
@@ -176,7 +181,7 @@ function getAttendanceByType($ticketTypeID) {
       </div>
     </div>
     <div class="ui segment">
-      <div class="ui dividing header">
+      <div class="ui small dividing header">
         <i class="feed icon"></i>
         <div class="content">
           Feed

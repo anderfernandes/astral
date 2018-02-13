@@ -190,7 +190,7 @@ class SaleController extends Controller
             $sale->tickets()->createMany($secondShowTickets);
           }
 
-          Session::flash('success', 'Sale #'. $sale->id .' created successfully!');
+          Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> created successfully!');
 
           return redirect()->route('admin.sales.show', $sale);
 
@@ -252,6 +252,7 @@ class SaleController extends Controller
           'ticket.*'             => 'numeric',
           'memo'                 => 'max:255',
           'sell_to_organization' => 'required',
+          'memo'                 => 'required',
         ]);
 
         $sale->organization_id      = $request->organization_id;
@@ -357,7 +358,7 @@ class SaleController extends Controller
           $sale->tickets()->createMany($secondShowTickets);
         }
 
-        Session::flash('success', 'Sale #'. $sale->id .' updated successfully!');
+        Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> updated successfully!');
 
         return redirect()->route('admin.sales.show', $sale);
 
@@ -412,7 +413,7 @@ class SaleController extends Controller
 
 
       Session::flash('success',
-          'Sale # '.$sale->id.' has been refunded successfully!');
+          '<strong>Sale # '.$sale->id.'</strong> has been refunded successfully!');
 
       return redirect()->route('admin.sales.show', $sale);
     }
@@ -444,7 +445,7 @@ class SaleController extends Controller
       $payment->save();
 
       Session::flash('success',
-          'Payment # ' . $refund->id . ' has been refunded successfully!');
+          '<strong>Payment # ' . $refund->id . '</strong> has been refunded successfully!');
 
       return redirect()->route('admin.sales.show', $payment->sale_id);
 
