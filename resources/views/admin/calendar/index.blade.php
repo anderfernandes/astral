@@ -38,7 +38,7 @@
   </div>
 
   <div class="ui right floated secondary floating dropdown labeled icon button">
-    <i class="eye icon"></i>
+    <i class="calendar outline icon"></i>
     <span class="text">{{ $request->type == 'events' ? 'Events' : 'Reservations' }}</span>
     <div class="menu">
       @if (isSet($request))
