@@ -14,7 +14,7 @@ class Calendar extends Component {
   }
 
   getSales() {
-    fetch('/api/sales')
+    fetch('/api/calendar-events')
       .then((response) => response.json())
       .then((sales) => this.setState({ sales: sales, isLoading: false }))
       .catch((error) => console.log(error))

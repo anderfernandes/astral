@@ -80,6 +80,41 @@ Route::get('calendar', function() {
 });
 
 Route::get('sales', function() {
+  $allSales = Sale::all();
+
+  $sales = [];
+
+  foreach ($allSales as $sale) {
+    $sales = array_prepend($sales, [
+      'id'      => $sale->id,
+      'creator' => [
+        'id'   => $sale->creator->id,
+        'name' => $sale->creator->fullname,
+      ],
+      'status'   => $sale->status,
+      'source'   => $sale->source,
+      'taxable'  => boolval($sale->taxable),
+      'subtotal' => $sale->subtotal,
+      'tax'      => $sale->tax,
+      'total'    => $sale->total,
+      'refund'   => $sale->refund,
+      'customer' => [
+        'id'   => $sale->customer->id,
+        'name' => $sale->customer->fullname,
+      ],
+      'organization' => [
+        'id' => $sale->organization->id,
+        'name' => $sale->organization->name,
+      ],
+      'sellToOrganization' => boolval($sale->sell_to_organization),
+      'payments' => $sale->payments
+    ]);
+  };
+
+  return $sales;
+});
+
+Route::get('calendar-events', function() {
   $today = Date::parse()->format('Y-m-d');
   $todaysEvents = Event::whereDate('start', '>=', $today)->get();
   $todaysEventsIds = [];

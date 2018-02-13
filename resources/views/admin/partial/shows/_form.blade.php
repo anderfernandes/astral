@@ -31,7 +31,7 @@
 </div>
 <div class="field">
   {!! Form::label('description', 'Description') !!}
-  {!! Form::textarea('description', null, ['placeholder' => 'What is the show about?', 'id' => 'description']) !!}
+  {!! Form::textarea('description', null, ['placeholder' => 'What is the show about?', 'id' => 'description', 'data-validate' => 'description']) !!}
 </div>
 <div class="field">
   @if (Request::routeIs('admin.shows.create') or Request::routeIs('admin.shows.edit'))
@@ -60,7 +60,7 @@
     })
   } else {
     window.simplemde = new SimpleMDE({
-      element: document.querySelectorAll('#description')[0],
+      element: document.querySelector('#description'),
       toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list'],
     })
   }
@@ -96,13 +96,7 @@
           { type: 'minLength[5]', prompt: '{name} should be at least {ruleValue} characters long'}
         ]
       },
-      description: {
-        identifier: 'description',
-        rules: [
-          { type: 'empty', prompt: 'Enter a show description' },
-          { type: 'minLength[10]', prompt: '{name} should be at least {ruleValue} characters long'}
-        ]
-      },
+      
     }
   })
 </script>

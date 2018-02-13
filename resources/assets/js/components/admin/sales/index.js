@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import moment from 'moment'
 import ReactDOM from 'react-dom'
+import { Dimmer, Loader } from 'semantic-ui-react'
 
-class Sale extends Component {
+class Sales extends Component {
   constructor() {
     super()
     this.state = {
@@ -35,24 +36,26 @@ class Sale extends Component {
       )
     }
     else {
-      <div>
-      <table class="ui selectable striped single line very compact table">
-        <thead>
-          <tr>
-            <th>Sale #</th>
-            <th>Customer</th>
-            <th>Total</th>
-            <th>Balance</th>
-            <th>Status</th>
-            <th>Created by</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          { sales.map((sale) => <SaleItem data={sale} key={sale.id} />) }
-        </tbody>
-      </table>
-      </div>
+      return (
+        <div>
+        <table className="ui selectable striped single line very compact table">
+          <thead>
+            <tr>
+              <th>Sale #</th>
+              <th>Customer</th>
+              <th>Total</th>
+              <th>Balance</th>
+              <th>Status</th>
+              <th>Created by</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            { sales.map((sale) => <SaleItem data={sale} key={sale.id} />) }
+          </tbody>
+        </table>
+        </div>
+      )
     }
   }
 }
@@ -67,16 +70,16 @@ class SaleItem extends Component {
     let sale = this.props.data
     return (
       <tr>
-        <td>{ sale.id }</td>
+        <td><h3 className="ui center aligned header">{ sale.id }</h3></td>
         <td>{ sale.customer_id }</td>
-        <td>$ { sale.total }</td>
+        <td>$ { parseFloat(sale.total).toFixed(2) }</td>
         <td></td>
         <td>{ sale.status }</td>
         <td>{ sale.creator_id }</td>
         <td>
-          <div class="ui icon buttons">
-            <a href="/admin/sales/{ sale.id }" class="ui secondary button"><i class="eye icon"></i></a>
-            <a href="/admin/sales/{sale.id}/edit" class="ui primary button"><i class="edit icon"></i></a>
+          <div className="ui icon buttons">
+            <a href="/admin/sales/{sale.id}" className="ui secondary button"><i className="eye icon"></i></a>
+            <a href={ "/admin/sales/" + sale.id + "/edit"} className="ui primary button"><i className="edit icon"></i></a>
           </div>
         </td>
       </tr>

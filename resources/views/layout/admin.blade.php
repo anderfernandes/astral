@@ -16,7 +16,7 @@
   <meta name="keywords" content="mayborn science theater, ctc planetarium, field trip,
   field trips, reservation, @yield('meta_keywords')" />
 
-  <!-- Libraries -->
+  {{-- Libraries ---}}
   <link rel="stylesheet" href="{{ asset('css/vendor.css')}}">
   <script src="{{asset('js/vendor.js')}}"></script>
 
