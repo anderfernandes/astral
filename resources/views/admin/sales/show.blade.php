@@ -9,7 +9,16 @@
 @section('content')
 
   @if ($sale->memos->count() > 0)
-    {!! Session::flash('info', 'This sale has one or more memos. <a href="#memos">Click here</a> to read them.') !!}
+    <div class="ui info icon message">
+      <i class="info circle icon"></i>
+      <i class="close icon"></i>
+      <div class="content">
+        <div class="header">
+          Hey, you!
+        </div>
+        <p>This sale has one or more memos. <a href="#memos">Click here</a> to read them.</p>
+      </div>
+    </div>
   @endif
 
   @if ($sale->refund)

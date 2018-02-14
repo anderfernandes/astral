@@ -8,6 +8,7 @@ use App\User;
 use App\PaymentMethod;
 use App\Sale;
 use App\Organization;
+use App\EventType;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -89,7 +90,7 @@ Route::get('sales', function() {
       'id'      => $sale->id,
       'creator' => [
         'id'   => $sale->creator->id,
-        'name' => $sale->creator->fullname,
+        'name' => $sale->creator->firstname,
       ],
       'status'   => $sale->status,
       'source'   => $sale->source,
@@ -97,6 +98,7 @@ Route::get('sales', function() {
       'subtotal' => $sale->subtotal,
       'tax'      => $sale->tax,
       'total'    => $sale->total,
+      'balance'  => number_format($sale->total - $sale->payments->sum('tendered'), 2),
       'refund'   => $sale->refund,
       'customer' => [
         'id'   => $sale->customer->id,
@@ -224,6 +226,11 @@ Route::get('events', function() {
   return $eventsArray;
 });
 
+Route::get('staff', function() {
+  $staff = User::where('staff', true)->orderBy('name', 'asc')->get();
+  return $staff;
+});
+
 Route::get('events/{start}/{end}', function($start, $end) {
   $start = Date::parse($start)->startOfDay()->toDateTimeString();
   $end = Date::parse($end)->endOfDay()->toDateTimeString();
@@ -284,6 +291,11 @@ Route::get('customers', function() {
 Route::get('payment-methods', function() {
   $paymentMethods = PaymentMethod::all();
   return $paymentMethods;
+});
+
+Route::get('event-types', function() {
+  $eventTypes = EventType::where('id', '!=', 1)->orderBy('name', 'asc')->get();
+  return $eventTypes;
 });
 
 Route::middleware('auth:api')->get('user', function (Request $request) {

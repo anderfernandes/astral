@@ -97,7 +97,7 @@
     <!-- Messages -->
 
 
-    <div class="ui basic segment" style="margin-top:3rem">
+    <div class="ui basic segment" style="margin-top:3.5rem">
 
       @include('admin.partial._message')
 
@@ -115,6 +115,10 @@
       this.form.submit()
     })
   </script>
+
+  {{-- Astral JS --}}
+  <script src="{{ asset('js/app.js') }}"></script>
+
 
 </body>
 </html>

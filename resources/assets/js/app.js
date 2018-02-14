@@ -15,4 +15,4 @@ require('./bootstrap');
 
 require('./components/Upcoming/Upcoming');
 require('./components/Calendar/Calendar');
-require('./components/admin/sales/index');
+require('./admin/Sales/Sales');
