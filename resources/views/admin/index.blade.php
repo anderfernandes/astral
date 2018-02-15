@@ -97,19 +97,19 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
       <div class="ui black icon buttons">
-        <div onclick="$('#calendar').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
-        <div onclick="$('#calendar').fullCalendar('today')" class="ui button"><i class="checked calendar icon"></i></div>
-        <div onclick="$('#calendar').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
+        <div onclick="$('#calendars').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
+        <div onclick="$('#calendars').fullCalendar('today')" class="ui button"><i class="checked calendar icon"></i></div>
+        <div onclick="$('#calendars').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
       </div>
       <div class="ui secondary floating dropdown labeled icon button" style="margin-bottom: 0.5rem">
         <i class="calendar outline icon"></i>
         <span class="text">Reservations</span>
         <div class="menu">
-          <div onclick="toggleCalendar('calendar')" class="active item">Reservations</div>
+          <div onclick="toggleCalendar('calendars')" class="active item">Reservations</div>
           <div onclick="toggleCalendar('events')" class="item">Events</div>
         </div>
       </div>
-      <div id="calendar"></div>
+      <div id="calendars"></div>
     </div>
   </div>
 
@@ -265,7 +265,7 @@ function loadCalendars() {
     eventColor: '#1b1c1d',
     events: '/api/events'
   })
-  $('#calendar').fullCalendar({
+  $('#calendars').fullCalendar({
     header: false,
     defaultView: 'basicDay',
     defaultDate: moment().format('YYYY-MM-DD'),
@@ -282,7 +282,7 @@ function loadCalendars() {
 
 function refetchEvents() {
   $('#events').fullCalendar('refetchEvents')
-  $('#calendar').fullCalendar('refetchEvents')
+  $('#calendars').fullCalendar('refetchEvents')
 }
 
 $(document).ready(loadCalendars)
@@ -290,10 +290,10 @@ $(document).ready(loadCalendars)
 setInterval(refetchEvents, 5000)
 
 function toggleCalendar(type) {
-  $('#calendar').fullCalendar('removeEventSources')
+  $('#calendars').fullCalendar('removeEventSources')
   var color = type == 'calendar' ? '#1b1c1d' : '#002e5d'
-  $('#calendar').fullCalendar('option', 'eventColor', color)
-  $('#calendar').fullCalendar('addEventSource', '/api/' + type)
+  $('#calendars').fullCalendar('option', 'eventColor', color)
+  $('#calendars').fullCalendar('addEventSource', '/api/' + type)
 }
 
 window.onload = function() {
