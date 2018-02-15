@@ -250,8 +250,8 @@ class FilterSalesOptions extends Component {
   }
 
   getStaff() {
-    let staff = this.state.staff.map(staff => ({ text: staff.firstname, value: staff.id, key: staff.id }))
-    staff.unshift({ text: 'All', value: null, key: 0 })
+    let staff = this.state.staff.map(staff => ({ firstname: staff.firstname, value: staff.id }))
+    staff.unshift({ firstname: 'All', value: '' })
     return staff
   }
 
@@ -270,6 +270,7 @@ class FilterSalesOptions extends Component {
     ]
 
     let staff = this.getStaff()
+    console.log(staff)
 
     return (
       <div className="ui form">
@@ -286,8 +287,8 @@ class FilterSalesOptions extends Component {
             </select>
           </div>
           <div className="field">
-            <select id="creator" onChange={ this.changeOption.bind(this, 'creator') }>
-              { this.state.staff.map(person => <option key={person.id} value={person.firstname}>{person.firstname}</option>) }
+            <select id="creator" defaultValue="" onChange={ this.changeOption.bind(this, 'creator') }>
+              { staff.map((person, index) => <option key={index} value={person.firstname}>{person.firstname}</option>) }
             </select>
           </div>
         </div>

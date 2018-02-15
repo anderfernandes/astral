@@ -98066,9 +98066,9 @@ var FilterSalesOptions = function (_Component5) {
     key: 'getStaff',
     value: function getStaff() {
       var staff = this.state.staff.map(function (staff) {
-        return { text: staff.firstname, value: staff.id, key: staff.id };
+        return { firstname: staff.firstname, value: staff.id };
       });
-      staff.unshift({ text: 'All', value: null, key: 0 });
+      staff.unshift({ firstname: 'All', value: '' });
       return staff;
     }
   }, {
@@ -98082,6 +98082,7 @@ var FilterSalesOptions = function (_Component5) {
       var statuses = [{ text: 'All', value: '', icon: 'announcement' }, { text: 'Open', value: 'open', icon: 'unlock' }, { text: 'Complete', value: 'complete', icon: 'check' }, { text: 'No Show', value: 'no show', icon: 'thumbs outline down' }, { text: 'Tentative', value: 'tentative', icon: 'help' }, { text: 'Canceled', value: 'canceled', icon: 'remove' }];
 
       var staff = this.getStaff();
+      console.log(staff);
 
       return _react2.default.createElement(
         'div',
@@ -98119,11 +98120,11 @@ var FilterSalesOptions = function (_Component5) {
             { className: 'field' },
             _react2.default.createElement(
               'select',
-              { id: 'creator', onChange: this.changeOption.bind(this, 'creator') },
-              this.state.staff.map(function (person) {
+              { id: 'creator', defaultValue: '', onChange: this.changeOption.bind(this, 'creator') },
+              staff.map(function (person, index) {
                 return _react2.default.createElement(
                   'option',
-                  { key: person.id, value: person.firstname },
+                  { key: index, value: person.firstname },
                   person.firstname
                 );
               })
