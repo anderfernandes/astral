@@ -270,7 +270,6 @@ class FilterSalesOptions extends Component {
     ]
 
     let staff = this.getStaff()
-    console.log(staff)
 
     return (
       <div className="ui form">

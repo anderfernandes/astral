@@ -98082,7 +98082,6 @@ var FilterSalesOptions = function (_Component5) {
       var statuses = [{ text: 'All', value: '', icon: 'announcement' }, { text: 'Open', value: 'open', icon: 'unlock' }, { text: 'Complete', value: 'complete', icon: 'check' }, { text: 'No Show', value: 'no show', icon: 'thumbs outline down' }, { text: 'Tentative', value: 'tentative', icon: 'help' }, { text: 'Canceled', value: 'canceled', icon: 'remove' }];
 
       var staff = this.getStaff();
-      console.log(staff);
 
       return _react2.default.createElement(
         'div',
