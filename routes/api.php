@@ -88,10 +88,7 @@ Route::get('sales', function() {
   foreach ($allSales as $sale) {
     $sales = array_prepend($sales, [
       'id'      => $sale->id,
-      'creator' => [
-        'id'   => $sale->creator->id,
-        'name' => $sale->creator->firstname,
-      ],
+      'creator' => $sale->creator->firstname,
       'status'   => $sale->status,
       'source'   => $sale->source,
       'taxable'  => boolval($sale->taxable),
@@ -100,14 +97,8 @@ Route::get('sales', function() {
       'total'    => $sale->total,
       'balance'  => number_format($sale->total - $sale->payments->sum('tendered'), 2),
       'refund'   => $sale->refund,
-      'customer' => [
-        'id'   => $sale->customer->id,
-        'name' => $sale->customer->fullname,
-      ],
-      'organization' => [
-        'id' => $sale->organization->id,
-        'name' => $sale->organization->name,
-      ],
+      'customer' => $sale->customer->fullname,
+      'organization' => $sale->organization->name,
       'sellToOrganization' => boolval($sale->sell_to_organization),
       'payments' => $sale->payments
     ]);

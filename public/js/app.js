@@ -97668,7 +97668,6 @@ var Sales = function (_Component) {
       var sales = this.state.sales;
       var isLoading = this.state.isLoading;
       var eventTypes = this.state.eventTypes;
-
       if (isLoading) {
         return _react2.default.createElement(
           _semanticUiReact.Dimmer,
@@ -97700,7 +97699,7 @@ var SaleItem = function (_Component2) {
 
     var _this5 = _possibleConstructorReturn(this, (SaleItem.__proto__ || Object.getPrototypeOf(SaleItem)).call(this, props));
 
-    _this5.state = { data: [] };
+    _this5.state = {};
     return _this5;
   }
 
@@ -97750,6 +97749,7 @@ var SaleItem = function (_Component2) {
     key: 'render',
     value: function render() {
       var sale = this.props.data;
+
       return _react2.default.createElement(
         'tr',
         null,
@@ -97768,12 +97768,12 @@ var SaleItem = function (_Component2) {
           _react2.default.createElement(
             'h4',
             { className: 'ui header' },
-            sale.customer.name,
+            sale.customer,
             sale.sellToOrganization ? _react2.default.createElement(
               'div',
               { className: 'sub header' },
               ' ',
-              sale.organization.name
+              sale.organization
             ) : null
           )
         ),
@@ -97802,7 +97802,7 @@ var SaleItem = function (_Component2) {
         _react2.default.createElement(
           'td',
           null,
-          sale.creator.name
+          sale.creator
         ),
         _react2.default.createElement(
           'td',
@@ -97870,6 +97870,11 @@ var FilterSalesForm = function (_Component3) {
   }
 
   _createClass(FilterSalesForm, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.setState({ status: 'open' });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var filteredItems = this.props.data;
@@ -97879,25 +97884,26 @@ var FilterSalesForm = function (_Component3) {
         var filterValue = state[filterBy];
         if (filterValue) {
           filteredItems = filteredItems.filter(function (item) {
-            //console.log(item['customer'])
-            //return item[filterBy].toLowerCase().match(filterValue.toLowerCase())
+            // Object problems: item.customer.name for example...
+            return item[filterBy].toLowerCase().match(filterValue.toLowerCase());
           });
         }
       });
+
       var numberArray = this.props.data.map(function (item) {
         return item.id;
       });
       var customerArray = this.props.data.map(function (item) {
-        return item.customer.name;
+        return item.customer;
       });
       var organizationArray = this.props.data.map(function (item) {
-        return item.organization.name;
+        return item.organization;
       });
       var statusArray = this.props.data.map(function (item) {
         return item.status;
       });
       var creatorArray = this.props.data.map(function (item) {
-        return item.creator.name;
+        return item.creator;
       });
 
       numberArray.unshift('');
@@ -98073,18 +98079,56 @@ var FilterSalesOptions = function (_Component5) {
   }, {
     key: 'render',
     value: function render() {
-      var statuses = [{ text: 'Open', value: 'open', icon: 'unlock' }, { text: 'Complete', value: 'complete', icon: 'check' }, { text: 'No Show', value: 'no show', icon: 'thumbs outline down' }, { text: 'Tentative', value: 'tentative', icon: 'help' }, { text: 'Canceled', value: 'canceled', icon: 'remove' }];
+      var statuses = [{ text: 'All', value: '', icon: 'announcement' }, { text: 'Open', value: 'open', icon: 'unlock' }, { text: 'Complete', value: 'complete', icon: 'check' }, { text: 'No Show', value: 'no show', icon: 'thumbs outline down' }, { text: 'Tentative', value: 'tentative', icon: 'help' }, { text: 'Canceled', value: 'canceled', icon: 'remove' }];
+
+      var staff = this.getStaff();
 
       return _react2.default.createElement(
-        _semanticUiReact.Form,
-        null,
+        'div',
+        { className: 'ui form' },
         _react2.default.createElement(
-          _semanticUiReact.Form.Group,
-          null,
-          _react2.default.createElement(_semanticUiReact.Form.Input, { value: this.props.customer, onChange: this.changeOption.bind(this, 'customer'), placeholder: 'Customer' }),
-          _react2.default.createElement(_semanticUiReact.Form.Input, { value: this.props.organization, onChange: this.changeOption.bind(this, 'organization'), placeholder: 'Organization' }),
-          _react2.default.createElement(_semanticUiReact.Form.Select, { value: this.props.status, onChange: this.changeOption.bind(this, 'status'), placeholder: 'Status', options: statuses, search: true, selection: true }),
-          _react2.default.createElement(_semanticUiReact.Form.Select, { value: this.props.creator, onChange: this.changeOption.bind(this, 'creator'), placeholder: 'Creator', options: this.getStaff(), search: true, selection: true })
+          'div',
+          { className: 'four fields' },
+          _react2.default.createElement(
+            'div',
+            { className: 'field' },
+            _react2.default.createElement('input', { value: this.props.customer, onChange: this.changeOption.bind(this, 'customer'), placeholder: 'Customer' })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'field' },
+            _react2.default.createElement('input', { value: this.props.organization, onChange: this.changeOption.bind(this, 'organization'), placeholder: 'Organization' })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'field' },
+            _react2.default.createElement(
+              'select',
+              { id: 'status', defaultValue: 'open', onChange: this.changeOption.bind(this, 'status') },
+              statuses.map(function (status, index) {
+                return _react2.default.createElement(
+                  'option',
+                  { key: index, value: status.value },
+                  status.text
+                );
+              })
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'field' },
+            _react2.default.createElement(
+              'select',
+              { id: 'creator', onChange: this.changeOption.bind(this, 'creator') },
+              this.state.staff.map(function (person) {
+                return _react2.default.createElement(
+                  'option',
+                  { key: person.id, value: person.firstname },
+                  person.firstname
+                );
+              })
+            )
+          )
         )
       );
     }
