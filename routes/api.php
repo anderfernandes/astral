@@ -87,8 +87,8 @@ Route::get('sales', function() {
 
   foreach ($allSales as $sale) {
     $sales = array_prepend($sales, [
-      'id'      => $sale->id,
-      'creator' => $sale->creator->firstname,
+      'id'       => $sale->id,
+      'creator'  => $sale->creator->fullname,
       'status'   => $sale->status,
       'source'   => $sale->source,
       'taxable'  => boolval($sale->taxable),
