@@ -23,7 +23,7 @@ class Sales extends Component {
   fetchEventTypes() {
     fetch('/api/event-types')
       .then((response) => response.json())
-      .then((eventTypes) => this.setState({ eventTypes: eventTypes, isLoading: false}))
+      .then((eventTypes) => this.setState({ eventTypes: eventTypes}))
       .catch((error) => console.log(error))
   }
 

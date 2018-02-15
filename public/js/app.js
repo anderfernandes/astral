@@ -97646,7 +97646,7 @@ var Sales = function (_Component) {
       fetch('/api/event-types').then(function (response) {
         return response.json();
       }).then(function (eventTypes) {
-        return _this3.setState({ eventTypes: eventTypes, isLoading: false });
+        return _this3.setState({ eventTypes: eventTypes });
       }).catch(function (error) {
         return console.log(error);
       });
