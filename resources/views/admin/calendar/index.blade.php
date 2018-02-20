@@ -9,9 +9,9 @@
 @section('content')
 
   <div class="ui black icon buttons">
-    <div onclick="$('#calendar').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
-    <div onclick="$('#calendar').fullCalendar('today')" class="ui button"><i class="checked calendar icon"></i></div>
-    <div onclick="$('#calendar').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
+    <div onclick="$('#admin-calendar').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
+    <div onclick="$('#admin-calendar').fullCalendar('today')" class="ui button"><i class="checked calendar icon"></i></div>
+    <div onclick="$('#admin-calendar').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
   </div>
 
   <a class="ui secondary button" href="javascript:$('#create-event').modal('show')">
@@ -31,9 +31,9 @@
     <i class="eye icon"></i>
     <span class="text">Week</span>
     <div class="menu">
-      <div onclick="$('#calendar').fullCalendar('changeView', 'agendaDay')" class="item">Single Day</div>
-      <div onclick="$('#calendar').fullCalendar('changeView', 'agendaWeek')" class="active item">Week</div>
-      <div onclick="$('#calendar').fullCalendar('changeView', 'month')" class="item">Month</div>
+      <div onclick="$('#admin-calendar').fullCalendar('changeView', 'agendaDay')" class="item">Single Day</div>
+      <div onclick="$('#admin-calendar').fullCalendar('changeView', 'agendaWeek')" class="active item">Week</div>
+      <div onclick="$('#admin-calendar').fullCalendar('changeView', 'month')" class="item">Month</div>
     </div>
   </div>
 
@@ -54,7 +54,7 @@
   @if (!isset($events) || count($events) > 0)
     <br /><br /><br />
     <div class="ui doubling stackable grid">
-      <div id="calendar" style="min-width:100%; max-width:100%; padding-bottom: 2rem"></div>
+      <div id="admin-calendar" style="min-width:100%; max-width:100%; padding-bottom: 2rem"></div>
     </div>
   @else
     <div class="ui info icon message">
@@ -74,7 +74,7 @@
 <script>
 
   function loadCalendar(events) {
-    $('#calendar').fullCalendar({
+    $('#admin-calendar').fullCalendar({
       header: false,
       views: null,
       defaultView: 'agendaWeek',
@@ -97,18 +97,18 @@
   }
 
   function toggleCalendar(type) {
-    $('#calendar').fullCalendar('removeEventSources')
+    $('#admin-calendar').fullCalendar('removeEventSources')
     var color = type == 'calendar' ? '#1b1c1d' : '#002e5d'
-    $('#calendar').fullCalendar('option', 'eventColor', color)
-    $('#calendar').fullCalendar('addEventSource', '/api/' + type)
+    $('#admin-calendar').fullCalendar('option', 'eventColor', color)
+    $('#admin-calendar').fullCalendar('addEventSource', '/api/' + type)
   }
 
   function refetchEvents() {
-    $('#calendar').fullCalendar('refetchEvents')
+    $('#admin-calendar').fullCalendar('refetchEvents')
   }
 
   function setTitle() {
-    var title = $('#calendar').fullCalendar('getView').title
+    var title = $('#admin-calendar').fullCalendar('getView').title
     $('.header.active.item.hide-on-mobile').html('<i class="calendar icon"></i> Calendar | {{ App\Setting::find(1)->organization }} | <strong>' + title + '</strong>')
   }
 
