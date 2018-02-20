@@ -6,9 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
-use Session;
-
-
 use App\Event;
 use Jenssegers\Date\Date;
 use App\Sale;
@@ -16,6 +13,7 @@ use App\Ticket;
 use App\Payment;
 use App\PaymentMethod;
 use App\User;
+
 
 class ReportController extends Controller
 {
@@ -36,7 +34,7 @@ class ReportController extends Controller
 
     if ($type == 'closeout')
     {
-      
+
       $cashPayments = [];
       $cardPayments = [];
       $checkPayments = [];

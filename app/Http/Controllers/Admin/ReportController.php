@@ -102,11 +102,13 @@ class ReportController extends Controller
     {
       $user = User::find($id);
       $date = new Date($date);
-      $date = $date->toDateTimeString();
+      $start = $date->startOfDay()->toDateTimeString();
+      $end = $date->endOfDay()->toDateTimeString();
       $today = Date::now()->startOfDay();
 
       $sales = Sale::where([
-        ['updated_at', '>=', $date],
+        ['updated_at', '>=', $start],
+        ['updated_at', '<', $end]
       ])->orderBy('created_at', 'asc')->get();
 
       // Get Card Sales IDs

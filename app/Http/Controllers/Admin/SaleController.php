@@ -28,11 +28,45 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sales = Sale::orderBy('id', 'desc')->paginate(10);
         $eventTypes = EventType::where('id', '!=', 1)->get();
-        return view('admin.sales.index')->withSales($sales)->withEventTypes($eventTypes);
+
+        if (count($request->all()) > 0)
+        {
+          $sales = Sale::all();
+
+          // If there's a sale number...
+          if ($request->saleNumber) {
+            $sales = $sales->where('id', $request->saleNumber);
+          }
+          // If there's a customer...
+          if ($request->saleCustomer) {
+            $sales = $sales->where('customer_id', $request->saleCustomer);
+          }
+          // if there's a sale total...
+          if ($request->saleTotal) {
+            $sales = $sales->where('total', $request->saleTotal);
+          }
+          // If there's a cashier...
+          if ($request->paymentUser) {
+            $sales = $sales->where('creator_id', $request->paymentUser);
+          }
+          // If there's a sale status
+          if ($request->saleStatus) {
+            $sales = $sales->where('status', $request->saleStatus);
+          }
+
+          $saleIds = $sales->pluck('id');
+          $sales = Sale::whereIn('id', $saleIds)->orderBy('id', 'desc')->paginate(10);
+        }
+        else
+        {
+          $sales = Sale::orderBy('id', 'desc')->paginate(10);
+          $eventTypes = EventType::where('id', '!=', 1)->get();
+
+        }
+        return view('admin.sales.index')->withSales($sales)->withEventTypes($eventTypes)->withRequest($request);
     }
 
     /**
