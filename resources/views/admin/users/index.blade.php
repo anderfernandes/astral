@@ -23,7 +23,7 @@
     @foreach($users as $user)
     <div class="card">
       <div class="content">
-        <i class="user circle outline huge right floated icon"></i>
+        <i class="user circle huge right floated icon"></i>
         <div class="header">{{ $user->fullname }} @if ($user->staff) <i class="empty star icon"></i>@endif </div>
         <div class="meta">
           <div class="ui label">{{ $user->role->name }}</div>

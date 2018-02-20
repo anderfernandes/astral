@@ -23,7 +23,7 @@
 
   <div class="ui unstackable items">
     <div class="item">
-      <i class="user circle outline massive icon"></i>
+      <i class="user circle massive icon"></i>
       <div class="content">
         <h1 class="ui huge header">
           {{ $user->fullname }} @if ($user->staff) <i style="display:inline-block" class="empty star icon"></i>@endif

@@ -70,6 +70,9 @@
 </script>
 
 <body>
+  <div class="ui inverted dimmer">
+    <div class="ui large text loader">Loading</div>
+  </div>
   <!-- Load Facebook SDK for JavaScript -->
   <!--<div id="fb-root"></div>
   <script>

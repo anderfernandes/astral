@@ -324,7 +324,7 @@
     <div class="ui comments">
       @foreach(App\SaleMemo::where('sale_id', $sale->id)->orderBy('updated_at', 'desc')->get() as $memo)
         <div class="comment">
-          <div class="avatar"><i class="user circle outline big icon"></i></div>
+          <div class="avatar"><i class="user circle big icon"></i></div>
           <div class="content">
             <div class="author">
               {{ $memo->author->fullname }}

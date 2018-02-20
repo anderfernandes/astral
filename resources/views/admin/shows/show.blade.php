@@ -35,7 +35,7 @@
           <i class="clock icon"></i> {{ $show->duration }} minutes
         </div>
         <div class="meta">
-          Created by <i class="user circle outline icon"></i> {{ $show->creator->fullname }}
+          Created by <i class="user circle icon"></i> {{ $show->creator->fullname }}
           on {{ Date::parse($show->created_at)->format('l, F j, Y \a\t g:i A') }}
         </div>
         <div class="meta">

@@ -65,7 +65,7 @@ function getAttendanceByType($ticketTypeID) {
       <i class="announcement icon"></i>
       <div class="content">
         <div class="header">Welcome, {{ Auth::user()->firstname }}!</div>
-        If you are new, make sure you visit our <a href="http://astral.anderfernandes.com/docs">documentation website</a> for instructions
+        If you are new, make sure you visit our <a href="http://astral.anderfernandes.com/docs" target="_blank">documentation website</a> for instructions
         on how to use Astral.
       </div>
       </div>
@@ -196,7 +196,7 @@ function getAttendanceByType($ticketTypeID) {
           @if ($lastSale->tickets->count() > 0)
           <div class="event">
             <div class="label">
-              <i class="user circle outline icon"></i>
+              <i class="user circle icon"></i>
             </div>
             <div class="content">
               <div class="summary">
@@ -218,7 +218,7 @@ function getAttendanceByType($ticketTypeID) {
         @elseif ($lastSale->customer->role->name == "Member")
             <div class="event">
               <div class="label">
-                <i class="user circle outline icon"></i>
+                <i class="user circle icon"></i>
               </div>
               <div class="content">
                 <div class="summary">

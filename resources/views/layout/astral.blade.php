@@ -53,7 +53,7 @@
 
       // Initialize Semantic UI components
       $('.ui.radio.checkbox').checkbox();
-      $('.ui.dropdown').dropdown();
+      $('.ui.dropdown').dropdown({'fullTextSearch': true});
 
       /*jQuery('.datetimepicker').datetimepicker({
         format:'dddd, MMMM DD, YYYY H:mm',

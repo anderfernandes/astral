@@ -40,7 +40,7 @@
 
       // Initialize Semantic UI components
       $('.ui.radio.checkbox').checkbox();
-      $('.ui.dropdown').dropdown();
+      $('.ui.dropdown').dropdown({'fullTextSearch': true});
       $('.ui.dropdown.item').dropdown({on: 'hover'});
 
 
@@ -71,6 +71,9 @@
 </style>
 
 <body>
+  <div class="ui inverted dimmer">
+    <div class="ui large text loader">Loading</div>
+  </div>
   <!-- Load Facebook SDK for JavaScript -->
   <!--<div id="fb-root"></div>
   <script>
@@ -108,10 +111,8 @@
   </div>
 
   <script type="text/javascript">
-    $('[type="submit"]').click(function() {
-      $('.ui.button').addClass('loading')
-      $('button.ui.button').attr('disabled', true)
-      $('a.ui.button').addClass('disabled')
+    $('.ui.positive.right.floated.right.labeled.submit.icon.button').click(function() {
+      $('.ui.dimmer').addClass('active')
       this.form.submit()
     })
   </script>

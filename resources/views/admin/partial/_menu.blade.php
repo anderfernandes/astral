@@ -10,7 +10,7 @@
       <a href="{{ route('cashier.index') }}" target="_blank" class="ui inverted button"> <i class="inbox icon"></i> Cashier</a>
     </div>
     <div class="ui dropdown item">
-      <i class="user circle outline large inverted icon"></i>
+      <i class="user circle large inverted icon"></i>
       {!! Auth::user()->firstname !!} <i class="dropdown icon"></i>
       <div class="menu">
         <a href="{{ route('account') }}" target="_blank" class="item"><i class="user icon"></i> My Account</a>

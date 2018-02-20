@@ -64,6 +64,9 @@
 </style>
 
 <body>
+  <div class="ui inverted dimmer">
+    <div class="ui large text loader">Loading</div>
+  </div>
   <!-- Load Facebook SDK for JavaScript -->
   <!--<div id="fb-root"></div>
   <script>
@@ -100,9 +103,7 @@
 
   <script type="text/javascript">
     $('[type="submit"]').click(function() {
-      $('.ui.button').addClass('loading')
-      $('button.ui.button').attr('disabled', true)
-      $('a.ui.button').addClass('disabled')
+      $('.ui.dimmer').addClass('active')
       this.form.submit()
     })
   </script>

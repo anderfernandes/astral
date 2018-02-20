@@ -351,7 +351,7 @@
         <div class="ui dividing header">Memo</div>
         @foreach($sale->memos as $memo)
           <div class="comment">
-            <div class="avatar"><i class="user circle outline big icon"></i></div>
+            <div class="avatar"><i class="user circle big icon"></i></div>
             <div class="content">
               <div class="author">
                 {{ $memo->author->fullname }}

@@ -1,6 +1,6 @@
 <div class="ui sidebar vertical menu" style="overflow: visible !important">
   <div class="item" style="text-align:center">
-    <h1 class="ui icon header"><i class="user circle outline large icon"></i></h1>
+    <h1 class="ui icon header"><i class="user circle large icon"></i></h1>
     <br />
     {{ Auth::user()->fullname }}
     <br /><br />

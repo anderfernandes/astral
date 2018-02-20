@@ -12,7 +12,7 @@
       <strong><i class="calendar icon"></i>{{ Date::now()->format('l, F j, Y')}}</strong>
     </div>
     <div class="ui dropdown item">
-      <i class="user circle outline large icon"></i>
+      <i class="user circle large icon"></i>
       {!! Auth::user()->firstname !!} <i class="dropdown icon"></i>
       <div class="menu">
         <a href="{{ route('account') }}" target="_blank" class="item"><i class="user icon"></i> My Account</a>

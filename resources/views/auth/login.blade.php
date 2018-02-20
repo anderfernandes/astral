@@ -4,16 +4,8 @@
 
 <div class="ui centered grid">
   <div class="sixteen wide mobile four wide computer column">
-    <div class="ui raised segment">
-      <h2 class="ui center aligned icon header">
-      <i class="sun icon"></i>
-      <div class="content">
-        Astral
-        <div class="sub header">
-        {{ App\Setting::find(1)->organization }}
-        </div>
-      </div>
-      </h2>
+    <div class="ui raised attached segment">
+      <img class="ui centered tiny image" src={{ '/'.App\Setting::find(1)->logo }} />
       <form class="ui form <?php if (count($errors) > 0) echo 'error'?>" role="form" method="POST" action="{{ route('login') }}">
         {{ csrf_field() }}
 
@@ -69,6 +61,11 @@
 
         </div>
     </form>
+    </div>
+    <div class="ui raised bottom attached segment">
+      <h5 class="ui center aligned header">
+        Powered by <a href="http://astral.anderfernandes.com" target="_blank">Astral</a> &copy; 2016-2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>.
+      </h5>
     </div>
   </div>
 </div>
