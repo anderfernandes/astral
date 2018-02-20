@@ -86,6 +86,10 @@ Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier
     // Sales
     Route::resource('sales', 'SaleController', ['except' => ['create']]);
     Route::get('sales/create/{eventType}', 'SaleController@create')->name('sales.create');
+    Route::get('sales/{sale}/confirmation', 'SaleController@confirmation')->name('sales.confirmation');
+    Route::get('sales/{sale}/invoice', 'SaleController@invoice')->name('sales.invoice');
+    Route::get('sales/{sale}/receipt', 'SaleController@receipt')->name('sales.receipt');
+    Route::get('sales/{sale}/cancelation', 'SaleController@cancelation')->name('sales.cancelation');
     // Members
     Route::resource('members', 'MemberController');
     // Users (edit member only)

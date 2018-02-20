@@ -14,6 +14,7 @@
 @else
 
 @endif
+<div class="ui error message"></div>
 <div class="two fields">
   <div class="inline required field">
     {!! Form::label('status', 'Status') !!}
@@ -499,7 +500,6 @@
   {{-- Client Side Validation --}}
   @if (Request::routeIs('*.sales.edit'))
     $('form').form({
-      inline: true,
       fields: {
         memo: {
           identifier: 'memo',

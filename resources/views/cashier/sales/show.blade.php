@@ -8,16 +8,29 @@
 
 @section('content')
 
+  @if ($sale->memos->count() > 0)
+    <div class="ui info icon message">
+      <i class="info circle icon"></i>
+      <i class="close icon"></i>
+      <div class="content">
+        <div class="header">
+          Hey, you!
+        </div>
+        <p>This sale has one or more memos. <a href="#memos">Click here</a> to read them.</p>
+      </div>
+    </div>
+  @endif
+
   @if ($sale->refund)
-  <h2 class="ui red dividing header">
+  <h3 class="ui red dividing header">
   @else
-  <h2 class="ui dividing header">
+  <h3 class="ui dividing header">
   @endif
     <i class="dollar icon"></i>
     <div class="content">
       Sale # {{ $sale->id }}
       @if ($sale->refund)
-        <div class="ui red label"><i class="refresh icon"></i> Refund</div>
+        <div class="ui red label"><i class="reply icon"></i> Refund</div>
       @endif
       @if ($sale->status == 'complete')
         <span class="ui green label"><i class="checkmark icon"></i>
@@ -34,7 +47,7 @@
       @endif
       {{ $sale->status }}</span>
       <div class="sub header">
-        by {{ $sale->creator->fullname }}
+        by {{ $sale->creator->firstname }} {{ $sale->creator->lastname }}
         on {{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}
         ({{ Date::parse($sale->created_at)->diffForHumans() }})
       </div>
@@ -44,109 +57,132 @@
       </div>
       @endif
     </div>
-  </h2>
+  </h3>
 
-  @if (!$sale->refund)
-  <div class="ui right floated buttons">
-    <a href="javascript:$('#refund-modal').modal('show')" class="ui red button"><i class="refresh icon"></i> Refund</a>
-  </div>
-  @endif
   <div class="ui left floated buttons">
-    <a href="javascript:window.history.back()" class="ui default button">
+    <a href="{{ route('cashier.sales.index') }}" class="ui default button">
       <i class="left chevron icon"></i>
       Back
     </a>
     <a href="{{ route('cashier.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
+    <div class="ui floating secondary dropdown button">
+      <i class="copy icon"></i> Invoices <i class="dropdown icon"></i>
+      <div class="menu">
+        @if ($sale->events->count() > 0)
+          @if ($sale->status != "canceled")
+            <a class="item" target="_blank" href="{{ route('cashier.sales.confirmation', $sale) }}">Reservation Confirmation</a>
+            <a class="item" target="_blank" href="{{ route('cashier.sales.invoice', $sale) }}">Invoice</a>
+            <a class="item" target="_blank" href="{{ route('cashier.sales.receipt', $sale) }}">Receipt</a>
+          @else
+            <a class="item" target="_blank" href="{{ route('cashier.sales.cancelation', $sale) }}">Cancelation Receipt</a>
+          @endif
+        @else
+          <a class="item" href="{{ route('cashier.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>
+        @endif
+      </div>
+    </div>
   </div>
 
-  <br /><br /><br />
+  <br /><br />
 
-  <div class="ui two column grid">
-    <div class="column">
-      @if ($sale->refund)
-      <h2 class="ui red header">
-      @else
-      <h2 class="ui header">
-      @endif
-        <div class="sub header">Sale #</div>
-        {{ $sale->id }}
-      </h2>
+  <div class="ui center aligned segment">
+    <h4 class="ui horizontal divider header">
+      <i class="dollar icon"></i> Sale Information
+    </h4>
+    <table class="ui very basic celled table">
+      <thead>
+        <tr>
+          <th>Sale #</th>
+          <th>Source</th>
+          <th>Created by</th>
+          <th>Created On</th>
+          <th>Last Modified</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><h4 class="ui header">{{ $sale->id }}</h4></td>
+          <td>{{ $sale->source }}</td>
+          <td>{{ $sale->creator->fullname }}</td>
+          <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->created_at)->diffForHumans() }})</td>
+          <td>{{ Date::parse($sale->updated_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->updated_at)->diffForHumans() }})</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-      @if ($sale->refund)
-      <h2 class="ui red header">
-      @else
-      <h2 class="ui header">
-      @endif
-        <div class="sub header">Customer</div>
-        {{ $sale->customer->fullname }}
-      </h2>
+  @if ($sale->customer_id != 1 )
 
-      @if ($sale->refund)
-      <h2 class="ui red header">
-      @else
-      <h2 class="ui header">
-      @endif
-        <div class="sub header">Organization</div>
-        {{ $sale->organization->name }}
-      </h2>
+  <div class="ui center aligned segment">
+    <h4 class="ui horizontal divider header">
+      <i class="user circle icon"></i> Customer Information
+    </h4>
 
-      @if ($sale->refund)
-      <h2 class="ui red header">
-      @else
-      <h2 class="ui header">
-      @endif
-        <div class="sub header">Source</div>
-        {{ $sale->source }}
-      </h2>
+    <table class="ui very basic celled table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><h4 class="ui header">{{ $sale->customer->fullname }}</h4></td>
+          <td>{{ $sale->customer->email }}</td>
+          <td>{{ $sale->customer->address }} {{ $sale->customer->city }} {{ $sale->customer->state }} {{ $sale->customer->city }}</td>
+          <td>{{ $sale->organization->phone }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-      @if ($sale->refund)
-      <h2 class="ui red header">
-      @else
-      <h2 class="ui header">
-      @endif
-        <div class="sub header">Created on</div>
-        {{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}
-        ({{ Date::parse($sale->created_at)->diffForHumans() }})
-      </h2>
+  <div class="ui center aligned segment">
+    <h4 class="ui horizontal divider header">
+      <i class="university icon"></i> Organization Information
+    </h4>
+    <table class="ui very basic celled table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><h4 class="ui header">{{ $sale->organization->name }}</h4></td>
+          <td>{{ $sale->organization->email }}</td>
+          <td>{{ $sale->organization->address }} {{ $sale->organization->city }} {{ $sale->organization->state }} {{ $sale->organization->city }}</td>
+          <td>{{ $sale->organization->phone }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-      @if ($sale->refund)
-      <h2 class="ui red header">
-      @else
-      <h2 class="ui header">
-      @endif
-        <div class="sub header">Updated on</div>
-        {{ Date::parse($sale->updated_at)->format('l, F j, Y \a\t g:i A') }}
-        ({{ Date::parse($sale->updated_at)->diffForHumans() }})
-      </h2>
+  @endif
 
-      @if ($sale->refund)
-      <h3 class="ui red header">
-      @else
-      <h3 class="ui header">
-      @endif
-        <div class="sub header">Tickets</div>
-        {{ count($sale->tickets) }}
-      </h3>
-
-      <h3 class="ui header">
-        <div class="sub header">
-          Events and Attendance
-        </div>
-      </h3>
-
+  <div class="ui center aligned segment">
+    <h4 class="ui horizontal divider header">
+      <i class="calendar check icon"></i> Events and Attendance
+    </h4>
+    <div class="ui ordered horizontal divided list">
       @foreach($sale->events as $event)
+        <div class="item">
         @if($event->show->id != 1)
           @if ($sale->refund)
             <h3 class="ui red header">
           @endif
         <h3 class="ui header">
-          <img src="{{ $event->show->cover }}" alt="" class="ui mini image">
+          <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}" class="image">
           <div class="content">
             <div class="sub header">
               {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
               <div class="ui black circular label">{{ $event->type->name }}</div>
             </div>
-            {{ $event->show->name }}
+            <a href="{{ route('admin.events.edit', $event) }}" target="_blank">{{ $event->show->name }}</a>
             <div class="sub header">
               @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
                 <div class="ui black label" style="margin-left:0">
@@ -161,164 +197,119 @@
           </div>
         </h3>
         @endif
+      </div>
       @endforeach
-
     </div>
-    <div class="column">
-      @if ($sale->reference)
-        @if ($sale->refund)
-        <h2 class="ui red header">
-        @else
-        <h2 class="ui header">
-        @endif
-        <div class="sub header">Reference</div>
-        {{ $sale->reference }}
-      </h2>
-      @endif
+  </div>
 
-      @if ($sale->refund)
-      <h2 class="ui red header">
+  <div class="ui center aligned segment">
+    <h4 class="ui horizontal divider header">
+      <i class="dollar icon"></i> Totals
+    </h4>
+
+    <div class="ui tiny five statistics">
+      <div class="statistic">
+        <div class="label">Subtotal</div>
+        <div class="value"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
+      </div>
+      <div class="statistic">
+        <div class="label">Tax</div>
+        <div class="value"><i class="dollar sign icon"></i> {{ number_format($sale->total - $sale->subtotal, 2) }}</div>
+      </div>
+      <div class="statistic">
+        <div class="label">Total</div>
+        <div class="value"><i class="dollar sign icon"></i> {{ number_format($sale->total, 2) }}</div>
+      </div>
+      @if ($sale->payments->sum('tendered') == 0)
+        <div class="yellow statistic">
+      @elseif ($sale->payments->sum('tendered') < 0)
+        <div class="red statistic">
       @else
-      <h2 class="ui header">
+        <div class="green statistic">
       @endif
-        <div class="sub header">Subtotal</div>
-        $ {{ number_format($sale->subtotal, 2) }}
-      </h2>
-
-      @if ($sale->refund)
-      <h2 class="ui red header">
+        <div class="label">Paid</div>
+        <div class="value"><i class="dollar sign icon"></i> {{ number_format($sale->payments->sum('tendered'), 2) }}</div>
+      </div>
+      @if ($sale->total - $sale->payments->sum('tendered') == 0)
+        <div class="green statistic">
       @else
-      <h2 class="ui header">
+        <div class="red statistic">
       @endif
-        <div class="sub header">Tax</div>
-        $ {{ number_format($sale->total - $sale->subtotal, 2) }}
-      </h2>
-
-      @if ($sale->refund)
-      <h2 class="ui red header">
-      @else
-      <h2 class="ui header">
-      @endif
-        <div class="sub header">Total</div>
-        $ {{ number_format($sale->total, 2) }}
-      </h2>
-
-      @if ($sale->refund)
-      <h2 class="ui red header">
-      @else
-      <h2 class="ui header">
-      @endif
-        <div class="sub header">Balance</div>
-        @if (number_format($sale->total - $sale->payments->sum('tendered'), 2) > 0)
-          $ {{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}
-        @else
-          $ 0.00
-        @endif
-      </h2>
-
-      @if ($sale->refund)
-      <h2 class="ui red header">
-      @else
-      <h2 class="ui header">
-      @endif
-        <div class="sub header">Paid</div>
-        $ {{ number_format($sale->payments->sum('tendered'), 2) }}
-      </h2>
-
-      <table class="ui selectable single line table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Method</th>
-            <th>Amount Paid</th>
-            <th>Date</th>
-            <th>Cashier</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if(count($sale->payments) > 0)
-            @foreach($sale->payments as $payment)
-              <tr>
-                <td><div class="ui header">{{ $payment->id }}</div></td>
-                <td>{{ $payment->method->name }}</td>
-                <td>{{ number_format($payment->tendered, 2) }}</td>
-                <td>{{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
-                <td>{{ $payment->cashier->firstname }}</td>
-              </tr>
-            @endforeach
+        <div class="label">Balance</div>
+        <div class="value">
+          @if (number_format($sale->total - $sale->payments->sum('tendered'), 2) > 0)
+            <i class="dollar sign icon"></i> {{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}
           @else
-            <tr class="warning center aligned">
-              <td colspan="5"><i class="info circle icon"></i> No payments have been received so far</td>
-            </tr>
+            <i class="dollar sign icon"></i> 0.00
           @endif
-        </tbody>
-      </table>
-
+        </div>
+      </div>
     </div>
-
   </div>
 
-  <div class="ui comments">
-    <div class="ui dividing header">Memo</div>
-    @foreach(App\SaleMemo::where('sale_id', $sale->id)->orderBy('updated_at', 'desc')->get() as $memo)
-      <div class="comment">
-        <div class="avatar"><i class="user circle outline big icon"></i></div>
-        <div class="content">
-          <div class="author">
-            {{ $memo->author->fullname }}
-            <div class="metadata">
-              <span class="date">{{ Date::parse($memo->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($memo->created_at)->diffForHumans() }})</span>
-            </div>
-          </div>
-          <div class="text">
-            {{ $memo->message }}
-          </div>
-        </div>
-      </div>
-    @endforeach
+  <div class="ui center aligned segment">
+    <h4 class="ui horizontal divider header">
+      <i class="money icon"></i> Payments
+    </h4>
+
+    <table class="ui selectable single line table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Method</th>
+          <th>Amount Paid</th>
+          <th>Date</th>
+          <th>Cashier</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if(count($sale->payments) > 0)
+          @foreach($sale->payments as $payment)
+            @if ($payment->total < 0)
+            <tr class="negative">
+            @else
+            <tr>
+            @endif
+              <td><div class="ui header">{{ $payment->id }}</div></td>
+              <td>{{ $payment->method->name }}</td>
+              <td>{{ number_format($payment->tendered, 2) }}</td>
+              <td>{{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
+              <td @if($payment->total < 0 or $payment->refunded) colspan="2" @endif>{{ $payment->cashier->firstname }}</td>
+            </tr>
+          @endforeach
+        @else
+          <tr class="warning center aligned">
+            <td colspan="5"><i class="info circle icon"></i> No payments have been received so far</td>
+          </tr>
+        @endif
+
+      </tbody>
+    </table>
   </div>
 
-  <!-- Refund Modal -->
-  <div class="ui basic modal" id="refund-modal">
-    <div class="ui icon header">
-      <i class="refresh icon"></i>
-      Refund
-      <div class="sub header" style="color:white">Please confirm sale information</div>
-    </div>
-    <div class="content">
-      {!! Form::open(['route' => ['admin.sales.refund', $sale], 'class' => 'ui form', 'id' => 'refund']) !!}
-      <div class="inverted segment">
-        <div class="two fields">
-          <div class="field">
-            {!! Form::label('id', 'Sale Number') !!}
-            {!! Form::text('id', null, ['placeholder' => 'Sale Number']) !!}
-          </div>
-          <div class="field">
-            {!! Form::label('total', 'Sale Total') !!}
-            <div class="ui labeled input">
-              <div class="ui label">$</div>
-              {!! Form::text('total', null, ['placeholder' => 'Sale Total']) !!}
+  <div class="ui segment" id="memos">
+    <h4 class="ui horizontal divider header">
+      <i class="comment outline icon"></i> Memo
+    </h4>
+
+    <div class="ui comments">
+      @foreach(App\SaleMemo::where('sale_id', $sale->id)->orderBy('updated_at', 'desc')->get() as $memo)
+        <div class="comment">
+          <div class="avatar"><i class="user circle outline big icon"></i></div>
+          <div class="content">
+            <div class="author">
+              {{ $memo->author->fullname }}
+              <div class="metadata">
+                <span class="date">{{ Date::parse($memo->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($memo->created_at)->diffForHumans() }})</span>
+              </div>
+            </div>
+            <div class="text">
+              {{ $memo->message }}
             </div>
           </div>
         </div>
-        <div class="field">
-          {!! Form::label('memo', 'Memo') !!}
-          {!! Form::textarea('memo', null, ['placeholder' => 'Explain why you had to give a refund']) !!}
-        </div>
-      </div>
+      @endforeach
     </div>
-    <div class="actions">
-      <div class="ui blue inverted button" onclick="$('#refund-modal').modal('hide')">
-        <i class="cancel icon"></i>
-        Close
-      </div>
-      <div class="ui standard inverted button" onclick="$('form').form('clear')">
-        <i class="eraser icon"></i>
-        Clear Form
-      </div>
-      {!! Form::button('<i class="refresh icon"></i> Refund', ['type' => 'submit', 'class' => 'ui red inverted button', 'id' => 'submit-refund']) !!}
-    </div>
-    {!! Form::close() !!}
   </div>
 
   <script>
@@ -335,6 +326,4 @@
   });
   </script>
 
-  @include('cashier.partial._spinner')
-
-@endsection
+  @endsection

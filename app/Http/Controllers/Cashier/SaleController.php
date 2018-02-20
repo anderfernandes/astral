@@ -54,7 +54,7 @@ class SaleController extends Controller
     public function create(EventType $eventType)
     {
         $organizations = Organization::pluck('name', 'id');
-        $events    = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $eventType->id)->orderBy('start', 'asc')->get();
+        $events = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $eventType->id)->orderBy('start', 'asc')->get();
         $paymentMethods = PaymentMethod::all();
         $ticketTypes = $eventType->allowedTickets;
 
@@ -437,5 +437,24 @@ class SaleController extends Controller
         return view('cashier.query')->withResults($results->where('created_at', '>=', Date::now('America/Chicago')->startOfDay())->get());
 
       }
+    }
+    public function confirmation(Sale $sale)
+    {
+      return view('admin.sales.confirmation')->withSale($sale);
+    }
+
+    public function invoice(Sale $sale)
+    {
+      return view('admin.sales.invoice')->withSale($sale);
+    }
+
+    public function receipt(Sale $sale)
+    {
+      return view('admin.sales.receipt')->withSale($sale);
+    }
+
+    public function cancelation(Sale $sale)
+    {
+      return view('admin.sales.cancelation')->withSale($sale);
     }
 }
