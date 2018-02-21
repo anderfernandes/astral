@@ -19,6 +19,10 @@
           @endforeach
         </div>
       </div>
+
+    </div>
+    <div class="field">
+      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui right floated secondary button']) !!}
     </div>
     <div class="field">
       <div class="ui input">
@@ -74,9 +78,6 @@
           @endforeach
         </div>
       </div>
-    </div>
-    <div class="field">
-      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
 

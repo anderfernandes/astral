@@ -8,33 +8,46 @@
 
 @section('content')
 
-  <a href="javascript:$('#add-show').modal('show')" href="#" class="ui secondary button">
-    <i class="plus icon"></i> Add Show
-  </a>
-
-  <!--
-  <div class="ui right icon input">
-    <input type="text" placeholder="Show Name">
-    <i class="search link icon"></i>
+  {!! Form::open(['route' => 'admin.shows.index', 'class' => 'ui form', 'method' => 'get']) !!}
+  <div class="four fields">
+    <div class="field">
+      <div onclick="$('#add-show').modal('show')" class="ui secondary button">
+        <i class="plus icon"></i> Add Show
+      </div>
+      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui right floated secondary button']) !!}
+    </div>
+    <div class="field">
+      <div class="ui selection search dropdown" id="show-id">
+        <input type="hidden" id="showId" name="showId">
+        <i class="dropdown icon"></i>
+          <div class="default text">All Shows</div>
+        <div class="menu">
+          <div class="item" data-value="">All Shows</div>
+          @foreach (App\Show::where('id', '!=', 1)->get() as $show)
+            <div class="item" data-value="{{ $show->id }}">
+              {{ $show->name }}
+            </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="ui right labeled input">
+        <input type="text" value="{{ $request->showDuration ? $request->showDuration : null }}" name="showDuration" id="showDuration" placeholder="Show Duration">
+        <div class="ui label">minutes</div>
+      </div>
+    </div>
+    <div class="field">
+      <select id="showType" class="ui dropdown" name="showType">
+        <option value="">All Types</option>
+        <option value="Planetarium">Planetarium</option>
+        <option value="Laser Light">Laser Light</option>
+      </select>
+    </div>
   </div>
-  <select name="type" id="" class="ui dropdown">
-    <option value="">All Types</option>
-    <option value="Planetarium">Planetarium</option>
-    <option value="Laser Light">Laser Light</option>
-  </select>
-  <select name="grade" id="grade" class="ui dropdown">
-  <option value="">All Grades</option>
-  <option value="Pre-K">Pre-K</option>
-  <option value="Kindergarten">Kindergarten</option>
-  <option value="Elementary">Elementary</option>
-  <option value="Middle School">Middle School</option>
-  <option value="High School">High School</option>
-  <option value="College">College</option>
-</select>
--->
+{!! Form::close() !!}
 
-@if (!isset($shows) || count($shows) > 0)
-  <br /><br />
+@if (!isSet($shows) || ($shows->count()) > 0)
   <div class="ui five doubling link cards">
     @foreach($shows as $show)
       <div class="card">
@@ -75,5 +88,14 @@
 
 {{-- Add Show Modal --}}
 @include('admin.partial.shows._create')
+
+<script>
+  @if ($request->showId)
+    $('#show-id').dropdown('set exactly', {{ $request->showId }})
+  @endif
+  @if ($request->showType)
+    $('#showType').dropdown('set exactly', "{{ $request->showType }}")
+  @endif
+</script>
 
 @endsection

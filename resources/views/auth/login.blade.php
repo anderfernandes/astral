@@ -64,7 +64,9 @@
     </div>
     <div class="ui raised bottom attached segment">
       <h5 class="ui center aligned header">
-        Powered by <a href="http://astral.anderfernandes.com" target="_blank">Astral</a> &copy; 2016-2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>.
+        <div class="sub header">
+          Powered by <a href="http://astral.anderfernandes.com" target="_blank">Astral</a> &copy; 2016-2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>.
+        </div>
       </h5>
     </div>
   </div>

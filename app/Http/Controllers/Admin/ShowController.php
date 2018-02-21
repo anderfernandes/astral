@@ -18,8 +18,32 @@ class ShowController extends Controller
      */
     public function index(Request $request)
     {
-        $shows = Show::where('id', '<>', 1)->orderBy('name', 'asc')->paginate(10);
-        return view('admin.shows.index')->withShows($shows);
+        //$shows = Show::where('id', '<>', 1)->orderBy('name', 'asc')->paginate(10);
+
+        $shows = Show::where('id', '!=', 1);
+
+        if (count($request->all()) > 0)
+        {
+          if ($request->showId) {
+            $shows = $shows->where('id', $request->showId);
+          }
+
+          if ($request->showDuration) {
+            $shows = $shows->where('duration', $request->showDuration);
+          }
+
+          if ($request->showType) {
+            $shows = $shows->where('type', $request->showType);
+          }
+
+          $showIds = $shows->pluck('id');
+          $shows = Show::whereIn('id', $showIds)->orderBy('name', 'asc')->paginate(50);
+        }
+        else
+        {
+          $shows = $shows->orderBy('name', 'asc')->paginate(10);
+        }
+        return view('admin.shows.index')->withShows($shows)->withRequest($request);
     }
 
     /**

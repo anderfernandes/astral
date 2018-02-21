@@ -1,6 +1,6 @@
 <div class="ui borderless fixed top menu">
   <a class="header toc item"><i class="sidebar large icon"></i></a>
-  <div class="header item"><img src="/astral-logo-dark.svg" style="padding-right:4px"></div>
+  <div class="header item"><img src="/astral-logo-dark.png" style="padding-right:4px"></div>
   <div class="active header item hide-on-mobile">
     <strong>
       <i class="@yield('icon') icon"></i> @yield('name') |
