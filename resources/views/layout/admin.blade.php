@@ -112,8 +112,16 @@
 
   <script type="text/javascript">
     $('.ui.positive.right.floated.right.labeled.submit.icon.button').click(function() {
-      $('.ui.dimmer').addClass('active')
-      this.form.submit()
+      if (document.querySelector('form')) {
+        if ($('form').form('is valid')) {
+          $('.ui.dimmer').addClass('active')
+          this.form.submit()
+        }
+      }
+      else {
+        $('.ui.dimmer').addClass('active')
+        this.form.submit()
+      }
     })
   </script>
 

@@ -22,9 +22,24 @@
           <div class="default text">All Customers</div>
         <div class="menu">
           <div class="item" data-value="">All Customers</div>
-          @foreach (App\User::where('staff', false)->get() as $customer)
+          @foreach (App\User::where('staff', false)->where('type', 'individual')->get() as $customer)
             <div class="item" data-value="{{ $customer->id }}">
               {{ $customer->fullname }}
+            </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="ui selection search dropdown" id="sale-organization">
+        <input type="hidden" id="saleOrganization" name="saleOrganization">
+        <i class="dropdown icon"></i>
+          <div class="default text">All Organizations</div>
+        <div class="menu">
+          <div class="item" data-value="">All Organizations</div>
+          @foreach (App\Organization::where('id', '!=', 1)->orderBy('name', 'asc')->get() as $organization)
+            <div class="item" data-value="{{ $organization->id }}">
+              {{ $organization->name }}
             </div>
           @endforeach
         </div>
@@ -156,7 +171,9 @@
         <td>
           <div class="ui icon buttons">
             <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
-            <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
+            @if (!isSet($sale->customer->member))
+              <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
+            @endif
             <div class="ui icon top left pointing dropdown secondary button">
               <i class="copy icon"></i>
               <div class="menu">
@@ -206,6 +223,9 @@
 <script>
   @if ($request->saleCustomer)
     $('#sale-customer').dropdown('set exactly', {{ $request->saleCustomer }})
+  @endif
+  @if ($request->saleOrganization)
+    $('#sale-organization').dropdown('set exactly', {{ $request->saleOrganization }})
   @endif
   @if ($request->paymentUser)
     $('#payment-user').dropdown('set exactly', {{ $request->paymentUser }})

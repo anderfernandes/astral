@@ -44,6 +44,10 @@ class SaleController extends Controller
           if ($request->saleCustomer) {
             $sales = $sales->where('customer_id', $request->saleCustomer);
           }
+          // If there's an organization...
+          if ($request->saleOrganization) {
+            $sales = $sales->where('organization_id', $request->saleOrganization);
+          }
           // if there's a sale total...
           if ($request->saleTotal) {
             $sales = $sales->where('total', $request->saleTotal);
