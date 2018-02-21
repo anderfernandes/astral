@@ -1,6 +1,6 @@
 <div class="ui borderless inverted fixed top menu">
   <a class="header toc item"><i class="sidebar large icon"></i></a>
-  <div class="header item"><i class="sun large icon"></i>Astral</div>
+  <div class="header item"><img src="/astral-logo-light.svg" style="padding-right:4px"> Astral</div>
   <div class="header active item hide-on-mobile">
     <i class="@yield('icon') icon"></i>
     @yield('title') | @yield('subtitle')
