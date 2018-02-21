@@ -40,6 +40,10 @@ class MemberController extends Controller
             $members = $members->where('id', $request->membershipNumber);
           }
 
+          if ($request->memberType) {
+            $members = $members->where('member_type_id', $request->memberType);
+          }
+
           $memberIds = $members->pluck('id');
           $members = Member::whereIn('id', $memberIds)->orderBy('firstname', 'asc')->paginate(48);
         }
