@@ -33,7 +33,7 @@ class OrganizationController extends Controller
         }
 
         $organizationIds = $organizations->pluck('id');
-        $organizations = Organization::whereIn('id', $organizationIds)->orderBy('name', 'asc')->paginate(50);;
+        $organizations = Organization::whereIn('id', $organizationIds)->orderBy('name', 'asc')->paginate(48);;
       }
       else
       {

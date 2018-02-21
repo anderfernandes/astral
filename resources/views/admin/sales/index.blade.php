@@ -11,20 +11,6 @@
   {!! Form::open(['route' => 'admin.sales.index', 'class' => 'ui form', 'method' => 'get']) !!}
   <div class="seven fields">
     <div class="field">
-      <div class="ui secondary dropdown button">
-        <i class="plus icon"></i> New Sale<i class="dropdown icon"></i>
-        <div class="menu">
-          @foreach ($eventTypes as $eventType)
-            <a href="{{ route('admin.sales.create') }}?eventType={{ $eventType->id }}" class="item">{{ $eventType->name }}</a>
-          @endforeach
-        </div>
-      </div>
-
-    </div>
-    <div class="field">
-      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui right floated secondary button']) !!}
-    </div>
-    <div class="field">
       <div class="ui input">
         <input type="text" value="{{ $request->saleNumber ? $request->saleNumber : "" }}" name="saleNumber" id="saleNumber" placeholder="Sale Number">
       </div>
@@ -79,14 +65,25 @@
         </div>
       </div>
     </div>
+    <div class="field">
+      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui floated secondary button']) !!}
+    </div>
   </div>
-
   {!! Form::close() !!}
+
+  <div class="ui secondary dropdown button">
+    <i class="plus icon"></i> New Sale<i class="dropdown icon"></i>
+    <div class="menu">
+      @foreach ($eventTypes as $eventType)
+        <a href="{{ route('admin.sales.create') }}?eventType={{ $eventType->id }}" class="item">{{ $eventType->name }}</a>
+      @endforeach
+    </div>
+  </div>
 
 
 @if (!isset($sales) || count($sales) > 0)
 
-<br /><br />
+<br />
 
 <table class="ui selectable striped single line very compact table">
   <thead>

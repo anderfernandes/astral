@@ -24,14 +24,31 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         // member role_id is 5
-        $members = Member::where('id', '!=', 1)
-                         ->orderBy('firstname', 'asc')
-                         ->paginate(12);
+        $members = Member::where('id', '!=', 1);
 
-        return view('admin.members.index')->withMembers($members);
+
+        if (count($request->all()) > 0)
+        {
+          if ($request->memberId) {
+            $members = $members->where('id', $request->memberId);
+          }
+
+          if ($request->membershipNumber) {
+            $members = $members->where('id', $request->membershipNumber);
+          }
+
+          $memberIds = $members->pluck('id');
+          $members = Member::whereIn('id', $memberIds)->orderBy('firstname', 'asc')->paginate(48);
+        }
+        else
+        {
+          $members = $members->orderBy('firstname', 'asc')->paginate(12);
+        }
+
+        return view('admin.members.index')->withRequest($request)->withMembers($members);
     }
 
     /**

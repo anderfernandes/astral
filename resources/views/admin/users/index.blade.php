@@ -11,12 +11,6 @@
   {!! Form::open(['route' => 'admin.users.index', 'class' => 'ui form', 'method' => 'get']) !!}
   <div class="five fields">
     <div class="field">
-      <div class="ui secondary button" onclick=""="$('#add-user').modal('show')">
-        <i class="add user icon"></i> Add User
-      </div>
-      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui right floated secondary button']) !!}
-    </div>
-    <div class="field">
       <div class="ui selection search dropdown" id="user-id">
         <input type="hidden" id="userId" name="userId">
         <i class="dropdown icon"></i>
@@ -73,8 +67,17 @@
         </div>
       </div>
     </div>
+    <div class="field">
+      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+    </div>
   </div>
   {!! Form::close() !!}
+
+  <div class="ui secondary button" onclick=""="$('#add-user').modal('show')">
+    <i class="add user icon"></i> Add User
+  </div>
+
+  <br /><br />
 
   @if ($users->count() > 0)
   <div class="ui four doubling link cards">

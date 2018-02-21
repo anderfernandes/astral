@@ -9,13 +9,7 @@
 @section('content')
 
   {!! Form::open(['route' => 'admin.organizations.index', 'class' => 'ui form', 'method' => 'get']) !!}
-  <div class="four fields">
-    <div class="field">
-      <div class="ui secondary button" onclick="$('#add-organization').modal('show')">
-        <i class="plus icon"></i> Add Organization
-      </div>
-      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui right floated secondary button']) !!}
-    </div>
+  <div class="five fields">
     <div class="field">
       <div class="ui selection search dropdown" id="organization-id">
         <input type="hidden" id="organizationId" name="organizationId">
@@ -47,11 +41,16 @@
       </div>
     </div>
     <div class="field">
-
+      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
-
   {!! Form::close() !!}
+
+  <div class="ui secondary button" onclick="$('#add-organization').modal('show')">
+    <i class="plus icon"></i> Add Organization
+  </div>
+
+  <br /><br />
 
 @if (!isset($organizations) || count($organizations) > 0)
   <div class="ui four doubling link cards">

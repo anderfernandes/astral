@@ -8,18 +8,54 @@
 
 @section('content')
 
+  {!! Form::open(['route' => 'admin.members.index', 'class' => 'ui form', 'method' => 'get']) !!}
+  <div class="five fields">
+    <div class="field">
+      <div class="ui selection search dropdown" id="member-id">
+        <input type="hidden" id="memberId" name="memberId">
+        <i class="dropdown icon"></i>
+          <div class="default text">All Members</div>
+        <div class="menu">
+          <div class="item" data-value="">All Members</div>
+          @foreach (App\Member::where('id', '!=', 1)->orderBy('firstname', 'asc')->get() as $member)
+            <div class="item" data-value="{{ $member->id }}">
+              {{ $member->users[0]->fullname }}
+            </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <input type="text" value="{{ $request->membershipNumber ? $request->membershipNumber : null }}" name="membershipNumber" placeholder="Enter a membership number">
+    </div>
+    <div class="field">
+      <div class="ui selection search dropdown" id="member-type">
+        <input type="hidden" id="membershipType" name="memberType">
+        <i class="dropdown icon"></i>
+          <div class="default text">All Membership Types</div>
+        <div class="menu">
+          <div class="item" data-value="">All Membership Types</div>
+          @foreach (App\MemberType::where('id', '!=', 1)->orderBy('firstname', 'asc')->get() as $memberType)
+            <div class="item" data-value="{{ $memberType->id }}">
+              {{ $memberType->name }}
+            </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+    </div>
+  </div>
+  {!! Form::close() !!}
+
   <a class="ui secondary button" href="{{ route('admin.members.create') }}">
     <i class="plus icon"></i> Add Member
   </a>
 
-  <!--<div class="ui right icon input">
-    <input type="text" placeholder="Search...">
-    <i class="search link icon"></i>
-  </div>-->
-
   <br /><br />
 
-  @if (!isset($members) || count($members) > 0)
+  @if (!isSet($members) || count($members) > 0)
     <div class="ui four doubling link cards">
       @foreach($members as $member)
         <div class="card">
@@ -50,7 +86,7 @@
           <div class="header">
             No members!
           </div>
-          <p>It looks like there are no members in the database.</p>
+          <p>It looks like your search has returned no results or there are no members in the database.</p>
         </div>
       </div>
     </div>
@@ -63,5 +99,14 @@
   </div>
 
   <br /><br />
+
+  <script>
+    @if ($request->memberId)
+      $('#member-id').dropdown('set exactly', {{ $request->memberId }})
+    @endif
+    @if ($request->memberType)
+      $('#member-type').dropdown('set exactly', "{{ $request->memberType }}")
+    @endif
+  </script>
 
 @endsection

@@ -11,12 +11,6 @@
   {!! Form::open(['route' => 'admin.shows.index', 'class' => 'ui form', 'method' => 'get']) !!}
   <div class="four fields">
     <div class="field">
-      <div onclick="$('#add-show').modal('show')" class="ui secondary button">
-        <i class="plus icon"></i> Add Show
-      </div>
-      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui right floated secondary button']) !!}
-    </div>
-    <div class="field">
       <div class="ui selection search dropdown" id="show-id">
         <input type="hidden" id="showId" name="showId">
         <i class="dropdown icon"></i>
@@ -44,8 +38,17 @@
         <option value="Laser Light">Laser Light</option>
       </select>
     </div>
+    <div class="field">
+      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+    </div>
   </div>
 {!! Form::close() !!}
+
+<div onclick="$('#add-show').modal('show')" class="ui secondary button">
+  <i class="plus icon"></i> Add Show
+</div>
+
+<br /><br />
 
 @if (!isSet($shows) || ($shows->count()) > 0)
   <div class="ui five doubling link cards">
