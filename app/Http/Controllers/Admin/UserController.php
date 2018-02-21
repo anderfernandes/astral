@@ -18,17 +18,43 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::where('type', 'individual')->where('role_id', '!=', 5)
-                 ->orderBy('firstname', 'asc')->paginate(12);
-
+        $users = User::where('type', 'individual')->where('role_id', '!=', 5);
         $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
         $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
 
+        if (count($request->all()) > 0) {
+
+          if ($request->userId) {
+            $users = $users->where('id', $request->userId);
+          }
+
+          if ($request->roleId) {
+            $users = $users->where('role_id', $request->roleId);
+          }
+
+          if ($request->organizationId) {
+            $users = $users->where('organization_id', $request->organizationId);
+          }
+
+          if ($request->isStaff) {
+            $isStaff = $request->isStaff == "true" ? true : false;
+            $users = $users->where('staff', $isStaff);
+          }
+
+          $userIds = $users->pluck('id');
+          $users = User::whereIn('id', $userIds)->orderBy('firstname', 'asc')->paginate(50);
+
+        }
+        else
+        {
+          $users = $users->orderBy('firstname', 'asc')->paginate(12);
+        }
         return view('admin.users.index')->withUsers($users)
                                         ->withRoles($roles)
-                                        ->withOrganizations($organizations);;
+                                        ->withRequest($request)
+                                        ->withOrganizations($organizations);
     }
 
     /**
