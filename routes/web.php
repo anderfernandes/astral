@@ -39,10 +39,10 @@ Route::group(
   Route::get('reports/royalty', 'ReportController@royalty')->name('reports.royalty');
   Route::get('reports', 'ReportController@index')->name('reports.index');
   // Sales Resource
-  Route::resource('sales', 'SaleController', ['except' => ['create']]);
+  //Route::resource('sales', 'SaleController', ['except' => ['create']]);
+  Route::resource('sales', 'SaleController');
   Route::post('sales/refund/{sale}', 'SaleController@refund')->name('sales.refund');
   Route::post('sales/refundPayment/{payment}', 'SaleController@refundPayment')->name('sales.refundPayment');
-  Route::get('sales/create/{eventType}', 'SaleController@create')->name('sales.create');
   Route::get('sales/{sale}/confirmation', 'SaleController@confirmation')->name('sales.confirmation');
   Route::get('sales/{sale}/invoice', 'SaleController@invoice')->name('sales.invoice');
   Route::get('sales/{sale}/receipt', 'SaleController@receipt')->name('sales.receipt');
@@ -84,8 +84,7 @@ Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier
     // Find Sale
     Route::post('query', 'SaleController@query')->name('query');
     // Sales
-    Route::resource('sales', 'SaleController', ['except' => ['create']]);
-    Route::get('sales/create/{eventType}', 'SaleController@create')->name('sales.create');
+    Route::resource('sales', 'SaleController');
     Route::get('sales/{sale}/confirmation', 'SaleController@confirmation')->name('sales.confirmation');
     Route::get('sales/{sale}/invoice', 'SaleController@invoice')->name('sales.invoice');
     Route::get('sales/{sale}/receipt', 'SaleController@receipt')->name('sales.receipt');

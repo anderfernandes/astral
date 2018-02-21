@@ -58,7 +58,7 @@ class SaleController extends Controller
           }
 
           $saleIds = $sales->pluck('id');
-          $sales = Sale::whereIn('id', $saleIds)->orderBy('id', 'desc')->paginate(10);
+          $sales = Sale::whereIn('id', $saleIds)->orderBy('id', 'desc')->paginate(50);
         }
         else
         {
@@ -74,14 +74,15 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(EventType $eventType)
+    public function create(Request $request)
     {
         $organizations  = Organization::pluck('name', 'id');
-        $events         = Event::where('type_id', $eventType->id)
+        $events         = Event::where('type_id', $request->eventType)
                                ->where('start', '>=', Date::now()->subDays(7)->toDateTimeString())
                                ->orderBy('start', 'asc')
                                ->get();
         $paymentMethods = PaymentMethod::all();
+        $eventType = EventType::find($request->eventType);
         $ticketTypes    = $eventType->allowedTickets;
 
         /*$customers = $allCustomers->mapWithKeys(function ($item) {

@@ -51,12 +51,13 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(EventType $eventType)
+    public function create(Request $request)
     {
         $organizations = Organization::pluck('name', 'id');
-        $events = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $eventType->id)->orderBy('start', 'asc')->get();
+        $events = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $request->eventType)->orderBy('start', 'asc')->get();
         $paymentMethods = PaymentMethod::all();
-        $ticketTypes = $eventType->allowedTickets;
+        $eventType = EventType::find($request->eventType);
+        $ticketTypes    = $eventType->allowedTickets;
 
         /*$customers = $allCustomers->mapWithKeys(function ($item) {
           return [ $item['id'] => $item['firstname'].' '.$item['lastname']];

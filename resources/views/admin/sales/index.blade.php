@@ -15,7 +15,7 @@
         <i class="plus icon"></i> New Sale<i class="dropdown icon"></i>
         <div class="menu">
           @foreach ($eventTypes as $eventType)
-            <a href={{ route('admin.sales.create', $eventType) }} class="item">{{ $eventType->name }}</a>
+            <a href="{{ route('admin.sales.create') }}?eventType={{ $eventType->id }}" class="item">{{ $eventType->name }}</a>
           @endforeach
         </div>
       </div>
@@ -47,6 +47,20 @@
       </div>
     </div>
     <div class="field">
+      <div class="ui selection dropdown" id="sale-status">
+        <input type="hidden" id="saleStatus" name="saleStatus">
+        <i class="dropdown icon"></i>
+        <div class="default text">All Sale Status</div>
+        <div class="menu">
+          <div class="item" data-value="open"><i class="unlock icon"></i>Open</div>
+          <div class="item" data-value="complete"><i class="checkmark icon"></i>Complete</div>
+          <div class="item" data-value="canceled"><i class="remove icon"></i>Canceled</div>
+          <div class="item" data-value="tentative"><i class="help icon"></i>Tentative</div>
+          <div class="item" data-value="no show"><i class="thumbs outline down icon"></i>No Show</div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
       <div class="ui selection search dropdown" id="payment-user">
         <input type="hidden" id="paymentUser" name="paymentUser">
         <i class="dropdown icon"></i>
@@ -58,20 +72,6 @@
               {{ $paymentUser->firstname }}
             </div>
           @endforeach
-        </div>
-      </div>
-    </div>
-    <div class="field">
-      <div class="ui selection dropdown" id="sale-status">
-        <input type="hidden" id="saleStatus" name="saleStatus">
-        <i class="dropdown icon"></i>
-        <div class="default text">All Sale Status</div>
-        <div class="menu">
-          <div class="item" data-value="open"><i class="unlock icon"></i>Open</div>
-          <div class="item" data-value="complete"><i class="checkmark icon"></i>Complete</div>
-          <div class="item" data-value="canceled"><i class="remove icon"></i>Canceled</div>
-          <div class="item" data-value="tentative"><i class="help icon"></i>Tentative</div>
-          <div class="item" data-value="no show"><i class="thumbs outline down icon"></i>No Show</div>
         </div>
       </div>
     </div>
