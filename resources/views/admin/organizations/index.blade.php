@@ -8,17 +8,52 @@
 
 @section('content')
 
-  <a class="ui secondary button" href="javascript:$('#add-organization').modal('show')">
-    <i class="plus icon"></i> Add Organization
-  </a>
+  {!! Form::open(['route' => 'admin.organizations.index', 'class' => 'ui form', 'method' => 'get']) !!}
+  <div class="four fields">
+    <div class="field">
+      <div class="ui secondary button" onclick="$('#add-organization').modal('show')">
+        <i class="plus icon"></i> Add Organization
+      </div>
+      {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui right floated secondary button']) !!}
+    </div>
+    <div class="field">
+      <div class="ui selection search dropdown" id="organization-id">
+        <input type="hidden" id="organizationId" name="organizationId">
+        <i class="dropdown icon"></i>
+          <div class="default text">All Organizations</div>
+        <div class="menu">
+          <div class="item" data-value="">All Organizations</div>
+          @foreach (App\Organization::where('type_id', '!=', 1)->orderBy('name', 'asc')->get() as $organization)
+            <div class="item" data-value="{{ $organization->id }}">
+              {{ $organization->name }}
+            </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="ui selection search dropdown" id="organization-type-id">
+        <input type="hidden" id="organizationTypeId" name="organizationTypeId">
+        <i class="dropdown icon"></i>
+          <div class="default text">All Organization Types</div>
+        <div class="menu">
+          <div class="item" data-value="">All Organization Types</div>
+          @foreach (App\OrganizationType::where('name', '!=', 'System')->orderBy('name', 'asc')->get() as $organizationType)
+            <div class="item" data-value="{{ $organizationType->id }}">
+              {{ $organizationType->name }}
+            </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
+    <div class="field">
 
-  <div class="ui right icon input">
-    <input type="text" placeholder="Search...">
-    <i class="search link icon"></i>
+    </div>
   </div>
 
+  {!! Form::close() !!}
+
 @if (!isset($organizations) || count($organizations) > 0)
-  <br /><br />
   <div class="ui four doubling link cards">
     @foreach($organizations as $organization)
     <div class="card">
@@ -37,7 +72,7 @@
       </div>
       <div class="ui two bottom attached buttons">
         <a href="{{ route('admin.organizations.show', $organization) }}" class="ui black button">
-          <i class="book icon"></i> View
+          <i class="eye icon"></i> View
         </a>
         <a href="{{ route('admin.organizations.edit', $organization ) }}" class="ui blue button">
           <i class="edit icon"></i> Edit
@@ -75,5 +110,14 @@
     @include('admin.partial.organizations._create')
   @endslot
 @endcomponent
+
+<script>
+  @if ($request->organizationId)
+    $('#organization-id').dropdown('set exactly', {{ $request->organizationId }})
+  @endif
+  @if ($request->organizationTypeId)
+    $('#organization-type-id').dropdown('set exactly', "{{ $request->organizationTypeId }}")
+  @endif
+</script>
 
 @endsection

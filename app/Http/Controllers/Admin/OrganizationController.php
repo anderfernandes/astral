@@ -18,15 +18,30 @@ class OrganizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-      $organizations = Organization::where('type_id', '!=', 1)
-                                   ->orderBy('name', 'asc')
-                                   ->paginate(12);
 
-      $organizationTypes = OrganizationType::where('name', '!=', 'System')->pluck('name', 'id');
+      $organizations = Organization::where('type_id', '!=', 1);
+      $organizationTypes = OrganizationType::where('name', '!=', 'System')->orderBy('name', 'asc')->pluck('name', 'id');
+
+      if (count($request->all()) > 0) {
+        if ($request->organizationId) {
+          $organizations = $organizations->where('id', $request->organizationId);
+        }
+        if ($request->organizationTypeId) {
+          $organizations = $organizations->where('type_id', $request->organizationTypeId);
+        }
+
+        $organizationIds = $organizations->pluck('id');
+        $organizations = Organization::whereIn('id', $organizationIds)->orderBy('name', 'asc')->paginate(50);;
+      }
+      else
+      {
+        $organizations = $organizations->orderBy('name', 'asc')->paginate(12);
+      }
 
       return view('admin.organizations.index')->withOrganizations($organizations)
+                                              ->withRequest($request)
                                               ->withOrganizationTypes($organizationTypes);
     }
 
