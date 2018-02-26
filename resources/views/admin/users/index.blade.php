@@ -73,7 +73,7 @@
   </div>
   {!! Form::close() !!}
 
-  <div class="ui secondary button" onclick=""="$('#add-user').modal('show')">
+  <div class="ui secondary button" onclick="$('#add-user').modal('show')">
     <i class="add user icon"></i> Add User
   </div>
 

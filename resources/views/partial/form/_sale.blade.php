@@ -286,7 +286,9 @@
               @if (!$sale->refund)
                 @if ($sale->payments->count() > 1)
                   @if ($sale->payments->sum('total') > 0)
-                  <th>Actions</th>
+                    @if ($sale->payments[0]->cashier_id == Auth::user()->id)
+                    <th>Actions</th>
+                    @endif
                   @endif
                 @endif
               @endif
@@ -313,11 +315,13 @@
                         @if ($sale->payments->sum('total') > 0)
                           @if ($payment->total > 0)
                             @if (!$payment->refunded)
-                            <td>
-                              {!! Form::open(['route' => ['admin.sales.refundPayment', $payment], 'class' => 'ui form', 'id' => 'refundPayment']) !!}
-                                {!! Form::button('<i class="reply icon"></i>', ['type' => 'submit', 'class' => 'ui mini basic icon button']) !!}
-                              {!! Form::close() !!}
-                            </td>
+                              @if ($payment->cashier_id == Auth::user()->id)
+                              <td>
+                                {!! Form::open(['route' => ['admin.sales.refundPayment', $payment], 'class' => 'ui form', 'id' => 'refundPayment']) !!}
+                                  {!! Form::button('<i class="reply icon"></i>', ['type' => 'submit', 'class' => 'ui mini basic icon button']) !!}
+                                {!! Form::close() !!}
+                              </td>
+                              @endif
                             @endif
                           @endif
                         @endif

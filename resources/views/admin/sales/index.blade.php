@@ -171,7 +171,7 @@
         <td>
           <div class="ui icon buttons">
             <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
-            @if (!isSet($sale->customer->member))
+            @if (($sale->customer->membership_id == 1))
               <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
             @endif
             <div class="ui icon top left pointing dropdown secondary button">

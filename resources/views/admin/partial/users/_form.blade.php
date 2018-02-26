@@ -49,7 +49,7 @@
     @if (isSet($user))
       {!! Form::select('role_id', $roles, $user->role_id, ['class' => 'ui dropdown']) !!}
     @else
-      {!! Form::select('role_id', $roles, 7, ['class' => 'ui dropdown']) !!}
+      {!! Form::select('role_id', $roles, 8, ['class' => 'ui dropdown']) !!}
     @endif
 
   </div>
@@ -66,7 +66,7 @@
     {!! Form::text('email', null, ['placeholder' => 'Email']) !!}
   </div>
 </div>
-@if (Request::routeIs('*.users.edit'))
+@if ($type != "create")
 <div class="required two fields">
   <div class="field">
     {!! Form::label('password', 'Password') !!}
