@@ -115,7 +115,9 @@
         <td>
           <div class="ui icon buttons">
             <a href="{{ route('cashier.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
-            <a href="{{ route('cashier.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
+            @if (($sale->customer->membership_id == 1))
+              <a href="{{ route('cashier.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
+            @endif
           </div>
         </td>
       </tr>

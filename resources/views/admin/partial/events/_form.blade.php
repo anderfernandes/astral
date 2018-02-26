@@ -19,7 +19,7 @@
     @if (isSet($event))
       {!! Form::select('public', [true => 'Yes', false => 'No'], $event->public, ['placeholder' => 'Is this a public event?', 'class' => 'ui dropdown']) !!}
     @else
-      {!! Form::select('public', [true => 'Yes', false => 'No'], true, ['placeholder' => 'Is this a public event?', 'class' => 'ui dropdown']) !!}
+      {!! Form::select('public', [true => 'Yes', false => 'No'], null, ['placeholder' => 'Is this a public event?', 'class' => 'ui dropdown']) !!}
     @endif
 
   </div>
@@ -139,6 +139,12 @@ $('form').form({
   inline: true,
   on: 'blur',
   fields: {
+    public: {
+      identifier: 'public',
+      rules: [
+        { type: 'empty', prompt: 'Is this show for the general public or for a private group/school?' }
+      ]
+    },
     show_id: {
       identifier: 'show_id',
       rules: [

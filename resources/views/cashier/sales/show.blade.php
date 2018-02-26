@@ -261,9 +261,11 @@
           <th>Date</th>
           <th>Cashier</th>
           @if (!$sale->refund)
-            @if ($sale->payments->count() > 1)
+            @if ($sale->payments->where('refunded', false)->where('total', '>', 0)->count() > 1)
               @if ($sale->payments->sum('total') > 0)
-              <th>Actions</th>
+                @if ($sale->payments[0]->cashier_id == Auth::user()->id)
+                <th>Actions</th>
+                @endif
               @endif
             @endif
           @endif

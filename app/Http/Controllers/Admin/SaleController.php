@@ -294,6 +294,59 @@ class SaleController extends Controller
           'memo'                 => 'required',
         ]);
 
+        // If the event(s) for this sale change, delete tickets that belong to the old event
+        if (isSet($request->first_event_id)) {
+          if ($sale->events[0]->id != $request->first_event_id) {
+            // Delete old tickets created
+            $sale->tickets()->delete();
+
+            // Store updated tickets in the database
+
+            // Holds the tickets coming from the request
+            $firstShowTickets  = [];
+
+            // Create array with all tickets for the first show if the amount of
+            // tickets for a ticket type is not zero
+            foreach($request->ticket as $key => $value) {
+              for($i = 1; $i <= $value; $i++) {
+                $array['ticket_type_id'] = $key;
+                $array['event_id']       = $request->first_event_id;
+                $array['customer_id']    = $request->customer_id;
+                $array['cashier_id']     = Auth::user()->id;
+
+                $firstShowTickets = array_prepend($firstShowTickets, $array);
+              }
+            }
+
+            // Update first show tickets to the database
+            $sale->tickets()->createMany($firstShowTickets);
+          }
+        }
+
+        if ($request->second_event_id != 1) {
+          if ($sale->events[1]->id != $request->second_event_id) {
+            // If it does, create and array with all the tickets for the second
+            // show if the amount of tickets for a ticket type is not zero
+
+            // Create array with second show tickets
+            $secondShowTickets = [];
+
+            // Populate the array
+            foreach($request->ticket as $key => $value) {
+              for($i = 1; $i <= $value; $i++) {
+                $array['ticket_type_id'] = $key;
+                $array['event_id'] = $request->second_event_id;
+                $array['customer_id'] = $request->customer_id;
+                $array['cashier_id'] = Auth::user()->id;
+                $secondShowTickets = array_prepend($secondShowTickets, $array);
+              }
+            }
+
+            // Save to the database
+            $sale->tickets()->createMany($secondShowTickets);
+          }
+        }
+
         $sale->organization_id      = $request->organization_id;
         $sale->customer_id          = $request->customer_id;
         $sale->status               = $request->status;
@@ -345,7 +398,6 @@ class SaleController extends Controller
           $sale->status = "complete";
           $sale->save();
         }
-
 
         // Update tickets only if its number changes
         if (array_sum($request->ticket) != $sale->tickets->count()) {
