@@ -11,9 +11,10 @@
   <div class="ui top attached tabular menu">
     <div class="active item" data-tab="cashier"><i class="inbox icon"></i> Cashier</div>
     <div class="item" data-tab="royalties"><i class="money icon"></i> Royalties</div>
+    <div class="item" data-tab="membership"><i class="address card icon"></i> Membership</div>
   </div>
 
-  <!-- Cashier Reports Tab -->
+  {{-- Cashier Reports Tab --}}
   <div class="ui bottom attached active tab segment" data-tab="cashier">
     <h3 class="ui dividing header">
       <i class="inbox icon"></i>
@@ -80,7 +81,7 @@
     </div>
   </div>
 
-  <!-- Royalties Reports Tab -->
+  {{-- Royalties Reports Tab --}}
   <div class="ui bottom attached tab segment" data-tab="royalties">
     <h3 class="ui dividing header">
       <i class="money icon"></i>
@@ -127,6 +128,42 @@
     </div>
   </div>
 
+  {{-- Membership Reports Tab --}}
+  <div class="ui bottom attached tab segment" data-tab="membership">
+    <h3 class="ui dividing header">
+      <i class="address card icon"></i>
+      <div class="content">
+        Membership
+        <div class="sub header">These reports contain information on memberships</div>
+      </div>
+    </h3>
+    <div class="ui four doubling stackable cards">
+      <!--- Closeout Report Card --->
+      <div class="card">
+        <div class="content">
+          <div class="header">New Members Report</div>
+          <div class="description">This report displays a list of new members by membership start date and time range</div><br />
+          <div class="ui form">
+            <div class="field">
+              <label for="royalty_start">Range:</label>
+                <div class="ui left icon input">
+                  {!! Form::text('new_member_start', null, ['placeholder' => 'Start Date and Time', 'id' => 'new-member-start']) !!}
+                <i class="calendar icon"></i>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui left icon input">
+                {!! Form::text('new_member_end', null, ['placeholder' => 'End Date and Time', 'id' =>'new-member-end']) !!}
+                <i class="calendar icon"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="new-member-submit" class="ui bottom attached black button">Get New Members Report <i class="right chevron icon"></i></div>
+      </div>
+
+    </div>
+  </div>
 
   <script>
 
@@ -148,6 +185,9 @@
 
     $('#royalty-start').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:0, defaultMinute:0});
     $('#royalty-end').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:23, defaultMinute:59});
+
+    $('#new-member-start').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:0, defaultMinute:0, maxDate: 'today'});
+    $('#new-member-end').flatpickr({enableTime:true, defaultDate: 'today', dateFormat: 'l, F j, Y h:i K', defaultHour:23, defaultMinute:59, maxDate: 'today'});
 
     $('#closeout-submit').click(function() {
       var user = document.querySelector('#closeout-user').value
@@ -172,6 +212,14 @@
       end = moment(end, 'dddd, MMM D, YYYY h:mm A').format('X')
 
       window.open('/admin/reports/royalty?show=' + show + '&free=' + free + '&start=' + start + '&end=' + end, '_blank')
+    })
+
+    $('#new-member-submit').click(function() {
+      var start = document.querySelector('#new-member-start').value
+      var end = document.querySelector('#new-member-end').value
+      start = moment(start, 'dddd, MMM D, YYYY h:mm A').format('X')
+      end = moment(end, 'dddd, MMM D, YYYY h:mm A').format('X')
+      window.open('/admin/reports/newMembers?start=' + start + '&end=' + end, '_blank')
     })
 
   </script>

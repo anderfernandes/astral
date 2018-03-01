@@ -14,6 +14,7 @@ use App\PaymentMethod;
 use App\User;
 use App\Show;
 use App\TicketType;
+use App\Member;
 use Session;
 
 use Illuminate\Http\Request;
@@ -233,5 +234,15 @@ class ReportController extends Controller
                                           ->with('allTicketTypes', $allTicketTypes)
                                           ->withEvents($events);
 
+    }
+
+    public function newMembers(Request $request)
+    {
+      $start = Date::createFromTimestamp($request->start)->toDateTimeString();
+      $end = Date::createFromTimestamp($request->end)->toDateTimeString();
+
+      $memberships = Member::where('start', '>=', $start)->where('start', '<=', $end)->get();
+
+      return view('admin.reports.new-members')->withMemberships($memberships)->withStart($start)->withEnd($end);
     }
 }
