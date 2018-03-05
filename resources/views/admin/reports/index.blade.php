@@ -192,15 +192,19 @@
     $('#closeout-submit').click(function() {
       var user = document.querySelector('#closeout-user').value
       var start = document.querySelector('#closeout-start').value
-      start = moment(start, 'dddd, MMMM D, YYYY h:mm A').format('Y-M-D')
-      window.open('/admin/reports/closeout/' + user + '/' + start, '_blank')
+      var end = document.querySelector('#closeout-end').value
+      start = moment(start, 'dddd, MMMM D, YYYY h:mm A').format('X')
+      end = moment(end, 'dddd, MMMM D, YYYY h:mm A').format('X')
+      window.open('/admin/reports/closeout/?user=' + user + '&start=' + start + '&end=' + end, '_blank')
     })
 
     $('#transaction-detail-submit').click(function() {
       var user = document.querySelector('#transaction-detail-user').value
       var start = document.querySelector('#transaction-detail-start').value
-      start = moment(start, 'dddd, MMMM D, YYYY h:mm A').format('Y-M-D')
-      window.open('/admin/reports/transaction-detail/' + user + '/' + start, '_blank')
+      var end = document.querySelector('#transaction-detail-end').value
+      start = moment(start, 'dddd, MMMM D, YYYY h:mm A').format('X')
+      end = moment(end, 'dddd, MMMM D, YYYY h:mm A').format('X')
+      window.open('/admin/reports/transactionDetail/?user=' + user + '&start=' + start + '&end=' + end, '_blank')
     })
 
     $('#royalty-submit').click(function() {

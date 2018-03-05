@@ -28,8 +28,9 @@ class ReportController extends Controller
      */
     public function index()
     {
-        $users = User::where('id', '!=', 1)->where('staff', true)->pluck('firstname', 'id');
-        $shows = Show::where('id', '!=', 1)->pluck('name', 'id');
+        $users = User::where('id', '!=', 1)->orderBy('name')->where('staff', true)->pluck('firstname', 'id');
+        $users->prepend('All Users', 0);
+        $shows = Show::where('id', '!=', 1)->orderBy('name')->pluck('name', 'id');
         return view('admin.reports.index')->withUsers($users)->withShows($shows);
     }
 
@@ -99,12 +100,97 @@ class ReportController extends Controller
         //
     }
 
-    public function reports($type, $id, $date)
+    public function closeout(Request $request)
     {
-      $user = User::find($id);
-      $date = new Date($date);
-      $start = $date->startOfDay()->toDateTimeString();
-      $end = $date->endOfDay()->toDateTimeString();
+
+        $user = $request->user != 0 ? User::find($request->user) : new User(['id' => 0, 'firstname' => 'All Users', 'lastname' => null]);
+        $start = Date::createFromTimestamp($request->start)->toDateTimeString();
+        $end = Date::createFromTimestamp($request->end)->toDateTimeString();
+        $payments = Payment::where([
+          ['updated_at', '>=', $start],
+          ['updated_at', '<', $end],
+          ])->get();
+
+        if (isSet($user->id)) {
+          $payments = $payments->where('cashier_id', $user->id);
+        }
+
+        $cashPayments  = [];
+        $cashRefunds   = [];
+        $cardPayments  = [];
+        $cardRefunds   = [];
+        $checkPayments = [];
+        $checkRefunds  = [];
+        $otherPayments = [];
+        $otherRefunds  = [];
+
+        // Get payments of a particular payment_method type
+        foreach ($payments as $payment) {
+          if ($payment->method->type == 'cash' and $payment->tendered > 0)
+            array_unshift($cashPayments, $payment);
+          elseif ($payment->method->type == 'cash' and $payment->tendered < 0)
+              array_unshift($cashRefunds, $payment);
+          else if ($payment->method->type == 'card' and $payment->tendered > 0)
+            array_unshift($cardPayments, $payment);
+          elseif ($payment->method->type == 'card' and $payment->tendered < 0)
+              array_unshift($cardRefunds, $payment);
+          else if ($payment->method->type == 'check' and $payment->tendered > 0)
+            array_unshift($checkPayments, $payment);
+          elseif ($payment->method->type == 'check' and $payment->tendered < 0)
+              array_unshift($checkRefunds, $payment);
+          else
+            if ($payment->tendered > 0)
+              array_unshift($otherPayments, $payment);
+            else
+              array_unshift($otherRefunds, $payment);
+        }
+
+        return view('admin.reports.closeout')->with('cashPayments', $cashPayments)
+                                             ->with('cashRefunds', $cashRefunds)
+                                             ->with('cardPayments', $cardPayments)
+                                             ->with('cardRefunds', $cardRefunds)
+                                             ->with('checkPayments', $checkPayments)
+                                             ->with('checkRefunds', $checkRefunds)
+                                             ->with('otherPayments', $otherPayments)
+                                             ->with('otherRefunds', $otherRefunds)
+                                             ->with('paymentUser', $user)
+                                             ->withDate($start);
+    }
+
+    public function transactionDetail(Request $request)
+    {
+        $user = $request->user != 0 ? User::find($request->user) : new User(['id' => 0, 'firstname' => 'All Users', 'lastname' => null]);
+        $start = Date::createFromTimestamp($request->start)->toDateTimeString();
+        $end = Date::createFromTimestamp($request->end)->toDateTimeString();
+        $payments = Payment::where([
+          ['updated_at', '>=', $start],
+          ['updated_at', '<', $end],
+          ])->get();
+
+        if (isSet($user->id)) {
+          $payments = $payments->where('cashier_id', $user->id);
+        }
+
+        $totals = 0;
+
+        foreach ($payments as $payment) {
+          if ($payment->sale->refund == false)
+            $totals += $payment['tendered'] - $payment['change_due'];
+        }
+
+        $totals = number_format($totals, 2);
+
+        return view('admin.reports.transaction-detail')->withPayments($payments)
+                                                       ->withTotals($totals)
+                                                       ->withPaymentUser($user)
+                                                       ->withDate($start);
+    }
+
+    public function reports(Request $request)
+    {
+      $user = User::find($request->user);
+      $start = Date::createFromTimestamp($request->start)->toDateTimeString();
+      $end = Date::createFromTimestamp($request->end)->toDateTimeString();
       $today = Date::now()->startOfDay();
 
       $sales = Sale::where([
@@ -113,9 +199,14 @@ class ReportController extends Controller
       ])->orderBy('created_at', 'asc')->get();
 
       // Get Card Sales IDs
-      $salesIds = array_pluck($sales, 'id');
+      // $salesIds = array_pluck($sales, 'id');
       // Find all payments for the IDs we retrieved
-      $payments = Payment::where('cashier_id', $id)->whereIn('sale_id', $salesIds)->get();
+      //$payments = Payment::where('cashier_id', $id)->whereIn('sale_id', $salesIds)->get();
+      $payments = Payment::where([
+        ['cashier_id', $id],
+        ['updated_at', '>=', $start],
+        ['updated_at', '<', $end],
+        ])->get();
 
       if ($type == 'closeout')
       {
