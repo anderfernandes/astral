@@ -102,48 +102,57 @@ class ReportController extends Controller
 
     public function closeout(Request $request)
     {
-
-        $user = $request->user != 0 ? User::find($request->user) : new User(['id' => 0, 'firstname' => 'All Users', 'lastname' => null]);
         $start = Date::createFromTimestamp($request->start)->toDateTimeString();
         $end = Date::createFromTimestamp($request->end)->toDateTimeString();
         $payments = Payment::where([
           ['updated_at', '>=', $start],
           ['updated_at', '<', $end],
-          ])->get();
+          ]);
 
-        if (isSet($user->id)) {
-          $payments = $payments->where('cashier_id', $user->id);
-        }
 
-        $cashPayments  = [];
-        $cashRefunds   = [];
-        $cardPayments  = [];
-        $cardRefunds   = [];
-        $checkPayments = [];
-        $checkRefunds  = [];
-        $otherPayments = [];
-        $otherRefunds  = [];
+        // If payment user is not "all users", get the payments for a particular user
+        if ($request->user != 0) $payment = $payments->where('cashier_id', $request->user);
+
+        // Get the ids of all the users from the payments collection
+        $userIds = $payments->pluck('cashier_id')->unique()->values()->all();
+
+        $payments = $payments->get();
+        // Get information on all the users in the payments collecton
+        // THIS VARIABLE HAS A COLLECTION WITH ONE OR MORE USERS,
+        // DEPENDING ON HOW MANY DIFFERENT USERS ARE IN THE PAYMENT COLLECTION!
+        $user = User::whereIn('id', $userIds)->get();
+
+        $cashPayments  = collect([]);
+        $cashRefunds   = collect([]);
+        $cardPayments  = collect([]);
+        $cardRefunds   = collect([]);
+        $checkPayments = collect([]);
+        $checkRefunds  = collect([]);
+        $otherPayments = collect([]);
+        $otherRefunds  = collect([]);
 
         // Get payments of a particular payment_method type
         foreach ($payments as $payment) {
           if ($payment->method->type == 'cash' and $payment->tendered > 0)
-            array_unshift($cashPayments, $payment);
+            $cashPayments->prepend($payment);
           elseif ($payment->method->type == 'cash' and $payment->tendered < 0)
-              array_unshift($cashRefunds, $payment);
+              $cashRefunds->prepend($payment);
           else if ($payment->method->type == 'card' and $payment->tendered > 0)
-            array_unshift($cardPayments, $payment);
+            $cardPayments->prepend($payment);
           elseif ($payment->method->type == 'card' and $payment->tendered < 0)
-              array_unshift($cardRefunds, $payment);
+            $cardRefunds->prepend($payment);
           else if ($payment->method->type == 'check' and $payment->tendered > 0)
-            array_unshift($checkPayments, $payment);
+            $checkPayments->prepend($payment);
           elseif ($payment->method->type == 'check' and $payment->tendered < 0)
-              array_unshift($checkRefunds, $payment);
+            $checkRefunds->prepend($payment);
           else
             if ($payment->tendered > 0)
-              array_unshift($otherPayments, $payment);
+              $otherPayments->prepend($payment);
             else
-              array_unshift($otherRefunds, $payment);
+              $otherRefunds->prepend($payment);
         }
+
+        $totals = number_format($payments->sum('tendered') - $payments->sum('change_due'), 2);
 
         return view('admin.reports.closeout')->with('cashPayments', $cashPayments)
                                              ->with('cashRefunds', $cashRefunds)
@@ -154,36 +163,38 @@ class ReportController extends Controller
                                              ->with('otherPayments', $otherPayments)
                                              ->with('otherRefunds', $otherRefunds)
                                              ->with('paymentUser', $user)
+                                             ->with('totals', $totals)
                                              ->withDate($start);
     }
 
     public function transactionDetail(Request $request)
     {
-        $user = $request->user != 0 ? User::find($request->user) : new User(['id' => 0, 'firstname' => 'All Users', 'lastname' => null]);
-        $start = Date::createFromTimestamp($request->start)->toDateTimeString();
-        $end = Date::createFromTimestamp($request->end)->toDateTimeString();
-        $payments = Payment::where([
-          ['updated_at', '>=', $start],
-          ['updated_at', '<', $end],
-          ])->get();
+      $start = Date::createFromTimestamp($request->start)->toDateTimeString();
+      $end = Date::createFromTimestamp($request->end)->toDateTimeString();
+      $payments = Payment::where([
+        ['updated_at', '>=', $start],
+        ['updated_at', '<', $end],
+        ]);
 
-        if (isSet($user->id)) {
-          $payments = $payments->where('cashier_id', $user->id);
-        }
 
-        $totals = 0;
+      // If payment user is not "all users", get the payments for a particular user
+      if ($request->user != 0) $payment = $payments->where('cashier_id', $request->user);
 
-        foreach ($payments as $payment) {
-          if ($payment->sale->refund == false)
-            $totals += $payment['tendered'] - $payment['change_due'];
-        }
+      // Get the ids of all the users from the payments collection
+      $userIds = $payments->pluck('cashier_id')->unique()->values()->all();
 
-        $totals = number_format($totals, 2);
+      $payments = $payments->get();
+      // Get information on all the users in the payments collecton
+      // THIS VARIABLE HAS A COLLECTION WITH ONE OR MORE USERS,
+      // DEPENDING ON HOW MANY DIFFERENT USERS ARE IN THE PAYMENT COLLECTION!
+      $user = User::whereIn('id', $userIds)->get();
 
-        return view('admin.reports.transaction-detail')->withPayments($payments)
-                                                       ->withTotals($totals)
-                                                       ->withPaymentUser($user)
-                                                       ->withDate($start);
+      $totals = number_format($payments->sum('tendered') - $payments->sum('change_due'), 2);
+
+      return view('admin.reports.transaction-detail')->withPayments($payments)
+                                                     ->withTotals($totals)
+                                                     ->withPaymentUser($user)
+                                                     ->withDate($start);
     }
 
     public function reports(Request $request)

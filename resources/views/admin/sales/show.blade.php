@@ -138,13 +138,14 @@
         <tr>
           <td><h4 class="ui header">{{ $sale->customer->fullname }}</h4></td>
           <td>{{ $sale->customer->email }}</td>
-          <td>{{ $sale->customer->address }} {{ $sale->customer->city }} {{ $sale->customer->state }} {{ $sale->customer->city }}</td>
+          <td>{{ $sale->customer->address }} {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}</td>
           <td>{{ $sale->organization->phone }}</td>
         </tr>
       </tbody>
     </table>
   </div>
 
+  @if ($sale->organization_id != 1)
   <div class="ui center aligned segment">
     <h4 class="ui horizontal divider header">
       <i class="university icon"></i> Organization Information
@@ -162,12 +163,13 @@
         <tr>
           <td><h4 class="ui header">{{ $sale->organization->name }}</h4></td>
           <td>{{ $sale->organization->email }}</td>
-          <td>{{ $sale->organization->address }} {{ $sale->organization->city }} {{ $sale->organization->state }} {{ $sale->organization->city }}</td>
+          <td>{{ $sale->organization->address }} {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}</td>
           <td>{{ $sale->organization->phone }}</td>
         </tr>
       </tbody>
     </table>
   </div>
+  @endif
 
   @endif
 

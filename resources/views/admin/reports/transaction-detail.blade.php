@@ -1,57 +1,85 @@
 @extends('layout.report')
 
-@section('title', $paymentUser->firstname.' '.$paymentUser->lastname.'s Payment Transaction Detail Report')
+@section('title','Payment Transaction Detail Report')
 
 @section('content')
 
-<div class="ui centered aligned header">
-  {{ App\Setting::find(1)->organization }}
-  <div class="sub header">Payment Transaction Detail</div>
-</div>
+  <div class="ui centered aligned header">
+    {{ App\Setting::find(1)->organization }}
+    <div class="sub header">Payment Transaction Detail</div>
+  </div>
 
-<p style="float:right">Run: {{ Date::now()->format('m/d/Y H:i:s A') }}</p>
+  <p style="float:right">Run: {{ Date::now()->format('m/d/Y H:i:s A') }}</p>
 
-<table class="ui single line table">
-  <thead>
-    <tr>
-      <th>Payment Date and Time</td>
-      <th>Sale #</th>
-      <th>Customer</th>
-      <th>Payment Method</th>
-      <th>Reference</th>
-      <th>Tendered</th>
-      <th>Change</th>
-      <th>Amount</th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach ($payments as $payment)
-
-      @if ($payment->total < 0)
-      <tr class="negative">
-      @else
+  @foreach ($paymentUser as $user)
+    @if ($paymentUser->count() > 1)
+    <h5 class="ui header">Payment User: {{ $user->fullname }}</h5>
+    @endif
+    <table class="ui single line table">
+    <thead>
       <tr>
-      @endif
-        <td>{{ $payment->created_at->format('m/d/Y H:i:s a') }}</td>
-        <td>{{ $payment->sale->id }}</td>
-        <td>{{ $payment->sale->customer->firstname }} {{ $payment->sale->customer->lastname }}</td>
-        <td>{{ $payment->method->name }}</td>
-        <td>{{ $payment->reference }}</td>
-        <td>$ {{ number_format($payment->tendered, 2) }}</td>
-        <td>$ {{ number_format($payment->change_due, 2) }}</td>
-        <td>$ {{ number_format($payment->tendered - $payment->change_due, 2) }}</td>
+        <th>Payment Date and Time</td>
+        <th>Sale #</th>
+        <th>Customer</th>
+        <th>Payment Method</th>
+        <th>Reference</th>
+        <th>Tendered</th>
+        <th>Change</th>
+        <th>Amount</th>
       </tr>
+    </thead>
+    <tbody>
+      @foreach ($payments->where('cashier_id', $user->id) as $payment)
+        @if ($payment->total < 0)
+        <tr class="negative">
+        @else
+        <tr>
+        @endif
+          <td>{{ $payment->created_at->format('m/d/Y H:i:s a') }}</td>
+          <td>{{ $payment->sale->id }}</td>
+          <td>{{ $payment->sale->customer->firstname }} {{ $payment->sale->customer->lastname }}</td>
+          <td>{{ $payment->method->name }}</td>
+          <td>{{ $payment->reference }}</td>
+          <td>$ {{ number_format($payment->tendered, 2) }}</td>
+          <td>$ {{ number_format($payment->change_due, 2) }}</td>
+          <td>$ {{ number_format($payment->tendered - $payment->change_due, 2) }}</td>
+        </tr>
+      @endforeach
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="8" class="right aligned">
+          <strong>
+            Totals for {{ $paymentUser[$loop->index]->firstname }}:
+            $ {{ number_format($payments->where('cashier_id', $user->id)->sum('tendered') - $payments->where('cashier_id', $user->id)->sum('change_due'),2) }}
+          </strong>
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+  @endforeach
 
-    </tr>
-    @endforeach
-  </tbody>
-  <tfoot>
-    <tr>
-      <th colspan="8" class="right aligned">
-        <strong>Totals for {{ $paymentUser->firstname }}: $ {{ $totals }}</strong>
-      </th>
-    </tr>
-  </tfoot>
-</table>
-
+  @if ($paymentUser->count() > 1)
+  <table class="ui single line table">
+    <tfoot>
+      <tr>
+        <th colspan="8" class="right aligned">
+          <strong>
+            Totals for
+            @foreach ($paymentUser as $user)
+              @if ($loop->first)
+                {{ $user->fullname }}
+              @elseif ($loop->last)
+                and {{ $user->fullname }}
+              @else
+                , {{ $user->fullname }}
+              @endif
+            @endforeach
+            : $ {{ $totals }}
+          </strong>
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+  @endif
 @endsection

@@ -1,6 +1,6 @@
 @extends('layout.report')
 
-@section('title', $paymentUser->fullname . '\'s Closeout Report')
+@section('title', 'Closeout Report')
 
 @section('content')
 
@@ -8,77 +8,88 @@
     Closeout Report
     <div class="sub header">Run: {{ Date::now()->format('l, F j, Y \a\t g:i:s A') }}</div>
     <div class="sub header">Payment Date: {{ Date::parse($date)->format('l, F j, Y') }}</div>
-    <div class="sub header">Payment User: {{ $paymentUser->firstname }} {{ $paymentUser->lastname }}</div>
+    @if ($paymentUser->count() == 1)
+      <div class="sub header">Payment User: {{ $paymentUser[0]->fullname }}</div>
+    @else
+      <div class="sub header">Payment Users:
+        @foreach ($paymentUser as $user)
+          @if ($loop->first)
+            {{ $user->fullname }}
+          @elseif ($loop->last)
+            and {{ $user->fullname }}
+          @else
+            , {{ $user->fullname }}
+          @endif
+        @endforeach
+      </div>
+    @endif
   </div>
 
-  <table class="ui very basic collapsing celled table">
-  @if (count($cashPayments) > 0)
-
-      <tr>
-        <td><strong>Method</strong></td>
-        <td><strong>Transactions</strong></td>
-        <td><strong>Amount</strong></td>
-      </tr>
-
-      <tr>
-        <td>Cash</td>
-        <td>{{ count($cashPayments) }}</td>
-        <td class="right aligned">$
-          <?php
-            $cashPaymentsTotal = 0;
-            foreach ($cashPayments as $cashPayment)
-            {
-              $cashPaymentsTotal += $cashPayment['tendered'] - $cashPayment['change_due'];
-            }
-            echo number_format($cashPaymentsTotal, 2)
-            ?>
-        </td>
-      </tr>
-
-      <tr>
-        <td colspan="3">
-          <strong>Cash Totals: <span style="float:right">$ {{ number_format($cashPaymentsTotal, 2) }}</span></strong>
-        </td>
-      </tr>
-
-  @else
-      <?php $cashPaymentsTotal = 0 ?>
-  @endif
-
-  @if (count($cashRefunds) > 0)
-
-      <tr>
-        <td><strong>Method</strong></td>
-        <td><strong>Transactions</strong></td>
-        <td><strong>Amount</strong></td>
-      </tr>
-
-      <tr>
-        <td>Cash</td>
-        <td>{{ count($cashRefunds) }}</td>
-        <td class="right aligned">$
-          <?php
-            $cashRefundsTotal = 0;
-            foreach ($cashRefunds as $cashRefund)
-            {
-              $cashRefundsTotal += $cashRefund['tendered'] - $cashRefund['change_due'];
-            }
-            echo '(' . number_format($cashRefundsTotal, 2) .')'
-            ?>
-        </td>
-      </tr>
-
-      <tr>
-        <td colspan="3">
-          <strong>Cash Totals: <span style="float:right">$ ({{ number_format($cashRefundsTotal, 2) }})</span></strong>
-        </td>
-      </tr>
-
-  @else
-      <?php $cashRefundsTotal = 0 ?>
-  @endif
-
-  @if (count($cardPayments) > 0)
+  @foreach ($paymentUser as $user)
+    @if ($paymentUser->count() > 1)
+    <h5 class="ui header">Payment User: {{ $user->fullname }}</h5>
+    @endif
+    <table class="ui very basic collapsing celled table">
+      {{-- Cash Payments --}}
+      @if ($cashPayments->where('cashier_id', $user->id)->count() > 0)
+        <tr>
+          <td><strong>Method</strong></td>
+          <td><strong>Transactions</strong></td>
+          <td><strong>Amount</strong></td>
+        </tr>
+        <tr>
+          <td>Cash</td>
+          <td>{{ $cashPayments->where('cashier_id', $user->id)->count() }}</td>
+          <td class="right aligned">$
+            <?php
+              $cashPaymentsTotal = 0;
+              foreach ($cashPayments->where('cashier_id', $user->id) as $cashPayment)
+              {
+                $cashPaymentsTotal += $cashPayment->tendered - $cashPayment->change_due;
+              }
+              echo number_format($cashPaymentsTotal, 2)
+              ?>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <strong>Cash Totals: <span style="float:right">$ {{ number_format($cashPaymentsTotal, 2) }}</span></strong>
+          </td>
+        </tr>
+      @else
+        <?php $cashPaymentsTotal = 0 ?>
+      @endif
+      {{-- Cash Refunds --}}
+      @if ($cashRefunds->where('cashier_id', $user->id)->count() > 0)
+        <tr>
+          <td><strong>Method</strong></td>
+          <td><strong>Transactions</strong></td>
+          <td><strong>Amount</strong></td>
+        </tr>
+        <tr>
+          <td>Cash</td>
+          <td>{{ $cashRefunds->where('cashier_id', $user->id)->count() }}</td>
+          <td class="right aligned">$
+            <?php
+              $cashRefundsTotal = 0;
+              foreach ($cashRefunds as $cashRefund)
+              {
+                $cashRefundsTotal += $cashRefund->tendered - $cashRefund->change_due;
+              }
+              echo '(' . number_format($cashRefundsTotal, 2) .')'
+              ?>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <strong>Cash Refund Totals: <span style="float:right">$ ({{ number_format($cashRefundsTotal, 2) }})</span></strong>
+          </td>
+        </tr>
+      @else
+        <?php $cashRefundsTotal = 0 ?>
+      @endif
+      {{-- Card Payments --}}
+      @if ($cardPayments->where('cashier_id', $user->id)->count() > 0)
 
       <tr>
         <td><strong>Method</strong></td>
@@ -88,13 +99,13 @@
 
       <tr>
         <td>Credit Card</td>
-        <td>{{ count($cardPayments) }}</td>
+        <td>{{ $cardPayments->where('cashier_id', $user->id)->count() }}</td>
         <td class="right aligned">$
           <?php
             $cardPaymentsTotal = 0;
-            foreach ($cardPayments as $cardPayment)
+            foreach ($cardPayments->where('cashier_id', $user->id) as $cardPayment)
             {
-              $cardPaymentsTotal += $cardPayment['tendered'] - $cardPayment['change_due'];
+              $cardPaymentsTotal += $cardPayment->tendered - $cardPayment->change_due;
             }
             echo number_format($cardPaymentsTotal, 2)
             ?>
@@ -107,11 +118,11 @@
         </td>
       </tr>
 
-  @else
-      <?php $cardPaymentsTotal = 0 ?>
-  @endif
-
-  @if (count($cardRefunds) > 0)
+      @else
+          <?php $cardPaymentsTotal = 0 ?>
+      @endif
+      {{-- Card Refunds --}}
+      @if ($cardRefunds->where('cashier_id', $user->id)->count() > 0)
 
       <tr>
         <td><strong>Method</strong></td>
@@ -121,13 +132,13 @@
 
       <tr>
         <td>Credit Card</td>
-        <td>{{ count($cardRefunds) }}</td>
+        <td>{{ $cardRefunds->where('cashier_id', $user->id)->count() }}</td>
         <td class="right aligned">$
           <?php
             $cardRefundsTotal = 0;
-            foreach ($cardRefunds as $cardRefund)
+            foreach ($cardRefunds->where('cashier_id', $user->id) as $cardRefund)
             {
-              $cardRefundsTotal += $cardRefund['tendered'] - $cardRefund['change_due'];
+              $cardRefundsTotal += $cardRefund->tendered - $cardRefund->change_due;
             }
             echo '(' . number_format($cardRefundsTotal, 2) .')'
             ?>
@@ -136,96 +147,125 @@
 
       <tr>
         <td colspan="3">
-          <strong>Card Totals: <span style="float:right">$ ({{ number_format($cardRefundsTotal, 2) }})</span></strong>
+          <strong>Card Refund Totals: <span style="float:right">$ ({{ number_format($cardRefundsTotal, 2) }})</span></strong>
         </td>
       </tr>
 
-  @else
-      <?php $cardRefundsTotal = 0 ?>
-  @endif
+      @else
+          <?php $cardRefundsTotal = 0 ?>
+      @endif
+      {{-- Check Payments --}}
+      @if ($checkPayments->where('cashier_id', $user->id)->count() > 0)
+        <tr>
+          <td><strong>Method</strong></td>
+          <td><strong>Transactions</strong></td>
+          <td><strong>Amount</strong></td>
+        </tr>
 
-  @if (count($checkPayments) > 0)
-
-      <tr>
-        <td><strong>Method</strong></td>
-        <td><strong>Transactions</strong></td>
-        <td><strong>Amount</strong></td>
-      </tr>
-
-      <tr>
-        <td>Check</td>
-        <td>{{ count($checkPayments) }}</td>
-        <td>$
-          <?php
-            $checkPaymentsTotal = 0;
-            foreach ($checkPayments as $checkPayment)
-            {
-              $checkPaymentsTotal += $checkPayment['tendered'] - $checkPayment['change_due'];
-            }
-            echo number_format($checkPaymentsTotal, 2)
-          ?>
-        </td>
-      </tr>
-
-      <tr>
-        <td colspan="3">
-          Check Totals: <span style="float:right">$ {{ number_format($checkPaymentsTotal, 2) }}</span>
-        </td>
-      </tr>
-
-  @else
-    <?php $checkPaymentsTotal = 0 ?>
-  @endif
-  {{-- Check refunds --}}
-  @if (count($checkRefunds) > 0)
-
-      <tr>
-        <td><strong>Method</strong></td>
-        <td><strong>Transactions</strong></td>
-        <td><strong>Amount</strong></td>
-      </tr>
-
-      <tr>
-        <td>Check</td>
-        <td>{{ count($checkRefunds) }}</td>
-        <td class="right aligned">$
-          <?php
-            $checkRefundsTotal = 0;
-            foreach ($checkRefunds as $checkRefund)
-            {
-              $checkRefundsTotal += $checkRefund['tendered'] - $checkRefund['change_due'];
-            }
-            echo '(' . number_format($checkRefundsTotal, 2) .')'
+        <tr>
+          <td>Check</td>
+          <td>{{ $checkPayments->where('cashier_id', $user->id)->count() }}</td>
+          <td>$
+            <?php
+              $checkPaymentsTotal = 0;
+              foreach ($checkPayments->where('cashier_id', $user->id) as $checkPayment)
+              {
+                $checkPaymentsTotal += $checkPayment->tendered - $checkPayment->change_due;
+              }
+              echo number_format($checkPaymentsTotal, 2)
             ?>
-        </td>
-      </tr>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            Check Totals: <span style="float:right">$ {{ number_format($checkPaymentsTotal, 2) }}</span>
+          </td>
+        </tr>
+      @else
+        <?php $checkPaymentsTotal = 0 ?>
+      @endif
+      {{-- Check Refunds --}}
+      @if ($checkRefunds->where('cashier_id', $user->id)->count() > 0)
 
-      <tr>
-        <td colspan="3">
-          <strong>Check Totals: <span style="float:right">$ ({{ number_format($checkRefundsTotal, 2) }})</span></strong>
-        </td>
-      </tr>
+       <tr>
+         <td><strong>Method</strong></td>
+         <td><strong>Transactions</strong></td>
+         <td><strong>Amount</strong></td>
+       </tr>
 
-  @else
-      <?php $checkRefundsTotal = 0 ?>
-  @endif
+       <tr>
+         <td>Check</td>
+         <td>{{ $checkRefunds->where('cashier_id', $user->id)->count() }}</td>
+         <td class="right aligned">$
+           <?php
+             $checkRefundsTotal = 0;
+             foreach ($checkRefunds->where('cashier_id', $user->id) as $checkRefund)
+             {
+               $checkRefundsTotal += $checkRefund->tendered - $checkRefund->change_due;
+             }
+             echo '(' . number_format($checkRefundsTotal, 2) .')'
+             ?>
+         </td>
+       </tr>
 
+       <tr>
+         <td colspan="3">
+           <strong>Check Totals: <span style="float:right">$ ({{ number_format($checkRefundsTotal, 2) }})</span></strong>
+         </td>
+       </tr>
+      @else
+         <?php $checkRefundsTotal = 0 ?>
+      @endif
+      {{-- Other Payments --}}
+      {{-- Other Refunds --}}
+      {{-- User Totals --}}
+      @if ($paymentUser->count() > 1)
       <tr>
         <td colspan="3">
           {{ Date::parse($date)->format('m/d/Y') }}
-          Transactions: <span style="float:right">
-            {{ count($cashPayments) + count($cashRefunds) + count($cardPayments) + count($cardRefunds) + count($checkPayments) + count($checkRefunds) }}
+          {{ $user->firstname }}'s Transactions: <span style="float:right">
+            {{
+              ($cashPayments->where('cashier_id', $user->id)->count()) +
+              ($cashRefunds->where('cashier_id', $user->id)->count()) +
+              ($cardPayments->where('cashier_id', $user->id)->count()) +
+              ($cardRefunds->where('cashier_id', $user->id)->count()) +
+              ($checkPayments->where('cashier_id', $user->id)->count()) +
+              ($checkRefunds->where('cashier_id', $user->id)->count())
+            }}
         </td>
       </tr>
-
       <tr>
         <td colspan="3">
           {{ Date::parse($date)->format('m/d/Y') }}
-          Totals: <span style="float:right">
+          {{ $user->firstname }}'s' Totals: <span style="float:right">
             $ {{ number_format($cashPaymentsTotal + $cashRefundsTotal + $cardPaymentsTotal + $cardRefundsTotal + $checkPaymentsTotal + $checkRefundsTotal, 2) }}
         </td>
       </tr>
+      @endif
+    </table>
+  @endforeach
+  <table class="ui very basic collapsing table">
+    <tbody>
+      <tr>
+        <td colspan="2">
+          {{ Date::parse($date)->format('m/d/Y') }}
+          Transactions:
 
+        </td>
+        <td></td>
+        <td class="right aligned">
+          {{ count($cashPayments) + count($cashRefunds) + count($cardPayments) + count($cardRefunds) + count($checkPayments) + count($checkRefunds) }}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          {{ Date::parse($date)->format('m/d/Y') }}
+          Totals:
+        </td>
+        <td></td>
+        <td class="right aligned">$ {{ number_format($totals, 2) }}</td>
+      </tr>
+    </tbody>
   </table>
 
   <p>End of Report</p>
