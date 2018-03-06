@@ -39,6 +39,7 @@ class EventController extends Controller
     {
         $shows = Show::pluck('name', 'id');
         $eventTypes = EventType::where('id', '<>', 1)->pluck('name', 'id');
+
         return view('admin.events.create', compact('shows'), compact('eventTypes'));
     }
 
@@ -76,10 +77,12 @@ class EventController extends Controller
           $event->save();
         }
 
+        $date = Date::parse($event->start)->format('Y-m-d');
+
         Session::flash('success',
             'The event(s) <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> been added successfully!');
 
-        return redirect()->to(route('admin.calendar.index') . '/?type=events');
+        return redirect()->to(route('admin.calendar.index') . '/?type=events&date=' . $date . '&view=agendaDay');
     }
 
     /**
@@ -138,10 +141,12 @@ class EventController extends Controller
 
       $event->save();
 
+      $date = Date::parse($event->start)->format('Y-m-d');
+
       Session::flash('success',
           'The <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> on <strong>'.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').'</strong> has been updated successfully!');
 
-      return redirect()->route('admin.events.show', $event);
+      return redirect()->to(route('admin.calendar.index') . '/?type=events&date=' . $date . '&view=agendaDay');
     }
 
     /**

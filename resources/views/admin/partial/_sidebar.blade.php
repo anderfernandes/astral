@@ -27,10 +27,10 @@
   <div class="ui dropdown item" href="{{ route('admin.calendar.index') }}">
     <i class="large calendar icon"></i> Calendar
     <div class="menu">
-      <a class="item" href="{{ route('admin.calendar.index') }}/?type=calendar">
+      <a class="item" href="{{ route('admin.calendar.index') }}/?type=calendar&view=agendaWeek">
         <i class="large dollar icon"></i> Reservations
       </a>
-      <a class="item" href="{{ route('admin.calendar.index') }}/?type=events">
+      <a class="item" href="{{ route('admin.calendar.index') }}/?type=events&view=agendaWeek">
         <i class="large calendar check icon"></i> Events
       </a>
     </div>
@@ -38,9 +38,20 @@
   <a class="item {{ Request::routeIs('admin.sales.index') ? 'active' : '' }}" href="{{ route('admin.sales.index') }}">
     <i class="large dollar icon"></i> Sales
   </a>
-  <a class="item {{ Request::routeIs('admin.reports.index') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">
+  <div class="ui dropdown item" href="{{ route('admin.reports.index') }}">
     <i class="large file text icon"></i> Reports
-  </a>
+    <div class="menu">
+      <a class="item" href="{{ route('admin.reports.index') }}/#cashier">
+        <i class="large inbox icon"></i> Cashier
+      </a>
+      <a class="item" href="{{ route('admin.reports.index') }}/#royalties">
+        <i class="large money icon"></i> Royalties
+      </a>
+      <a class="item" href="{{ route('admin.reports.index') }}/#membership">
+        <i class="large address card icon"></i> Membership
+      </a>
+    </div>
+  </div>
   <div class="ui dropdown item">
     <i class="large address card icon"></i> Members
     <div class="menu">

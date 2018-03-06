@@ -31,9 +31,9 @@
     <i class="eye icon"></i>
     <span class="text">Week</span>
     <div class="menu">
-      <div onclick="$('#admin-calendar').fullCalendar('changeView', 'agendaDay')" class="item">Single Day</div>
-      <div onclick="$('#admin-calendar').fullCalendar('changeView', 'agendaWeek')" class="active item">Week</div>
-      <div onclick="$('#admin-calendar').fullCalendar('changeView', 'month')" class="item">Month</div>
+      <div onclick="$('#admin-calendar').fullCalendar('changeView', 'agendaDay')" class="{{ $request->view == 'agendaDay' ? 'active' : null }} item">Single Day</div>
+      <div onclick="$('#admin-calendar').fullCalendar('changeView', 'agendaWeek')" class="{{ $request->view == 'agendaWeek' ? 'active' : null }} item">Week</div>
+      <div onclick="$('#admin-calendar').fullCalendar('changeView', 'month')" class="{{ $request->view == 'month' ? 'active' : null }} item">Month</div>
     </div>
   </div>
 
@@ -73,7 +73,7 @@
 
 <script>
 
-  function loadCalendar(events) {
+  function loadCalendar() {
     $('#admin-calendar').fullCalendar({
       header: false,
       views: null,
@@ -87,10 +87,10 @@
       minTime: '07:00:00',
       eventColor: '#000',
       @if (isSet($request->type))
-      events: '/api/{{ $request->type }}',
-      eventColor: '{{ $request->type == 'calendar' ? '#1b1c1d' : '#002e5d' }}'
+      // events: '/api/{{ $request->type }}',
+      // eventColor: '{{ $request->type == 'calendar' ? '#1b1c1d' : '#002e5d' }}'
       @else
-      events: '/api/calendar',
+      // events: '/api/calendar',
       @endif
 
     })
@@ -116,7 +116,14 @@
 
   $(document).ready(function() {
     loadCalendar()
+    $('#admin-calendar').fullCalendar('addEventSource', '/api/{{ $request->type }}')
     setTitle()
+    @if (isSet($request->view))
+      $('#admin-calendar').fullCalendar('changeView', '{{ $request->view }}')
+    @endif
+    @if (isSet($request->date))
+      $('#admin-calendar').fullCalendar('gotoDate', $.fullCalendar.moment('{{ $request->date }}'))
+    @endif
   })
 
   $('.ui.button').click(setTitle)
