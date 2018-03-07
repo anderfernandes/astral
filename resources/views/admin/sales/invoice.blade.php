@@ -132,7 +132,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
               @else
                 @foreach ($sale->payments as $payment)
                   <tr>
-                    <td><strong>Payments {{ Date::parse($payment->created_at)->format('d/m/Y') }} {{ $payment->method->name }}</strong></td>
+                    <td><strong>Payments ({{ Date::parse($payment->created_at)->format('m/d/Y') }}) {{ $payment->method->name }}</strong></td>
                   </tr>
                 @endforeach
               @endif

@@ -18,9 +18,11 @@
     <a href="{{ route('admin.events.create') }}" class="ui secondary button">
       <i class="calendar plus icon"></i> Create Another Event
     </a>
+    {{--
     {!! Form::open(['route' => ['admin.events.destroy', $event], 'method' => 'DELETE']) !!}
       {!! Form::button('<i class="trash icon"></i> Delete Event', ['type' => 'submit', 'class' => 'ui negative button']) !!}
     {!! Form::close() !!}
+    --}}
   </div>
 
   <div class="ui items">
