@@ -16,28 +16,21 @@
 
 function getSalesTotals($day)
 {
-  $dailySalesTendered = \App\Payment::whereDate('created_at','=', $day->format('Y-m-d'))
-  ->sum('tendered');
 
-  $dailySalesChangeDue = \App\Payment::whereDate('created_at','=', $day->format('Y-m-d'))
-  ->sum('change_due');
+  $dailySales = \App\Sale::where('status', 'complete')
+                                 ->whereDate('created_at','=', $day->format('Y-m-d'))
+                                 ->sum('total');
 
-  $dailySales = $dailySalesTendered - $dailySalesChangeDue;
-
-  return round($dailySales, 2);
+  return number_format($dailySales, 2);
 }
 
 function getSalesTotalsRange($start, $end)
 {
   $rangeTotal = 0;
 
-  $rangeTotalTendered = \App\Payment::where([['created_at','>=', $start], ['created_at','<=', $end]])
-  ->sum('tendered');
-
-  $rangeTotalChangeDue = \App\Payment::where([['created_at','>=', $start], ['created_at','<=', $end]])
-  ->sum('change_due');
-
-  $rangeSales = $rangeTotalTendered - $rangeTotalChangeDue;
+  $rangeSales = \App\Sale::where('status', 'complete')
+                                 ->where([['created_at','>=', $start], ['created_at','<=', $end]])
+                                 ->sum('total');
 
   return number_format($rangeSales, 2);
 }
@@ -105,7 +98,7 @@ function getAttendanceByType($ticketTypeID) {
         <i class="calendar outline icon"></i>
         <span class="text">Reservations</span>
         <div class="menu">
-          <div onclick="toggleCalendar('calendars')" class="active item">Reservations</div>
+          <div onclick="toggleCalendar('calendar')" class="active item">Reservations</div>
           <div onclick="toggleCalendar('events')" class="item">Events</div>
         </div>
       </div>
@@ -191,7 +184,7 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
       <div class="ui feed">
-        <?php $lastSales = App\Sale::latest()->take(5)->get() ?>
+        <?php $lastSales = App\Sale::where('status', 'complete')->latest()->take(5)->get() ?>
         @foreach ($lastSales as $lastSale)
           @if ($lastSale->tickets->count() > 0)
           <div class="event">

@@ -111,25 +111,5 @@ class UsersTableSeeder extends Seeder
         'staff'           => true,
         'created_at'      => Date::now('America/Chicago'),
       ]);
-      // 6
-      DB::table('users')->insert([
-        'firstname'       => 'David',
-        'lastname'        => 'Cantwell',
-        'email'           => 'somethingsomething@gmail.com',
-        'password'        => '$2y$10$RMa8J6rGq1VfoA9jMFPH0.QO3e5bvaRU/S2p0/eqGKVy1Uta518tu',
-        'role_id'         => 2,
-        'organization_id' => 2,
-        'type'            => 'individual',
-        'membership_id'   => 1,
-        'address'         => '6200 W Central Texas Expwy',
-        'city'            => 'Killeen',
-        'state'           => 'Texas',
-        'zip'             => '76549',
-        'country'         => 'United States',
-        'phone'           => '(254) 526-7161',
-        'active'          => false,
-        'staff'           => true,
-        'created_at'      => Date::now('America/Chicago'),
-      ]);
     }
 }
