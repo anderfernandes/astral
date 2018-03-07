@@ -64,7 +64,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
+        $roles = Role::where('type', '=', 'individuals')->orderBy('name', 'asc')->pluck('name', 'id');
         $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
 
         return view('admin.users.create')->withRoles($roles)

@@ -5,7 +5,6 @@
 <div class="ui centered grid">
   <div class="sixteen wide mobile four wide computer column">
     <div class="ui raised attached segment">
-
       <div class="ui center aligned icon header">
         <img class="ui centered massive image" src="/astral-logo-dark.png" />
         <div class="content">Astral</div>

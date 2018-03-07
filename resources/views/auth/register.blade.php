@@ -5,15 +5,11 @@
 <div class="ui centered grid">
   <div class="ui sixteen wide mobile six wide computer column">
     <div class="ui raised segment">
-      <h2 class="ui center aligned icon header">
-      <i class="sun icon"></i>
-      <div class="content">
-        Astral
-        <div class="sub header">
-        {{ App\Setting::find(1)->organization }}
-        </div>
+      <div class="ui center aligned icon header">
+        <img class="ui centered massive image" src="/astral-logo-dark.png" />
+        <div class="content">Astral</div>
+        <div class="sub header">{{ App\Setting::find(1)->organization }}</div>
       </div>
-      </h2>
       <form class="ui form <?php if (count($errors) > 0) echo 'error'?>" role="form" method="POST" action="{{ route('register') }}">
         {{ csrf_field() }}
 

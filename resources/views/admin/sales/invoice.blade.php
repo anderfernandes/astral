@@ -125,9 +125,17 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
               <tr>
                 <td class="right aligned"><strong>Total</strong></td>
               </tr>
+              @if ($sale->payments->count() < 2)
               <tr>
                 <td class="right aligned"><strong>Amount Paid</strong></td>
               </tr>
+              @else
+                @foreach ($sale->payments as $payment)
+                  <tr>
+                    <td><strong>Payments {{ Date::parse($payment->created_at)->format('d/m/Y') }} {{ $payment->method->name }}</strong></td>
+                  </tr>
+                @endforeach
+              @endif
               @if ($sale->refund)
                 <tr>
                   <td class="right aligned"><strong>Refund</strong></td>
@@ -154,9 +162,17 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
               <tr>
                 <td>$ {{ number_format($sale->total, 2) }}</td>
               </tr>
+              @if ($sale->payments->count() < 2)
               <tr>
                 <td style="color:#cf3534"><strong>-$ {{ number_format($sale->payments->sum('tendered'), 2) }}</strong></td>
               </tr>
+              @else
+                @foreach ($sale->payments as $payment)
+                  <tr>
+                    <td>$ {{ number_format($payment->tendered, 2) }}</td>
+                  </tr>
+                @endforeach
+              @endif
               @if ($sale->refund)
                 <tr>
                   <td style="color:#cf3534"><strong>($ {{ number_format($sale->total, 2) }})</strong></td>
