@@ -49,14 +49,18 @@ use Illuminate\Support\Facades\Auth;
   return $eventsArray;
 });*/
 
-Route::get('calendar', function() {
-  // Gets all events
-
-  $sales = Sale::where('customer_id', '!=', 1)->where('status', '!=', 'canceled')->where('refund', false)->get();
+Route::get('calendar', function(Request $request) {
+  $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
+  $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
+  $sales = Sale::where([
+                        ['customer_id', '!=', 1],
+                        ['status', '!=', 'canceled'],
+                        ['refund', false],
+                      ])->get();
   $eventsArray = [];
   foreach ($sales as $sale) {
     if ($sale->tickets->count() >= 15) {
-      $events = $sale->events->where('type_id', '!=', 1);
+      $events = $sale->events->where('start', '>=', $start)->where('end', '<', $end)->where('type_id', '!=', 1);
       $customer = ($sale->customer->firstname == $sale->organization->name) ? null : ' - ' . $sale->customer->fullname;
       $organization = ($sale->organization->id == 1)? null : ' - ' . $sale->organization->name;
       foreach ($events as $event) {
@@ -196,8 +200,13 @@ Route::get('calendar-events', function() {
   return $sorted;
 });
 
-Route::get('events', function() {
-  $events = Event::all();
+Route::get('events', function(Request $request) {
+  $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
+  $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
+  $events = Event::where([
+                          ['start', '>=', $start],
+                          ['end', '<', $end],
+                        ])->get();
   $eventsArray = [];
   foreach ($events as $event) {
     $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
