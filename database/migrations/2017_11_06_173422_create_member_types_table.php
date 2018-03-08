@@ -18,7 +18,7 @@ class CreateMemberTypesTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->unsignedSmallInteger('duration');
-            $table->decimal('price', 4, 2)->nullable();
+            $table->decimal('price', 5, 2)->nullable();
             $table->timestamps();
         });
     }
