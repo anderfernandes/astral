@@ -136,11 +136,10 @@ class SaleController extends Controller
           $sale->customer_id          = $request->customer_id;
           $sale->status               = $request->status;
           $sale->taxable              = $request->taxable;
-          $sale->subtotal             = round($request->subtotal, 2);
-          $sale->tax                  = round($request->tax, 2);
-          $sale->total                = round($request->total, 2);
+          $sale->subtotal             = number_format($request->subtotal, 2);
+          $sale->tax                  = number_format($request->tax, 2);
+          $sale->total                = number_format($request->total, 2);
           $sale->refund               = false;
-          //$sale->memo                 = $request->memo;
           $sale->source               = "admin";
           $sale->sell_to_organization = ($request->organization_id == 1) ? false : true;
 
@@ -289,9 +288,8 @@ class SaleController extends Controller
           'first_event_id'       => 'required|different:second_event_id',
           'tendered'             => 'numeric',
           'ticket.*'             => 'numeric',
-          'memo'                 => 'max:255',
+          'memo'                 => 'required|max:255',
           'sell_to_organization' => 'required',
-          'memo'                 => 'required',
         ]);
 
         // If the event(s) for this sale change, delete tickets that belong to the old event

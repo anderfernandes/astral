@@ -17,9 +17,9 @@
           <div class="default text">All Users</div>
         <div class="menu">
           <div class="item" data-value="">All Users</div>
-          @foreach (App\User::where('type', 'individual')->where('role_id', '!=', 5)->orderBy('name', 'asc')->get() as $user)
-            <div class="item" data-value="{{ $user->id }}">
-              {{ $user->fullname }}
+          @foreach (App\User::where('type', 'individual')->where('role_id', '!=', 5)->orderBy('firstname', 'asc')->get() as $u)
+            <div class="item" data-value="{{ $u->id }}">
+              {{ $u->fullname }}
             </div>
           @endforeach
         </div>
@@ -32,9 +32,9 @@
           <div class="default text">All Roles</div>
         <div class="menu">
           <div class="item" data-value="">All Roles</div>
-          @foreach (App\Role::where('type', 'individuals')->orderBy('name', 'asc')->get() as $role)
-            <div class="item" data-value="{{ $role->id }}">
-              {{ $role->name }}
+          @foreach (App\Role::where('type', 'individuals')->orderBy('name', 'asc')->get() as $r)
+            <div class="item" data-value="{{ $r->id }}">
+              {{ $r->name }}
             </div>
           @endforeach
         </div>
@@ -47,9 +47,9 @@
           <div class="default text">All Organizations</div>
         <div class="menu">
           <div class="item" data-value="">All Organizations</div>
-          @foreach (App\Organization::where('type', '!=', 'System')->orderBy('name', 'asc')->get() as $organization)
-            <div class="item" data-value="{{ $organization->id }}">
-              {{ $organization->name }}
+          @foreach (App\Organization::where('type_id', '!=', 1)->orderBy('name', 'asc')->get() as $o)
+            <div class="item" data-value="{{ $o->id }}">
+              {{ $o->name }}
             </div>
           @endforeach
         </div>
@@ -81,23 +81,23 @@
 
   @if ($users->count() > 0)
   <div class="ui four doubling link cards">
-    @foreach($users as $user)
+    @foreach($users as $u)
     <div class="card">
       <div class="content">
         <i class="user circle huge right floated icon"></i>
-        <div class="header">{{ $user->fullname }} @if ($user->staff) <i class="star icon"></i>@endif </div>
+        <div class="header">{{ $u->fullname }} @if ($u->staff) <i class="star icon"></i>@endif </div>
         <div class="meta">
-          <div class="ui label">{{ $user->role->name }}</div>
+          <div class="ui label">{{ $u->role->name }}</div>
         </div>
         <div class="meta">
-          <i class="mail icon"></i> {{ $user->email }}
+          <i class="mail icon"></i> {{ $u->email }}
         </div>
       </div>
       <div class="ui two bottom attached buttons">
-        <a href="{{ route('admin.users.show', $user) }}" class="ui black button">
+        <a href="{{ route('admin.users.show', $u) }}" class="ui black button">
           <i class="eye icon"></i> View
         </a>
-        <a href="{{ route('admin.users.edit', $user ) }}" class="ui blue button">
+        <a href="{{ route('admin.users.edit', $u ) }}" class="ui blue button">
           <i class="edit icon"></i> Edit
         </a>
       </div>

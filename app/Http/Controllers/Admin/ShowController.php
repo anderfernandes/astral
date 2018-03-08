@@ -124,7 +124,7 @@ class ShowController extends Controller
     {
 
       $this->validate($request, [
-        'name'        => 'required|unique:shows, ' . $show->id,
+        'name'        => 'required',
         'description' => 'required',
         'type'        => 'required',
         'duration'    => 'required|integer',

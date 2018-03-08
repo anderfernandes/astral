@@ -17,7 +17,7 @@
           <div class="default text">All Members</div>
         <div class="menu">
           <div class="item" data-value="">All Members</div>
-          @foreach (App\Member::where('id', '!=', 1)->orderBy('firstname', 'asc')->get() as $member)
+          @foreach (App\Member::where('id', '!=', 1)->get() as $member)
             <div class="item" data-value="{{ $member->id }}">
               {{ $member->users[0]->fullname }}
             </div>
@@ -35,7 +35,7 @@
           <div class="default text">All Membership Types</div>
         <div class="menu">
           <div class="item" data-value="">All Membership Types</div>
-          @foreach (App\MemberType::where('id', '!=', 1)->orderBy('firstname', 'asc')->get() as $memberType)
+          @foreach (App\MemberType::where('id', '!=', 1)->orderBy('name', 'asc')->get() as $memberType)
             <div class="item" data-value="{{ $memberType->id }}">
               {{ $memberType->name }}
             </div>

@@ -21,8 +21,9 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::where('type', 'individual')->where('role_id', '!=', 5);
-        $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
-        $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
+        $roles = Role::where('type', '=', 'individuals')->orderBy('name', 'asc')->pluck('name', 'id');
+        $organizations = Organization::where('type_id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+        $organizations->prepend('No Organization', 1);
 
         if (count($request->all()) > 0) {
 
@@ -126,8 +127,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-      $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
-      $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
+      $roles = Role::where('type', '=', 'individuals')->orderBy('name', 'asc')->pluck('name', 'id');
+      $organizations = Organization::where('type_id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+      $organizations->prepend('No Organization', 1);
 
       return view('admin.users.show')->withUser($user)
                                      ->withRoles($roles)

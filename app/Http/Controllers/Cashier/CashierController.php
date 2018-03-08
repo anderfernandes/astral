@@ -78,7 +78,6 @@ class CashierController extends Controller
         $sale->refund               = false;
         $sale->customer_id          = $request->customer_id;
         $sale->status               = 'complete';
-        $sale->memo                 = $request->memo;
         $sale->tax                  = $request->total - $request->subtotal;
         $sale->sell_to_organization = false;
 

@@ -28,9 +28,9 @@ class ReportController extends Controller
      */
     public function index()
     {
-        $users = User::where('id', '!=', 1)->orderBy('name')->where('staff', true)->pluck('firstname', 'id');
+        $users = User::where('id', '!=', 1)->orderBy('firstname', 'asc')->where('staff', true)->pluck('firstname', 'id');
         $users->prepend('All Users', 0);
-        $shows = Show::where('id', '!=', 1)->orderBy('name')->pluck('name', 'id');
+        $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
         return view('admin.reports.index')->withUsers($users)->withShows($shows);
     }
 

@@ -353,18 +353,18 @@
     @if (isSet($sale->memos))
       <div class="ui comments">
         <div class="ui dividing header">Memo</div>
-        @foreach($sale->memos as $memo)
+        @foreach($sale->memos as $m)
           <div class="comment">
             <div class="avatar"><i class="user circle big icon"></i></div>
             <div class="content">
               <div class="author">
-                {{ $memo->author->fullname }}
+                {{ $m->author->fullname }}
                 <div class="metadata">
-                  <span class="date">{{ Date::parse($memo->created_at)->format('l, F j, Y \a\t g:i A') }}</span>
+                  <span class="date">{{ Date::parse($m->created_at)->format('l, F j, Y \a\t g:i A') }}</span>
                 </div>
               </div>
               <div class="text">
-                {{ $memo->message }}
+                {{ $m->message }}
               </div>
             </div>
           </div>
@@ -376,7 +376,7 @@
   <div class="column">
     <div class="field">
       {!! Form::label('memo', 'Memo') !!}
-      {!! Form::textarea('memo', null, ['placeholder' => 'Write a memo here']) !!}
+      {!! Form::textarea('memo', "", ['placeholder' => 'Write a memo here']) !!}
     </div>
   </div>
 </div>

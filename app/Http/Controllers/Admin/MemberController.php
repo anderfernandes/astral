@@ -49,7 +49,7 @@ class MemberController extends Controller
         }
         else
         {
-          $members = $members->orderBy('firstname', 'asc')->paginate(12);
+          $members = $members->paginate(12);
         }
 
         return view('admin.members.index')->withRequest($request)->withMembers($members);

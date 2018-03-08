@@ -49,7 +49,7 @@
     @if (isSet($user))
       {!! Form::select('role_id', $roles, $user->role_id, ['class' => 'ui dropdown']) !!}
     @else
-      {!! Form::select('role_id', $roles, 8, ['class' => 'ui dropdown']) !!}
+      {!! Form::select('role_id', $roles, 7, ['class' => 'ui dropdown blabla']) !!}
     @endif
 
   </div>

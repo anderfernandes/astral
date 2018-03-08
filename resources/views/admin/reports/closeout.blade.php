@@ -207,7 +207,7 @@
             <td></td>
             <td class="right aligned">
               <strong>
-                $ {{ number_format($totals, 2) }}
+                $ {{ $totals }}
               </strong>
             </td>
           </tr>

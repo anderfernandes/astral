@@ -18,7 +18,7 @@ class CreateTicketTypesTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->boolean('active');
-            $table->decimal('price', 6, 2);
+            $table->decimal('price', 8, 2);
             $table->timestamps();
         });
     }
