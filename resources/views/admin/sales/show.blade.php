@@ -290,7 +290,7 @@
             @endif
               <td><div class="ui header">{{ $payment->id }}</div></td>
               <td>{{ $payment->method->name }}</td>
-              <td>{{ number_format($payment->tendered, 2) }}</td>
+              <td>{{ number_format($payment->total, 2) }}</td>
               <td>{{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
               <td @if($payment->total < 0 or $payment->refunded) colspan="2" @endif>{{ $payment->cashier->firstname }}</td>
               @if (!$sale->refund)

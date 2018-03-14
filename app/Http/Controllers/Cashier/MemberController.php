@@ -32,7 +32,7 @@ class MemberController extends Controller
       $members = Member::where('id', '!=', 1)
                        ->orderBy('id', 'asc')
                        ->paginate(12);
-                       
+
       return view('cashier.members.index')->withMembers($members);
     }
 
@@ -82,7 +82,7 @@ class MemberController extends Controller
           'phone'             => 'required',
           'role_id'           => 'required',
           'organization_id'   => 'required',
-          'email'             => 'required|email',
+          'email'             => 'required|email|unique:users,email',
         ]);
 
         $user = new User;

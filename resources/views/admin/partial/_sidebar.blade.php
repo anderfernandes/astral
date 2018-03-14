@@ -85,6 +85,9 @@
       </a>
     </div>
   </div>
+  <a class="item {{ Request::routeIs('admin.posts.index') ? 'active' : '' }}" href="{{ route('admin.posts.index') }}">
+    <i class="large comments outline icon"></i> Bulletin
+  </a>
   <div class="ui dropdown item">
     <i class="large setting icon"></i> Settings
     <div class="menu">

@@ -54,6 +54,10 @@ Route::group(
   // Roles
   Route::resource('roles', 'RoleController');
   Route::resource('ticket-types', 'TicketTypeController');
+  // Bulletin
+  Route::resource('posts', 'PostController');
+  Route::resource('replies', 'ReplyController');
+  Route::resource('categories', 'CategoryController');
   // HTTP PUT route for updating general settings
   Route::put('settings', 'SettingController@update');
   // HTTP PUT route for adding managing Organization Types

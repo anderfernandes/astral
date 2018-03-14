@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Session;
-Use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 
 class ShowController extends Controller
 {

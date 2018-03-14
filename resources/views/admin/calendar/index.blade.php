@@ -85,10 +85,9 @@
       editable: false,
       eventLimit: true,
       minTime: '07:00:00',
-      eventColor: '#000',
       @if (isSet($request->type))
       // events: '/api/{{ $request->type }}',
-      // eventColor: '{{ $request->type == 'calendar' ? '#1b1c1d' : '#002e5d' }}'
+      eventColor: '{{ $request->type == 'calendar' ? '#1b1c1d' : '#002e5d' }}'
       @else
       // events: '/api/calendar',
       @endif

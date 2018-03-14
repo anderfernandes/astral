@@ -15,6 +15,7 @@ use App\TicketType;
 use App\PaymentMethod;
 use App\EventType;
 use App\MemberType;
+use App\Category;
 
 class SettingController extends Controller
 {
@@ -32,6 +33,7 @@ class SettingController extends Controller
         $paymentMethods = PaymentMethod::all();
         $eventTypes = EventType::where('name', '!=', 'system')->get();
         $memberTypes = MemberType::where('id', '!=', 1)->get();
+        $categories = Category::all();
 
         return view('admin.settings.index')
           ->withSetting($setting)
@@ -40,7 +42,8 @@ class SettingController extends Controller
           ->withPaymentMethods($paymentMethods)
           ->withRoles($roles)
           ->withMemberTypes($memberTypes)
-          ->withEventTypes($eventTypes);
+          ->withEventTypes($eventTypes)
+          ->withCategories($categories);
     }
 
     public function addOrganizationType(Request $request)
