@@ -10,7 +10,7 @@
 <div class="two fields">
   <div class="field">
     {!! Form::label('category_id', 'Category') !!}
-    {!! Form::select('category_id', $categories, 1, ['placeholder' => 'What is your post about?', 'class' => 'ui dropdown']) !!}
+    {!! Form::select('category_id', $categories, null, ['placeholder' => 'What is your post about?', 'class' => 'ui dropdown', 'data-validate' => 'category']) !!}
   </div>
   <div class="field">
     {!! Form::label('sticky', 'Sticky') !!}
@@ -62,6 +62,12 @@ $('form').form({
       rules: [
         { type: 'empty', prompt: 'Do not forget the title of the post!' },
         { type: 'minLength[5]', prompt: '{name} should be at least {ruleValue} characters long'}
+      ]
+    },
+    category_id: {
+      identifier: 'category_id',
+      rules: [
+        { type: 'empty', prompt: 'Do not forget to select a category for this post!' },
       ]
     },
   }

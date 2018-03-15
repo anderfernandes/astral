@@ -55,7 +55,7 @@
 </script>
 
 <style>
-    .pusher {
+    #left {
         padding-top: 2.5rem;
         background: linear-gradient(rgba(0,0,0,1), rgba(255,255,255,0.5)), url('{{ App\Setting::find(1)->cover }}');
         background-size: cover;

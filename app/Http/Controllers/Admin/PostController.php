@@ -88,7 +88,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $categories = Category::orderBy('name', 'asc')->pluck('name', 'id');
+        return view('admin.posts.edit')->withPost($post)->withCategories($categories);
     }
 
     /**

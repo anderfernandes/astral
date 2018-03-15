@@ -2,9 +2,10 @@
 
 @section('content')
 
-<div class="ui centered grid">
-  <div class="ui sixteen wide mobile six wide computer column">
-    <div class="ui raised segment">
+<div class="ui middle aligned two column centered  doubling stackable grid">
+  <div class="twelve wide computer only column" id="left"></div>
+  <div class="four wide computer sixteen wide mobile column">
+    <div class="ui basic segment hidden" id="form">
       <div class="ui center aligned icon header">
         <img class="ui centered massive image" src="/astral-logo-dark.png" />
         <div class="content">Astral</div>
@@ -94,7 +95,12 @@
             <div class="ui secondary button" onclick="$('form').form('clear')"><i class="eraser icon"></i> Clear</div>
           </div>
         </div>
-    </form>
+      </form>
+      <h5 class="ui center aligned header">
+        <div class="sub header">
+          Created by <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>. <a href="http://astral.anderfernandes.com" target="_blank">Astral</a> {{ config('app.version') }}.
+        </div>
+      </h5>
     </div>
   </div>
 </div>

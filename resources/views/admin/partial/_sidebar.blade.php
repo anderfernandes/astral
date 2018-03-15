@@ -112,6 +112,9 @@
       <a class="item" href="{{ route('admin.settings.index') }}/#member-types">
         <i class="large address card icon"></i> Membership
       </a>
+      <a class="item" href="{{ route('admin.settings.index') }}/#bulletin">
+        <i class="large comments outline icon"></i> Bulletin
+      </a>
     </div>
   </div>
   @endif

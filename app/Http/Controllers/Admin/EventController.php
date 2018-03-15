@@ -157,11 +157,11 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        $temp = $event;
-        $event->delete();
+        //$temp = $event;
+        //$event->delete();
 
-        Session::flash('success',
-            'The <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> on <strong>'.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').'</strong> has been deleted successfully!');
-        return redirect()->route('admin.events.index');
+        //Session::flash('success',
+        //    'The <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> on <strong>'.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').'</strong> has been deleted successfully!');
+        //return redirect()->route('admin.events.index');
     }
 }

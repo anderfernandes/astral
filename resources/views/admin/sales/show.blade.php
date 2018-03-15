@@ -266,7 +266,7 @@
         <tr>
           <th>#</th>
           <th>Method</th>
-          <th>Amount Paid</th>
+          <th>Tendered</th>
           <th>Date</th>
           <th>Cashier</th>
           @if (!$sale->refund)
