@@ -41,7 +41,7 @@
     {!! Form::text('zip', null, ['placeholder' => 'ZIP']) !!}
   </div>
 </div>
-<div class="two fields">
+<div class="three fields">
   <div class="required field">
     {!! Form::label('phone', 'Phone') !!}
     {!! Form::tel('phone', null, ['placeholder' => 'Enter organization\'s phone number']) !!}
@@ -49,12 +49,6 @@
   <div class="field">
     {!! Form::label('fax', 'Fax') !!}
     {!! Form::tel('fax', null, ['placeholder' => 'Enter organization\'s fax number']) !!}
-  </div>
-</div>
-<div class="two fields">
-  <div class="required field">
-    {!! Form::label('email', 'Email') !!}
-    {!! Form::text('email', null, ['placeholder' => 'Enter organization\'s email. If none, use school secretary email or organization.name@website.com']) !!}
   </div>
   <div class="field">
     {!! Form::label('website', 'Website') !!}
@@ -64,6 +58,7 @@
     </div>
   </div>
 </div>
+
 <div class="field">
   @if (Request::routeIs('admin.shows.create'))
   <div class="ui buttons">

@@ -55,7 +55,7 @@
 @if (!isset($organizations) || count($organizations) > 0)
   <div class="ui four doubling link cards">
     @foreach($organizations as $organization)
-    <div class="card">
+    <div class="card" onclick="window.location.href='{{ route('admin.organizations.show', $organization) }}'">
       <div class="content">
         <i class="university huge right floated icon"></i>
         <div class="header">{{ $organization->name }}</div>

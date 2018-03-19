@@ -74,9 +74,11 @@ class OrganizationController extends Controller
           'zip'     => 'required|numeric',
           'phone'   => 'required',
           'fax'     => 'nullable',
-          'email'   => 'required|email|unique:organizations,email',
           'website' => 'nullable',
         ]);
+
+        // List of special chars to remove from organization name and create fake email
+        $specialChars = array(".", ".", ";", ";", " ");
 
         // ORGANIZATIONS HAVE ACCOUNTS!!!
 
@@ -91,7 +93,7 @@ class OrganizationController extends Controller
         $organization->zip     = $request->zip;
         $organization->phone   = $request->phone;
         $organization->fax     = $request->fax;
-        $organization->email   = strtolower($request->email);
+        $organization->email   = str_replace($specialChars, '', strtolower($request->name)) . '@' . \App\Setting::find(1)->website;
         $organization->website = $request->website;
 
         $organization->save();
@@ -100,7 +102,7 @@ class OrganizationController extends Controller
 
         $user->firstname       = $request->name;
         $user->lastname        = '';
-        $user->email           = $request->email;
+        $user->email           = $organization->email;
         $user->password        = bcrypt(str_random(10));
         $user->role_id         = OrganizationType::find($request->type_id)->id;
         $user->organization_id = $organization->id;
@@ -128,7 +130,8 @@ class OrganizationController extends Controller
      */
     public function show(Organization $organization)
     {
-        return view('admin.organizations.show')->withOrganization($organization);
+        $sales = \App\Sale::where('organization_id', $organization->id)->where('status', 'complete')->orderBy('created_at', 'desc')->get();
+        return view('admin.organizations.show')->withSales($sales)->withOrganization($organization);
     }
 
     /**

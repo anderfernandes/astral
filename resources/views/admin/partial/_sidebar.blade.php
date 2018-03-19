@@ -118,11 +118,15 @@
     </div>
   </div>
   @endif
-  <a class="item" href="http://astral.anderfernandes.com/docs/1.0.0-alpha1/" target="_blank">
+  <a class="item" href="http://astral.anderfernandes.com/docs/{{ config('app.version') }}" target="_blank">
     <i class="large help circle icon"></i> Help
   </a>
 
   <div class="item">
     <img class="ui centered tiny image" src="{{ '/'.App\Setting::find(1)->logo }}" alt="">
+  </div>
+  <div class="item" style="text-align: center">
+    Astral {{ config('app.version') }} <br>
+    Created by <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>
   </div>
 </div>

@@ -130,9 +130,11 @@ class UserController extends Controller
       $roles = Role::where('type', '=', 'individuals')->orderBy('name', 'asc')->pluck('name', 'id');
       $organizations = Organization::where('type_id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
       $organizations->prepend('No Organization', 1);
+      $sales = \App\Sale::where('customer_id', $user->id)->where('status', 'complete')->orderBy('created_at', 'desc')->get();
 
       return view('admin.users.show')->withUser($user)
                                      ->withRoles($roles)
+                                     ->withSales($sales)
                                      ->withOrganizations($organizations);
     }
 
@@ -223,7 +225,7 @@ class UserController extends Controller
     {
       $temp = $user;
 
-      $user->delete();
+      //$user->delete();
 
       Session::flash('success', 'The <strong>'.$temp->role.'</strong> user '. $user->fullname .' was successfully deleted.');
 

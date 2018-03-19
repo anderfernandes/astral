@@ -92,7 +92,7 @@
     <label for="paid">Balance</label>
     <div class="ui labeled input">
       <div class="ui label">$ </div>
-      <input type="text" id="balance" name="balance" value="{{ isSet($sale) ? number_format($sale->total - $sale->payments->sum('tendered'), 2) : number_format(0, 2) }}" readonly>
+      <input type="text" id="balance" name="balance" value="{{ isSet($sale) ? number_format($sale->payments->sum('tendered') - $sale->total, 2) : number_format(0, 2) }}" readonly>
     </div>
   </div>
 </div>
@@ -475,7 +475,7 @@
     balance = total - (paid + tendered)
     balanceBox.value = balance <= 0 ? (0).toFixed(2) : balance.toFixed(2)
 
-    changeDue = tendered - total
+    changeDue = tendered - (total - paid)
     changeDueBox.value = changeDue <= 0 ? (0).toFixed(2) : changeDue.toFixed(2)
 
   }

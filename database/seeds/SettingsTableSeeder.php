@@ -17,6 +17,7 @@ class SettingsTableSeeder extends Seeder
         'seats'        => 180,
         'tax'          => 8.25,
         'created_at'   => Date::now('America/Chicago')->toDateTimeString(),
+        'website'      => 'mynonprofit.org',
       ]);
     }
 }

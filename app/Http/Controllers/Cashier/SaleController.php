@@ -212,7 +212,11 @@ class SaleController extends Controller
      */
     public function show(Sale $sale)
     {
-        return view('cashier.sales.show')->withSale($sale);
+        $paid = number_format($sale->payments->sum('tendered') - $sale->payments->sum('change_due'), 2);
+        $balance = number_format(($sale->payments->sum('tendered') - $sale->payments->sum('change_due')) - $sale->total, 2);
+        return view('cashier.sales.show')->withSale($sale)
+                                       ->withPaid($paid)
+                                       ->withBalance($balance);
     }
 
     /**
