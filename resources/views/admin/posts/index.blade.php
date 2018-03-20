@@ -31,7 +31,7 @@
       @endforeach
     @endif
 
-    @if (!isSet($posts) || ($posts->count()) > 0)
+    @if (!isSet($posts) || ($posts->count()) > 0 || ($sticky->count() > 0))
       <div class="ui divider"></div>
       @foreach($posts as $post)
       <div class="ui raised segment">

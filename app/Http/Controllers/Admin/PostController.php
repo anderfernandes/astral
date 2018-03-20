@@ -101,7 +101,25 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $this->validate($request, [
+          'title'       => 'required',
+          'category_id' => 'required',
+          'sticky'      => 'required',
+          'message'     => 'required',
+        ]);
+
+        $post->title       = $request->title;
+        $post->category_id = $request->category_id;
+        $post->sticky      = $request->sticky;
+        $post->message     = $request->message;
+        $post->open        = true;
+        $post->author_id   = Auth::user()->id;
+
+        $post->save();
+
+        Session::flash('success', 'Post <strong>' . $post->title . '</strong> updated successfully!');
+
+        return redirect()->route('admin.posts.show', $post);
     }
 
     /**

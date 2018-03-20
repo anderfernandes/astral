@@ -25,7 +25,7 @@
   </div>
   @if (Auth::user()->role->name == 'Senior Staff' || Auth::user()->role->name == 'Planetarium Lead Assistant')
   <div class="ui dropdown item" href="{{ route('admin.calendar.index') }}">
-    <i class="large calendar icon"></i> Calendar
+    <i class="large calendar alternate icon"></i> Calendar
     <div class="menu">
       <a class="item" href="{{ route('admin.calendar.index') }}/?type=calendar&view=agendaWeek">
         <i class="large dollar icon"></i> Reservations

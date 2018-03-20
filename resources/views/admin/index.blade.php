@@ -51,7 +51,7 @@ function getAttendanceByType($ticketTypeID) {
 }
 
 ?>
-
+{{-- Welcome Box --}}
 <div class="ui grid">
   <div class="sixteen wide column" style="margin-bottom: -1rem">
     <div class="ui icon message">
@@ -63,8 +63,9 @@ function getAttendanceByType($ticketTypeID) {
       </div>
       </div>
   </div>
-  <!-- Overall Earnings -->
+
   <div class="eight wide computer sixteen wide mobile column">
+    {{-- Overall Earnings --}}
     <div class="ui segment">
       <div class="ui dividing header">
         <i class="money icon"></i>
@@ -79,6 +80,7 @@ function getAttendanceByType($ticketTypeID) {
         <canvas height="200" id="earningsChart"></canvas>
       </div>
     </div>
+    {{-- Calendar --}}
     <div class="ui segment">
       <div class="ui dividing header">
         <i class="calendar icon"></i>
@@ -95,7 +97,7 @@ function getAttendanceByType($ticketTypeID) {
         <div onclick="$('#calendars').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
       </div>
       <div class="ui secondary floating dropdown labeled icon button" style="margin-bottom: 0.5rem">
-        <i class="calendar outline icon"></i>
+        <i class="calendar alternate outline icon"></i>
         <span class="text">Reservations</span>
         <div class="menu">
           <div onclick="toggleCalendar('calendar')" class="active item">Reservations</div>
@@ -104,10 +106,41 @@ function getAttendanceByType($ticketTypeID) {
       </div>
       <div id="calendars"></div>
     </div>
+    {{-- Bulletin --}}
+    <div class="ui segment">
+      <div class="ui dividing header">
+        <i class="comments outline icon"></i>
+        <div class="content">
+          Bulletin
+          <div class="sub header">
+          Post from last 7 days
+          </div>
+        </div>
+      </div>
+    <div class="ui feed">
+      @foreach (\App\Post::latest()->take(5)->get() as $post)
+        <div class="event">
+          <div class="label"><i class="user circle icon"></i></div>
+          <div class="content">
+            <div class="summary">
+              <a href="{{ route('admin.users.show', $post->author) }}" class="user" target="_blank">{{ $post->author->firstname }}</a>
+              created a post <a href="{{ route('admin.posts.show', $post->id) }}" target="_blank">{{ $post->title }}</a>
+              <div class="ui black label"><i class="tag icon"></i>{{ $post->category->name }}</div>
+              @if ($post->sticky)
+                <div class="ui red label"><i class="info circle icon"></i> important</div>
+              @endif
+            </div>
+            <div class="date"><i class="calendar outline alternate icon"></i>{{ Date::parse($post->created_at)->ago() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
+          </div>
+        </div>
+      @endforeach
+    </div>
+
+    </div>
   </div>
 
-  <!-- Attendance -->
   <div class="eight wide computer sixteen wide mobile column">
+    {{-- Attendance --}}
     <div class="ui segment">
       <div class="ui dividing header">
         <i class="child icon"></i>
@@ -127,6 +160,7 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
     </div>
+    {{-- Charts --}}
     <div class="ui horizontal segments">
       <div class="ui center aligned segment">
         <div class="ui small statistic">
@@ -173,6 +207,7 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
     </div>
+    {{-- Feed --}}
     <div class="ui segment">
       <div class="ui small dividing header">
         <i class="feed icon"></i>
@@ -201,7 +236,6 @@ function getAttendanceByType($ticketTypeID) {
                   @else
                     tickets</a> to <a target="_blank" href="{{ route('admin.shows.show', $lastSale->events[0]->show) }}">{{ $lastSale->tickets[0]->event->show->name }}</a> <div class="ui black circular label">{{ $lastSale->tickets[0]->event->type->name }}</div>
                   @endif
-
               </div>
               <div class="date">
                 {{ Date::parse($lastSale->created_at)->ago() }}
@@ -230,15 +264,6 @@ function getAttendanceByType($ticketTypeID) {
         @endforeach
       </div>
     </div>
-  </div>
-
-  <!-- Events and Calendar -->
-  <div class="eight wide computer sixteen wide mobile column">
-
-  </div>
-  <!-- Calendar -->
-  <div class="eight wide computer sixteen wide mobile column">
-
   </div>
 </div>
 

@@ -31,36 +31,38 @@
     </div>
     <div class="ui segment">
       <div class="ui dividing header">Replies</div>
-      @if (isSet($post->replies) || $post->replies > 0)
-        @foreach($replies as $reply)
-          <div class="ui comments">
-            <div class="comment">
-            <div class="avatar"><i class="user circle big icon"></i></div>
-            <div class="content">
-              <div class="author">
-                {{ $reply->author->firstname }}
-                <div class="metadata">
-                  <span class="date">{{ Date::parse($reply->created_at)->diffForHumans() }}</span>
+      @if (isSet($post->replies))
+        @if ($post->replies->count() > 0)
+          @foreach($replies as $reply)
+            <div class="ui comments">
+              <div class="comment">
+              <div class="avatar"><i class="user circle big icon"></i></div>
+              <div class="content">
+                <div class="author">
+                  {{ $reply->author->firstname }}
+                  <div class="metadata">
+                    <span class="date">{{ Date::parse($reply->created_at)->diffForHumans() }}</span>
+                  </div>
+                </div>
+                <div class="text">
+                  {!! \Illuminate\Mail\Markdown::parse($reply->message) !!}
+                </div>
                 </div>
               </div>
-              <div class="text">
-                {!! \Illuminate\Mail\Markdown::parse($reply->message) !!}
+            </div>
+          @endforeach
+        @else
+          <div class="ui info icon message">
+            <i class="info circle icon"></i>
+            <i class="close icon"></i>
+            <div class="content">
+              <div class="header">
+                No replies!
               </div>
-              </div>
+              <p>It looks like there are no one has replied to this post yet.</p>
             </div>
           </div>
-        @endforeach
-      @else
-        <div class="ui info icon message">
-          <i class="info circle icon"></i>
-          <i class="close icon"></i>
-          <div class="content">
-            <div class="header">
-              No replies!
-            </div>
-            <p>It looks like there are no one has replied to this post yet.</p>
-          </div>
-        </div>
+        @endif
       @endif
     </div>
     <div class="ui segment">
