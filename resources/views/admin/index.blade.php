@@ -241,19 +241,17 @@ function getAttendanceByType($ticketTypeID) {
             </div>
           </div>
         @elseif ($lastSale->customer->role->name == "Member")
-            <div class="event">
-              <div class="label">
-                <i class="user circle icon"></i>
-              </div>
+            <div class="item">
+              <i class="big user circle icon"></i>
               <div class="content">
-                <div class="summary">
-                  <a target="_blank" href="{{ route('admin.users.show', $lastSale->creator) }}" class="user">
+                <div class="header">
+                  <a target="_blank" href="{{ route('admin.users.show', $lastSale->creator) }}">
                     {{ $lastSale->creator->firstname }}</a>
                     sold a
                     <a target="_blank" href="{{ route('admin.members.show', $lastSale->customer->member) }}">{{ $lastSale->customer->member->type->name }}</a>
                     to <a target="_blank" href="{{ route('admin.users.show', $lastSale->customer) }}">{{ $lastSale->customer->fullname }}</a>
                 </div>
-                <div class="date">
+                <div class="description">
                   {{ Date::parse($lastSale->created_at)->ago() }}
                 </div>
               </div>

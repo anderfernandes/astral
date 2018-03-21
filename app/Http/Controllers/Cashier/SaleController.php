@@ -214,8 +214,10 @@ class SaleController extends Controller
     {
         $paid = number_format($sale->payments->sum('tendered') - $sale->payments->sum('change_due'), 2);
         $balance = number_format(($sale->payments->sum('tendered') - $sale->payments->sum('change_due')) - $sale->total, 2);
+        $memos = \App\SaleMemo::where('sale_id', $sale->id)->orderBy('updated_at', 'desc')->get();
         return view('cashier.sales.show')->withSale($sale)
                                        ->withPaid($paid)
+                                       ->withMemos($memos)
                                        ->withBalance($balance);
     }
 

@@ -7,7 +7,9 @@
   </div>
   <div class="right menu">
     <div class="item hide-on-mobile">
-      <a href="{{ route('cashier.index') }}" target="_blank" class="ui inverted button"> <i class="inbox icon"></i> Cashier</a>
+      <a href="{{ route('cashier.index') }}" target="_blank" class="ui active inverted button">
+        <i class="inbox icon"></i> Cashier
+      </a>
     </div>
     <div class="ui dropdown item">
       <i class="user circle large inverted icon"></i>

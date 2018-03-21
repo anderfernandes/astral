@@ -133,8 +133,12 @@
     <tbody>
       <tr>
         <td>
-          @if (Request::routeIs('admin.sales.show'))
-            <h4 class="ui header"><a href="{{ route('admin.users.show', $sale->customer) }}" target="_blank">{{ $sale->customer->fullname }}</a></h4>
+          @if (Request::routeIs('admin.sales.show') and $sale->customer->firstname != $sale->organization->name)
+            <h4 class="ui header">
+              <a href="{{ route('admin.users.show', $sale->customer) }}" target="_blank">
+                {{ $sale->customer->fullname }}
+              </a>
+            </h4>
           @else
             <h4 class="ui header">{{ $sale->customer->fullname }}</h4>
           @endif
@@ -340,13 +344,15 @@
     <i class="comment outline icon"></i> Memo
   </h4>
 
+  @if ($memos->count() > 0)
   <div class="ui comments">
-    @foreach(App\SaleMemo::where('sale_id', $sale->id)->orderBy('updated_at', 'desc')->get() as $memo)
+    @foreach($memos as $memo)
       <div class="comment">
         <div class="avatar"><i class="user circle big icon"></i></div>
         <div class="content">
           <div class="author">
             {{ $memo->author->fullname }}
+            <div class="ui tiny black label">{{ $memo->author->role->name }}</div>
             <div class="metadata">
               <span class="date">{{ Date::parse($memo->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($memo->created_at)->diffForHumans() }})</span>
             </div>
@@ -358,6 +364,18 @@
       </div>
     @endforeach
   </div>
+  @else
+  <div class="ui info icon message">
+    <i class="info circle icon"></i>
+    <i class="close icon"></i>
+    <div class="content">
+      <div class="header">
+        No Memos!
+      </div>
+      <p>This sale has no memos so far.</p>
+    </div>
+  </div>
+  @endif
 </div>
 
 {{-- Refund Modal --}}
