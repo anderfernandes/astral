@@ -16,23 +16,22 @@
 
 function getSalesTotals($day)
 {
+  $start = Date::parse($day)->startOfDay()->toDateTimeString();
+  $end = Date::parse($day)->endOfDay()->toDateTimeString();
 
-  $dailySales = \App\Sale::where('status', 'complete')
-                                 ->whereDate('created_at','=', $day->format('Y-m-d'))
-                                 ->sum('total');
+  $dailyTendered = \App\Payment::where([
+    ['created_at','>=', $start],
+    ['created_at','<=', $end]
+    ])->sum('tendered');
 
-  return number_format($dailySales, 2);
-}
+  $dailyChange = \App\Payment::where([
+    ['created_at','>=', $start],
+    ['created_at','<=', $end]
+    ])->sum('change_due');
 
-function getSalesTotalsRange($start, $end)
-{
-  $rangeTotal = 0;
+  $daily = number_format($dailyTendered - $dailyChange, 2);
 
-  $rangeSales = \App\Sale::where('status', 'complete')
-                                 ->where([['created_at','>=', $start], ['created_at','<=', $end]])
-                                 ->sum('total');
-
-  return number_format($rangeSales, 2);
+  return $daily;
 }
 
 function getAttendance($date) {

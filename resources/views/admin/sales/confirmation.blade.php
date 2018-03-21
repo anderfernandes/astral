@@ -160,9 +160,22 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
 
   {!! \Illuminate\Mail\Markdown::parse(App\Setting::find(1)->confirmation_text) !!}
 
+  <?php
+
+    //$events = $sale->events->count();
+    $numberOfEvents = 0;
+
+    // Loop through all events
+    foreach ($sale->events as $event) {
+      // Add one to $numberOfEvents if eventis not "No Show"
+      if ($event->id != '1') $numberOfEvents++;
+    }
+
+  ?>
+
   <ul>
     <li>
-      We reserved {{ $sale->tickets->count() / $sale->events->count() }} seats per show for you. If more than {{ $sale->tickets->count() / $sale->events->count() }} people show up,
+      We reserved {{ $numberOfEvents == 1 ? $sale->tickets->count() : $sale->tickets->count() / $numberOfEvents }} seats per show for you. If more than {{ $numberOfEvents == 1 ? $sale->tickets->count() : $sale->tickets->count() / $numberOfEvents }} people show up,
       we admit them space available (up to our capacity of {{ App\Setting::find(1)->seats }}) for the same price you paid. You may
       choose, include them in your payment or they may buy their own tickets at show time.
     </li>
