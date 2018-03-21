@@ -1,27 +1,28 @@
 @if (Session::has('success'))
-<div class="ui success icon message">
-  <i class="info circle icon"></i>
-  <i class="close icon"></i>
-  <div class="content">
-    <div class="header">
-      Success!
+  <div class="ui success icon message">
+    <i class="info circle icon"></i>
+    <i class="close icon"></i>
+    <div class="content">
+      <div class="header">
+        Success!
+      </div>
+      <p>{!! Session::get('success') !!}</p>
     </div>
-    <p>{{ Session::get('success') }}</p>
   </div>
-</div>
-@elseif (Session::has('status'))
-<div class="ui success icon message">
-  <i class="info circle icon"></i>
-  <i class="close icon"></i>
-  <div class="content">
-    <div class="header">
-      Success!
-    </div>
-    <p>{{ Session::get('success') }}</p>
-  </div>
-</div>
 @endif
 
+@if (Session::has('info'))
+  <div class="ui info icon message">
+    <i class="info circle icon"></i>
+    <i class="close icon"></i>
+    <div class="content">
+      <div class="header">
+        Hey, you!
+      </div>
+      <p>{!! Session::get('info') !!}</p>
+    </div>
+  </div>
+@endif
 
 @if (count($errors) > 0)
   <div class="ui error icon message">

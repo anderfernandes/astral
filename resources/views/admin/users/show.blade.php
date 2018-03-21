@@ -27,7 +27,9 @@
       {{ $user->fullname }}
       @if ($user->staff) <i style="display:inline-block" class="star icon"></i>@endif
       <div class="ui label" style="margin-left:0">{{ $user->role->name }}</div>
-      @if ($user->organization_id != 1) <div class="ui label" style="margin-left:0">{{ $user->organization->name }}</div> @endif
+      @if ($user->organization_id != 1)
+        <a href="{{ route('admin.organizations.show', $user->organization) }}" target="_blank" class="ui label" style="margin-left:0">{{ $user->organization->name }}</a> 
+      @endif
       <div class="sub header">
         Created on {{ Date::parse($user->created_at)->format('l, F j, Y \a\t h:i:s A') }} ({{ Date::parse($user->created_at)->diffForHumans() }})
       </div>

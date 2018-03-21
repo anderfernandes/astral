@@ -18,9 +18,6 @@
     <a href="{{ route('admin.organizations.create') }}" class="ui secondary button">
       <i class="calendar plus icon"></i> Add Another Organization
     </a>
-    {!! Form::open(['route' => ['admin.events.destroy', $organization], 'method' => 'DELETE']) !!}
-      {!! Form::button('<i class="trash icon"></i> Delete Organization', ['type' => 'submit', 'class' => 'ui negative button']) !!}
-    {!! Form::close() !!}
   </div>
 
   <div class="ui large dividing header">
@@ -113,7 +110,8 @@
                 {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
                 <div class="ui black circular label">{{ $event->type->name }}</div>
               </div>
-              <a href="{{ route('admin.events.edit', $event) }}" target="_blank">{{ $event->show->name }}</a>
+              <a href="{{ route('admin.events.show', $event) }}" target="_blank">{{ $event->show->name }}</a> |
+              <a href="{{ route('admin.sales.show', $sale) }}">Sale #{{ $sale->id }}</a>
               <div class="sub header">
                 @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
                   <div class="ui black label" style="margin-left:0">
@@ -133,5 +131,29 @@
       </div>
     @endforeach
   @endif
+
+  @if ($organization->users->where('active', true)->count() > 0)
+  <div class="ui dividing header">
+    <div class="content">
+      Users
+      <div class="sub header">In this Organization: {{ $organization->users->where('active', true)->count() }}</div>
+    </div>
+  </div>
+  <div class="ui relaxed list">
+    @foreach ($organization->users->where('active', true) as $user)
+      <div class="item">
+        <i class="large user circle icon"></i>
+        <div class="content">
+          <div class="header">
+            <a href="{{ route('admin.users.show', $user) }}" target="_blank">{{ $user->fullname }}</a>
+            <div class="ui black label">{{ $user->role->name }}</div>
+          </div>
+        </div>
+      </div>
+    @endforeach
+  </div>
+  @endif
+
+
 
 @endsection

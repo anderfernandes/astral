@@ -101,7 +101,7 @@
 
 
   <!-- Page Contents -->
-  <div class="pusher" style="padding-top: 2.5rem">
+  <div class="pusher">
 
     <!-- Top Fixed Menu -->
     <!-- @ include('partial._menu') -->

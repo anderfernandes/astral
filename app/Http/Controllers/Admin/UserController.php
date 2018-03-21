@@ -147,7 +147,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
-        $organizations = Organization::where('type', '!=', 'System')->pluck('name', 'id');
+        $organizations = Organization::where('type_id', '!=', 1)->pluck('name', 'id');
         return view('admin.users.edit')
           ->withUser($user)
           ->withRoles($roles)
@@ -235,7 +235,7 @@ class UserController extends Controller
     public function selfupdate(Request $request, User $user)
     {
       $this->validate($request, [
-        'email'                 => 'required|unique:users',
+        'email'                 => 'required',
         'password'              => 'nullable|same:password_confirmation|min:6',
         'password_confirmation' => 'nullable|min:6',
         'address'               => 'required',
@@ -243,7 +243,7 @@ class UserController extends Controller
         'country'               => 'required',
         'state'                 => 'required',
         'zip'                   => 'required|numeric',
-        'phone'                 => 'required|unique:organizations,phone',
+        'phone'                 => 'required',
       ]);
 
       $user = User::find(\Auth::id());

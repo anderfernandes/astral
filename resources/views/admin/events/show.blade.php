@@ -35,6 +35,7 @@
           <div class="ui label">{{ $event->type->name }}</div>
           <div class="ui label">{{ App\Show::find($event->show_id)->type }}</div>
           <div class="ui label">{{ App\Show::find($event->show_id)->duration }} minutes</div>
+          <div class="ui label">{{ App\Ticket::where('event_id', $event->id)->count() }} tickets sold</div>
         </div>
         <h1 class="ui large header">
           {{ App\Show::find($event->show_id)->name }}
@@ -54,36 +55,53 @@
           @endif
         </div>
         <div class="extra">
-          @if ($event->sales->count() > 0)
           <h4 class="ui horizontal divider header">
             <i class="dollar icon"></i> Sales
           </h4>
-          @foreach ($event->sales as $sale)
-            @if (!$sale->refund and $sale->customer->id != 1)
-            <h3 class="ui dividing header">
-              <div class="content">
-                <div class="sub header">Sale # {{ $sale->id }}</div>
-                <a href="{{ route('admin.sales.show', $sale->id) }}">{{ $sale->organization->name }}
-                  @if (!($sale->organization->name == $sale->customer->firstname))
-                  | {{ $sale->customer->fullname }}
-                  @endif
-                </a>
-                <div class="sub header">
-                  <div class="ui green tag label">$ {{ number_format($sale->total, 2) }}</div>
-                  @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
-                    <div class="ui black label" style="margin-left:0">
-                      <i class="ticket icon"></i>
-                      {{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}
-                      <div class="detail">
-                        {{ $ticket->type->name }}
+          @if ($event->sales->where('customer_id', '!=', 1)->count() > 0)
+            @foreach ($event->sales->where('customer_id', '!=', 1) as $sale)
+              <h3 class="ui dividing header">
+                <div class="content">
+                  <a class="sub header" href="{{ route('admin.sales.show', $sale) }}">Sale # {{ $sale->id }}</a>
+                  <a href="{{ route('admin.users.show', $sale->customer) }}">
+                    @if ($sale->organization_id != 1)
+                      {{ $sale->organization->name }}
+                    @endif
+                    @if (!($sale->organization->name == $sale->customer->firstname))
+                    {{ $sale->customer->fullname }}
+                    @endif
+                  </a>
+                  <div class="sub header">
+                    <div class="ui green tag label">$ {{ number_format($sale->total, 2) }}</div>
+                    @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
+                      <div class="ui black label" style="margin-left:0">
+                        <i class="ticket icon"></i>
+                        {{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}
+                        <div class="detail">
+                          {{ $ticket->type->name }}
+                        </div>
                       </div>
-                    </div>
-                  @endforeach
+                    @endforeach
+                  </div>
                 </div>
+              </h3>
+            @endforeach
+          @else
+            <div class="ui info icon message">
+              <i class="info circle icon"></i>
+              <i class="close icon"></i>
+              <div class="content">
+                <div class="header">
+                  No Group Sales!
+                </div>
+                <p>
+                  There are no group sales for this show.
+                  @if (App\Ticket::where('event_id', $event->id)->count() > 0)
+                    There are, however, {{ App\Ticket::where('event_id', $event->id)->count() }} tickets solds to this event.
+                  @endif
+                </p>
               </div>
-            </h3>
-          @endif
-          @endforeach
+            </div>
           @endif
         </div>
       </div>

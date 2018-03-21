@@ -171,6 +171,9 @@ class OrganizationController extends Controller
           'website' => 'nullable',
         ]);
 
+        // Get the name of the organization before it changes
+        $user = User::where('firstname', $organization->name)->first();
+
         $organization->name    = $request->name;
         $organization->type_id = $request->type_id;
         $organization->address = $request->address;
@@ -185,8 +188,6 @@ class OrganizationController extends Controller
 
         $organization->save();
 
-        $user = User::where('firstname', $organization->name)->first();
-
         $user->firstname       = $request->name;
         $user->lastname        = '';
         $user->email           = $request->email;
@@ -200,6 +201,7 @@ class OrganizationController extends Controller
         $user->state           = $request->state;
         $user->zip             = $request->zip;
         $user->phone           = $request->phone;
+        $user->active          = false;
 
         if ($request->password == null) {
 

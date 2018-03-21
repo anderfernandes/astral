@@ -83,7 +83,7 @@ function getAttendanceByType($ticketTypeID) {
     {{-- Calendar --}}
     <div class="ui segment">
       <div class="ui dividing header">
-        <i class="calendar icon"></i>
+        <i class="calendar alternate icon"></i>
         <div class="content">
           Calendar
           <div class="sub header">
@@ -117,20 +117,20 @@ function getAttendanceByType($ticketTypeID) {
           </div>
         </div>
       </div>
-    <div class="ui feed">
+    <div class="ui relaxed divided list">
       @foreach (\App\Post::latest()->take(5)->get() as $post)
-        <div class="event">
-          <div class="label"><i class="user circle icon"></i></div>
+        <div class="item">
+          <i class="big user circle icon"></i>
           <div class="content">
-            <div class="summary">
-              <a href="{{ route('admin.users.show', $post->author) }}" class="user" target="_blank">{{ $post->author->firstname }}</a>
+            <div class="header">
+              <a href="{{ route('admin.users.show', $post->author) }}" target="_blank">{{ $post->author->firstname }}</a>
               created a post <a href="{{ route('admin.posts.show', $post->id) }}" target="_blank">{{ $post->title }}</a>
               <div class="ui black label"><i class="tag icon"></i>{{ $post->category->name }}</div>
               @if ($post->sticky)
                 <div class="ui red label"><i class="info circle icon"></i> important</div>
               @endif
             </div>
-            <div class="date"><i class="calendar outline alternate icon"></i>{{ Date::parse($post->created_at)->ago() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
+            <div class="description"><i class="calendar outline alternate icon"></i>{{ Date::parse($post->created_at)->ago() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
           </div>
         </div>
       @endforeach
@@ -218,16 +218,14 @@ function getAttendanceByType($ticketTypeID) {
           </div>
         </div>
       </div>
-      <div class="ui feed">
+      <div class="ui relaxed list">
         <?php $lastSales = App\Sale::where('status', 'complete')->latest()->take(5)->get() ?>
         @foreach ($lastSales as $lastSale)
           @if ($lastSale->tickets->count() > 0)
-          <div class="event">
-            <div class="label">
-              <i class="user circle icon"></i>
-            </div>
+          <div class="item">
+            <i class="big user circle icon"></i>
             <div class="content">
-              <div class="summary">
+              <div class="header">
                 <a target="_blank" href="{{ route('admin.users.show', $lastSale->creator) }}" class="user">
                   {{ $lastSale->creator->firstname }}</a>
                   sold <a target="_blank" href="{{ route('admin.sales.show', $lastSale) }}"> {{ $lastSale->tickets->count() }}
@@ -237,7 +235,7 @@ function getAttendanceByType($ticketTypeID) {
                     tickets</a> to <a target="_blank" href="{{ route('admin.shows.show', $lastSale->events[0]->show) }}">{{ $lastSale->tickets[0]->event->show->name }}</a> <div class="ui black circular label">{{ $lastSale->tickets[0]->event->type->name }}</div>
                   @endif
               </div>
-              <div class="date">
+              <div class="description">
                 {{ Date::parse($lastSale->created_at)->ago() }}
               </div>
             </div>
@@ -274,7 +272,7 @@ function loadCalendars() {
     header: false,
     defaultView: 'agendaDay',
     defaultDate: moment().format('YYYY-MM-DD'),
-    contentHeight: 200,
+    contentHeight: 150,
     hiddenDays: [0],
     navLinks: true,
     editable: false,
@@ -287,7 +285,7 @@ function loadCalendars() {
     header: false,
     defaultView: 'basicDay',
     defaultDate: moment().format('YYYY-MM-DD'),
-    contentHeight: 200,
+    contentHeight: 150,
     hiddenDays: [0],
     navLinks: true,
     editable: false,

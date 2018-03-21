@@ -304,7 +304,7 @@
             <td>{{ $payment->method->name }}</td>
             <td>$ {{ number_format($payment->tendered - $payment->change_due, 2) }}</td>
             <td>$ {{ number_format($payment->tendered, 2) }}</td>
-            <td>$ {{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
+            <td>{{ Date::parse($payment->created_at)->format('l, F j, Y \a\t g:i A') }}</td>
             <td @if($payment->total < 0 or $payment->refunded) colspan="2" @endif>{{ $payment->cashier->firstname }}</td>
             @if (!$sale->refund)
               @if ($sale->payments->where('refunded', false)->where('total', '>', 0)->count() > 1)
@@ -346,7 +346,7 @@
         <div class="avatar"><i class="user circle big icon"></i></div>
         <div class="content">
           <div class="author">
-            {{ $memo->author->fullname }} 
+            {{ $memo->author->fullname }}
             <div class="metadata">
               <span class="date">{{ Date::parse($memo->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($memo->created_at)->diffForHumans() }})</span>
             </div>
