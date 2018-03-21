@@ -63,12 +63,11 @@
               <h3 class="ui dividing header">
                 <div class="content">
                   <a class="sub header" href="{{ route('admin.sales.show', $sale) }}">Sale # {{ $sale->id }}</a>
-                  <a href="{{ route('admin.users.show', $sale->customer) }}">
                     @if ($sale->organization_id != 1)
-                      {{ $sale->organization->name }}
+                      <a href="{{ route('admin.organizations.show', $sale->organization) }}">{{ $sale->organization->name }}</a>
                     @endif
                     @if (!($sale->organization->name == $sale->customer->firstname))
-                    {{ $sale->customer->fullname }}
+                      | <a href="{{ route('admin.users.show', $sale->customer) }}">{{ $sale->customer->fullname }}</a>
                     @endif
                   </a>
                   <div class="sub header">
