@@ -75,7 +75,7 @@
        event_types: {
          identifier: 'event_types',
          rules: [
-           { type: 'minCount[1]', prompt: 'Select at least 1 event type this ticket is allowed to be sold to' }
+           { type: 'empty', prompt: 'Select at least 1 event type this ticket is allowed to be sold to' }
          ]
        }
       }

@@ -47,7 +47,7 @@
           <div class="default text">All Organizations</div>
         <div class="menu">
           <div class="item" data-value="">All Organizations</div>
-          @foreach (App\Organization::where('type_id', '!=', 1)->orderBy('name', 'asc')->get() as $o)
+          @foreach (App\Organization::orderBy('name', 'asc')->get() as $o)
             <div class="item" data-value="{{ $o->id }}">
               {{ $o->name }}
             </div>

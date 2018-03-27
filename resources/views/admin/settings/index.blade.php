@@ -25,97 +25,97 @@
 
       <!--- General --->
       <div class="ui tab segment active" data-tab="general">
-        {!! Form::model($setting, ['route' => ['admin.settings.update', $setting], 'class' => 'ui form', 'method' => 'PUT']) !!}
-        <div class="field">
-          <div class="ui buttons">
-            {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui primary button']) !!}
-          </div>
-        </div>
-        <div class="four fields">
+        {!! Form::model($setting, ['route' => ['admin.settings.update', $setting], 'class' => 'ui form', 'id' => 'general', 'method' => 'PUT']) !!}
           <div class="field">
-            {!! Form::label('organization', 'Organization Name') !!}
-            {!! Form::text('organization', null, ['placeholder' => 'Organization Name']) !!}
-          </div>
-          <div class="field">
-            {!! Form::label('astc', 'Member of ASTC?') !!}
-            {!! Form::select('astc', [true => 'Yes', false => 'No'], null, ['placeholder' => 'Select an Organization Type', 'class' => 'ui search dropdown']) !!}
-          </div>
-          <div class="field">
-            {!! Form::label('seats', 'Number of Seats') !!}
-            {!! Form::number('seats', null, ['placeholder' => 'Number of Seats']) !!}
-          </div>
-          <div class="field">
-            {!! Form::label('tax', 'Tax (%)') !!}
-            <div class="ui right labeled input">
-              {!! Form::number('tax', null, ['placeholder' => 'Tax %', 'step' => '0.01']) !!}
-              <div class="ui label">%</div>
+            <div class="ui buttons">
+              {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui primary button']) !!}
             </div>
           </div>
-        </div>
-        <div class="three fields">
-          <div class="field">
-            {!! Form::label('address', 'Address') !!}
-            {!! Form::text('address', null, ['placeholder' => 'Full address']) !!}
-          </div>
-          <div class="field">
-            {!! Form::label('phone', 'Phone') !!}
-            {!! Form::tel('phone', null, ['placeholder' => 'Phone']) !!}
-          </div>
-          <div class="field">
-            {!! Form::label('fax', 'Fax') !!}
-            {!! Form::tel('fax', null, ['placeholder' => 'Fax']) !!}
-          </div>
-        </div>
-        <div class="two fields">
-          <div class="field">
-            {!! Form::label('email', 'Email') !!}
-            {!! Form::text('email', null, ['placeholder' => 'Email']) !!}
-          </div>
-          <div class="field">
-            {!! Form::label('website', 'Website') !!}
-            <div class="ui labeled input">
-              <div class="ui label">http://</div>
-              {!! Form::text('website', null, ['placeholder' => 'Enter organization\'s website']) !!}
+          <div class="four fields">
+            <div class="field">
+              {!! Form::label('organization', 'Organization Name') !!}
+              {!! Form::text('organization', null, ['placeholder' => 'Organization Name', 'data-validate' => 'organization']) !!}
+            </div>
+            <div class="field">
+              {!! Form::label('astc', 'Member of ASTC?') !!}
+              {!! Form::select('astc', [true => 'Yes', false => 'No'], null, ['placeholder' => 'Select an Organization Type', 'class' => 'ui search dropdown']) !!}
+            </div>
+            <div class="field">
+              {!! Form::label('seats', 'Number of Seats') !!}
+              {!! Form::number('seats', null, ['placeholder' => 'Number of Seats']) !!}
+            </div>
+            <div class="field">
+              {!! Form::label('tax', 'Tax (%)') !!}
+              <div class="ui right labeled input">
+                {!! Form::number('tax', null, ['placeholder' => 'Tax %', 'step' => '0.01']) !!}
+                <div class="ui label">%</div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="two fields">
-          <div class="field">
-            {!! Form::label('logo', 'Logo (URL)') !!}
-            {!! Form::text('logo', null, ['placeholder' => 'URL to a PNG or JPEG']) !!}
-            <br /><br />
+          <div class="three fields">
+            <div class="field">
+              {!! Form::label('address', 'Address') !!}
+              {!! Form::text('address', null, ['placeholder' => 'Full address']) !!}
+            </div>
+            <div class="field">
+              {!! Form::label('phone', 'Phone') !!}
+              {!! Form::tel('phone', null, ['placeholder' => 'Phone']) !!}
+            </div>
+            <div class="field">
+              {!! Form::label('fax', 'Fax') !!}
+              {!! Form::tel('fax', null, ['placeholder' => 'Fax']) !!}
+            </div>
+          </div>
+          <div class="two fields">
+            <div class="field">
+              {!! Form::label('email', 'Email') !!}
+              {!! Form::text('email', null, ['placeholder' => 'Email']) !!}
+            </div>
+            <div class="field">
+              {!! Form::label('website', 'Website') !!}
+              <div class="ui labeled input">
+                <div class="ui label">http://</div>
+                {!! Form::text('website', null, ['placeholder' => 'Enter organization\'s website']) !!}
+              </div>
+            </div>
+          </div>
+          <div class="two fields">
+            <div class="field">
+              {!! Form::label('logo', 'Logo (URL)') !!}
+              {!! Form::text('logo', null, ['placeholder' => 'URL to a PNG or JPEG']) !!}
+              <br /><br />
+            </div>
+            <div class="field">
+              {!! Form::label('cover', 'Cover (URL)') !!}
+              {!! Form::text('cover', null, ['placeholder' => 'URL to a PNG or JPEG']) !!}
+              <br /><br />
+            </div>
+          </div>
+          <div class="ui two column grid">
+            <div class="column">
+              <div class="ui basic segment"><img src="{{ '/'.App\Setting::find(1)->logo }}" alt="" class="ui small image"></div>
+            </div>
+            <div class="column">
+              <div class="ui basic segment"><img src="{{ '/'.App\Setting::find(1)->cover }}" alt="" class="ui medium image"></div>
+            </div>
           </div>
           <div class="field">
-            {!! Form::label('cover', 'Cover (URL)') !!}
-            {!! Form::text('cover', null, ['placeholder' => 'URL to a PNG or JPEG']) !!}
-            <br /><br />
+            {!! Form::label('membership_text', 'Membership Receipt Text') !!}
+            {!! Form::textarea('membership_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
           </div>
-        </div>
-        <div class="ui two column grid">
-          <div class="column">
-            <div class="ui basic segment"><img src="{{ '/'.App\Setting::find(1)->logo }}" alt="" class="ui small image"></div>
+          <div class="field">
+            {!! Form::label('confirmation_text', 'Confirmation Text') !!}
+            {!! Form::textarea('confirmation_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
           </div>
-          <div class="column">
-            <div class="ui basic segment"><img src="{{ '/'.App\Setting::find(1)->cover }}" alt="" class="ui medium image"></div>
+          <div class="field">
+            {!! Form::label('invoice_text', 'Invoice Text') !!}
+            {!! Form::textarea('invoice_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
           </div>
-        </div>
-        <div class="field">
-          {!! Form::label('membership_text', 'Membership Receipt Text') !!}
-          {!! Form::textarea('membership_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
-        </div>
-        <div class="field">
-          {!! Form::label('confirmation_text', 'Confirmation Text') !!}
-          {!! Form::textarea('confirmation_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
-        </div>
-        <div class="field">
-          {!! Form::label('invoice_text', 'Invoice Text') !!}
-          {!! Form::textarea('invoice_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
-        </div>
-        <div class="field">
-          <div class="ui buttons">
-            {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+          <div class="field">
+            <div class="ui buttons">
+              {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+            </div>
           </div>
-        </div>
         {!! Form::close() !!}
       </div>
 
@@ -159,27 +159,27 @@
             </table>
           </div>
           <div class="column">
-            {!! Form::open(['route' => 'admin.settings.addOrganizationType', 'class' => 'ui form']) !!}
-            <div class="two fields">
-              <div class="field">
-                {!! Form::label('name', 'Name') !!}
-                {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
+            {!! Form::open(['route' => 'admin.settings.addOrganizationType', 'class' => 'ui form', 'id' => 'organizations']) !!}
+              <div class="two fields">
+                <div class="field">
+                  {!! Form::label('name', 'Name') !!}
+                  {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
+                </div>
+                <div class="field">
+                  {!! Form::label('taxable', 'Taxable') !!}
+                  {!! Form::select('taxable',
+                    [1 => 'Yes', 0 => 'No'],
+                    null,
+                    ['placeholder' => 'Taxable?', 'class' => 'ui dropdown']) !!}
+                </div>
               </div>
               <div class="field">
-                {!! Form::label('taxable', 'Taxable') !!}
-                {!! Form::select('taxable',
-                  [1 => 'Yes', 0 => 'No'],
-                  null,
-                  ['placeholder' => 'Taxable?', 'class' => 'ui dropdown']) !!}
+                {!! Form::label('description', 'Description') !!}
+                {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
               </div>
-            </div>
-            <div class="field">
-              {!! Form::label('description', 'Description') !!}
-              {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
-            </div>
-            <div class="field">
-              {!! Form::button('<i class="plus icon"></i> Add Organization Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
-            </div>
+              <div class="field">
+                {!! Form::button('<i class="plus icon"></i> Add Organization Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+              </div>
             {!! Form::close() !!}
           </div>
         </div>
@@ -297,35 +297,35 @@
             </table>
           </div>
           <div class="column">
-            {!! Form::open(['route' => 'admin.settings.addPaymentMethod', 'class' => 'ui form']) !!}
-            <div class="three fields">
-              <div class="field">
-                {!! Form::label('name', 'Payment Method Name') !!}
-                {!! Form::text('name', null, ['placeholder' => 'Payment Method name']) !!}
+            {!! Form::open(['route' => 'admin.settings.addPaymentMethod', 'class' => 'ui form', 'id' => 'payment_methods']) !!}
+              <div class="three fields">
+                <div class="field">
+                  {!! Form::label('name', 'Payment Method Name') !!}
+                  {!! Form::text('name', null, ['placeholder' => 'Payment Method name']) !!}
+                </div>
+                <div class="field">
+                  {!! Form::label('taxable', 'Icon') !!}
+                  {!! Form::text('icon', null, ['placeholder' => 'Icon class name']) !!}
+                </div>
+                <div class="field">
+                  {!! Form::label('type', 'Type') !!}
+                  {!! Form::select('type',
+                    [
+                      'cash'        => 'Cash',
+                      'card'        => 'Card',
+                      'check'       => 'Check',
+                      'money order' => 'Money Order',
+                      'other'       => 'Other',
+                    ], 'card', ['placeholder' => 'Taxable?', 'class' => 'ui dropdown']) !!}
+                </div>
               </div>
               <div class="field">
-                {!! Form::label('taxable', 'Icon') !!}
-                {!! Form::text('icon', null, ['placeholder' => 'Font Awesome icon class name']) !!}
+                {!! Form::label('description', 'Description') !!}
+                {!! Form::text('description', null, ['placeholder' => 'Describe this payment method']) !!}
               </div>
               <div class="field">
-                {!! Form::label('type', 'Type') !!}
-                {!! Form::select('type',
-                  [
-                    'cash'        => 'Cash',
-                    'card'        => 'Card',
-                    'check'       => 'Check',
-                    'money order' => 'Money Order',
-                    'other'       => 'Other',
-                  ], 'card', ['placeholder' => 'Taxable?', 'class' => 'ui dropdown']) !!}
+                {!! Form::button('<i class="plus icon"></i> Add Payment Method', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
               </div>
-            </div>
-            <div class="field">
-              {!! Form::label('description', 'Description') !!}
-              {!! Form::text('description', null, ['placeholder' => 'Describe this payment method']) !!}
-            </div>
-            <div class="field">
-              {!! Form::button('<i class="plus icon"></i> Add Payment Method', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
-            </div>
             {!! Form::close() !!}
           </div>
         </div>
@@ -359,18 +359,18 @@
             </table>
           </div>
           <div class="column">
-            {!! Form::open(['route' => 'admin.settings.addEventType', 'class' => 'ui form']) !!}
-            <div class="field">
-              {!! Form::label('name', 'Name') !!}
-              {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
-            </div>
-            <div class="field">
-              {!! Form::label('description', 'Description') !!}
-              {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
-            </div>
-            <div class="field">
-              {!! Form::button('<i class="plus icon"></i> Add Event Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
-            </div>
+            {!! Form::open(['route' => 'admin.settings.addEventType', 'class' => 'ui form', 'id' => 'event_types']) !!}
+              <div class="field">
+                {!! Form::label('name', 'Name') !!}
+                {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
+              </div>
+              <div class="field">
+                {!! Form::label('description', 'Description') !!}
+                {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
+              </div>
+              <div class="field">
+                {!! Form::button('<i class="plus icon"></i> Add Event Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
+              </div>
             {!! Form::close() !!}
           </div>
         </div>
@@ -420,7 +420,7 @@
             </table>
           </div>
           <div class="column">
-            {!! Form::open(['route' => 'admin.roles.store', 'class' => 'ui form']) !!}
+            {!! Form::open(['route' => 'admin.roles.store', 'class' => 'ui form', 'id' => 'users']) !!}
             <div class="two fields">
               <div class="required field">
                 {!! Form::label('name', 'Name') !!}
@@ -483,7 +483,7 @@
             </table>
           </div>
           <div class="column">
-            {!! Form::open(['route' => 'admin.settings.addMemberType', 'class' => 'ui form']) !!}
+            {!! Form::open(['route' => 'admin.settings.addMemberType', 'class' => 'ui form', 'id' => 'memberships']) !!}
             <div class="required field">
               {!! Form::label('name', 'Name') !!}
               {!! Form::text('name', null, ['placeholder' => 'Membership Type Name']) !!}
@@ -522,7 +522,7 @@
 
       <!-- Bulletin -->
       <div class="ui tab segment" data-tab="bulletin">
-        {!! Form::open(['route' => 'admin.categories.store', 'class' => 'ui form']) !!}
+        {!! Form::open(['route' => 'admin.categories.store', 'class' => 'ui form', 'id' => 'bulletin']) !!}
         <div class="two fields">
           <div class="required field">
             {!! Form::label('name', 'Name') !!}
@@ -568,7 +568,79 @@
 
 <script>
   $('.menu .item').tab({ history: true });
-  $('.ui.form').form({ fields: { price: ['number', 'empty'] } });
+
+  $('#general').form({
+    on: 'blur',
+    inline: true,
+    fields: {
+      organization : ['empty'],
+      seats        : ['number', 'empty'],
+      tax          : ['number', 'empty'],
+      logo         : ['url', 'empty'],
+      cover        : ['url', 'empty'],
+    }
+  })
+
+  $('#organizations').form({
+    on: 'blur',
+    inline: true,
+    fields: {
+      name: ['empty'],
+      taxable: ['empty'],
+      description: ['empty'],
+    }
+  })
+
+  $('#payment_methods').form({
+    on: 'blur',
+    inline: true,
+    fields: {
+      name        : ['empty'],
+      icon        : ['empty'],
+      type        : ['empty'],
+      description : ['empty'],
+    }
+  })
+
+  $('#event_types').form({
+    on: 'blur',
+    inline: true,
+    fields: {
+      name        : ['empty'],
+      description : ['empty'],
+    }
+  })
+
+  $('#users').form({
+    on: 'blur',
+    inline: true,
+    fields: {
+      name        : 'empty',
+      staff       : 'empty',
+      description : 'empty',
+    }
+  })
+
+  $('#memberships').form({
+    on: 'blur',
+    inline: true,
+    fields: {
+      name            : 'empty',
+      description     : 'empty',
+      price           : ['number', 'empty'],
+      duration        : ['number', 'empty'],
+      max_secondaries : ['number', 'empty'],
+    }
+  })
+
+  $('#bulletin').form({
+    on: 'blur',
+    inline: true,
+    fields: {
+      name        : 'empty',
+      description : 'empty',
+    }
+  })
 
   var hideIcons = ["quote", "image", "guide"]
 
