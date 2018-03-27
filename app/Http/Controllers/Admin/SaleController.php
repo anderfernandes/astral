@@ -176,7 +176,11 @@ class SaleController extends Controller
 
           }
 
-          // Store tickets in the database
+          // Mark sale as completed if it has been paid in full
+          if ($sale->payments->sum('tendered') >= $sale->total) {
+            $sale->status = "complete";
+            $sale->save();
+          }
 
           // Holds the tickets coming from the request
           $firstShowTickets  = [];
@@ -490,11 +494,11 @@ class SaleController extends Controller
       $refund =  new Payment([
         'cashier_id'        => Auth::user()->id,
         'payment_method_id' => $sale->payments[0]->payment_method_id,
-        'tendered'          => - number_format($sale->payments[0]->sum('tendered'), 2),
-        'total'             => - number_format($sale->payments[0]->sum('total'), 2),
-        'change_due'        => - number_format($sale->payments[0]->sum('change_due'), 2),
+        'tendered'          => - number_format($sale->payments->sum('tendered'), 2),
+        'total'             => - number_format($sale->payments->sum('total'), 2),
+        'change_due'        => - number_format($sale->payments->sum('change_due'), 2),
         'source'            => 'admin',
-        'sale_id'           => $sale->payments[0]->sale_id,
+        'sale_id'           => $sale->id,
         'refunded'          => false,
       ]);
 

@@ -24,7 +24,6 @@ Route::group(
   // Calendar
   Route::get('calendar/', 'AdminController@calendar')->name('calendar.index');
   // Shows resource
-  Route::get('shows/search', 'ShowController@search')->name('shows.search');
   Route::resource('shows', 'ShowController');
   // Members Resource
   Route::resource('members', 'MemberController');

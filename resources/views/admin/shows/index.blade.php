@@ -8,11 +8,11 @@
 
 @section('content')
 
-  {!! Form::open(['route' => 'admin.shows.index', 'class' => 'ui form', 'method' => 'get']) !!}
+  {!! Form::open(['route' => 'admin.shows.index', 'class' => 'ui form', 'method' => 'get', 'id' => 'search']) !!}
   <div class="four fields">
     <div class="field">
       <div class="ui selection search dropdown" id="show-id">
-        <input type="hidden" id="showId" name="showId">
+        <input type="hidden" name="id">
         <i class="dropdown icon"></i>
           <div class="default text">All Shows</div>
         <div class="menu">
@@ -27,12 +27,12 @@
     </div>
     <div class="field">
       <div class="ui right labeled input">
-        <input type="text" value="{{ $request->showDuration ? $request->showDuration : null }}" name="showDuration" id="showDuration" placeholder="Show Duration">
+        <input type="text" value="{{ app('request')->duration ? app('request')->duration : null }}" name="duration" placeholder="Show Duration">
         <div class="ui label">minutes</div>
       </div>
     </div>
     <div class="field">
-      <select id="showType" class="ui dropdown" name="showType">
+      <select id="showType" class="ui dropdown" name="type">
         <option value="">All Types</option>
         <option value="Planetarium">Planetarium</option>
         <option value="Laser Light">Laser Light</option>
@@ -84,7 +84,7 @@
 <br /><br />
 
 <div class="ui centered grid">
-  {{ $shows->links('vendor.pagination.semantic-ui') }}
+  {{ $shows->appends(app('request')->input())->links('vendor.pagination.semantic-ui') }}
 </div>
 
 <br /><br />
@@ -93,11 +93,11 @@
 @include('admin.partial.shows._create')
 
 <script>
-  @if ($request->showId)
-    $('#show-id').dropdown('set exactly', {{ $request->showId }})
+  @if (app('request')->id)
+    $('#show-id').dropdown('set exactly', {{ app('request')->id }})
   @endif
-  @if ($request->showType)
-    $('#showType').dropdown('set exactly', "{{ $request->showType }}")
+  @if (app('request')->type)
+    $('#showType').dropdown('set exactly', "{{ app('request')->type }}")
   @endif
 </script>
 

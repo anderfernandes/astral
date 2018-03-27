@@ -20,30 +20,34 @@ class ShowController extends Controller
     {
         //$shows = Show::where('id', '<>', 1)->orderBy('name', 'asc')->paginate(10);
 
+        // Filtering non-empty query strings
+
+
         $shows = Show::where('id', '!=', 1);
 
-        if (count($request->all()) > 0)
+        if (count($request->query()) > 0)
         {
-          if ($request->showId) {
-            $shows = $shows->where('id', $request->showId);
+          if (isSet($request->id)) {
+            $shows = $shows->where('id', $request->id);
           }
 
-          if ($request->showDuration) {
-            $shows = $shows->where('duration', $request->showDuration);
+          if (isSet($request->duration)) {
+            $shows = $shows->where('duration', $request->duration);
           }
 
-          if ($request->showType) {
-            $shows = $shows->where('type', $request->showType);
+          if (isSet($request->type)) {
+            $shows = $shows->where('type', $request->type);
           }
 
           $showIds = $shows->pluck('id');
-          $shows = Show::whereIn('id', $showIds)->orderBy('name', 'asc')->paginate(50);
+          $shows = Show::whereIn('id', $showIds)->orderBy('name', 'asc')->paginate(10);
         }
         else
         {
           $shows = $shows->orderBy('name', 'asc')->paginate(10);
         }
-        return view('admin.shows.index')->withShows($shows)->withRequest($request);
+
+        return view('admin.shows.index')->withShows($shows);
     }
 
     /**

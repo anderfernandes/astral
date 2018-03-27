@@ -215,7 +215,7 @@
 <br /><br />
 
 <div class="ui centered grid">
-  {{ $sales->links('vendor.pagination.semantic-ui') }}
+  {{ $sales->appends(app('request')->input())->links('vendor.pagination.semantic-ui') }}
 </div>
 
 <br /> <br />

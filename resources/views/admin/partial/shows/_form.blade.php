@@ -65,7 +65,7 @@
     })
   }
   {{-- Client side Form Validation --}}
-  $('form').form({
+  $('form:not(#search)').form({
     inline: true,
     on: 'blur',
     fields: {
@@ -96,7 +96,7 @@
           { type: 'minLength[5]', prompt: '{name} should be at least {ruleValue} characters long'}
         ]
       },
-      
+
     }
   })
 </script>

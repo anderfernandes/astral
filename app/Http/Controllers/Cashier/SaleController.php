@@ -146,7 +146,11 @@ class SaleController extends Controller
 
         }
 
-        // Store tickets in the database
+        // Mark sale as completed if it has been paid in full
+        if ($sale->payments->sum('tendered') >= $sale->total) {
+          $sale->status = "complete";
+          $sale->save();
+        }
 
         // Holds the tickets coming from the request
         $firstShowTickets  = [];

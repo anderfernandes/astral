@@ -96,7 +96,7 @@
 <br /><br />
 
 <div class="ui centered grid">
-  {{ $organizations->links('vendor.pagination.semantic-ui') }}
+  {{ $organizations->appends(app('request')->input())->links('vendor.pagination.semantic-ui') }}
 </div>
 
 {{-- Add Organization Modal --}}
