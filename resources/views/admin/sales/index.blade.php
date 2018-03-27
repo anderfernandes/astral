@@ -141,11 +141,7 @@
         </td>
         <td>$ {{ number_format($sale->total, 2) }}</td>
         <td>
-          @if (number_format($sale->total - $sale->payments->sum('tendered'), 2) > 0)
-            $ {{ number_format($sale->total - $sale->payments->sum('tendered'), 2) }}
-          @else
-            $ 0.00
-          @endif
+          $ {{  number_format( $sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')) , 2) }}
         </td>
         <td>
           @if ($sale->refund)

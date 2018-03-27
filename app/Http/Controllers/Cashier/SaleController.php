@@ -54,7 +54,10 @@ class SaleController extends Controller
     public function create(Request $request)
     {
         $organizations = Organization::pluck('name', 'id');
-        $events = Event::where('start', '>', Date::now()->toDateTimeString())->where('type_id', $request->eventType)->orderBy('start', 'asc')->get();
+        $events        = Event::where('type_id', $request->eventType)
+                           ->where('start', '>=', Date::now()->subDays(7)->toDateTimeString())
+                           ->orderBy('start', 'asc')
+                           ->get();
         $paymentMethods = PaymentMethod::all();
         $eventType = EventType::find($request->eventType);
         $ticketTypes    = $eventType->allowedTickets;
