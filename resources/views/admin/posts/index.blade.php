@@ -31,34 +31,74 @@
       @endforeach
     @endif
 
-    @if (!isSet($posts) || ($posts->count()) > 0 || ($sticky->count() > 0))
-      <div class="ui divider"></div>
-      @foreach($posts as $post)
-      <div class="ui raised segment">
-        <div class="ui header">
-          <i class="comments outline icon"></i>
-          <div class="content"><a href="{{ route('admin.posts.show', $post) }}">{{ $post->title }}</a></div>
-          <div class="sub header">
-            <i class="user circle icon"></i>{{ $post->author->firstname }}<div class="ui label">{{ $post->author->role->name }}</div> |
-            <i class="calendar alternate outline icon"></i>{{ Date::parse($post->created_at)->diffForHumans() }} |
-            <i class="comments icon"></i> {{ $post->replies->count() }} &nbsp; &nbsp; &nbsp;
-            <div class="ui black tag label"><i class="tag icon"></i>{{ $post->category->name }}</div>
+    <div class="ui top attached tabular menu">
+      <a class="active item" data-tab="open">Open</a>
+      <a class="item" data-tab="closed">Closed</a>
+    </div>
+    <div class="ui bottom attached active tab segment" data-tab="open">
+      @if (!isSet($openPosts) || ($openPosts->count()) > 0 )
+        @foreach($openPosts as $post)
+        <div class="ui raised segment">
+          <div class="ui header">
+            <i class="comments outline icon"></i>
+            <div class="content"><a href="{{ route('admin.posts.show', $post) }}">{{ $post->title }}</a></div>
+            <div class="sub header">
+              <i class="user circle icon"></i>{{ $post->author->firstname }}<div class="ui label">{{ $post->author->role->name }}</div> |
+              <i class="calendar alternate outline icon"></i>{{ Date::parse($post->created_at)->diffForHumans() }} |
+              <i class="comments icon"></i> {{ $post->replies->count() }} &nbsp; &nbsp; &nbsp;
+              <div class="ui black tag label"><i class="tag icon"></i>{{ $post->category->name }}</div>
+            </div>
           </div>
         </div>
-      </div>
-      @endforeach
-    @else
-      <div class="ui info icon message">
-        <i class="info circle icon"></i>
-        <i class="close icon"></i>
-        <div class="content">
-          <div class="header">
-            No posts!
+        @endforeach
+      @else
+        <div class="ui info icon message">
+          <i class="info circle icon"></i>
+          <i class="close icon"></i>
+          <div class="content">
+            <div class="header">
+              No open posts!
+            </div>
+            <p>It looks like there are no open posts in the database.</p>
           </div>
-          <p>It looks like there are no posts in the database.</p>
         </div>
-      </div>
-    @endif
+      @endif
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="closed">
+      @if (!isSet($closedPosts) || ($closedPosts->count()) > 0 )
+        @foreach($closedPosts as $post)
+        <div class="ui raised segment">
+          <div class="ui top right attached red label">Closed</div>
+          <div class="ui header" style="margin-top:0 !important">
+            <i class="comments outline icon"></i>
+            <div class="content"><a href="{{ route('admin.posts.show', $post) }}">{{ $post->title }}</a></div>
+            <div class="sub header">
+              <i class="user circle icon"></i>{{ $post->author->firstname }}<div class="ui label">{{ $post->author->role->name }}</div> |
+              <i class="calendar alternate outline icon"></i>{{ Date::parse($post->created_at)->diffForHumans() }} |
+              <i class="comments icon"></i> {{ $post->replies->count() }} &nbsp; &nbsp; &nbsp;
+              <div class="ui black tag label"><i class="tag icon"></i>{{ $post->category->name }}</div>
+            </div>
+          </div>
+        </div>
+        @endforeach
+      @else
+        <div class="ui info icon message">
+          <i class="info circle icon"></i>
+          <i class="close icon"></i>
+          <div class="content">
+            <div class="header">
+              No closed posts!
+            </div>
+            <p>It looks like there are no closed posts in the database.</p>
+          </div>
+        </div>
+      @endif
+    </div>
   </div>
+
+
+  <script>
+    $('.menu .item').tab();
+  </script>
 
 @endsection

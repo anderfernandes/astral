@@ -3,11 +3,7 @@
 @else
   {!! Form::model($post, ['route' => ['admin.posts.update', $post], 'class' => 'ui form', 'method' => 'PUT']) !!}
 @endif
-<div class="field">
-  {!! Form::label('title', 'Title') !!}
-  {!! Form::text('title', null, ['placeholder' => 'What\'s the title of the post?']) !!}
-</div>
-<div class="two fields">
+<div class="three fields">
   <div class="field">
     {!! Form::label('category_id', 'Category') !!}
     {!! Form::select('category_id', $categories, null, ['placeholder' => 'What is your post about?', 'class' => 'ui dropdown', 'data-validate' => 'category']) !!}
@@ -16,6 +12,14 @@
     {!! Form::label('sticky', 'Sticky') !!}
     {!! Form::select('sticky', [true => 'Yes', false => 'No'], false, ['placeholder' => 'What is your post about?', 'class' => 'ui dropdown']) !!}
   </div>
+  <div class="field">
+    {!! Form::label('status') !!}
+    {!! Form::select('status', [true => 'Open', false => 'Closed'], isSet($post) ? $post->open : true, ['placeholder' => 'What is your post about?', 'class' => 'ui dropdown']) !!}
+  </div>
+</div>
+<div class="field">
+  {!! Form::label('title', 'Title') !!}
+  {!! Form::text('title', null, ['placeholder' => 'What\'s the title of the post?']) !!}
 </div>
 <div class="field">
   {!! Form::label('message', 'Message') !!}

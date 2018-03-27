@@ -20,9 +20,12 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::where('sticky', false)->orderBy('updated_at', 'desc')->get();
+        $openPosts = Post::where([['sticky', false], ['open', true]])->orderBy('updated_at', 'desc')->get();
+        $closedPosts = Post::where([['sticky', false], ['open', false]])->orderBy('updated_at', 'desc')->get();
         $sticky = Post::where('sticky', true)->orderBy('updated_at', 'desc')->get();
-        return view('admin.posts.index')->withPosts($posts)->withSticky($sticky);
+        return view('admin.posts.index')->withOpenPosts($openPosts)
+                                        ->withClosedPosts($closedPosts)
+                                        ->withSticky($sticky);
     }
 
     /**
@@ -49,6 +52,7 @@ class PostController extends Controller
           'category_id' => 'required',
           'sticky'      => 'required',
           'message'     => 'required',
+          'status'      => 'required',
         ]);
 
         $post = new Post;
@@ -57,7 +61,7 @@ class PostController extends Controller
         $post->category_id = $request->category_id;
         $post->sticky = $request->sticky;
         $post->message = $request->message;
-        $post->open = true;
+        $post->open = $request->status;
         $post->author_id = Auth::user()->id;
 
         $post->save();
@@ -106,13 +110,14 @@ class PostController extends Controller
           'category_id' => 'required',
           'sticky'      => 'required',
           'message'     => 'required',
+          'status'      => 'required',
         ]);
 
         $post->title       = $request->title;
         $post->category_id = $request->category_id;
         $post->sticky      = $request->sticky;
         $post->message     = $request->message;
-        $post->open        = true;
+        $post->open        = $request->status;
         $post->author_id   = Auth::user()->id;
 
         $post->save();
