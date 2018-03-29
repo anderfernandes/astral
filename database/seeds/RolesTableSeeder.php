@@ -16,6 +16,7 @@ class RolesTableSeeder extends Seeder
         'name'        => 'walk-up',
         'description' => 'Walk-up account.',
         'type'        => 'walk-up',
+        //'creator_id'  => 1,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 2
@@ -24,6 +25,7 @@ class RolesTableSeeder extends Seeder
         'description' => 'Senior Staff accounts.',
         'type'        => 'individuals',
         'staff'       => true,
+        //'creator_id'  => 1,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 3
@@ -32,6 +34,7 @@ class RolesTableSeeder extends Seeder
         'description' => 'Planetarium Lead Assistant accounts.',
         'type'        => 'individuals',
         'staff'       => true,
+        //'creator_id'  => 1,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 4
@@ -40,6 +43,7 @@ class RolesTableSeeder extends Seeder
         'description' => 'Planetarium Assistant accounts.',
         'type'        => 'individuals',
         'staff'       => true,
+        //'creator_id'  => 1,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 5
@@ -48,6 +52,7 @@ class RolesTableSeeder extends Seeder
         'description' => 'Member accounts',
         'type'        => 'members',
         'staff'       => false,
+        //'creator_id'  => 1,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 6
@@ -56,6 +61,7 @@ class RolesTableSeeder extends Seeder
         'description' => 'Community College accounts.',
         'type'        => 'organizations',
         'staff'       => false,
+        //'creator_id'  => 1,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 7
@@ -64,6 +70,7 @@ class RolesTableSeeder extends Seeder
         'description' => 'Visitor accounts.',
         'type'        => 'individuals',
         'staff'       => false,
+        //'creator_id'  => 1,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       // 8
@@ -72,6 +79,7 @@ class RolesTableSeeder extends Seeder
         'description' => 'Teacher accounts.',
         'type'        => 'individuals',
         'staff'       => false,
+        //'creator_id'  => 1,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
     }

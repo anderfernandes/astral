@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Session;
+use Illuminate\Support\Facades\Auth;
 
 class TicketTypeController extends Controller
 {
@@ -113,6 +114,8 @@ class TicketTypeController extends Controller
       $ticketType->price       = number_format($request->price, 2);
       $ticketType->active      = $request->active;
       $ticketType->description = $request->description;
+
+      $ticketType->creator_id  = Auth::user()->id;
 
       $ticketType->save();
 

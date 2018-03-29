@@ -25,7 +25,13 @@
       <div class="content">
         {{ $organization->name }} <div class="ui label" style="margin-left:0">{{ $organization->type->name }}</div>
         <div class="sub header">
-          Created on {{ Date::parse($organization->created_at)->format('l, F j, Y \a\t h:i:s A') }} ({{ Date::parse($organization->created_at)->diffForHumans() }})
+          {{-- Display creator only if it is a no user --}}
+          @if ($organization->creator_id == 1)
+            Created on {{ Date::parse($organization->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($organization->created_at)->diffForHumans()}})
+          @else
+            Created by <strong>{{ $organization->creator->fullname }}</strong> on {{ Date::parse($organization->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($organization->created_at)->diffForHumans()}})
+          @endif
+          Updated on {{ Date::parse($organization->updated_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($organization->created_at)->diffForHumans()}})
         </div>
       </div>
   </div>

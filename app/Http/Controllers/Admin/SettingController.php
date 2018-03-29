@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Session;
+use Illuminate\Support\Facades\Auth;
 
 use App\Organization;
 use App\OrganizationType;
@@ -59,6 +60,7 @@ class SettingController extends Controller
       $organizationType->name        = $request->input('name');
       $organizationType->description = $request->input('description');
       $organizationType->taxable     = $request->input('taxable');
+      $organizationType->creator_id  =  Auth::user()->id;
 
       $organizationType->save();
 
@@ -68,6 +70,7 @@ class SettingController extends Controller
       $role->name        = $request->input('name');
       $role->type        = 'organizations';
       $role->description = $request->input('description');
+      $role->creator_id  = Auth::user()->id;
 
       $role->save();
 
@@ -93,6 +96,8 @@ class SettingController extends Controller
       $paymentMethod->icon        = $request->icon;
       $paymentMethod->type        = $request->type;
 
+      $paymentMethod->creator_id = Auth::user()->id;
+
       $paymentMethod->save();
 
       Session::flash('success', 'Payment Method <strong>'. $paymentMethod->name .'</strong> added successfully!');
@@ -112,6 +117,8 @@ class SettingController extends Controller
 
       $eventType->name        = $request->name;
       $eventType->description = $request->description;
+
+      $eventType->creator_id  = Auth::user()->id;
 
       $eventType->save();
 
@@ -139,6 +146,8 @@ class SettingController extends Controller
       $memberType->price           = $request->price;
       $memberType->duration        = $request->duration;
       $memberType->max_secondaries = $request->max_secondaries;
+
+      $memberType->creator_id     = Auth::user()->id;
 
       $memberType->save();
 

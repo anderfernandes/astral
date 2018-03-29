@@ -10,4 +10,8 @@ class EventType extends Model
   {
     return $this->belongsToMany('App\TicketType', 'allowed_ticket_events', 'event_type_id', 'ticket_type_id');
   }
+  public function creator()
+  {
+    return $this->belongsTo('App\User');
+  }
 }

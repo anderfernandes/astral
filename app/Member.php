@@ -20,4 +20,8 @@ class Member extends Model
     {
       return $this->belongsTo('App\Sale');
     }
+    public function creator()
+    {
+      return $this->belongsTo('App\User');
+    }
 }

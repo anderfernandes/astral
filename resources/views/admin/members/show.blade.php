@@ -35,7 +35,12 @@
           Expires {{ Date::parse($member->end)->format('l, F j, Y') }}
         </div>
         <div class="description">
-          <p>Created on {{ Date::parse($member->created_at)->format('l, F j, Y \a\t h:i:s A') }} ({{ Date::parse($member->created_at)->diffForHumans()}})</p>
+          {{-- Display creator only if it is a no user --}}
+          @if ($member->creator_id == 1)
+            <p>Created on {{ Date::parse($member->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($member->created_at)->diffForHumans()}})</p>
+          @else
+            <p>Created by <i class="user circle icon"></i> {{ $member->creator->fullname }} on {{ Date::parse($member->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($member->created_at)->diffForHumans()}})</p>
+          @endif
           <p>Updated on {{ Date::parse($member->updated_at)->format('l, F j, Y \a\t h:i:s A') }} ({{ Date::parse($member->updated_at)->diffForHumans()}})</p>
         </div>
         <div class="extra"></div>

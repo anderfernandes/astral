@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Session;
+use Illuminate\Support\Facades\Auth;
 
 use App\Role;
 use App\Organization;
@@ -111,6 +112,8 @@ class UserController extends Controller
         $user->phone           = $request->phone;
         $user->active          = true;
         $user->staff           = Role::find($request->role_id)->staff;
+
+        $user->creator_id      = Auth::user()->id;
 
         $user->save();
 

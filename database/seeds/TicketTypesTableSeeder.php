@@ -46,6 +46,7 @@ class TicketTypesTableSeeder extends Seeder
       $member->price       = 0;
       $member->active      = true;
       $member->description = "Member tickets for all event types";
+      $member->creator_id  = 1;
 
       $member->save();
 
@@ -59,6 +60,7 @@ class TicketTypesTableSeeder extends Seeder
       $matinee->price       = 5;
       $matinee->active      = true;
       $matinee->description = "Matinee unique price ticket, adult or child";
+      $matinee->creator_id  = 1;
 
       $matinee->save();
 
@@ -72,6 +74,7 @@ class TicketTypesTableSeeder extends Seeder
       $adult->price       = 7;
       $adult->active      = true;
       $adult->description = "Adult tickets for Weekend shows";
+      $adult->creator_id  = 1;
 
       $adult->save();
 
@@ -85,6 +88,7 @@ class TicketTypesTableSeeder extends Seeder
       $child->price       = 6;
       $child->active      = true;
       $child->description = "Adult tickets for Weekend shows";
+      $child->creator_id  = 1;
 
       $child->save();
 

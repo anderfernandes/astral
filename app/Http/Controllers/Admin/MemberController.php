@@ -133,6 +133,7 @@ class MemberController extends Controller
 
         $member = new Member([
           'member_type_id' => $request->member_type_id,
+          'creator_id'     => Auth::user()->id,
           'start'          => Date::parse($request->start)->startOfDay()->toDateTimeString(),
           'end'            => Date::parse($request->end)->startOfDay()->toDateTimeString(),
         ]);

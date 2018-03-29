@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
         // Seed database with sample data
         $this->call(RolesTableSeeder::class);
         $this->call(OrganizationTypesTableSeeder::class);
-        $this->call(OrganizationsTableSeeder::class);
         $this->call(MemberTypesTableSeeder::class);
+        $this->call(OrganizationsTableSeeder::class);
         $this->call(MembersTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(ShowsTableSeeder::class);

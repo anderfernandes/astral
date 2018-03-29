@@ -17,6 +17,7 @@ class PaymentMethodsTableSeeder extends Seeder
           'description' => 'Cash payments',
           'icon'        => 'money',
           'type'        => 'cash',
+          'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
         ]);
 
@@ -26,6 +27,7 @@ class PaymentMethodsTableSeeder extends Seeder
           'description' => 'Check payments',
           'icon'        => 'check',
           'type'        => 'check',
+          'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
         ]);
 
@@ -35,6 +37,7 @@ class PaymentMethodsTableSeeder extends Seeder
           'description' => 'Visa payments',
           'icon'        => 'visa',
           'type'        => 'card',
+          'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
         ]);
 
@@ -44,6 +47,7 @@ class PaymentMethodsTableSeeder extends Seeder
           'description' => 'Mastercard payments',
           'icon'        => 'mastercard',
           'type'        => 'card',
+          'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
         ]);
 
@@ -53,6 +57,7 @@ class PaymentMethodsTableSeeder extends Seeder
           'description' => 'Discover payments',
           'icon'        => 'discover',
           'type'        => 'card',
+          'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
         ]);
     }

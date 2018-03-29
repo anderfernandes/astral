@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\OrganizationType;
 
+use Illuminate\Support\Facades\Auth;
+
 use Session;
 
 class OrganizationController extends Controller
@@ -95,6 +97,8 @@ class OrganizationController extends Controller
         $organization->fax     = $request->fax;
         $organization->email   = str_replace($specialChars, '', strtolower($request->name)) . '@' . \App\Setting::find(1)->website;
         $organization->website = $request->website;
+
+        $organization->creator_id = Auth::user()->id;
 
         $organization->save();
 

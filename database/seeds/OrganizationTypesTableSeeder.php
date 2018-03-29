@@ -16,6 +16,7 @@ class OrganizationTypesTableSeeder extends Seeder
           'name'        => 'System',
           'description' => 'System category time.',
           'taxable'     => false,
+          'creator_id'  => 1,
           'created_at'  => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
         ]);
 
@@ -23,6 +24,7 @@ class OrganizationTypesTableSeeder extends Seeder
           'name'        => 'Non Profit',
           'description' => 'All non profit organizations should fall under this category.',
           'taxable'     => false,
+          'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
         ]);
 
@@ -30,6 +32,7 @@ class OrganizationTypesTableSeeder extends Seeder
           'name'        => 'Community College',
           'description' => 'All 2 year colleges should fall under this category.',
           'taxable'     => false,
+          'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
         ]);
     }

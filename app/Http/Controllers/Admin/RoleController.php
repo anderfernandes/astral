@@ -52,6 +52,8 @@ class RoleController extends Controller
         $role->type        = 'individuals';
         $role->staff       = $request->staff;
 
+        $role->creator_id  => Auth::user()->id;
+
         $role->save();
 
         Session::flash('success', 'The <strong>User Role ' . $role->name . '</strong> has been created successfully!');

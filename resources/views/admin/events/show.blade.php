@@ -40,12 +40,18 @@
         <h1 class="ui large header">
           {{ App\Show::find($event->show_id)->name }}
           <div class="sub header">
-            <i class="calendar icon"></i>
+            <i class="calendar alternate icon"></i>
             {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
           </div>
         </h1>
         <div class="extra">
-          <p>Created by {{ $event->creator->firstname }} {{ $event->creator->lastname }} on {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($event->created_at)->diffForHumans()}})</p>
+          {{-- Display creator only if it is a no user --}}
+          @if ($event->creator_id == 1)
+            <p>Created on {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($event->created_at)->diffForHumans()}})</p>
+          @else
+            <p>Created by <i class="user circle icon"></i> {{ $event->creator->fullname }} on {{ Date::parse($event->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($event->created_at)->diffForHumans()}})</p>
+          @endif
+
           <p>Updated on {{ Date::parse($event->updated_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($event->updated_at)->diffForHumans()}})</p>
         </div>
         <div class="extra">
