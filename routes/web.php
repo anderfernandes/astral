@@ -48,6 +48,7 @@ Route::group(
   Route::get('sales/{sale}/invoice', 'SaleController@invoice')->name('sales.invoice');
   Route::get('sales/{sale}/receipt', 'SaleController@receipt')->name('sales.receipt');
   Route::get('sales/{sale}/cancelation', 'SaleController@cancelation')->name('sales.cancelation');
+  Route::get('sales/{sale}/mail', 'SaleController@mail')->name('sales.mail');
   // Setting resource
   Route::resource('settings', 'SettingController');
   // Roles
@@ -76,6 +77,8 @@ Route::group(
   Route::get('members/{member}/receipt', 'MemberController@receipt')->name('members.receipt');
   // Membersihp Secondary
   Route::put('members/{member}/addSecondary', 'MemberController@addSecondary')->name('members.addSecondary');
+  // Mail Preview
+  Route::get('mail/confirmation/{sale}', function(App\Sale $sale) { return new App\Mail\ConfirmationLetter($sale); });
 });
 // Cashier Routes
 Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier', 'middleware' => 'auth'],

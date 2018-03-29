@@ -44,7 +44,7 @@ if (document.querySelector('.ui.modal')) {
       if (!window.simplemde) {
         window.simplemde = new SimpleMDE({
           element: document.querySelectorAll('#message')[0],
-          toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list'],
+          toolbar: ['bold', 'italic', 'strikethrough', '|', 'code', '|', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'table', 'horizontal-rule', '|', 'preview', 'guide'],
 
         })
       }
@@ -53,7 +53,7 @@ if (document.querySelector('.ui.modal')) {
 } else {
   window.simplemde = new SimpleMDE({
     element: document.querySelector('#message'),
-    toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list'],
+    toolbar: ['bold', 'italic', 'strikethrough', '|', 'code', '|', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'table', 'horizontal-rule', '|', 'preview', 'guide'],
   })
 }
 {{-- Client side Form Validation --}}

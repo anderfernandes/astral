@@ -265,22 +265,9 @@ function getAttendanceByType($ticketTypeID) {
 <script>
 
 function loadCalendars() {
-  $('#events').fullCalendar({
-    header: false,
-    defaultView: 'agendaDay',
-    defaultDate: moment().format('YYYY-MM-DD'),
-    contentHeight: 150,
-    hiddenDays: [0],
-    navLinks: true,
-    editable: false,
-    eventLimit: true,
-    minTime: '07:00:00',
-    eventColor: '#1b1c1d',
-    events: '/api/events'
-  })
   $('#calendars').fullCalendar({
     header: false,
-    defaultView: 'basicDay',
+    defaultView: 'listDay',
     defaultDate: moment().format('YYYY-MM-DD'),
     contentHeight: 150,
     hiddenDays: [0],

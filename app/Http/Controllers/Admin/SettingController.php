@@ -201,11 +201,14 @@ class SettingController extends Controller
     {
 
       $this->validate($request, [
-        'organization' => 'required|min:5',
-        'address'      => 'required',
-        'phone'        => 'required',
-        'email'        => 'required',
-        'seats'        => 'required',
+        'organization'    => 'required|min:5',
+        'address'         => 'required',
+        'phone'           => 'required',
+        'email'           => 'e-mail',
+        'seats'           => 'required',
+        'emailserver'     => 'string|min:3',
+        'emailserverport' => 'integer|min:2',
+        'emailservertype' => 'string',
       ]);
 
       $setting->organization         = $request->organization;

@@ -78,6 +78,10 @@
       @endif
     </div>
   </div>
+  <a href="{{ route('admin.sales.mail', $sale) . '?document=confirmation' }}" class="ui basic primary button">
+    <i class="mail icon"></i>
+    Email Confirmation Letter
+  </a>
 </div>
 
 <br /><br />

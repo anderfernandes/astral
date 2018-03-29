@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Mail\ConfirmationLetter;
+use Illuminate\Support\Facades\Mail;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -231,6 +234,10 @@ class SaleController extends Controller
             // Save to the database
             $sale->tickets()->createMany($secondShowTickets);
           }
+
+          // Email customer with copies to management
+          // Mail::to($sale->customer->email)->bcc('planetarium.webmaster@ctcd.edu')
+          //                                ->send(new ConfirmationLetter($sale));
 
           Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> created successfully!');
 
@@ -568,6 +575,20 @@ class SaleController extends Controller
     public function cancelation(Sale $sale)
     {
       return view('admin.sales.cancelation')->withSale($sale);
+    }
+
+    public function mail(Request $request, Sale $sale)
+    {
+      // Email customer with copies to management
+      Mail::to($sale->customer->email)->bcc('planetarium.webmaster@ctcd.edu')
+                                      ->send(new ConfirmationLetter($sale));
+      // Write memo
+      $sale->memo()->create([
+        'author_id' => Auth::user()->id,
+        'message'   => 'I sent a confirmation letter to this group on ' . Date::now()->format('l, F j, Y \a\t g:i A') . '.',
+      ]);
+      Session::flash('success', '<strong>Confirmation Letter</strong> successfully sent to <strong>' . $sale->customer->email . '</strong>!');
+      return redirect()->route('admin.sales.show', $sale);
     }
 
 }

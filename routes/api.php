@@ -202,10 +202,10 @@ Route::get('calendar-events', function() {
 
 Route::get('events', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
-  $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
+  $end = Date::parse($request->end)->endOfDay()->addMinute()->toDateTimeString();
   $events = Event::where([
                           ['start', '>=', $start],
-                          ['end', '<', $end],
+                          ['end', '<=', $end],
                         ])->get();
   $eventsArray = [];
   foreach ($events as $event) {
@@ -225,7 +225,12 @@ Route::get('events', function(Request $request) {
         ],
     ]);
   }
-  return $eventsArray;
+  $eventsCollect = collect($eventsArray);
+
+  $eventsCollect = $eventsCollect->sortBy('start');
+
+  $eventsCollect = $eventsCollect->values()->all();
+  return response($eventsCollect)->withHeaders(['Access-Control-Allow-Origin' => '*']);
 });
 
 Route::get('staff', function() {
@@ -233,7 +238,7 @@ Route::get('staff', function() {
   return $staff;
 });
 
-Route::get('events/{start}/{end}', function($start, $end) {
+/*Route::get('events/{start}/{end}', function($start, $end) {
   $start = Date::parse($start)->startOfDay()->toDateTimeString();
   $end = Date::parse($end)->endOfDay()->toDateTimeString();
   $events = Event::where('start', '>=', $start)->whereDate('end', '<', $end)->where('public', true)->get();
@@ -265,7 +270,7 @@ Route::get('events/{start}/{end}', function($start, $end) {
   $eventsCollect = $eventsCollect->values()->all();
 
   return $eventsCollect;
-});
+}); */
 
 Route::get('organizations/{organization}', function(Organization $organization) {
   $users = [];
@@ -281,8 +286,8 @@ Route::get('organizations/{organization}', function(Organization $organization) 
 });
 
 Route::get('settings', function() {
-  $settings = Setting::find(1)->get();
-  return $settings;
+  $settings = \App\Setting::find(1);
+  return response($settings)->withHeaders(['Access-Control-Allow-Origin' => '*']);
 });
 
 Route::get('customers', function() {

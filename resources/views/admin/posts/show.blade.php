@@ -90,7 +90,7 @@
     } else {
       window.simplemde = new SimpleMDE({
         element: document.querySelector('#message'),
-        toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list'],
+        toolbar: ['bold', 'italic', 'strikethrough', '|', 'code', '|', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'table', 'horizontal-rule', '|', 'preview', 'guide'],
       })
     }
     {{-- Client side Form Validation --}}

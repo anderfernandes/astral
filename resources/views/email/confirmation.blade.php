@@ -1,0 +1,180 @@
+@extends('layout.report')
+
+@section('content')
+
+  <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
+
+  <h2 class="ui center aligned icon header" style="margin-top:8px">
+    <div class="content">Reservation Confirmation</div>
+  </h2>
+ 
+  <h4 class="ui header">
+    {{ Date::now()->format('l, F j, Y') }}
+  </h4>
+
+  <div class="ui clearing basic segment" style="padding:0 0 0 0">
+    <h4 class="ui right floated header">
+      Sale # {{ $sale->id }}
+    </h4>
+
+    <h4 class="ui left floated header">
+      @if ($sale->sell_to_organization)
+        {{ $sale->organization->name }}<br />
+        @if (!($sale->organization->name == $sale->customer->firstname))
+        {{ $sale->customer->fullname }}<br />
+        @endif
+        {{ $sale->organization->address }} </br>
+        {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}
+      @else
+        {{ $sale->customer->fullname }}<br />
+        {{ $sale->customer->address }} </br>
+        {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
+      @endif
+    </h4>
+  </div>
+
+  <p>Dear {{ $sale->customer->fullname }},</p>
+
+  <p>
+    Welcome to the {{ App\Setting::find(1)->organization }}. We are pleased to confirm your reservation as follows:
+  </p>
+
+  <table class="ui very basic compact unstackable table">
+    <thead>
+      <tr>
+        <th>Date and Time</th>
+        <th>Event</th>
+        <th>Ticket Type</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach($sale->events as $event)
+        @if ($event->id != 1)
+          @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
+              <tr>
+                <td>
+                  <h4 class="ui header">
+                    {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+                  </h4>
+                </td>
+                <td>
+                  <h4 class="ui header">
+                    <div class="content">
+                      {{ $event->show->name }}
+                    </div>
+                  </h4>
+                </td>
+                <td>{{ $ticket->type->name }}</td>
+                <td>$ {{ number_format($ticket->type->price, 2) }}</td>
+                <td>{{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}</td>
+                <td>$ {{ number_format($ticket->type->price * $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count(), 2) }}</td>
+              </tr>
+          @endforeach
+        @endif
+      @endforeach
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+          <table class="ui very basic compact collapsing unstackable table" style="margin-left:auto; margin-right:0; width:auto">
+            <tbody>
+              <tr>
+                <td class="right aligned"><strong>Subtotal</strong></td>
+              </tr>
+              <tr>
+                <td class="right aligned"><strong>Tax</strong></td>
+              </tr>
+              <tr>
+                <td class="right aligned"><strong>Total</strong></td>
+              </tr>
+              <tr>
+                <td class="right aligned"><strong>Amount Paid</strong></td>
+              </tr>
+              <tr>
+                <td class="right aligned"><strong>Change</strong></td>
+              </tr>
+              <tr>
+                <td class="right aligned"><strong>Balance</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td>
+          <table class="ui very basic compact unstackable table">
+            <tbody>
+              <tr>
+                <td>{{ number_format($sale->subtotal, 2) }}</td>
+              </tr>
+              <tr>
+                <td>$ {{ number_format($sale->tax, 2) }}</td>
+              </tr>
+              <tr>
+                <td>$ {{ number_format($sale->total, 2) }}</td>
+              </tr>
+              <tr>
+                <td style="color:#cf3534"><strong>-$ {{ number_format($sale->payments->sum('tendered'), 2) }}</strong></td>
+              </tr>
+              <tr>
+                <td>$ {{ number_format($sale->payments->sum('change_due'), 2) }}</td>
+              </tr>
+              <tr>
+                <td><strong>{{ '$ ' . number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+
+  {!! \Illuminate\Mail\Markdown::parse(App\Setting::find(1)->confirmation_text) !!}
+
+  <?php
+
+    //$events = $sale->events->count();
+    $numberOfEvents = 0;
+
+    // Loop through all events
+    foreach ($sale->events as $event) {
+      // Add one to $numberOfEvents if eventis not "No Show"
+      if ($event->id != '1') $numberOfEvents++;
+    }
+
+  ?>
+
+  <ul>
+    <li>
+      We reserved {{ $numberOfEvents == 1 ? $sale->tickets->count() : $sale->tickets->count() / $numberOfEvents }} seats per show for you. If more than {{ $numberOfEvents == 1 ? $sale->tickets->count() : $sale->tickets->count() / $numberOfEvents }} people show up,
+      we admit them space available (up to our capacity of {{ App\Setting::find(1)->seats }}) for the same price you paid. You may
+      choose, include them in your payment or they may buy their own tickets at show time.
+    </li>
+  </ul>
+
+  <p>
+    Please visit our website for directions, parking and other valuable info. We sincerely hope you enjoy your visit. Do not hesitate
+    to call or email us with any questions regarding your visit. Thank you a have a great day.
+  </p>
+
+  <p>Sincerely,</p>
+
+  <p>Visitor Services <br /> {{ App\Setting::find(1)->organization }}</p>
+
+  <h4 class="ui center aligned header">
+    <div class="content">
+      {{ App\Setting::find(1)->organization }} <br /> {{ App\Setting::find(1)->address }}
+      <div class="sub header">
+        <i class="phone icon"></i>{{ App\Setting::find(1)->phone }} |
+        <i class="at icon"></i>{{ App\Setting::find(1)->email }} |
+        <i class="globe icon"></i><a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> | <i class="sun icon"></i>Astral
+      </div>
+    </div>
+  </h4>
+
+@endsection
