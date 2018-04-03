@@ -1,5 +1,5 @@
 {
-  "base": "semantic\\",
+  "base": "semantic/",
   "paths": {
     "source": {
       "config": "src/theme.config",
@@ -9,14 +9,14 @@
     },
     "output": {
       "packaged": "../public/semantic/",
-      "uncompressed": "../public/semantic/",
-      "compressed": "../public/semantic/",
-      "themes": "../public/semantic/"
+      "uncompressed": "dist/components/",
+      "compressed": "dist/components/",
+      "themes": "../public/semantic/themes/"
     },
     "clean": "dist/"
   },
   "permission": false,
   "autoInstall": false,
   "rtl": false,
-  "version": "2.3.0"
+  "version": "2.3.1"
 }
