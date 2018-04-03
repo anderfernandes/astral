@@ -65,7 +65,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
 
   <table class="ui very basic compact unstackable table">
     <thead>
-      <tr>
+      <tr class="right aligned">
         <th>Date and Time</th>
         <th>Event</th>
         <th>Ticket Type</th>
@@ -78,7 +78,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
       @foreach($sale->events as $event)
         @if ($event->id != 1)
           @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
-              <tr>
+              <tr class="right aligned">
                 <td>
                   <h4 class="ui header">
                     {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
@@ -99,7 +99,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
           @endforeach
         @endif
       @endforeach
-      <tr>
+      <tr class="right aligned">
         <td></td>
         <td></td>
         <td></td>
@@ -131,22 +131,22 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
         <td>
           <table class="ui very basic compact unstackable table">
             <tbody>
-              <tr>
+              <tr class="right aligned">
                 <td>{{ number_format($sale->subtotal, 2) }}</td>
               </tr>
-              <tr>
+              <tr class="right aligned">
                 <td>$ {{ number_format($sale->tax, 2) }}</td>
               </tr>
-              <tr>
+              <tr class="right aligned">
                 <td>$ {{ number_format($sale->total, 2) }}</td>
               </tr>
-              <tr>
+              <tr class="right aligned">
                 <td style="color:#cf3534"><strong>-$ {{ number_format($sale->payments->sum('tendered'), 2) }}</strong></td>
               </tr>
-              <tr>
+              <tr class="right aligned">
                 <td>$ {{ number_format($sale->payments->sum('change_due'), 2) }}</td>
               </tr>
-              <tr>
+              <tr class="right aligned">
                 <td><strong>{{ '$ ' . number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}</strong></td>
               </tr>
             </tbody>
@@ -194,9 +194,10 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
     <div class="content">
       {{ App\Setting::find(1)->organization }} <br /> {{ App\Setting::find(1)->address }}
       <div class="sub header">
-        <i class="phone icon"></i>{{ App\Setting::find(1)->phone }} |
-        <i class="at icon"></i>{{ App\Setting::find(1)->email }} |
-        <i class="globe icon"></i><a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> | <i class="sun icon"></i>Astral
+        {{ App\Setting::find(1)->phone }} |
+        {{ App\Setting::find(1)->email }} |
+        <a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> |
+        <a href="http://astral.anderfernandes.com">Astral</a>
       </div>
     </div>
   </h4>

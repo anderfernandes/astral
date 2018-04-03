@@ -6,7 +6,7 @@
       <div class="header">
         Hey, you!
       </div>
-      <p>This sale has one or more memos. <a href="#memos">Click here</a> to read them.</p>
+      <p>This sale has {{ $sale->memos->count() }} {{ $sale->memos->count() == 1 ? 'memo' : 'memos' }}. <a href="#memos">Click here</a> to read them.</p>
     </div>
   </div>
 @endif
@@ -52,7 +52,7 @@
 @if (!$sale->refund)
   @if ($sale->payments->sum('total') > 0)
   <div class="ui right floated buttons">
-    <div onclick="$('#refund-modal').modal('show')" class="ui red button"><i class="reply icon"></i> Refund</div>
+    <div onclick="$('#refund-modal').modal('toggle')" class="ui red button"><i class="reply icon"></i> Refund</div>
   </div>
   @endif
 @endif
@@ -61,7 +61,7 @@
     <i class="left chevron icon"></i>
     Back
   </a>
-  <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i>Edit</a>
+  <a href="{{ route('admin.sales.edit', $sale) }}" class="ui yellow button"><i class="edit icon"></i>Edit</a>
   <div class="ui floating secondary dropdown button">
     <i class="copy icon"></i> Invoices <i class="dropdown icon"></i>
     <div class="menu">
@@ -78,10 +78,12 @@
       @endif
     </div>
   </div>
-  <a href="{{ route('admin.sales.mail', $sale) . '?document=confirmation' }}" class="ui basic primary button">
-    <i class="mail icon"></i>
-    Email Confirmation Letter
-  </a>
+  @if ($sale->customer_id != 1)
+    <div onclick="$('#email-confirmation-letter').modal('toggle')" class="ui primary button">
+      <i class="mail icon"></i>
+      Email Confirmation Letter
+    </div>
+  @endif
 </div>
 
 <br /><br />
@@ -164,7 +166,6 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Email</th>
         <th>Address</th>
         <th>Phone</th>
       </tr>
@@ -178,7 +179,6 @@
             <h4 class="ui header">{{ $sale->organization->name }}</h4>
           @endif
         </td>
-        <td>{{ $sale->organization->email }}</td>
         <td>{{ $sale->organization->address }} {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}</td>
         <td>{{ $sale->organization->phone }}</td>
       </tr>
@@ -423,6 +423,32 @@
     {!! Form::button('<i class="refresh icon"></i> Refund', ['type' => 'submit', 'class' => 'ui red inverted button', 'id' => 'submit-refund']) !!}
   </div>
   {!! Form::close() !!}
+</div>
+
+{{-- Email Confirmation Letter Modal --}}
+<div class="ui fullscreen modal" id="email-confirmation-letter">
+  <i class="close icon"></i>
+  <div class="header">Confirmation Letter Preview</div>
+  <div class="content">
+    <div class="ui info icon message">
+      <i class="info circle icon"></i>
+      <i class="close icon"></i>
+      <div class="content">
+        <div class="header">
+          Make sure there are no mistakes before sending!
+        </div>
+        <p>Triple check dates, times and amounts. If everything looks good, click on send.</p>
+      </div>
+    </div>
+  </div>
+  <div class="scrolling content">
+    @include('partial.email._confirmation')
+  </div>
+  <div class="actions">
+    <a href="{{ route('admin.sales.mail', $sale) . '?document=confirmation' }}" class="ui positive right labeled submit icon button">Looks good! Email it now! <i class="checkmark icon"></i></a>
+    <a href="{{ route('admin.sales.edit', $sale) }}" class="ui yellow right labeled submit icon button">Let me change a few things... <i class="edit icon"></i></a>
+    <div class="ui secondary deny right labeled submit icon button">Close Preview <i class="close icon"></i></div>
+  </div>
 </div>
 
 <script>

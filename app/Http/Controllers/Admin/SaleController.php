@@ -579,8 +579,8 @@ class SaleController extends Controller
 
     public function mail(Request $request, Sale $sale)
     {
-      // Email customer with copies to management
-      Mail::to($sale->customer->email)->bcc('planetarium.webmaster@ctcd.edu')
+      // Email customer with copies to the person who clicked the send button
+      Mail::to($sale->customer->email)->bcc(Auth::user()->email)
                                       ->send(new ConfirmationLetter($sale));
       // Write memo
       $sale->memo()->create([
