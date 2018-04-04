@@ -111,7 +111,7 @@
   </div>
 
   <script type="text/javascript">
-    $('.ui.button').not('a').not('[onclick]').click(function() {
+    $('.ui.positive.button').not('a').not('[onclick]').click(function() {
       if (document.querySelector('form')) {
         if ($('form').form('is valid')) {
           $('.ui.dimmer').addClass('active')
