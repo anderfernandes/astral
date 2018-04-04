@@ -30388,72 +30388,89 @@ var render = function() {
       ]),
       _vm._v(" "),
       _vm._l(_vm.events, function(event) {
-        return _vm.events.length > 0
-          ? _c(
+        return _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.events.length > 0,
+                expression: "events.length > 0"
+              }
+            ],
+            key: event.id,
+            staticClass: "ui four wide column"
+          },
+          [
+            _c("img", {
+              staticClass: "ui medium centered image",
+              attrs: { src: event.show.cover, alt: event.show.name }
+            }),
+            _vm._v(" "),
+            _c(
               "div",
               {
-                key: event.id,
-                staticClass: "ui four wide column",
-                staticStyle: { "margin-top": "0 !important" }
+                staticClass: "ui centered header",
+                staticStyle: { "margin-top": "0.5rem" }
               },
               [
-                _c("img", {
-                  staticClass: "ui medium centered image",
-                  attrs: { src: event.show.cover, alt: event.show.name }
-                }),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "ui centered header",
-                    staticStyle: { "margin-top": "0.5rem" }
-                  },
-                  [
-                    _c("div", { staticClass: "content" }, [
-                      _vm._v(
-                        "\n        " +
-                          _vm._s(_vm.moment(event.start).calendar()) +
-                          "\n        "
-                      ),
-                      _c("div", { staticClass: "sub header" }, [
-                        _c("div", { staticClass: "ui blue label" }, [
-                          _vm._v(_vm._s(event.show.type))
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "ui red label" }, [
-                          _vm._v(_vm._s(event.type))
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "sub header" },
-                        _vm._l(event.allowedTickets, function(ticket) {
-                          return _c("div", { staticClass: "ui label" }, [
-                            _vm._v(
-                              "$ " +
-                                _vm._s(parseFloat(ticket.price)) +
-                                " / " +
-                                _vm._s(ticket.name)
-                            )
-                          ])
-                        })
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "sub header" }, [
-                        _vm._v(_vm._s(event.seats) + " seats left")
-                      ])
+                _c("div", { staticClass: "content" }, [
+                  _vm._v(
+                    "\n        " +
+                      _vm._s(_vm.moment(event.start).calendar()) +
+                      "\n        "
+                  ),
+                  _c("div", { staticClass: "sub header" }, [
+                    _c("div", { staticClass: "ui blue label" }, [
+                      _vm._v(_vm._s(event.show.type))
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "ui red label" }, [
+                      _vm._v(_vm._s(event.type))
                     ])
-                  ]
-                )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "sub header" },
+                    _vm._l(event.allowedTickets, function(ticket) {
+                      return _c("div", { staticClass: "ui label" }, [
+                        _vm._v(
+                          "$ " +
+                            _vm._s(parseFloat(ticket.price)) +
+                            " / " +
+                            _vm._s(ticket.name)
+                        )
+                      ])
+                    })
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "sub header" }, [
+                    _vm._v(_vm._s(event.seats) + " seats left")
+                  ])
+                ])
               ]
             )
-          : _vm._e()
+          ]
+        )
       }),
       _vm._v(" "),
-      _vm.events.length <= 0
-        ? _c("div", { staticClass: "ui sixteen wide column" }, [_vm._m(0)])
-        : _vm._e()
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.events.length <= 0,
+              expression: "events.length <= 0"
+            }
+          ],
+          staticClass: "ui sixteen wide column"
+        },
+        [_vm._m(0)]
+      )
     ],
     2
   )

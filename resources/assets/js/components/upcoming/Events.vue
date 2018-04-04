@@ -1,7 +1,7 @@
 <template>
   <div class="ui grid">
     <div class="ui top right attached blue label">Upcoming Events</div>
-    <div v-if="events.length > 0" class="ui four wide column" v-for="event in events" :key="event.id" style="margin-top: 0 !important">
+    <div v-show="events.length > 0" class="ui four wide column" v-for="event in events" :key="event.id">
       <img class="ui medium centered image" :src="event.show.cover" :alt="event.show.name">
       <div class="ui centered header" style="margin-top: 0.5rem">
         <div class="content">
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div v-if="events.length <= 0" class="ui sixteen wide column">
+    <div v-show="events.length <= 0" class="ui sixteen wide column">
       <div class="ui info icon floating massive message">
         <i class="info circle icon"></i>
         <div class="content">
