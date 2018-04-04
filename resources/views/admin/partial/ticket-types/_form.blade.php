@@ -53,8 +53,8 @@
           identifier: 'tt_name',
           rules: [
             { type: 'empty', prompt: 'Do not forget a name for this ticket!' },
-            { type: 'minLength[1]', prompt: '{name} should be at least 1 character long' },
-            { type: 'maxLength[16]', prompt: '{name} should be at least 16 character long' }
+            { type: 'minLength[1]'},
+            { type: 'maxLength[32]'}
          ]
        },
        tt_price: {
