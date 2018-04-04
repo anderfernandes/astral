@@ -13,6 +13,8 @@
       }
     </style>
 
+  <div class="ui top right attached blue label">Upcoming Events</div>
+
   <div id="events"></div>
 
   <script src="/js/app.js"></script>
