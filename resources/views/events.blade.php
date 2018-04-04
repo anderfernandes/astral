@@ -13,7 +13,7 @@
       }
     </style>
 
-  <div id="root"></div>
+  <div id="events"></div>
 
   <script src="/js/app.js"></script>
 

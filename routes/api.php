@@ -223,6 +223,8 @@ Route::get('events', function(Request $request) {
         'type'  => $event->show->type,
         'cover' => $event->show->cover
         ],
+      'allowedTickets' => $event->type->allowedTickets,
+      'date' => $start,
     ]);
   }
   $eventsCollect = collect($eventsArray);
@@ -238,10 +240,10 @@ Route::get('staff', function() {
   return $staff;
 });
 
-/*Route::get('events/{start}/{end}', function($start, $end) {
+Route::get('events/{start}/{end}', function($start, $end) {
   $start = Date::parse($start)->startOfDay()->toDateTimeString();
   $end = Date::parse($end)->endOfDay()->toDateTimeString();
-  $events = Event::where('start', '>=', $start)->whereDate('end', '<', $end)->where('public', true)->get();
+  $events = Event::where('start', '>=', $start)->where('end', '<', $end)->where('public', true)->get();
   $eventsArray = [];
   foreach ($events as $event) {
     $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
@@ -270,7 +272,7 @@ Route::get('staff', function() {
   $eventsCollect = $eventsCollect->values()->all();
 
   return $eventsCollect;
-}); */
+});
 
 Route::get('organizations/{organization}', function(Organization $organization) {
   $users = [];
