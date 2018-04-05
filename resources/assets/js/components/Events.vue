@@ -1,5 +1,5 @@
 <template>
-  <div class="ui grid" style="margin-top: 1rem">
+  <div class="ui grid" style="margin-top: 2rem">
     <div v-show="events.length > 0" class="ui four wide column" v-for="event in events" :key="event.id">
       <img class="ui medium centered image" :src="event.show.cover" :alt="event.show.name">
       <div class="ui centered header" style="margin-top: 0.5rem">

@@ -121,4 +121,4 @@ Route::get('/logout', 'Auth\LoginController@logout');
 
 Route::get('/events', function() { return view('events'); })->name('events');
 
-//Route::get('/calendar', function() { return view('events'); })->name('upcoming');
+Route::get('/sales', function() { return view('sales'); })->name('sales'); // PROTECT THIS ROUTE IN A FUTURE RELEASE!
