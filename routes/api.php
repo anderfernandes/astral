@@ -53,34 +53,32 @@ Route::get('calendar', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
   $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
   $sales = Sale::where([
-                        ['customer_id', '!=', 1],
-                        ['status', '!=', 'canceled'],
+                        ['customer_id',     '!=', 1],
+                        ['organization_id', '!=', 1],
                         ['refund', false],
                       ])->get();
   $eventsArray = [];
   foreach ($sales as $sale) {
-    if ($sale->tickets->count() >= 15) {
-      $events = $sale->events->where('start', '>=', $start)->where('end', '<', $end)->where('type_id', '!=', 1);
-      $customer = ($sale->customer->firstname == $sale->organization->name) ? null : ' - ' . $sale->customer->fullname;
-      $organization = ($sale->organization->id == 1)? null : ' - ' . $sale->organization->name;
-      foreach ($events as $event) {
-        $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
-        $title = $event->show->name .  $organization . $customer . ' - Sale #' . $sale->id;
-        $eventsArray = array_prepend($eventsArray, [
-          'id'       => $event->id,
-          'type'     => $event->type->name,
-          'start'    => Date::parse($event->start)->toDateTimeString(),
-          'end'      => Date::parse($event->end)->toDateTimeString(),
-          'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-          'title'    => $title,
-          'url'      => '/admin/sales/' . $sale->id,
-          'show'     => [
-            'name'  => $event->show->name,
-            'type'  => $event->show->type,
-            'cover' => $event->show->cover
-          ],
-        ]);
-      }
+    $events = $sale->events->where('start', '>=', $start)->where('end', '<', $end)->where('type_id', '!=', 1);
+    $customer = ($sale->customer->firstname == $sale->organization->name) ? null : ' - ' . $sale->customer->fullname;
+    $organization = ($sale->organization->id == 1)? null : ' - ' . $sale->organization->name;
+    foreach ($events as $event) {
+      $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
+      $title = $event->show->name .  $organization . $customer . ' - Sale #' . $sale->id;
+      $eventsArray = array_prepend($eventsArray, [
+        'id'       => $event->id,
+        'type'     => $event->type->name,
+        'start'    => Date::parse($event->start)->toDateTimeString(),
+        'end'      => Date::parse($event->end)->toDateTimeString(),
+        'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
+        'title'    => $title . ' (' . $sale->status . ')',
+        'url'      => route('admin.events.show', $event),
+        'show'     => [
+          'name'  => $event->show->name,
+          'type'  => $event->show->type,
+          'cover' => $event->show->cover
+        ],
+      ]);
     }
   }
   return $eventsArray;

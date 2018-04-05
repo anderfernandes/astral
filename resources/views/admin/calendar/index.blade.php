@@ -51,7 +51,7 @@
     </div>
   </div>
 
-  @if (!isset($events) || count($events) > 0)
+  @if (!isset($events) || $events->count() > 0)
     <br /><br /><br />
     <div class="ui doubling stackable grid">
       <div id="admin-calendar" style="min-width:100%; max-width:100%; padding-bottom: 2rem"></div>
@@ -84,7 +84,7 @@
       navLinks: true,
       editable: false,
       eventLimit: true,
-      minTime: '07:00:00',
+      minTime: '08:00:00',
       @if (isSet($request->type))
       // events: '/api/{{ $request->type }}',
       eventColor: '{{ $request->type == 'calendar' ? '#1b1c1d' : '#002e5d' }}'
