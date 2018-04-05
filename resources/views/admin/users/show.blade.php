@@ -35,7 +35,7 @@
         @if ($user->creator_id == 1)
           Created on {{ Date::parse($user->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($user->created_at)->diffForHumans()}})
         @else
-          Created by <strong>{{ $user->creator->fullname }}</strong> on {{ Date::parse($user->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($organization->created_at)->diffForHumans()}})
+          Created by <strong>{{ $user->creator->fullname }}</strong> on {{ Date::parse($user->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($user->created_at)->diffForHumans()}})
         @endif
       </div>
     </div>

@@ -139,9 +139,9 @@ class SaleController extends Controller
           $sale->customer_id          = $request->customer_id;
           $sale->status               = $request->status;
           $sale->taxable              = $request->taxable;
-          $sale->subtotal             = number_format($request->subtotal, 2);
-          $sale->tax                  = number_format($request->tax, 2);
-          $sale->total                = number_format($request->total, 2);
+          $sale->subtotal             = number_format($request->subtotal, 2, '.', '');
+          $sale->tax                  = number_format($request->tax, 2, '.', '');
+          $sale->total                = number_format($request->total, 2, '.', '');
           $sale->refund               = false;
           $sale->source               = "admin";
           $sale->sell_to_organization = ($request->organization_id == 1) ? false : true;
@@ -167,10 +167,10 @@ class SaleController extends Controller
             $payment->cashier_id        = Auth::user()->id;
             $payment->payment_method_id = $request->payment_method_id;
             // Tendered may be nullable if the customer hasn't paid
-            $payment->tendered          = number_format($request->tendered, 2);
-            $payment->total             = number_format($request->total, 2);
+            $payment->tendered          = number_format($request->tendered, 2, '.', '');
+            $payment->total             = number_format($request->total, 2, '.', '');
             // payment = total - tendered (precision set to two decimal places)
-            $payment->change_due        = number_format($request->change_due, 2);
+            $payment->change_due        = number_format($request->change_due, 2, '.', '');
             $payment->reference         = $request->reference;
             $payment->source            = 'admin';
             $payment->sale_id           = $sale->id;
@@ -254,8 +254,8 @@ class SaleController extends Controller
      */
     public function show(Sale $sale)
     {
-        $paid = number_format($sale->payments->sum('tendered') - $sale->payments->sum('change_due'), 2);
-        $balance = number_format(($sale->payments->sum('tendered') - $sale->payments->sum('change_due')) - $sale->total, 2);
+        $paid = number_format($sale->payments->sum('tendered') - $sale->payments->sum('change_due'), 2, '.', '');
+        $balance = number_format(($sale->payments->sum('tendered') - $sale->payments->sum('change_due')) - $sale->total, 2, '.', '');
         $memos = \App\SaleMemo::where('sale_id', $sale->id)->orderBy('updated_at', 'desc')->get();
         return view('admin.sales.show')->withSale($sale)
                                        ->withPaid($paid)
@@ -366,9 +366,9 @@ class SaleController extends Controller
         $sale->customer_id          = $request->customer_id;
         $sale->status               = $request->status;
         $sale->taxable              = $request->taxable;
-        $sale->subtotal             = number_format($request->subtotal, 2);
-        $sale->tax                  = number_format($request->tax, 2);
-        $sale->total                = number_format($request->total, 2);
+        $sale->subtotal             = number_format($request->subtotal, 2, '.', '');
+        $sale->tax                  = number_format($request->tax, 2, '.', '');
+        $sale->total                = number_format($request->total, 2, '.', '');
         $sale->refund               = false;
         //$sale->memo                 = $request->memo;
         $sale->sell_to_organization = $request->sell_to_organization;
@@ -396,10 +396,10 @@ class SaleController extends Controller
           $payment->cashier_id        = Auth::user()->id;
           $payment->payment_method_id = $request->payment_method_id;
           // Tendered may be nullable if the customer hasn't paid
-          $payment->tendered          = number_format($request->tendered, 2);
-          $payment->total             = number_format($request->total, 2);
+          $payment->tendered          = number_format($request->tendered, 2, '.', '');
+          $payment->total             = number_format($request->total, 2, '.', '');
           // payment = total - tendered (precision set to two decimal places)
-          $payment->change_due        = number_format($request->change_due, 2);
+          $payment->change_due        = number_format($request->change_due, 2, '.', '');
           $payment->reference         = $request->reference;
           $payment->source            = 'admin';
           $payment->sale_id           = $sale->id;
@@ -535,10 +535,10 @@ class SaleController extends Controller
       $refund->cashier_id        = Auth::user()->id;
       $refund->payment_method_id = $payment->payment_method_id;
       // Tendered may be nullable if the customer hasn't paid
-      $refund->tendered          = - number_format($payment->tendered, 2);
-      $refund->total             = - number_format($payment->total, 2);
+      $refund->tendered          = - number_format($payment->tendered, 2, '.', '');
+      $refund->total             = - number_format($payment->total, 2, '.', '');
       // payment = total - tendered (precision set to two decimal places)
-      $refund->change_due        = - number_format($payment->change_due, 2);
+      $refund->change_due        = - number_format($payment->change_due, 2, '.', '');
       $refund->reference         = $payment->reference;
       $refund->source            = 'admin';
       $refund->sale_id           = $payment->sale_id;

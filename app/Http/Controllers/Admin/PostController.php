@@ -118,7 +118,6 @@ class PostController extends Controller
         $post->sticky      = $request->sticky;
         $post->message     = $request->message;
         $post->open        = $request->status;
-        $post->author_id   = Auth::user()->id;
 
         $post->save();
 

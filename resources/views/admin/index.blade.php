@@ -105,60 +105,6 @@ function getAttendanceByType($ticketTypeID) {
       </div>
       <div id="calendars"></div>
     </div>
-    {{-- Bulletin --}}
-    <div class="ui segment">
-      <div class="ui dividing header">
-        <i class="comments outline icon"></i>
-        <div class="content">
-          Bulletin
-          <div class="sub header">
-          Post from last 7 days
-          </div>
-        </div>
-      </div>
-    <div class="ui relaxed divided list">
-      @foreach (\App\Post::latest()->take(5)->get() as $post)
-        <div class="item">
-          <i class="big user circle icon"></i>
-          <div class="content">
-            <div class="header">
-              <a href="{{ route('admin.users.show', $post->author) }}" target="_blank">{{ $post->author->firstname }}</a>
-              created a post <a href="{{ route('admin.posts.show', $post->id) }}" target="_blank">{{ $post->title }}</a>
-              <div class="ui black label"><i class="tag icon"></i>{{ $post->category->name }}</div>
-              @if ($post->sticky)
-                <div class="ui red label"><i class="info circle icon"></i> important</div>
-              @endif
-            </div>
-            <div class="description"><i class="calendar outline alternate icon"></i>{{ Date::parse($post->created_at)->ago() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
-          </div>
-        </div>
-      @endforeach
-    </div>
-
-    </div>
-  </div>
-
-  <div class="eight wide computer sixteen wide mobile column">
-    {{-- Attendance --}}
-    <div class="ui segment">
-      <div class="ui dividing header">
-        <i class="child icon"></i>
-        <div class="content">
-          Attendance
-          <div class="sub header">
-            Last 7 Days
-          </div>
-        </div>
-      </div>
-      <div class="ui two column grid">
-        <div class="column">
-          <canvas height="200" id="attendanceChart"></canvas>
-        </div>
-        <div class="column">
-          <canvas height="200" id="secondAttendanceChart"></canvas>
-        </div>
-      </div>
-    </div>
     {{-- Charts --}}
     <div class="ui horizontal segments">
       <div class="ui center aligned segment">
@@ -204,6 +150,59 @@ function getAttendanceByType($ticketTypeID) {
             Members
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="eight wide computer sixteen wide mobile column">
+    {{-- Attendance --}}
+    <div class="ui segment">
+      <div class="ui dividing header">
+        <i class="child icon"></i>
+        <div class="content">
+          Attendance
+          <div class="sub header">
+            Last 7 Days
+          </div>
+        </div>
+      </div>
+      <div class="ui two column grid">
+        <div class="column">
+          <canvas height="200" id="attendanceChart"></canvas>
+        </div>
+        <div class="column">
+          <canvas height="200" id="secondAttendanceChart"></canvas>
+        </div>
+      </div>
+    </div>
+    {{-- Bulletin --}}
+    <div class="ui segment">
+      <div class="ui dividing header">
+        <i class="comments outline icon"></i>
+        <div class="content">
+          Bulletin
+          <div class="sub header">
+          Open posts
+          </div>
+        </div>
+      </div>
+      <div class="ui relaxed divided list">
+        @foreach (\App\Post::where('open', true)->latest()->take(5)->get() as $post)
+          <div class="item">
+            <i class="big user circle icon"></i>
+            <div class="content">
+              <div class="header">
+                <a href="{{ route('admin.users.show', $post->author) }}" target="_blank">{{ $post->author->firstname }}</a>
+                created a post <a href="{{ route('admin.posts.show', $post->id) }}" target="_blank">{{ $post->title }}</a>
+                <div class="ui black label"><i class="tag icon"></i>{{ $post->category->name }}</div>
+                @if ($post->sticky)
+                  <div class="ui red label"><i class="info circle icon"></i> important</div>
+                @endif
+              </div>
+              <div class="description"><i class="calendar outline alternate icon"></i>{{ Date::parse($post->created_at)->ago() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
+            </div>
+          </div>
+        @endforeach
       </div>
     </div>
     {{-- Feed --}}
