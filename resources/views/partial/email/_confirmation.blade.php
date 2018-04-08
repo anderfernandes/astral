@@ -161,7 +161,7 @@
 
 <p>Visitor Services <br /> {{ App\Setting::find(1)->organization }}</p>
 
-<h4 class="ui center aligned header">
+<h4 class="ui center aligned header" style="text-align: center">
   <div class="content">
     {{ App\Setting::find(1)->organization }} <br /> {{ App\Setting::find(1)->address }}
     <div class="sub header">

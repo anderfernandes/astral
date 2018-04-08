@@ -68,7 +68,6 @@
       @if (!isSet($closedPosts) || ($closedPosts->count()) > 0 )
         @foreach($closedPosts as $post)
         <div class="ui raised segment">
-          <div class="ui top right attached red label">Closed</div>
           <div class="ui header" style="margin-top:0 !important">
             <i class="comments outline icon"></i>
             <div class="content"><a href="{{ route('admin.posts.show', $post) }}">{{ $post->title }}</a></div>
