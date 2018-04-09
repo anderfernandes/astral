@@ -35,7 +35,7 @@
                     {{ $event->seats - App\Ticket::where('event_id', '=', $event->id)->count() }} seats left
                   </div>
                   <div class="extra content">
-                    @foreach ($event->type->allowedTickets as $ticket)
+                    @foreach ($event->type->allowedTickets->where('in_cashier', true) as $ticket)
                       <div class="ui buttons">
                         <div class="ui inverted green button" onclick="changeAmount(1, `{{ $ticket->name }}`, {{ $event->show_id }}, `{{ $event->show->name }}`, '{{ $event->type->name }}', {{ number_format($ticket->price, 2) }}, {{ $event->id }}, {{ $ticket->pivot->ticket_type_id }}, '{{ $event->show->type }}')">
                           {{ $ticket->name }}

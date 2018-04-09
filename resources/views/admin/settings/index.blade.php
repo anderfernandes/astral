@@ -213,7 +213,16 @@
         <div class="ui one column doubling grid">
           <div class="column">
             <div onclick="$('#add-ticket-type').modal('show')" class="ui black button"><i class="plus icon"></i>Add Ticket Type</div>
-            @include('admin.partial.ticket-types._create')
+            {{-- Add User Ticket Modal --}}
+            @component('admin.partial._modal', [
+                'id' => 'add-ticket-type',
+                'icon' => 'plus',
+                'title' => 'Add Ticket Type'
+              ])
+              @slot('content')
+                @include('admin.ticket-types._form', ['ticketType' => null])
+              @endslot
+            @endcomponent
             <table class="ui very basic striped selectable celled table">
               <thead>
                 <tr>
@@ -233,6 +242,7 @@
                         <i class="ticket icon"></i>
                         <div class="content">
                           {{ $ticketType->name }}
+                          @if ($ticketType->in_cashier) <i class="inbox icon"></i> @endif
                           <div class="sub header">{{ $ticketType->description }}</div>
                         </div>
                       </h4>
@@ -242,7 +252,7 @@
                     </td>
                     <td>
                       @foreach($ticketType->allowedEvents as $eventType)
-                        <div class="ui mini label">{{ $eventType->name }}</div>
+                        <div class="ui mini label" style="background-color: {{ $eventType->color }}; color: rgba(255, 255, 255, 0.8)">{{ $eventType->name }}</div>
                       @endforeach
                     </td>
                     <td>

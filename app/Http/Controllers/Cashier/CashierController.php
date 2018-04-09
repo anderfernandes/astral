@@ -23,7 +23,8 @@ class CashierController extends Controller
       // Get the authenticated user
       $user = Auth::user();
       // Get today's date for the query that will show today's events
-      $today = Date::now('America/Chicago')->addMinutes(-30)->toDateTimeString();
+      // $today = Date::now('America/Chicago')->addMinutes(-30)->toDateTimeString();
+      $today = Date::now('America/Chicago')->toDateTimeString();
       // Get all events going on today
       $events = Event::where('start','>=', $today)
                      ->where('start','<=', Date::now('America/Chicago')->endOfDay())
@@ -34,7 +35,7 @@ class CashierController extends Controller
       $allCustomers = User::all();
 
       $customers = $allCustomers->mapWithKeys(function ($item) {
-        return [ $item['id'] => $item['firstname'].' '.$item['lastname']];
+        return [ $item['id'] => $item['fullname']];
       });
 
       return view('cashier.index')->withUser($user)

@@ -8,6 +8,6 @@
 
 @section('content')
 
-  @include('admin.partial.ticket-types._edit')
+  @include('admin.ticket-types._form', ['ticketType' => $ticketType])
 
 @endsection

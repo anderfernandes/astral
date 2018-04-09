@@ -45,7 +45,8 @@ class TicketTypeController extends Controller
           'price'               => 'required|numeric',
           'allowed_in_events.*' => 'required',
           'active'              => 'required',
-          'description'         => 'required|max:255'
+          'description'         => 'required|max:255',
+          'in_cashier'          => 'required',
         ]);
 
         $allowed_in_events = [];
@@ -56,6 +57,9 @@ class TicketTypeController extends Controller
         $ticketType->price       = number_format($request->price, 2);
         $ticketType->active      = $request->active;
         $ticketType->description = $request->description;
+        $ticketType->in_cashier  = $request->in_cashier;
+
+        $ticketType->creator_id  = Auth::user()->id;
 
         $ticketType->save();
 
@@ -103,7 +107,8 @@ class TicketTypeController extends Controller
         'price'               => 'required|numeric',
         'allowed_in_events.*' => 'required',
         'active'              => 'required',
-        'description'         => 'required|max:255'
+        'description'         => 'required|max:255',
+        'in_cashier'          => 'required',
       ]);
 
       $ticketType->allowedEvents()->detach();
@@ -114,8 +119,7 @@ class TicketTypeController extends Controller
       $ticketType->price       = number_format($request->price, 2);
       $ticketType->active      = $request->active;
       $ticketType->description = $request->description;
-
-      $ticketType->creator_id  = Auth::user()->id;
+      $ticketType->in_cashier  = $request->in_cashier;
 
       $ticketType->save();
 

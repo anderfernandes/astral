@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard')
 
-@section('subtitle', Auth::user()->firstname.' '. Auth::user()->lastname)
+@section('subtitle', Auth::user()->fullname)
 
 @section('icon', 'dashboard')
 
@@ -29,7 +29,7 @@ function getSalesTotals($day)
     ['created_at','<=', $end]
     ])->sum('change_due');
 
-  $daily = number_format($dailyTendered - $dailyChange, 2);
+  $daily = number_format($dailyTendered - $dailyChange, 2, '.', '');
 
   return $daily;
 }
