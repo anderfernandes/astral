@@ -27,14 +27,14 @@
 
   <div class="ui items">
     <div class="item">
-      <div class="ui rounded image">
+      <div class="ui medium rounded image">
         <img src="{{ $event->show->cover }}" alt="">
       </div>
       <div class="content">
         <div class="meta">
-          <div class="ui label">{{ $event->type->name }}</div>
-          <div class="ui label">{{ App\Show::find($event->show_id)->type }}</div>
-          <div class="ui label">{{ App\Show::find($event->show_id)->duration }} minutes</div>
+          <div class="ui label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
+          <div class="ui label">{{ $event->show->type }}</div>
+          <div class="ui label">{{ $event->show->duration }} minutes</div>
           <div class="ui label">{{ App\Ticket::where('event_id', $event->id)->count() }} tickets sold</div>
         </div>
         <h1 class="ui large header">

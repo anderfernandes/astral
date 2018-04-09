@@ -22,7 +22,9 @@
     <i class="plus icon"></i> Create Sale<i class="dropdown icon"></i>
     <div class="menu">
       @foreach (App\EventType::where('id', '!=', 1)->get() as $eventType)
+        @if ($eventType->allowedTickets->count() > 0)
         <a href="{{ route('admin.sales.create') }}?eventType={{ $eventType->id }}" class="item">{{ $eventType->name }}</a>
+        @endif
       @endforeach
     </div>
   </div>
@@ -51,8 +53,14 @@
     </div>
   </div>
 
+  <div class="ui labels" style="text-align: center; margin-top: 1rem !important">
+  @foreach (App\EventType::where('id', '!=', 1)->get() as $eventType)
+    <div class="ui label" style="background-color: {{ $eventType->color }}; color: rgba(255, 255, 255, 0.8)">{{ $eventType->name }}</div>
+  @endforeach
+  </div>
+
   @if (!isset($events) || $events->count() > 0)
-    <br /><br /><br />
+    <br />
     <div class="ui doubling stackable grid">
       <div id="admin-calendar" style="min-width:100%; max-width:100%; padding-bottom: 2rem"></div>
     </div>
@@ -85,20 +93,11 @@
       editable: false,
       eventLimit: true,
       minTime: '08:00:00',
-      @if (isSet($request->type))
-      // events: '/api/{{ $request->type }}',
-      eventColor: '{{ $request->type == 'calendar' ? '#1b1c1d' : '#002e5d' }}'
-      @else
-      // events: '/api/calendar',
-      @endif
-
     })
   }
 
   function toggleCalendar(type) {
     $('#admin-calendar').fullCalendar('removeEventSources')
-    var color = type == 'calendar' ? '#1b1c1d' : '#002e5d'
-    $('#admin-calendar').fullCalendar('option', 'eventColor', color)
     $('#admin-calendar').fullCalendar('addEventSource', '/api/' + type)
   }
 

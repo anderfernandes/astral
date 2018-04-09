@@ -274,7 +274,6 @@ function loadCalendars() {
     editable: false,
     eventLimit: true,
     minTime: '09:00:00',
-    eventColor: '#1b1c1d',
     events: '/api/calendar'
   })
 }
@@ -290,8 +289,6 @@ setInterval(refetchEvents, 5000)
 
 function toggleCalendar(type) {
   $('#calendars').fullCalendar('removeEventSources')
-  var color = type == 'calendar' ? '#1b1c1d' : '#002e5d'
-  $('#calendars').fullCalendar('option', 'eventColor', color)
   $('#calendars').fullCalendar('addEventSource', '/api/' + type)
 }
 

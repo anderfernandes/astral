@@ -90,7 +90,9 @@
     <i class="plus icon"></i> New Sale<i class="dropdown icon"></i>
     <div class="menu">
       @foreach ($eventTypes as $eventType)
+        @if ($eventType->allowedTickets->count() > 0)
         <a href="{{ route('admin.sales.create') }}?eventType={{ $eventType->id }}" class="item">{{ $eventType->name }}</a>
+        @endif
       @endforeach
     </div>
   </div>

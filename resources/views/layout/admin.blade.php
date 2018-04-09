@@ -63,6 +63,10 @@
     min-height: 100px;
   }
 
+  .fc-event .fc-bg { background: none !important}
+
+  .fc-content { font-weight: bold !important }
+
   @media only screen and (max-width:700px) {
     .hide-on-mobile {
       display:none !important;

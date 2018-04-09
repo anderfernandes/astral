@@ -53,22 +53,19 @@ Route::group(
   Route::resource('settings', 'SettingController');
   // Roles
   Route::resource('roles', 'RoleController');
-  Route::resource('ticket-types', 'TicketTypeController');
   // Bulletin
   Route::resource('posts', 'PostController');
   Route::resource('replies', 'ReplyController');
   Route::resource('categories', 'CategoryController');
   // HTTP PUT route for updating general settings
   Route::put('settings', 'SettingController@update');
+  // Settings Resources
+  Route::resource('ticket-types', 'TicketTypeController');
+  Route::resource('event-types', 'EventTypeController');
   // HTTP PUT route for adding managing Organization Types
   Route::post('settings/addOrganizationType', 'SettingController@addOrganizationType')->name('settings.addOrganizationType');
-  // HTTP PUT route for adding managing Ticket Types
-  Route::post('settings/addTicketType', 'SettingController@addTicketType')->name('settings.addTicketType');
-  Route::get('settings/{ticketType}/edit', 'SettingController@editTicketType')->name('settings.editTicketType');
   // HTTP PUT route for adding managing Payment Methods
   Route::post('settings/addPaymentMethod', 'SettingController@addPaymentMethod')->name('settings.addPaymentMethod');
-  // HTTP PUT route for adding managing Event Types
-  Route::post('settings/addEventType', 'SettingController@addEventType')->name('settings.addEventType');
   // HTTP PUT route for adding managing Member Types
   Route::post('settings/addMemberType', 'SettingController@addMemberType')->name('settings.addMemberType');
   // Member Card

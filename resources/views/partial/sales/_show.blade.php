@@ -205,7 +205,7 @@
         <div class="content">
           <div class="sub header">
             {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-            <div class="ui black circular label">{{ $event->type->name }}</div>
+            <div class="ui circular label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
           </div>
           <a href="{{ route('admin.events.show', $event) }}" target="_blank">{{ $event->show->name }}</a>
           <div class="sub header">

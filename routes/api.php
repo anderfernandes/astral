@@ -78,6 +78,9 @@ Route::get('calendar', function(Request $request) {
           'type'  => $event->show->type,
           'cover' => $event->show->cover
         ],
+        'color' => $event->type->color,
+        'backgroundColor' => $event->type->color,
+        'textColor' => 'rgba(255, 255, 255, 0.8)',
       ]);
     }
   }
@@ -223,6 +226,9 @@ Route::get('events', function(Request $request) {
         ],
       'allowedTickets' => $event->type->allowedTickets,
       'date' => $start,
+      'color' => $event->type->color,
+      'backgroundColor' => $event->type->color,
+      'textColor' => 'rgba(255, 255, 255, 0.8)',
     ]);
   }
   $eventsCollect = collect($eventsArray);

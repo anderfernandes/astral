@@ -345,13 +345,15 @@
                 @foreach($eventTypes as $eventType)
                 <tr>
                   <td>
-                    <h4 class="ui header">
-                      <i class="university icon"></i>
-                      <div class="content">
-                        {{ $eventType->name }}
-                        <div class="sub header">{{ $eventType->description }}</div>
-                      </div>
-                    </h4>
+                    <div class="ui inverted segment" style="background-color: {{ $eventType->color }}">
+                      <a href="{{ route('admin.event-types.edit', $eventType) }}" class="ui right corner label"><i class="edit icon"></i></a>
+                      <h4 class="ui inverted header" style="margin-top: 0">
+                        <div class="content">
+                          {{ $eventType->name }}
+                          <div class="sub header">{{ $eventType->description }}</div>
+                        </div>
+                      </h4>
+                    </div>
                   </td>
                 </tr>
                 @endforeach
@@ -359,19 +361,7 @@
             </table>
           </div>
           <div class="column">
-            {!! Form::open(['route' => 'admin.settings.addEventType', 'class' => 'ui form', 'id' => 'event_types']) !!}
-              <div class="field">
-                {!! Form::label('name', 'Name') !!}
-                {!! Form::text('name', null, ['placeholder' => 'Organization Type']) !!}
-              </div>
-              <div class="field">
-                {!! Form::label('description', 'Description') !!}
-                {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
-              </div>
-              <div class="field">
-                {!! Form::button('<i class="plus icon"></i> Add Event Type', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
-              </div>
-            {!! Form::close() !!}
+            @include('admin.event-types.partial._form', ['eventType' => null])
           </div>
         </div>
       </div>
@@ -598,15 +588,6 @@
       name        : ['empty'],
       icon        : ['empty'],
       type        : ['empty'],
-      description : ['empty'],
-    }
-  })
-
-  $('#event_types').form({
-    on: 'blur',
-    inline: true,
-    fields: {
-      name        : ['empty'],
       description : ['empty'],
     }
   })

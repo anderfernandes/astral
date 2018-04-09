@@ -35,6 +35,21 @@ class SettingController extends Controller
         $eventTypes = EventType::where('name', '!=', 'system')->get();
         $memberTypes = MemberType::where('id', '!=', 1)->get();
         $categories = Category::all();
+        $colors = [
+          'red'    => '#cf3534',
+          'orange' => '#f2711c',
+          'yellow' => '#fbbd08',
+          'olive'  => '#b5cc18',
+          'green'  => '#21ba45',
+          'teal'   => '#00b5ad',
+          'blue'   => '#002e5d',
+          'violet' => '#6435c9',
+          'purple' => '#a333c8',
+          'pink'   => '#e03997',
+          'brown'  => '#a5673f',
+          'grey'   => '#767676',
+          'black'  => '#1b1c1d',
+        ];
 
         return view('admin.settings.index')
           ->withSetting($setting)
@@ -44,6 +59,7 @@ class SettingController extends Controller
           ->withRoles($roles)
           ->withMemberTypes($memberTypes)
           ->withEventTypes($eventTypes)
+          ->withColors($colors)
           ->withCategories($categories);
     }
 
@@ -108,23 +124,13 @@ class SettingController extends Controller
 
     public function addEventType(Request $request)
     {
-      $this->validate($request, [
-        'name'        => 'required',
-        'description' => 'required',
-      ]);
 
-      $eventType = new eventType;
+    }
 
-      $eventType->name        = $request->name;
-      $eventType->description = $request->description;
+    public function editEventType(EventType $eventType)
+    {
 
-      $eventType->creator_id  = Auth::user()->id;
 
-      $eventType->save();
-
-      Session::flash('success', 'Event Type <strong>'. $eventType->name .'</strong> added successfully!');
-
-      return redirect()->to(route('admin.settings.index').'#event-types');
     }
 
     // Add Roles has its own controler
