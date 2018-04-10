@@ -10,14 +10,14 @@
     </div>
     <div class="field">
       {!! Form::label('color', 'Color') !!}
-      <div class="ui selection dropdown">
+      <div class="ui selection dropdown" style="color: #fff !important; font-weight: bold">
         <input type="hidden" name="color">
         <i class="dropdown icon"></i>
         <div class="default text">Select an event color</div>
         <div class="menu">
           @foreach ($colors as $name => $hex)
-            <div class="item" data-value="{{ $hex }}">
-              <div class="ui label" style="background-color: {{ $hex }} !important; border-color: {{ $hex }} !important; color: #fff !important">{{ $name }}</div>
+            <div class="item" data-value="{{ $hex }}" style="background-color: {{ $hex }} !important; border-color: {{ $hex }} !important; color: #fff !important; font-weight: bold">
+              {{ $name }}
             </div>
           @endforeach
         </div>
@@ -50,5 +50,9 @@ $('#event_types').form({
   })
 }
 @endif
+
+$('.ui.selection.dropdown').change(function() {
+  $(this).css('background-color', $('[name="color"]').val())
+})
 
 </script>

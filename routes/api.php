@@ -201,6 +201,7 @@ Route::get('calendar-events', function() {
   return $sorted;
 });
 
+// This API is consumed by Full Calendar in /admin/calendar?type=events
 Route::get('events', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
   $end = Date::parse($request->end)->endOfDay()->addMinute()->toDateTimeString();
@@ -217,7 +218,7 @@ Route::get('events', function(Request $request) {
       'start'    => Date::parse($event->start)->toDateTimeString(),
       'end'      => Date::parse($event->end)->toDateTimeString(),
       'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-      'title'    => $event->show->name .' - ' . $event->type->name . ' - ' . $seats . ' seats left',
+      'title'    => ($event->show_id !=1 ? $event->show->name .' - ' : null) . $event->type->name . ' - ' . $seats . ' seats left',
       'url'      => '/admin/events/' . $event->id,
       'show'     => [
         'name'  => $event->show->name,
