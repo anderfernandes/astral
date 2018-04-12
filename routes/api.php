@@ -201,6 +201,75 @@ Route::get('calendar-events', function() {
   return $sorted;
 });
 
+Route::get('event/{event}', function(Event $event) {
+
+  // Get all Sales for this event
+  $salesArray = [];
+  $ticketsArray = [];
+  foreach ($event->sales as $sale) {
+    if ($sale->tickets->count() > 1) {
+      // Loop through tickets for this sale, get type and quantity for each type
+      $tickets = $sale->tickets->unique('ticket_type_id');
+      foreach ($tickets as $ticket) {
+        $q = $sale->tickets->where('ticket_type_id', $ticket->type->id)->count();
+        $quantity = $sale->events[0]->show_id == 1 ? $q : $q/2;
+        $ticketsArray = array_prepend($ticketsArray, [
+          'type'     => $ticket->type->name,
+          'price'    => $ticket->type->price,
+          'quantity' => $quantity,
+        ]);
+      }
+    }
+
+    // Taking out walkup sales
+    if ($sale->customer_id != 1) {
+      $salesArray = array_prepend($salesArray, [
+        'id' => $sale->id,
+        'customer'        => [
+          'id'   => $sale->customer_id,
+          // check if last name has a space in the end for organization accounts
+          'name' => $sale->customer->lastname == null ? $sale->customer->firstname : $sale->customer->fullname,
+        ],
+        'organization'    => [
+          'id'   => $sale->organization_id,
+          'name' => $sale->organization->name,
+        ],
+        'creator' => [
+          'id' => $sale->creator_id,
+          'name' => $sale->creator->fullname,
+        ],
+        'total'           => $sale->total,
+        'tickets'         => $ticketsArray,
+      ]);
+    }
+
+  }
+
+  return [
+    'id'       => $event->id,
+    'type'     => $event->type->name,
+    'start'    => Date::parse($event->start)->toDateTimeString(),
+    'end'      => Date::parse($event->end)->toDateTimeString(),
+    'color'    => $event->type->color,
+    'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
+    //'url'      => '#' . $event->id,
+    'creator' => [
+      'name' => $event->creator->fullname,
+      'role' => $event->creator->role->name,
+    ],
+    'show'     => [
+      'name'     => $event->show->name,
+      'type'     => $event->show->type,
+      'duration' => $event->show->duration,
+        'cover'  => $event->show->cover
+    ],
+    'sales'   => $salesArray,
+    'tickets_sold' => App\Ticket::where('event_id', $event->id)->count(),
+    'created_at' => Date::parse($event->created_at)->toDateTimeString(),
+    'updated_at' => Date::parse($event->updated_at)->toDateTimeString(),
+  ];
+});
+
 // This API is consumed by Full Calendar in /admin/calendar?type=events
 Route::get('events', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
@@ -219,7 +288,7 @@ Route::get('events', function(Request $request) {
       'end'      => Date::parse($event->end)->toDateTimeString(),
       'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
       'title'    => ($event->show_id !=1 ? $event->show->name .' - ' : null) . $event->type->name . ' - ' . $seats . ' seats left',
-      'url'      => '/admin/events/' . $event->id,
+      //'url'      => '/admin/events/' . $event->id,
       'show'     => [
         'name'  => $event->show->name,
         'type'  => $event->show->type,

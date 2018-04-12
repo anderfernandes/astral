@@ -12,7 +12,7 @@
     <a href="{{ route('admin.calendar.index') }}?type=events{{ isSet($request->date) ? '&date=' . $request->date : null }}" class="ui default button">
       <i class="left chevron icon"></i> Back
     </a>
-    <a href="javascript:$('#edit-event').modal('show')" class="ui primary button">
+    <a href="javascript:$('#edit-event').modal('show')" class="ui yellow button">
       <i class="edit icon"></i> Edit This Event
     </a>
     <a href="{{ route('admin.events.create') }}" class="ui secondary button">
@@ -33,7 +33,9 @@
       <div class="content">
         <div class="meta">
           <div class="ui label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
-          <div class="ui label">{{ $event->show->type }}</div>
+          @if ($event->show->type != 'system')
+            <div class="ui label">{{ $event->show->type }}</div>
+          @endif
           <div class="ui label">{{ $event->show->duration }} minutes</div>
           <div class="ui label">{{ App\Ticket::where('event_id', $event->id)->count() }} tickets sold</div>
         </div>
@@ -70,10 +72,10 @@
                 <div class="content">
                   <a class="sub header" href="{{ route('admin.sales.show', $sale) }}">Sale # {{ $sale->id }}</a>
                     @if ($sale->organization_id != 1)
-                      <a href="{{ route('admin.organizations.show', $sale->organization) }}">{{ $sale->organization->name }}</a>
+                      <a href="{{ route('admin.organizations.show', $sale->organization) }}">{{ $sale->organization->name }}</a> |
                     @endif
-                    @if (!($sale->organization->name == $sale->customer->firstname))
-                      | <a href="{{ route('admin.users.show', $sale->customer) }}">{{ $sale->customer->fullname }}</a>
+                    @if ($sale->organization->name != $sale->customer->firstname)
+                      <a href="{{ route('admin.users.show', $sale->customer) }}">{{ $sale->customer->fullname }}</a>
                     @endif
                   </a>
                   <div class="sub header">
@@ -100,7 +102,7 @@
                   No Group Sales!
                 </div>
                 <p>
-                  There are no group sales for this show.
+                  There are no group sales for this event.
                   @if (App\Ticket::where('event_id', $event->id)->count() > 0)
                     There are, however, {{ App\Ticket::where('event_id', $event->id)->count() }} tickets solds to this event.
                   @endif
