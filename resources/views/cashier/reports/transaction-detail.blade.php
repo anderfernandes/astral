@@ -4,12 +4,16 @@
 
 @section('content')
 
-<div class="ui centered aligned header">
+<style>
+  table, .sub.header {font-size: 12px !important}
+</style>
+
+<div class="ui small centered aligned header">
   {{ App\Setting::find(1)->organization }}
   <div class="sub header">Payment Transaction Detail</div>
 </div>
 
-<p style="float:right">Run: {{ Date::now()->format('m/d/Y H:i:s A') }}</p>
+<p style="float:right; font-size: 12px !important">Run: {{ Date::now()->format('m/d/Y H:i:s A') }}</p>
 
 <table class="ui single line table">
   <thead>

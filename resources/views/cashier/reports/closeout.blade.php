@@ -4,7 +4,11 @@
 
 @section('content')
 
-  <div class="ui header">
+  <style>
+    table, .sub.header {font-size: 12px !important}
+  </style>
+
+  <div class="ui small header">
     Closeout Report
     <div class="sub header">Run: {{ Date::now()->format('l, F j, Y \a\t g:i:s A') }}</div>
     <div class="sub header">Payment Date: {{ Date::now()->format('l, F j, Y') }}</div>

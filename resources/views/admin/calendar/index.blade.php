@@ -105,23 +105,12 @@
           .then(response => {
 
             // Start this variable with a message box saying that there are no sales for this event
-            var sales =
-            `
-            <div class="ui info icon message">
-              <i class="info circle icon"></i>
-              <div class="content">
-                <div class="header">
-                  No Group Sales!
-                </div>
-                <p>There are no group sales for this show.</p>
-              </div>
-            </div>
-            `
+            var sales = ''
 
             if (response.sales.length > 0) {
               response.sales.forEach(function (sale)
               {
-                sales =
+                sales +=
                 `
                 <h3 class="ui dividing header">
                   <div class="content">
@@ -136,7 +125,20 @@
                 `
               }
             )
-            }
+          } else {
+            sales =
+            `
+            <div class="ui info icon message">
+              <i class="info circle icon"></i>
+              <div class="content">
+                <div class="header">
+                  No Group Sales!
+                </div>
+                <p>There are no group sales for this show.</p>
+              </div>
+            </div>
+            `
+          }
 
             var header = `
             <i class="close icon" style="color: white"></i>

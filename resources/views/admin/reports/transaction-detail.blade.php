@@ -4,12 +4,16 @@
 
 @section('content')
 
-  <div class="ui centered aligned header">
+  <style>
+    table, .sub.header {font-size: 12px !important}
+  </style>
+
+  <div class="ui small centered aligned header">
     {{ App\Setting::find(1)->organization }}
     <div class="sub header">Payment Transaction Detail</div>
   </div>
 
-  <p style="float:right">Run: {{ Date::now()->format('m/d/Y H:i:s A') }}</p>
+  <p style="float:right; font-size: 12px !important">Run: {{ Date::now()->format('m/d/Y H:i:s A') }}</p>
 
   @foreach ($paymentUser as $user)
     @if ($paymentUser->count() > 1)
@@ -37,7 +41,12 @@
         @endif
           <td>{{ $payment->created_at->format('m/d/Y H:i:s a') }}</td>
           <td>{{ $payment->sale->id }}</td>
-          <td>{{ $payment->sale->customer->firstname }} {{ $payment->sale->customer->lastname }}</td>
+          <td>
+            {{ $payment->sale->customer->fullname }}
+            @if ($payment->sale->sell_to_organization and $payment->sale->customer->firstname != $payment->sale->organization->name)
+              ({{ $payment->sale->organization->name }})
+            @endif
+          </td>
           <td>{{ $payment->method->name }}</td>
           <td>{{ $payment->reference }}</td>
           <td>$ {{ number_format($payment->tendered, 2) }}</td>
