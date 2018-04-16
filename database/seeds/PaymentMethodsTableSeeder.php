@@ -35,7 +35,7 @@ class PaymentMethodsTableSeeder extends Seeder
         DB::table('payment_methods')->insert([
           'name'        => 'Visa',
           'description' => 'Visa payments',
-          'icon'        => 'visa',
+          'icon'        => 'cc visa',
           'type'        => 'card',
           'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
@@ -45,7 +45,7 @@ class PaymentMethodsTableSeeder extends Seeder
         DB::table('payment_methods')->insert([
           'name'        => 'Mastercard',
           'description' => 'Mastercard payments',
-          'icon'        => 'mastercard',
+          'icon'        => 'cc mastercard',
           'type'        => 'card',
           'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
@@ -55,7 +55,17 @@ class PaymentMethodsTableSeeder extends Seeder
         DB::table('payment_methods')->insert([
           'name'        => 'Discover',
           'description' => 'Discover payments',
-          'icon'        => 'discover',
+          'icon'        => 'cc discover',
+          'type'        => 'card',
+          'creator_id'  => 1,
+          'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
+        ]);
+
+        // 6
+        DB::table('payment_methods')->insert([
+          'name'        => 'American Express',
+          'description' => 'American Express payments',
+          'icon'        => 'cc amex',
           'type'        => 'card',
           'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),

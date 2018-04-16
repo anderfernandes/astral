@@ -72,7 +72,7 @@ Route::get('calendar', function(Request $request) {
         'end'      => Date::parse($event->end)->toDateTimeString(),
         'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
         'title'    => $title . ' (' . $sale->status . ')',
-        'url'      => route('admin.events.show', $event),
+        //'url'      => route('admin.events.show', $event),
         'show'     => [
           'name'  => $event->show->name,
           'type'  => $event->show->type,

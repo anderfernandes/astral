@@ -110,6 +110,16 @@
             if (response.sales.length > 0) {
               response.sales.forEach(function (sale)
               {
+                var tickets = ``
+                sale.tickets.forEach(function (ticket) {
+                  tickets +=
+                  `
+                  <div class="ui black label" style="margin-left:0">
+                  <i class="ticket icon"></i>
+                  ${ticket.quantity} <div class="detail">${ticket.type}</div>
+                  </div>
+                  `
+                })
                 sales +=
                 `
                 <h3 class="ui dividing header">
@@ -119,26 +129,27 @@
                     ${sale.organization.name == sale.customer.name ? `` : `| <a href="/admin/users/${sale.customer.id}" target="_blank">${sale.customer.name}</a>`}
                     <div class="sub header">
                       <div class="ui green tag label">$ ${parseFloat(sale.total).toFixed(2)}</div>
+                      ${tickets}
                     </div>
                   </div>
                 </h3>
                 `
               }
             )
-          } else {
-            sales =
-            `
-            <div class="ui info icon message">
-              <i class="info circle icon"></i>
-              <div class="content">
-                <div class="header">
-                  No Group Sales!
+            } else {
+              sales =
+              `
+              <div class="ui info icon message">
+                <i class="info circle icon"></i>
+                <div class="content">
+                  <div class="header">
+                    No Group Sales!
+                  </div>
+                  <p>There are no group sales for this show.</p>
                 </div>
-                <p>There are no group sales for this show.</p>
               </div>
-            </div>
-            `
-          }
+              `
+            }
 
             var header = `
             <i class="close icon" style="color: white"></i>
@@ -194,9 +205,9 @@
             </div>
             `
 
-            document.querySelector('#event-detail').innerHTML = header + body + footer
-            $('#event-detail').modal('show')
-          });
+          document.querySelector('#event-detail').innerHTML = header + body + footer
+          $('#event-detail').modal('show')
+        });
       }
     })
   }
