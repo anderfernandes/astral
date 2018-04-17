@@ -261,6 +261,8 @@ function getAttendanceByType($ticketTypeID) {
   </div>
 </div>
 
+<div class="ui large modal" id="event-detail"></div>
+
 <script>
 
 function loadCalendars() {
@@ -273,8 +275,145 @@ function loadCalendars() {
     navLinks: true,
     editable: false,
     eventLimit: true,
-    minTime: '09:00:00',
-    events: '/api/calendar'
+    minTime: '08:00:00',
+    events: '/api/calendar',
+    eventClick: function(calEvent, jsEvent, view) {
+      fetch(`/api/event/${calEvent.id}`)
+        .then(response => response.json())
+        .then(response => {
+
+          // Start this variable with a message box saying that there are no sales for this event
+          var sales = ''
+
+          if (response.sales.length > 0) {
+            response.sales.forEach(function (sale)
+            {
+              var tickets = ``
+              sale.tickets.forEach(function (ticket) {
+                tickets +=
+                `
+                <div class="ui black label" style="margin-left:0">
+                <i class="ticket icon"></i>
+                ${ticket.quantity} <div class="detail">${ticket.type}</div>
+                </div>
+                `
+              })
+              sales +=
+              `
+              <h3 class="ui dividing header">
+                <div class="content">
+                  <a class="sub header" href="/admin/sales/${sale.id}" target="_blank">Sale # ${sale.id}</a>
+                  ${sale.organization.id != 1 ? `<a href="/admin/organizations/${sale.organization.id}" target="_blank">${sale.organization.name}</a>`  : `` }
+                  ${sale.organization.name == sale.customer.name ? `` : `| <a href="/admin/users/${sale.customer.id}" target="_blank">${sale.customer.name}</a>`}
+                  <div class="sub header">
+                    <div class="ui green tag label">$ ${parseFloat(sale.total).toFixed(2)}</div>
+                    ${tickets}
+                  </div>
+                </div>
+              </h3>
+              `
+            }
+          )
+          } else {
+            sales =
+            `
+            <div class="ui info icon message">
+              <i class="info circle icon"></i>
+              <div class="content">
+                <div class="header">
+                  No Group Sales!
+                </div>
+                <p>There are no group sales for this show.</p>
+              </div>
+            </div>
+            `
+          }
+
+          if (response.memo == null) {
+            response.memo =
+            `
+            <div class="ui info icon message">
+              <i class="info circle icon"></i>
+              <div class="content">
+                <div class="header">
+                  No Memos
+                </div>
+                <p>No one has left a memo for this event yet.</p>
+              </div>
+            </div>
+            `
+          }
+
+          var header = `
+          <i class="close icon" style="color: white"></i>
+          <div class="ui header">
+            <i class="calendar check icon"></i>
+            <div class="content">
+              Event Details
+              <div class="sub header">Event #${response.id}</div>
+            </div>
+          </div>
+          `
+          var body = `
+          <div class="content">
+            <div class="ui items">
+              <div class="ui item">
+                <div class="ui small rounded image"><img src="${response.show.cover}"></div>
+                <div class="content">
+                  <div class="meta">
+                  <div class="ui label" style="background-color: ${response.color}; color: rgba(255, 255, 255, 0.8)">${response.type}</div>
+                    <div class="ui label">${response.show.duration} ${response.show.duration > 1 ? `minutes` : `minute`}</div>
+                    <div class="ui label">${response.tickets_sold} tickets sold</div>
+                  </div>
+                  <div class="ui large header">
+                    ${response.show.name}
+                    <div class="sub header">
+                      <i class="calendar alternate icon"></i>
+                      ${moment(response.start).calendar()}
+                    </div>
+                  </div>
+                  <div class="extra">
+                    <p>Created by ${response.creator.name} on ${moment(response.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')}</p>
+                    <p>Updated on ${moment(response.updated_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')}</p>
+                  </div>
+                  <div class="description">
+                    <h4 class="ui horizontal divider header">
+                      <i class="comment alternate outline icon"></i> Memo
+                    </h4>
+                    ${response.memo}
+                  </div>
+                </div>
+              </div>
+              <div class="ui item">
+                <div class="content">
+                  <div class="extra">
+                  <h4 class="ui horizontal divider header">
+                    <i class="dollar icon"></i> Sales
+                  </h4>
+                  ${sales}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          `
+          var footer = `
+          <div class="actions">
+            <a href="/admin/events/${response.id}/edit" class="ui yellow right labeled icon button">
+              Edit
+              <i class="edit icon"></i>
+            </a>
+            <div class="ui black deny button">
+              Close
+            </div>
+          </div>
+          </div>
+          `
+
+        document.querySelector('#event-detail').innerHTML = header + body + footer
+        $('#event-detail').modal('show')
+      });
+    }
   })
 }
 

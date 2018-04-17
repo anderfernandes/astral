@@ -29,7 +29,7 @@
     </div>
   </div>
 
-  <div class="ui right floated secondary floating dropdown labeled icon button">
+  <div class="ui right floated secondary floating dropdown labeled icon button" id="view">
     <i class="eye icon"></i>
     <span class="text">Week</span>
     <div class="menu">
@@ -79,9 +79,7 @@
 
   @include('admin.partial.events._create')
 
-  <div class="ui large modal" id="event-detail">
-
-  </div>
+  <div class="ui large modal" id="event-detail"></div>
 
 <script>
 
@@ -96,6 +94,10 @@
       contentHeight: 'auto',
       hiddenDays: [0],
       navLinks: true,
+      navLinkDayClick: function(date, jsEvent) {
+        $('#view').dropdown('set exactly', 'Single Day')
+        $('#admin-calendar').fullCalendar('changeView', 'agendaDay')
+      },
       editable: false,
       eventLimit: true,
       minTime: '08:00:00',
@@ -151,6 +153,21 @@
               `
             }
 
+            if (response.memo == null) {
+              response.memo =
+              `
+              <div class="ui info icon message">
+                <i class="info circle icon"></i>
+                <div class="content">
+                  <div class="header">
+                    No Memos
+                  </div>
+                  <p>No one has left a memo for this event yet.</p>
+                </div>
+              </div>
+              `
+            }
+
             var header = `
             <i class="close icon" style="color: white"></i>
             <div class="ui header">
@@ -182,10 +199,22 @@
                     <div class="extra">
                       <p>Created by ${response.creator.name} on ${moment(response.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')}</p>
                       <p>Updated on ${moment(response.updated_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')}</p>
+                    </div>
+                    <div class="description">
                       <h4 class="ui horizontal divider header">
-                        <i class="dollar icon"></i> Sales
+                        <i class="comment alternate outline icon"></i> Memo
                       </h4>
-                      ${sales}
+                      ${response.memo}
+                    </div>
+                  </div>
+                </div>
+                <div class="ui item">
+                  <div class="content">
+                    <div class="extra">
+                    <h4 class="ui horizontal divider header">
+                      <i class="dollar icon"></i> Sales
+                    </h4>
+                    ${sales}
                     </div>
                   </div>
                 </div>
@@ -223,7 +252,7 @@
 
   function setTitle() {
     var title = $('#admin-calendar').fullCalendar('getView').title
-    $('.header.active.item.hide-on-mobile').html('<i class="calendar icon"></i> Calendar | {{ App\Setting::find(1)->organization }} | <strong>' + title + '</strong>')
+    $('.header.active.item.hide-on-mobile').html('<i class="calendar icon"></i> Calendar | <strong>' + title + '</strong>')
   }
 
   //$(document).ready(loadCalendar)

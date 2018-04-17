@@ -45,7 +45,7 @@ class MemberController extends Controller
           }
 
           $memberIds = $members->pluck('id');
-          $members = Member::whereIn('id', $memberIds)->orderBy('firstname', 'asc')->paginate(48);
+          $members = Member::whereIn('id', $memberIds)->orderBy('firstname', 'asc')->paginate(12);
         }
         else
         {

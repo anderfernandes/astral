@@ -88,6 +88,7 @@
 
 <br /><br />
 
+{{-- Sale Information --}}
 <div class="ui center aligned segment">
   <h4 class="ui horizontal divider header">
     <i class="dollar icon"></i> Sale Information
@@ -120,45 +121,46 @@
   </table>
 </div>
 
+{{-- Customer Information --}}
 @if ($sale->customer_id != 1 )
 
-<div class="ui center aligned segment">
-  <h4 class="ui horizontal divider header">
-    <i class="user circle icon"></i> Customer Information
-  </h4>
+  <div class="ui center aligned segment">
+    <h4 class="ui horizontal divider header">
+      <i class="user circle icon"></i> Customer Information
+    </h4>
 
-  <table class="ui very basic celled table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Address</th>
-        <th>Phone</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          @if (Request::routeIs('admin.sales.show') and $sale->customer->firstname != $sale->organization->name)
-            <h4 class="ui header">
-              <a href="{{ route('admin.users.show', $sale->customer) }}" target="_blank">
-                {{ $sale->customer->fullname }}
-              </a>
-            </h4>
-          @else
-            <h4 class="ui header">{{ $sale->customer->fullname }}</h4>
-          @endif
-        </td>
-        <td>{{ $sale->customer->email }}</td>
-        <td>{{ $sale->customer->address }} {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}</td>
-        <td>{{ $sale->organization->phone }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+    <table class="ui very basic celled table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            @if (Request::routeIs('admin.sales.show') and $sale->customer->firstname != $sale->organization->name)
+              <h4 class="ui header">
+                <a href="{{ route('admin.users.show', $sale->customer) }}" target="_blank">
+                  {{ $sale->customer->fullname }}
+                </a>
+              </h4>
+            @else
+              <h4 class="ui header">{{ $sale->customer->fullname }}</h4>
+            @endif
+          </td>
+          <td>{{ $sale->customer->email }}</td>
+          <td>{{ $sale->customer->address }} {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}</td>
+          <td>{{ $sale->organization->phone }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-@if ($sale->organization_id != 1)
-<div class="ui center aligned segment">
+  @if ($sale->organization_id != 1)
+    <div class="ui center aligned segment">
   <h4 class="ui horizontal divider header">
     <i class="university icon"></i> Organization Information
   </h4>
@@ -185,10 +187,10 @@
     </tbody>
   </table>
 </div>
+  @endif
 @endif
 
-@endif
-
+{{-- Events and Attendance --}}
 <div class="ui center aligned segment">
   <h4 class="ui horizontal divider header">
     <i class="calendar check icon"></i> Events and Attendance
@@ -227,6 +229,7 @@
   </div>
 </div>
 
+{{-- Totals --}}
 <div class="ui center aligned segment">
   <h4 class="ui horizontal divider header">
     <i class="dollar icon"></i> Totals
@@ -270,11 +273,10 @@
         </div>
       </div>
     @endif
-
-
   </div>
 </div>
 
+{{-- Payments --}}
 <div class="ui center aligned segment">
   <h4 class="ui horizontal divider header">
     <i class="money icon"></i> Payments
@@ -338,11 +340,11 @@
           <td colspan="6"><i class="info circle icon"></i> No payments have been received so far</td>
         </tr>
       @endif
-
     </tbody>
   </table>
 </div>
 
+{{-- Memo --}}
 <div class="ui segment" id="memos">
   <h4 class="ui horizontal divider header">
     <i class="comment outline icon"></i> Memo
@@ -381,6 +383,7 @@
   </div>
   @endif
 </div>
+
 
 {{-- Refund Modal --}}
 <div class="ui basic modal" id="refund-modal">

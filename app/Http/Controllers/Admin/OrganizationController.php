@@ -10,6 +10,7 @@ use App\User;
 use App\OrganizationType;
 
 use Illuminate\Support\Facades\Auth;
+use Jenssegers\Date\Date;
 
 use Session;
 
@@ -35,7 +36,7 @@ class OrganizationController extends Controller
         }
 
         $organizationIds = $organizations->pluck('id');
-        $organizations = Organization::whereIn('id', $organizationIds)->orderBy('name', 'asc')->paginate(48);;
+        $organizations = Organization::whereIn('id', $organizationIds)->orderBy('name', 'asc')->paginate(12);
       }
       else
       {
@@ -134,8 +135,21 @@ class OrganizationController extends Controller
      */
     public function show(Organization $organization)
     {
-        $sales = \App\Sale::where('organization_id', $organization->id)->where('status', 'complete')->orderBy('created_at', 'desc')->get();
-        return view('admin.organizations.show')->withSales($sales)->withOrganization($organization);
+        $today = Date::today()->toDateTimeString();
+
+        $pastSales = \App\Sale::where([
+          ['organization_id', $organization->id],
+          ['created_at', '<=', $today]
+        ])->orderBy('created_at', 'desc')->get();
+
+        $futureSales = \App\Sale::where([
+          ['organization_id', $organization->id],
+          ['created_at', '>', $today]
+        ])->orderBy('created_at', 'desc')->get();
+
+        return view('admin.organizations.show')->withPastSales($pastSales)
+                                               ->withFutureSales($futureSales)
+                                               ->withOrganization($organization);
     }
 
     /**

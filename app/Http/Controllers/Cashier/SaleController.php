@@ -40,7 +40,7 @@ class SaleController extends Controller
           }
         }
 
-        $sales = Sale::whereIn('id', $todaySalesIds)->orderBy('id', 'desc')->get();
+        $sales = Sale::whereIn('id', $todaySalesIds)->orderBy('id', 'desc')->paginate(10);
 
         return view('cashier.sales.index')->withSales($sales);
         //dd($sales);

@@ -136,7 +136,6 @@ class EventController extends Controller
       $event->end            = new Date($request->dates[0]['end']);
       $event->seats          = $request->seats;
       $event->memo           = $request->memo;
-      $event->creator_id     = Auth::user()->id;
       $event->public         = $request->public;
 
       $event->save();

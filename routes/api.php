@@ -209,10 +209,10 @@ Route::get('event/{event}', function(Event $event) {
   foreach ($event->sales as $sale) {
     if ($sale->tickets->count() > 1) {
       // Loop through tickets for this sale, get type and quantity for each type
-      $tickets = $sale->tickets->unique('ticket_type_id');
+      $tickets = $sale->tickets->where('event_id', $event->id)->unique('ticket_type_id')->all();
       foreach ($tickets as $ticket) {
-        $q = $sale->tickets->where('ticket_type_id', $ticket->type->id)->count();
-        $quantity = $sale->events[0]->show_id == 1 ? $q : $q/2;
+        $quantity = $sale->tickets->where('ticket_type_id', $ticket->ticket_type_id)->where('event_id', $event->id)->count();
+        //$quantity = $sale->events[0]->show_id == 1 ? $q : $q/2;
         $ticketsArray = array_prepend($ticketsArray, [
           'type'     => $ticket->type->name,
           'price'    => $ticket->type->price,
@@ -242,7 +242,8 @@ Route::get('event/{event}', function(Event $event) {
         'tickets'         => $ticketsArray,
       ]);
     }
-
+    // clear ticket array after we loop through this event
+    $ticketsArray = [];
   }
 
   return [
@@ -265,6 +266,7 @@ Route::get('event/{event}', function(Event $event) {
     ],
     'sales'   => $salesArray,
     'tickets_sold' => App\Ticket::where('event_id', $event->id)->count(),
+    'memo'       => $event->memo,
     'created_at' => Date::parse($event->created_at)->toDateTimeString(),
     'updated_at' => Date::parse($event->updated_at)->toDateTimeString(),
   ];

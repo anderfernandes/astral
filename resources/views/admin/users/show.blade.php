@@ -30,6 +30,10 @@
       @if ($user->organization_id != 1)
         <a href="{{ route('admin.organizations.show', $user->organization) }}" target="_blank" class="ui label" style="margin-left:0">{{ $user->organization->name }}</a>
       @endif
+      <div class="ui label" style="margin-left:0">
+        {{ $pastSales->count() + $futureSales->count() }}
+        {{ $pastSales->count() + $futureSales->count() == 1 ? 'visit' : 'visits'}}
+      </div>
       <div class="sub header">
         {{-- Display creator only if it is a no user --}}
         @if ($user->creator_id == 1)
@@ -97,47 +101,72 @@
     </div>
   </div>
 
-  @if ($sales->count() > 0)
+  @if ($futureSales->count() > 0)
     <div class="ui dividing header">
       <div class="content">
-        Visits
-        <div class="sub header">Total Events Attended: {{ $sales->count() }}</div>
+        Future Visits
+        <div class="sub header">Total Events Attended: {{ $futureSales->count() }}</div>
       </div>
     </div>
-    @foreach ($sales as $sale)
-      <div class="ui horizontal divided list">
-        @foreach($sale->events as $event)
-          <div class="item">
-          @if($event->show->id != 1)
-            @if ($sale->refund)
-              <h3 class="ui red header">
-            @endif
-          <h3 class="ui header">
-            <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}" class="image">
-            <div class="content">
-              <div class="sub header">
-                {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-                <div class="ui black circular label">{{ $event->type->name }}</div>
-              </div>
-              <a href="{{ route('admin.events.edit', $event) }}" target="_blank">{{ $event->show->name }}</a>
-              <div class="sub header">
-                @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
-                  <div class="ui black label" style="margin-left:0">
-                    <i class="ticket icon"></i>
-                    {{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}
-                    <div class="detail">
-                      {{ $ticket->type->name }}
+    <div class="ui four column grid">
+      @foreach ($futureSales as $sale)
+          @foreach($sale->events as $event)
+            @if($event->show->id != 1)
+            <div class="column">
+              <div class="ui items">
+                <div class="item">
+                  <div class="ui tiny image"><img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}"></div>
+                  <div class="content">
+                    <div class="meta">
+                      <div class="ui label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
                     </div>
+                    <div class="header">{{ $event->show->name }}</div>
+                    <div class="meta">
+                      {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+                    </div>
+                    <a href="{{ route('admin.sales.show', $sale) }}" target="_blank" class="extra">Sale #{{ $sale->id }}</a>
                   </div>
-                @endforeach
+                </div>
               </div>
             </div>
-          </h3>
-          @endif
-        </div>
-        @endforeach
+            @endif
+          @endforeach
+      @endforeach
+    </div>
+  @endif
+
+  @if ($pastSales->count() > 0)
+    <div class="ui dividing header">
+      <div class="content">
+        Past Visits
+        <div class="sub header">Total Events Attended: {{ $pastSales->count() }}</div>
       </div>
-    @endforeach
+    </div>
+    <div class="ui four column grid">
+      @foreach ($pastSales as $sale)
+          @foreach($sale->events as $event)
+            @if($event->show->id != 1)
+            <div class="column">
+              <div class="ui items">
+                <div class="item">
+                  <div class="ui tiny image"><img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}"></div>
+                  <div class="content">
+                    <div class="meta">
+                      <div class="ui label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
+                    </div>
+                    <div class="header">{{ $event->show->name }}</div>
+                    <div class="meta">
+                      {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+                    </div>
+                    <a href="{{ route('admin.sales.show', $sale) }}" target="_blank" class="extra">Sale #{{ $sale->id }}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            @endif
+          @endforeach
+      @endforeach
+    </div>
   @endif
 
   @include('admin.partial.users._edit')

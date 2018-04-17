@@ -65,7 +65,7 @@ class SaleController extends Controller
           }
 
           $saleIds = $sales->pluck('id');
-          $sales = Sale::whereIn('id', $saleIds)->orderBy('id', 'desc')->paginate(50);
+          $sales = Sale::whereIn('id', $saleIds)->orderBy('id', 'desc')->paginate(10);
         }
         else
         {

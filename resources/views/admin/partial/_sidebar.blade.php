@@ -24,17 +24,9 @@
     </div>
   </div>
   @if (Auth::user()->role->name == 'Senior Staff' || Auth::user()->role->name == 'Planetarium Lead Assistant')
-  <div class="ui dropdown item" href="{{ route('admin.calendar.index') }}">
+  <a class="ui dropdown item" href="{{ route('admin.calendar.index') }}/?type=events&view=agendaWeek">
     <i class="large calendar alternate icon"></i> Calendar
-    <div class="menu">
-      <a class="item" href="{{ route('admin.calendar.index') }}/?type=calendar&view=agendaWeek">
-        <i class="large dollar icon"></i> Reservations
-      </a>
-      <a class="item" href="{{ route('admin.calendar.index') }}/?type=events&view=agendaWeek">
-        <i class="large calendar check icon"></i> Events
-      </a>
-    </div>
-  </div>
+  </a>
   <a class="item {{ Request::routeIs('admin.sales.index') ? 'active' : '' }}" href="{{ route('admin.sales.index') }}">
     <i class="large dollar icon"></i> Sales
   </a>
@@ -122,11 +114,16 @@
     <i class="large help circle icon"></i> Help
   </a>
 
-  <div class="item">
-    <img class="ui centered tiny image" src="{{ '/'.App\Setting::find(1)->logo }}" alt="">
+  <div class="item" style="text-align: center">
+    <img class="ui centered tiny image" src="{{ '/'.App\Setting::find(1)->logo }}" alt=""><br>
+    <div class="ui tiny buttons">
+      <div class="ui basic tiny image label">
+        <img src="/astral-logo-dark.png" alt="Astral">
+        {{ config('app.version') }}
+      </div>
+    </div>
   </div>
   <div class="item" style="text-align: center">
-    Astral {{ config('app.version') }} <br>
     Created by <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>
   </div>
 </div>

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 use Session;
 use Illuminate\Support\Facades\Auth;
+use Jenssegers\Date\Date;
 
 use App\Role;
 use App\Organization;
@@ -133,11 +134,23 @@ class UserController extends Controller
       $roles = Role::where('type', '=', 'individuals')->orderBy('name', 'asc')->pluck('name', 'id');
       $organizations = Organization::where('type_id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
       $organizations->prepend('No Organization', 1);
-      $sales = \App\Sale::where('customer_id', $user->id)->where('status', 'complete')->orderBy('created_at', 'desc')->get();
+
+      $today = Date::today()->toDateTimeString();
+
+      $pastSales = \App\Sale::where([
+        ['customer_id', $user->id],
+        ['created_at', '<=', $today]
+      ])->orderBy('created_at', 'desc')->get();
+
+      $futureSales = \App\Sale::where([
+        ['customer_id', $user->id],
+        ['created_at', '>', $today]
+      ])->orderBy('created_at', 'desc')->get();
 
       return view('admin.users.show')->withUser($user)
                                      ->withRoles($roles)
-                                     ->withSales($sales)
+                                     ->withPastSales($pastSales)
+                                     ->withFutureSales($futureSales)
                                      ->withOrganizations($organizations);
     }
 
