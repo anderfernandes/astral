@@ -12,7 +12,7 @@
     <div class="active item" data-tab="cashier"><i class="inbox icon"></i> Cashier</div>
     <div class="item" data-tab="royalties"><i class="money icon"></i> Royalties</div>
     <div class="item" data-tab="membership"><i class="address card icon"></i> Membership</div>
-    <div class="item" data-tab="system"><i class="setting card icon"></i> System</div>
+    <div class="item" data-tab="system"><i class="setting icon"></i> System</div>
   </div>
 
   {{-- Cashier Reports Tab --}}

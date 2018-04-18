@@ -31,7 +31,9 @@
       <div class="menu">
         <div class="item" data-value="open"><i class="unlock icon"></i>Open</div>
         <div class="item" data-value="complete"><i class="checkmark icon"></i>Complete</div>
+        @if (!Request::routeIs('*.*.create'))
         <div class="item" data-value="canceled"><i class="remove icon"></i>Canceled</div>
+        @endif
         <div class="item" data-value="tentative"><i class="help icon"></i>Tentative</div>
         <div class="item" data-value="no show"><i class="thumbs outline down icon"></i>No Show</div>
       </div>

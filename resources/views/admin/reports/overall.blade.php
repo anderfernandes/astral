@@ -44,7 +44,7 @@
     <div class="statistic">
       <div class="value">
         <i class="dollar icon"></i>
-        {{ $payments->sum('tendered') - $payments->sum('change_due') }}
+        {{ number_format($payments->sum('tendered') - $payments->sum('change_due'), 2) }}
       </div>
       <div class="label">
         Total
@@ -109,14 +109,6 @@
       </div>
       <div class="label">
         Organizations
-      </div>
-    </div>
-    <div class="statistic">
-      <div class="value">
-        {{ $users->where('membership_id','!=', 1)->count() }}
-      </div>
-      <div class="label">
-        Members
       </div>
     </div>
   </div>

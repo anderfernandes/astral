@@ -42,6 +42,9 @@
       <a class="item" href="{{ route('admin.reports.index') }}/#membership">
         <i class="large address card icon"></i> Membership
       </a>
+      <a class="item" href="{{ route('admin.reports.index') }}/#membership">
+        <i class="large setting icon"></i> System
+      </a>
     </div>
   </div>
   <div class="ui dropdown item">

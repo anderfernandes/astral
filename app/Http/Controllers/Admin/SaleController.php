@@ -180,9 +180,11 @@ class SaleController extends Controller
           }
 
           // Mark sale as completed if it has been paid in full
-          if ($sale->payments->sum('tendered') >= $sale->total) {
-            $sale->status = "complete";
-            $sale->save();
+          if ($sale->total != 0) {
+            if ($sale->payments->sum('tendered') >= $sale->total) {
+              $sale->status = "complete";
+              $sale->save();
+            }
           }
 
           // Holds the tickets coming from the request
@@ -464,6 +466,11 @@ class SaleController extends Controller
           $sale->tickets()->createMany($secondShowTickets);
         }
 
+        if ($sale->status == 'canceled') {
+          $sale->events()->attach([1, 1]);
+          $sale->tickets()->delete();
+        }
+
         Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> updated successfully!');
 
         return redirect()->route('admin.sales.show', $sale);
@@ -511,7 +518,7 @@ class SaleController extends Controller
 
       $sale->payments()->save($refund);
 
-      $sale->status = "complete";
+      $sale->status != 'canceled' ? 'complete' : 'canceled';
 
       $sale->tickets()->delete();
 
