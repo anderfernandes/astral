@@ -316,6 +316,7 @@ Route::get('staff', function() {
   return $staff;
 });
 
+// This is the URL for the /events slide show
 Route::get('events/{start}/{end}', function($start, $end) {
   $start = Date::parse($start)->startOfDay()->toDateTimeString();
   $end = Date::parse($end)->endOfDay()->toDateTimeString();
@@ -336,7 +337,7 @@ Route::get('events/{start}/{end}', function($start, $end) {
         'type'  => $event->show->type,
         'cover' => $event->show->cover
         ],
-      'allowedTickets' => $event->type->allowedTickets,
+      'allowedTickets' => $event->type->allowedTickets->where('in_cashier', true),
       'date' => $start,
     ]);
   }
