@@ -52,7 +52,7 @@
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $payments->count() }}
+        {{ number_format($payments->count(), 0) }}
       </div>
       <div class="label">
         Payments
@@ -60,7 +60,7 @@
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $sales->count() }}
+        {{ number_format($sales->count(), 0) }}
       </div>
       <div class="label">
         Sales
@@ -97,7 +97,7 @@
   <div class="ui statistics">
     <div class="statistic">
       <div class="value">
-        {{ $users->where('type', 'individual')->count() }}
+        {{ number_format($users->where('type', 'individual')->count(), 0) }}
       </div>
       <div class="label">
         Users
@@ -105,7 +105,7 @@
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $organizations->where('id','!=', 1)->count() }}
+        {{ number_format($organizations->where('id','!=', 1)->count(), 0) }}
       </div>
       <div class="label">
         Organizations
@@ -118,7 +118,7 @@
   <div class="ui statistics">
     <div class="statistic">
       <div class="value">
-        {{ $members->where('id', '!=', 1)->count() }}
+        {{ number_format($members->where('id', '!=', 1)->count(), 0) }}
       </div>
       <div class="label">
         Members
@@ -148,7 +148,7 @@
   <div class="ui statistics">
     <div class="statistic">
       <div class="value">
-        {{ $shows->where('id', '!=', 1)->count() }}
+        {{ number_format($shows->where('id', '!=', 1)->count(), 0) }}
       </div>
       <div class="label">
         Shows
@@ -156,7 +156,7 @@
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $events->where('id', '!=', 1)->count() }}
+        {{ number_format($events->where('id', '!=', 1)->count(), 0) }}
       </div>
       <div class="label">
         Events Scheduled
@@ -170,7 +170,7 @@
           foreach ($completeSales as $sale) {
             $visitors += $sale->tickets->count();
           }
-          echo $visitors;
+          echo number_format($visitors, 0);
         ?>
       </div>
       <div class="label">
