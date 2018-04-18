@@ -96,7 +96,9 @@
       navLinks: true,
       navLinkDayClick: function(date, jsEvent) {
         $('#view').dropdown('set exactly', 'Single Day')
+        $('#admin-calendar').fullCalendar('gotoDate', date)
         $('#admin-calendar').fullCalendar('changeView', 'agendaDay')
+        setTitle()
       },
       editable: false,
       eventLimit: true,

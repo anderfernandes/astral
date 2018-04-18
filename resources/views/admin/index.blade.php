@@ -219,6 +219,7 @@ function getAttendanceByType($ticketTypeID) {
       <div class="ui relaxed list">
         <?php $lastSales = App\Sale::where('status', 'complete')->latest()->take(5)->get() ?>
         @foreach ($lastSales as $lastSale)
+          {{-- MEMBERSHIP SALES HAVE NO TICKETS UNDER THEM!!! --}}
           @if ($lastSale->tickets->count() > 0)
           <div class="item">
             <i class="big user circle icon"></i>

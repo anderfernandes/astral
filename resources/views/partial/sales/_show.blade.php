@@ -384,7 +384,6 @@
   @endif
 </div>
 
-
 {{-- Refund Modal --}}
 <div class="ui basic modal" id="refund-modal">
   <div class="ui icon header">

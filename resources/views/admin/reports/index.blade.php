@@ -12,6 +12,7 @@
     <div class="active item" data-tab="cashier"><i class="inbox icon"></i> Cashier</div>
     <div class="item" data-tab="royalties"><i class="money icon"></i> Royalties</div>
     <div class="item" data-tab="membership"><i class="address card icon"></i> Membership</div>
+    <div class="item" data-tab="system"><i class="setting card icon"></i> System</div>
   </div>
 
   {{-- Cashier Reports Tab --}}
@@ -138,7 +139,7 @@
       </div>
     </h3>
     <div class="ui four doubling stackable cards">
-      <!--- Closeout Report Card --->
+      <!--- New Members Report Card --->
       <div class="card">
         <div class="content">
           <div class="header">New Members Report</div>
@@ -162,6 +163,26 @@
         <div id="new-member-submit" class="ui bottom attached black button">Get New Members Report <i class="right chevron icon"></i></div>
       </div>
 
+    </div>
+  </div>
+
+  {{-- System Reports --}}
+  <div class="ui bottom attached tab segment" data-tab="system">
+    <h3 class="ui dividing header">
+      <i class="address card icon"></i>
+      <div class="content">
+        System
+        <div class="sub header">These reports contain information on your instance of Astral</div>
+      </div>
+    </h3>
+    <div class="ui four doubling stackable cards">
+      <div class="card">
+        <div class="content">
+          <div class="header">Overall Report</div>
+          <div class="description">This report displays overall information on the data processed by Astral so far</div>
+        </div>
+        <a href="{{ route('admin.reports.overall') }}" target="_blank" class="ui bottom attached black button">Get Overall Report <i class="right chevron icon"></i></a>
+      </div>
     </div>
   </div>
 

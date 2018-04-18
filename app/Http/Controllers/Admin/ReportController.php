@@ -347,4 +347,25 @@ class ReportController extends Controller
 
       return view('admin.reports.new-members')->withMemberships($memberships)->withStart($start)->withEnd($end);
     }
+
+    public function overall(Request $request)
+    {
+      $payments = \App\Payment::all();
+      $users = \App\User::all();
+      $organizations = \App\Organization::all();
+      $events = \App\Event::all();
+      $sales = \App\Sale::all();
+      $tickets = \App\Ticket::all();
+      $members = \App\Member::all();
+      $shows = \App\Show::all();
+
+      return view('admin.reports.overall')->withPayments($payments)
+                                          ->withShows($shows)
+                                          ->withMembers($members)
+                                          ->withTickets($tickets)
+                                          ->withEvents($events)
+                                          ->withSales($sales)
+                                          ->withOrganizations($organizations)
+                                          ->withUsers($users);
+    }
 }
