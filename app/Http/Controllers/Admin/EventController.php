@@ -57,7 +57,7 @@ class EventController extends Controller
             'dates.*.start'  => 'required',
             'dates.*.end'    => 'required',
             'seats'          => 'required|min:0',
-            'memo'           => 'nullable',
+            'memo'           => 'required',
             'public'         => 'required',
         ]);
 
@@ -70,11 +70,21 @@ class EventController extends Controller
           $event->start          = new Date($date['start']);
           $event->end            = new Date($date['end']);
           $event->seats          = $request->seats;
-          $event->memo           = $request->memo;
+          //$event->memo           = $request->memo;
           $event->creator_id     = Auth::user()->id;
           $event->public         = $request->public;
 
           $event->save();
+
+          if (isSet($request->memo))
+          {
+            $event->memo()->create([
+              'author_id' => Auth::user()->id,
+              'message'   => $request->memo,
+              'event_id'   => $event->id,
+            ]);
+          }
+
         }
 
         $date = Date::parse($event->start)->format('Y-m-d');
@@ -126,7 +136,7 @@ class EventController extends Controller
           'dates.*.start'  => 'required',
           'dates.*.end'    => 'required',
           'seats'          => 'required',
-          'memo'           => 'nullable',
+          'memo'           => 'required',
           'public'         => 'required',
       ]);
 
@@ -135,10 +145,19 @@ class EventController extends Controller
       $event->start          = new Date($request->dates[0]['start']);
       $event->end            = new Date($request->dates[0]['end']);
       $event->seats          = $request->seats;
-      $event->memo           = $request->memo;
+      //$event->memo           = $request->memo;
       $event->public         = $request->public;
 
       $event->save();
+
+      if (isSet($request->memo))
+      {
+        $event->memo()->create([
+          'author_id' => Auth::user()->id,
+          'message'   => $request->memo,
+          'event_id'   => $event->id,
+        ]);
+      }
 
       $date = Date::parse($event->start)->format('Y-m-d');
 
@@ -156,11 +175,26 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //$temp = $event;
-        //$event->delete();
+        $date = Date::parse($event->start)->format('l, F j, Y \a\t h:i A');
 
-        //Session::flash('success',
-        //    'The <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> on <strong>'.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').'</strong> has been deleted successfully!');
-        //return redirect()->route('admin.events.index');
+        if ($event->sales->count() <= 0)
+        {
+          Session::flash('success',
+              "The <strong>{$event->type->name}</strong> show <strong>{$event->show->name}</strong> on <strong>{$date}</strong> has been deleted successfully!");
+          $event->memos()->delete();
+          $event->delete();
+        }
+        else
+        {
+          $word = $event->sales->count() == 1 ? 'sale' : 'sales';
+          Session::flash('info',
+          "The <strong>{$event->type->name}</strong> show <strong>{$event->show->name}</strong> on <strong>{$date}</strong> cannot be deleted because it contains {$event->sales->count()} {$word} that depend on it");
+        }
+
+        $date = Date::parse($event->start)->format('Y-m-d');
+
+
+
+        return redirect()->to(route('admin.calendar.index') . '/?type=events&date=' . $date . '&view=agendaDay');
     }
 }

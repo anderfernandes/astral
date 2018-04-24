@@ -108,6 +108,46 @@
           .then(response => response.json())
           .then(response => {
 
+            var memos = ''
+
+            if (response.memos.length > 0) {
+              response.memos.forEach(function (memo)
+              {
+                memos +=
+                `
+                <div class="comment">
+                  <div class="avatar"><i class="user circle big icon"></i></div>
+                  <div class="content">
+                    <div class="author">
+                      ${memo.author.name}
+                      <div class="ui tiny black label">${memo.author.role}</div>
+                      <div class="metadata">
+                        <span class="date">${moment(memo.created_at).calendar()}</span>
+                      </div>
+                    </div>
+                    <div class="text">
+                      ${memo.message}
+                    </div>
+                  </div>
+                </div>
+                `
+              }
+            )
+          } else {
+            memos =
+            `
+            <div class="ui info icon message">
+              <i class="info circle icon"></i>
+              <div class="content">
+                <div class="header">
+                  No Memos
+                </div>
+                <p>No one has left a memo for this event yet.</p>
+              </div>
+            </div>
+            `
+          }
+
             // Start this variable with a message box saying that there are no sales for this event
             var sales = ''
 
@@ -124,11 +164,25 @@
                   </div>
                   `
                 })
+                {{-- This function gets the sale status and returns it prettified in the modal --}}
+                function getSaleStatus(status) {
+                  switch(status) {
+                    case 'complete'  : return `<span class="ui tiny green label"><i class="checkmark icon"></i>${status}`
+                    case 'no show'   : return `<span class="ui tiny orange label"><i class="thumbs outline down icon"></i>${status}`
+                    case 'open'      : return `<div class="ui tiny violet label"><i class="unlock icon"></i> open</div>${status}`
+                    case 'tentative' : return `<span class="ui tiny yellow label"><i class="help icon"></i>${status}`
+                    case 'canceled'  : return `<span class="ui tiny red label"><i class="remove icon"></i>${status}`
+                  }
+                }
+
                 sales +=
                 `
                 <h3 class="ui dividing header">
                   <div class="content">
-                    <a class="sub header" href="/admin/sales/${sale.id}" target="_blank">Sale # ${sale.id}</a>
+                    <a class="sub header" href="/admin/sales/${sale.id}" target="_blank" style="padding-bottom: 0">
+                      Sale # ${sale.id}
+                      ${getSaleStatus(sale.status)}
+                    </a>
                     ${sale.organization.id != 1 ? `<a href="/admin/organizations/${sale.organization.id}" target="_blank">${sale.organization.name}</a>`  : `` }
                     ${sale.organization.name == sale.customer.name ? `` : `| <a href="/admin/users/${sale.customer.id}" target="_blank">${sale.customer.name}</a>`}
                     <div class="sub header">
@@ -155,21 +209,6 @@
               `
             }
 
-            if (response.memo == null) {
-              response.memo =
-              `
-              <div class="ui info icon message">
-                <i class="info circle icon"></i>
-                <div class="content">
-                  <div class="header">
-                    No Memos
-                  </div>
-                  <p>No one has left a memo for this event yet.</p>
-                </div>
-              </div>
-              `
-            }
-
             var header = `
             <i class="close icon" style="color: white"></i>
             <div class="ui header">
@@ -190,6 +229,7 @@
                     <div class="ui label" style="background-color: ${response.color}; color: rgba(255, 255, 255, 0.8)">${response.type}</div>
                       <div class="ui label">${response.show.duration} ${response.show.duration > 1 ? `minutes` : `minute`}</div>
                       <div class="ui label">${response.tickets_sold} tickets sold</div>
+                      <div class="ui basic label">${response.public ? `Public` : `Private`}</div>
                     </div>
                     <div class="ui large header">
                       ${response.show.name}
@@ -201,12 +241,6 @@
                     <div class="extra">
                       <p>Created by ${response.creator.name} on ${moment(response.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')}</p>
                       <p>Updated on ${moment(response.updated_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')}</p>
-                    </div>
-                    <div class="description">
-                      <h4 class="ui horizontal divider header">
-                        <i class="comment alternate outline icon"></i> Memo
-                      </h4>
-                      ${response.memo}
                     </div>
                   </div>
                 </div>
@@ -220,11 +254,34 @@
                     </div>
                   </div>
                 </div>
+                <h4 class="ui horizontal divider header">
+                  <i class="comment alternate outline icon"></i> Memos
+                </h4>
+                <div class="ui comments">
+                  ${memos}
+                </div>
               </div>
             </div>
             `
+            var deleteButton = ''
+
+            if (response.sales.length <= 0) {
+              deleteButton =
+              `
+              <form action="/admin/events/${response.id}" method="POST" style="display:contents">
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <button class="ui red right labeled icon button" type="submit">
+                  Delete
+                  <i class="trash icon"></i>
+                </button>
+              </form>
+              `
+            }
+
             var footer = `
             <div class="actions">
+              ${deleteButton}
               <a href="/admin/events/${response.id}/edit" class="ui yellow right labeled icon button">
                 Edit
                 <i class="edit icon"></i>

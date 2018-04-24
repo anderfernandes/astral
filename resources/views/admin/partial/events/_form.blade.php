@@ -57,7 +57,7 @@
 <div class="field">
   @if (Request::routeIs('admin.events.create') or Request::routeIs('admin.events.edit'))
   <div class="ui buttons">
-    <a href="{{ route('admin.events.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
+    <a href="{{ route('admin.calendar.index') . '?type=events&view=agendaWeek' }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
     <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
   </div>
   @else
@@ -67,11 +67,6 @@
 {!! Form::close() !!}
 
 <script>
-
-  var simplemde = new SimpleMDE({
-      element: document.getElementById('memo'),
-      toolbar: false
-  });
 
   @if (isSet($event))
     document.querySelector('[name="dates[0][start]"]').value = moment("{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}", 'dddd, MMMM D, YYYY h:mm A').format('dddd, MMMM D, YYYY h:mm A');
@@ -176,7 +171,17 @@ $('form').form({
       rules: [
         { type: 'empty', prompt: 'Do not forget to set an end date and time for this event!' }
       ]
-    }
+    },
+    memo: {
+      identifier: 'memo',
+      rules: [
+        @if (Request::routeIs('admin.events.edit'))
+        { type: 'empty', prompt: 'Let everyone know why you are editing this event!' }
+        @else
+        { type: 'empty', prompt: 'Let everyone know why you are creating this event' }
+        @endif
+      ]
+    },
   }
 })
 </script>

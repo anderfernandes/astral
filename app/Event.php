@@ -26,4 +26,14 @@ class Event extends Model
       return $this->belongsTo('App\EventType');
     }
 
+    public function memo()
+    {
+      return $this->hasMany('App\EventMemo');
+    }
+
+    public function memos()
+    {
+      return $this->hasMany('App\EventMemo');
+    }
+
 }

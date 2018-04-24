@@ -180,7 +180,7 @@ class SaleController extends Controller
           }
 
           // Mark sale as completed if it has been paid in full
-          if ($sale->total != 0) {
+          if ($sale->status != 'canceled') {
             if ($sale->payments->sum('tendered') >= $sale->total) {
               $sale->status = "complete";
               $sale->save();
@@ -411,9 +411,11 @@ class SaleController extends Controller
         }
 
         // Mark sale as completed if it has been paid in full
-        if ($sale->payments->sum('tendered') >= $sale->total) {
-          $sale->status = "complete";
-          $sale->save();
+        if ($sale->status != 'canceled') {
+          if ($sale->payments->sum('tendered') >= $sale->total) {
+            $sale->status = "complete";
+            $sale->save();
+          }
         }
 
         // Update tickets only if its number changes
@@ -466,6 +468,7 @@ class SaleController extends Controller
           $sale->tickets()->createMany($secondShowTickets);
         }
 
+        // Delete events if sale is canceled
         if ($sale->status == 'canceled') {
           $sale->events()->attach([1, 1]);
           $sale->tickets()->delete();

@@ -201,6 +201,7 @@ Route::get('calendar-events', function() {
   return $sorted;
 });
 
+// This API is consumed by the pop up that shows event information in /admin/calendar
 Route::get('event/{event}', function(Event $event) {
 
   // Get all Sales for this event
@@ -221,29 +222,50 @@ Route::get('event/{event}', function(Event $event) {
       }
     }
 
-    // Taking out walkup sales
+    // Taking out canceled, non-refund and walkup sales
     if ($sale->customer_id != 1) {
-      $salesArray = array_prepend($salesArray, [
-        'id' => $sale->id,
-        'customer'        => [
-          'id'   => $sale->customer_id,
-          // check if last name has a space in the end for organization accounts
-          'name' => $sale->customer->lastname == null ? $sale->customer->firstname : $sale->customer->fullname,
-        ],
-        'organization'    => [
-          'id'   => $sale->organization_id,
-          'name' => $sale->organization->name,
-        ],
-        'creator' => [
-          'id' => $sale->creator_id,
-          'name' => $sale->creator->fullname,
-        ],
-        'total'           => $sale->total,
-        'tickets'         => $ticketsArray,
-      ]);
+      if (!$sale->refund) {
+        if ($sale->status != 'canceled') {
+          $salesArray = array_prepend($salesArray, [
+            'id' => $sale->id,
+            'customer'        => [
+              'id'   => $sale->customer_id,
+              // check if last name has a space in the end for organization accounts
+              'name' => $sale->customer->lastname == null ? $sale->customer->firstname : $sale->customer->fullname,
+            ],
+            'organization'    => [
+              'id'   => $sale->organization_id,
+              'name' => $sale->organization->name,
+            ],
+            'creator' => [
+              'id' => $sale->creator_id,
+              'name' => $sale->creator->fullname,
+            ],
+            'total'           => $sale->total,
+            'tickets'         => $ticketsArray,
+            'status'          => $sale->status,
+          ]);
+        }
+      }
     }
+
     // clear ticket array after we loop through this event
     $ticketsArray = [];
+  }
+
+  $memos = [];
+  $memosArray = [];
+  foreach ($event->memos as $memo) {
+    $memosArray = array_prepend($memosArray, [
+      'id'         => $memo->id,
+      'message'    => $memo->message,
+      'author'     => [
+        'name' => $memo->author->fullname,
+        'role' => $memo->author->role->name,
+      ],
+      'created_at' => Date::parse($memo->created_at)->toDateTimeString(),
+      'updated_at' => Date::parse($memo->updated_at)->toDateTimeString(),
+    ]);
   }
 
   return [
@@ -269,6 +291,7 @@ Route::get('event/{event}', function(Event $event) {
     'memo'       => $event->memo,
     'created_at' => Date::parse($event->created_at)->toDateTimeString(),
     'updated_at' => Date::parse($event->updated_at)->toDateTimeString(),
+    'memos'      => $memosArray,
   ];
 });
 
@@ -297,10 +320,11 @@ Route::get('events', function(Request $request) {
         'cover' => $event->show->cover
         ],
       'allowedTickets' => $event->type->allowedTickets,
-      'date' => $start,
-      'color' => $event->type->color,
+      'date'            => $start,
+      'color'           => $event->type->color,
       'backgroundColor' => $event->type->color,
-      'textColor' => 'rgba(255, 255, 255, 0.8)',
+      'textColor'       => 'rgba(255, 255, 255, 0.8)',
+      'public'          => $event->public,
     ]);
   }
   $eventsCollect = collect($eventsArray);

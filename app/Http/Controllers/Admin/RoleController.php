@@ -52,7 +52,7 @@ class RoleController extends Controller
         $role->type        = 'individuals';
         $role->staff       = $request->staff;
 
-        $role->creator_id  => Auth::user()->id;
+        $role->creator_id  = Auth::user()->id;
 
         $role->save();
 
