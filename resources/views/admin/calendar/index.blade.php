@@ -209,7 +209,8 @@
               `
             }
 
-            var header = `
+            var header =
+            `
             <i class="close icon" style="color: white"></i>
             <div class="ui header">
               <i class="calendar check icon"></i>
@@ -257,9 +258,7 @@
                 <h4 class="ui horizontal divider header">
                   <i class="comment alternate outline icon"></i> Memos
                 </h4>
-                <div class="ui comments">
-                  ${memos}
-                </div>
+                ${response.memos.length > 0 ? `<div class="ui comments">${memos}</div>` : memos}
               </div>
             </div>
             `
