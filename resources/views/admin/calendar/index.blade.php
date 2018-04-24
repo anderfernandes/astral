@@ -167,11 +167,11 @@
                 {{-- This function gets the sale status and returns it prettified in the modal --}}
                 function getSaleStatus(status) {
                   switch(status) {
-                    case 'complete'  : return `<span class="ui tiny green label"><i class="checkmark icon"></i>${status}`
-                    case 'no show'   : return `<span class="ui tiny orange label"><i class="thumbs outline down icon"></i>${status}`
-                    case 'open'      : return `<div class="ui tiny violet label"><i class="unlock icon"></i> open</div>${status}`
-                    case 'tentative' : return `<span class="ui tiny yellow label"><i class="help icon"></i>${status}`
-                    case 'canceled'  : return `<span class="ui tiny red label"><i class="remove icon"></i>${status}`
+                    case 'complete'  : return `<div class="ui tiny green label"><i class="checkmark icon"></i>${status}</div>`
+                    case 'no show'   : return `<div class="ui tiny orange label"><i class="thumbs outline down icon"></i>${status}</div>`
+                    case 'open'      : return `<div class="ui tiny violet label"><i class="unlock icon"></i>${status}</div>`
+                    case 'tentative' : return `<div class="ui tiny yellow label"><i class="help icon"></i>${status}</div>`
+                    case 'canceled'  : return `<div class="ui tiny red label"><i class="remove icon"></i>${status}</div>`
                   }
                 }
 
