@@ -66,6 +66,7 @@ class SaleController extends Controller
 
           //$saleIds = $sales->pluck('id');
           //$sales = Sale::whereIn('id', $saleIds)->orderBy('id', 'desc')->paginate(10);
+          $sales = $sales->get();
           $sales = $sales->orderBy('id', 'desc')->paginate(10);
         }
         else
