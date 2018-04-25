@@ -70,9 +70,10 @@ class SaleController extends Controller
         {
           // Get only 500 sales to avoid querying data that won't be used
           // MAKE THIS A VALUE DEFINED BY THE USER IN THE FUTURE
-          $salesIds = Sale::take(-100)->pluck('id');
-          //
-          $sales = Sale::whereIn('id', $salesIds)->orderBy('id', 'desc')->paginate(10);
+          //$salesIds = Sale::take(-100)->pluck('id');
+
+          //$sales = Sale::whereIn('id', $salesIds)->orderBy('id', 'desc')->paginate(10);
+          $sales = Sale::orderBy('id', 'desc')->paginate(10);
         }
         return view('admin.sales.index')->withSales($sales)->withEventTypes($eventTypes)->withRequest($request);
     }
