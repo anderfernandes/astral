@@ -37,7 +37,8 @@ class SaleController extends Controller
 
         if (count($request->all()) > 0)
         {
-          $sales = Sale::all();
+          // Limiting the number of sales to 500, make this value a user defined number later
+          $sales = Sale::take(500);
 
           // If there's a sale number...
           if ($request->saleNumber) {
@@ -64,16 +65,11 @@ class SaleController extends Controller
             $sales = $sales->where('status', $request->saleStatus);
           }
 
-          //$saleIds = $sales->pluck('id');
-          //$sales = Sale::whereIn('id', $saleIds)->orderBy('id', 'desc')->paginate(10);
-          $sales = $sales->get();
           $sales = $sales->orderBy('id', 'desc')->paginate(10);
         }
         else
         {
-          $sales = Sale::orderBy('id', 'desc')->paginate(10);
-          $eventTypes = EventType::where('id', '!=', 1)->get();
-
+          $sales = Sale::take(500)->orderBy('id', 'desc')->paginate(10);
         }
         return view('admin.sales.index')->withSales($sales)->withEventTypes($eventTypes)->withRequest($request);
     }
