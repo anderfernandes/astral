@@ -70,7 +70,7 @@ class SaleController extends Controller
         {
           // Get only 500 sales to avoid querying data that won't be used
           // MAKE THIS A VALUE DEFINED BY THE USER IN THE FUTURE
-          $salesIds = Sale::take(-500)->pluck('id');
+          $salesIds = Sale::take(-100)->pluck('id');
           //
           $sales = Sale::whereIn('id', $salesIds)->orderBy('id', 'desc')->paginate(10);
         }
