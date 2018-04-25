@@ -225,27 +225,25 @@ Route::get('event/{event}', function(Event $event) {
     // Taking out canceled, non-refund and walkup sales
     if ($sale->customer_id != 1) {
       if (!$sale->refund) {
-        if ($sale->status != 'canceled') {
-          $salesArray = array_prepend($salesArray, [
-            'id' => $sale->id,
-            'customer'        => [
-              'id'   => $sale->customer_id,
-              // check if last name has a space in the end for organization accounts
-              'name' => $sale->customer->lastname == null ? $sale->customer->firstname : $sale->customer->fullname,
-            ],
-            'organization'    => [
-              'id'   => $sale->organization_id,
-              'name' => $sale->organization->name,
-            ],
-            'creator' => [
-              'id' => $sale->creator_id,
-              'name' => $sale->creator->fullname,
-            ],
-            'total'           => $sale->total,
-            'tickets'         => $ticketsArray,
-            'status'          => $sale->status,
-          ]);
-        }
+        $salesArray = array_prepend($salesArray, [
+          'id' => $sale->id,
+          'customer'        => [
+            'id'   => $sale->customer_id,
+            // check if last name has a space in the end for organization accounts
+            'name' => $sale->customer->lastname == null ? $sale->customer->firstname : $sale->customer->fullname,
+          ],
+          'organization'    => [
+            'id'   => $sale->organization_id,
+            'name' => $sale->organization->name,
+          ],
+          'creator' => [
+            'id' => $sale->creator_id,
+            'name' => $sale->creator->fullname,
+          ],
+          'total'           => $sale->total,
+          'tickets'         => $ticketsArray,
+          'status'          => $sale->status,
+        ]);
       }
     }
 
