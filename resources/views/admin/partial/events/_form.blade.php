@@ -30,10 +30,10 @@
 </div>
 <div class="two required fields">
   <div class="field">
-      {!! Form::label('start', 'Start Date and Time') !!}
-      <div class="ui left icon input">
-        <input placeholder="Event Date and Time" data-validate="start_dates" name="dates[0][start]" type="text" readonly="readonly">
-        <i class="calendar icon"></i>
+    {!! Form::label('start', 'Start Date and Time') !!}
+    <div class="ui left icon input">
+      <input placeholder="Event Date and Time" data-validate="start_dates" name="dates[0][start]" type="text" readonly="readonly">
+      <i class="calendar icon"></i>
     </div>
   </div>
   <div class="field">

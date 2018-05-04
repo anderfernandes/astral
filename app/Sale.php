@@ -3,11 +3,21 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Product;
 
 class Sale extends Model
 {
 
     public $fillable = ['ticket_id'];
+
+    /**
+     * Return products included in this sale
+     * @return App\Product An instance of the Product model.
+     */
+    public function products()
+    {
+      return $this->belongsToMany('App\Product', 'product_sale');
+    }
 
     public function tickets()
     {

@@ -49,6 +49,34 @@ use Illuminate\Support\Facades\Auth;
   return $eventsArray;
 });*/
 
+// This API is consumed by the dropdowns in the new/edit sale views
+Route::get('/admin/events/date/{date}', function($date) {
+  $eventsArray = [[
+    'name'  => 'No Show',
+    'value' => '1',
+    'text'  => 'No Show',
+  ]];
+
+  $events = Event::whereDate('start', $date)->orderBy('start', 'asc')->get();
+
+  foreach($events as $event) {
+    $start = Date::parse($event->start)->format('l, F j, Y \a\t g:i A');
+    $eventsArray = array_prepend($eventsArray, [
+      'name' => "{$event->show->name} on {$start}",
+      'value' => "{$event->id}",
+      'text' => "{$event->show->name} on {$start}",
+    ]);
+  }
+
+  $data = [
+    'success'=> true,
+    'results' => $eventsArray,
+  ];
+
+  return response($data);
+
+});
+
 Route::get('calendar', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
   $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
@@ -297,10 +325,12 @@ Route::get('event/{event}', function(Event $event) {
 Route::get('events', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
   $end = Date::parse($request->end)->endOfDay()->addMinute()->toDateTimeString();
+  $type = isSet($request->type) ? $request->type : null;
   $events = Event::where([
-                          ['start', '>=', $start],
-                          ['end', '<=', $end],
-                        ])->get();
+                          ['start'  , '>=', $start],
+                          ['end'    , '<=', $end  ],
+                        ]);
+  $events = isSet($request->type) ? $events->where('type_id', $request->type)->get() : $events->get();
   $eventsArray = [];
   foreach ($events as $event) {
     $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
@@ -373,27 +403,29 @@ Route::get('events/{start}/{end}', function($start, $end) {
   return $eventsCollect;
 });
 
-Route::get('organizations/{organization}', function(Organization $organization) {
-  $users = [];
-  foreach ($organization->users as $user) {
-    $users = array_prepend($users, [
-      'id'      => $user->id,
-      'name'    => $user->fullname,
-      'taxable' => $organization->type->taxable,
-    ]);
-  }
-
-  return $users;
-});
-
 Route::get('settings', function() {
   $settings = \App\Setting::find(1);
   return response($settings)->withHeaders(['Access-Control-Allow-Origin' => '*']);
 });
 
 Route::get('customers', function() {
-  $customers = User::all();
-  return $customers;
+  $customerArray = [];
+  $customers = User::where('type', 'individual')->orderBy('firstname', 'asc')->get();
+  foreach ($customers as $customer) {
+    array_push($customerArray, [
+      'id' => $customer->id,
+      'name' => $customer->fullname,
+      'role' => $customer->role->name,
+      'taxable' => $customer->organization->taxable,
+      'organization' => [
+        'id' => $customer->organization->id,
+        'name' => $customer->organization->name,
+        'type' => $customer->organization->type->name,
+      ]
+    ]);
+  }
+
+  return $customerArray;
 });
 
 Route::get('payment-methods', function() {

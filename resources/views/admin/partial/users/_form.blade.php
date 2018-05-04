@@ -87,6 +87,7 @@
   @else
     <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
   @endif
+  <br><br>
 </div>
 {!! Form::close() !!}
 

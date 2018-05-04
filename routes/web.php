@@ -24,6 +24,8 @@ Route::group(
   // Calendar
   Route::get('calendar/', 'AdminController@calendar')->name('calendar.index');
   // Shows resource
+  Route::resource('products', 'ProductController');
+  // Shows resource
   Route::resource('shows', 'ShowController');
   // Members Resource
   Route::resource('members', 'MemberController');
@@ -33,6 +35,8 @@ Route::group(
   Route::resource('organizations', 'OrganizationController');
   // Events resource
   Route::resource('events', 'EventController');
+  // Product Types
+  Route::resource('product-types', 'ProductTypeController');
   // Reports
   Route::get('reports/closeout', 'ReportController@closeout')->name('reports.closeout');
   Route::get('reports/transactionDetail', 'ReportController@transactionDetail')->name('reports.transactionDetail');

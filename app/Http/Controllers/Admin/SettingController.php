@@ -17,6 +17,7 @@ use App\PaymentMethod;
 use App\EventType;
 use App\MemberType;
 use App\Category;
+use App\ProductType;
 
 class SettingController extends Controller
 {
@@ -35,6 +36,7 @@ class SettingController extends Controller
         $eventTypes = EventType::where('name', '!=', 'system')->get();
         $memberTypes = MemberType::where('id', '!=', 1)->get();
         $categories = Category::all();
+        $productTypes = ProductType::all();
         $colors = [
           'red'    => '#cf3534',
           'orange' => '#f2711c',
@@ -60,7 +62,8 @@ class SettingController extends Controller
           ->withMemberTypes($memberTypes)
           ->withEventTypes($eventTypes)
           ->withColors($colors)
-          ->withCategories($categories);
+          ->withCategories($categories)
+          ->withProductTypes($productTypes);
     }
 
     public function addOrganizationType(Request $request)

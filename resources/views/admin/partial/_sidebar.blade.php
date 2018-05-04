@@ -2,16 +2,18 @@
   <div class="item" style="text-align:center">
     <h1 class="ui inverted icon header"><i class="user circle large icon"></i></h1>
     <br />
-    {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
+    {{ Auth::user()->fullname }}
     <br /><br />
     <div class="ui tiny buttons">
       <span class="ui basic tiny label">{{ Auth::user()->role->name }}</span>
     </div>
   </div>
-  <!-- Pending loop to automatically pull all menu items -->
+  {{-- Pending loop to automatically pull all menu items --}}
   <a class="item {{ Request::routeIs('admin.index') ? 'active' : '' }}" href="{{ route('admin.index') }}">
     <i class="large dashboard icon"></i></i> Dashboard
   </a>
+  @if (Auth::user()->role->name == 'Senior Staff' || Auth::user()->role->name == 'Planetarium Lead Assistant')
+  {{-- Shows --}}
   <div class="ui dropdown item">
     <i class="large film icon"></i> Shows
     <div class="menu">
@@ -23,10 +25,15 @@
       </a>
     </div>
   </div>
-  @if (Auth::user()->role->name == 'Senior Staff' || Auth::user()->role->name == 'Planetarium Lead Assistant')
+  {{-- Products --}}
+  <a class="item {{ Request::routeIs('admin.products.index') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
+    <i class="large box icon"></i> Products
+  </a>
+  {{-- Calendar --}}
   <a class="ui dropdown item" href="{{ route('admin.calendar.index') }}/?type=events&view=agendaWeek">
     <i class="large calendar alternate icon"></i> Calendar
   </a>
+  {{-- Sales --}}
   <a class="item {{ Request::routeIs('admin.sales.index') ? 'active' : '' }}" href="{{ route('admin.sales.index') }}">
     <i class="large dollar icon"></i> Sales
   </a>
@@ -42,11 +49,12 @@
       <a class="item" href="{{ route('admin.reports.index') }}/#membership">
         <i class="large address card icon"></i> Membership
       </a>
-      <a class="item" href="{{ route('admin.reports.index') }}/#membership">
+      <a class="item" href="{{ route('admin.reports.index') }}/#system">
         <i class="large setting icon"></i> System
       </a>
     </div>
   </div>
+  {{-- Members --}}
   <div class="ui dropdown item">
     <i class="large address card icon"></i> Members
     <div class="menu">
@@ -58,6 +66,7 @@
       </a>
     </div>
   </div>
+  {{-- Users --}}
   <div class="ui dropdown item">
     <i class="large users icon"></i> Users
     <div class="menu">
@@ -69,6 +78,7 @@
       </a>
     </div>
   </div>
+  {{-- Organizations --}}
   <div class="ui dropdown item">
     <i class="large university icon"></i> Organizations
     <div class="menu">
@@ -80,9 +90,11 @@
       </a>
     </div>
   </div>
+  {{-- Bulletin --}}
   <a class="item {{ Request::routeIs('admin.posts.index') ? 'active' : '' }}" href="{{ route('admin.posts.index') }}">
     <i class="large comments outline icon"></i> Bulletin
   </a>
+  {{-- Settings --}}
   <div class="ui dropdown item">
     <i class="large setting icon"></i> Settings
     <div class="menu">
@@ -110,9 +122,13 @@
       <a class="item" href="{{ route('admin.settings.index') }}/#bulletin">
         <i class="large comments outline icon"></i> Bulletin
       </a>
+      <a class="item" href="{{ route('admin.settings.index') }}/#product-types">
+        <i class="large box icon"></i> Products
+      </a>
     </div>
   </div>
   @endif
+  {{-- Help --}}
   <a class="item" href="http://astral.anderfernandes.com/docs/{{ config('app.version') }}" target="_blank">
     <i class="large help circle icon"></i> Help
   </a>
