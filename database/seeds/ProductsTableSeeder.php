@@ -17,7 +17,7 @@ class ProductsTableSeeder extends Seeder
           'creator_id'  => 1,
           'type_id'     => 1,
           'cover'       => '/default.png',
-          'price'       => number_format(0, 2),
+          'price'       => 0,
           'created_at'  => Date::now()->toDateTimeString(),
         ]);
         DB::table('products')->insert([
@@ -26,7 +26,7 @@ class ProductsTableSeeder extends Seeder
           'creator_id'  => 1,
           'type_id'     => 1,
           'cover'       => '/default.png',
-          'price'       => number_format(0, 2),
+          'price'       => 0,
           'created_at'  => Date::now()->toDateTimeString(),
         ]);
     }

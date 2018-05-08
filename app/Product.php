@@ -7,6 +7,9 @@ use App\ProductType;
 
 class Product extends Model
 {
+
+    protected $fillable = ['product_id'];
+
     /**
      * Returns an object with this product's Creator data
      * @return App\User An instance of the User model.

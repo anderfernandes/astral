@@ -115,7 +115,7 @@ class SaleController extends Controller
             'events.*.id'                     => 'required|integer',
             'events.*.tickets.*.quantity'     => 'integer|min:0',
             'events.*.tickets.*.type_id'      => 'integer',
-            'products.*.quantity'               => 'integer|min:0',
+            'products.*.quantity'             => 'integer|min:0',
             'products.*.type_id'              => 'integer',
             'taxable'                         => 'required',
             'payment_method_id'               => 'string|nullable',
@@ -141,9 +141,9 @@ class SaleController extends Controller
           $sale->total                = number_format($request->total, 2, '.', '');
           $sale->refund               = false;
           $sale->source               = "admin";
-          $sale->sell_to_organization = ($request->organization_id == "true") ? false : true;
+          $sale->sell_to_organization = ($request->organization_id == "0");
 
-          //$sale->save();
+          $sale->save();
 
           // Create an array with event ids that are not a "no event" and add them to the DB
 
@@ -155,9 +155,7 @@ class SaleController extends Controller
             }
           }
 
-          // $sale->events()->attach($eventsArray);
-
-          // $sale->events()->attach([$request->first_event_id, $request->second_event_id]);
+          $sale->events()->attach($eventsArray);
 
           if (isSet($request->memo))
           {
@@ -182,11 +180,8 @@ class SaleController extends Controller
             $payment->change_due        = number_format($request->change_due, 2, '.', '');
             $payment->reference         = $request->reference;
             $payment->source            = 'admin';
-            //$payment->sale_id           = $sale->id;
 
-            // $payment->save();
-
-            // $sale->payments()->save($payment);
+            $sale->payments()->save($payment);
 
           }
 
@@ -194,7 +189,7 @@ class SaleController extends Controller
           if ($sale->status != 'canceled') {
             if ($sale->payments->sum('tendered') >= $sale->total) {
               $sale->status = "complete";
-              //$sale->save();
+              $sale->save();
             }
           }
 
@@ -205,8 +200,8 @@ class SaleController extends Controller
             if ($event['id'] != 1) {
               foreach ($event['tickets'] as $ticket) {
                 // Create the amount of tickets in the amount field if quantity is greater than 0
-                if ($ticket['quantity'] > 0) {
-                  for ($i = 1; $i <= $ticket['quantity']; $i++) {
+                if ((int)$ticket['quantity'] > 0) {
+                  for ($i = 1; $i <= (int)$ticket['quantity']; $i++) {
                     $tickets = array_prepend($tickets, [
                       'ticket_type_id' => $ticket['type_id'],
                       'event_id'       => $event['id'],
@@ -219,7 +214,7 @@ class SaleController extends Controller
             }
           }
 
-          //$sale->tickets()->createMany($tickets);
+          $sale->tickets()->createMany($tickets);
 
           /*
 
@@ -275,33 +270,23 @@ class SaleController extends Controller
 
           */
 
-          // Email customer with copies to management
-          // Mail::to($sale->customer->email)->bcc('planetarium.webmaster@ctcd.edu')
-          //                                ->send(new ConfirmationLetter($sale));
-
           // Add Products to sale
-
-          //Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> created successfully!');
-
-          //return redirect()->route('admin.sales.show', $sale);
 
           // Take out products with 0 quantity
 
-          $products = [];
+          $productsArray = [];
 
           foreach ($request->products as $product) {
-            if ($product['quantity'] > 0) {
-              for ($j = 1; $j <= $product['quantity']; $j++) {
-                $products = array_prepend($products, [
-                  'product_id' => $product['id'],
-                ]);
-              }
+            if ((int)$product['quantity'] > 0) {
+              array_push($productsArray, $product['id']);
             }
           }
 
-          //$sale->products()->createMany($products);
+          $sale->products()->attach($productsArray);
 
-          dd($products);
+          Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> created successfully!');
+
+          return redirect()->route('admin.sales.show', $sale);
 
     }
 
@@ -330,20 +315,16 @@ class SaleController extends Controller
      */
     public function edit(Sale $sale)
     {
-        $organizations = Organization::pluck('name', 'id');
-        $events    = Event::where('type_id', $sale->events[0]->type->id)->orderBy('start', 'asc')->get();
         $paymentMethods = PaymentMethod::all();
-        $ticketTypes = $sale->events[0]->type->allowedTickets;
-
-        // $customers = $allCustomers->mapWithKeys(function ($item) {
-        //   return [ $item['id'] => $item['firstname'].' '.$item['lastname']];
-        // });
+        $eventType      = EventType::find($sale->events[0]->type_id);
+        $ticketTypes    = $eventType->allowedTickets;
+        $products       = Product::all();
 
         return view('admin.sales.edit')
-          ->withEvents($events)
           ->withTicketTypes($ticketTypes)
           ->withPaymentMethods($paymentMethods)
-          ->withOrganizations($organizations)
+          ->withEventType($eventType)
+          ->withProducts($products)
           ->withSale($sale);
     }
 
@@ -357,185 +338,140 @@ class SaleController extends Controller
     public function update(Request $request, Sale $sale)
     {
 
-        $this->validate($request, [
-          'organization_id'      => 'required',
-          'customer_id'          => 'required',
-          'status'               => 'required',
-          'first_event_id'       => 'required|different:second_event_id',
-          'tendered'             => 'numeric',
-          'ticket.*'             => 'numeric',
-          'memo'                 => 'required|max:255',
-          'sell_to_organization' => 'required',
+      $this->validate($request, [
+        'status'                          => 'required',
+        'sell_to_organization'            => 'required|boolean',
+        'customer_id'                     => 'required|integer',
+        'events.*.date'                   => 'required|date',
+        'events.*.id'                     => 'required|integer',
+        'events.*.tickets.*.quantity'     => 'integer|min:0',
+        'events.*.tickets.*.type_id'      => 'integer',
+        'products.*.quantity'             => 'integer|min:0',
+        'products.*.type_id'              => 'integer',
+        'taxable'                         => 'required',
+        'payment_method_id'               => 'string|nullable',
+        'tendered'                        => 'numeric',
+        'change_due'                      => 'numeric',
+        'memo'                            => 'max:255',
+
+      ]);
+
+      // Get user's organization
+      $user = User::find($request->customer_id);
+
+      // Create new sale
+      $sale = new Sale;
+
+      $sale->creator_id           = Auth::user()->id;
+      $sale->organization_id      = $user->organization->id;
+      $sale->customer_id          = $request->customer_id;
+      $sale->status               = $request->status;
+      $sale->taxable              = $request->taxable;
+      $sale->subtotal             = number_format($request->subtotal, 2, '.', '');
+      $sale->tax                  = number_format($request->tax, 2, '.', '');
+      $sale->total                = number_format($request->total, 2, '.', '');
+      $sale->refund               = false;
+      $sale->source               = "admin";
+      $sale->sell_to_organization = ($request->organization_id == "0");
+
+      $sale->save();
+
+      // Create an array with event ids that are not a "no event" and add them to the DB
+
+      $eventsArray = [];
+
+      foreach ($request->events as $event) {
+        if ($event['id'] != "1") {
+          array_push($eventsArray, $event['id']);
+        }
+      }
+
+      $sale->events()->attach($eventsArray);
+
+      if (isSet($request->memo))
+      {
+        $sale->memo()->create([
+          'author_id' => Auth::user()->id,
+          'message'   => $request->memo,
+          'sale_id'   => $sale->id,
         ]);
+      }
 
-        // If the event(s) for this sale change, delete tickets that belong to the old event
-        if (isSet($request->first_event_id)) {
-          if ($sale->events[0]->id != $request->first_event_id) {
-            // Delete old tickets created
-            $sale->tickets()->delete();
+      if (isSet($request->payment_method_id) && ($request->tendered > 0)) {
 
-            // Store updated tickets in the database
+        // Create new payment
+        $payment = new Payment;
 
-            // Holds the tickets coming from the request
-            $firstShowTickets  = [];
+        $payment->cashier_id        = Auth::user()->id;
+        $payment->payment_method_id = $request->payment_method_id;
+        // Tendered may be nullable if the customer hasn't paid
+        $payment->tendered          = number_format($request->tendered, 2, '.', '');
+        $payment->total             = number_format($request->total, 2, '.', '');
+        // payment = total - tendered (precision set to two decimal places)
+        $payment->change_due        = number_format($request->change_due, 2, '.', '');
+        $payment->reference         = $request->reference;
+        $payment->source            = 'admin';
 
-            // Create array with all tickets for the first show if the amount of
-            // tickets for a ticket type is not zero
-            foreach($request->ticket as $key => $value) {
-              for($i = 1; $i <= $value; $i++) {
-                $array['ticket_type_id'] = $key;
-                $array['event_id']       = $request->first_event_id;
-                $array['customer_id']    = $request->customer_id;
-                $array['cashier_id']     = Auth::user()->id;
+        $sale->payments()->save($payment);
 
-                $firstShowTickets = array_prepend($firstShowTickets, $array);
+      }
+
+      // Mark sale as completed if it has been paid in full
+      if ($sale->status != 'canceled') {
+        if ($sale->payments->sum('tendered') >= $sale->total) {
+          $sale->status = "complete";
+          $sale->save();
+        }
+      }
+
+      $tickets = [];
+
+      // ADD AND REMOVE EXTRA TICKETS
+      //
+      // Compare number of tickets in the sale.
+      // If it is the same, don't do anything
+      // Else, see if we need to add or remove
+      // If we need to add, figure out how many and add
+      // Else, delete the amount of tickets we have extra
+
+      foreach ($request->events as $event) {
+        // Do not create tickets for "No Event" events
+        if ($event['id'] != 1) {
+          foreach ($event['tickets'] as $ticket) {
+            // Create the amount of tickets in the amount field if quantity is greater than 0
+            if ((int)$ticket['quantity'] > 0) {
+              for ($i = 1; $i <= (int)$ticket['quantity']; $i++) {
+                $tickets = array_prepend($tickets, [
+                  'ticket_type_id' => $ticket['type_id'],
+                  'event_id'       => $event['id'],
+                  'customer_id'    => $request->customer_id,
+                  'cashier_id'     => Auth::user()->id,
+                ]);
               }
             }
-
-            // Update first show tickets to the database
-            $sale->tickets()->createMany($firstShowTickets);
           }
         }
+      }
 
-        if ($request->second_event_id != 1) {
-          if ($sale->events[1]->id != $request->second_event_id) {
-            // If it does, create and array with all the tickets for the second
-            // show if the amount of tickets for a ticket type is not zero
+      $sale->tickets()->createMany($tickets);
 
-            // Create array with second show tickets
-            $secondShowTickets = [];
+      // Add Products to sale
 
-            // Populate the array
-            foreach($request->ticket as $key => $value) {
-              for($i = 1; $i <= $value; $i++) {
-                $array['ticket_type_id'] = $key;
-                $array['event_id'] = $request->second_event_id;
-                $array['customer_id'] = $request->customer_id;
-                $array['cashier_id'] = Auth::user()->id;
-                $secondShowTickets = array_prepend($secondShowTickets, $array);
-              }
-            }
+      // Take out products with 0 quantity
 
-            // Save to the database
-            $sale->tickets()->createMany($secondShowTickets);
-          }
+      $productsArray = [];
+
+      foreach ($request->products as $product) {
+        if ((int)$product['quantity'] > 0) {
+          array_push($productsArray, $product['id']);
         }
+      }
 
-        $sale->organization_id      = $request->organization_id;
-        $sale->customer_id          = $request->customer_id;
-        $sale->status               = $request->status;
-        $sale->taxable              = $request->taxable;
-        $sale->subtotal             = number_format($request->subtotal, 2, '.', '');
-        $sale->tax                  = number_format($request->tax, 2, '.', '');
-        $sale->total                = number_format($request->total, 2, '.', '');
-        $sale->refund               = false;
-        //$sale->memo                 = $request->memo;
-        $sale->sell_to_organization = $request->sell_to_organization;
+      $sale->products()->attach($productsArray);
 
-        $sale->save();
+      Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> created successfully!');
 
-        $sale->events()->detach();
-
-        $sale->events()->attach([$request->first_event_id, $request->second_event_id]);
-
-        if (isSet($request->memo))
-        {
-          $sale->memo()->create([
-            'author_id' => Auth::user()->id,
-            'message'   => $request->memo,
-            'sale_id'   => $sale->id,
-          ]);
-        }
-
-        if (isSet($request->payment_method_id) && ($request->tendered > 0)) {
-
-          // Create new payment
-          $payment = new Payment;
-
-          $payment->cashier_id        = Auth::user()->id;
-          $payment->payment_method_id = $request->payment_method_id;
-          // Tendered may be nullable if the customer hasn't paid
-          $payment->tendered          = number_format($request->tendered, 2, '.', '');
-          $payment->total             = number_format($request->total, 2, '.', '');
-          // payment = total - tendered (precision set to two decimal places)
-          $payment->change_due        = number_format($request->change_due, 2, '.', '');
-          $payment->reference         = $request->reference;
-          $payment->source            = 'admin';
-          $payment->sale_id           = $sale->id;
-
-          $payment->save();
-
-        }
-
-        // Mark sale as completed if it has been paid in full
-        if ($sale->status != 'canceled') {
-          if ($sale->payments->sum('tendered') >= $sale->total) {
-            $sale->status = "complete";
-            $sale->save();
-          }
-        }
-
-        // Update tickets only if its number changes
-        if (array_sum($request->ticket) != $sale->tickets->count()) {
-          // Delete old tickets created
-          $sale->tickets()->delete();
-
-          // Store updated tickets in the database
-
-          // Holds the tickets coming from the request
-          $firstShowTickets  = [];
-
-          // Create array with all tickets for the first show if the amount of
-          // tickets for a ticket type is not zero
-          foreach($request->ticket as $key => $value) {
-            for($i = 1; $i <= $value; $i++) {
-              $array['ticket_type_id'] = $key;
-              $array['event_id']       = $request->first_event_id;
-              $array['customer_id']    = $request->customer_id;
-              $array['cashier_id']     = Auth::user()->id;
-
-              $firstShowTickets = array_prepend($firstShowTickets, $array);
-            }
-          }
-
-          // Update first show tickets to the database
-          $sale->tickets()->createMany($firstShowTickets);
-        }
-
-        // Check if a second show exists
-        if ($request->second_event_id != 1) {
-          // If it does, create and array with all the tickets for the second
-          // show if the amount of tickets for a ticket type is not zero
-
-          // Create array with second show tickets
-          $secondShowTickets = [];
-
-          // Populate the array
-          foreach($request->ticket as $key => $value) {
-            for($i = 1; $i <= $value; $i++) {
-              $array['ticket_type_id'] = $key;
-              $array['event_id'] = $request->second_event_id;
-              $array['customer_id'] = $request->customer_id;
-              $array['cashier_id'] = Auth::user()->id;
-              $secondShowTickets = array_prepend($secondShowTickets, $array);
-            }
-          }
-
-          // Save to the database
-          $sale->tickets()->createMany($secondShowTickets);
-        }
-
-        // Delete events if sale is canceled
-        if ($sale->status == 'canceled') {
-          $sale->events()->attach([1, 1]);
-          $sale->tickets()->delete();
-        }
-
-        Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> updated successfully!');
-
-        return redirect()->route('admin.sales.show', $sale);
-
-        //dd(array_sum($request->ticket));
+      return redirect()->route('admin.sales.show', $sale);
 
 
     }

@@ -8,7 +8,7 @@ use App\Product;
 class Sale extends Model
 {
 
-    public $fillable = ['ticket_id'];
+    public $fillable = ['ticket_id', 'product_id'];
 
     /**
      * Return products included in this sale
@@ -16,7 +16,7 @@ class Sale extends Model
      */
     public function products()
     {
-      return $this->belongsToMany('App\Product', 'product_sale');
+      return $this->belongsToMany('App\Product', 'sale_product', 'sale_id', 'product_id');
     }
 
     public function tickets()

@@ -164,6 +164,18 @@
                   </div>
                   `
                 })
+
+                var products = ``
+                sale.products.forEach(function (product) {
+                  products +=
+                  `
+                  <div class="ui black label" style="margin-left:0">
+                    <i class="box icon"></i>
+                    ${product.quantity} <div class="detail">${product.name}</div>
+                  </div>
+                  `
+                })
+
                 {{-- This function gets the sale status and returns it prettified in the modal --}}
                 function getSaleStatus(status) {
                   switch(status) {
@@ -187,7 +199,7 @@
                     ${sale.organization.name == sale.customer.name ? `` : `| <a href="/admin/users/${sale.customer.id}" target="_blank">${sale.customer.name}</a>`}
                     <div class="sub header">
                       <div class="ui green tag label">$ ${parseFloat(sale.total).toFixed(2)}</div>
-                      ${tickets}
+                      ${tickets} ${products}
                     </div>
                   </div>
                 </h3>

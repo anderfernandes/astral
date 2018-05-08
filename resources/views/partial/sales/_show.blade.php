@@ -229,6 +229,40 @@
   </div>
 </div>
 
+@if($sale->products->count() > 0)
+<div class="ui center aligned segment">
+  <h4 class="ui horizontal divider header">
+    <i class="box icon"></i> Extras
+  </h4>
+  {{-- Products --}}
+  <div class="ui horizontal divided list">
+    @foreach ($sale->products as $product)
+      <div class="item">
+        <h3 class="ui header">
+          <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}">
+          <div class="content">
+            <div class="sub header">
+              <div class="ui circular blue label">{{ $product->type->name }}</div>
+            </div>
+            {{ $product->name }}
+            <div class="sub header">
+              <div class="ui black label">
+                <i class="box icon"></i>
+                {{ $sale->products->where('id', $product->id)->count() }}
+              </div>
+              <div class="ui black label">
+                <i class="dollar icon"></i>
+                {{ number_format($product->price, 2, '.', '') }} each
+              </div>
+            </div>
+          </div>
+        </h3>
+      </div>
+    @endforeach
+  </div>
+</div>
+@endif
+
 {{-- Totals --}}
 <div class="ui center aligned segment">
   <h4 class="ui horizontal divider header">

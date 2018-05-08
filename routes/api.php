@@ -233,8 +233,9 @@ Route::get('calendar-events', function() {
 Route::get('event/{event}', function(Event $event) {
 
   // Get all Sales for this event
-  $salesArray = [];
-  $ticketsArray = [];
+  $salesArray    = [];
+  $ticketsArray  = [];
+  $productsArray = [];
   foreach ($event->sales as $sale) {
     if ($sale->tickets->count() > 1) {
       // Loop through tickets for this sale, get type and quantity for each type
@@ -253,6 +254,14 @@ Route::get('event/{event}', function(Event $event) {
     // Taking out canceled, non-refund and walkup sales
     if ($sale->customer_id != 1) {
       if (!$sale->refund) {
+        foreach ($sale->products as $product) {
+          $productsArray = array_prepend($productsArray, [
+            'id'       => $product->id,
+            'name'     => $product->name,
+            'price'    => number_format($product->price, 2),
+            'quantity' => $sale->products->where('id', $product->id)->count(),
+          ]);
+        }
         $salesArray = array_prepend($salesArray, [
           'id' => $sale->id,
           'customer'        => [
@@ -268,15 +277,17 @@ Route::get('event/{event}', function(Event $event) {
             'id' => $sale->creator_id,
             'name' => $sale->creator->fullname,
           ],
-          'total'           => $sale->total,
-          'tickets'         => $ticketsArray,
-          'status'          => $sale->status,
+          'total'    => $sale->total,
+          'tickets'  => $ticketsArray,
+          'products' => $productsArray,
+          'status'   => $sale->status,
         ]);
       }
     }
 
     // clear ticket array after we loop through this event
-    $ticketsArray = [];
+    $ticketsArray  = [];
+    $productsArray = [];
   }
 
   $memos = [];

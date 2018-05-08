@@ -8,6 +8,6 @@
 
 @section('content')
 
-  @include('partial.form._sale')
+  @include('partial.sales._form')
 
 @endsection

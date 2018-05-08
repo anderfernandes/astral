@@ -98,6 +98,22 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
           @endforeach
         @endif
       @endforeach
+      @foreach($sale->products as $product)
+        <tr>
+          <td>
+            <h4 class="ui header"></h4>
+          </td>
+          <td>
+            <h4 class="ui header">
+              <div class="content">{{ $product->name }}</div>
+            </h4>
+          </td>
+          <td>{{ $product->type->name }}</td>
+          <td>${{ number_format($product->price, 2, '.', ',') }}</td>
+          <td>{{ $sale->products->where('id', $product->id)->count() }}</td>
+          <td>$ {{ number_format($product->price * $sale->products->where('id', $product->id)->count(), 2, '.' , ',') }}</td>
+        </tr>
+      @endforeach
       <tr>
         <td></td>
         <td></td>

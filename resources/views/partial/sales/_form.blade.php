@@ -64,7 +64,7 @@
           <label for="subtotal">Subtotal</label>
           <div class="ui labeled input">
             <div class="ui label">$ </div>
-            <input type="text" id="subtotal" value="{{ isSet($sale) ? number_format($sale->subtotal, 2, '.', ',') : old('subtotal') }}" readonly>
+            <input name="subtotal" type="text" id="subtotal" value="{{ isSet($sale) ? number_format($sale->subtotal, 2, '.', ',') : old('subtotal') }}" readonly>
           </div>
         </div>
 
@@ -73,7 +73,7 @@
           {!! Form::label('tax', 'Tax ('. App\Setting::find(1)->tax .'%)') !!}
           <div class="ui labeled input">
             <div class="ui label">$ </div>
-            <input type="text" id="tax" value="{{ isSet($sale) ? number_format($sale->tax, 2, '.', ',') : old('tax') }}" readonly>
+            <input name="tax" type="text" id="tax" value="{{ isSet($sale) ? number_format($sale->tax, 2, '.', ',') : old('tax') != null ? old('tax') : 0 }}" readonly>
           </div>
         </div>
 
@@ -82,7 +82,7 @@
           {!! Form::label('total', 'Total') !!}
           <div class="ui labeled input">
             <div class="ui label">$ </div>
-            <input type="text" id="total" value="{{ isSet($sale) ? number_format($sale->total, 2, '.', ',') : old('total') }}" readonly>
+            <input name="total" type="text" id="total" value="{{ isSet($sale) ? number_format($sale->total, 2, '.', ',') : old('total') }}" readonly>
           </div>
         </div>
 
@@ -135,7 +135,7 @@
       <div class="required field">
         <label for="Customer">Customer</label>
         <div class="ui selection search scrolling dropdown" id="customers">
-          <input type="hidden" id="customer_id" name="customer_id" value="{{ isSet($sale) ? $sale->customer_id : 1 }}">
+          <input type="hidden" id="customer_id" name="customer_id" value="1">
           <div class="default text">Select a Customer</div>
           <i class="dropdown icon"></i>
           <div class="menu" id="users">
@@ -146,77 +146,154 @@
 
     </div>
 
-    {{-- Event #1 --}}
-    <div class="ui inverted segment">
+    {{-- Pre-existing events for edit view --}}
+    @if (isSet($sale))
+      @foreach($sale->events as $event)
+        <div class="ui inverted segment">
 
-      <h4 class="ui horizontal divider inverted header"><i class="calendar check icon"></i> Event #1</h4>
+          <h4 class="ui horizontal divider header"><i class="calendar check icon"></i> Event #{{ $loop->index + 1 }}</h4>
 
-      <div class="two fields">
+          <div class="two fields">
 
-        {{-- First Event Date --}}
-        <div class="required field">
-          <label for="event[0][date]">Date</label>
-          <div class="ui left icon input">
-            {{-- dateFieldId --}}
-            <input type="text" name="events[0][date]" placeholder="First Event Date and Time" class="date" data-validate="date" readonly="readonly" value="">
-            <i class="calendar alternate outline icon"></i>
+            {{-- Event Date --}}
+            <div class="required field">
+              <div class="field">
+                <div class="required field">
+                  <label for="start">Date</label>
+                  <div class="ui left icon input">
+                    {{-- dateFieldId --}}
+                    <input type="text" name="events[{{ $loop->index }}][date]" placeholder="Second Event Date" class="date" readonly="readonly" data-validate="date">
+                    <i class="calendar alternate outline icon"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {{-- Show --}}
+            <div class="required field">
+              <label for="second_event_id">Show</label>
+              {{-- dropdownDivId --}}
+              <div class="ui search selection dropdown" id="second-event">
+                <input type="hidden" name="events[{{ $loop->index }}][id]" value="1" class="show" data-validate="show">
+                <i class="dropdown icon"></i>
+                <div class="default text">Select a Show</div>
+                {{-- dropdownMenuId --}}
+                <div class="menu" id="second-show">
+                  <div class="item" data-value="1">No Show</div>
+                </div>
+              </div>
+            </div>
+
           </div>
-        </div>
 
-        {{-- First Show --}}
-        <div class="required field">
-          <label for="first_event_id">Show</label>
-          {{-- dropdownDivId --}}
-          <div class="ui search selection dropdown" id="first-event">
-            <input type="hidden" name="events[0][id]" value="1" class="show" data-validate="show">
-            <i class="dropdown icon"></i>
-            <div class="default text">Select a Show</div>
-            {{-- dropdownMenuId --}}
-            <div class="menu" id="first-show">
-              <div class="item" data-value="1">No Show</div>
+          {{-- Tickets --}}
+          <table class="ui selectable single line very compact table">
+              <thead>
+                <tr class="header">
+                  <th>Ticket Type</th>
+                  <th>Amount / Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($ticketTypes as $ticketType)
+                <tr>
+                  <td>
+                    <h4 class="ui header">
+                      <i class="ticket icon"></i>
+                      <div class="content">
+                        {{ $ticketType->name }}
+                        <div class="sub header">{{ $ticketType->description }}</div>
+                      </div>
+                    </h4>
+                  </td>
+                  <td>
+                    <div class="ui right labeled input">
+                      <input type="text" name="events[${index}][tickets][{{ $loop->index }}][quantity]" value="{{ isSet($sale->tickets) ? $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticketType->id)->count() : old("events.{$event->id}.tickets.{$loop->index}.quantity") }}" size="1" class="ticket-amount">
+                      <input type="hidden" name="events[${index}][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
+                      <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+                    </div>
+                  </td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+
+        </div>
+      @endforeach
+    @else
+      {{-- Event #1 --}}
+      <div class="ui inverted segment">
+
+        <h4 class="ui horizontal divider inverted header"><i class="calendar check icon"></i> Event #1</h4>
+
+        <div class="two fields">
+
+          {{-- First Event Date --}}
+          <div class="required field">
+            <label for="event[0][date]">Date</label>
+            <div class="ui left icon input">
+              {{-- dateFieldId --}}
+              <input type="text" name="events[0][date]" placeholder="First Event Date and Time" class="date" data-validate="date" readonly="readonly" value="">
+              <i class="calendar alternate outline icon"></i>
             </div>
           </div>
+
+          {{-- First Show --}}
+          <div class="required field">
+            <label for="first_event_id">Show</label>
+            {{-- dropdownDivId --}}
+            <div class="ui search selection dropdown" id="first-event">
+              <input type="hidden" name="events[0][id]" value="1" class="show" data-validate="show">
+              <i class="dropdown icon"></i>
+              <div class="default text">Select a Show</div>
+              {{-- dropdownMenuId --}}
+              <div class="menu" id="first-show">
+                <div class="item" data-value="1">No Show</div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-      </div>
-
-      {{-- Tickets --}}
-      <table class="ui selectable single line very compact table" style="display:none">
-        <thead>
-          <tr class="header">
-            <th>Ticket Type</th>
-            <th>Amount / Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($ticketTypes as $ticketType)
-          <tr>
-            <td>
-              <h4 class="ui header">
-                <i class="ticket icon"></i>
-                <div class="content">
-                  {{ $ticketType->name }}
-                  <div class="sub header">{{ $ticketType->description }}</div>
+        {{-- Tickets --}}
+        <table class="ui selectable single line very compact table" style="display:none">
+          <thead>
+            <tr class="header">
+              <th>Ticket Type</th>
+              <th>Amount / Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($ticketTypes as $ticketType)
+            <tr>
+              <td>
+                <h4 class="ui header">
+                  <i class="ticket icon"></i>
+                  <div class="content">
+                    {{ $ticketType->name }}
+                    <div class="sub header">{{ $ticketType->description }}</div>
+                  </div>
+                </h4>
+              </td>
+              <td>
+                <div class="ui right labeled input">
+                  <input type="text" name="events[0][tickets][{{ $loop->index }}][quantity]" value="0" size="1" class="ticket-amount">
+                  <input type="hidden" name="events[0][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
+                  <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
                 </div>
-              </h4>
-            </td>
-            <td>
-              <div class="ui right labeled input">
-                <input type="text" name="events[0][tickets][{{ $loop->index }}][quantity]" value="0" size="1" class="ticket-amount">
-                <input type="hidden" name="events[0][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
-                <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
-              </div>
-            </td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
+              </td>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
 
-    </div>
+      </div>
+    @endif
 
     <div id="extra-events"></div>
 
     <br>
+
     <div class="ui button" id="add-another-event">
       <i class="icons">
         <i class="calendar alternate icon"></i>
@@ -252,7 +329,7 @@
             </td>
             <td>
               <div class="ui right labeled input">
-                <input type="text" name="products[{{ $loop->index }}][quantity]" value="0" size="1" class="product-amount">
+                <input type="text" name="products[{{ $loop->index }}][quantity]" value="{{ isSet($sale->products) ? $sale->products->where('id', $product->id)->count() : old("products.{$loop->index}.quantity") }}" size="1" class="product-amount">
                 <input type="hidden" name="products[{{ $loop->index }}][id]" value="{{ $product->id }}">
                 <input type="hidden" name="products[{{ $loop->index }}][type_id]" value="{{ $product->type_id }}">
                 <div class="ui label product price">$ {{ number_format($product->price, 2) }} each</div>
@@ -273,8 +350,8 @@
       <div class="required field">
         <label for="taxable">Taxable</label>
         <select name="taxable" value="{{ isSet($sale) ? $sale->taxable : old('taxable') }}" class="ui dropdown">
-          <option value="1">No</option>
-          <option value="0">Yes</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
         </select>
       </div>
     </div>
@@ -465,7 +542,7 @@
 
 <script>
 
-  var index = 0
+  var index = {!! isSet($sale->events) ? $sale->events->count() - 1 : 0 !!}
 
   $('#add-another-event').click(function() {
     if ($($('.show')[index]).val() == '1') {
@@ -540,7 +617,7 @@
                   <td>
                     <div class="ui right labeled input">
                       <input type="text" name="events[${index}][tickets][{{ $loop->index }}][quantity]" value="0" size="1" class="ticket-amount">
-                      <input type="hidden" name="events[${index}][tickets][{{ $loop->index }}][ticket_type_id]" value="{{ $ticketType->id }}">
+                      <input type="hidden" name="events[${index}][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
                       <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
                     </div>
                   </td>
@@ -567,6 +644,7 @@
         var dropdownMenu = $('.ui.search.selection.dropdown .menu').not('#users')[index]
         {{-- Fetch events of the selected event segment --}}
         fetchEvents(dateField, dropdownDiv, dropdownMenu)
+        console.log(index)
       })
       $($('.date')[index]).trigger("change")
         {{-- Toggle tickets table --}}
@@ -618,6 +696,7 @@
   function fetchEvents(dateFieldId, dropdownDivId, dropdownMenuId) {
     var date = document.querySelector(dateFieldId).value
     var date = moment(date, 'dddd, MMMM D, YYYY h:mm A').format('Y-MM-DD')
+
     $(dropdownMenuId).empty()
     $(dropdownMenuId).append(`<div class="item" data-value="1">No Show</div>`)
     $(dropdownDivId).dropdown('restore defaults')
@@ -639,20 +718,14 @@
 
   $('.menu .item').tab({ history: true })
 
-  {{--Auto Select Taxable--}}
-  function autoSelectTaxable() {
-    var taxable = document.querySelector('#taxable').value
-    $('#taxable').val(taxable).change()
-  }
-
   {{-- Get Users for the user selecion dropdown --}}
   function fetchUsers() {
-    $('#users').empty()
-    $("#users").append(`<div class="item" data-value="1">Walk-up</div>`)
     fetch('/api/customers/')
       .then((response) => response.json())
       .then((customers) => {
         customers.map((customer, index) => {
+          $('#users').empty()
+          $("#users").append(`<div class="item" data-value="1">Walk-up</div>`)
           $("#users")
             .append(`
               <div class="item" data-value="${customer.id}">
@@ -661,10 +734,7 @@
                 (<em>${customer.role}</em> ${customer.organization.id != 1 ? `, <strong>${customer.organization.name}</strong>` : `)`})
               </div>
               `)
-          @if (!isSet($sale))
-            $('#taxable').dropdown('set selected', customer.taxable)
-          @endif
-
+          //$('#taxable').dropdown('set selected', customer.taxable)
         })
       })
       .catch((error) => console.log(error))
@@ -734,7 +804,7 @@
       subtotalBox.value = (parseFloat(subtotal.toFixed(2)) + parseFloat(productSubtotal.toFixed(2))).toFixed(2)
 
 
-      tax = taxable.value == 'true' ? subtotal * ({{ App\Setting::find(1)->tax }} / 100) : 0
+      tax = taxable.value == "1" ? (subtotal + productSubtotal) * ({{ App\Setting::find(1)->tax }} / 100) : 0
 
       tax = Number(Math.round(tax+'e2')+'e-2')
 
@@ -767,20 +837,29 @@
     changeSaleStatusColor()
     calculateTotals()
     fetchUsers()
-    $('.date').flatpickr({dateFormat: 'l, F j, Y', defaultDate: {!! old('events.0.date') == null ? "'today'" : old('events.0.date') !!} })
-    $('.date').trigger("change")
-    @if (isSet($sale))
-      $("#customers").dropdown('set selected', {{ $sale->customer_id }})
-      @isset($sale->events[1])
-        $("#second-event").dropdown('set selected', {{ $sale->events[1]->id }})
-      @endisset
-      $("#sale-status").dropdown('set selected', '{{ $sale->status }}')
+    @if (isSet($sale->events))
+      @foreach ($sale->events as $event)
+      $($('.date')[{{ $loop->index }}]).flatpickr({dateFormat: 'l, F j, Y', defaultDate: '{{ Date::parse($event->start)->format('l, F j, Y') }}'})
+      @endforeach
     @else
-      $("#customers").dropdown('set selected', {{ old('customer_id') }})
+      $('.date').flatpickr({dateFormat: 'l, F j, Y', defaultDate: 'today' })
     @endif
+    {{-- Forcing change on date field so that new events can be fetched from the server --}}
+    $('.date').trigger("change")
+    setTimeout(function() {
+      {{-- Set default events --}}
+      @if (isSet($sale))
+        $("#customers").dropdown('set selected', {{ $sale->customer_id }})
+        $("#sale-status").dropdown('set selected', '{{ $sale->status }}')
+        @foreach ($sale->events as $event)
+        {{-- Set default event --}}
+        $($('.ui.search.selection.dropdown').not('.scrolling')[{{ $loop->index }}]).dropdown('set selected', {{ $event->id }})
+        @endforeach
+      @else
+        $("#customers").dropdown('set selected', {{ old('customer_id') }})
+      @endif
+    }, 500)
   })
-
-  console.log({{ old('events.0.date') }})
 
   {{-- Change Sale Status color whenever the sale status changes --}}
   $('#status').change(changeSaleStatusColor)

@@ -1,8 +1,8 @@
 <div class="ui sidebar vertical inverted menu" style="overflow: visible !important">
   <div class="item" style="text-align:center">
-    <h1 class="ui inverted icon header"><i class="user circle large icon"></i></h1>
+    <h3 class="ui inverted icon header"><i class="user circle large icon"></i></h3>
     <br />
-    {{ Auth::user()->fullname }}
+    {!! Auth::user()->fullname !!}
     <br /><br />
     <div class="ui tiny buttons">
       <span class="ui basic tiny label">{{ Auth::user()->role->name }}</span>
@@ -134,7 +134,6 @@
   </a>
 
   <div class="item" style="text-align: center">
-    <img class="ui centered tiny image" src="{{ '/'.App\Setting::find(1)->logo }}" alt=""><br>
     <div class="ui tiny buttons">
       <div class="ui basic tiny image label">
         <img src="/astral-logo-dark.png" alt="Astral">
