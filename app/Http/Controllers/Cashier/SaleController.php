@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 
 use Session;
 use Jenssegers\Date\Date;
+
 Use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 use App\Sale;
 use App\User;
@@ -147,6 +149,9 @@ class SaleController extends Controller
 
           $payment->save();
 
+          // Log added payment
+          Log::info(Auth::user()->fullname . ' added Payment #' . $payment->id . ' to Sale #' . $sale->id .' using cashier');
+
         }
 
         // Mark sale as completed if it has been paid in full
@@ -206,6 +211,9 @@ class SaleController extends Controller
         }
 
         Session::flash('success', 'Sale #'. $sale->id .' created successfully!');
+
+        // Log created sale
+        Log::info(Auth::user()->fullname . ' created Sale #' . $sale->id .' using cashier');
 
         return redirect()->route('cashier.sales.index');
 
@@ -318,6 +326,9 @@ class SaleController extends Controller
 
           $payment->save();
 
+          // Log created payment
+          Log::info(Auth::user()->fullname . ' added Payment #' . $payment->id . ' to Sale #' . $sale->id .' using cashier');
+
         }
 
         // Mark sale as completed if it has been paid in full
@@ -378,6 +389,9 @@ class SaleController extends Controller
         }
 
         Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> updated successfully!');
+
+        // Log created sale
+        Log::info(Auth::user()->fullname . ' updated Sale #' . $sale->id .' using cashier');
 
         return redirect()->route('cashier.sales.index');
 

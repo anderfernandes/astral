@@ -1,6 +1,6 @@
 <div class="ui sidebar vertical menu" style="overflow: visible !important">
   <div class="item" style="text-align:center">
-    <h1 class="ui icon header"><i class="user circle large icon"></i></h1>
+    <h3 class="ui icon header"><i class="user circle large icon"></i></h3>
     <br />
     {{ Auth::user()->fullname }}
     <br /><br />
@@ -42,11 +42,20 @@
       <i class="large sun icon"></i> Admin
     </a>
   @endif
-  <a class="item" href="http://astral.anderfernandes.com/docs/1.0.0-alpha1/" target="_blank">
+  <a class="item" href="http://astral.anderfernandes.com/docs/{{ config('app.version') }}" target="_blank">
     <i class="large help circle icon"></i> Help
   </a>
-  <div class="item">
-    <img class="ui centered tiny image" src="{{ '/'.App\Setting::find(1)->logo }}" alt="">
+
+  <div class="item" style="text-align: center">
+    <div class="ui tiny buttons">
+      <div class="ui black tiny image label">
+        <img src="/astral-logo-light.png" alt="Astral">
+        {{ config('app.version') }}
+      </div>
+    </div>
+  </div>
+  <div class="item" style="text-align: center">
+    Created by <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>
   </div>
 </div>
 

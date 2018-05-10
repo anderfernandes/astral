@@ -427,7 +427,7 @@ Route::get('customers', function() {
       'id' => $customer->id,
       'name' => $customer->fullname,
       'role' => $customer->role->name,
-      'taxable' => $customer->organization->taxable,
+      'taxable' => (boolean)$customer->organization->type->taxable,
       'organization' => [
         'id' => $customer->organization->id,
         'name' => $customer->organization->name,

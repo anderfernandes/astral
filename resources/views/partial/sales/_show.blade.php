@@ -52,7 +52,9 @@
 @if (!$sale->refund)
   @if ($sale->payments->sum('total') > 0)
   <div class="ui right floated buttons">
-    <div onclick="$('#refund-modal').modal('toggle')" class="ui red button"><i class="reply icon"></i> Refund</div>
+    <div onclick="$('#refund-modal').modal('toggle')" class="ui red button">
+      <i class="reply icon"></i> Refund
+    </div>
   </div>
   @endif
 @endif
@@ -61,7 +63,9 @@
     <i class="left chevron icon"></i>
     Back
   </a>
-  <a href="{{ route('admin.sales.edit', $sale) }}" class="ui yellow button"><i class="edit icon"></i>Edit</a>
+  <a href="{{ Request::routeIs('admin.sales.edit') ? route('admin.sales.edit', $sale) : route('cashier.sales.edit', $sale) }}" class="ui yellow button">
+    <i class="edit icon"></i>Edit
+  </a>
   <div class="ui floating secondary dropdown button">
     <i class="copy icon"></i> Invoices <i class="dropdown icon"></i>
     <div class="menu">

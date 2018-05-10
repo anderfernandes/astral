@@ -11,7 +11,9 @@ use App\Http\Controllers\Controller;
 use App\Show;
 use Session;
 use Jenssegers\Date\Date;
-Use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -87,12 +89,18 @@ class EventController extends Controller
 
         }
 
-        $date = Date::parse($event->start)->format('Y-m-d');
+        $date = Date::parse($event->start)->format('l, F j, Y \a\t h:i A');
 
         Session::flash('success',
-            'The event(s) <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> been added successfully!');
+          "The <strong>{$event->type->name}</strong> show <strong>{$event->show->name}</strong> on <strong>{$date}</strong> has been added successfully!");
+
+        $date = Date::parse($event->start)->format('Y-m-d');
+
+        // Log created event
+        Log::info(Auth::user()->fullname . ' created Event #' . $event->id .' using admin');
 
         return redirect()->to(route('admin.calendar.index') . '/?type=events&date=' . $date . '&view=agendaDay');
+
     }
 
     /**
@@ -159,10 +167,15 @@ class EventController extends Controller
         ]);
       }
 
-      $date = Date::parse($event->start)->format('Y-m-d');
+      $date = Date::parse($event->start)->format('l, F j, Y \a\t h:i A');
 
       Session::flash('success',
-          'The <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> on <strong>'.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').'</strong> has been updated successfully!');
+        "The <strong>{$event->type->name}</strong> show <strong>{$event->show->name}</strong> on <strong>{$date}</strong> has been edited successfully!");
+
+      $date = Date::parse($event->start)->format('Y-m-d');
+
+      // Log edited event
+      Log::info(Auth::user()->fullname . ' edited Event #' . $event->id .' using admin');
 
       return redirect()->to(route('admin.calendar.index') . '/?type=events&date=' . $date . '&view=agendaDay');
     }
@@ -188,12 +201,13 @@ class EventController extends Controller
         {
           $word = $event->sales->count() == 1 ? 'sale' : 'sales';
           Session::flash('info',
-          "The <strong>{$event->type->name}</strong> show <strong>{$event->show->name}</strong> on <strong>{$date}</strong> cannot be deleted because it contains {$event->sales->count()} {$word} that depend on it");
+          "The <strong>{$event->type->name} {$event->show->name}</strong> on <strong>{$date}</strong> cannot be deleted because it contains {$event->sales->count()} {$word} that depend on it");
         }
 
         $date = Date::parse($event->start)->format('Y-m-d');
 
-
+        // Log deleted event
+        Log::info(Auth::user()->fullname . ' deleted Event #' . $event->id .' using admin');
 
         return redirect()->to(route('admin.calendar.index') . '/?type=events&date=' . $date . '&view=agendaDay');
     }

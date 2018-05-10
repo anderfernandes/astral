@@ -10,7 +10,9 @@ use App\Http\Controllers\Controller;
 
 use Session;
 use Jenssegers\Date\Date;
-Use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 use App\Sale;
 use App\User;
@@ -183,6 +185,9 @@ class SaleController extends Controller
 
             $sale->payments()->save($payment);
 
+            // Log created payment
+            Log::info(Auth::user()->fullname . ' added Payment #' . $payment->id . ' to Sale #' . $sale->id .' using admin');
+
           }
 
           // Mark sale as completed if it has been paid in full
@@ -216,60 +221,6 @@ class SaleController extends Controller
 
           $sale->tickets()->createMany($tickets);
 
-          /*
-
-          // Holds the tickets coming from the request
-          $firstShowTickets  = [];
-
-          // Create array with all tickets for the first show if the amount of
-          // tickets for a ticket type is not zero
-          foreach($request->ticket as $key => $value) {
-            for($i = 1; $i <= $value; $i++) {
-              $array['ticket_type_id'] = $key;
-              $array['event_id']       = $request->first_event_id;
-              $array['customer_id']    = $request->customer_id;
-              $array['cashier_id']     = Auth::user()->id;
-
-              $firstShowTickets = array_prepend($firstShowTickets, $array);
-            }
-          }
-
-          //********************************************************************
-          //A NOTE ON TICKET UPDATES!
-          //Tickets are not actually updated because their number may change.
-          //The previous tickets created are deleted and new ones are created
-          //every time a sale is updated to ensure that each ticket has the right
-          //event, sale number and owner.
-          //********************************************************************
-
-          // Add first show tickets to the database
-          $sale->tickets()->createMany($firstShowTickets);
-
-          // add second show tickets if a second show exists
-          if ($request->second_event_id != 1) {
-            // If it does, create and array with all the tickets for the second
-            // show if the amount of tickets for a ticket type is not zero
-
-            // Create array with second show tickets
-            $secondShowTickets = [];
-
-            // Populate the array
-            foreach($request->ticket as $key => $value) {
-              for($i = 1; $i <= $value; $i++) {
-                $array['ticket_type_id'] = $key;
-                $array['event_id'] = $request->second_event_id;
-                $array['customer_id'] = $request->customer_id;
-                $array['cashier_id'] = Auth::user()->id;
-                $secondShowTickets = array_prepend($secondShowTickets, $array);
-              }
-            }
-
-            // Save to the database
-            $sale->tickets()->createMany($secondShowTickets);
-          }
-
-          */
-
           // Add Products to sale
 
           // Take out products with 0 quantity
@@ -284,7 +235,10 @@ class SaleController extends Controller
 
           $sale->products()->attach($productsArray);
 
-          Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> created successfully!');
+          Session::flash('success', "<strong>Sale #{$sale->id}</strong> created successfully!");
+
+          // Log created sale
+          Log::info(Auth::user()->fullname . ' created Sale #' . $sale->id .' using admin');
 
           return redirect()->route('admin.sales.show', $sale);
 
@@ -343,7 +297,7 @@ class SaleController extends Controller
         'sell_to_organization'            => 'required|boolean',
         'customer_id'                     => 'required|integer',
         'events.*.date'                   => 'required|date',
-        'events.*.id'                     => 'required|integer',
+        'events.*.id'                     => 'required|integer|distinct',
         'events.*.tickets.*.quantity'     => 'integer|min:0',
         'events.*.tickets.*.type_id'      => 'integer',
         'products.*.quantity'             => 'integer|min:0',
@@ -356,13 +310,11 @@ class SaleController extends Controller
 
       ]);
 
+      //dd($request->events);
+
       // Get user's organization
       $user = User::find($request->customer_id);
 
-      // Create new sale
-      $sale = new Sale;
-
-      $sale->creator_id           = Auth::user()->id;
       $sale->organization_id      = $user->organization->id;
       $sale->customer_id          = $request->customer_id;
       $sale->status               = $request->status;
@@ -376,7 +328,8 @@ class SaleController extends Controller
 
       $sale->save();
 
-      // Create an array with event ids that are not a "no event" and add them to the DB
+      // Detach sales from events regardless if they were changed or not
+      $sale->events()->detach($sale->events->pluck('id')->all());
 
       $eventsArray = [];
 
@@ -386,14 +339,15 @@ class SaleController extends Controller
         }
       }
 
+      // Attach Events to a Sale
       $sale->events()->attach($eventsArray);
 
+      // Check if there's a memo. If there is, add it to the database
       if (isSet($request->memo))
       {
         $sale->memo()->create([
           'author_id' => Auth::user()->id,
           'message'   => $request->memo,
-          'sale_id'   => $sale->id,
         ]);
       }
 
@@ -414,6 +368,9 @@ class SaleController extends Controller
 
         $sale->payments()->save($payment);
 
+        // Log created payment
+        Log::info(Auth::user()->fullname . ' added Payment #' . $payment->id . ' to Sale #' . $sale->id .' using admin');
+
       }
 
       // Mark sale as completed if it has been paid in full
@@ -424,11 +381,11 @@ class SaleController extends Controller
         }
       }
 
+      // Delete tickets
+      $sale->tickets()->delete();
+
       $tickets = [];
 
-      // ADD AND REMOVE EXTRA TICKETS
-      //
-      // Compare number of tickets in the sale.
       // If it is the same, don't do anything
       // Else, see if we need to add or remove
       // If we need to add, figure out how many and add
@@ -455,7 +412,11 @@ class SaleController extends Controller
 
       $sale->tickets()->createMany($tickets);
 
-      // Add Products to sale
+      // Remove products from sale
+
+      $sale->products()->detach($sale->products->pluck('id')->all());
+
+      // Add Products to Sale
 
       // Take out products with 0 quantity
 
@@ -469,10 +430,12 @@ class SaleController extends Controller
 
       $sale->products()->attach($productsArray);
 
-      Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> created successfully!');
+      Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> updated successfully!');
+
+      // Log edited sale
+      Log::info(Auth::user()->fullname . ' edited Sale #' . $sale->id .' using admin');
 
       return redirect()->route('admin.sales.show', $sale);
-
 
     }
 
@@ -522,7 +485,10 @@ class SaleController extends Controller
 
 
       Session::flash('success',
-          '<strong>Sale # '.$sale->id.'</strong> has been refunded successfully!');
+        "<strong>Sale #{$sale->id} </strong> has been refunded successfully!");
+
+      // Log created sale
+      Log::info(Auth::user()->fullname . ' refunded Sale #' . $sale->id .' using admin');
 
       return redirect()->route('admin.sales.show', $sale);
     }
@@ -554,7 +520,10 @@ class SaleController extends Controller
       $payment->save();
 
       Session::flash('success',
-          '<strong>Payment # ' . $refund->id . '</strong> has been refunded successfully!');
+          "<strong>Payment #{$refund->id}</strong> has been refunded successfully!");
+
+      // Log refunded payment
+      Log::info(Auth::user()->fullname . ' refunded Payment #' . $payment->id . ' which belongs to Sale #' . $sale->id .' using admin');
 
       return redirect()->route('admin.sales.show', $payment->sale_id);
 
@@ -588,9 +557,14 @@ class SaleController extends Controller
       // Write memo
       $sale->memo()->create([
         'author_id' => Auth::user()->id,
-        'message'   => 'I sent a confirmation letter to this group on ' . Date::now()->format('l, F j, Y \a\t g:i A') . '.',
+        'message'   => 'I sent a confirmation letter to ' . $sale->customer->email . ' on ' . Date::now()->format('l, F j, Y \a\t g:i A') . '.',
       ]);
+
       Session::flash('success', '<strong>Confirmation Letter</strong> successfully sent to <strong>' . $sale->customer->email . '</strong>!');
+
+      // Log refunded payment
+      Log::info(Auth::user()->fullname . ' refunded Payment #' . $payment->id . ' which belongs to Sale #' . $sale->id .' using admin');
+
       return redirect()->route('admin.sales.show', $sale);
     }
 

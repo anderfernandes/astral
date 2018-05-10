@@ -129,11 +129,13 @@ class CashierController extends Controller
           $sale->memo()->create([
             'author_id' => Auth::user()->id,
             'message'   => $request->memo,
-            'sale_id'   => $sale->id,
           ]);
         }
 
         Session::flash('success', count($request->input('ticket')). ' ticket(s) sold successfully');
+
+        // Log created sale
+        Log::info(Auth::user()->fullname . ' created Sale #' . $sale->id .' using cashier');
 
         return redirect()->route('cashier.index');
 
