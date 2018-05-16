@@ -4,7 +4,7 @@
 
 @section('subtitle', null)
 
-@section('icon', 'calendar')
+@section('icon', 'calendar alternate')
 
 @section('content')
 
@@ -14,10 +14,13 @@
     <div onclick="$('#admin-calendar').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
   </div>
 
+  @if (str_contains(Auth::user()->role->permissions['calendar'], "C"))
   <a class="ui secondary button" href="javascript:$('#create-event').modal('show')">
     <i class="calendar plus icon"></i> Create Event
   </a>
+  @endif
 
+  @if (str_contains(Auth::user()->role->permissions['sales'], "C"))
   <div class="ui floating secondary dropdown button">
     <i class="plus icon"></i> Create Sale<i class="dropdown icon"></i>
     <div class="menu">
@@ -28,6 +31,7 @@
       @endforeach
     </div>
   </div>
+  @endif
 
   <div class="ui right floated secondary floating dropdown labeled icon button" id="view">
     <i class="eye icon"></i>
@@ -103,6 +107,7 @@
       editable: false,
       eventLimit: true,
       minTime: '08:00:00',
+      titleFormat: 'dddd, MMMM D, YYYY',
       eventClick: function(calEvent, jsEvent, view) {
         fetch(`/api/event/${calEvent.id}`)
           .then(response => response.json())
@@ -322,7 +327,7 @@
 
   function setTitle() {
     var title = $('#admin-calendar').fullCalendar('getView').title
-    $('.header.active.item.hide-on-mobile').html('<i class="calendar icon"></i> Calendar | <strong>' + title + '</strong>')
+    $('.header.active.item.hide-on-mobile').html(`<i class="calendar alternate icon"></i> Calendar | <strong>${title}</strong>`)
   }
 
   //$(document).ready(loadCalendar)

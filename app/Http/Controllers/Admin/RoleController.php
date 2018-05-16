@@ -6,8 +6,10 @@ use App\Role;
 use Illuminate\Http\Request;
 
 use Session;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
+use App\RoleAccessControl;
 
 class RoleController extends Controller
 {
@@ -56,9 +58,29 @@ class RoleController extends Controller
 
         $role->save();
 
-        Session::flash('success', 'The <strong>User Role ' . $role->name . '</strong> has been created successfully!');
+        $role->permissions()->create([
+          'dashboard'     => null,
+          'shows'         => null,
+          'products'      => null,
+          'calendar'      => null,
+          'sales'         => null,
+          'reports'       => null,
+          'members'       => null,
+          'users'         => null,
+          'organizations' => null,
+          'bulletin'      => null,
+          'settings'      => null,
+          'admin'         => false,
+          'cashier'       => false,
+        ]);
 
-        return redirect()->to(route('admin.settings.index').'#user-roles');
+
+
+        Session::flash('success', "The role <strong>$role->name</strong> has been created successfully!<br> Please set the permissions for this role.");
+
+        // return redirect()->to(route('admin.settings.index').'#user-roles');
+
+        return view('admin.roles.edit')->withRole($role);
     }
 
     /**
@@ -97,11 +119,28 @@ class RoleController extends Controller
           'staff' => 'required',
         ]);
 
+        $permissions = \App\RoleAccessControl::find($role->permissions->id);
+
         $role->name        = $request->name;
         $role->description = $request->description;
         $role->staff       = $request->staff;
 
-        $role->save();
+        $permissions->dashboard     = isSet($request->dashboard)     ? implode("", $request->dashboard)     : null;
+        $permissions->shows         = isSet($request->shows)         ? implode("", $request->shows)         : null;
+        $permissions->products      = isSet($request->products)      ? implode("", $request->products)      : null;
+        $permissions->calendar      = isSet($request->calendar)      ? implode("", $request->calendar)      : null;
+        $permissions->sales         = isSet($request->sales)          ? implode("", $request->sales)          : null;
+        $permissions->reports       = isSet($request->reports)       ? implode("", $request->reports)       : null;
+        $permissions->members       = isSet($request->members)       ? implode("", $request->members)       : null;
+        $permissions->users         = isSet($request->users)         ? implode("", $request->users)         : null;
+        $permissions->organizations = isSet($request->organizations) ? implode("", $request->organizations) : null;
+        $permissions->bulletin      = isSet($request->bulletin)      ? implode("", $request->bulletin)      : null;
+        $permissions->settings      = isSet($request->settings)      ? implode("", $request->settings)      : null;
+        $permissions->admin         = (boolean)$request->admin;
+        $permissions->cashier       = (boolean)$request->cashier;
+
+
+        $permissions->save();
 
         Session::flash('success', 'The <strong>User Role ' . $role->name . '</strong> has been updated successfully!');
 

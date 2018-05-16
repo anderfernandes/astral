@@ -20,12 +20,32 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(10);
+
         $productTypes = ProductType::all();
 
-        return view('admin.products.index')->withProducts($products)
+        if (count($request->all()) > 0)
+        {
+
+          $products = Product::take(500);
+
+          $products = $request->product_name ? $products->where('id', $request->product_name) : $products;
+
+          $products = $request->product_type ? $products->where('type_id', $request->product_type) : $products;
+
+          $products = $request->product_price ? $products->where('price', $request->product_price) : $products;
+
+          $products = $products->orderBy('name', 'asc')->paginate(10);
+
+        }
+        else
+        {
+          $products = Product::orderBy('name', 'asc')->paginate(10);
+        }
+
+        return view('admin.products.index')->withRequest($request)
+                                           ->withProducts($products)
                                            ->withProductTypes($productTypes);
     }
 

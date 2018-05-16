@@ -1,4 +1,5 @@
 <div class="ui sidebar vertical inverted menu" style="overflow: visible !important">
+
   <div class="item" style="text-align:center">
     <h3 class="ui inverted icon header"><i class="user circle large icon"></i></h3>
     <br />
@@ -8,11 +9,13 @@
       <span class="ui basic tiny label">{{ Auth::user()->role->name }}</span>
     </div>
   </div>
+
   {{-- Pending loop to automatically pull all menu items --}}
   <a class="item {{ Request::routeIs('admin.index') ? 'active' : '' }}" href="{{ route('admin.index') }}">
     <i class="large dashboard icon"></i></i> Dashboard
   </a>
-  @if (Auth::user()->role->name == 'Senior Staff' || Auth::user()->role->name == 'Planetarium Lead Assistant')
+
+  @if(str_contains(Auth::user()->role->permissions['shows'], "R"))
   {{-- Shows --}}
   <div class="ui dropdown item">
     <i class="large film icon"></i> Shows
@@ -25,18 +28,31 @@
       </a>
     </div>
   </div>
+  @endif
+
+  @if(str_contains(Auth::user()->role->permissions['products'], "R"))
   {{-- Products --}}
   <a class="item {{ Request::routeIs('admin.products.index') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
     <i class="large box icon"></i> Products
   </a>
+  @endif
+
+  @if(str_contains(Auth::user()->role->permissions['calendar'], "R"))
   {{-- Calendar --}}
   <a class="ui dropdown item" href="{{ route('admin.calendar.index') }}/?type=events&view=agendaWeek">
     <i class="large calendar alternate icon"></i> Calendar
   </a>
+  @endif
+
+  @if(str_contains(Auth::user()->role->permissions['sales'], "R"))
   {{-- Sales --}}
   <a class="item {{ Request::routeIs('admin.sales.index') ? 'active' : '' }}" href="{{ route('admin.sales.index') }}">
     <i class="large dollar icon"></i> Sales
   </a>
+  @endif
+
+  @if(str_contains(Auth::user()->role->permissions['calendar'], "R"))
+  {{-- Reports --}}
   <div class="ui dropdown item" href="{{ route('admin.reports.index') }}">
     <i class="large file text icon"></i> Reports
     <div class="menu">
@@ -54,6 +70,9 @@
       </a>
     </div>
   </div>
+  @endif
+
+  @if(str_contains(Auth::user()->role->permissions['members'], "R"))
   {{-- Members --}}
   <div class="ui dropdown item">
     <i class="large address card icon"></i> Members
@@ -66,6 +85,9 @@
       </a>
     </div>
   </div>
+  @endif
+
+  @if(str_contains(Auth::user()->role->permissions['users'], "R"))
   {{-- Users --}}
   <div class="ui dropdown item">
     <i class="large users icon"></i> Users
@@ -78,6 +100,9 @@
       </a>
     </div>
   </div>
+  @endif
+
+  @if(str_contains(Auth::user()->role->permissions['organizations'], "R"))
   {{-- Organizations --}}
   <div class="ui dropdown item">
     <i class="large university icon"></i> Organizations
@@ -90,10 +115,16 @@
       </a>
     </div>
   </div>
+  @endif
+
+  @if(str_contains(Auth::user()->role->permissions['bulletin'], "R"))
   {{-- Bulletin --}}
   <a class="item {{ Request::routeIs('admin.posts.index') ? 'active' : '' }}" href="{{ route('admin.posts.index') }}">
     <i class="large comments outline icon"></i> Bulletin
   </a>
+  @endif
+
+  @if(str_contains(Auth::user()->role->permissions['settings'], "R"))
   {{-- Settings --}}
   <div class="ui dropdown item">
     <i class="large setting icon"></i> Settings
@@ -128,6 +159,7 @@
     </div>
   </div>
   @endif
+
   {{-- Help --}}
   <a class="item" href="http://astral.anderfernandes.com/docs/{{ config('app.version') }}" target="_blank">
     <i class="large help circle icon"></i> Help

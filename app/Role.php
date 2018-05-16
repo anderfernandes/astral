@@ -11,4 +11,9 @@ class Role extends Model
     {
       return $this->belongsTo('App\User');
     }
+
+    public function permissions()
+    {
+      return $this->hasOne('App\RoleAccessControl');
+    }
 }

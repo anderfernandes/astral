@@ -86,6 +86,7 @@
   </div>
   {!! Form::close() !!}
 
+  @if (str_contains(Auth::user()->role->permissions['sales'], "C"))
   <div class="ui secondary dropdown button">
     <i class="plus icon"></i> New Sale<i class="dropdown icon"></i>
     <div class="menu">
@@ -96,6 +97,7 @@
       @endforeach
     </div>
   </div>
+  @endif
 
 
 @include('partial.sales._index')

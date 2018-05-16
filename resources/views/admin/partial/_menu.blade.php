@@ -6,11 +6,13 @@
     @yield('title') | @yield('subtitle')
   </div>
   <div class="right menu">
+    @if (Auth::user()->staff)
     <div class="item hide-on-mobile">
       <a href="{{ route('cashier.index') }}" target="_blank" class="ui active inverted button">
         <i class="inbox icon"></i> Cashier
       </a>
     </div>
+    @endif
     <div class="ui dropdown item">
       <i class="user circle large inverted icon"></i>
       {!! Auth::user()->firstname !!} <i class="dropdown icon"></i>

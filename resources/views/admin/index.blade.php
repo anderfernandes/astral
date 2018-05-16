@@ -63,7 +63,10 @@ function getAttendanceByType($ticketTypeID) {
       </div>
   </div>
 
+
   <div class="eight wide computer sixteen wide mobile column">
+
+    @if(str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Overall Earnings --}}
     <div class="ui segment">
       <div class="ui dividing header">
@@ -79,21 +82,22 @@ function getAttendanceByType($ticketTypeID) {
         <canvas height="200" id="earningsChart"></canvas>
       </div>
     </div>
+    @endif
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "R"))
     {{-- Calendar --}}
     <div class="ui segment">
       <div class="ui dividing header">
         <i class="calendar alternate icon"></i>
         <div class="content">
           Calendar
-          <div class="sub header">
-          {{ App\Setting::find(1)->organization }}
-          </div>
+          <div class="sub header" id="calendar-title"></div>
         </div>
       </div>
       <div class="ui black icon buttons">
-        <div onclick="$('#calendars').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
-        <div onclick="$('#calendars').fullCalendar('today')" class="ui button"><i class="checked calendar icon"></i></div>
-        <div onclick="$('#calendars').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
+        <div onclick="$('#calendars').fullCalendar('prev'); setTitle()" class="ui button"><i class="left chevron icon"></i></div>
+        <div onclick="$('#calendars').fullCalendar('today'); setTitle()" class="ui button"><i class="checked calendar icon"></i></div>
+        <div onclick="$('#calendars').fullCalendar('next'); setTitle()" class="ui button"><i class="right chevron icon"></i></div>
       </div>
       <div class="ui secondary floating dropdown labeled icon button" style="margin-bottom: 0.5rem">
         <i class="calendar alternate outline icon"></i>
@@ -105,6 +109,9 @@ function getAttendanceByType($ticketTypeID) {
       </div>
       <div id="calendars"></div>
     </div>
+    @endif
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Charts --}}
     <div class="ui horizontal segments">
       <div class="ui center aligned segment">
@@ -152,9 +159,13 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
     </div>
+    @endif
+
   </div>
 
   <div class="eight wide computer sixteen wide mobile column">
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Attendance --}}
     <div class="ui segment">
       <div class="ui dividing header">
@@ -175,6 +186,9 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
     </div>
+    @endif
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "C"))
     {{-- Bulletin --}}
     <div class="ui segment">
       <div class="ui dividing header">
@@ -205,6 +219,9 @@ function getAttendanceByType($ticketTypeID) {
         @endforeach
       </div>
     </div>
+    @endif
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Feed --}}
     <div class="ui segment">
       <div class="ui small dividing header">
@@ -259,6 +276,8 @@ function getAttendanceByType($ticketTypeID) {
         @endforeach
       </div>
     </div>
+    @endif
+
   </div>
 </div>
 
@@ -278,6 +297,7 @@ function loadCalendars() {
     eventLimit: true,
     minTime: '08:00:00',
     events: '/api/calendar',
+    titleFormat: 'dddd, MMMM D, YYYY',
     eventClick: function(calEvent, jsEvent, view) {
       fetch(`/api/event/${calEvent.id}`)
         .then(response => response.json())
@@ -484,6 +504,7 @@ function loadCalendars() {
       });
     }
   })
+  setTitle()
 }
 
 function refetchEvents() {
@@ -491,13 +512,21 @@ function refetchEvents() {
   $('#calendars').fullCalendar('refetchEvents')
 }
 
-$(document).ready(loadCalendars)
+function setTitle() {
+  var title = $('#calendars').fullCalendar('getView').title
+  $('#calendar-title').html(title)
+}
+
+$(document).ready(function() {
+  loadCalendars()
+})
 
 setInterval(refetchEvents, 5000)
 
 function toggleCalendar(type) {
   $('#calendars').fullCalendar('removeEventSources')
   $('#calendars').fullCalendar('addEventSource', '/api/' + type)
+  setTitle()
 }
 
 window.onload = function() {
