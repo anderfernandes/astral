@@ -18,6 +18,7 @@ use App\EventType;
 use App\MemberType;
 use App\Category;
 use App\ProductType;
+use App\Grade;
 
 class SettingController extends Controller
 {
@@ -37,6 +38,7 @@ class SettingController extends Controller
         $memberTypes = MemberType::where('id', '!=', 1)->get();
         $categories = Category::all();
         $productTypes = ProductType::all();
+        $grades = Grade::all();
         $colors = [
           'red'    => '#cf3534',
           'orange' => '#f2711c',
@@ -63,7 +65,8 @@ class SettingController extends Controller
           ->withEventTypes($eventTypes)
           ->withColors($colors)
           ->withCategories($categories)
-          ->withProductTypes($productTypes);
+          ->withProductTypes($productTypes)
+          ->withGrades($grades);
     }
 
     public function addOrganizationType(Request $request)

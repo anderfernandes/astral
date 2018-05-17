@@ -101,9 +101,9 @@ function getAttendanceByType($ticketTypeID) {
       </div>
       <div class="ui secondary floating dropdown labeled icon button" style="margin-bottom: 0.5rem">
         <i class="calendar alternate outline icon"></i>
-        <span class="text">Reservations</span>
+        <span class="text">Sales</span>
         <div class="menu">
-          <div onclick="toggleCalendar('calendar')" class="active item">Reservations</div>
+          <div onclick="toggleCalendar('calendar')" class="active item">Sales</div>
           <div onclick="toggleCalendar('events')" class="item">Events</div>
         </div>
       </div>
@@ -303,6 +303,8 @@ function loadCalendars() {
         .then(response => response.json())
         .then(response => {
 
+          document.querySelector('#event-detail').innerHTML = null
+
           var memos = ''
 
           if (response.memos.length > 0) {
@@ -384,20 +386,22 @@ function loadCalendars() {
 
               sales +=
               `
-              <h3 class="ui dividing header">
-                <div class="content">
-                  <a class="sub header" href="/admin/sales/${sale.id}" target="_blank" style="padding-bottom: 0">
-                    Sale # ${sale.id}
-                    ${getSaleStatus(sale.status)}
-                  </a>
-                  ${sale.organization.id != 1 ? `<a href="/admin/organizations/${sale.organization.id}" target="_blank">${sale.organization.name}</a>`  : `` }
-                  ${sale.organization.name == sale.customer.name ? `` : `| <a href="/admin/users/${sale.customer.id}" target="_blank">${sale.customer.name}</a>`}
-                  <div class="sub header">
-                    <div class="ui green tag label">$ ${parseFloat(sale.total).toFixed(2)}</div>
-                    ${tickets} ${products}
+              <div class="ui ${sale.status == 'canceled' ? 'red inverted' : ''} raised segment">
+                <h3 class="ui ${sale.status == 'canceled' ? 'inverted' : ''} header">
+                  <div class="content">
+                    <a class="sub header" href="/admin/sales/${sale.id}" target="_blank" style="padding-bottom: 0">
+                      Sale # ${sale.id}
+                      ${getSaleStatus(sale.status)}
+                    </a>
+                    ${sale.organization.id != 1 ? `<i class="circular university icon"></i> <a href="/admin/organizations/${sale.organization.id}" target="_blank">${sale.organization.name}</a>`  : `` }<br />
+                    ${sale.organization.name == sale.customer.name ? `` : `<i class="circular user icon"></i> <a href="/admin/users/${sale.customer.id}" target="_blank">${sale.customer.name}</a>`}
+                    <div class="sub header">
+                      <div class="ui green tag label">$ ${parseFloat(sale.total).toFixed(2)}</div>
+                      ${tickets} ${products}
+                    </div>
                   </div>
-                </div>
-              </h3>
+                </h3>
+              </div>
               `
             }
           )

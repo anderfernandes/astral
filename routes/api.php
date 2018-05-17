@@ -106,8 +106,8 @@ Route::get('calendar', function(Request $request) {
           'type'  => $event->show->type,
           'cover' => $event->show->cover
         ],
-        'color' => $event->type->color,
-        'backgroundColor' => $event->type->color,
+        'color' => $sale->status == 'canceled' ? 'red' : $event->type->color,
+        'backgroundColor' => $sale->status == 'canceled' ? 'red' : $event->type->color,
         'textColor' => 'rgba(255, 255, 255, 0.8)',
       ]);
     }
@@ -398,7 +398,7 @@ Route::get('events/{start}/{end}', function($start, $end) {
       'show'     => [
         'name'  => $event->show->name,
         'type'  => $event->show->type,
-        'cover' => $event->show->cover
+        'cover' => $event->show->cover,
         ],
       'allowedTickets' => $event->type->allowedTickets->where('in_cashier', true),
       'date' => $start,

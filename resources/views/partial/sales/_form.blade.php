@@ -91,6 +91,17 @@
 
         </div>
 
+        {{-- Grade --}}
+        <div class="field">
+          <label for="grades">Grade(s)</label>
+          <select name="grades[]" multiple="" id="grades" class="ui dropdown">
+            <option value="">N/A</option>
+            @foreach ($grades as $grade)
+              <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+            @endforeach
+          </select>
+        </div>
+
         {{-- Pre-existing events for edit view --}}
         @if (isSet($sale))
           @foreach($sale->events as $event)
@@ -129,7 +140,7 @@
                         <div class="item" data-value="{{ $e->id }}">
                           <strong>{{ $e->show->name }}</strong>
                           at <em>{{ Date::parse($e->start)->format('g:i A') }}</em>
-                          ({{ $e->type->name }}, {{ $e->seats - App\Ticket::where('event_id', $e->id)->count() }} seats left)
+                          ({{ $e->seats - App\Ticket::where('event_id', $e->id)->count() }} seats left)
                         </div>
                         <?php $e = null ?>
                       @endforeach
@@ -729,7 +740,7 @@
           $(dropdownMenuId)
             .append(`
               <div class="item" data-value="${event.id}">
-                <strong>${event.show.name}</strong> at <em>${date}</em> (${event.type}, ${event.seats} seats left)
+                <strong>${event.show.name}</strong> at <em>${date}</em> (${event.seats} seats left)
               </div>
               `)
         })
@@ -918,6 +929,14 @@
       memo : ['empty', 'minLength[5]'],
     }
   })
+
+  @if ($sale->grades->count() > 0)
+
+    @foreach ($sale->grades as $g)
+      $('#grades').dropdown('set selected', {{ $g->id }})
+    @endforeach
+
+  @endif
 
   @endisset
 

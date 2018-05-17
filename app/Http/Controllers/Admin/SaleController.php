@@ -92,8 +92,10 @@ class SaleController extends Controller
         $eventType      = EventType::find($request->eventType);
         $ticketTypes    = $eventType->allowedTickets;
         $products       = Product::all();
+        $grades         = \App\Grade::all();
 
         return view('admin.sales.create')
+          ->withGrades($grades)
           ->withTicketTypes($ticketTypes)
           ->withPaymentMethods($paymentMethods)
           ->withEventType($eventType)
@@ -235,6 +237,12 @@ class SaleController extends Controller
 
           $sale->products()->attach($productsArray);
 
+          // Attaching Grades if they exist
+
+          if (count($request->grades) > 0) {
+            $sale->grades()->attach($request->grades);
+          }
+
           Session::flash('success', "<strong>Sale #{$sale->id}</strong> created successfully!");
 
           // Log created sale
@@ -255,6 +263,16 @@ class SaleController extends Controller
         $paid = number_format($sale->payments->sum('tendered') - $sale->payments->sum('change_due'), 2, '.', '');
         $balance = number_format(($sale->payments->sum('tendered') - $sale->payments->sum('change_due')) - $sale->total, 2, '.', '');
         $memos = \App\SaleMemo::where('sale_id', $sale->id)->orderBy('updated_at', 'desc')->get();
+
+        if ($sale->memos->count() > 0) {
+          if ($sale->memos->count() == 1) {
+            Session::flash('info', "This sale <strong>has {$sale->memos->count()}</strong> memo. <a href='#memos'>Click here</a> to read it.");
+          }
+          else {
+            Session::flash('info', "This sale <strong>has {$sale->memos->count()}</strong> memos. <a href='#memos'>Click here</a> to read them.");
+          }
+        }
+
         return view('admin.sales.show')->withSale($sale)
                                        ->withPaid($paid)
                                        ->withMemos($memos)
@@ -273,8 +291,10 @@ class SaleController extends Controller
         $eventType      = EventType::find($sale->events[0]->type_id);
         $ticketTypes    = $eventType->allowedTickets;
         $products       = Product::all();
+        $grades         = \App\Grade::all();
 
         return view('admin.sales.edit')
+          ->withGrades($grades)
           ->withTicketTypes($ticketTypes)
           ->withPaymentMethods($paymentMethods)
           ->withEventType($eventType)
@@ -429,6 +449,13 @@ class SaleController extends Controller
       }
 
       $sale->products()->attach($productsArray);
+
+      // Grades
+      $sale->grades()->detach();
+
+      if (count($request->grades) > 0) {
+        $sale->grades()->attach($request->grades);
+      }
 
       Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> updated successfully!');
 

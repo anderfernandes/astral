@@ -72,6 +72,11 @@
       display:none !important;
     }
   }
+
+  @media print {
+    .ui.borderless.inverted.fixed.top.menu {display: none !important}
+    .ui.basic.segment {margin-top: 0 !important}
+  }
 </style>
 
 <body>

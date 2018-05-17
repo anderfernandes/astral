@@ -19,6 +19,11 @@ class Sale extends Model
       return $this->belongsToMany('App\Product', 'sale_product', 'sale_id', 'product_id');
     }
 
+    public function grades()
+    {
+      return $this->belongsToMany('App\Grade', 'sale_grade', 'sale_id', 'grade_id');
+    }
+
     public function tickets()
     {
       return $this->hasMany('App\Ticket');

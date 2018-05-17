@@ -23,8 +23,8 @@ $('#product-types').form({
   on: 'blur',
   inline: true,
   fields : {
-    name        : 'empty',
-    description : 'empty',
+    name: ['empty', 'minLength[3]'],
+    description: ['empty', 'minLength[3]'],
   }
 })
 </script>

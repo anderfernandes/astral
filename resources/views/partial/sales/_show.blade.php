@@ -1,16 +1,3 @@
-@if ($sale->memos->count() > 0)
-  <div class="ui info icon message">
-    <i class="info circle icon"></i>
-    <i class="close icon"></i>
-    <div class="content">
-      <div class="header">
-        Hey, you!
-      </div>
-      <p>This sale has {{ $sale->memos->count() }} {{ $sale->memos->count() == 1 ? 'memo' : 'memos' }}. <a href="#memos">Click here</a> to read them.</p>
-    </div>
-  </div>
-@endif
-
 @if ($sale->refund)
 <h3 class="ui red dividing header">
 @else
@@ -37,9 +24,7 @@
     @endif
     {{ $sale->status }}</span>
     <div class="sub header">
-      by {{ $sale->creator->firstname }} {{ $sale->creator->lastname }}
-      on {{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }}
-      ({{ Date::parse($sale->created_at)->diffForHumans() }})
+      <i class="pencil icon"></i>{{ $sale->creator->fullname }}
     </div>
     @if ($sale->refund)
     <div class="sub header">
@@ -47,7 +32,7 @@
     </div>
     @endif
   </div>
-</h3>
+</h1>
 
 @if (!$sale->refund)
   @if ($sale->payments->sum('total') > 0)
@@ -63,7 +48,7 @@
     <i class="left chevron icon"></i>
     Back
   </a>
-  <a href="{{ Request::routeIs('admin.sales.edit') ? route('admin.sales.edit', $sale) : route('cashier.sales.edit', $sale) }}" class="ui yellow button">
+  <a href="{{ Request::routeIs('admin.*') ? route('admin.sales.edit', $sale) : route('cashier.sales.edit', $sale) }}" class="ui yellow button">
     <i class="edit icon"></i>Edit
   </a>
   <div class="ui floating secondary dropdown button">
@@ -90,112 +75,122 @@
   @endif
 </div>
 
-<br /><br />
+<br />
 
-{{-- Sale Information --}}
-<div class="ui center aligned segment">
-  <h4 class="ui horizontal divider header">
-    <i class="dollar icon"></i> Sale Information
-  </h4>
-  <table class="ui very basic celled table">
-    <thead>
-      <tr>
-        <th>Sale #</th>
-        <th>Source</th>
-        <th>Created by</th>
-        <th>Created On</th>
-        <th>Last Modified</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><h4 class="ui header">{{ $sale->id }}</h4></td>
-        <td>{{ $sale->source }}</td>
-        <td>
-          @if (Request::routeIs('admin.sales.show'))
-            <a href="{{ route('admin.users.show', $sale->creator) }}" target="_blank">{{ $sale->creator->fullname }} <div class="ui label">{{ $sale->creator->role->name }}</div></a>
-          @else
-            {{ $sale->creator->fullname }} <div class="ui label">{{ $sale->creator->role->name }}</div>
-          @endif
-        </td>
-        <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->created_at)->diffForHumans() }})</td>
-        <td>{{ Date::parse($sale->updated_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->updated_at)->diffForHumans() }})</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<h4 class="ui center aligned horizontal divider header"><i class="info circle icon"></i> Sale Data</h4>
 
-{{-- Customer Information --}}
-@if ($sale->customer_id != 1 )
+<div class="ui four cards">
 
-  <div class="ui center aligned segment">
-    <h4 class="ui horizontal divider header">
-      <i class="user circle icon"></i> Customer Information
-    </h4>
+    <div class="card">
+      <div class="ui top attached label"><i class="dollar icon"></i> Sale Information</div>
+      <div class="content">
+        <div class="header">Sale # {{ $sale->id }}</div>
+        <div class="meta"><i class="user circle icon"></i> {{ $sale->creator->fullname }}</div>
+        <div class="meta"><i class="inbox icon"></i> {{ $sale->source }}</div>
+        <div class="description">
+          <i class="pencil icon"></i> {{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->created_at)->diffForHumans() }})
+        </div>
+        <div class="description">
+          <i class="edit icon"></i> {{ Date::parse($sale->updated_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->updated_at)->diffForHumans() }})
+        </div>
+      </div>
+    </div>
 
-    <table class="ui very basic celled table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Address</th>
-          <th>Phone</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            @if (Request::routeIs('admin.sales.show') and $sale->customer->firstname != $sale->organization->name)
-              <h4 class="ui header">
-                <a href="{{ route('admin.users.show', $sale->customer) }}" target="_blank">
-                  {{ $sale->customer->fullname }}
-                </a>
-              </h4>
-            @else
-              <h4 class="ui header">{{ $sale->customer->fullname }}</h4>
-            @endif
-          </td>
-          <td>{{ $sale->customer->email }}</td>
-          <td>{{ $sale->customer->address }} {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}</td>
-          <td>{{ $sale->organization->phone }}</td>
-        </tr>
-      </tbody>
-    </table>
+    @if ($sale->customer_id != 1 )
+
+    <div class="card">
+      <div class="ui top attached label"><i class="user circle icon"></i> Customer Information</div>
+      <div class="content">
+        <div class="header">{{ $sale->customer->fullname }}</div>
+        <div class="meta"><i class="user circle icon"></i> {{ $sale->customer->role->name }}</div>
+        <div class="meta"><i class="university icon"></i>{{ $sale->customer->organization->name }}</div>
+        <div class="description">
+          <i class="map marker alternate icon"></i> {{ $sale->customer->address }}
+        </div>
+        <div class="description">
+          <i class="map marker icon"></i> {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
+        </div>
+        <div class="description">
+          <i class="phone icon"></i> {{ $sale->customer->phone}}
+        </div>
+        <div class="description">
+          <i class="at icon"></i> {{ $sale->customer->email }}
+        </div>
+      </div>
+    </div>
+
+    @endif
+
+    @if ($sale->organization_id != 1)
+
+    <div class="card">
+      <div class="ui top attached label"><i class="university icon"></i> Organization Information</div>
+      <div class="content">
+        <div class="header">{{ $sale->organization->name }}</div>
+        <div class="meta"><i class="university icon"></i> {{ $sale->organization->type->name }}</div>
+        <div class="description">
+          <i class="map marker alternate icon"></i> {{ $sale->organization->address }}
+        </div>
+        <div class="description">
+          <i class="map marker icon"></i> {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}
+        </div>
+        <div class="description">
+          <i class="phone icon"></i> {{ $sale->organization->phone}}
+        </div>
+        @isset($sale->organization->website)
+        <div class="description">
+          <i class="globe icon"></i> {{ $sale->organization->website }}
+        </div>
+        @endisset
+      </div>
+    </div>
+
+    @endif
+
+    <div class="card">
+      <div class="ui top attached label"><i class="dollar icon"></i>Totals</div>
+      <div class="extra content">
+        <div class="meta">Subtotal</div>
+        <div class="right floated header"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
+      </div>
+      <div class="extra content">
+        <div class="meta">Tax</div>
+        <div class="right floated header"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
+      </div>
+      <div class="extra content">
+        <div class="meta">Total</div>
+        <div class="right floated header"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
+      </div>
+      <div class="extra content">
+        <div class="meta">Paid</div>
+        <div class="right floated header"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
+      </div>
+      <div class="extra content">
+        <div class="meta">Balance</div>
+        <div class="right floated header"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
+      </div>
+    </div>
+
   </div>
 
-  @if ($sale->organization_id != 1)
-    <div class="ui center aligned segment">
-  <h4 class="ui horizontal divider header">
-    <i class="university icon"></i> Organization Information
-  </h4>
-  <table class="ui very basic celled table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Address</th>
-        <th>Phone</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          @if (Request::routeIs('admin.sales.show'))
-            <h4 class="ui header"><a href="{{ route('admin.organizations.show', $sale->organization) }}" target="_blank">{{ $sale->organization->name }}</a></h4>
-          @else
-            <h4 class="ui header">{{ $sale->organization->name }}</h4>
-          @endif
-        </td>
-        <td>{{ $sale->organization->address }} {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}</td>
-        <td>{{ $sale->organization->phone }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-  @endif
+
+
+{{-- Grades --}}
+@if ($sale->grades->count() > 0)
+  <div class="ui center aligned basic segment">
+    <h4 class="ui horizontal divider header">
+      <i class="book icon"></i> Grades
+    </h4>
+    <div class="ui labels">
+      @foreach ($sale->grades as $grade)
+        <div class="ui black label">{{ $grade->name }}</div>
+      @endforeach
+    </div>
+  </div>
 @endif
 
 {{-- Events and Attendance --}}
-<div class="ui center aligned segment">
+<div class="ui center aligned basic segment">
   <h4 class="ui horizontal divider header">
     <i class="calendar check icon"></i> Events and Attendance
   </h4>
@@ -234,7 +229,7 @@
 </div>
 
 @if($sale->products->count() > 0)
-<div class="ui center aligned segment">
+<div class="ui center aligned basic segment">
   <h4 class="ui horizontal divider header">
     <i class="box icon"></i> Extras
   </h4>

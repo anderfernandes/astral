@@ -37,6 +37,8 @@ Route::group(
   Route::resource('events', 'EventController');
   // Product Types
   Route::resource('product-types', 'ProductTypeController');
+  // Grades
+  Route::resource('grades', 'GradeController');
   // Reports
   Route::get('reports/closeout', 'ReportController@closeout')->name('reports.closeout');
   Route::get('reports/transactionDetail', 'ReportController@transactionDetail')->name('reports.transactionDetail');
