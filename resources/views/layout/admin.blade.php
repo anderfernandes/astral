@@ -108,10 +108,9 @@
 
     <!-- Messages -->
 
+    @include('admin.partial._message')
 
     <div class="ui basic segment" style="margin-top:3.5rem">
-
-      @include('admin.partial._message')
 
       @yield('content')
 

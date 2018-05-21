@@ -1,5 +1,6 @@
 @if (Session::has('success'))
 
+  {{-- Modal --}}
   <div class="ui basic modal">
     <div class="ui icon header">
       <i class="thumbs up icon"></i>
@@ -18,7 +19,8 @@
 
   <script>$('.ui.basic.modal').modal('show')</script>
 
-  <div class="ui success icon message">
+  {{--
+  <div class="ui success icon attached message" style="margin-top:3.5rem">
     <i class="info circle icon"></i>
     <i class="close icon"></i>
     <div class="content">
@@ -28,10 +30,15 @@
       <p>{!! Session::get('success') !!}</p>
     </div>
   </div>
+  --}}
+
+  <?php Session::forget('info') ?>
+
 @endif
 
 @if (Session::has('info'))
 
+  {{-- Modal --}}
   <div class="ui basic modal">
     <div class="ui icon header">
       <i class="info circle icon"></i>
@@ -50,7 +57,8 @@
 
   <script>$('.ui.basic.modal').modal('show')</script>
 
-  <div class="ui info icon message">
+  {{--
+  <div class="ui info icon message" style="margin-top:3.5rem">
     <i class="info circle icon"></i>
     <i class="close icon"></i>
     <div class="content">
@@ -60,6 +68,10 @@
       <p>{!! Session::get('info') !!}</p>
     </div>
   </div>
+  --}}
+
+  <?php Session::forget('info') ?>
+
 @endif
 
 @if (count($errors) > 0)
@@ -86,6 +98,7 @@
 
   <script>$('.ui.basic.modal').modal('show')</script>
 
+  {{--
   <div class="ui error icon message">
     <i class="warning circle icon"></i>
     <i class="close icon"></i>
@@ -104,4 +117,6 @@
       </ul>
     </div>
   </div>
+  --}}
+  
 @endif

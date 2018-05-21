@@ -15,7 +15,7 @@
         "babel-preset-stage-0": "^6.24.1",
         "chart.js": "^2.7.0",
         "cross-env": "^5.1.5",
-        "flatpickr": "^4.4.6",
+        "flatpickr": "^4.5.0",
         "fullcalendar": "^3.8.2",
         "jquery-address": "^1.6.0",
         "laravel-mix": "^1.7.2",

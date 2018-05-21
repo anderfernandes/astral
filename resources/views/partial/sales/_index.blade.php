@@ -11,6 +11,7 @@
       <th>Balance</th>
       <th>Status</th>
       <th>Created by</th>
+      <th>Created on</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -65,7 +66,8 @@
             {{ $sale->status }}</span>
           @endif
         </td>
-        <td>{{ $sale->creator->firstname }}</td>
+        <td><i class="user circle icon"></i>{{ $sale->creator->firstname }}</td>
+        <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->created_at)->diffForHumans() }})</td>
         <td>
           <div class="ui icon buttons">
             @if (($sale->customer->membership_id == 1))

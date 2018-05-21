@@ -51,99 +51,168 @@
 
   </div>
 
-  <div class="ui grid">
+  <div class="ui grid" style="margin-bottom:90px">
 
-    <div class="ui thirteen wide column">
+      <div class="ui sixteen wide column">
 
-      {{-- Tabs --}}
-      <div class="ui top attached tabular menu">
-        <a class="active item" data-tab="sale-information"><i class="dollar icon"></i>Sale Information</a>
-        <a class="item" data-tab="payment-information"><i class="money icon"></i>Payment Information</a>
-      </div>
+        {{-- Tabs --}}
+        <div class="ui top attached tabular menu">
+          <a class="active item" data-tab="sale-information"><i class="dollar icon"></i>Sale Information</a>
+          <a class="item" data-tab="payment-information"><i class="money icon"></i>Payment Information</a>
+        </div>
 
-      {{-- Sale Information Tab --}}
-      <div class="ui bottom attached active tab segment" data-tab="sale-information">
+        {{-- Sale Information Tab --}}
+        <div class="ui bottom attached active tab segment" data-tab="sale-information">
 
-        {{-- Customer Information --}}
-        <div class="two fields">
+          {{-- Customer Information --}}
+          <div class="two fields">
 
-          {{-- Sell To --}}
-          <div class="required field">
-            <label for="sell_to_organization">Sell To</label>
-            <select class="ui dropdown" name="sell_to_organization" value="{{ isSet($sale) ? $sale->sell_to_organization : old('sell_to_organization') }}">
-              <option value="0">Customer</option>
-              <option value="1">Organization</option>
+            {{-- Sell To --}}
+            <div class="required field">
+              <label for="sell_to_organization">Sell To</label>
+              <select class="ui dropdown" name="sell_to_organization" value="{{ isSet($sale) ? $sale->sell_to_organization : old('sell_to_organization') }}">
+                <option value="0">Customer</option>
+                <option value="1">Organization</option>
+              </select>
+            </div>
+
+            {{-- Customer --}}
+            <div class="required field">
+              <label for="Customer">Customer</label>
+              <div class="ui selection search scrolling dropdown" id="customers">
+                <input type="hidden" id="customer_id" name="customer_id" value="1">
+                <div class="default text">Select a Customer</div>
+                <i class="dropdown icon"></i>
+                <div class="menu" id="users">
+                  <div class="item" data-value="1">Walk-up</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {{-- Grade --}}
+          <div class="field">
+            <label for="grades">Grade(s)</label>
+            <select name="grades[]" multiple="" id="grades" class="ui dropdown">
+              <option value="">N/A</option>
+              @foreach ($grades as $grade)
+                <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+              @endforeach
             </select>
           </div>
 
-          {{-- Customer --}}
-          <div class="required field">
-            <label for="Customer">Customer</label>
-            <div class="ui selection search scrolling dropdown" id="customers">
-              <input type="hidden" id="customer_id" name="customer_id" value="1">
-              <div class="default text">Select a Customer</div>
-              <i class="dropdown icon"></i>
-              <div class="menu" id="users">
-                <div class="item" data-value="1">Walk-up</div>
-              </div>
-            </div>
-          </div>
+          {{-- Pre-existing events for edit view --}}
+          @if (isSet($sale))
+            @foreach($sale->events as $event)
+              <div class="ui inverted segment">
 
-        </div>
+                <h4 class="ui horizontal divider header"><i class="calendar check icon"></i> Event #{{ $loop->index + 1 }}</h4>
 
-        {{-- Grade --}}
-        <div class="field">
-          <label for="grades">Grade(s)</label>
-          <select name="grades[]" multiple="" id="grades" class="ui dropdown">
-            <option value="">N/A</option>
-            @foreach ($grades as $grade)
-              <option value="{{ $grade->id }}">{{ $grade->name }}</option>
-            @endforeach
-          </select>
-        </div>
+                <div class="two fields">
 
-        {{-- Pre-existing events for edit view --}}
-        @if (isSet($sale))
-          @foreach($sale->events as $event)
-            <div class="ui inverted segment">
-
-              <h4 class="ui horizontal divider header"><i class="calendar check icon"></i> Event #{{ $loop->index + 1 }}</h4>
-
-              <div class="two fields">
-
-                {{-- Event Date --}}
-                <div class="required field">
-                  <div class="field">
-                    <div class="required field">
-                      <label for="start">Date</label>
-                      <div class="ui left icon input">
-                        {{-- dateFieldId --}}
-                        <input type="text" name="events[{{ $loop->index }}][date]" placeholder="Second Event Date" class="date" readonly="readonly" data-validate="date">
-                        <i class="calendar alternate outline icon"></i>
+                  {{-- Event Date --}}
+                  <div class="required field">
+                    <div class="field">
+                      <div class="required field">
+                        <label for="start">Date</label>
+                        <div class="ui left icon input">
+                          {{-- dateFieldId --}}
+                          <input type="text" name="events[{{ $loop->index }}][date]" placeholder="Second Event Date" class="date" readonly="readonly" data-validate="date">
+                          <i class="calendar alternate outline icon"></i>
+                        </div>
                       </div>
                     </div>
                   </div>
+
+                  {{-- Show --}}
+                  <div class="required field">
+                    <label for="second_event_id">Show</label>
+                    {{-- dropdownDivId --}}
+                    <div class="ui search selection dropdown" id="second-event">
+                      <input type="hidden" name="events[{{ $loop->index }}][id]" value="{{ $event->id }}" class="show" data-validate="show">
+                      <i class="dropdown icon"></i>
+                      <div class="default text">Select a Show</div>
+                      {{-- dropdownMenuId --}}
+                      <div class="menu" id="second-show">
+                        <div class="item" data-value="1">No Show</div>
+                        @foreach (App\Event::whereDate('start', Date::parse($event->start)->format('m-d-Y'))->get() as $e)
+                          <div class="item" data-value="{{ $e->id }}">
+                            <strong>{{ $e->show->name }}</strong>
+                            at <em>{{ Date::parse($e->start)->format('g:i A') }}</em>
+                            ({{ $e->seats - App\Ticket::where('event_id', $e->id)->count() }} seats left)
+                          </div>
+                          <?php $e = null ?>
+                        @endforeach
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
 
-                {{-- Show --}}
+                {{-- Tickets --}}
+                <table class="ui selectable single line very compact table">
+                    <thead>
+                      <tr class="header">
+                        <th>Ticket Type</th>
+                        <th>Amount / Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($ticketTypes as $ticketType)
+                      <tr>
+                        <td>
+                          <h4 class="ui header">
+                            <i class="ticket icon"></i>
+                            <div class="content">
+                              {{ $ticketType->name }}
+                              <div class="sub header">{{ $ticketType->description }}</div>
+                            </div>
+                          </h4>
+                        </td>
+                        <td>
+                          <div class="ui right labeled input">
+                            <input type="text" name="events[{{ $loop->parent->index }}][tickets][{{ $loop->index }}][quantity]" value="{{ isSet($sale->tickets) ? $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticketType->id)->count() : old("events.{$event->id}.tickets.{$loop->index}.quantity") }}" size="1" class="ticket-amount">
+                            <input type="hidden" name="events[{{ $loop->parent->index }}][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
+                            <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+                          </div>
+                        </td>
+                      </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+
+              </div>
+            @endforeach
+          @else
+            {{-- Event #1 --}}
+            <div class="ui inverted segment">
+
+              <h4 class="ui horizontal divider inverted header"><i class="calendar check icon"></i> Event #1</h4>
+
+              <div class="two fields">
+
+                {{-- First Event Date --}}
                 <div class="required field">
-                  <label for="second_event_id">Show</label>
+                  <label for="event[0][date]">Date</label>
+                  <div class="ui left icon input">
+                    {{-- dateFieldId --}}
+                    <input type="text" name="events[0][date]" placeholder="First Event Date and Time" class="date" data-validate="date" readonly="readonly" value="">
+                    <i class="calendar alternate outline icon"></i>
+                  </div>
+                </div>
+
+                {{-- First Show --}}
+                <div class="required field">
+                  <label for="first_event_id">Show</label>
                   {{-- dropdownDivId --}}
-                  <div class="ui search selection dropdown" id="second-event">
-                    <input type="hidden" name="events[{{ $loop->index }}][id]" value="{{ $event->id }}" class="show" data-validate="show">
+                  <div class="ui search selection dropdown" id="first-event">
+                    <input type="hidden" name="events[0][id]" value="1" class="show" data-validate="show">
                     <i class="dropdown icon"></i>
                     <div class="default text">Select a Show</div>
                     {{-- dropdownMenuId --}}
-                    <div class="menu" id="second-show">
+                    <div class="menu" id="first-show">
                       <div class="item" data-value="1">No Show</div>
-                      @foreach (App\Event::whereDate('start', Date::parse($event->start)->format('m-d-Y'))->get() as $e)
-                        <div class="item" data-value="{{ $e->id }}">
-                          <strong>{{ $e->show->name }}</strong>
-                          at <em>{{ Date::parse($e->start)->format('g:i A') }}</em>
-                          ({{ $e->seats - App\Ticket::where('event_id', $e->id)->count() }} seats left)
-                        </div>
-                        <?php $e = null ?>
-                      @endforeach
                     </div>
                   </div>
                 </div>
@@ -151,99 +220,83 @@
               </div>
 
               {{-- Tickets --}}
-              <table class="ui selectable single line very compact table">
-                  <thead>
-                    <tr class="header">
-                      <th>Ticket Type</th>
-                      <th>Amount / Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($ticketTypes as $ticketType)
-                    <tr>
-                      <td>
-                        <h4 class="ui header">
-                          <i class="ticket icon"></i>
-                          <div class="content">
-                            {{ $ticketType->name }}
-                            <div class="sub header">{{ $ticketType->description }}</div>
-                          </div>
-                        </h4>
-                      </td>
-                      <td>
-                        <div class="ui right labeled input">
-                          <input type="text" name="events[{{ $loop->parent->index }}][tickets][{{ $loop->index }}][quantity]" value="{{ isSet($sale->tickets) ? $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticketType->id)->count() : old("events.{$event->id}.tickets.{$loop->index}.quantity") }}" size="1" class="ticket-amount">
-                          <input type="hidden" name="events[{{ $loop->parent->index }}][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
-                          <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+              <table class="ui selectable single line very compact table" style="display:none">
+                <thead>
+                  <tr class="header">
+                    <th>Ticket Type</th>
+                    <th>Amount / Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($ticketTypes as $ticketType)
+                  <tr>
+                    <td>
+                      <h4 class="ui header">
+                        <i class="ticket icon"></i>
+                        <div class="content">
+                          {{ $ticketType->name }}
+                          <div class="sub header">{{ $ticketType->description }}</div>
                         </div>
-                      </td>
-                    </tr>
-                    @endforeach
-                  </tbody>
-                </table>
+                      </h4>
+                    </td>
+                    <td>
+                      <div class="ui right labeled input">
+                        <input type="text" name="events[0][tickets][{{ $loop->index }}][quantity]" value="0" size="1" class="ticket-amount">
+                        <input type="hidden" name="events[0][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
+                        <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+                      </div>
+                    </td>
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
 
             </div>
-          @endforeach
-        @else
-          {{-- Event #1 --}}
-          <div class="ui inverted segment">
+          @endif
 
-            <h4 class="ui horizontal divider inverted header"><i class="calendar check icon"></i> Event #1</h4>
+          <div id="extra-events"></div>
 
-            <div class="two fields">
+          <br>
 
-              {{-- First Event Date --}}
-              <div class="required field">
-                <label for="event[0][date]">Date</label>
-                <div class="ui left icon input">
-                  {{-- dateFieldId --}}
-                  <input type="text" name="events[0][date]" placeholder="First Event Date and Time" class="date" data-validate="date" readonly="readonly" value="">
-                  <i class="calendar alternate outline icon"></i>
-                </div>
-              </div>
+          <div class="ui button" id="add-another-event">
+            <i class="icons">
+              <i class="calendar alternate icon"></i>
+              <i class="add corner icon"></i>
+            </i>
+            Add Another Event
+          </div>
 
-              {{-- First Show --}}
-              <div class="required field">
-                <label for="first_event_id">Show</label>
-                {{-- dropdownDivId --}}
-                <div class="ui search selection dropdown" id="first-event">
-                  <input type="hidden" name="events[0][id]" value="1" class="show" data-validate="show">
-                  <i class="dropdown icon"></i>
-                  <div class="default text">Select a Show</div>
-                  {{-- dropdownMenuId --}}
-                  <div class="menu" id="first-show">
-                    <div class="item" data-value="1">No Show</div>
-                  </div>
-                </div>
-              </div>
+          {{-- Products --}}
+          <div class="ui segment">
 
-            </div>
+            <h4 class="ui horizontal divider header"><i class="box icon"></i> Products</h4>
 
-            {{-- Tickets --}}
-            <table class="ui selectable single line very compact table" style="display:none">
+            <table class="ui selectable single line very compact table">
               <thead>
                 <tr class="header">
-                  <th>Ticket Type</th>
+                  <th>Product</th>
                   <th>Amount / Price</th>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($ticketTypes as $ticketType)
+                @foreach ($products as $product)
                 <tr>
                   <td>
                     <h4 class="ui header">
-                      <i class="ticket icon"></i>
+                      <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}">
                       <div class="content">
-                        {{ $ticketType->name }}
-                        <div class="sub header">{{ $ticketType->description }}</div>
+                        {{ $product->name }}
+                        <div class="ui tiny black label">{{ $product->type->name }}</div>
+                        <div class="sub header">{{ $product->description }}</div>
                       </div>
                     </h4>
                   </td>
                   <td>
                     <div class="ui right labeled input">
-                      <input type="text" name="events[0][tickets][{{ $loop->index }}][quantity]" value="0" size="1" class="ticket-amount">
-                      <input type="hidden" name="events[0][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
-                      <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+                      <input type="text" name="products[{{ $loop->index }}][quantity]" value="{{ isSet($sale->products) ? $sale->products->where('id', $product->id)->count() : (old("products.{$loop->index}.quantity") == null ? 0 : old("products.{$loop->index}.quantity")) }}" size="1" class="product-amount">
+                      <input type="hidden" name="products[{{ $loop->index }}][id]" value="{{ $product->id }}">
+                      <input type="hidden" name="products[{{ $loop->index }}][type_id]" value="{{ $product->type_id }}">
+                      <div class="ui label product price">$ {{ number_format($product->price, 2) }} each</div>
                     </div>
                   </td>
                 </tr>
@@ -252,73 +305,20 @@
             </table>
 
           </div>
-        @endif
-
-        <div id="extra-events"></div>
-
-        <br>
-
-        <div class="ui button" id="add-another-event">
-          <i class="icons">
-            <i class="calendar alternate icon"></i>
-            <i class="add corner icon"></i>
-          </i>
-          Add Another Event
-        </div>
-
-        {{-- Products --}}
-        <div class="ui segment">
-
-          <h4 class="ui horizontal divider header"><i class="box icon"></i> Products</h4>
-
-          <table class="ui selectable single line very compact table">
-            <thead>
-              <tr class="header">
-                <th>Product</th>
-                <th>Amount / Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($products as $product)
-              <tr>
-                <td>
-                  <h4 class="ui header">
-                    <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}">
-                    <div class="content">
-                      {{ $product->name }}
-                      <div class="ui tiny black label">{{ $product->type->name }}</div>
-                      <div class="sub header">{{ $product->description }}</div>
-                    </div>
-                  </h4>
-                </td>
-                <td>
-                  <div class="ui right labeled input">
-                    <input type="text" name="products[{{ $loop->index }}][quantity]" value="{{ isSet($sale->products) ? $sale->products->where('id', $product->id)->count() : (old("products.{$loop->index}.quantity") == null ? 0 : old("products.{$loop->index}.quantity")) }}" size="1" class="product-amount">
-                    <input type="hidden" name="products[{{ $loop->index }}][id]" value="{{ $product->id }}">
-                    <input type="hidden" name="products[{{ $loop->index }}][type_id]" value="{{ $product->type_id }}">
-                    <div class="ui label product price">$ {{ number_format($product->price, 2) }} each</div>
-                  </div>
-                </td>
-              </tr>
-              @endforeach
-            </tbody>
-          </table>
 
         </div>
 
-      </div>
-
-      {{-- Payment Information Tab --}}
-      <div class="ui bottom attached tab segment" data-tab="payment-information">
-        <div class="four fields">
-          <div class="required field">
-            <label for="taxable">Taxable</label>
-            <select name="taxable" value="{{ isSet($sale) ? $sale->taxable : old('taxable') }}" class="ui dropdown">
-              <option value="0">No</option>
-              <option value="1">Yes</option>
-            </select>
+        {{-- Payment Information Tab --}}
+        <div class="ui bottom attached tab segment" data-tab="payment-information">
+          <div class="four fields">
+            <div class="required field">
+              <label for="taxable">Taxable</label>
+              <select name="taxable" value="{{ isSet($sale) ? $sale->taxable : old('taxable') }}" class="ui dropdown">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
           </div>
-        </div>
 
         <div class="four fields">
           <div class="field">
@@ -429,101 +429,46 @@
       </div>
 
       {{-- Memos --}}
-    </div>
+      </div>
 
-    {{-- Totals --}}
+      <div class="ui sixteen wide column">
 
-    <div class="ui three wide column">
-
-      <div class="ui sticky">
-
-        <div class="ui raised segment">
-
-            {{-- Subtotal --}}
-            <div class="field">
-              <label for="subtotal">Subtotal</label>
-              <div class="ui labeled input">
-                <div class="ui label">$ </div>
-                <input name="subtotal" type="text" id="subtotal" value="{{ isSet($sale) ? number_format($sale->subtotal, 2, '.', ',') : old('subtotal') }}" readonly size="1">
-              </div>
-            </div>
-
-            <h6 class="ui center aligned header" style="margin: 0 0 0 0"><i class="plus icon"></i></h6>
-
-            {{-- Tax --}}
-            <div class="field">
-              {!! Form::label('tax', 'Tax ('. App\Setting::find(1)->tax .'%)') !!}
-              <div class="ui labeled input">
-                <div class="ui label">$ </div>
-                <input name="tax" type="text" id="tax" value="{{ isSet($sale) ? number_format($sale->tax, 2, '.', ',') : old('tax') != null ? old('tax') : 0 }}" readonly size="1">
-              </div>
-            </div>
-
-            <h2 class="ui center aligned header" style="margin: 0 0 0 0">=</h2>
-
-            {{-- Total --}}
-            <div class="field">
-              {!! Form::label('total', 'Total') !!}
-              <div class="ui labeled input">
-                <div class="ui label">$ </div>
-                <input name="total" type="text" id="total" value="{{ isSet($sale) ? number_format($sale->total, 2, '.', ',') : old('total') }}" readonly size="1">
-              </div>
-            </div>
-
-            <h6 class="ui center aligned header" style="margin: 0 0 0 0"><i class="minus icon"></i></h6>
-
-            {{-- Paid --}}
-            <div class="field">
-              <label for="paid">Paid</label>
-              <div class="ui labeled input">
-                <div class="ui label">$ </div>
-                <input type="text" id="paid" value="{{ isSet($sale) ? number_format($sale->payments->sum('tendered'), 2, '.', ',') : number_format(0, 2) }}" readonly size="1">
-              </div>
-            </div>
-
-            <h2 class="ui center aligned header" style="margin: 0 0 0 0">=</h2>
-
-            {{-- Balance --}}
-            <div class="field">
-              <label for="paid">Balance</label>
-              <div class="ui labeled huge input">
-                <div class="ui label">$ </div>
-                <input type="text" id="balance" value="{{ isSet($sale) ? number_format($sale->payments->sum('tendered') - $sale->total, 2, '.', ',') : number_format(0, 2) }}" readonly size="1">
-              </div>
-            </div>
-
-        </div>
+        <h4 class="ui horizontal divider header"><i class="comments outline icon"></i> Memos</h4>
 
       </div>
 
-    </div>
-
-  </div>
-
-  <h4 class="ui horizontal divider header"><i class="comments outline icon"></i> Memos</h4>
-
-  <div class="ui two column doubling stackable grid">
-    <div class="column">
-      @if (isSet($sale->memos))
-        @if ($sale->memos->count() > 0)
-          <div class="ui comments">
-          @foreach($sale->memos as $m)
-            <div class="comment">
-              <div class="avatar"><i class="user circle big icon"></i></div>
-              <div class="content">
-                <div class="author">
-                  {{ $m->author->fullname }}
-                  <div class="metadata">
-                    <span class="date">{{ Date::parse($m->created_at)->format('l, F j, Y \a\t g:i A') }}</span>
+      <div class="ui eight wide column">
+        @if (isSet($sale->memos))
+          @if ($sale->memos->count() > 0)
+            <div class="ui comments">
+            @foreach($sale->memos as $m)
+              <div class="comment">
+                <div class="avatar"><i class="user circle big icon"></i></div>
+                <div class="content">
+                  <div class="author">
+                    {{ $m->author->fullname }}
+                    <div class="metadata">
+                      <span class="date">{{ Date::parse($m->created_at)->format('l, F j, Y \a\t g:i A') }}</span>
+                    </div>
+                  </div>
+                  <div class="text">
+                    {{ $m->message }}
                   </div>
                 </div>
-                <div class="text">
-                  {{ $m->message }}
+              </div>
+            @endforeach
+          </div>
+          @else
+            <div class="ui icon info message">
+              <i class="info circle icon"></i>
+              <div class="content">
+                <div class="header">
+                  No memos yet
                 </div>
+                <p>This sale doesn't have any memos yet.</p>
               </div>
             </div>
-          @endforeach
-        </div>
+          @endif
         @else
           <div class="ui icon info message">
             <i class="info circle icon"></i>
@@ -535,25 +480,78 @@
             </div>
           </div>
         @endif
-      @else
-        <div class="ui icon info message">
-          <i class="info circle icon"></i>
-          <div class="content">
-            <div class="header">
-              No memos yet
-            </div>
-            <p>This sale doesn't have any memos yet.</p>
-          </div>
-        </div>
-      @endif
-    </div>
-
-    <div class="column">
-      <div class="field">
-        {!! Form::label('memo', 'Message') !!}
-        {!! Form::textarea('memo', "", ['placeholder' => 'Write a memo here']) !!}
       </div>
-    </div>
+
+      <div class="ui eight wide column">
+        <div class="field">
+          <label for="memo">Message</label>
+          <textarea name="memo" rows="8" cols="3" placeholder="Write a memo here"></textarea>
+        </div>
+      </div>
+
+      {{-- Totals --}}
+
+      <div class="ui sixteen wide column" style="padding: 0 0 0 0 !important">
+
+        <div class="ui bottom fixed sticky" style="width:100%">
+
+          <div class="ui raised segment">
+
+              <div class="five fields">
+
+                {{-- Subtotal --}}
+                <div class="field">
+                  <label for="subtotal">Subtotal</label>
+                  <div class="ui labeled input">
+                    <div class="ui label">$ </div>
+                    <input name="subtotal" type="text" id="subtotal" value="{{ isSet($sale) ? number_format($sale->subtotal, 2, '.', ',') : old('subtotal') }}" readonly size="1">
+                  </div>
+                </div>
+
+                {{-- Tax --}}
+                <div class="field">
+                  <label for="tax">Tax ({{ App\Setting::find(1)->tax }})</label>
+                  <div class="ui labeled input">
+                    <div class="ui label">$ </div>
+                    <input name="tax" type="text" id="tax" value="{{ isSet($sale) ? number_format($sale->tax, 2, '.', ',') : old('tax') != null ? old('tax') : 0 }}" readonly size="1">
+                  </div>
+                </div>
+
+                {{-- Total --}}
+                <div class="field">
+                  <label for="total">Total</label>
+                  <div class="ui labeled input">
+                    <div class="ui label">$ </div>
+                    <input name="total" type="text" id="total" value="{{ isSet($sale) ? number_format($sale->total, 2, '.', ',') : old('total') }}" readonly size="1">
+                  </div>
+                </div>
+
+                {{-- Paid --}}
+                <div class="field">
+                  <label for="paid">Paid</label>
+                  <div class="ui labeled input">
+                    <div class="ui label">$ </div>
+                    <input type="text" id="paid" value="{{ isSet($sale) ? number_format($sale->payments->sum('tendered'), 2, '.', ',') : number_format(0, 2) }}" readonly size="1">
+                  </div>
+                </div>
+
+                {{-- Balance --}}
+                <div class="field">
+                  <label for="paid">Balance</label>
+                  <div class="ui labeled input">
+                    <div class="ui label">$ </div>
+                    <input type="text" id="balance" value="{{ isSet($sale) ? number_format($sale->payments->sum('tendered') - $sale->total, 2, '.', ',') : number_format(0, 2) }}" readonly size="1">
+                  </div>
+                </div>
+
+              </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
   </div>
 
 </form>
@@ -702,7 +700,7 @@
 
   })
 
-  $('.ui.sticky').sticky({ offset: 50 })
+  //$('.ui.bottom.fixed.sticky').sticky()
 
   $('.date').change(function() {
     {{-- Get index of the event --}}

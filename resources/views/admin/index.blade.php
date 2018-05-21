@@ -376,31 +376,32 @@ function loadCalendars() {
               {{-- This function gets the sale status and returns it prettified in the modal --}}
               function getSaleStatus(status) {
                 switch(status) {
-                  case 'complete'  : return `<div class="ui tiny green label"><i class="checkmark icon"></i>${status}</div>`
-                  case 'no show'   : return `<div class="ui tiny orange label"><i class="thumbs outline down icon"></i>${status}</div>`
-                  case 'open'      : return `<div class="ui tiny violet label"><i class="unlock icon"></i>${status}</div>`
-                  case 'tentative' : return `<div class="ui tiny yellow label"><i class="help icon"></i>${status}</div>`
-                  case 'canceled'  : return `<div class="ui tiny red label"><i class="remove icon"></i>${status}</div>`
+                  case 'complete'  : return `<div class="ui green label"><i class="checkmark icon"></i>${status}</div>`
+                  case 'no show'   : return `<div class="ui orange label"><i class="thumbs outline down icon"></i>${status}</div>`
+                  case 'open'      : return `<div class="ui violet label"><i class="unlock icon"></i>${status}</div>`
+                  case 'tentative' : return `<div class="ui yellow label"><i class="help icon"></i>${status}</div>`
+                  case 'canceled'  : return `<div class="ui red label"><i class="remove icon"></i>${status}</div>`
                 }
               }
 
               sales +=
               `
-              <div class="ui ${sale.status == 'canceled' ? 'red inverted' : ''} raised segment">
-                <h3 class="ui ${sale.status == 'canceled' ? 'inverted' : ''} header">
-                  <div class="content">
-                    <a class="sub header" href="/admin/sales/${sale.id}" target="_blank" style="padding-bottom: 0">
-                      Sale # ${sale.id}
+              <div class="ui ${sale.status == 'canceled' ? `red raised` : `raised`} card">
+                <div class="content">
+                  <div class="header">
+                    <a href="/admin/sales/${sale.id}" target="_blank" style="padding: 0 0 0 0">Sale # ${sale.id}</a>
+                    <div class="right floated">
+                      <div class="ui black tag label"><i class="dollar icon"></i> ${parseFloat(sale.total).toFixed(2)}</div>
                       ${getSaleStatus(sale.status)}
-                    </a>
-                    ${sale.organization.id != 1 ? `<i class="circular university icon"></i> <a href="/admin/organizations/${sale.organization.id}" target="_blank">${sale.organization.name}</a>`  : `` }<br />
-                    ${sale.organization.name == sale.customer.name ? `` : `<i class="circular user icon"></i> <a href="/admin/users/${sale.customer.id}" target="_blank">${sale.customer.name}</a>`}
-                    <div class="sub header">
-                      <div class="ui green tag label">$ ${parseFloat(sale.total).toFixed(2)}</div>
-                      ${tickets} ${products}
                     </div>
                   </div>
-                </h3>
+                  <a class="meta" href="/admin/users/${sale.creator.id}" target="_blank"><i class="user circle icon"></i> ${sale.creator.name}</a>
+                  <div class="meta"><i class="pencil icon"></i> ${moment(sale.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')} (${moment(sale.created_at).fromNow()})</div>
+                  ${sale.organization.name == sale.customer.name ? `` : `<a class="description" href="/admin/users/${sale.customer.id}" target="_blank"><i class="user icon"></i> ${sale.customer.name}</a>`}<br>
+                  ${sale.organization.id != 1 ? `<a class="description" href="/admin/organizations/${sale.organization.id}" target="_blank"><i class="university icon"></i> ${sale.organization.name}</a>`  : `` }
+                  <br><br>
+                  <div class="description">${tickets} ${products}</div>
+                </div>
               </div>
               `
             }
@@ -422,12 +423,11 @@ function loadCalendars() {
 
           var header =
           `
-          <i class="close icon" style="color: white"></i>
+          <i class="close icon"></i>
           <div class="ui header">
             <i class="calendar check icon"></i>
             <div class="content">
-              Event Details
-              <div class="sub header">Event #${response.id}</div>
+              Event #${response.id}
             </div>
           </div>
           `
@@ -435,41 +435,40 @@ function loadCalendars() {
           <div class="content">
             <div class="ui items">
               <div class="ui item">
-                <div class="ui small rounded image"><img src="${response.show.cover}"></div>
+                <div class="ui rounded image"><img src="${response.show.cover}"></div>
                 <div class="content">
                   <div class="meta">
-                  <div class="ui label" style="background-color: ${response.color}; color: rgba(255, 255, 255, 0.8)">${response.type}</div>
-                    <div class="ui label">${response.show.duration} ${response.show.duration > 1 ? `minutes` : `minute`}</div>
-                    <div class="ui label">${response.tickets_sold} tickets sold</div>
-                    <div class="ui basic label">${response.public ? `Public` : `Private`}</div>
-                  </div>
-                  <div class="ui large header">
-                    ${response.show.name}
-                    <div class="sub header">
-                      <i class="calendar alternate icon"></i>
-                      ${moment(response.start).calendar()}
+                    <div class="ui label" style="background-color: ${response.color}; color: rgba(255, 255, 255, 0.8)">${response.type}</div>
+                      <div class="ui label">${response.show.duration} ${response.show.duration > 1 ? `minutes` : `minute`}</div>
+                      <div class="ui label">${response.tickets_sold} tickets sold</div>
+                      <div class="ui basic label">${response.public ? `Public` : `Private`}</div>
+                    </div>
+                    <div class="ui large header">
+                      ${response.show.name}
+                      <div class="sub header"><i class="calendar alternate icon"></i>${moment(response.start).calendar()}</div>
+                    </div>
+                    <div class="extra">
+                      <p><i class="user circle icon"></i> ${response.creator.name}</p>
+                      <p><i class="pencil icon"></i> ${moment(response.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')} (${moment(response.created_at).fromNow()})</p>
+                      <p><i class="edit icon"></i> ${moment(response.updated_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')} (${moment(response.updated_at).fromNow()})</p>
+                    </div>
+                    <div class="description"><i class="info circle icon"></i> ${response.show.description}</div>
+                    <div class="ui basic segment">
+                      <h4 class="ui horizontal divider header">
+                        <i class="comment alternate outline icon"></i> Memos
+                      </h4>
+                      ${response.memos.length > 0 ? `<div class="ui comments">${memos}</div>` : memos}
+                    </div>
+                    <div class="ui basic segment">
+                    <h4 class="ui horizontal divider header">
+                      <i class="dollar icon"></i> Sales
+                    </h4>
+                    <div class="ui two doubling stackable cards">
+                      ${sales}
                     </div>
                   </div>
-                  <div class="extra">
-                    <p>Created by ${response.creator.name} on ${moment(response.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')}</p>
-                    <p>Updated on ${moment(response.updated_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')}</p>
-                  </div>
                 </div>
               </div>
-              <div class="ui item">
-                <div class="content">
-                  <div class="extra">
-                  <h4 class="ui horizontal divider header">
-                    <i class="dollar icon"></i> Sales
-                  </h4>
-                  ${sales}
-                  </div>
-                </div>
-              </div>
-              <h4 class="ui horizontal divider header">
-                <i class="comment alternate outline icon"></i> Memos
-              </h4>
-              ${response.memos.length > 0 ? `<div class="ui comments">${memos}</div>` : memos}
             </div>
           </div>
           `

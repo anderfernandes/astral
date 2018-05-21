@@ -49,34 +49,6 @@ use Illuminate\Support\Facades\Auth;
   return $eventsArray;
 });*/
 
-// This API is consumed by the dropdowns in the new/edit sale views
-Route::get('/admin/events/date/{date}', function($date) {
-  $eventsArray = [[
-    'name'  => 'No Show',
-    'value' => '1',
-    'text'  => 'No Show',
-  ]];
-
-  $events = Event::whereDate('start', $date)->orderBy('start', 'asc')->get();
-
-  foreach($events as $event) {
-    $start = Date::parse($event->start)->format('l, F j, Y \a\t g:i A');
-    $eventsArray = array_prepend($eventsArray, [
-      'name' => "{$event->show->name} on {$start}",
-      'value' => "{$event->id}",
-      'text' => "{$event->show->name} on {$start}",
-    ]);
-  }
-
-  $data = [
-    'success'=> true,
-    'results' => $eventsArray,
-  ];
-
-  return response($data);
-
-});
-
 Route::get('calendar', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
   $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
@@ -236,7 +208,9 @@ Route::get('event/{event}', function(Event $event) {
   $salesArray    = [];
   $ticketsArray  = [];
   $productsArray = [];
+  $ticketsSold   = 0;
   foreach ($event->sales as $sale) {
+    $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
     if ($sale->tickets->count() > 1) {
       // Loop through tickets for this sale, get type and quantity for each type
       $tickets = $sale->tickets->where('event_id', $event->id)->unique('ticket_type_id')->all();
@@ -251,7 +225,7 @@ Route::get('event/{event}', function(Event $event) {
       }
     }
 
-    // Taking out canceled, non-refund and walkup sales
+    // Taking out non-refunded and walkup sales
     if ($sale->customer_id != 1) {
       if (!$sale->refund) {
         foreach ($sale->products as $product) {
@@ -277,10 +251,12 @@ Route::get('event/{event}', function(Event $event) {
             'id' => $sale->creator_id,
             'name' => $sale->creator->fullname,
           ],
-          'total'    => $sale->total,
-          'tickets'  => $ticketsArray,
-          'products' => $productsArray,
-          'status'   => $sale->status,
+          'total'      => $sale->total,
+          'tickets'    => $ticketsArray,
+          'products'   => $productsArray,
+          'status'     => $sale->status,
+          'created_at' => Date::parse($sale->created_at)->toDateTimeString(),
+          'updated_at' => Date::parse($sale->updated_at)->toDateTimeString(),
         ]);
       }
     }
@@ -318,13 +294,14 @@ Route::get('event/{event}', function(Event $event) {
       'role' => $event->creator->role->name,
     ],
     'show'     => [
-      'name'     => $event->show->name,
-      'type'     => $event->show->type,
-      'duration' => $event->show->duration,
-        'cover'  => $event->show->cover
+      'name'        => $event->show->name,
+      'description' => $event->show->description,
+      'type'        => $event->show->type,
+      'duration'    => $event->show->duration,
+      'cover'       => $event->show->cover
     ],
     'sales'   => $salesArray,
-    'tickets_sold' => App\Ticket::where('event_id', $event->id)->count(),
+    'tickets_sold' => $ticketsSold,
     'memo'       => $event->memo,
     'created_at' => Date::parse($event->created_at)->toDateTimeString(),
     'updated_at' => Date::parse($event->updated_at)->toDateTimeString(),
@@ -344,14 +321,19 @@ Route::get('events', function(Request $request) {
   $events = isSet($request->type) ? $events->where('type_id', $request->type)->get() : $events->get();
   $eventsArray = [];
   foreach ($events as $event) {
-    $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
+    $ticketsSold = 0;
+    foreach ($event->sales as $sale) {
+        $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
+    }
+    $seats = $event->seats - $ticketsSold;
     $eventsArray = array_prepend($eventsArray, [
       'id'       => $event->id,
       'type'     => $event->type->name,
       'start'    => Date::parse($event->start)->toDateTimeString(),
       'end'      => Date::parse($event->end)->toDateTimeString(),
-      'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-      'title'    => ($event->show_id !=1 ? $event->show->name .' - ' : null) . $event->type->name . ' - ' . $seats . ' seats left',
+      // Take out tickets from shows that have been canceled!!!
+      'seats'    => $seats, // $event->seats - App\Ticket::where('event_id', $event->id)->count(),
+      'title'    => $event->show_id !=1 ? "{$event->show->name} - $seats seats left" : $event->type->name,
       //'url'      => '/admin/events/' . $event->id,
       'show'     => [
         'name'  => $event->show->name,

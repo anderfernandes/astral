@@ -1,39 +1,3 @@
-@if ($sale->refund)
-<h3 class="ui red dividing header">
-@else
-<h3 class="ui dividing header">
-@endif
-  <i class="dollar icon"></i>
-  <div class="content">
-    Sale # {{ $sale->id }}
-    @if ($sale->refund)
-      <div class="ui red label"><i class="reply icon"></i> Refund</div>
-    @endif
-    @if ($sale->status == 'complete')
-      <span class="ui green label"><i class="checkmark icon"></i>
-    @elseif ($sale->status == 'no show')
-      <span class="ui orange label"><i class="thumbs outline down icon"></i>
-    @elseif ($sale->status == 'open')
-      <span class="ui violet label"><i class="unlock icon"></i>
-    @elseif ($sale->status == 'tentative')
-      <span class="ui yellow label"><i class="help icon"></i>
-    @elseif ($sale->status == 'canceled')
-      <span class="ui red label"><i class="remove icon"></i>
-    @else
-      <span class="ui label">
-    @endif
-    {{ $sale->status }}</span>
-    <div class="sub header">
-      <i class="pencil icon"></i>{{ $sale->creator->fullname }}
-    </div>
-    @if ($sale->refund)
-    <div class="sub header">
-      <strong>Refunded on {{ Date::parse($sale->updated_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->updated_at)->diffForHumans() }})</strong>
-    </div>
-    @endif
-  </div>
-</h1>
-
 @if (!$sale->refund)
   @if ($sale->payments->sum('total') > 0)
   <div class="ui right floated buttons">
@@ -79,13 +43,32 @@
 
 <h4 class="ui center aligned horizontal divider header"><i class="info circle icon"></i> Sale Data</h4>
 
-<div class="ui four cards">
+<div class="ui three doubling stackable cards">
 
     <div class="card">
-      <div class="ui top attached label"><i class="dollar icon"></i> Sale Information</div>
       <div class="content">
-        <div class="header">Sale # {{ $sale->id }}</div>
-        <div class="meta"><i class="user circle icon"></i> {{ $sale->creator->fullname }}</div>
+        <div class="ui top attached black center aligned large label"><i class="dollar icon"></i> Sale Information</div>
+        <div class="header">
+          Sale # {{ $sale->id }}
+          @if ($sale->refund)
+            <div class="ui red label"><i class="reply icon"></i> Refund</div>
+          @endif
+          @if ($sale->status == 'complete')
+            <span class="ui green label"><i class="checkmark icon"></i>
+          @elseif ($sale->status == 'no show')
+            <span class="ui orange label"><i class="thumbs outline down icon"></i>
+          @elseif ($sale->status == 'open')
+            <span class="ui violet label"><i class="unlock icon"></i>
+          @elseif ($sale->status == 'tentative')
+            <span class="ui yellow label"><i class="help icon"></i>
+          @elseif ($sale->status == 'canceled')
+            <span class="ui red label"><i class="remove icon"></i>
+          @else
+            <span class="ui label">
+          @endif
+          {{ $sale->status }}</span>
+        </div>
+        <a href="{{ route('admin.users.show', $sale->creator) }}" target="_blank" class="meta"><i class="user circle icon"></i> {{ $sale->creator->fullname }}</a>
         <div class="meta"><i class="inbox icon"></i> {{ $sale->source }}</div>
         <div class="description">
           <i class="pencil icon"></i> {{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->created_at)->diffForHumans() }})
@@ -99,11 +82,11 @@
     @if ($sale->customer_id != 1 )
 
     <div class="card">
-      <div class="ui top attached label"><i class="user circle icon"></i> Customer Information</div>
       <div class="content">
-        <div class="header">{{ $sale->customer->fullname }}</div>
-        <div class="meta"><i class="user circle icon"></i> {{ $sale->customer->role->name }}</div>
-        <div class="meta"><i class="university icon"></i>{{ $sale->customer->organization->name }}</div>
+        <div class="ui top attached black center aligned large label"><i class="user icon"></i> Customer Information</div>
+        <a href="{{ route('admin.users.show', $sale->customer) }}" target="_blank" class="header">{{ $sale->customer->fullname }}</a>
+        <div class="meta"><i class="user icon"></i> {{ $sale->customer->role->name }}</div>
+        <a href="{{ route('admin.organizations.show', $sale->customer->organization) }}" class="meta"><i class="university icon"></i>{{ $sale->customer->organization->name }}</a>
         <div class="description">
           <i class="map marker alternate icon"></i> {{ $sale->customer->address }}
         </div>
@@ -124,9 +107,9 @@
     @if ($sale->organization_id != 1)
 
     <div class="card">
-      <div class="ui top attached label"><i class="university icon"></i> Organization Information</div>
       <div class="content">
-        <div class="header">{{ $sale->organization->name }}</div>
+        <div class="ui top attached black center aligned large label"><i class="university icon"></i> Organization Information</div>
+        <a href="{{ route('admin.organizations.show', $sale->organization) }}" class="header">{{ $sale->organization->name }}</a>
         <div class="meta"><i class="university icon"></i> {{ $sale->organization->type->name }}</div>
         <div class="description">
           <i class="map marker alternate icon"></i> {{ $sale->organization->address }}
@@ -147,124 +130,104 @@
 
     @endif
 
-    <div class="card">
-      <div class="ui top attached label"><i class="dollar icon"></i>Totals</div>
-      <div class="extra content">
-        <div class="meta">Subtotal</div>
-        <div class="right floated header"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
-      </div>
-      <div class="extra content">
-        <div class="meta">Tax</div>
-        <div class="right floated header"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
-      </div>
-      <div class="extra content">
-        <div class="meta">Total</div>
-        <div class="right floated header"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
-      </div>
-      <div class="extra content">
-        <div class="meta">Paid</div>
-        <div class="right floated header"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
-      </div>
-      <div class="extra content">
-        <div class="meta">Balance</div>
-        <div class="right floated header"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
-      </div>
-    </div>
-
   </div>
 
+<div class="ui three cards">
 
-
-{{-- Grades --}}
-@if ($sale->grades->count() > 0)
-  <div class="ui center aligned basic segment">
-    <h4 class="ui horizontal divider header">
-      <i class="book icon"></i> Grades
-    </h4>
-    <div class="ui labels">
-      @foreach ($sale->grades as $grade)
-        <div class="ui black label">{{ $grade->name }}</div>
-      @endforeach
+  {{-- Grades --}}
+  @if ($sale->grades->count() > 0)
+  <div class="card">
+    <div class="content">
+      <div class="ui top attached black center aligned large label"><i class="book icon"></i> Grades</div>
+      <div class="header">
+        <div class="ui large labels">
+          @foreach ($sale->grades as $grade)
+            <div class="ui black label">{{ $grade->name }}</div>
+          @endforeach
+        </div>
+      </div>
     </div>
   </div>
-@endif
+  @endif
 
-{{-- Events and Attendance --}}
-<div class="ui center aligned basic segment">
-  <h4 class="ui horizontal divider header">
-    <i class="calendar check icon"></i> Events and Attendance
-  </h4>
-  <div class="ui horizontal divided list">
-    @foreach($sale->events as $event)
-      <div class="item">
-      @if($event->show->id != 1)
-        @if ($sale->refund)
-          <h3 class="ui red header">
-        @endif
-      <h3 class="ui header">
-        <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}" class="image">
-        <div class="content">
-          <div class="sub header">
-            {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-            <div class="ui circular label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
-          </div>
-          <a href="{{ route('admin.events.show', $event) }}" target="_blank">{{ $event->show->name }}</a>
-          <div class="sub header">
-            @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
-              <div class="ui black label" style="margin-left:0">
-                <i class="ticket icon"></i>
-                {{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}
-                <div class="detail">
-                  {{ $ticket->type->name }}
+  {{-- Events and Attendance --}}
+  <div class="card">
+    <div class="content">
+      <div class="ui top attached black center aligned large label"><i class="calendar check icon"></i> Events and Tickets</div>
+      <div class="ui divided list">
+        @foreach($sale->events as $event)
+          <div class="item">
+          @if($event->show->id != 1)
+            @if ($sale->refund)
+              <h3 class="ui red header">
+            @endif
+          <h3 class="ui header">
+            <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}" class="ui image">
+            <div class="content">
+              <div class="sub header">
+                {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+                <div class="ui circular label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
+              </div>
+              <a href="{{ route('admin.events.show', $event) }}" target="_blank">{{ $event->show->name }}</a>
+              <div class="sub header">
+                @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
+                  <div class="ui black label" style="margin-left:0">
+                    <i class="ticket icon"></i>
+                    {{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}
+                    <div class="detail">
+                      {{ $ticket->type->name }}
+                    </div>
+                  </div>
+                @endforeach
+              </div>
+            </div>
+          </h3>
+          @endif
+        </div>
+        @endforeach
+      </div>
+    </div>
+  </div>
+
+  @if($sale->products->count() > 0)
+  <div class="card">
+    <div class="content">
+      <div class="ui top attached black center aligned large label"><i class="box icon"></i> Extras</div>
+      {{-- Products --}}
+      <div class="ui divided list">
+        @foreach ($sale->products as $product)
+          <div class="item">
+            <h3 class="ui header">
+              <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}">
+              <div class="content">
+                <div class="sub header">
+                  <div class="ui circular blue label" style="margin-left:0">{{ $product->type->name }}</div>
+                </div>
+                {{ $product->name }}
+                <div class="sub header">
+                  <div class="ui black label" style="margin-left:0">
+                    <i class="box icon"></i>
+                    {{ $sale->products->where('id', $product->id)->count() }}
+                  </div>
+                  <div class="ui black label" style="margin-left:0">
+                    <i class="dollar icon"></i>
+                    {{ number_format($product->price, 2, '.', '') }} each
+                  </div>
                 </div>
               </div>
-            @endforeach
+            </h3>
           </div>
-        </div>
-      </h3>
-      @endif
-    </div>
-    @endforeach
-  </div>
-</div>
-
-@if($sale->products->count() > 0)
-<div class="ui center aligned basic segment">
-  <h4 class="ui horizontal divider header">
-    <i class="box icon"></i> Extras
-  </h4>
-  {{-- Products --}}
-  <div class="ui horizontal divided list">
-    @foreach ($sale->products as $product)
-      <div class="item">
-        <h3 class="ui header">
-          <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}">
-          <div class="content">
-            <div class="sub header">
-              <div class="ui circular blue label">{{ $product->type->name }}</div>
-            </div>
-            {{ $product->name }}
-            <div class="sub header">
-              <div class="ui black label">
-                <i class="box icon"></i>
-                {{ $sale->products->where('id', $product->id)->count() }}
-              </div>
-              <div class="ui black label">
-                <i class="dollar icon"></i>
-                {{ number_format($product->price, 2, '.', '') }} each
-              </div>
-            </div>
-          </div>
-        </h3>
+        @endforeach
       </div>
-    @endforeach
+    </div>
   </div>
+  @endif
+
 </div>
-@endif
 
 {{-- Totals --}}
-<div class="ui center aligned segment">
-  <h4 class="ui horizontal divider header">
+
+  <h4 class="ui horizontal divider center aligned header">
     <i class="dollar icon"></i> Totals
   </h4>
 
@@ -307,11 +270,10 @@
       </div>
     @endif
   </div>
-</div>
 
 {{-- Payments --}}
-<div class="ui center aligned segment">
-  <h4 class="ui horizontal divider header">
+
+  <h4 class="ui horizontal divider center aligned header">
     <i class="money icon"></i> Payments
   </h4>
 
@@ -375,11 +337,10 @@
       @endif
     </tbody>
   </table>
-</div>
+
 
 {{-- Memo --}}
-<div class="ui segment" id="memos">
-  <h4 class="ui horizontal divider header">
+  <h4 class="ui horizontal divider center aligned header" id="memos">
     <i class="comment outline icon"></i> Memo
   </h4>
 
@@ -415,7 +376,6 @@
     </div>
   </div>
   @endif
-</div>
 
 {{-- Refund Modal --}}
 <div class="ui basic modal" id="refund-modal">
