@@ -98,7 +98,11 @@
       </form>
       <h5 class="ui center aligned header">
         <div class="sub header">
-          Created by <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>. <a href="http://astral.anderfernandes.com" target="_blank">Astral</a> {{ config('app.version') }}.
+          &copy; 2017-2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a> <br><br>
+          <a href="http://astral.anderfernandes.com" target="blank" class="ui black tiny image label">
+            <img src="/astral-logo-light.png" alt="Astral">
+            {{ config('app.version') }}
+          </a>
         </div>
       </h5>
     </div>

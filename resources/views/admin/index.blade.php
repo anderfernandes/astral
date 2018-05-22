@@ -9,7 +9,10 @@
 @section('content')
 
 <style>
-/*.ui..raised.center.aligned.segment {display: none}*/
+  .pusher {
+    background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.2)), url('{{ App\Setting::find(1)->cover }}') !important;
+    background-size: cover !important;
+  }
 </style>
 
 <?php
@@ -68,7 +71,7 @@ function getAttendanceByType($ticketTypeID) {
 
     @if(str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Overall Earnings --}}
-    <div class="ui segment">
+    <div class="ui raised segment">
       <div class="ui dividing header">
         <i class="money icon"></i>
         <div class="content">
@@ -86,7 +89,7 @@ function getAttendanceByType($ticketTypeID) {
 
     @if (str_contains(Auth::user()->role->permissions['dashboard'], "R"))
     {{-- Calendar --}}
-    <div class="ui segment">
+    <div class="ui raised segment">
       <div class="ui dividing header">
         <i class="calendar alternate icon"></i>
         <div class="content">

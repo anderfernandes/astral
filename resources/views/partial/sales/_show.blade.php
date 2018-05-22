@@ -45,7 +45,7 @@
 
 <div class="ui three doubling stackable cards">
 
-    <div class="card">
+    <div class="ui raised card">
       <div class="content">
         <div class="ui top attached black center aligned large label"><i class="dollar icon"></i> Sale Information</div>
         <div class="header">
@@ -81,7 +81,7 @@
 
     @if ($sale->customer_id != 1 )
 
-    <div class="card">
+    <div class="ui raised card">
       <div class="content">
         <div class="ui top attached black center aligned large label"><i class="user icon"></i> Customer Information</div>
         <a href="{{ route('admin.users.show', $sale->customer) }}" target="_blank" class="header">{{ $sale->customer->fullname }}</a>
@@ -106,7 +106,7 @@
 
     @if ($sale->organization_id != 1)
 
-    <div class="card">
+    <div class="ui raised card">
       <div class="content">
         <div class="ui top attached black center aligned large label"><i class="university icon"></i> Organization Information</div>
         <a href="{{ route('admin.organizations.show', $sale->organization) }}" class="header">{{ $sale->organization->name }}</a>
@@ -136,7 +136,7 @@
 
   {{-- Grades --}}
   @if ($sale->grades->count() > 0)
-  <div class="card">
+  <div class="ui raised card">
     <div class="content">
       <div class="ui top attached black center aligned large label"><i class="book icon"></i> Grades</div>
       <div class="header">
@@ -151,10 +151,10 @@
   @endif
 
   {{-- Events and Attendance --}}
-  <div class="card">
+  <div class="ui raised card">
     <div class="content">
       <div class="ui top attached black center aligned large label"><i class="calendar check icon"></i> Events and Tickets</div>
-      <div class="ui divided list">
+      <div class="ui list">
         @foreach($sale->events as $event)
           <div class="item">
           @if($event->show->id != 1)
@@ -190,7 +190,7 @@
   </div>
 
   @if($sale->products->count() > 0)
-  <div class="card">
+  <div class="ui raised card">
     <div class="content">
       <div class="ui top attached black center aligned large label"><i class="box icon"></i> Extras</div>
       {{-- Products --}}

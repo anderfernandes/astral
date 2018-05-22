@@ -495,24 +495,24 @@
 
         <div class="ui bottom fixed sticky" style="width:100%">
 
-          <div class="ui raised segment">
+          <div class="ui inverted segment" style="border-radius: 0 !important">
 
               <div class="five fields">
 
                 {{-- Subtotal --}}
                 <div class="field">
                   <label for="subtotal">Subtotal</label>
-                  <div class="ui labeled input">
-                    <div class="ui label">$ </div>
+                  <div class="ui inverted transparent left icon input">
+                    <i class="dollar icon"></i>
                     <input name="subtotal" type="text" id="subtotal" value="{{ isSet($sale) ? number_format($sale->subtotal, 2, '.', ',') : old('subtotal') }}" readonly size="1">
                   </div>
                 </div>
 
                 {{-- Tax --}}
                 <div class="field">
-                  <label for="tax">Tax ({{ App\Setting::find(1)->tax }})</label>
-                  <div class="ui labeled input">
-                    <div class="ui label">$ </div>
+                  <label for="tax">Tax ({{ App\Setting::find(1)->tax }}%)</label>
+                  <div class="ui inverted transparent left icon input">
+                    <i class="dollar icon"></i>
                     <input name="tax" type="text" id="tax" value="{{ isSet($sale) ? number_format($sale->tax, 2, '.', ',') : old('tax') != null ? old('tax') : 0 }}" readonly size="1">
                   </div>
                 </div>
@@ -520,8 +520,8 @@
                 {{-- Total --}}
                 <div class="field">
                   <label for="total">Total</label>
-                  <div class="ui labeled input">
-                    <div class="ui label">$ </div>
+                  <div class="ui inverted transparent left icon input">
+                    <i class="dollar icon"></i>
                     <input name="total" type="text" id="total" value="{{ isSet($sale) ? number_format($sale->total, 2, '.', ',') : old('total') }}" readonly size="1">
                   </div>
                 </div>
@@ -529,8 +529,8 @@
                 {{-- Paid --}}
                 <div class="field">
                   <label for="paid">Paid</label>
-                  <div class="ui labeled input">
-                    <div class="ui label">$ </div>
+                  <div class="ui inverted transparent left icon input">
+                    <i class="dollar icon"></i>
                     <input type="text" id="paid" value="{{ isSet($sale) ? number_format($sale->payments->sum('tendered'), 2, '.', ',') : number_format(0, 2) }}" readonly size="1">
                   </div>
                 </div>
@@ -538,8 +538,8 @@
                 {{-- Balance --}}
                 <div class="field">
                   <label for="paid">Balance</label>
-                  <div class="ui labeled input">
-                    <div class="ui label">$ </div>
+                  <div class="ui inverted transparent left icon input">
+                    <i class="dollar icon"></i>
                     <input type="text" id="balance" value="{{ isSet($sale) ? number_format($sale->payments->sum('tendered') - $sale->total, 2, '.', ',') : number_format(0, 2) }}" readonly size="1">
                   </div>
                 </div>
