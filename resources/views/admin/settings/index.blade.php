@@ -12,6 +12,7 @@
   <div class="three wide column">
     <div class="ui vertical fluid tabular menu">
       <a class="item active" data-tab="general"><i class="setting icon"></i>General</a>
+      <a class="item" data-tab="announcements"><i class="announcement icon"></i>Announcements</a>
       <a class="item" data-tab="organization-types"><i class="university icon"></i>Organizations</a>
       <a class="item" data-tab="ticket-types"><i class="ticket icon"></i>Tickets</a>
       <a class="item" data-tab="payment-methods"><i class="money icon"></i>Payments</a>
@@ -28,6 +29,9 @@
 
     {{-- General --}}
     @include('admin.settings._general')
+
+    {{-- Announcements --}}
+    @include('admin.settings._announcements')
 
     {{-- Organization Types --}}
     @include('admin.settings._organization')

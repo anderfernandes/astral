@@ -1,4 +1,4 @@
-<form action="{{ isSet($grade) ? route('admin.grades.update', $grade) : route('admin.grades.store') }}" id="grade" class="ui form" method="POST">
+<form action="{{ isSet($grade) ? route('admin.grades.update', $grade) : route('admin.grades.store') }}" id="grades" class="ui form" method="POST">
 @if (isSet($grade))
   {{ method_field('PUT') }}
 @endif
@@ -19,7 +19,7 @@
 </form>
 
 <script>
-  $('#grade').form({
+  $('#grades').form({
     on: 'blur',
     inline: true,
     fields: {

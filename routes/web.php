@@ -39,6 +39,7 @@ Route::group(
   Route::resource('product-types', 'ProductTypeController');
   // Grades
   Route::resource('grades', 'GradeController');
+  Route::resource('announcements', 'AnnouncementController');
   // Reports
   Route::get('reports/closeout', 'ReportController@closeout')->name('reports.closeout');
   Route::get('reports/transactionDetail', 'ReportController@transactionDetail')->name('reports.transactionDetail');

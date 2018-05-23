@@ -132,6 +132,9 @@
       <a class="item" href="{{ route('admin.settings.index') }}">
         <i class="large setting icon"></i> General
       </a>
+      <a class="item" href="{{ route('admin.settings.index') }}/#announcements">
+        <i class="large announcement icon"></i> Announcements
+      </a>
       <a class="item" href="{{ route('admin.settings.index') }}/#organization-types">
         <i class="large university icon"></i> Organizations
       </a>

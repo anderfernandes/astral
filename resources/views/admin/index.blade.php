@@ -8,9 +8,11 @@
 
 @section('content')
 
+@include('admin.announcements._announcement')
+
 <style>
   .pusher {
-    background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.2)), url('{{ App\Setting::find(1)->cover }}') !important;
+    background: linear-gradient(rgba(253,254,255,1), rgba(253,254,255,0.5)), url('{{ App\Setting::find(1)->cover }}') !important;
     background-size: cover !important;
   }
 </style>
@@ -53,6 +55,7 @@ function getAttendanceByType($ticketTypeID) {
 }
 
 ?>
+
 {{-- Welcome Box --}}
 <div class="ui grid">
   <div class="sixteen wide column" style="margin-bottom: -1rem">

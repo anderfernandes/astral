@@ -1,4 +1,5 @@
 <div class="ui tab segment" data-tab="grade">
+
   @include('admin.grades._form')
 
   <table class="ui very basic striped selectable celled table">
@@ -14,7 +15,7 @@
       <tr>
         <td>
           <h4 class="ui header">
-            <i class="tag icon"></i>
+            <i class="book icon"></i>
             <div class="content">
               {{ $grade->name }}
               <div class="sub header">{{ $grade->description }}</div>

@@ -7,15 +7,14 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Event;
-use App\EventType;
-use App\Show;
+use App\{ Event, EventType, Show, Announcement };
 
 class AdminController extends Controller
 {
     public function index()
     {
-      return view('admin.index');
+      $announcements = Announcement::where('end', '<=', today()->toDateTimeString())->get();
+      return view('admin.index')->withAnnouncements($announcements);
     }
 
     public function calendar(Request $request)
