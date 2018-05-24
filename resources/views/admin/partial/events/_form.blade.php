@@ -3,6 +3,23 @@
 @else
   {!! Form::model($event, ['route' => ['admin.events.update', $event], 'class' => 'ui form', 'method' => 'PUT']) !!}
 @endif
+<div class="two fields" style="height:60px; margin-bottom;14px">
+  <div class="field">
+    <div class="field" style="display:none" id="title-field">
+      <label for="title">Title</label>
+      <input type="text" name="title" placeholder="Enter the title of the event">
+    </div>
+  </div>
+  <div class="field">
+    <label for=""></label>
+    <div class="ui basic segment" style="text-align: right">
+      <div class="ui toggle checkbox">
+        <input type="checkbox" tabindex="0" class="hidden" name="allday">
+        <label for="allday">All Day</label>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="two required fields">
   <div class="field">
     {!! Form::label('show_id', 'Show') !!}
@@ -28,15 +45,15 @@
     {!! Form::text('seats', App\Setting::find(1)->seats, ['placeholder' => 'Number of seats']) !!}
   </div>
 </div>
-<div class="two required fields">
-  <div class="field">
-    {!! Form::label('start', 'Start Date and Time') !!}
+<div class="two fields">
+  <div class="required field">
+    <label for="dates[0][start]"><span id="start-word">Start</span> Date and Time</label>
     <div class="ui left icon input">
       <input placeholder="Event Date and Time" data-validate="start_dates" name="dates[0][start]" type="text" readonly="readonly">
       <i class="calendar icon"></i>
     </div>
   </div>
-  <div class="field">
+  <div class="required field" id="end-datetime">
     {!! Form::label('end', 'End Date and Time') !!}
     <div class="ui left icon input">
       <input placeholder="Event Date and Time" data-validate="end_dates" name="dates[0][end]" type="text" readonly="readonly">
@@ -46,13 +63,13 @@
 </div>
 <div id="extra-dates"></div>
 @if (!isSet($event))
-<div class="field">
+<div class="field" style="height:60px; margin-bottom;14px">
   <div class="ui button" id="add-another-date"><i class="plus icon"></i>Add Another Date</div>
 </div>
 @endif
 <div class="required field">
   {!! Form::label('memo', 'Memo') !!}
-  {!! Form::textarea('memo', null, ['placeholder' => 'Write a memo here']) !!}
+  {!! Form::textarea('memo', null, ['placeholder' => 'Tell us why you are creating this event', 'rows' => 2]) !!}
 </div>
 <div class="field">
   @if (Request::routeIs('admin.events.create') or Request::routeIs('admin.events.edit'))
@@ -127,6 +144,21 @@
       minuteIncrement: 15
     })
   }
+})
+
+{{-- Handling the All Day checkbox --}}
+$('[name="allday"]').change(function() {
+  $('#title-field').transition('fade')
+  $('#add-another-date').transition('fade')
+  $('#end-datetime').transition('fade')
+  $('#start-word').transition('fade')
+  $('form').form('reset')
+  if ($(this).prop('checked')) {
+    $('[name="dates[0][start]"]').flatpickr({enableTime: false, minDate: 'today', dateFormat: 'l, F j, Y'});
+  } else {
+    $('[name="dates[0][start]"]').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15});
+  }
+
 })
 
 {{-- Client side form validation --}}

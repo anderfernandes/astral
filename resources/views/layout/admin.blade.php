@@ -42,7 +42,7 @@
       $('.ui.radio.checkbox').checkbox();
       $('.ui.dropdown').dropdown({'fullTextSearch': true});
       $('.ui.dropdown.item').dropdown({on: 'hover'});
-
+      $('.ui.checkbox').checkbox()
 
       /*jQuery('.datetimepicker').datetimepicker({
         format:'dddd, MMMM DD, YYYY H:mm',

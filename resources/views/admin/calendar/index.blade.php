@@ -83,7 +83,7 @@
 
   @include('admin.partial.events._create')
 
-  <div class="ui large modal" id="event-detail"></div>
+  <div class="ui modal" id="event-detail"></div>
 
 <script>
 
@@ -242,7 +242,7 @@
             </div>
             `
             var body = `
-            <div class="content">
+            <div class="scrolling content">
               <div class="ui items">
                 <div class="ui item">
                   <div class="ui rounded image"><img src="${response.show.cover}"></div>
