@@ -67,12 +67,24 @@ class EventController extends Controller
 
           $event = new Event;
 
+          // Setting a Date object for start and end times of this even
+          $start = new Date($date['start']);
+          $end   = new Date($date['end']);
+
           $event->show_id        = $request->show_id;
           $event->type_id        = $request->type_id;
-          $event->start          = new Date($date['start']);
-          $event->end            = new Date($date['end']);
+
+          // If the event is "all day", set it to start at the beginning of the
+          // day and end at the end of the day. If not, keep original datetimes
+          // If the event is "all day", set it to start at the beginning of the
+          // day and end at the end of the day. If not, keep original datetimes
+          $event->start          = $request->has('allday') ? $start->startOfDay()->toDateTimeString() : $start;
+          $event->end            = $request->has('allday') ? $start->endOfDay()->toDateTimeString()   : $end;
+
           $event->seats          = $request->seats;
-          //$event->memo           = $request->memo;
+
+          // The old memo field will serve as a title for the event if it is all day
+          $event->memo           = $request->show_id == 1 ? $request->title : null;
           $event->creator_id     = Auth::user()->id;
           $event->public         = $request->public;
 
@@ -148,12 +160,27 @@ class EventController extends Controller
           'public'         => 'required',
       ]);
 
+      $start = new Date($request->dates[0]['start']);
+      $end   = new Date($request->dates[0]['end']);
+
+      // Setting a Date object for start and end times of this even
+
+      $start = new Date($request->dates[0]['start']);
+      $end   = new Date($request->dates[0]['end']);
+
       $event->show_id        = $request->show_id;
       $event->type_id        = $request->type_id;
-      $event->start          = new Date($request->dates[0]['start']);
-      $event->end            = new Date($request->dates[0]['end']);
+
+      // If the event is "all day", set it to start at the beginning of the
+      // day and end at the end of the day. If not, keep original datetimes
+      $event->start          = $request->has('allday') ? $start->startOfDay()->toDateTimeString() : $start;
+      $event->end            = $request->has('allday') ? $start->endOfDay()->toDateTimeString()   : $end;
+
       $event->seats          = $request->seats;
-      //$event->memo           = $request->memo;
+
+      // The old memo field will serve as a title for the event if it is all day
+      $event->memo           = $request->show_id == 1 ? $request->title : null;
+      $event->creator_id     = Auth::user()->id;
       $event->public         = $request->public;
 
       $event->save();

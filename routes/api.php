@@ -201,7 +201,7 @@ Route::get('calendar-events', function() {
   return $sorted;
 });
 
-// This API is consumed by the pop up that shows event information in /admin/calendar
+// This API is consumed by the MODAL that shows event information in /admin/calendar
 Route::get('event/{event}', function(Event $event) {
 
   // Get all Sales for this event
@@ -280,7 +280,7 @@ Route::get('event/{event}', function(Event $event) {
       'updated_at' => Date::parse($memo->updated_at)->toDateTimeString(),
     ]);
   }
-
+  $isAllDay = (Date::parse($event->start)->isStartOfDay() && Date::parse($event->end)->isEndOfDay());
   return [
     'id'       => $event->id,
     'type'     => $event->type->name,
@@ -294,6 +294,7 @@ Route::get('event/{event}', function(Event $event) {
       'role' => $event->creator->role->name,
     ],
     'show'     => [
+      'id'          => $event->show->id,
       'name'        => $event->show->name,
       'description' => $event->show->description,
       'type'        => $event->show->type,
@@ -306,6 +307,7 @@ Route::get('event/{event}', function(Event $event) {
     'created_at' => Date::parse($event->created_at)->toDateTimeString(),
     'updated_at' => Date::parse($event->updated_at)->toDateTimeString(),
     'memos'      => $memosArray,
+    'allDay'     => $isAllDay,
   ];
 });
 
@@ -326,14 +328,15 @@ Route::get('events', function(Request $request) {
         $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
     }
     $seats = $event->seats - $ticketsSold;
+    $isAllDay = (Date::parse($event->start)->isStartOfDay() && Date::parse($event->end)->isEndOfDay());
     $eventsArray = array_prepend($eventsArray, [
       'id'       => $event->id,
       'type'     => $event->type->name,
-      'start'    => Date::parse($event->start)->toDateTimeString(),
-      'end'      => Date::parse($event->end)->toDateTimeString(),
+      'start'    => $isAllDay ? Date::parse($event->start)->format('Y-m-d') : Date::parse($event->start)->toDateTimeString(),
+      'end'      => $isAllDay ? '' : Date::parse($event->end)->toDateTimeString(),
       // Take out tickets from shows that have been canceled!!!
       'seats'    => $seats, // $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-      'title'    => $event->show_id !=1 ? "{$event->show->name} - $seats seats left" : $event->type->name,
+      'title'    => $event->show_id !=1 ? "{$event->show->name}, $seats seats left" : (isSet($event->memo) ? $event->memo : $event->type->name),
       //'url'      => '/admin/events/' . $event->id,
       'show'     => [
         'name'  => $event->show->name,
@@ -346,6 +349,7 @@ Route::get('events', function(Request $request) {
       'backgroundColor' => $event->type->color,
       'textColor'       => 'rgba(255, 255, 255, 0.8)',
       'public'          => $event->public,
+      'allDay'          => $isAllDay,
     ]);
   }
   $eventsCollect = collect($eventsArray);

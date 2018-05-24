@@ -52,7 +52,7 @@
         if (!window.simplemde) {
           window.simplemde = new SimpleMDE({
             element: document.querySelectorAll('#description')[0],
-            toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list'],
+            toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list', '|', 'preview'],
 
           })
         }

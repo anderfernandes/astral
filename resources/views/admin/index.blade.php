@@ -351,6 +351,8 @@ function loadCalendars() {
           `
         }
 
+          var dateFormat = response.allDay ? 'dddd, MMMM D, YYYY' : 'dddd, MMMM D, YYYY [at] h:mm A'
+
           // Start this variable with a message box saying that there are no sales for this event
           var sales = ''
 
@@ -438,27 +440,32 @@ function loadCalendars() {
           </div>
           `
           var body = `
-          <div class="content">
+          <div class="scrolling content">
             <div class="ui items">
               <div class="ui item">
-                <div class="ui rounded image"><img src="${response.show.cover}"></div>
+                ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui rounded small image"><img src="${response.show.cover}"></div>`}
                 <div class="content">
                   <div class="meta">
                     <div class="ui label" style="background-color: ${response.color}; color: rgba(255, 255, 255, 0.8)">${response.type}</div>
-                      <div class="ui label">${response.show.duration} ${response.show.duration > 1 ? `minutes` : `minute`}</div>
-                      <div class="ui label">${response.tickets_sold} tickets sold</div>
+                      ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui label">${response.show.duration} minutes</div>`}
+                      ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui label">${response.tickets_sold} tickets sold</div>`}
                       <div class="ui basic label">${response.public ? `Public` : `Private`}</div>
                     </div>
                     <div class="ui large header">
-                      ${response.show.name}
-                      <div class="sub header"><i class="calendar alternate icon"></i>${moment(response.start).calendar()}</div>
+                      ${ (response.allDay || response.show.id == 1) ? response.memo : response.show.name}
+                      <div class="sub header">
+                        <i class="calendar alternate icon"></i>${moment(response.start).format(dateFormat)}
+                        (${moment(response.start).fromNow()})
+                        </div>
                     </div>
                     <div class="extra">
                       <p><i class="user circle icon"></i> ${response.creator.name}</p>
-                      <p><i class="pencil icon"></i> ${moment(response.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')} (${moment(response.created_at).fromNow()})</p>
-                      <p><i class="edit icon"></i> ${moment(response.updated_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')} (${moment(response.updated_at).fromNow()})</p>
+                      <p><i class="pencil icon"></i> ${moment(response.created_at).format(dateFormat)} (${moment(response.created_at).fromNow()})</p>
+                      <p><i class="edit icon"></i> ${moment(response.updated_at).format(dateFormat)} (${moment(response.updated_at).fromNow()})</p>
                     </div>
-                    <div class="description"><i class="info circle icon"></i> ${response.show.description}</div>
+                    <div class="description">
+                    ${ (response.allDay || response.show.id == 1) ? `` : `<i class="info circle icon"></i> ${ response.show.description}` }
+                    </div>
                     <div class="ui basic segment">
                       <h4 class="ui horizontal divider header">
                         <i class="comment alternate outline icon"></i> Memos
@@ -466,12 +473,16 @@ function loadCalendars() {
                       ${response.memos.length > 0 ? `<div class="ui comments">${memos}</div>` : memos}
                     </div>
                     <div class="ui basic segment">
-                    <h4 class="ui horizontal divider header">
-                      <i class="dollar icon"></i> Sales
-                    </h4>
-                    <div class="ui two doubling stackable cards">
-                      ${sales}
-                    </div>
+                    ${ (response.allDay || response.show.id == 1) ? `` :
+                      `
+                      <h4 class="ui horizontal divider header">
+                        <i class="dollar icon"></i> Sales
+                      </h4>
+                      <div class="ui two doubling stackable cards">
+                        ${sales}
+                      </div>
+                      `
+                    }
                   </div>
                 </div>
               </div>

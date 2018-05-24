@@ -7,14 +7,14 @@
   <div class="field">
     <div class="field" style="display:none" id="title-field">
       <label for="title">Title</label>
-      <input type="text" name="title" placeholder="Enter the title of the event">
+      <input type="text" name="title" placeholder="Enter the title of the event" value="{{ isSet($event) ? $event->memo : old('title') }}">
     </div>
   </div>
   <div class="field">
     <label for=""></label>
     <div class="ui basic segment" style="text-align: right">
       <div class="ui toggle checkbox">
-        <input type="checkbox" tabindex="0" class="hidden" name="allday">
+        <input type="checkbox" tabindex="0" name="allday">
         <label for="allday">All Day</label>
       </div>
     </div>
@@ -106,6 +106,7 @@
       alert("Please select a date and time for the event before adding a new one.")
     } else {
       index++
+      $('.ui.checkbox').transition('fade')
       $('#extra-dates').append(
       '<div class="two required fields">' +
         '<div class="field">' +
@@ -148,17 +149,22 @@
 
 {{-- Handling the All Day checkbox --}}
 $('[name="allday"]').change(function() {
-  $('#title-field').transition('fade')
   $('#add-another-date').transition('fade')
   $('#end-datetime').transition('fade')
   $('#start-word').transition('fade')
-  $('form').form('reset')
+  //$('form').form('clear')
   if ($(this).prop('checked')) {
-    $('[name="dates[0][start]"]').flatpickr({enableTime: false, minDate: 'today', dateFormat: 'l, F j, Y'});
+    $('[name="dates[0][start]"]').flatpickr({enableTime: false, minDate: 'today', dateFormat: 'l, F j, Y', defaultDate: '{{ isSet($event->start) ? Date::parse($event->start)->format('l, F j, Y') : null }}'});
+    $('[name="dates[0][end]"]').flatpickr({enableTime: false, minDate: 'today', dateFormat: 'l, F j, Y', defaultDate: ''});
   } else {
-    $('[name="dates[0][start]"]').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15});
+    $('[name="dates[0][start]"]').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15, defaultDate: ''});
+    $('[name="dates[0][end]"]').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15, defaultDate: ''});
   }
+})
 
+$('[name="show_id"]').change(function() {
+
+  if (this.value == 1) $('#title-field').transition('show')
 })
 
 {{-- Client side form validation --}}
@@ -216,4 +222,9 @@ $('form').form({
     },
   }
 })
+
+@isset($event)
+  $('.ui.checkbox').checkbox('{{ Date::parse($event->start)->isStartOfDay() && Date::parse($event->end)->isEndOfDay() ? "check" : "uncheck" }}')
+@endif
+
 </script>
