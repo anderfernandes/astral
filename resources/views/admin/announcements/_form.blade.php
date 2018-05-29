@@ -50,11 +50,11 @@
 
   window.simplemde = new SimpleMDE({
     element: document.querySelector('#content'),
-    toolbar: ['bold', 'italic', 'strikethrough', '|', 'code', '|', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'table', 'horizontal-rule', '|', 'preview', 'guide'],
+    toolbar: ['bold', 'italic', 'strikethrough', '|', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'table', 'horizontal-rule', '|', 'preview', 'guide'],
   })
 
   @if (isSet($announcement))
-    simplemde.value("{{ $announcement->content }}")
+    simplemde.value(`{{ $announcement->content }}`)
   @endif
 
 </script>

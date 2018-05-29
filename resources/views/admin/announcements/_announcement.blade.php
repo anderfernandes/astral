@@ -8,12 +8,12 @@
   </div>
   <div class="content">
     @foreach ($announcements as $announcement)
-    <div class="ui header" style="margin-bottom: 0 !important">
+    <div class="ui dividing header" style="margin-bottom: 0 !important">
       <div class="content">
         {{ $announcement->title }}
         <div class="sub header">
           <i class="user circle icon"></i>{{ $announcement->creator->firstname }}<div class="ui tiny label">{{ $announcement->creator->role->name }}</div>
-          <i class="calendar alternate outline icon"></i>{{ $announcement->created_at->diffForHumans() }}
+          <i class="calendar alternate outline icon"></i>{{ $announcement->created_at->format('l, F j, Y \a\t g:i A') }} ({{ $announcement->created_at->diffForHumans() }})
         </div>
       </div>
     </div>

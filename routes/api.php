@@ -405,9 +405,9 @@ Route::get('settings', function() {
   return response($settings)->withHeaders(['Access-Control-Allow-Origin' => '*']);
 });
 
-Route::get('customers', function() {
+Route::get('customers', function(Request $request) {
   $customerArray = [];
-  $customers = User::where('type', 'individual')->orderBy('firstname', 'asc')->get();
+  $customers = User::where('type', 'individual')->where('id', '!=', $request->primary)->orderBy('firstname', 'asc')->get();
   foreach ($customers as $customer) {
     array_push($customerArray, [
       'id' => $customer->id,
@@ -418,7 +418,7 @@ Route::get('customers', function() {
         'id' => $customer->organization->id,
         'name' => $customer->organization->name,
         'type' => $customer->organization->type->name,
-      ]
+      ],
     ]);
   }
 

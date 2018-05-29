@@ -33,7 +33,7 @@
             <div class="ui label">
             {{ $announcement->end->isPast() ? "expired" : null }}
             {{ $announcement->end->isFuture() ? "pending" : null }}
-            {{ $announcement->end == today() ? "expired" : null }}
+            {{ $announcement->end == today() ? "active" : null }}
             </div>
           </td>
           <td>

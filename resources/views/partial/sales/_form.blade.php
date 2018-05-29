@@ -761,8 +761,7 @@
               <div class="item" data-value="${customer.id}">
               <i class="user circle icon"></i>
                 ${customer.name}
-                (<em>${customer.role}</em> ${customer.organization.id != 1 ? `,
-                  <strong>${customer.organization.name}</strong>` : `)`})
+                (<em>${customer.role}</em>${customer.organization.id != 1 ? `, <strong>${customer.organization.name}</strong>` : ``})
               </div>
               `)
           //$('#taxable').dropdown('set selected', customer.taxable)

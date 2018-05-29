@@ -63,15 +63,7 @@ class MemberController extends Controller
     public function create()
     {
         $users = User::all()->where('type', 'individual')->where('role_id', '!=', 5);
-        $users = $users->mapWithKeys(function($item) {
-          return [$item['id'] => $item['firstname'] . ' ' . $item['lastname']];
-        });
-
         $memberTypes = MemberType::all()->where('id', '!=', 1);
-        $memberTypes = $memberTypes->mapWithKeys(function($item) {
-          return [$item['id'] => $item['name'] . ' - $ ' . number_format($item['price'], 2)];
-        });
-
         $paymentMethods = PaymentMethod::all();
         return view('admin.members.create')->withUsers($users)
                                            ->withPaymentMethods($paymentMethods)
@@ -86,6 +78,7 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         $this->validate($request, [
           'user_id'           => 'required|integer',
           'member_type_id'    => 'required|integer',
@@ -143,6 +136,14 @@ class MemberController extends Controller
         $user->role_id = 5;
         $user->membership_id = $member->id;
         $user->save();
+
+        foreach ($request->secondaries as $secondary)
+        {
+          $user = User::find($request->user_id);
+          $user->role_id = 5;
+
+          $member->users()->save($user);
+        }
 
         Session::flash('success','<strong>' . $member->users[0]->fullname . ', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
 
