@@ -78,7 +78,7 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        dd($request->paid_secondaries);
         $this->validate($request, [
           'user_id'           => 'required|integer',
           'member_type_id'    => 'required|integer',

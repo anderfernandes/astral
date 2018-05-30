@@ -9,6 +9,7 @@ use App\PaymentMethod;
 use App\Sale;
 use App\Organization;
 use App\EventType;
+use App\MemberType;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -398,6 +399,18 @@ Route::get('events/{start}/{end}', function($start, $end) {
   $eventsCollect = $eventsCollect->values()->all();
 
   return $eventsCollect;
+});
+
+// This API is consumed on the add members
+Route::get('membership-type/{id}', function($id) {
+  $membership_type = \App\MemberType::find($id);
+  return [
+    'id'       => $membership_type->id,
+    'name'     => $membership_type->name,
+    'price'    => number_format($membership_type->price, 2, '.', ','),
+    'duration' => (float)$membership_type->duration,
+    'max_secondaries' => (int)$membership_type->max_secondaries,
+  ];
 });
 
 Route::get('settings', function() {

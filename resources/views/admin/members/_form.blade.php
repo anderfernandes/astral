@@ -5,7 +5,7 @@
   {{ csrf_field() }}
 <div class="ui two column grid">
   <div class="column">
-    <div class="field">
+    <div class="required field">
       <label for="user_id">Name</label>
       <div class="ui search selection dropdown" id="name">
         <input type="hidden" name="user_id">
@@ -20,12 +20,12 @@
         </div>
       </div>
     </div>
-    <div class="field">
+    <div class="required field">
       <label for="member_type_id">Memebrship Type</label>
       <div class="ui search selection dropdown" id="member_type_id">
         <input type="hidden" name="member_type_id">
         <i class="dropdown icon"></i>
-        <div class="default text">Select a customer</div>
+        <div class="default text">Select a membership type</div>
         <div class="menu">
           @foreach ($memberTypes as $memberType)
             <div class="item" data-value="{{ $memberType->id }}">
@@ -36,7 +36,7 @@
         </div>
       </div>
     </div>
-    <div class="two fields">
+    <div class="required two fields">
       <div class="field">
         <label for="start">Start Date</label>
         <div class="ui left icon input">
@@ -53,11 +53,14 @@
       </div>
     </div>
   </div>
+
+  {{-- Payment Information --}}
+
   <div class="column">
     <div class="three fields">
-      <div class="field">
+      <div class="required field">
         <label for="payment_method_id">Payment Method</label>
-        <div class="ui fluid selection dropdown">
+        <div class="ui selection dropdown" id="payment_method">
           <input type="hidden" id="payment_method_id" name="payment_method_id" value="{{ old('payment_method_id') }}">
           <i class="dropdown icon"></i>
           <div class="default text">Select Payment Method</div>
@@ -71,33 +74,39 @@
         </div>
       </div>
       <div class="field">
-        <label for="tendered">Tendered</label>
+        <label for="required tendered">Tendered</label>
         <div class="ui labeled input">
           <div class="ui label">$ </div>
-          <input type="text" id="tendered" name="tendered" value="{{ number_format(0, 2) }}">
+          <input type="text" id="tendered" name="tendered" value="{{ number_format(old('tendered') ?? 0, 2) }}">
         </div>
       </div>
       <div class="field">
         <label for="change_due">Change Due</label>
         <div class="ui labeled input">
           <div class="ui label">$ </div>
-          <input type="text" name="change_due" id="change_due" value="{{ number_format(0, 2) }}" placeholder="Change Due" readonly>
+          <input type="text" name="change_due" id="change_due" value="{{ number_format(old('change_due') ?? 0, 2) }}" placeholder="Change Due" readonly>
         </div>
       </div>
     </div>
     <div class="field">
       <label for="reference">Reference</label>
-      <input type="text" name="referece" id="reference" placeholder="Credit Card or Check reference">
+      <input type="text" name="referece" id="reference" placeholder="Credit Card or Check reference" value="{{ old('reference') }}">
     </div>
     <div class="field">
       <label for="memo">Memo</label>
-      <input type="text" placeholder="Memo">
+      <input type="text" placeholder="Memo" value="{{ old('memo') }}">
     </div>
   </div>
 </div>
 <div class="field">
-  <label for="secondaries">Secondaries</label>
+  <label for="secondaries">Free Secondaries</label>
   <select name="secondaries[]" id="secondaries" multiple="" class="ui dropdown">
+    <option value="">Select secondaries</option>
+  </select>
+</div>
+<div class="field">
+  <label for="paid_secondaries[]">Non-free Secondaries</label>
+  <select name="paid_secondaries[]" id="paid_secondaries" multiple="" class="ui disabled dropdown">
     <option value="">Select secondaries</option>
   </select>
 </div>
@@ -105,6 +114,7 @@
 <div class="field">
   <div class="ui buttons">
     <a href="{{ route('admin.members.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
+    <div class="ui yellow right floated right labeled reset icon button">Start Over <i class="eraser icon"></i></div>
     <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
   </div>
 </div>
@@ -157,15 +167,17 @@
 
 <script>
   function calculateTotals() {
-    var price = $('#member_type_id').dropdown('get value') == "" ? 0 : $('#member_type_id').dropdown('get text').split(" ").slice(-1)
-    price = parseFloat(price)
-    priceString = price.toFixed(2)
-    var tax = (({{ App\Setting::find(1)->tax }}/100) * price).toFixed(2)
+    var subtotal = $('#member_type_id').dropdown('get value') == "" ? 0 : $('#member_type_id').dropdown('get text').split(" ").slice(-1)
+    subtotal = parseFloat(subtotal)
+    var paidSecondaries = $('#paid_secondaries').dropdown('get value').length * 20
+    subtotal = subtotal + paidSecondaries
+    subtotalString = subtotal.toFixed(2)
+    var tax = (({{ App\Setting::find(1)->tax }}/100) * subtotal).toFixed(2)
     tax = parseFloat(tax)
     var taxString = tax.toFixed(2)
-    total = price + tax
+    total = subtotal + tax
     var totalString = total.toFixed(2)
-    $('#subtotal').val(priceString)
+    $('#subtotal').val(subtotalString)
     $('#tax').val(taxString)
     $('#total').val(totalString)
   }
@@ -176,15 +188,28 @@
   $(document).ready(function() {
     $('#name').dropdown({
       onChange: function(value, text, $choice) {
+        $('#member_type_id').dropdown('clear')
         $('#secondaries').dropdown('clear')
+        $('#paid_secondaries').dropdown('clear')
         $('#secondaries').html('')
         fetch(`/api/customers?primary=${value}`)
           .then(response => response.json())
           .then(customers => {
-
             customers.map(customer => {
               $('#secondaries').append(`<option value="${customer.id}">${customer.name} (${customer.role})</option>`)
+              //$('#paid_secondaries').append(`<option value="${customer.id}">${customer.name} (${customer.role})</option>`)
             })
+          })
+          .then(() => {
+            <?php
+
+            if (old('secondaries') != null)
+            {
+              foreach (old('secondaries') as $secondary) {
+                echo "$('#secondaries').dropdown('set selected', $secondary) \n ";
+              }
+            }
+            ?>
           })
       } // end of dropdown onChange
     }) // end of dropdown
@@ -208,18 +233,64 @@
     $('#change_due').val(changeDue)
   })
 
-  $('#start').flatpickr({ defaultDate: 'today', dateFormat: 'l, F j, Y' });
-  $('#end').flatpickr({ defaultDate: moment().add(365, 'days').format('dddd, MMMM D, YYYY'), dateFormat: 'l, F j, Y'})
+  $('#start').flatpickr({ defaultDate: '{{ old('start') ?? 'today' }}', dateFormat: 'l, F j, Y' });
 
-  function setMembershipEndDate() {
-    var start = document.querySelector('#start').value
-    var end = moment(start, 'dddd, MMMM D, YYYY').add(365, 'days').format('dddd, MMMM D, YYYY')
-    $('#end').flatpickr({ defaultDate: end, dateFormat: 'l, F j, Y'})
-  }
+  $('#member_type_id').dropdown('set selected', {{ old('member_type_id') }})
+  $('#payment_method').dropdown('set selected', {{ old('payment_method_id') }})
 
-  $('#start').change(setMembershipEndDate)
-  $(document).ready(setMembershipEndDate)
-  $(document).ready(calculateTotals)
+  {{-- Getting membership duration and filling in atomatically --}}
+  $('#member_type_id').change(function() {
+    var membership_type_id = $(this).dropdown('get value')
+    fetch(`/api/membership-type/${membership_type_id}`)
+      .then(response => response.json())
+      .then(membership_type => {
+        $('#secondaries').dropdown('clear')
+        $('#paid_secondaries').dropdown('clear')
+        var start = document.querySelector('#start').value
+        var end = moment(start, 'dddd, MMMM D, YYYY').add(membership_type.duration, 'days').format('dddd, MMMM D, YYYY')
+        $('#end').flatpickr({ defaultDate: end, dateFormat: 'l, F j, Y'})
+        $($('.ui.multiple.selection.dropdown')[0]).dropdown({maxSelections: membership_type.max_secondaries})
+      })
+      .then(() => { calculateTotals() })
+  })
+
+  {{-- Free Secondaries --}}
+  $('#secondaries').change(function() {
+    var membership_type_id = $('#member_type_id').dropdown('get value')
+    fetch(`/api/membership-type/${membership_type_id}`)
+    .then(response => response.json())
+    .then(membership_type => {
+      if ($('#secondaries').dropdown('get value').length >= membership_type.max_secondaries) {
+        $('#paid_secondaries').dropdown('clear')
+        $('#paid_secondaries').removeClass('disabled')
+        $($('.ui.multiple.selection.dropdown')[1]).removeClass('disabled')
+        var user_id = $('#name').dropdown('get value')
+        fetch(`/api/customers?primary=${user_id}`)
+          .then(response => response.json())
+          .then(customers => {
+            customers.map(customer => {
+              {{-- Only add values that are not selected in the free secondaries dropdown --}}
+              if (!$('#secondaries').dropdown('get values').includes(customer.id.toString()))
+                $('#paid_secondaries').append(`<option value="${customer.id}">${customer.name} (${customer.role})</option>`)
+            })
+          })
+      } else {
+        $('#paid_secondaries').dropdown('clear')
+        $('#paid_secondaries').html('')
+        $($('.ui.multiple.selection.dropdown')[1]).addClass('disabled')
+      }
+    })
+  })
+
+  {{-- Update totals when non-free secondaries change --}}
+  $('#paid_secondaries').change(function() {
+    calculateTotals()
+  })
+
+  $(document).ready(function() {
+    calculateTotals()
+    $('#name').dropdown('get value') != null ? $('#name').dropdown('set selected', {{ old('user_id') }}) : null
+  })
 
   $('#members').form({
     on: 'blur',
