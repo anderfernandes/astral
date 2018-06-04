@@ -9,19 +9,9 @@
 @section('content')
 
   <div class="sixteen wide column">
-    <div class="ui info icon message">
-      <i class="info circle icon"></i>
-      <i class="close icon"></i>
-      <div class="content">
-        <div class="header">
-          Make sure you make the right person a member!
-        </div>
-        <p>A sale will be created for the person. Membership status will only be granted upon payment.</p>
-      </div>
-    </div>
-  </div>
-
-  <br />
+    {{ Session::flash('info',
+      'Make sure you make the right changes here. Pay very close attention to free and non-free secondaries as well as membership start/end dates and membership type!')
+    }}
 
   @include('admin.members._form')
 

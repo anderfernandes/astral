@@ -50,7 +50,7 @@
 
   <div class="ui buttons">
 
-    @if ($member->users->count() >= $member->type->max_secondaries)
+    @if ($member->users->count() - 1 >= $member->type->max_secondaries)
       <a href="javascript:$('#secondary').modal('show')" class="ui default disabled button">
         <i class="plus icon"></i> Add a Secondary
       </a>

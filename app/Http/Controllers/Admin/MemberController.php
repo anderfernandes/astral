@@ -78,7 +78,6 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->paid_secondaries);
         $this->validate($request, [
           'user_id'           => 'required|integer',
           'member_type_id'    => 'required|integer',
@@ -90,6 +89,7 @@ class MemberController extends Controller
 
         // Create Sale
         $sale = new Sale;
+
         $sale->creator_id        = Auth::user()->id;
         $sale->organization_id   = $user->organization_id;
         $sale->customer_id       = $user->id;
@@ -103,16 +103,24 @@ class MemberController extends Controller
 
         $sale->save();
 
+        if (isSet($request->memo))
+        {
+          $sale->memo()->create([
+            'author_id' => Auth::user()->id,
+            'message'   => $request->memo,
+          ]);
+        }
+
         // Create Payment
         $payment = new Payment;
 
         $payment->cashier_id        = Auth::user()->id;
         $payment->payment_method_id = $request->payment_method_id;
         // Tendered may be nullable if the customer hasn't paid
-        $payment->tendered          = round($request->tendered, 2);
-        $payment->total             = round($request->total, 2);
+        $payment->tendered          = number_format($request->tendered, 2, '.', '');
+        $payment->total             = number_format($request->total, 2, '.', '');
         // payment = total - tendered (precision set to two decimal places)
-        $payment->change_due        = round($request->change_due, 2);
+        $payment->change_due        = number_format($request->change_due, 2, '.', '');
         $payment->reference         = $request->reference;
         $payment->source            = 'admin';
         $payment->sale_id           = $sale->id;
@@ -120,10 +128,6 @@ class MemberController extends Controller
         $payment->save();
 
         // Create membership
-        $membershipDuration = MemberType::find($request->member_type_id)->duration;
-
-
-
         $member = new Member([
           'member_type_id' => $request->member_type_id,
           'creator_id'     => Auth::user()->id,
@@ -137,12 +141,30 @@ class MemberController extends Controller
         $user->membership_id = $member->id;
         $user->save();
 
-        foreach ($request->secondaries as $secondary)
+        // Store free secondaries if they exist
+        if (isSet($request->secondaries))
         {
-          $user = User::find($request->user_id);
-          $user->role_id = 5;
+          foreach ($request->secondaries as $secondary)
+          {
+            $u = User::find($secondary);
+            $u->role_id = 5;
+            $u->save();
 
-          $member->users()->save($user);
+            $member->users()->save($u);
+          }
+        }
+
+        // Store free secondaries if they exis
+        if (isSet($request->paid_secondaries))
+        {
+          foreach ($request->paid_secondaries as $paid_secondary)
+          {
+            $p = User::find($paid_secondary);
+            $p->role_id = 5;
+            $p->save();
+
+            $member->users()->save($p);
+          }
         }
 
         Session::flash('success','<strong>' . $member->users[0]->fullname . ', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
@@ -174,14 +196,21 @@ class MemberController extends Controller
      */
     public function edit(Member $member)
     {
+        $users = User::all()->where('type', 'individual')->where('role_id', '!=', 5);
         $memberTypes = MemberType::all()->where('id', '!=', 1);
-        $memberTypes = $memberTypes->mapWithKeys(function($item) {
-          return [$item['id'] => $item['name'] . ' - $ ' . number_format($item['price'], 2)];
-        });
-
         $paymentMethods = PaymentMethod::all();
+        // Passing membership payments
+
+        // IN ORDER TO GET THE LATEST MEMBERSHIP PAYMENT, QUERY THE DATABASE FOR A PAYMENT THAT...
+        $sales = Sale::where('customer_id', $member->users[0]->id) // ...HAS THE PRIMARY MEMBER AS A CUSTOMER...
+                      ->where('subtotal', '>=', $member->type->price) // ...SUBTOTAL >= MEMBERSHIP TYPE PRICE
+                      ->whereDate('created_at', $member->created_at->format('Y-m-d'))->get(); // .. WAS CREATED THE SAME DAY THE MEMBERSHIP WAS CREATED
+        // Ensure we get the last membership payment
+        $sale = $sales->last();
 
         return view ('admin.members.edit')->withMember($member)
+                                          ->withSale($sale)
+                                          ->withUsers($users)
                                           ->withMemberTypes($memberTypes)
                                           ->withPaymentMethods($paymentMethods);
     }
@@ -195,61 +224,98 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-        $this->validate($request, [
-          'user_id'        => 'required|integer',
-          'member_type_id' => 'required|integer',
-          'tendered'       => 'numeric|min:' . $request->total,
+
+      //dd($request->total - $request->paid);
+
+      $this->validate($request, [
+        'user_id'           => 'required|integer',
+        'member_type_id'    => 'required|integer',
+        'tendered'          => 'numeric|min:' . ($request->total - $request->paid),
+        'payment_method_id' => 'required',
+      ]);
+
+      $user = User::find($request->user_id);
+
+      // Create Sale
+      $sale = new Sale;
+
+      $sale->creator_id        = Auth::user()->id;
+      $sale->organization_id   = $user->organization_id;
+      $sale->customer_id       = $user->id;
+      $sale->status            = "complete";
+      $sale->taxable           = false;
+      $sale->subtotal          = round($request->subtotal, 2);
+      $sale->tax               = round($request->tax, 2);
+      $sale->total             = round($request->total, 2);
+      $sale->refund            = false;
+      $sale->source            = "admin";
+
+      $sale->save();
+
+      if (isSet($request->memo))
+      {
+        $sale->memo()->create([
+          'author_id' => Auth::user()->id,
+          'message'   => $request->memo,
         ]);
+      }
 
-        $user = User::find($member->users[0]->id);
+      // Create Payment
+      $payment = new Payment;
 
-        // Create Sale
-        $sale = new Sale;
-        $sale->creator_id        = Auth::user()->id;
-        $sale->organization_id   = $user->organization_id;
-        $sale->customer_id       = $user->id;
-        $sale->status            = "complete";
-        $sale->taxable           = false;
-        $sale->subtotal          = round($request->subtotal, 2);
-        $sale->tax               = round($request->tax, 2);
-        $sale->total             = round($request->total, 2);
-        $sale->refund            = false;
-        $sale->source            = "admin";
+      $payment->cashier_id        = Auth::user()->id;
+      $payment->payment_method_id = $request->payment_method_id;
+      // Tendered may be nullable if the customer hasn't paid
+      $payment->tendered          = number_format($request->tendered, 2, '.', '');
+      $payment->total             = number_format($request->total, 2, '.', '');
+      // payment = total - tendered (precision set to two decimal places)
+      $payment->change_due        = number_format($request->change_due, 2, '.', '');
+      $payment->reference         = $request->reference;
+      $payment->source            = 'admin';
+      $payment->sale_id           = $sale->id;
 
-        $sale->save();
+      $payment->save();
 
-        // Create Payment
-        $payment = new Payment;
+      // Updating membership
+      $member->member_type_id = $request->member_type_id;
+      $member->start          = Date::parse($request->start)->startOfDay()->toDateTimeString();
+      $member->end            = Date::parse($request->end)->startOfDay()->toDateTimeString();
 
-        $payment->cashier_id        = Auth::user()->id;
-        $payment->payment_method_id = $request->payment_method_id;
-        // Tendered may be nullable if the customer hasn't paid
-        $payment->tendered          = round($request->tendered, 2);
-        $payment->total             = round($request->total, 2);
-        // payment = total - tendered (precision set to two decimal places)
-        $payment->change_due        = round($request->change_due, 2);
-        $payment->reference         = $request->reference;
-        $payment->source            = 'admin';
-        $payment->sale_id           = $sale->id;
+      $member->save();
 
-        $payment->save();
+      $user->role_id = 5;
+      $user->membership_id = $member->id;
+      $user->save();
 
-        // Create membership
-        $membershipDuration = MemberType::find($request->member_type_id)->duration;
+      // Store free secondaries if they exist
+      if (isSet($request->secondaries))
+      {
+        foreach ($request->secondaries as $secondary)
+        {
+          $u = User::find($secondary);
+          $u->role_id = 5;
+          $u->save();
 
-        // Update Membership
-        $member->member_type_id = $request->member_type_id;
-        $member->start          = Date::parse($request->start)->startOfDay()->toDateTimeString();
-        $member->end            = Date::parse($request->end)->startOfDay()->toDateTimeString();
+          $member->users()->save($u);
+        }
+      }
 
-        $member->save();
+      // Store free secondaries if they exis
+      if (isSet($request->paid_secondaries))
+      {
+        foreach ($request->paid_secondaries as $paid_secondary)
+        {
+          $p = User::find($paid_secondary);
+          $p->role_id = 5;
+          $p->save();
 
-        $user->role_id = 5;
-        $user->save();
+          $member->users()->save($p);
+        }
+      }
 
-        Session::flash('success','<strong>' . $member->users[0]->fullname .', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
+      Session::flash('success','<strong>' . $member->users[0]->fullname . ', Member # '. $member->id .' ('. $member->type->name .')</strong> edited successfully!');
 
-        return redirect()->route('admin.members.show', $member);
+      return redirect()->route('admin.members.index');
     }
 
     /**
@@ -270,8 +336,9 @@ class MemberController extends Controller
 
     public function receipt(Member $member)
     {
-      $sale = Sale::where('customer_id', $member->users[0]->id)->where('subtotal', $member->type->price)->get();
-      $sale = $sale[count($sale) - 1];
+      $sales = Sale::where('customer_id', $member->users[0]->id)->where('subtotal', $member->type->price)->get();
+      // Ensure we get the last membership payment
+      $sale = $sales->last();
 
       return view('admin.members.receipt')->withMember($member)->withsale($sale);
     }

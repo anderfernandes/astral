@@ -37,6 +37,8 @@ Route::group(
   Route::resource('events', 'EventController');
   // Product Types
   Route::resource('product-types', 'ProductTypeController');
+  // Member Types
+  Route::resource('member-types', 'MemberTypeController');
   // Grades
   Route::resource('grades', 'GradeController');
   Route::resource('announcements', 'AnnouncementController');

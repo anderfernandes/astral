@@ -118,7 +118,7 @@ function getAttendanceByType($ticketTypeID) {
     @endif
 
     @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
-    {{-- Charts --}}
+    {{-- Overview --}}
     <div class="ui horizontal segments">
       <div class="ui center aligned segment">
         <div class="ui small statistic">
@@ -161,6 +161,17 @@ function getAttendanceByType($ticketTypeID) {
           </div>
           <div class="label">
             Members
+          </div>
+        </div>
+      </div>
+      <div class="ui center aligned segment">
+        <div class="ui small statistic">
+          <div class="value">
+            <i class="box icon"></i>
+            {{ App\Product::all()->count() }}
+          </div>
+          <div class="label">
+            Products
           </div>
         </div>
       </div>

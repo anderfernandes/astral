@@ -36,13 +36,13 @@
     </h4>
 
     <h4 class="ui left floated header">
-      {{ $member->users[0]->firstname . ' ' . $member->users[0]->lastname }}<br />
+      {{ $member->users[0]->fullname }}<br />
       {{ $member->users[0]->address }} </br>
       {{ $member->users[0]->city }}, {{ $member->users[0]->state }} {{ $member->users[0]->zip }}
     </h4>
   </div>
 
-  <p>Dear {{ $member->users[0]->firstname . ' ' . $member->users[0]->lastname }},</p>
+  <p>Dear {{ $member->users[0]->fullname }},</p>
 
   <p>
     Thank you very much for purchasing a membership at the {{ App\Setting::find(1)->organization }}.
@@ -70,7 +70,7 @@
           <td>
             <h4 class="ui header">
               <div class="content">
-                {{ $user->firstname . ' ' . $user->lastname }}
+                {{ $user->fullname }}
                 <div class="sub header">
                   {{ $member->type->name }}
                   @if ($key != 0)

@@ -5,18 +5,24 @@
   {{ csrf_field() }}
 <div class="ui two column grid">
   <div class="column">
-    <div class="required field">
+    <div class="required @isset($member) disabled @endisset field">
       <label for="user_id">Name</label>
       <div class="ui search selection dropdown" id="name">
         <input type="hidden" name="user_id">
         <i class="dropdown icon"></i>
         <div class="default text">Select a customer</div>
         <div class="menu">
-          @foreach ($users as $user)
-            <div class="item" data-value="{{ $user->id }}">
-              <i class="user circle icon"></i>{{ $user->fullname }} (<em>{{ $user->role->name }}</em>)
+          @if (isSet($member))
+            <div class="item" data-value="{{ $member->users->first()->id }}">
+              <i class="user circle icon"></i>{{ $member->users->first()->fullname }} (<em>{{ $member->users->first()->role->name }}</em>)
             </div>
-          @endforeach
+          @else
+            @foreach ($users as $user)
+              <div class="item" data-value="{{ $user->id }}">
+                <i class="user circle icon"></i>{{ $user->fullname }} (<em>{{ $user->role->name }}</em>)
+              </div>
+            @endforeach
+          @endif
         </div>
       </div>
     </div>
@@ -76,21 +82,21 @@
       <div class="field">
         <label for="required tendered">Tendered</label>
         <div class="ui labeled input">
-          <div class="ui label">$ </div>
+          <div class="ui black label">$ </div>
           <input type="text" id="tendered" name="tendered" value="{{ number_format(old('tendered') ?? 0, 2) }}">
         </div>
       </div>
       <div class="field">
         <label for="change_due">Change Due</label>
         <div class="ui labeled input">
-          <div class="ui label">$ </div>
+          <div class="ui black label">$ </div>
           <input type="text" name="change_due" id="change_due" value="{{ number_format(old('change_due') ?? 0, 2) }}" placeholder="Change Due" readonly>
         </div>
       </div>
     </div>
     <div class="field">
       <label for="reference">Reference</label>
-      <input type="text" name="referece" id="reference" placeholder="Credit Card or Check reference" value="{{ old('reference') }}">
+      <input type="text" name="reference" id="reference" placeholder="Credit Card or Check reference" value="{{ old('reference') }}">
     </div>
     <div class="field">
       <label for="memo">Memo</label>
@@ -98,6 +104,18 @@
     </div>
   </div>
 </div>
+@isset($member)
+<div class="field">
+  <label for="secondaries">Current Secondaries</label>
+  @foreach ($member->users as $user)
+    @if ($loop->index != 0)
+      <div class="ui black label">
+        <i class="user circle icon"></i>{{ $user->fullname }}
+      </div>
+    @endif
+  @endforeach
+</div>
+@endisset
 <div class="field">
   <label for="secondaries">Free Secondaries</label>
   <select name="secondaries[]" id="secondaries" multiple="" class="ui dropdown">
@@ -113,8 +131,8 @@
 <br /><br />
 <div class="field">
   <div class="ui buttons">
-    <a href="{{ route('admin.members.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-    <div class="ui yellow right floated right labeled reset icon button">Start Over <i class="eraser icon"></i></div>
+    <a href="{{ route('admin.members.index') }}" class="ui black button"><i class="left chevron icon"></i> Back</a>
+    <div class="ui yellow right floated right labeled clear icon button">Start Over <i class="eraser icon"></i></div>
     <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
   </div>
 </div>
@@ -167,19 +185,45 @@
 
 <script>
   function calculateTotals() {
-    var subtotal = $('#member_type_id').dropdown('get value') == "" ? 0 : $('#member_type_id').dropdown('get text').split(" ").slice(-1)
-    subtotal = parseFloat(subtotal)
-    var paidSecondaries = $('#paid_secondaries').dropdown('get value').length * 20
-    subtotal = subtotal + paidSecondaries
-    subtotalString = subtotal.toFixed(2)
-    var tax = (({{ App\Setting::find(1)->tax }}/100) * subtotal).toFixed(2)
-    tax = parseFloat(tax)
-    var taxString = tax.toFixed(2)
-    total = subtotal + tax
-    var totalString = total.toFixed(2)
-    $('#subtotal').val(subtotalString)
-    $('#tax').val(taxString)
-    $('#total').val(totalString)
+    var mtid = $('#member_type_id').dropdown('get value') == "" ? 2 : $('#member_type_id').dropdown('get value')
+    fetch(`/api/membership-type/${mtid}`)
+      .then(data => data.json())
+      .then(membershipTypeData => membershipTypeData)
+      .then(membershipTypeData => {
+        var subtotal = $('#member_type_id').dropdown('get value') == "" ? 0 : $('#member_type_id').dropdown('get text').split(" ").slice(-1)
+        subtotal = parseFloat(subtotal)
+        var paidSecondaries = $('#paid_secondaries').dropdown('get value').length * membershipTypeData.secondary_price
+        subtotal = subtotal + paidSecondaries
+        subtotalString = subtotal.toFixed(2)
+        var tax = (({{ App\Setting::find(1)->tax }}/100) * subtotal).toFixed(2)
+        tax = parseFloat(tax)
+        var taxString = tax.toFixed(2)
+        total = subtotal + tax
+        var totalString = total.toFixed(2)
+        var balanceString = document.querySelector('#balance').value
+        var balance = parseFloat(balanceString)
+        var tendered = document.querySelector('#tendered').value
+        var tenderedString = parseFloat(tendered)
+        var paid = {{ isSet($member) ? $sale->payments->last()->total : 0 }}
+        var paidString = paid.toFixed(2)
+        balance = (total - tendered)
+        balance = (balance - paid)
+        balance = balance > 0 ? balance : 0
+
+        var changeDue = (total - paid - tendered)
+        changeDue = parseFloat(changeDue)
+        changeDue = changeDue < 0 ? changeDue * - 1 : 0
+
+        var balanceString = balance.toFixed(2)
+        var changeDueString = changeDue.toFixed(2)
+        $('#balance').val(balanceString)
+        $('#subtotal').val(subtotalString)
+        $('#tax').val(taxString)
+        $('#paid').val(paidString)
+        $('#total').val(totalString)
+        $('#change_due').val(changeDueString)
+
+      })
   }
 
   $('#member_type_id').change(calculateTotals)
@@ -203,12 +247,22 @@
           .then(() => {
             <?php
 
-            if (old('secondaries') != null)
+            if (isSet($member))
             {
-              foreach (old('secondaries') as $secondary) {
-                echo "$('#secondaries').dropdown('set selected', $secondary) \n ";
+              $secondaries = $member->users->pluck('id');
+              echo "$('#secondaries').dropdown('set value', $secondaries) \n";
+            }
+
+            else
+            {
+              if (old('secondaries') != null)
+              {
+                foreach (old('secondaries') as $secondary) {
+                  echo "$('#secondaries').dropdown('set selected', $secondary) \n ";
+                }
               }
             }
+
             ?>
           })
       } // end of dropdown onChange
@@ -217,30 +271,30 @@
 
 
   $('#tendered').keyup(function() {
-    var totalString = document.querySelector('#total').value
-    var total = parseFloat(totalString)
-    var balanceString = document.querySelector('#balance').value
-    var balance = parseFloat(balanceString)
-    var tendered = document.querySelector('#tendered').value
-    var tenderedString = parseFloat(tendered)
-    balance = (tendered - total).toFixed(2)
-    balance = balance <= 0 ? balance : (0).toFixed(2)
-    $('#balance').val(balance)
-
-    changeDue = (tendered - total).toFixed(2)
-    changeDue = changeDue >= 0 ? changeDue : (0).toFixed(2)
-
-    $('#change_due').val(changeDue)
+    calculateTotals()
   })
 
-  $('#start').flatpickr({ defaultDate: '{{ old('start') ?? 'today' }}', dateFormat: 'l, F j, Y' });
+  @if (isSet($member))
+    $('#start').flatpickr({ defaultDate: '{{ Date::parse($member->start)->format('l, F j, Y') }}', dateFormat: 'l, F j, Y' });
+  @else
+    $('#start').flatpickr({ defaultDate: '{{ old('start') ?? 'today' }}', dateFormat: 'l, F j, Y' });
+  @endif
 
-  $('#member_type_id').dropdown('set selected', {{ old('member_type_id') }})
-  $('#payment_method').dropdown('set selected', {{ old('payment_method_id') }})
+  $('#start').change(function() {
+    var membership_type_id = $('#member_type_id').dropdown('get value')
+    fetch(`/api/membership-type/${membership_type_id}`)
+      .then(response => response.json())
+      .then(membership_type => {
+        var start = document.querySelector('#start').value
+        var end = moment(start, 'dddd, MMMM D, YYYY').add(membership_type.duration, 'days').format('dddd, MMMM D, YYYY')
+        $('#end').flatpickr({ defaultDate: end, dateFormat: 'l, F j, Y'})
+      })
+  })
 
   {{-- Getting membership duration and filling in atomatically --}}
   $('#member_type_id').change(function() {
     var membership_type_id = $(this).dropdown('get value')
+    var currentSecondaries = {{ isSet($member) ? $member->users->count() - 1 : 0 }}
     fetch(`/api/membership-type/${membership_type_id}`)
       .then(response => response.json())
       .then(membership_type => {
@@ -249,18 +303,21 @@
         var start = document.querySelector('#start').value
         var end = moment(start, 'dddd, MMMM D, YYYY').add(membership_type.duration, 'days').format('dddd, MMMM D, YYYY')
         $('#end').flatpickr({ defaultDate: end, dateFormat: 'l, F j, Y'})
-        $($('.ui.multiple.selection.dropdown')[0]).dropdown({maxSelections: membership_type.max_secondaries})
+        $($('.ui.multiple.selection.dropdown')[0]).dropdown({maxSelections: membership_type.max_secondaries - currentSecondaries})
+        console.log(membership_type.max_secondaries - currentSecondaries)
       })
       .then(() => { calculateTotals() })
   })
 
   {{-- Free Secondaries --}}
   $('#secondaries').change(function() {
+    {{-- Get the number of secondaries --}}
+    var currentSecondaries = {{ isSet($member) ? $member->users->count() - 1 : 0 }}
     var membership_type_id = $('#member_type_id').dropdown('get value')
     fetch(`/api/membership-type/${membership_type_id}`)
     .then(response => response.json())
     .then(membership_type => {
-      if ($('#secondaries').dropdown('get value').length >= membership_type.max_secondaries) {
+      if (($('#secondaries').dropdown('get value').length + currentSecondaries) >= membership_type.max_secondaries) {
         $('#paid_secondaries').dropdown('clear')
         $('#paid_secondaries').removeClass('disabled')
         $($('.ui.multiple.selection.dropdown')[1]).removeClass('disabled')
@@ -280,6 +337,7 @@
         $($('.ui.multiple.selection.dropdown')[1]).addClass('disabled')
       }
     })
+
   })
 
   {{-- Update totals when non-free secondaries change --}}
@@ -288,15 +346,39 @@
   })
 
   $(document).ready(function() {
-    calculateTotals()
+    $('#name').dropdown('set selected', {{ isSet($member) ? $member->users[0]->id : old('name') }})
+    $('#member_type_id').dropdown('set selected', {{ isSet($member) ? $member->type->id : old('member_type_id')  }})
+    $('#payment_method').dropdown('set selected', {{ old('payment_method_id') }})
     $('#name').dropdown('get value') != null ? $('#name').dropdown('set selected', {{ old('user_id') }}) : null
+
+    calculateTotals()
   })
+
+
+  {{-- Automatically set tendered if payment method is not cash --}}
+  $('#payment_method').change(function() {
+    if ($(this).dropdown('get value') != 1) {
+      @if (!isSet($member))
+        document.querySelector('#tendered').value = document.querySelector('#total').value
+      @else
+        document.querySelector('#tendered').value = parseFloat(document.querySelector('#total').value) - parseFloat(document.querySelector('#paid').value)
+      @endif
+      {{-- Force user to leave reference since payment is not cash --}}
+      $('#members').form('add rule', 'reference', ['empty', 'minLength[3]'])
+    } else {
+      $('#members').form('remove field', 'reference')
+      document.querySelector('#tendered').value = (0).toFixed(2)
+
+    }
+    calculateTotals()
+  })
+
 
   $('#members').form({
     on: 'blur',
     inline: true,
     fields: {
-
+      name: ['empty']
     }
   })
 

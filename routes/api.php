@@ -404,12 +404,14 @@ Route::get('events/{start}/{end}', function($start, $end) {
 // This API is consumed on the add members
 Route::get('membership-type/{id}', function($id) {
   $membership_type = \App\MemberType::find($id);
+
   return [
-    'id'       => $membership_type->id,
-    'name'     => $membership_type->name,
-    'price'    => number_format($membership_type->price, 2, '.', ','),
-    'duration' => (float)$membership_type->duration,
+    'id'              => $membership_type->id,
+    'name'            => $membership_type->name,
+    'price'           => number_format($membership_type->price, 2, '.', ','),
+    'duration'        => (float)$membership_type->duration,
     'max_secondaries' => (int)$membership_type->max_secondaries,
+    'secondary_price' => (float)$membership_type->secondary_price,
   ];
 });
 
@@ -420,7 +422,7 @@ Route::get('settings', function() {
 
 Route::get('customers', function(Request $request) {
   $customerArray = [];
-  $customers = User::where('type', 'individual')->where('id', '!=', $request->primary)->orderBy('firstname', 'asc')->get();
+  $customers = User::where('type', 'individual')->where('id', '!=', $request->primary)->where('membership_id', 1)->orderBy('firstname', 'asc')->get();
   foreach ($customers as $customer) {
     array_push($customerArray, [
       'id' => $customer->id,

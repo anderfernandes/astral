@@ -147,8 +147,8 @@ class SettingController extends Controller
     public function addMemberType(Request $request)
     {
       $this->validate($request, [
-        'name'            => 'required',
-        'description'     => 'required',
+        'name'            => 'required|min:3',
+        'description'     => 'required|min:3',
         'price'           => 'required|numeric',
         'duration'        => 'required|numeric',
         'max_secondaries' => 'required|numeric'
