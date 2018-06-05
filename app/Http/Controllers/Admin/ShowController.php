@@ -91,7 +91,11 @@ class ShowController extends Controller
 
         $show->save();
 
-        Session::flash('success', 'The '.$show->type.' show '.$show->name.' has been added successfully!');
+        Session::flash('success', "The <strong>{$show->type}</strong> show <strong>{$show->name}</strong> has been added successfully!");
+
+        // Log created event
+        Log::info(Auth::user()->fullname . ' created Show ' . $show->name .' using admin');
+
         return redirect()->route('admin.shows.show', $show);
     }
 
@@ -148,6 +152,9 @@ class ShowController extends Controller
 
       Session::flash('success', 'The '.$show->type.' show '.$show->name.' has been updated successfully!');
 
+      // Log created event
+      Log::info(Auth::user()->fullname . ' edited Show ' . $show->name .' using admin');
+
       return redirect()->route('admin.shows.show', $show);
     }
 
@@ -159,6 +166,9 @@ class ShowController extends Controller
      */
     public function destroy(Show $show)
     {
+        // Log created event
+        Log::info(Auth::user()->fullname . ' deleted Show ' . $show->name .' using admin');
+
         $temp = $show;
 
         $show->delete();

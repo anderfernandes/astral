@@ -30,7 +30,7 @@
       </div>
       <div class="content">
         <div class="ui large header">{{ $show->name }}</div>
-        <div class="extra">
+        <div class="meta">
           <div class="ui black label">{{ $show->type }}</div>
           <div class="ui black label">{{ $show->duration }} minutes</div>
         </div>

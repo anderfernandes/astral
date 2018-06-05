@@ -36,7 +36,7 @@
 <div class="field">
   @if (Request::routeIs('admin.shows.create') or Request::routeIs('admin.shows.edit'))
     <div class="ui buttons">
-      <a href="{{ route('admin.shows.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
+      <a href="{{ route('admin.shows.index') }}" class="ui basic black button"><i class="left chevron icon"></i> Back</a>
       <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
     </div>
   @else
@@ -61,7 +61,7 @@
   } else {
     window.simplemde = new SimpleMDE({
       element: document.querySelector('#description'),
-      toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list'],
+      toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list', '|', 'preview'],
     })
   }
   {{-- Client side Form Validation --}}

@@ -17,14 +17,14 @@
 
   @if(str_contains(Auth::user()->role->permissions['shows'], "R"))
   {{-- Shows --}}
-  <div class="ui dropdown item">
+  <div class="ui dropdown item" onclick="location.href='{{ route('admin.shows.index') }}'">
     <i class="large film icon"></i> Shows
     <div class="menu">
       <a class="item {{ Request::routeIs('admin.shows.index') ? 'active' : '' }}" href="{{ route('admin.shows.index') }}">
         <i class="large film icon"></i> All Shows
       </a>
       <a class="item {{ Request::routeIs('admin.shows.create') ? 'active' : '' }}" href="{{ route('admin.shows.create') }}">
-        <i class="large plus icon"></i> Add Show
+        <i class="add icon"></i> Add Show
       </a>
     </div>
   </div>
@@ -32,9 +32,17 @@
 
   @if(str_contains(Auth::user()->role->permissions['products'], "R"))
   {{-- Products --}}
-  <a class="item {{ Request::routeIs('admin.products.index') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
-    <i class="large box icon"></i> Products
-  </a>
+  <div class="ui dropdown item">
+    <i class="large film icon"></i> Products
+    <div class="menu">
+      <a class="item {{ Request::routeIs('admin.products.index') ? 'active' : '' }}" href="{{ route('admin.shows.index') }}">
+        <i class="large film icon"></i> All Products
+      </a>
+      <a class="item {{ Request::routeIs('admin.products.create') ? 'active' : '' }}" href="{{ route('admin.shows.create') }}">
+        <i class="add icon"></i> Add Product
+      </a>
+    </div>
+  </div>
   @endif
 
   @if(str_contains(Auth::user()->role->permissions['calendar'], "R"))
