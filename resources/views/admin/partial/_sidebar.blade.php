@@ -32,13 +32,13 @@
 
   @if(str_contains(Auth::user()->role->permissions['products'], "R"))
   {{-- Products --}}
-  <div class="ui dropdown item">
+  <div class="ui dropdown item" onclick="location.href='{{ route('admin.products.index') }}'">
     <i class="large film icon"></i> Products
     <div class="menu">
-      <a class="item {{ Request::routeIs('admin.products.index') ? 'active' : '' }}" href="{{ route('admin.shows.index') }}">
+      <a class="item {{ Request::routeIs('admin.products.index') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
         <i class="large film icon"></i> All Products
       </a>
-      <a class="item {{ Request::routeIs('admin.products.create') ? 'active' : '' }}" href="{{ route('admin.shows.create') }}">
+      <a class="item {{ Request::routeIs('admin.products.create') ? 'active' : '' }}" href="{{ route('admin.products.create') }}">
         <i class="add icon"></i> Add Product
       </a>
     </div>
@@ -185,6 +185,6 @@
     </div>
   </div>
   <div class="item" style="text-align: center">
-    &copy; 2017 - 2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>
+    &copy; 2017-2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>
   </div>
 </div>

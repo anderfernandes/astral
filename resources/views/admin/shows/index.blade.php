@@ -1,9 +1,6 @@
 @extends('layout.admin')
-
 @section('title', 'Shows')
-
 @section ('subtitle', 'Manage Shows')
-
 @section ('icon', 'film')
 
 @section('content')

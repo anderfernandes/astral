@@ -2,8 +2,11 @@
   <a class="header toc item"><i class="sidebar large icon"></i></a>
   <div class="header item"><img src="/astral-logo-light.png" style="padding-right:4px"> Astral</div>
   <div class="header active item hide-on-mobile">
-    <i class="@yield('icon') icon"></i>
-    @yield('title') | @yield('subtitle')
+    <i class="icons">
+      <i class="@yield('icon') icon"></i>
+      <i class="@yield('type') inverted corner icon"></i>
+    </i>
+    <strong>@yield('title') | @yield('subtitle')</strong>
   </div>
   <div class="right menu">
     @if (Auth::user()->staff)

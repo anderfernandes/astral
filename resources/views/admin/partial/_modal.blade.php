@@ -3,9 +3,7 @@
   <div class="ui header">
     <i class="icons">
       <i class="{{ $icon }} icon"></i>
-      @if (isSet($type))
-        <i class="{{ $type }} corner icon"></i>
-      @endif
+      <i class="{{ $type ?? '' }} corner icon"></i>
     </i>
     <div class="content">
       {{ $title }}

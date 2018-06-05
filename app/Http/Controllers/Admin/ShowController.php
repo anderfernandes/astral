@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 use Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ShowController extends Controller
 {
@@ -150,7 +151,7 @@ class ShowController extends Controller
 
       $show->save();
 
-      Session::flash('success', 'The '.$show->type.' show '.$show->name.' has been updated successfully!');
+      Session::flash('success', "The <strong>{$show->type}</strong> show <strong>{$show->name}</strong> has been updated successfully!");
 
       // Log created event
       Log::info(Auth::user()->fullname . ' edited Show ' . $show->name .' using admin');
@@ -176,6 +177,40 @@ class ShowController extends Controller
         Session::flash('success', 'The '.$temp->type.' show '.$temp->name.' was successfully deleted.');
 
         return redirect()->route('admin.shows.index');
+    }
+
+    public function delete(Show $show)
+    {
+        // How many events this show is part of, past and future
+        $showings = \App\Event::where('show_id', $show->id)->count();
+
+        // Check if there are any events have this show
+
+        if ($showings == 0)
+        {
+
+          // Log created event
+          Log::info(Auth::user()->fullname . ' deleted Show ' . $show->name .' using admin');
+
+          $temp = $show;
+
+          $show->delete();
+
+          Session::flash('success', "The <strong>{$temp->type}</strong> show <strong>{$temp->name}</strong> was successfully deleted.");
+
+          return redirect()->route('admin.shows.index');
+
+        }
+        else
+        {
+
+          Session::flash('info', "Unable to delete <strong>{$show->name}</strong> because it is/will be featured in <strong>$showings or more events</strong>.");
+
+          return redirect()->route('admin.shows.show', $show);
+
+        }
+
+
     }
 
 }

@@ -27,6 +27,7 @@ Route::group(
   Route::resource('products', 'ProductController');
   // Shows resource
   Route::resource('shows', 'ShowController');
+  Route::get('shows/{show}/delete', 'ShowController@delete')->name('shows.delete');
   // Members Resource
   Route::resource('members', 'MemberController');
   // Users resource

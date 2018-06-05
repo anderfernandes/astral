@@ -4,10 +4,16 @@
 
 @section('subtitle', 'New Show')
 
-@section('icon', 'plus')
+@section('icon', 'film')
+
+@section('type', 'add')
 
 @section('content')
 
-  @include('admin.partial.shows._form', ['type' => 'create'])
+  <div class="ui container">
 
+    @include('admin.partial.shows._form', ['type' => 'create'])
+
+  </div>
+  
 @endsection
