@@ -9,14 +9,14 @@
 @section('content')
 
   <div class="ui buttons">
-    <a href="{{ route('admin.shows.index') }}" class="ui default button">
+    <a href="{{ route('admin.shows.index') }}" class="ui basic black button">
       <i class="left chevron icon"></i> Back
     </a>
-    <a href="javascript:$('#edit-show').modal('show')" class="ui primary button">
-      <i class="edit icon"></i> Edit Show
+    <a href="javascript:$('#edit-show').modal('show')" class="ui black button">
+      <i class="icons"><i class="film icon"></i><i class="corner inverted edit icon"></i></i> Edit Show
     </a>
-    <a href="{{ route('admin.shows.create') }}" class="ui secondary button">
-      <i class="plus icon"></i> Add Another Show
+    <a href="{{ route('admin.shows.create') }}" class="ui black button">
+      <i class="icons"><i class="film icon"></i><i class="corner inverted add icon"></i></i> Add Another Show
     </a>
     {!! Form::open(['route' => ['admin.shows.destroy', $show], 'method' => 'DELETE']) !!}
       {!! Form::button('<i class="trash icon"></i> Delete Show', ['type' => 'submit', 'class' => 'ui negative button']) !!}
@@ -30,19 +30,17 @@
       </div>
       <div class="content">
         <div class="ui large header">{{ $show->name }}</div>
-        <div class="meta">
-          <div class="ui label">{{ $show->type }}</div>
-          <i class="clock icon"></i> {{ $show->duration }} minutes
+        <div class="extra">
+          <div class="ui black label">{{ $show->type }}</div>
+          <div class="ui black label">{{ $show->duration }} minutes</div>
         </div>
-        <div class="meta">
-          Created by <i class="user circle icon"></i> {{ $show->creator->fullname }}
-          on {{ Date::parse($show->created_at)->format('l, F j, Y \a\t g:i A') }}
+        <div class="extra">
+          <p><i class="user circle icon"></i> {{ $show->creator->fullname }} <br></p>
+          <p><i class="pencil icon"></i> {{ $show->created_at->format('l, F j, Y \a\t g:i A') }} ({{ $show->created_at->diffForHumans() }})</p>
+          <p><i class="edit icon"></i> {{ Date::parse($show->updated_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($show->updated_at)->diffForHumans() }})</p>
         </div>
-        <div class="meta">
-          Updated on {{ Date::parse($show->updated_at)->format('l, F j, Y \a\t g:i A') }}
-        </div>
-        <div class="description">{!! \Illuminate\Mail\Markdown::parse($show->description) !!}</div>
-        <div class="extra"></div>
+        <div class="description">
+          {!! \Illuminate\Mail\Markdown::parse($show->description) !!}</div>
       </div>
     </div>
   </div>

@@ -56,19 +56,7 @@ function getAttendanceByType($ticketTypeID) {
 
 ?>
 
-{{-- Welcome Box --}}
 <div class="ui grid">
-  <div class="sixteen wide column" style="margin-bottom: -1rem">
-    <div class="ui icon message">
-      <i class="announcement icon"></i>
-      <div class="content">
-        <div class="header">Welcome, {{ Auth::user()->firstname }}!</div>
-        If you are new, make sure you visit our <a href="http://astral.anderfernandes.com/docs" target="_blank">documentation website</a> for instructions
-        on how to use Astral.
-      </div>
-      </div>
-  </div>
-
 
   <div class="eight wide computer sixteen wide mobile column">
 
@@ -196,44 +184,11 @@ function getAttendanceByType($ticketTypeID) {
       </div>
       <div class="ui two column grid">
         <div class="column">
-          <canvas height="200" id="attendanceChart"></canvas>
+          <canvas height="300" id="attendanceChart"></canvas>
         </div>
         <div class="column">
-          <canvas height="200" id="secondAttendanceChart"></canvas>
+          <canvas height="300" id="secondAttendanceChart"></canvas>
         </div>
-      </div>
-    </div>
-    @endif
-
-    @if (str_contains(Auth::user()->role->permissions['dashboard'], "C"))
-    {{-- Bulletin --}}
-    <div class="ui segment">
-      <div class="ui dividing header">
-        <i class="comments outline icon"></i>
-        <div class="content">
-          Bulletin
-          <div class="sub header">
-          Open posts
-          </div>
-        </div>
-      </div>
-      <div class="ui relaxed divided list">
-        @foreach (\App\Post::where('open', true)->latest()->take(5)->get() as $post)
-          <div class="item">
-            <i class="big user circle icon"></i>
-            <div class="content">
-              <div class="header">
-                <a href="{{ route('admin.users.show', $post->author) }}" target="_blank">{{ $post->author->firstname }}</a>
-                created a post <a href="{{ route('admin.posts.show', $post->id) }}" target="_blank">{{ $post->title }}</a>
-                <div class="ui black label"><i class="tag icon"></i>{{ $post->category->name }}</div>
-                @if ($post->sticky)
-                  <div class="ui red label"><i class="info circle icon"></i> important</div>
-                @endif
-              </div>
-              <div class="description"><i class="calendar outline alternate icon"></i>{{ Date::parse($post->created_at)->ago() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
-            </div>
-          </div>
-        @endforeach
       </div>
     </div>
     @endif
@@ -290,6 +245,39 @@ function getAttendanceByType($ticketTypeID) {
               </div>
             </div>
           @endif
+        @endforeach
+      </div>
+    </div>
+    @endif
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "C"))
+    {{-- Bulletin --}}
+    <div class="ui segment">
+      <div class="ui dividing header">
+        <i class="comments outline icon"></i>
+        <div class="content">
+          Bulletin
+          <div class="sub header">
+          Open posts
+          </div>
+        </div>
+      </div>
+      <div class="ui relaxed divided list">
+        @foreach (\App\Post::where('open', true)->latest()->take(5)->get() as $post)
+          <div class="item">
+            <i class="big user circle icon"></i>
+            <div class="content">
+              <div class="header">
+                <a href="{{ route('admin.users.show', $post->author) }}" target="_blank">{{ $post->author->firstname }}</a>
+                created a post <a href="{{ route('admin.posts.show', $post->id) }}" target="_blank">{{ $post->title }}</a>
+                <div class="ui black label"><i class="tag icon"></i>{{ $post->category->name }}</div>
+                @if ($post->sticky)
+                  <div class="ui red label"><i class="info circle icon"></i> important</div>
+                @endif
+              </div>
+              <div class="description"><i class="calendar outline alternate icon"></i>{{ Date::parse($post->created_at)->ago() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
+            </div>
+          </div>
         @endforeach
       </div>
     </div>
@@ -664,7 +652,7 @@ window.onload = function() {
 
   var secondAttendanceCanvas = document.getElementById("secondAttendanceChart").getContext("2d");
   var secondAttendanceChart = new Chart(secondAttendanceCanvas, {
-    type: 'pie',
+    type: 'polarArea',
     data: {
       labels: [
               <?php

@@ -7,7 +7,7 @@
     <div class="four wide computer sixteen wide mobile column">
       <div class="ui basic segment hidden" id="form">
         <div class="ui center aligned icon header">
-          <img class="ui centered massive image" src="/astral-logo-dark.png" />
+          <img class="ui centered massive image" id="logo" src="/astral-logo-dark.png" />
           <div class="content">Astral</div>
           <div class="sub header">{{ App\Setting::find(1)->organization }}</div>
         </div>
@@ -53,7 +53,7 @@
               <i class="sign in icon"></i> Login
             </button>
             <div class="ui horizontal divider">OR</div>
-            <a href="{{ route('register') }}" class="ui fluid primary button">
+            <a href="{{ route('register') }}" class="ui fluid basic black button">
               Register
               <i class="right chevron icon"></i>
             </a>
@@ -86,7 +86,23 @@
 
     $('#left')
       .transition('toggle')
-      .transition({ animation: 'fade', duration: '10s' })
+      .transition({ animation: 'fade', duration: '20s' })
+      .transition({ animation: 'fade', duration: '20s' })
+      .transition({ animation: 'fade', duration: '20s' })
+
+    $('#logo')
+      .transition('set looping')
+      .transition('pulse', '2s')
+
+    $('form').form({
+      on: 'blur',
+      inline: true,
+      fields: {
+        email: ['empty', 'email'],
+        password: ['empty'],
+      }
+    })
+
   </script>
 
 @endsection

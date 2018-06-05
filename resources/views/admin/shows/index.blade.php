@@ -28,7 +28,7 @@
     <div class="field">
       <div class="ui right labeled input">
         <input type="text" value="{{ app('request')->duration ? app('request')->duration : null }}" name="duration" placeholder="Show Duration">
-        <div class="ui label">minutes</div>
+        <div class="ui basic label">minutes</div>
       </div>
     </div>
     <div class="field">
@@ -45,7 +45,7 @@
 {!! Form::close() !!}
 
 <div onclick="$('#add-show').modal('show')" class="ui secondary button">
-  <i class="plus icon"></i> Add Show
+  <i class="icons"><i class="film icon"></i><i class="corner inverted add icon"></i></i> Add Show
 </div>
 
 <br /><br />
@@ -59,7 +59,7 @@
             {{ $show->name }}
           </div>
           <div class="meta">
-            <div class="ui label">{{ $show->type }}</div><div class="ui label">{{ $show->duration }} minutes</div>
+            <div class="ui black label">{{ $show->type }}</div><div class="ui black label">{{ $show->duration }} minutes</div>
           </div>
         </div>
         <a href="{{ route('admin.shows.show', $show) }}" class="image">

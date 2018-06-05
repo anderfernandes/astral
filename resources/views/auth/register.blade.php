@@ -89,10 +89,10 @@
 
         <div class="field">
           <div class="ui two buttons">
-            <button type="submit" class="ui primary button">
+            <button type="submit" class="ui secondary button">
                 <i class="sign in icon"></i> Register
             </button>
-            <div class="ui secondary button" onclick="$('form').form('clear')"><i class="eraser icon"></i> Clear</div>
+            <div class="ui basic black clear button"><i class="eraser icon"></i> Clear</div>
           </div>
         </div>
       </form>
@@ -108,4 +108,18 @@
     </div>
   </div>
 </div>
+
+<script>
+  $('form').form({
+    inline: true,
+    on: 'blur',
+    fields: {
+      firstname:         ['empty', 'minLength[2]', 'maxLength[64]'],
+      lastname:          ['empty', 'minLength[2]', 'maxLength[64]'],
+      email:             ['empty', 'email', 'minLength[5]', 'maxLength[64]'],
+      password:          ['empty', 'minLength[5]'],
+      confirm_password:  ['empty', 'minLength[5]'],
+    }
+  })
+</script>
 @endsection
