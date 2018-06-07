@@ -874,6 +874,7 @@
       @endforeach
     @else
       $('.date').flatpickr({dateFormat: 'l, F j, Y', defaultDate: 'today' })
+      $('.date').trigger('change')
     @endif
     {{-- Forcing change on date field so that new events can be fetched from the server --}}
     //$('.date').trigger("change")

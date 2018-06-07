@@ -19,7 +19,7 @@
     <div class="required field">
       <label for="price">Price</label>
       <div class="ui labeled input">
-        <div class="ui label">$</div>
+        <div class="ui basic label">$</div>
         <input type="text" placeholder="Product Price" name="price" value="{{ isSet($product) ? number_format($product->price, 2) : old('price') }}">
       </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="ui action input">
           <input type="text" readonly placeholder="Upload an image of the product">
           <input type="file" name="cover" style="display:none !important">
-          <div class="ui button">
+          <div class="ui black button">
             Choose Image...
           </div>
         </div>

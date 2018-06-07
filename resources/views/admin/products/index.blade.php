@@ -28,7 +28,7 @@
     </div>
     <div class="field">
       <div class="ui labeled input">
-        <div class="ui label">$</div>
+        <div class="ui basic label">$</div>
         <input name="product_price" type="text" value="{{ isSet($request->product_price) ? $request->product_price : null }}" placeholder="Product Price">
       </div>
     </div>
@@ -62,20 +62,20 @@
         </div>
         <div class="content">
           <a class="header">{{ $product->name }}</a>
+          <div class="ui green tag label">$ {{ number_format($product->price, 2, '.', ',')}}</div>
           <div class="ui black label">{{ $product->type->name }}</div>
-          <div class="ui green label">$ {{ number_format($product->price, 2, '.', ',')}}</div>
-          <div class="meta">
-            <p><i class="info circle icon"></i> {{ $product->description }}</p>
-          </div>
-          <div class="description">
-            <p></p>
-          </div>
           <div class="extra">
+            @if ($product->creator_id != 1)
+              <p><i class="user circle icon"></i>{{ $product->creator->fullname }}</p>
+            @endif
             <p><i class="pencil icon"></i>{{ Date::parse($product->created_at)->format('l, F j, Y \a\t g:i A') }}</p>
             <p><i class="edit icon"></i>{{ Date::parse($product->updated_at)->format('l, F j, Y \a\t g:i A') }}</p>
             @if ($product->creator_id != 1)
               <p><i class="user circle icon"></i>{{ $product->creator->fullname }}</p>
             @endif
+          </div>
+          <div class="meta">
+            <p><i class="info circle icon"></i> {{ $product->description }}</p>
           </div>
         </div>
       </div>

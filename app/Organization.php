@@ -15,9 +15,14 @@ class Organization extends Model
   {
     return $this->hasMany('App\User');
   }
-  
+
   public function creator()
   {
     return $this->belongsTo('App\User');
+  }
+
+  public function sales()
+  {
+    return $this->hasMany('App\Sale');
   }
 }

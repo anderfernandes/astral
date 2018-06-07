@@ -5,17 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
-use App\Event;
+use App\{ Event, Sale, Ticket, Payment, PaymentMethod, User, Show };
+use App\{ TicketType, Member, Organization, EventType };
 use Jenssegers\Date\Date;
-use App\Sale;
-use App\Ticket;
-use App\Payment;
-use App\PaymentMethod;
-use App\User;
-use App\Show;
-use App\TicketType;
-use App\Member;
-use Session;
 
 use Illuminate\Http\Request;
 
@@ -31,7 +23,14 @@ class ReportController extends Controller
         $users = User::where('id', '!=', 1)->orderBy('firstname', 'asc')->where('staff', true)->pluck('firstname', 'id');
         $users->prepend('All Users', 0);
         $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
-        return view('admin.reports.index')->withUsers($users)->withShows($shows);
+        $organizations = Organization::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+        $event_types = EventType::where('id', '!=', 1)->pluck('name', 'id');
+        $ticket_types = TicketType::where('id', '!=', 1)->pluck('name', 'id');
+        return view('admin.reports.index')->withUsers($users)
+                                          ->withOrganizations($organizations)
+                                          ->with(['ticket_types' => $ticket_types])
+                                          ->with(['event_types' => $event_types])
+                                          ->withShows($shows);
     }
 
     /**
@@ -367,5 +366,28 @@ class ReportController extends Controller
                                           ->withSales($sales)
                                           ->withOrganizations($organizations)
                                           ->withUsers($users);
+    }
+
+    public function attendance(Request $request)
+    {
+      $start = Date::createFromTimestamp($request->start)->toDateTimeString();
+      $end = Date::createFromTimestamp($request->end)->toDateTimeString();
+      $events = null;
+      if ($request->type == 'attendance_organization')
+      {
+        $organization = Organization::find($request->data);
+        foreach ($organization->sales as $sale)
+        {
+          $events = $sale->events;
+        }
+        //dd($events);
+        return view('admin.reports.attendance.organization')->withStart($start)
+                                                            ->withEnd($end)
+                                                            //->withEvents($events)
+                                                            ->withOrganization($organization);
+      }
+
+
+
     }
 }

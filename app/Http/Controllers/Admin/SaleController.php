@@ -238,9 +238,12 @@ class SaleController extends Controller
           $sale->products()->attach($productsArray);
 
           // Attaching Grades if they exist
-
-          if (count($request->grades) > 0) {
-            $sale->grades()->attach($request->grades);
+          if (isSet($request->grades))
+          {
+            if (count($request->grades) > 0)
+            {
+              $sale->grades()->attach($request->grades);
+            }
           }
 
           Session::flash('success', "<strong>Sale #{$sale->id}</strong> created successfully!");
@@ -453,8 +456,13 @@ class SaleController extends Controller
       // Grades
       $sale->grades()->detach();
 
-      if (count($request->grades) > 0) {
-        $sale->grades()->attach($request->grades);
+      // Attaching Grades if they exist
+      if (isSet($request->grades))
+      {
+        if (count($request->grades) > 0)
+        {
+          $sale->grades()->attach($request->grades);
+        }
       }
 
       Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> updated successfully!');

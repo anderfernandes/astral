@@ -33,10 +33,10 @@
   @if(str_contains(Auth::user()->role->permissions['products'], "R"))
   {{-- Products --}}
   <div class="ui dropdown item" onclick="location.href='{{ route('admin.products.index') }}'">
-    <i class="large film icon"></i> Products
+    <i class="large box icon"></i> Products
     <div class="menu">
       <a class="item {{ Request::routeIs('admin.products.index') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
-        <i class="large film icon"></i> All Products
+        <i class="large box icon"></i> All Products
       </a>
       <a class="item {{ Request::routeIs('admin.products.create') ? 'active' : '' }}" href="{{ route('admin.products.create') }}">
         <i class="add icon"></i> Add Product
@@ -61,7 +61,7 @@
 
   @if(str_contains(Auth::user()->role->permissions['calendar'], "R"))
   {{-- Reports --}}
-  <div class="ui dropdown item" href="{{ route('admin.reports.index') }}">
+  <div class="ui dropdown item" onclick="location.href='{{ route('admin.reports.index') }}'">
     <i class="large file text icon"></i> Reports
     <div class="menu">
       <a class="item" href="{{ route('admin.reports.index') }}/#cashier">
@@ -82,7 +82,7 @@
 
   @if(str_contains(Auth::user()->role->permissions['members'], "R"))
   {{-- Members --}}
-  <div class="ui dropdown item">
+  <div class="ui dropdown item" onclick="location.href='{{ route('admin.members.index') }}'">
     <i class="large address card icon"></i> Members
     <div class="menu">
       <a class="item {{ Request::routeIs('admin.members.index') ? 'active' : '' }}" href="{{ route('admin.members.index') }}">
@@ -97,7 +97,7 @@
 
   @if(str_contains(Auth::user()->role->permissions['users'], "R"))
   {{-- Users --}}
-  <div class="ui dropdown item">
+  <div class="ui dropdown item" onclick="location.href='{{ route('admin.users.index') }}'">
     <i class="large users icon"></i> Users
     <div class="menu">
       <a class="item {{ Request::routeIs('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
@@ -112,7 +112,7 @@
 
   @if(str_contains(Auth::user()->role->permissions['organizations'], "R"))
   {{-- Organizations --}}
-  <div class="ui dropdown item">
+  <div class="ui dropdown item" onclick="location.href='{{ route('admin.organizations.index') }}'">
     <i class="large university icon"></i> Organizations
     <div class="menu">
       <a class="item {{ Request::routeIs('admin.organizations.index') ? 'active' : '' }}" href="{{ route('admin.organizations.index') }}">
@@ -134,7 +134,7 @@
 
   @if(str_contains(Auth::user()->role->permissions['settings'], "R"))
   {{-- Settings --}}
-  <div class="ui dropdown item">
+  <div class="ui dropdown item" onclick="location.href='{{ route('admin.settings.index') }}'">
     <i class="large setting icon"></i> Settings
     <div class="menu">
       <a class="item" href="{{ route('admin.settings.index') }}">
