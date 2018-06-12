@@ -19,8 +19,9 @@ class AdminController extends Controller
 
     public function calendar(Request $request)
     {
-      $shows = Show::pluck('name', 'id');
-      $eventTypes = EventType::where('id', '<>', 1)->pluck('name', 'id');
+      $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+      $shows->prepend('No Show', 0);
+      $eventTypes = EventType::where('id', '<>', 1)->orderBy('name', 'asc')->pluck('name', 'id');
 
       return view('admin.calendar.index', compact('shows'), compact('eventTypes'))->withRequest($request);
       //dd($request->type);

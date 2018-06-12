@@ -441,7 +441,7 @@
         @if (isSet($sale->memos))
           @if ($sale->memos->count() > 0)
             <div class="ui comments">
-            @foreach($sale->memos as $m)
+            @foreach($sale->memos->sortByDesc('created_at') as $m)
               <div class="comment">
                 <div class="avatar"><i class="user circle big icon"></i></div>
                 <div class="content">

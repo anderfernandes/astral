@@ -6,16 +6,18 @@
 
   <?php
 
-    $visitors = 0;
+    $number_of_tickets = 0;
+    $attendance = 0;
     $beforeTax = 0;
     $afterTax = 0;
-    $events = 0;
+    $number_of_events = 0;
     foreach ($organization->sales->where('status', 'complete') as $sale)
     {
-      $visitors += $sale->tickets->count();
+      $number_of_tickets += $sale->tickets->count();
+      $sale->events->count() == 1 ? $attendance += $sale->tickets->count() : $attendance += $sale->tickets->count()/$sale->events->count();
       $beforeTax += $sale->subtotal;
       $afterTax += $sale->total;
-      $events += $sale->events->count();
+      $number_of_events += $sale->events->count();
     }
 
   ?>
@@ -49,7 +51,7 @@
     <div class="content">Attendance Report</div>
     <div class="sub header">{{ $organization->name }}</div>
     <div class="sub header">
-      {{ Date::parse($start)->format('l, F j, Y') }} - {{ Date::parse($end)->format('l, F j, Y') }}
+      {{ Date::parse($start)->format('l, F j, Y') }} | {{ Date::parse($end)->format('l, F j, Y') }}
     </div>
   </h2>
 
@@ -59,8 +61,8 @@
 
   {{-- Overview --}}
   <div class="ui dividing header">Overview</div>
-  <div class="ui statistics">
-    <div class="statistic">
+  <div class="ui mini statistics">
+    <div class="statistic" style="margin-right: 0">
       <div class="value">
         {{ $organization->sales->count() }}
       </div>
@@ -70,7 +72,15 @@
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $visitors }}
+        {{ $number_of_tickets }}
+      </div>
+      <div class="label">
+        Tickets Purchased
+      </div>
+    </div>
+    <div class="statistic">
+      <div class="value">
+        {{ $attendance }}
       </div>
       <div class="label">
         Attendance
@@ -78,18 +88,18 @@
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $events }}
+        {{ $number_of_events }}
       </div>
       <div class="label">
-        {{ $events > 1 ? 'Events' : 'Event' }}
+        {{ $number_of_events > 1 ? 'Events' : 'Event' }}
       </div>
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $events }}
+        {{ $number_of_events }}
       </div>
       <div class="label">
-        {{ $events > 1 ? 'Shows' : 'Show' }}
+        {{ $number_of_events > 1 ? 'Shows' : 'Show' }}
       </div>
     </div>
     <div class="statistic">
@@ -115,6 +125,30 @@
   {{-- Users and Organizations --}}
   <div class="ui dividing header">Visits and Attendance</div>
   <div class="ui grid">
+    @foreach ($events as $event)
+    <div class="ui eight wide column">
+        <div class="ui tiny header">
+          <div class="content">
+            Event # {{ $event->id }} - {{ $event->show->name }}
+          </div>
+          <div class="sub header">
+            {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+          </div>
+          <div class="sub header">
+            <div class="ui small basic black label" style="margin-left: 0">
+              <i class="ticket icon"></i> {{ $event->tickets->where('organization_id', $organization->id)->where('event_id', $event->id)->count() }}
+              <div class="detail">Tickets</div>
+            </div>
+            @foreach ($event->tickets->unique('ticket_type_id') as $ticket)
+              <div class="ui small black label" style="margin-left:0">
+                <i class="ticket icon"></i> {{ $event->tickets->where('organization_id', $organization->id)->where('ticket_type_id', $ticket->ticket_type_id)->where('event_id', $event->id)->count() }}
+                <div class="detail">{!! $ticket->type->name !!}</div>
+              </div>
+            @endforeach
+          </div>
+        </div>
+    </div>
+    @endforeach
     <div class="sixteen wide column">
       <canvas height="350" id="visitsAttendance"></canvas>
     </div>
@@ -130,73 +164,9 @@
     </div>
   </div>
 
-  {{-- Ticket Type --}}
-  <div class="ui dividing header">Demographics and Attendance</div>
-  <div class="ui grid">
-    <div class="sixteen wide column">
-      <canvas height="350" id="demographicsAndAttendance"></canvas>
-    </div>
-  </div>
-
-  {{-- Ticket Type --}}
-  <div class="ui dividing header">Demographics and Attendance</div>
-  <div class="ui grid">
-    <div class="sixteen wide column">
-      <canvas height="350" id="test"></canvas>
-    </div>
-  </div>
-
   <script>
 
     window.onload = function() {
-
-      new Chart(document.querySelector('#demographicsAndAttendance').getContext('2d'), {
-        type: 'bar',
-        options: {
-          maintainAspectRatio: false,
-          scales: {
-            xAxes: [{
-              stacked: true
-            }],
-            yAxes: [{
-              stacked: true
-            }]
-          },
-          title: { display: true },
-        },
-        data: {
-          labels: [
-            @foreach ($organization->sales as $sale)
-              @foreach ($sale->events as $event)
-              @endforeach
-            @endforeach
-          ],
-        }
-      })
-
-      new Chart(document.getElementById('test').getContext('2d'), {
-        type: 'bar',
-        options: {
-          maintainAspectRatio: false,
-          scales: {
-            xAxes: [{
-              stacked: true
-            }],
-            yAxes: [{
-              stacked: true
-            }]
-          },
-          title: { display: true },
-        },
-        data: {
-          labels: [  ], // Events
-          datasets: [
-            { label: 'Teacher', data: [ 10, 20, 30 ], backgroundColor: 'red'   }, // Amount of tickets sold in each day
-            { label: 'Student', data: [ 15, 25, 35 ], backgroundColor: 'blue'  },
-            { label: 'Parent',  data: [ 8, 16, 32  ], backgroundColor: 'green' },
-          ],
-        }
-      })
 
       new Chart(document.getElementById('visitsAttendance').getContext("2d"), {
         type: 'bar',
@@ -255,7 +225,9 @@
           tooltips: {
             callbacks: {
               label: function(tooltipItem, data) {
-                return 'Revenue: $ ' + tooltipItem.yLabel.toFixed(2)
+                console.log(tooltipItem)
+                console.log(data)
+                return `${tooltipItem.xLabel} $ ${tooltipItem.yLabel.toFixed(2)}`
               }
             }
           },
@@ -289,8 +261,24 @@
 
             @endforeach
           ],
-          datasets: [{
-            label: 'Revenue',
+          datasets: [
+            {
+            label: 'Revenue Before Tax',
+            data: [
+              @foreach ($organization->sales as $sale)
+                  {{ number_format($sale->subtotal, 2, '.', ',') }},
+              @endforeach
+            ],
+            backgroundColor: [
+              @foreach ($organization->sales as $sale)
+                "rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(2, 6) / 10 }})",
+              @endforeach
+            ],
+            borderColor: "rgba(21, 28, 29, 1)",
+            borderWidth: 2,
+          },
+          {
+            label: 'Revenue After Tax',
             data: [
               @foreach ($organization->sales as $sale)
                   {{ number_format($sale->total, 2, '.', ',') }},
@@ -303,7 +291,8 @@
             ],
             borderColor: "rgba(21, 28, 29, 1)",
             borderWidth: 2,
-          }],
+          }
+        ],
 
         },
       })

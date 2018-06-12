@@ -304,7 +304,7 @@
     $('#closeout-end').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:23, defaultMinute:59});
 
     $('#attendance_organization_start').flatpickr({ maxDate: 'today', dateFormat: 'l, F j, Y' });
-    $('#attendance_organization_end').flatpickr({ maxDate: 'today', dateFormat: 'l, F j, Y' });
+    $('#attendance_organization_end').flatpickr({ maxDate: 'today', defaultDate: 'today', dateFormat: 'l, F j, Y' });
 
     $('#transaction-detail-start').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:0, defaultMinute:0});
     $('#transaction-detail-end').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:23, defaultMinute:59});
@@ -320,8 +320,8 @@
       var data = document.querySelector(`#${type}`).value
       var start = document.querySelector(`#${type}_start`).value
       var end = document.querySelector(`#${type}_end`).value
-      start = moment(start, 'dddd, MMMM D, YYYY h:mm A').format('X')
-      end = moment(end, 'dddd, MMMM D, YYYY h:mm A').format('X')
+      start = moment(start, 'dddd, MMMM D, YYYY').startOf('day').format('X')
+      end = moment(end, 'dddd, MMMM D, YYYY').endOf('day').format('X')
       window.open(`/admin/reports/attendance/?type=${type}&data=${data}&start=${start}&end=${end}`, '_blank')
     }
 

@@ -15,7 +15,7 @@
   </div>
 
   @if (str_contains(Auth::user()->role->permissions['calendar'], "C"))
-  <a class="ui secondary button" onclick="$('#create-event').modal('show')" href="#">
+  <a class="ui secondary button" onclick="$('#create-event').modal('toggle')" href="#">
     <i class="calendar plus icon"></i> Create Event
   </a>
   @endif

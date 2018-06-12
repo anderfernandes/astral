@@ -2,29 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Mail\ConfirmationLetter;
-use Illuminate\Support\Facades\Mail;
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\Mail\ConfirmationLetter;
+
+// Helpers
 use Session;
 use Jenssegers\Date\Date;
-
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
-use App\Sale;
-use App\User;
-use App\Organization;
-use App\Event;
-use App\Show;
-use App\Payment;
-use App\PaymentMethod;
-use App\Ticket;
-use App\TicketType;
-use App\EventType;
-use App\Product;
+
+// Models
+use App\{ Sale, User, Organization, Event, Show, Payment, PaymentMethod };
+use App\{ Ticket, TicketType, EventType, Product };
+
 
 
 class SaleController extends Controller
@@ -210,10 +204,11 @@ class SaleController extends Controller
                 if ((int)$ticket['quantity'] > 0) {
                   for ($i = 1; $i <= (int)$ticket['quantity']; $i++) {
                     $tickets = array_prepend($tickets, [
-                      'ticket_type_id' => $ticket['type_id'],
-                      'event_id'       => $event['id'],
-                      'customer_id'    => $request->customer_id,
-                      'cashier_id'     => Auth::user()->id,
+                      'ticket_type_id'  => $ticket['type_id'],
+                      'event_id'        => $event['id'],
+                      'customer_id'     => $request->customer_id,
+                      'cashier_id'      => Auth::user()->id,
+                      'organization_id' => $user->organization_id,
                     ]);
                   }
                 }
@@ -245,6 +240,9 @@ class SaleController extends Controller
               $sale->grades()->attach($request->grades);
             }
           }
+
+          // Attaching an Organization to an Event
+          $sale->organization->events()->attach($eventsArray);
 
           Session::flash('success', "<strong>Sale #{$sale->id}</strong> created successfully!");
 
@@ -422,10 +420,11 @@ class SaleController extends Controller
             if ((int)$ticket['quantity'] > 0) {
               for ($i = 1; $i <= (int)$ticket['quantity']; $i++) {
                 $tickets = array_prepend($tickets, [
-                  'ticket_type_id' => $ticket['type_id'],
-                  'event_id'       => $event['id'],
-                  'customer_id'    => $request->customer_id,
-                  'cashier_id'     => Auth::user()->id,
+                  'ticket_type_id'  => $ticket['type_id'],
+                  'event_id'        => $event['id'],
+                  'customer_id'     => $request->customer_id,
+                  'cashier_id'      => Auth::user()->id,
+                  'organization_id' => $user->organization_id,
                 ]);
               }
             }
@@ -465,11 +464,16 @@ class SaleController extends Controller
         }
       }
 
+      // Detaching Events from Organization
+      $sale->organization->events()->detach();
+
+      // Attaching an Organization to an Event
+      $sale->organization->events()->attach($eventsArray);
+
       Session::flash('success', '<strong>Sale #'. $sale->id .'</strong> updated successfully!');
 
       // Log edited sale
       Log::info(Auth::user()->fullname . ' edited Sale #' . $sale->id .' using admin');
-
       return redirect()->route('admin.sales.show', $sale);
 
     }

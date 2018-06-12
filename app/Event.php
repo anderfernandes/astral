@@ -36,4 +36,9 @@ class Event extends Model
       return $this->hasMany('App\EventMemo');
     }
 
+    public function tickets()
+    {
+      return $this->hasMany('App\Ticket');
+    }
+
 }

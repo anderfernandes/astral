@@ -68,7 +68,8 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::where('type', '=', 'individuals')->orderBy('name', 'asc')->pluck('name', 'id');
-        $organizations = Organization::orderBy('name', 'asc')->pluck('name', 'id');
+        $organizations = Organization::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+        $organizations->prepend('No Organization', 0);
 
         return view('admin.users.create')->withRoles($roles)
                                          ->withOrganizations($organizations);
@@ -162,7 +163,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $roles = Role::where('type', '=', 'individuals')->pluck('name', 'id');
+        $roles = Role::where('type', '=', 'individuals')->orderBy('name', 'asc')->pluck('name', 'id');
         $organizations = Organization::where('type_id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
         $organizations->prepend('No Organization', 1);
         return view('admin.users.edit')

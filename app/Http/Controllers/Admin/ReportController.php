@@ -370,20 +370,24 @@ class ReportController extends Controller
 
     public function attendance(Request $request)
     {
-      $start = Date::createFromTimestamp($request->start)->toDateTimeString();
-      $end = Date::createFromTimestamp($request->end)->toDateTimeString();
+      $start = Date::createFromTimestamp($request->start)->startOfDay()->toDateTimeString();
+      $end = Date::createFromTimestamp($request->end)->endOfDay()->toDateTimeString();
       $events = null;
+      $sales = collect();
       if ($request->type == 'attendance_organization')
       {
+        // Get organization
         $organization = Organization::find($request->data);
-        foreach ($organization->sales as $sale)
+        $events = $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->sortBy('start');
+        foreach ($events as $event)
         {
-          $events = $sale->events;
+          $sales->prepend($event->sales->all());
         }
-        //dd($events);
+
         return view('admin.reports.attendance.organization')->withStart($start)
+                                                            ->withEvents($events)
+                                                            ->withSales($sales)
                                                             ->withEnd($end)
-                                                            //->withEvents($events)
                                                             ->withOrganization($organization);
       }
 

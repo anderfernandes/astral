@@ -34,27 +34,6 @@ class UsersTableSeeder extends Seeder
       ]);
       // 2
       DB::table('users')->insert([
-        'firstname'       => 'Anderson',
-        'lastname'        => 'Fernandes',
-        'email'           => 'anderson.fernandes@ctcd.edu',
-        'password'        =>  bcrypt('admin'),
-        'role_id'         => 2,
-        'organization_id' => 2,
-        'type'            => 'individual',
-        'membership_id'   => 1,
-        'address'         => '6200 W Central Texas Expwy',
-        'city'            => 'Killeen',
-        'state'           => 'Texas',
-        'zip'             => '76549',
-        'country'         => 'United States',
-        'phone'           => '(254) 526-7161',
-        'active'          => false,
-        'staff'           => true,
-        'creator_id'      => 1,
-        'created_at'      => Date::now('America/Chicago'),
-      ]);
-      // 3
-      DB::table('users')->insert([
         'firstname'       => 'Mayborn Science Theater',
         'lastname'        => '',
         'email'           => 'planetarium@ctcd.edu',
@@ -71,6 +50,27 @@ class UsersTableSeeder extends Seeder
         'phone'           => '(254) 526-7161',
         'active'          => false,
         'staff'           => false,
+        'creator_id'      => 1,
+        'created_at'      => Date::now('America/Chicago'),
+      ]);
+      // 3
+      DB::table('users')->insert([
+        'firstname'       => 'Anderson',
+        'lastname'        => 'Fernandes',
+        'email'           => 'anderson.fernandes@ctcd.edu',
+        'password'        =>  bcrypt('admin'),
+        'role_id'         => 2,
+        'organization_id' => 2,
+        'type'            => 'individual',
+        'membership_id'   => 1,
+        'address'         => '6200 W Central Texas Expwy',
+        'city'            => 'Killeen',
+        'state'           => 'Texas',
+        'zip'             => '76549',
+        'country'         => 'United States',
+        'phone'           => '(254) 526-7161',
+        'active'          => false,
+        'staff'           => true,
         'creator_id'      => 1,
         'created_at'      => Date::now('America/Chicago'),
       ]);

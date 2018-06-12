@@ -47,9 +47,9 @@
   <div class="required field">
     {!! Form::label('role_id', 'Role') !!}
     @if (isSet($user))
-      {!! Form::select('role_id', $roles, $user->role_id, ['class' => 'ui dropdown']) !!}
+      {!! Form::select('role_id', $roles, $user->role_id, ['class' => 'ui search selection dropdown']) !!}
     @else
-      {!! Form::select('role_id', $roles, 7, ['class' => 'ui dropdown blabla']) !!}
+      {!! Form::select('role_id', $roles, 7, ['class' => 'ui search selection dropdown']) !!}
     @endif
 
   </div>
@@ -82,10 +82,10 @@
   @if (Request::routeIs('admin.users.create') or Request::routeIs('admin.users.edit'))
   <div class="ui buttons">
     <a href="{{ route('admin.users.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-    <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
+    <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
   </div>
   @else
-    <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
+    <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
   @endif
   <br><br>
 </div>

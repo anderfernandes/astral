@@ -67,6 +67,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Returns all tickets assigned to a User
+     * @return App\Ticket Returns a tickets assigned to a User
+     */
+    public function tickets()
+    {
+      return $this->hasMany('App\Ticket', 'customer_id');
+    }
+
+    /**
      * Return this user's full name, combining $firstname and $lastname
      * @return {String} "${this->firstname} {$this->lastname}"
      */

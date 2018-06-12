@@ -67,11 +67,17 @@
       <a class="item" href="{{ route('admin.reports.index') }}/#cashier">
         <i class="large inbox icon"></i> Cashier
       </a>
+      <a class="item" href="{{ route('admin.reports.index') }}/#attendance">
+        <i class="large ticket icon"></i> Attendance
+      </a>
       <a class="item" href="{{ route('admin.reports.index') }}/#royalties">
         <i class="large money icon"></i> Royalties
       </a>
       <a class="item" href="{{ route('admin.reports.index') }}/#membership">
         <i class="large address card icon"></i> Membership
+      </a>
+      <a class="item" href="{{ route('admin.reports.index') }}/#product">
+        <i class="large box icon"></i> Product
       </a>
       <a class="item" href="{{ route('admin.reports.index') }}/#system">
         <i class="large setting icon"></i> System
