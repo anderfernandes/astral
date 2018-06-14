@@ -71,11 +71,11 @@
   @if (isSet($event))
     document.querySelector('[name="dates[0][start]"]').value = moment("{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}", 'dddd, MMMM D, YYYY h:mm A').format('dddd, MMMM D, YYYY h:mm A');
     document.querySelector('[name="dates[0][end]"]').value = moment("{{ Date::parse($event->end)->format('l, F j, Y \a\t g:i A') }}", 'dddd, MMMM D, YYYY h:mm A').format('dddd, MMMM D, YYYY h:mm A');
-    $('[name="dates[0][start]"]').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15});
-    $('[name="dates[0][end]"]').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15});
+    $('[name="dates[0][start]"]').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15});
+    $('[name="dates[0][end]"]').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15});
   @else
-  $('[name="dates[0][start]"]').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', defaultHour:8, defaultMin:0, minuteIncrement: 15});
-  $('[name="dates[0][end]"]').flatpickr({enableTime:true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15});
+  $('[name="dates[0][start]"]').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:8, defaultMin:0, minuteIncrement: 15});
+  $('[name="dates[0][end]"]').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15});
   @endif
 
   $('[name="dates[0][start]"]').change(function() {
@@ -110,7 +110,6 @@
 
     $('[name="dates[' + index + '][start]"]').flatpickr({
       enableTime:true,
-      minDate: 'today',
       dateFormat: 'l, F j, Y h:i K',
       defaultHour:8,
       defaultMin:0,
@@ -122,7 +121,6 @@
 
     $('[name="dates[' + index + '][end]"]').flatpickr({
       enableTime: true,
-      minDate:    'today',
       dateFormat: 'l, F j, Y h:i K',
       minuteIncrement: 15
     })
