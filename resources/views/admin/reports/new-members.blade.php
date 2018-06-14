@@ -15,7 +15,7 @@
     }
   </style>
 
-  <div class="ui icon right floated buttons">
+  <div class="ui icon right floated buttons" style="margin-bottom:4rem">
     <div onclick="window.print()" class="ui primary button"><i class="print icon"></i></div>
     <div onclick="window.close()" class="ui secondary button"><i class="close icon"></i></div>
   </div>

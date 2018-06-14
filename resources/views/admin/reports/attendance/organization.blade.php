@@ -15,7 +15,6 @@
     {
       $number_of_tickets += $sale->tickets->count();
       $sale->events->count() == 1 ? $attendance += $sale->tickets->count() : $attendance += $sale->tickets->count()/$sale->events->count();
-      $beforeTax += $sale->subtotal;
       $afterTax += $sale->total;
       $number_of_events += $sale->events->count();
     }
@@ -37,15 +36,16 @@
         height: auto !important;
         width: auto !important;
       }
+      img.ui.centered.mini.image { margin-top: 0 }
     }
   </style>
 
-  <div class="ui icon right floated buttons">
+  <div class="ui icon right floated buttons" style="margin-bottom:4rem">
     <div onclick="window.print()" class="ui primary button"><i class="print icon"></i></div>
     <div onclick="window.close()" class="ui secondary button"><i class="close icon"></i></div>
   </div>
 
-  <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
+  <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image" style="margin-top:2.6rem">
 
   <h2 class="ui center aligned icon header" style="margin-top:8px">
     <div class="content">Attendance Report</div>
@@ -105,19 +105,10 @@
     <div class="statistic">
       <div class="value">
         <i class="dollar icon"></i>
-        {{ number_format($beforeTax, 2, '.', ',') }}
-      </div>
-      <div class="label">
-        Revenue Before Tax
-      </div>
-    </div>
-    <div class="statistic">
-      <div class="value">
-        <i class="dollar icon"></i>
         {{ number_format($afterTax, 2, '.', ',') }}
       </div>
       <div class="label">
-        Revenue After Tax
+        Revenue
       </div>
     </div>
   </div>
@@ -211,7 +202,6 @@
             borderColor: "rgba(21, 28, 29, 1)",
             borderWidth: 2,
           }],
-
         },
       })
 

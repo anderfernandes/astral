@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
 use App\{ Event, Sale, Ticket, Payment, PaymentMethod, User, Show };
-use App\{ TicketType, Member, Organization, EventType };
+use App\{ TicketType, Member, Organization, EventType, OrganizationType };
 use Jenssegers\Date\Date;
 
 use Illuminate\Http\Request;
@@ -24,6 +24,7 @@ class ReportController extends Controller
         $users->prepend('All Users', 0);
         $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
         $organizations = Organization::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+        $organizations->prepend('All Organizations', 0);
         $event_types = EventType::where('id', '!=', 1)->pluck('name', 'id');
         $ticket_types = TicketType::where('id', '!=', 1)->pluck('name', 'id');
         return view('admin.reports.index')->withUsers($users)
@@ -376,22 +377,51 @@ class ReportController extends Controller
       $sales = collect();
       if ($request->type == 'attendance_organization')
       {
-        // Get organization
-        $organization = Organization::find($request->data);
-        $events = $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->sortBy('start');
-        foreach ($events as $event)
+        if ($request->data != 0)
         {
-          $sales->prepend($event->sales->all());
+          // Get organization
+          $organization = Organization::find($request->data);
+          $events = $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->sortBy('start');
+          foreach ($events as $event)
+          {
+            $sales->prepend($event->sales->all());
+          }
+
+          return view('admin.reports.attendance.organization')->withStart($start)
+                                                              ->withEvents($events)
+                                                              ->withSales($sales)
+                                                              ->withEnd($end)
+                                                              ->withOrganization($organization);
         }
+        else
+        {
+          $organizations = Organization::where('id', '!=', 1)->get();
+          $organization_types = OrganizationType::where('id', '!=', 1)->get();
+          $events = Event::all();
+          $sales = Sale::all();
+          $organizations->sales = 0;
+          $organizations->events = 0;
+          $organizations->tickets = 0;
+          $organizations->total = 0;
+          foreach ($organizations as $organization)
+          {
+            $organizations->sales += $organization->sales->count();
+            $organizations->events += $organization->events->count();
+            $organizations->tickets += $organization->tickets->count();
 
-        return view('admin.reports.attendance.organization')->withStart($start)
-                                                            ->withEvents($events)
-                                                            ->withSales($sales)
-                                                            ->withEnd($end)
-                                                            ->withOrganization($organization);
+            foreach ($organization->sales as $sale)
+            {
+              $organizations->total += $sale->total;
+            }
+          }
+          // This is a different view from the previous report data
+          return view('admin.reports.attendance.organizations')->withStart($start)
+                                                               ->withEnd($end)
+                                                               ->withEvents($events)
+                                                               ->withSales($sales)
+                                                               ->with('organization_types', $organization_types)
+                                                               ->withOrganizations($organizations);
+        }
       }
-
-
-
     }
 }
