@@ -56,15 +56,15 @@
     </div>
     <div class="statistic" style="margin-right: 0">
       <div class="value">
-        {{ number_format($organizations->events, 0, null, ',') }}
+        {{ $number_of_events_collection->sum() }}
       </div>
       <div class="label">
-        Visits
+        Events
       </div>
     </div>
     <div class="statistic">
       <div class="value">
-        {{ number_format($organizations->tickets, 0, null, ',') }}
+        {{ $number_of_visitors_collection->sum() }}
       </div>
       <div class="label">
         Tickets Purchased
@@ -72,7 +72,7 @@
     </div>
     <div class="statistic">
       <div class="value">
-        <i class="dollar icon"></i> {{ number_format($organizations->total, 2, '.', ',') }}
+        <i class="dollar icon"></i> {{ number_format($revenue_collection->sum(), 2, '.', ',') }}
       </div>
       <div class="label">
         Revenue
@@ -85,29 +85,91 @@
     <i class="university icon"></i>
     Organizations
   </div>
-  <div class="ui grid">
-    <div class="ui sixteen wide column">
-      <canvas height="350" id="organizations"></canvas>
-    </div>
-  </div>
+
+  <table class="ui celled table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Tickets Purchased</th>
+        <th>Sales</th>
+        <th>Events</th>
+        <th>Revenue</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach ($organizations as $organization)
+        @if ($organization->events->where('start', '>=', $start)->where('end', '<=', $end)->count() > 0)
+        <tr>
+
+        {{-- Name --}}
+        <td>
+          <h5 class="ui header">
+            {{ $organization->name }}
+            <div class="ui tiny black label">{{ $organization->type->name }}</div>
+              @foreach ($organization->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
+                <div class="sub header">{{ $event->show->name }} on {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</div>
+              @endforeach
+            </div>
+          </h5>
+        </td>
+
+        {{-- Visitors --}}
+        <td>
+          {{ $number_of_visitors_collection->all()[$loop->index] }}
+        </td>
+
+        {{-- Sales --}}
+        <td>
+          {{ $number_of_sales_collection->all()[$loop->index] }}
+
+        </td>
+
+        {{-- Events --}}
+        <td>
+          {{ $number_of_events_collection->all()[$loop->index] }}
+        </td>
+
+        {{-- Revenue --}}
+        <td>
+          $ {{ number_format($revenue_collection->all()[$loop->index], 2, '.', ',') }}
+        </td>
+      </tr>
+        @endif
+      @endforeach
+    </tbody>
+    <tfoot>
+      <tr>
+        <th class="right aligned"><h5 class="ui header">Totals:</h5></th>
+        <th><h5 class="ui header">{{ $number_of_visitors_collection->sum() }}</h5></th>
+        <th><h5 class="ui header">{{ $number_of_sales_collection->sum() }}</h5></th>
+        <th><h5 class="ui header">{{ $number_of_events_collection->sum() }}</h5></th>
+        <th><h5 class="ui header">$ {{ number_format($revenue_collection->sum(), 2, '.', ',') }}</h5></th>
+      </tr>
+    </tfoot>
+  </table>
 
   {{-- Visits --}}
+
+  @if($with_charts)
   <div class="ui horizontal divider header">
     <i class="bus icon"></i>
     Visits
   </div>
+
+
   <div class="ui grid">
     <div class="ui sixteen wide column">
       <canvas height="350" id="visits"></canvas>
     </div>
   </div>
+  @endif
 
   <script>
 
     window.onload = function() {
 
       {{-- Organizations Chart --}}
-      new Chart(document.querySelector('#organizations'), {
+      /*new Chart(document.querySelector('#organizations'), {
         type: 'bar',
         options: {
           animation: { animateScale: true, animateRotate: true },
@@ -119,7 +181,8 @@
               stacked: false
             }],
             yAxes: [{
-              stacked: false
+              stacked: false,
+              ticks: { beginAtZero: true, callback: function(value) { if (value % 1 === 0) return value } },
             }]
           },
         },
@@ -150,7 +213,7 @@
             },
           ],
         },
-      })
+      }) */
 
       {{-- Organizations Visits --}}
       new Chart(document.querySelector('#visits'), {
@@ -165,7 +228,8 @@
               stacked: false
             }],
             yAxes: [{
-              stacked: false
+              stacked: false,
+              ticks: { beginAtZero: true, callback: function(value) { if (value % 1 === 0) return value } },
             }]
           },
         },

@@ -171,7 +171,8 @@
               stacked: true
             }],
             yAxes: [{
-              stacked: true
+              stacked: true,
+              ticks: { beginAtZero: true, callback: function(value) { if (value % 1 === 0) return value } },
             }]
           },
         },

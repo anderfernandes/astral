@@ -202,7 +202,7 @@
       <div class="card">
         <div class="content">
           <div class="header">By Organization</div>
-          <div class="description">This report shows attendance data on a particular organization during a given date/time range.</div><br />
+          <div class="description">This report shows attendance data on a particular or all organizations during a given date/time range.</div><br />
           <div class="ui form">
             <div class="field">
               <label for="closeout_user">Select organization:</label>
@@ -219,6 +219,12 @@
               <div class="ui left icon input">
                 {!! Form::text('closeout_end', null, ['placeholder' => 'End Date and Time', 'id' =>'attendance_organization_end']) !!}
                 <i class="calendar icon"></i>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                {!! Form::checkbox('charts', 0, false, ['id' => 'attendance_organization_charts']) !!}
+                <label for="attendance_organization_charts">Show charts</label>
               </div>
             </div>
           </div>
@@ -320,9 +326,10 @@
       var data = document.querySelector(`#${type}`).value
       var start = document.querySelector(`#${type}_start`).value
       var end = document.querySelector(`#${type}_end`).value
+      var charts = document.querySelector(`#${type}_charts`).checked
       start = moment(start, 'dddd, MMMM D, YYYY').startOf('day').format('X')
       end = moment(end, 'dddd, MMMM D, YYYY').endOf('day').format('X')
-      window.open(`/admin/reports/attendance/?type=${type}&data=${data}&start=${start}&end=${end}`, '_blank')
+      window.open(`/admin/reports/attendance/?type=${type}&data=${data}&start=${start}&end=${end}&charts=${charts}`, '_blank')
     }
 
     $('#closeout-submit').click(function() {

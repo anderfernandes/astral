@@ -191,6 +191,6 @@
     </div>
   </div>
   <div class="item" style="text-align: center">
-    &copy; 2017-2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>
+    2017-2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>
   </div>
 </div>

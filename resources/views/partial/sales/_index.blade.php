@@ -28,15 +28,11 @@
             @if ($sale->customer->firstname == "Walk-up" or $sale->customer->firstname == $sale->organization->name)
               {{ $sale->customer->firstname }}
             @else
-              @if ($sale->sell_to_organization)
-                {{ $sale->customer->fullname }}
-                @if ($sale->organization->id != 1)
-                <div class="sub header">
-                  {{ $sale->organization->name }}
-                </div>
-                @endif
-              @else
-                {{ $sale->customer->fullname }}
+              {{ $sale->customer->fullname }}
+              @if ($sale->organization->id != 1)
+              <div class="sub header">
+                {{ $sale->organization->name }}
+              </div>
               @endif
 
             @endif

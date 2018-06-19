@@ -373,8 +373,10 @@ class ReportController extends Controller
     {
       $start = Date::createFromTimestamp($request->start)->startOfDay()->toDateTimeString();
       $end = Date::createFromTimestamp($request->end)->endOfDay()->toDateTimeString();
+      $with_charts = $request->charts == "true";
       $events = null;
       $sales = collect();
+
       if ($request->type == 'attendance_organization')
       {
         if ($request->data != 0)
@@ -397,29 +399,54 @@ class ReportController extends Controller
         {
           $organizations = Organization::where('id', '!=', 1)->get();
           $organization_types = OrganizationType::where('id', '!=', 1)->get();
-          $events = Event::all();
           $sales = Sale::all();
-          $organizations->sales = 0;
-          $organizations->events = 0;
-          $organizations->tickets = 0;
-          $organizations->total = 0;
+          $event_ids = null;
+          $number_of_events_collection = collect();
+          $number_of_visitors_collection = collect();
+          $number_of_sales_collection = collect();
+          $revenue_collection = collect();
+
           foreach ($organizations as $organization)
           {
-            $organizations->sales += $organization->sales->count();
-            $organizations->events += $organization->events->count();
-            $organizations->tickets += $organization->tickets->count();
 
-            foreach ($organization->sales as $sale)
+            $event_ids = $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->pluck('id');
+
+            $number_of_visitors = $organization->tickets->whereIn('event_id', $event_ids)->count();
+            $number_of_visitors_collection->push($number_of_visitors);
+
+            $number_of_sales = 0;
+
+            foreach ($organization->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
             {
-              $organizations->total += $sale->total;
+              $number_of_sales += $event->sales->where('organization_id', $organization->id)->count();
             }
+
+            $number_of_sales_collection->push($number_of_sales);
+
+            $number_of_events = $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->count();
+            $number_of_events_collection->push($number_of_events);
+
+            $revenue = 0;
+
+            foreach ($organization->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
+            {
+              $revenue += $event->sales->where('organization_id', $organization->id)->sum('total');
+            }
+
+            $revenue_collection->push($revenue);
+
           }
+
           // This is a different view from the previous report data
           return view('admin.reports.attendance.organizations')->withStart($start)
                                                                ->withEnd($end)
-                                                               ->withEvents($events)
-                                                               ->withSales($sales)
+                                                               ->with('number_of_sales_collection', $number_of_sales_collection)
+                                                               ->with('number_of_events_collection', $number_of_events_collection)
+                                                               ->with('number_of_visitors_collection', $number_of_visitors_collection)
+                                                               ->with('number_of_events_collection', $number_of_events_collection)
+                                                               ->with('revenue_collection', $revenue_collection)
                                                                ->with('organization_types', $organization_types)
+                                                               ->with('with_charts', $with_charts)
                                                                ->withOrganizations($organizations);
         }
       }
