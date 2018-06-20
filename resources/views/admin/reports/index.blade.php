@@ -231,6 +231,39 @@
         </div>
         <div onclick="getReportLink('attendance_organization')" class="ui bottom attached black button">Get Organization Attendance Report <i class="right chevron icon"></i></div>
       </div>
+      <!--- By Organization Type Report Card --->
+      <div class="card">
+        <div class="content">
+          <div class="header">By Organization Type</div>
+          <div class="description">This report shows attendance data on a particular or all organizations types during a given date/time range.</div><br />
+          <div class="ui form">
+            <div class="field">
+              <label for="closeout_user">Select organization:</label>
+              {!! Form::select('attendance_organization_type', $organization_types, null, ['class' => 'ui fluid selection search scrolling dropdown', 'id' => 'attendance_organization_type']) !!}
+            </div>
+            <div class="field">
+              <label for="closeout_start">Select date and time range:</label>
+                <div class="ui left icon input">
+                  {!! Form::text('closeout_start', null, ['placeholder' => 'Start Date and Time', 'id' => 'attendance_organization_type_start']) !!}
+                <i class="calendar icon"></i>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui left icon input">
+                {!! Form::text('closeout_end', null, ['placeholder' => 'End Date and Time', 'id' =>'attendance_organization_type_end']) !!}
+                <i class="calendar icon"></i>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                {!! Form::checkbox('charts', 0, false, ['id' => 'attendance_organization_type_charts', 'disabled' => true]) !!}
+                <label for="attendance_organization_types_charts">Show charts</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div onclick="getReportLink('attendance_organization_type')" class="ui bottom attached black button">Get Organization Attendance Report <i class="right chevron icon"></i></div>
+      </div>
       <!--- By Event Type Report Card --->
       <div class="card">
         <div class="content">
@@ -311,6 +344,9 @@
 
     $('#attendance_organization_start').flatpickr({ maxDate: 'today', dateFormat: 'l, F j, Y' });
     $('#attendance_organization_end').flatpickr({ maxDate: 'today', defaultDate: 'today', dateFormat: 'l, F j, Y' });
+
+    $('#attendance_organization_type_start').flatpickr({ maxDate: 'today', dateFormat: 'l, F j, Y' });
+    $('#attendance_organization_type_end').flatpickr({ maxDate: 'today', defaultDate: 'today', dateFormat: 'l, F j, Y' });
 
     $('#transaction-detail-start').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:0, defaultMinute:0});
     $('#transaction-detail-end').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:23, defaultMinute:59});

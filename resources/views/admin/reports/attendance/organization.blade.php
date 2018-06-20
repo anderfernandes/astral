@@ -40,20 +40,20 @@
     }
   </style>
 
-  <div class="ui icon right floated buttons" style="margin-bottom:4rem">
+  <div class="ui icon right floated buttons" style="margin-bottom:5rem">
     <div onclick="window.print()" class="ui primary button"><i class="print icon"></i></div>
     <div onclick="window.close()" class="ui secondary button"><i class="close icon"></i></div>
   </div>
 
-  <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image" style="margin-top:2.6rem">
+  <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
 
-  <h2 class="ui center aligned icon header" style="margin-top:8px">
+  <div class="ui center aligned icon header" style="margin-top:8px">
     <div class="content">Attendance Report</div>
     <div class="sub header">{{ $organization->name }}</div>
     <div class="sub header">
       {{ Date::parse($start)->format('l, F j, Y') }} | {{ Date::parse($end)->format('l, F j, Y') }}
     </div>
-  </h2>
+  </div>
 
   <h4 class="ui header">
     {{ Date::now()->format('l, F j, Y \a\t g:i A') }}
@@ -118,26 +118,29 @@
   <div class="ui grid">
     @foreach ($events as $event)
     <div class="ui eight wide column">
-        <div class="ui tiny header">
-          <div class="content">
-            Event # {{ $event->id }} - {{ $event->show->name }}
-          </div>
-          <div class="sub header">
-            {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-          </div>
-          <div class="sub header">
-            <div class="ui small basic black label" style="margin-left: 0">
-              <i class="ticket icon"></i> {{ $event->tickets->where('organization_id', $organization->id)->where('event_id', $event->id)->count() }}
-              <div class="detail">Tickets</div>
-            </div>
-            @foreach ($event->tickets->unique('ticket_type_id') as $ticket)
-              <div class="ui small black label" style="margin-left:0">
-                <i class="ticket icon"></i> {{ $event->tickets->where('organization_id', $organization->id)->where('ticket_type_id', $ticket->ticket_type_id)->where('event_id', $event->id)->count() }}
-                <div class="detail">{!! $ticket->type->name !!}</div>
-              </div>
-            @endforeach
-          </div>
+      <div class="ui tiny header">
+        <div class="content">
+          Event # {{ $event->id }} - {{ $event->show->name }}
         </div>
+        <div class="sub header">
+          {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+        </div>
+        <div class="sub header">
+          <div class="ui small green tag label">
+            <i class="dollar icon"></i> {{ number_format($event->sales->sum('total'), 2, '.', ',') }}
+          </div>
+          <div class="ui small basic label" style="margin-left: 0">
+            <i class="ticket icon"></i> {{ $event->tickets->where('organization_id', $organization->id)->where('event_id', $event->id)->count() }}
+            <div class="detail">Tickets</div>
+          </div>
+          @foreach ($event->tickets->unique('ticket_type_id') as $ticket)
+            <div class="ui small black label" style="margin-left:0">
+              <i class="ticket icon"></i> {{ $event->tickets->where('organization_id', $organization->id)->where('ticket_type_id', $ticket->ticket_type_id)->where('event_id', $event->id)->count() }}
+              <div class="detail">{!! $ticket->type->name !!}</div>
+            </div>
+          @endforeach
+        </div>
+      </div>
     </div>
     @endforeach
     <div class="sixteen wide column">
