@@ -1,6 +1,6 @@
 @extends('layout.report')
 
-@section('title', "Attendance Report - All Organization Types")
+@section('title', "Attendance Report")
 
 @section('content')
 
@@ -30,7 +30,7 @@
   <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
 
   <div class="ui center aligned icon header" style="margin-top:8px">
-    <div class="content">Attendance Report - All Organization Types</div>
+    <div class="content">Attendance Report</div>
     <div class="sub header">
       {{ Date::parse($start)->format('l, F j, Y') }} | {{ Date::parse($end)->format('l, F j, Y') }}
     </div>

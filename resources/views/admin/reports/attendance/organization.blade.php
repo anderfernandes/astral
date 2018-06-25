@@ -143,20 +143,23 @@
       </div>
     </div>
     @endforeach
+    @if ($with_charts)
     <div class="sixteen wide column">
       <canvas height="350" id="visitsAttendance"></canvas>
     </div>
+    @endif
   </div>
 
 
 
-  {{-- Members --}}
+  {{-- Revenue
   <div class="ui dividing header">Revenue</div>
   <div class="ui grid">
     <div class="sixteen wide column">
       <canvas height="350" id="revenue"></canvas>
     </div>
   </div>
+  --}}
 
   <script>
 
@@ -208,6 +211,8 @@
           }],
         },
       })
+
+      /**
 
       new Chart(document.getElementById('revenue').getContext("2d"), {
         type: 'bar',
@@ -290,6 +295,8 @@
 
         },
       })
+
+      **/
 
     }
 
