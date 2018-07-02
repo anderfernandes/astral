@@ -30,6 +30,7 @@ class ReportController extends Controller
         $event_types = EventType::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
         $event_types->prepend('All Event Types', 0);
         $ticket_types = TicketType::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+        $ticket_types->prepend('All Ticket Types', 0);
         return view('admin.reports.index')
                 ->withUsers($users)
                 ->withOrganizations($organizations)
@@ -513,12 +514,26 @@ class ReportController extends Controller
           }
           $sales = $sales->unique()->all();
           $sales = Sale::whereIn('id', $sales)->get();
-          return view ('admin.reports.attendance.event-type')->withStart($start)
-                                                             ->withEnd($end)
-                                                             ->withEvents($events)
-                                                             ->with('event_type', $event_type)
-                                                             ->withSales($sales);
+          return view('admin.reports.attendance.event-type')->withStart($start)
+                                                            ->withEnd($end)
+                                                            ->withEvents($events)
+                                                            ->with('event_type', $event_type)
+                                                            ->withSales($sales);
 
+        }
+
+        else if ($request->type = 'attendance_ticket_type')
+        {
+          $ticket_type = TicketType::find($request->data);
+          $events = Event::where('start', '>=', $start)->where('end', '<=', $end)->get();
+          $event_ids = Event::where('start', '>=', $start)->where('end', '<=', $end)->pluck('id');
+          $tickets = Ticket::where('ticket_type_id', $ticket_type->id)->whereIn('event_id', $event_ids);
+
+          return view('admin.reports.attendance.ticket-type')->withStart($start)
+                                                             ->withEnd($end)
+                                                             ->withTickets($tickets)
+                                                             ->withEvents($events)
+                                                             ->with('ticket_type', $ticket_type);
         }
       }
     }
