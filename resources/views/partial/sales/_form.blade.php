@@ -287,6 +287,11 @@
                       <div class="content">
                         {{ $product->name }}
                         <div class="ui tiny black label">{{ $product->type->name }}</div>
+                        @if ($product->inventory)
+                          <div class="ui {{ $product->stock < 10 ? 'red' : 'black' }} tiny label" {!! $product->stock < 10 ? "data-tooltip='Only $product->stock in stock!' data-inverted=''" : ""!!}>
+                            <i class="box icon"></i>{{ $product->stock }}
+                          </div>
+                        @endif
                         <div class="sub header">{{ $product->description }}</div>
                       </div>
                     </h4>

@@ -10,7 +10,7 @@
 
   <div class="ui black icon buttons">
     <div onclick="$('#admin-calendar').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
-    <div onclick="$('#admin-calendar').fullCalendar('today')" class="ui button"><i class="checked calendar icon"></i></div>
+    <div onclick="$('#admin-calendar').fullCalendar('today')" class="ui button"><i class="calendar outline icon"></i></div>
     <div onclick="$('#admin-calendar').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
   </div>
 
@@ -44,16 +44,11 @@
   </div>
 
   <div class="ui right floated secondary floating dropdown labeled icon button">
-    <i class="calendar outline icon"></i>
-    <span class="text">{{ $request->type == 'events' ? 'Events' : 'Sales' }}</span>
+    <i class="calendar alternate outline icon"></i>
+    <span class="text">Events</span>
     <div class="menu">
-      @if (isSet($request))
-        <div onclick="toggleCalendar('events')" class="{{ $request->type == 'events' ? 'active' : null }} item">Events</div>
-        <div onclick="toggleCalendar('calendar')" class="{{ $request->type == 'calendar' ? 'active' : null }} item">Sales</div>
-      @else
-        <div onclick="toggleCalendar('events')" class="item">Events</div>
-        <div onclick="toggleCalendar('calendar')" class="active item">Sales</div>
-      @endif
+      <a href="{{ route('admin.calendar.events') }}" class="active item">Events</a>
+      <a href="{{ route('admin.calendar.sales') }}" class="item">Sales</a>
     </div>
   </div>
 
@@ -330,11 +325,6 @@
     })
   }
 
-  function toggleCalendar(type) {
-    $('#admin-calendar').fullCalendar('removeEventSources')
-    $('#admin-calendar').fullCalendar('addEventSource', '/api/' + type)
-  }
-
   function refetchEvents() {
     $('#admin-calendar').fullCalendar('refetchEvents')
   }
@@ -348,7 +338,7 @@
 
   $(document).ready(function() {
     loadCalendar()
-    $('#admin-calendar').fullCalendar('addEventSource', '/api/{{ $request->type }}')
+    $('#admin-calendar').fullCalendar('addEventSource', '/api/events')
     setTitle()
     @if (isSet($request->view))
       $('#admin-calendar').fullCalendar('changeView', '{{ $request->view }}')

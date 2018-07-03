@@ -16,6 +16,7 @@ class EventTypesSeeder extends Seeder
         'name' => 'system',
         'description' => 'system',
         'creator_id' => 1,
+        'color' => '#767676',
         'created_at' => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
       ]);
 
@@ -23,18 +24,21 @@ class EventTypesSeeder extends Seeder
         'name' => 'Matinee',
         'description' => 'Weekday shows with a single price for all ages',
         'creator_id' => 1,
+        'color' => '#21ba45',
         'created_at' => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       DB::table('event_types')->insert([
         'name' => 'Weekend',
         'description' => 'Weekend shows',
         'creator_id' => 1,
+        'color' => '#21ba45',
         'created_at' => Date::now('America/Chicago')->toDateTimeString(),
       ]);
       DB::table('event_types')->insert([
         'name' => 'Special Event',
         'description' => 'Special Event',
         'creator_id' => 1,
+        'color' => '#f2711c',
         'created_at' => Date::now('America/Chicago')->toDateTimeString(),
       ]);
     }

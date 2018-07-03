@@ -22,7 +22,9 @@ Route::group(
   // Index
   Route::get('/', 'AdminController@index')->name('index');
   // Calendar
-  Route::get('calendar/', 'AdminController@calendar')->name('calendar.index');
+  Route::get('calendar', 'CalendarController@events')->name('calendar.index');
+  Route::get('calendar/events', 'CalendarController@events')->name('calendar.events');
+  Route::get('calendar/sales', 'CalendarController@sales')->name('calendar.sales');
   // Shows resource
   Route::resource('products', 'ProductController');
   // Shows resource

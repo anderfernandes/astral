@@ -67,10 +67,11 @@
 
   .fc-content { font-weight: bold !important }
 
+  .ui.label { margin-left:0 !important }
+
   @media only screen and (max-width:700px) {
-    .hide-on-mobile {
-      display:none !important;
-    }
+    .hide-on-mobile { display:none !important }
+    .ui.label       { margin-left:0 !important }
   }
 
   @media print {

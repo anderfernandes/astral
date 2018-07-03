@@ -21,16 +21,16 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
     }
   </style>
 
-  <div class="ui icon right floated buttons">
-    <div onclick="window.print()" class="ui primary button"><i class="print icon"></i></div>
-    <div onclick="window.close()" class="ui secondary button"><i class="close icon"></i></div>
+  <div class="ui icon right floated buttons" style="margin-bottom:5rem">
+    <div onclick="window.print()" class="ui black button"><i class="print icon"></i></div>
+    <div onclick="window.close()" class="ui red button"><i class="close icon"></i></div>
   </div>
 
   <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
 
-  <h2 class="ui center aligned icon header" style="margin-top:8px">
+  <div class="ui center aligned icon header" style="margin-top:8px">
     <div class="content">Receipt</div>
-  </h2>
+  </div>
 
   <div class="ui clearing basic segment" style="padding:0 0 0 0">
 
@@ -98,7 +98,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
           @endforeach
         @endif
       @endforeach
-      @foreach($sale->products as $product)
+      @foreach($sale->products->unique('id') as $product)
         <tr>
           <td>
             <h4 class="ui header"></h4>

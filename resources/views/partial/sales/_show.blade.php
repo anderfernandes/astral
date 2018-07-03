@@ -195,7 +195,7 @@
       <div class="ui top attached black center aligned large label"><i class="box icon"></i> Extras</div>
       {{-- Products --}}
       <div class="ui divided list">
-        @foreach ($sale->products as $product)
+        @foreach ($sale->products->unique('id') as $product)
           <div class="item">
             <h3 class="ui header">
               <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}">
