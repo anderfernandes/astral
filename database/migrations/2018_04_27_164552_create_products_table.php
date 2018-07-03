@@ -22,6 +22,8 @@ class CreateProductsTable extends Migration
             $table->foreign('type_id')->references('id')->on('product_types');
             $table->integer('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users');
+            $table->boolean('inventory');
+            $table->integer('stock')->unsigned();
             $table->string('cover');
             $table->timestamps();
         });

@@ -40,6 +40,19 @@
         </div>
       </div>
     </div>
+    <div class="two fields">
+      <div class="required field">
+        <label for="inventory">Track Inventory?</label>
+        <select class="ui dropdown" name="inventory" id="inventory" value="{{ isSet($product) ? $product->inventory : old('inventory') }}">
+          <option value="false">No</option>
+          <option value="true">Yes</option>
+        </select>
+      </div>
+      <div class="disabled field" id="current-stock">
+        <label for="stock">Current Stock</label>
+        <input type="text" name="stock" placeholder="How many in stock?" value="{{ isSet($product) ? $product->stock : old('stock') }}">
+      </div>
+    </div>
   <div class="field">
     <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
     <br><br>
@@ -64,6 +77,24 @@
       price       : ['number', 'empty'],
       description : ['empty', 'minLength[5]'],
       type_id     : ['number', 'empty'],
+      inventory   : ['empty'],
     }
   })
+
+  @isSet($product->inventory)
+    $('#inventory').dropdown('set selected', '{{ $product->inventory == 1 ? 'true' : 'false' }}')
+
+    @if ($product->inventory)
+      $('#current-stock').removeClass('disabled')
+    @else
+      $('#current-stock').addClass('disabled')
+    @endif
+
+  @endisset
+
+  $('#inventory').change(function() {
+    this.value == 'true' ? $('#current-stock').removeClass('disabled') : $('#current-stock').addClass('disabled')
+  })
+
+
 </script>

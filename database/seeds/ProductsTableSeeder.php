@@ -18,6 +18,8 @@ class ProductsTableSeeder extends Seeder
           'type_id'     => 1,
           'cover'       => '/default.png',
           'price'       => 0,
+          'inventory'   => false,
+          'stock'       => 0,
           'created_at'  => Date::now()->toDateTimeString(),
         ]);
         DB::table('products')->insert([
@@ -26,6 +28,8 @@ class ProductsTableSeeder extends Seeder
           'creator_id'  => 1,
           'type_id'     => 1,
           'cover'       => '/default.png',
+          'inventory'   => false,
+          'stock'       => 0,
           'price'       => 0,
           'created_at'  => Date::now()->toDateTimeString(),
         ]);

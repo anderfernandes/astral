@@ -8,8 +8,7 @@ use App\Http\Controllers\Controller;
 
 use Session;
 use Jenssegers\Date\Date;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{Log, Auth, Storage};
 
 use App\ProductType;
 
@@ -68,9 +67,10 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-          'name'  => 'required|unique:products,name',
-          'price' => 'required|numeric',
-          'type_id' => 'required|integer',
+          'name'      => 'required|unique:products,name',
+          'price'     => 'required|numeric',
+          'type_id'   => 'required|integer',
+          'inventory' => 'required',
         ]);
 
         $product = new Product;
@@ -80,12 +80,18 @@ class ProductController extends Controller
         $product->price       = $request->price;
         $product->type_id     = $request->type_id;
         $product->creator_id  = Auth::user()->id;
+        $product->inventory   = (bool)$request->inventory;
+
+        $product->stock = $product->inventory ? (int)$request->stock : 0;
 
         $product->cover = $request->cover == null ? '/default.png' : $request->file('cover')->store('products');
 
         $product->save();
 
         Session::flash('success', "Product <strong>{$product->name}</strong> created successfully!");
+
+        // Log created product
+        Log::info(Auth::user()->fullname . ' created Product #' . $product->id .' using admin');
 
         return redirect()->route('admin.products.index');
     }
@@ -133,6 +139,9 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->price       = $request->price;
         $product->type_id     = $request->type_id;
+        $product->inventory   = (bool)$request->inventory;
+
+        $product->stock = $product->inventory ? (int)$request->stock : 0;
 
         // Delete previous uploaded file and store new one
         if ($request->cover == null)
@@ -148,6 +157,9 @@ class ProductController extends Controller
         $product->save();
 
         Session::flash('success', "Product <strong>{$product->name}</strong> updated successfully!");
+
+        // Log created product
+        Log::info(Auth::user()->fullname . ' edited Product #' . $product->id .' using admin');
 
         return redirect()->route('admin.products.index');
     }

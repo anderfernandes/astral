@@ -10,9 +10,7 @@ use App\Mail\ConfirmationLetter;
 // Helpers
 use Session;
 use Jenssegers\Date\Date;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\{Log, Auth, Mail};
 
 
 // Models

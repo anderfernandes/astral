@@ -15,6 +15,7 @@
     background: linear-gradient(rgba(253,254,255,1), rgba(253,254,255,0.5)), url('{{ App\Setting::find(1)->cover }}') !important;
     background-size: cover !important;
   }
+
 </style>
 
 <?php
@@ -107,7 +108,7 @@ function getAttendanceByType($ticketTypeID) {
 
     @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Overview --}}
-    <div class="ui horizontal segments">
+    <div class="ui horizontal raised segments">
       <div class="ui center aligned segment">
         <div class="ui small statistic">
           <div class="value">
@@ -172,7 +173,7 @@ function getAttendanceByType($ticketTypeID) {
 
     @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Attendance --}}
-    <div class="ui segment">
+    <div class="ui raised segment">
       <div class="ui dividing header">
         <i class="child icon"></i>
         <div class="content">
@@ -195,7 +196,7 @@ function getAttendanceByType($ticketTypeID) {
 
     @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Feed --}}
-    <div class="ui segment">
+    <div class="ui raised segment">
       <div class="ui small dividing header">
         <i class="feed icon"></i>
         <div class="content">
@@ -252,7 +253,7 @@ function getAttendanceByType($ticketTypeID) {
 
     @if (str_contains(Auth::user()->role->permissions['dashboard'], "C"))
     {{-- Bulletin --}}
-    <div class="ui segment">
+    <div class="ui raised segment">
       <div class="ui dividing header">
         <i class="comments outline icon"></i>
         <div class="content">
@@ -690,11 +691,6 @@ window.onload = function() {
       }
   });
 }
-
-
-
-//$('.ui..raised.center.aligned.segment')
-//.transition({animation:'vertical flip', duration: 2000, interval: 1000 })
 
 </script>
 

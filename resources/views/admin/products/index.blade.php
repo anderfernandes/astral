@@ -64,15 +64,17 @@
           <a class="header">{{ $product->name }}</a>
           <div class="ui green tag label">$ {{ number_format($product->price, 2, '.', ',')}}</div>
           <div class="ui black label">{{ $product->type->name }}</div>
+          @if ($product->inventory)
+            <div class="ui {{ $product->stock < 10 ? 'red' : 'black' }} label" {!! $product->stock < 10 ? "data-tooltip='Only $product->stock in stock!' data-inverted=''" : ""!!}>
+              <i class="box icon"></i>{{ $product->stock }}
+            </div>
+          @endif
           <div class="extra">
             @if ($product->creator_id != 1)
               <p><i class="user circle icon"></i>{{ $product->creator->fullname }}</p>
             @endif
             <p><i class="pencil icon"></i>{{ Date::parse($product->created_at)->format('l, F j, Y \a\t g:i A') }}</p>
             <p><i class="edit icon"></i>{{ Date::parse($product->updated_at)->format('l, F j, Y \a\t g:i A') }}</p>
-            @if ($product->creator_id != 1)
-              <p><i class="user circle icon"></i>{{ $product->creator->fullname }}</p>
-            @endif
           </div>
           <div class="meta">
             <p><i class="info circle icon"></i> {{ $product->description }}</p>
