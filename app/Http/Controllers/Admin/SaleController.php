@@ -9,6 +9,7 @@ use App\Mail\ConfirmationLetter;
 
 // Helpers
 use Session;
+use PDF;
 use Jenssegers\Date\Date;
 use Illuminate\Support\Facades\{Log, Auth, Mail};
 
@@ -585,9 +586,17 @@ class SaleController extends Controller
       return view('admin.sales.confirmation')->withSale($sale);
     }
 
-    public function invoice(Sale $sale)
+    public function invoice(Sale $sale, Request $request)
     {
-      return view('admin.sales.invoice')->withSale($sale);
+      if ($request->format == 'pdf')
+      {
+        return PDF::loadView('admin.sales.invoice', ['sale' => $sale])->download("invoice.pdf");
+      }
+      else
+      {
+        return view('admin.sales.invoice')->withSale($sale);
+      }
+
     }
 
     public function receipt(Sale $sale)

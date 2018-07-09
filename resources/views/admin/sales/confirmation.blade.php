@@ -21,16 +21,16 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
     }
   </style>
 
-  <div class="ui icon right floated buttons">
+  <div class="ui icon right floated buttons" style="margin-bottom:5rem">
     <div onclick="window.print()" class="ui primary button"><i class="print icon"></i></div>
     <div onclick="window.close()" class="ui secondary button"><i class="close icon"></i></div>
   </div>
 
   <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
 
-  <h2 class="ui center aligned icon header" style="margin-top:8px">
+  <div class="ui center aligned big header" style="margin-top:8px">
     <div class="content">Reservation Confirmation</div>
-  </h2>
+  </div>
 
   <h4 class="ui header">
     {{ Date::now()->format('l, F j, Y') }}
@@ -99,7 +99,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
           @endforeach
         @endif
       @endforeach
-      @foreach($sale->products as $product)
+      @foreach($sale->products->unique('id') as $product)
         <tr class="right aligned">
           <td>
             <h4 class="ui header"></h4>

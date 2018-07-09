@@ -98,7 +98,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
           @endforeach
         @endif
       @endforeach
-      @foreach($sale->products as $product)
+      @foreach($sale->products->unique('id') as $product)
         <tr>
           <td>
             <h4 class="ui header"></h4>

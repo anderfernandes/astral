@@ -2,7 +2,8 @@
 
 <?php
 
-$title = $sale->organization->name != $sale->customer->fullname ? $sale->organization->name . '\'s' : $sale->organization->name . '\'s ' . $sale->customer->fullname
+// $title = $sale->organization->name != $sale->customer->fullname ? $sale->organization->name . '\'s' : $sale->organization->name . '\'s ' . $sale->customer->fullname;
+$title = 'Test';
 
 ?>
 
@@ -22,13 +23,14 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
   </style>
 
   <div class="ui icon right floated buttons" style="margin-bottom:5rem">
+    <a href="{{ route('admin.sales.invoice', $sale) . '?format=pdf' }}" target="_blank" class="ui basic black button"><i class="file pdf outline icon"></i></a>
     <div onclick="window.print()" class="ui black button"><i class="print icon"></i></div>
     <div onclick="window.close()" class="ui red button"><i class="close icon"></i></div>
   </div>
 
   <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
 
-  <div class="ui center aligned icon header" style="margin-top:8px">
+  <div class="ui center aligned big header" style="margin-top:8px">
     <div class="content">Invoice # {{ $sale->id }}</div>
   </div>
 
