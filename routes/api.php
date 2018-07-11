@@ -50,6 +50,7 @@ use Illuminate\Support\Facades\Auth;
   return $eventsArray;
 });*/
 
+// This API is consumed by /admin/calendar/sales in Full Calendar
 Route::get('calendar', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
   $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
@@ -63,16 +64,21 @@ Route::get('calendar', function(Request $request) {
     $events = $sale->events->where('start', '>=', $start)->where('end', '<', $end)->where('type_id', '!=', 1);
     $customer = ($sale->customer->firstname == $sale->organization->name) ? null : ' - ' . $sale->customer->fullname;
     $organization = ($sale->organization->id == 1)? null : ' - ' . $sale->organization->name;
-    foreach ($events as $event) {
+    $organization = $sale->sell_to_organization ? $organization : null;
+    foreach ($events->unique('id') as $event) {
       $seats = $event->seats - App\Ticket::where('event_id', $event->id)->count();
-      $title = $event->show->name .  $organization . $customer . ' - Sale #' . $sale->id;
+      $startTime = Date::parse($event->start)->format('i') == "00" ? Date::parse($event->start)->format('g') : Date::parse($event->start)->format('g:i');
+      $startTime = Date::parse($event->start)->format('a') == 'am' ? $startTime . 'a' : $startTime . 'p';
+      $endTime = Date::parse($event->end)->format('i') == "00" ? Date::parse($event->end)->format('g') : Date::parse($event->end)->format('g:i');
+      $endTime = Date::parse($event->end)->format('a') == 'am' ? $endTime . 'a' : $endTime . 'p';
+      $title = "$startTime-$endTime | Sale #$sale->id ($sale->status) \n" . $event->show->name .  $organization . $customer;
       $eventsArray = array_prepend($eventsArray, [
-        'id'       => $event->id,
+        'id'       => $sale->id,
         'type'     => $event->type->name,
         'start'    => Date::parse($event->start)->toDateTimeString(),
         'end'      => Date::parse($event->end)->toDateTimeString(),
         'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-        'title'    => $title . ' (' . $sale->status . ')',
+        'title'    => $title,
         //'url'      => route('admin.events.show', $event),
         'show'     => [
           'name'  => $event->show->name,
@@ -229,7 +235,7 @@ Route::get('event/{event}', function(Event $event) {
     // Taking out non-refunded and walkup sales
     if ($sale->customer_id != 1) {
       if (!$sale->refund) {
-        foreach ($sale->products as $product) {
+        foreach ($sale->products->unique('id') as $product) {
           $productsArray = array_prepend($productsArray, [
             'id'       => $product->id,
             'name'     => $product->name,
@@ -252,12 +258,13 @@ Route::get('event/{event}', function(Event $event) {
             'id' => $sale->creator_id,
             'name' => $sale->creator->fullname,
           ],
-          'total'      => $sale->total,
-          'tickets'    => $ticketsArray,
-          'products'   => $productsArray,
-          'status'     => $sale->status,
-          'created_at' => Date::parse($sale->created_at)->toDateTimeString(),
-          'updated_at' => Date::parse($sale->updated_at)->toDateTimeString(),
+          'total'                => $sale->total,
+          'tickets'              => $ticketsArray,
+          'products'             => $productsArray,
+          'status'               => $sale->status,
+          'sell_to_organization' => (bool)$sale->sell_to_organization,
+          'created_at'           => Date::parse($sale->created_at)->toDateTimeString(),
+          'updated_at'           => Date::parse($sale->updated_at)->toDateTimeString(),
         ]);
       }
     }
@@ -312,7 +319,7 @@ Route::get('event/{event}', function(Event $event) {
   ];
 });
 
-// This API is consumed by Full Calendar in /admin/calendar?type=events
+// This API is consumed by Full Calendar in /admin/calendar/events
 Route::get('events', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
   $end = Date::parse($request->end)->endOfDay()->addMinute()->toDateTimeString();
@@ -330,6 +337,10 @@ Route::get('events', function(Request $request) {
     }
     $seats = $event->seats - $ticketsSold;
     $isAllDay = (Date::parse($event->start)->isStartOfDay() && Date::parse($event->end)->isEndOfDay());
+    $startTime = Date::parse($event->start)->format('i') == "00" ? Date::parse($event->start)->format('g') : Date::parse($event->start)->format('g:i');
+    $startTime = Date::parse($event->start)->format('a') == 'am' ? $startTime . 'a' : $startTime . 'p';
+    $endTime = Date::parse($event->end)->format('i') == "00" ? Date::parse($event->end)->format('g') : Date::parse($event->end)->format('g:i');
+    $endTime = Date::parse($event->end)->format('a') == 'am' ? $endTime . 'a' : $endTime . 'p';
     $eventsArray = array_prepend($eventsArray, [
       'id'       => $event->id,
       'type'     => $event->type->name,
@@ -337,7 +348,7 @@ Route::get('events', function(Request $request) {
       'end'      => $isAllDay ? '' : Date::parse($event->end)->toDateTimeString(),
       // Take out tickets from shows that have been canceled!!!
       'seats'    => $seats, // $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-      'title'    => $event->show_id !=1 ? "{$event->show->name}, $seats seats left" : (isSet($event->memo) ? $event->memo : $event->type->name),
+      'title'    => $event->show_id !=1 ? "$startTime-$endTime | Event #$event->id ($seats seats left) \n {$event->show->name}" : (isSet($event->memo) ? $event->memo : $event->type->name),
       //'url'      => '/admin/events/' . $event->id,
       'show'     => [
         'name'  => $event->show->name,
@@ -438,6 +449,27 @@ Route::get('customers', function(Request $request) {
   }
 
   return $customerArray;
+});
+
+Route::get('sale/{sale}', function(Sale $sale) {
+  $memosArray = [];
+  foreach ($sale->memos as $memo) {
+    $memosArray = array_prepend($memosArray, [
+      'id'         => $memo->id,
+      'message'    => $memo->message,
+      'author'     => [
+        'name' => $memo->author->fullname,
+        'role' => $memo->author->role->name,
+      ],
+      'created_at' => Date::parse($memo->created_at)->toDateTimeString(),
+      'updated_at' => Date::parse($memo->updated_at)->toDateTimeString(),
+    ]);
+  }
+  return [
+    'id'    => $sale->id,
+    'status' => $sale->status,
+    'memos' => $memosArray,
+  ];
 });
 
 Route::get('payment-methods', function() {

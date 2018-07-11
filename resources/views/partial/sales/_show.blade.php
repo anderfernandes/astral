@@ -47,7 +47,9 @@
 
     <div class="ui raised card">
       <div class="content">
-        <div class="ui top attached black center aligned large label"><i class="dollar icon"></i> Sale Information</div>
+        <div class="ui top attached black center aligned large label">
+          <i class="dollar icon"></i> Sale Information
+        </div>
         <div class="header">
           Sale # {{ $sale->id }}
           @if ($sale->refund)

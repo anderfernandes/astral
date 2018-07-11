@@ -62,7 +62,7 @@
         </div>
         <div class="content">
           <a class="header">{{ $product->name }}</a>
-          <div class="ui green tag label">$ {{ number_format($product->price, 2, '.', ',')}}</div>
+          <div class="ui green tag label" style="margin-left: 1rem !important">$ {{ number_format($product->price, 2, '.', ',')}}</div>
           <div class="ui black label">{{ $product->type->name }}</div>
           @if ($product->inventory)
             <div class="ui {{ $product->stock < 10 ? 'red' : 'black' }} label" {!! $product->stock < 10 ? "data-tooltip='Only $product->stock in stock!' data-inverted=''" : ""!!}>

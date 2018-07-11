@@ -225,11 +225,11 @@ class SaleController extends Controller
 
           foreach ($request->products as $product) {
             if ((int)$product['quantity'] > 0) {
-              array_push($productsArray, $product['id']);
-              // Update product stock
-              $p = Product::find($product['id']);
-              $p->stock = $p->stock - $product['quantity'];
-              $p->save();
+              // Add product quantities
+              for ($i = 1; $i <= $product['quantity']; $i++)
+              {
+                array_push($productsArray, $product['id']);
+              }
             }
           }
 
@@ -348,7 +348,7 @@ class SaleController extends Controller
       $sale->total                = number_format($request->total, 2, '.', '');
       $sale->refund               = false;
       $sale->source               = "admin";
-      $sale->sell_to_organization = ($request->organization_id == "0");
+      $sale->sell_to_organization = (bool)$request->sell_to_organization;
 
       $sale->save();
 

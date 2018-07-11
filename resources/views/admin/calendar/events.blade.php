@@ -22,7 +22,7 @@
 
   @if (str_contains(Auth::user()->role->permissions['sales'], "C"))
   <div class="ui floating secondary dropdown button">
-    <i class="plus icon"></i> Create Sale<i class="dropdown icon"></i>
+    <i class="icons"><i class="dollar icon"></i><i class="corner plus inverted icon"></i></i> Create Sale<i class="dropdown icon"></i>
     <div class="menu">
       @foreach (App\EventType::where('id', '!=', 1)->get() as $eventType)
         @if ($eventType->allowedTickets->count() > 0)
@@ -32,6 +32,10 @@
     </div>
   </div>
   @endif
+
+  <div class="ui right floated icon black button" onclick="$('#event-colors').modal('toggle')">
+    <i class="help circle icon"></i>
+  </div>
 
   <div class="ui right floated secondary floating dropdown labeled icon button" id="view">
     <i class="eye icon"></i>
@@ -52,14 +56,8 @@
     </div>
   </div>
 
-  <div class="ui labels" style="text-align: center; margin-top: 1rem !important">
-  @foreach (App\EventType::where('id', '!=', 1)->get() as $eventType)
-    <div class="ui label" style="background-color: {{ $eventType->color }}; color: rgba(255, 255, 255, 0.8)">{{ $eventType->name }}</div>
-  @endforeach
-  </div>
-
   @if (!isset($events) || $events->count() > 0)
-    <br />
+    <br /><br />
     <div class="ui doubling stackable grid">
       <div id="admin-calendar" style="min-width:100%; max-width:100%; padding-bottom: 2rem"></div>
     </div>
@@ -80,6 +78,8 @@
 
   <div class="ui large modal" id="event-detail"></div>
 
+  @include('admin.partial.help._event-colors')
+
 <script>
 
   var ev = null;
@@ -92,6 +92,7 @@
       defaultDate: moment().format('YYYY-MM-DD'),
       contentHeight: 'auto',
       hiddenDays: [0],
+      displayEventTime: false,
       navLinks: true,
       navLinkDayClick: function(date, jsEvent) {
         $('#view').dropdown('set exactly', 'Single Day')
@@ -202,11 +203,15 @@
                         ${getSaleStatus(sale.status)}
                       </div>
                     </div>
-                    <a class="meta" href="/admin/users/${sale.creator.id}" target="_blank"><i class="user circle icon"></i> ${sale.creator.name}</a>
-                    <div class="meta"><i class="pencil icon"></i> ${moment(sale.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')} (${moment(sale.created_at).fromNow()})</div>
-                    ${sale.organization.name == sale.customer.name ? `` : `<a class="description" href="/admin/users/${sale.customer.id}" target="_blank"><i class="user icon"></i> ${sale.customer.name}</a>`}<br>
-                    ${sale.organization.id != 1 ? `<a class="description" href="/admin/organizations/${sale.organization.id}" target="_blank"><i class="university icon"></i> ${sale.organization.name}</a>`  : `` }
-                    <br><br>
+                    <a class="meta" href="/admin/users/${sale.creator.id}" target="_blank">
+                      <i class="user circle icon"></i> ${sale.creator.name}
+                    </a>
+                    <div class="meta">
+                      <i class="pencil icon"></i> ${moment(sale.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')} (${moment(sale.created_at).fromNow()})
+                    </div>
+                      ${sale.organization.name == sale.customer.name ? `` : `<a class="meta" href="/admin/users/${sale.customer.id}" target="_blank"><i class="user icon"></i> ${sale.customer.name}</a>`}
+                      ${sale.organization.id == 1 || !sale.sell_to_organization ? `` : ` | <a class="meta" href="/admin/organizations/${sale.organization.id}" target="_blank"><i class="university icon"></i> ${sale.organization.name}</a>` }
+                      <br><br>
                     <div class="description">${tickets} ${products}</div>
                   </div>
                 </div>
@@ -232,7 +237,7 @@
             `
             <i class="close icon"></i>
             <div class="ui header">
-              <i class="calendar check icon"></i>
+              <i class="calendar alternate icon"></i>
               <div class="content">
                 Event #${response.id}
               </div>
@@ -245,10 +250,10 @@
                   ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui rounded small image"><img src="${response.show.cover}"></div>`}
                   <div class="content">
                     <div class="meta">
-                      <div class="ui label" style="background-color: ${response.color}; color: rgba(255, 255, 255, 0.8)">${response.type}</div>
-                        ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui label">${response.show.duration} minutes</div>`}
-                        ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui label">${response.tickets_sold} tickets sold</div>`}
-                        <div class="ui basic label">${response.public ? `Public` : `Private`}</div>
+                      <div class="ui label" style="background-color: ${response.color}; color: rgba(255, 255, 255, 0.8)"><i class="calendar alternate icon"></i> <div class="detail">${response.type}</div></div>
+                        ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui black label"><i class="clock outline icon"></i><div class="detail">${response.show.duration} minutes</div></div>`}
+                        ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui black label"><i class="ticket icon"></i><div class="detail">${response.tickets_sold} tickets sold</div></div>`}
+                        <div class="ui black label"><i class="${response.public ? `users` : `user`} icon"></i><div class="detail">${response.public ? `Public` : `Private`}</div></div>
                       </div>
                       <div class="ui large header">
                         ${ (response.allDay || response.show.id == 1) ? response.memo : response.show.name}
@@ -258,31 +263,37 @@
                           </div>
                       </div>
                       <div class="extra">
-                        <p><i class="user circle icon"></i> ${response.creator.name}</p>
-                        <p><i class="pencil icon"></i> ${moment(response.created_at).format(dateFormat)} (${moment(response.created_at).fromNow()})</p>
-                        <p><i class="edit icon"></i> ${moment(response.updated_at).format(dateFormat)} (${moment(response.updated_at).fromNow()})</p>
+                        <p>
+                          <i class="user circle icon"></i> ${response.creator.name} |
+                          <i class="pencil icon"></i> ${moment(response.created_at).format(dateFormat)} (${moment(response.created_at).fromNow()}) |
+                          <i class="edit icon"></i> ${moment(response.updated_at).format(dateFormat)} (${moment(response.updated_at).fromNow()})
+                        </p>
                       </div>
                       <div class="description">
-                      ${ (response.allDay || response.show.id == 1) ? `` : `<i class="info circle icon"></i> ${ response.show.description}` }
-                      </div>
-                      <div class="ui basic segment">
+                        {{-- Sales --}}
+                        ${ (response.allDay || response.show.id == 1) ? `` :
+                          `
+                          <h4 class="ui horizontal divider header">
+                            <i class="dollar icon"></i> Sales
+                          </h4>
+                          <div class="ui two doubling stackable cards">
+                            ${sales}
+                          </div>
+                          `
+                        }
+                        {{-- Memos --}}
                         <h4 class="ui horizontal divider header">
                           <i class="comment alternate outline icon"></i> Memos
                         </h4>
                         ${response.memos.length > 0 ? `<div class="ui comments">${memos}</div>` : memos}
-                      </div>
-                      <div class="ui basic segment">
-                      ${ (response.allDay || response.show.id == 1) ? `` :
-                        `
+                        {{-- Show Description --}}
                         <h4 class="ui horizontal divider header">
-                          <i class="dollar icon"></i> Sales
+                          <i class="film icon"></i> Show Description
                         </h4>
-                        <div class="ui two doubling stackable cards">
-                          ${sales}
-                        </div>
-                        `
-                      }
-                    </div>
+                        ${ (response.allDay || response.show.id == 1) ? `` : response.show.description }
+                        <br><br>
+                        Duration: ${response.show.duration} minutes
+                      </div>
                   </div>
                 </div>
               </div>
@@ -353,7 +364,13 @@
 
   setInterval(refetchEvents, 5000)
 
-
 </script>
+
+<style>
+  @media print {
+    .ui.button, .ui.label {
+      display: none !important;
+    }
+</style>
 
 @endsection

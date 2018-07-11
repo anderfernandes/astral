@@ -70,7 +70,7 @@
             {{-- Sell To --}}
             <div class="required field">
               <label for="sell_to_organization">Sell To</label>
-              <select class="ui dropdown" name="sell_to_organization" value="{{ isSet($sale) ? $sale->sell_to_organization : old('sell_to_organization') }}">
+              <select class="ui dropdown" name="sell_to_organization" id="sell_to_organization" value="1">
                 <option value="0">Customer</option>
                 <option value="1">Organization</option>
               </select>
@@ -884,6 +884,7 @@
     {{-- Forcing change on date field so that new events can be fetched from the server --}}
     //$('.date').trigger("change")
     setTimeout(function() {
+      $("#sell_to_organization").dropdown('set selected', "{{ isSet($sale) ? $sale->sell_to_organization : old('sell_to_organization') }}")
       {{-- Set default events --}}
       @if (isSet($sale))
         $("#customers").dropdown('set selected', {{ $sale->customer_id }})
