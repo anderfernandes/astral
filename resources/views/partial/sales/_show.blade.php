@@ -43,7 +43,7 @@
 
 <h4 class="ui center aligned horizontal divider header"><i class="info circle icon"></i> Sale Data</h4>
 
-<div class="ui three doubling stackable cards">
+<div class="ui {{ ($sale->sell_to_organization and $sale->organization->id != 1) ? "three" : "two" }} doubling stackable cards">
 
     <div class="ui raised card">
       <div class="content">
@@ -106,7 +106,7 @@
 
     @endif
 
-    @if ($sale->organization_id != 1)
+    @if ($sale->sell_to_organization and $sale->organization_id != 1)
 
     <div class="ui raised card">
       <div class="content">
@@ -134,7 +134,7 @@
 
   </div>
 
-<div class="ui three cards">
+<div class="ui {{ ($sale->grades->count() > 0) ? "three" : "two" }}  cards">
 
   {{-- Grades --}}
   @if ($sale->grades->count() > 0)
@@ -203,10 +203,6 @@
               <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}">
               <div class="content">
                 <div class="sub header">
-                  <div class="ui circular blue label" style="margin-left:0">{{ $product->type->name }}</div>
-                </div>
-                {{ $product->name }}
-                <div class="sub header">
                   <div class="ui black label" style="margin-left:0">
                     <i class="box icon"></i>
                     {{ $sale->products->where('id', $product->id)->count() }}
@@ -215,7 +211,9 @@
                     <i class="dollar icon"></i>
                     {{ number_format($product->price, 2, '.', '') }} each
                   </div>
+                  <div class="ui circular blue label" style="margin-left:0">{{ $product->type->name }}</div>
                 </div>
+                <a href="{{ route('admin.products.edit', $product) }}" target="_blank">{{ $product->name }}</a>
               </div>
             </h3>
           </div>

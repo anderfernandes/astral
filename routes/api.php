@@ -453,6 +453,56 @@ Route::get('customers', function(Request $request) {
 
 Route::get('sale/{sale}', function(Sale $sale) {
   $memosArray = [];
+  $eventsArray = [];
+  $productsArray = [];
+  $gradesArray = [];
+
+  foreach($sale->grades as $grade)
+  {
+    $gradesArray = array_prepend($gradesArray, [
+      'id' => $grade->id,
+      'name' => $grade->name,
+    ]);
+  }
+
+  foreach($sale->products->unique('id') as $product)
+  {
+    $productsArray = array_prepend($productsArray, [
+      'id'       => $product->id,
+      'type'     => $product->type->name,
+      'name'     => $product->name,
+      'price'    => $product->price,
+      'cover'    => $product->cover,
+      'quantity' => $sale->products->where('id', $product->id)->count(),
+    ]);
+  }
+
+  foreach($sale->events as $event)
+  {
+    $ticketsArray = [];
+    foreach($event->tickets->unique('ticket_type_id') as $ticket)
+    {
+      $ticketsArray = array_prepend($ticketsArray, [
+        'name' => $ticket->type->name,
+        'quantity' => $event->tickets->where('ticket_type_id', $ticket->ticket_type_id)->count(),
+      ]);
+    }
+    $eventsArray = array_prepend($eventsArray, [
+      'id'    => $event->id,
+      'type'  => $event->type->name,
+      'color' => $event->type->color,
+      'show' => [
+        'id' => $event->show->id,
+        'name'  => $event->show->name,
+        'cover' => $event->show->cover,
+      ],
+      'start' => Date::parse($event->start)->toDateTimeString(),
+      'end'   => Date::parse($event->end)->toDateTimeString(),
+      'tickets' => $ticketsArray,
+    ]);
+
+  }
+
   foreach ($sale->memos as $memo) {
     $memosArray = array_prepend($memosArray, [
       'id'         => $memo->id,
@@ -466,9 +516,38 @@ Route::get('sale/{sale}', function(Sale $sale) {
     ]);
   }
   return [
-    'id'    => $sale->id,
-    'status' => $sale->status,
-    'memos' => $memosArray,
+    'id'      => $sale->id,
+    'status'  => $sale->status,
+    'source'  => $sale->source,
+    'memos'   => $memosArray,
+    'creator' => [
+      'id' => $sale->creator->id,
+      'name' => $sale->creator->fullname,
+      'role' => $sale->creator->role->name,
+    ],
+    'customer' => [
+      'id'           => $sale->customer->id,
+      'name'         => $sale->customer->fullname,
+      'role'         => $sale->customer->role->name,
+      'organization' => $sale->customer->organization->name,
+      'address'      => "{$sale->customer->address} {$sale->customer->city}, {$sale->customer->state} {$sale->customer->zip}",
+      'phone'        => $sale->customer->phone,
+      'email'        => $sale->customer->email,
+    ],
+    'organization' => [
+      'id'    => $sale->organization->id,
+      'name'  => $sale->organization->name,
+      'type'         => $sale->organization->type->name,
+      'address'      => "{$sale->organization->address} {$sale->organization->city}, {$sale->organization->state} {$sale->organization->zip}",
+      'phone'        => $sale->customer->phone,
+      'email'        => $sale->customer->email,
+    ],
+    'events'               => $eventsArray,
+    'grades'               => $gradesArray,
+    'products'             => $productsArray,
+    'sell_to_organization' => (bool)$sale->sell_to_organization,
+    'created_at'           => Date::parse($sale->created_at)->toDateTimeString(),
+    'updated_at'           => Date::parse($sale->updated_at)->toDateTimeString(),
   ];
 });
 

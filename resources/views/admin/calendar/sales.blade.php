@@ -78,7 +78,7 @@
 
   @include('admin.partial.help._event-colors')
 
-  <div class="ui large modal" id="sale-detail"></div>
+  <div class="ui fullscreen modal" id="sale-detail"></div>
 
 <script>
 
@@ -153,33 +153,194 @@
 
             var dateFormat = 'dddd, MMMM D, YYYY [at] h:mm A'
 
-            var header =
-            `
-            <i class="close icon"></i>
-            <div class="ui header">
-              <i class="dollar icon"></i>
-              <div class="content">
-                Sale #${sale.id}
-              </div>
-            </div>
-            `
-            var status = function() {
+            var getStatus = function() {
 
               switch(sale.status) {
                 case `open`: return `<div class="ui violet label"><i class="unlock icon"></i>${sale.status}</div>`
               }
 
             }
+
+            var header =
+            `
+            <i class="close icon"></i>
+            <div class="ui header">
+              <i class="dollar icon"></i>
+              <div class="content">
+                Sale #${sale.id} ${getStatus()}
+                <div class="sub header">
+                  <a href="/admin/users/${sale.creator.id}" target="_blank" style="color:rgba(0,0,0,.4)">
+                    <i class="user circle icon"></i>
+                    <span class="detail">${sale.creator.name}</span>
+                  </a> |
+                  <i class="inbox icon"></i> ${sale.source} |
+                  <i class="pencil icon"></i> ${ moment(sale.created_at).format(dateFormat) }
+                  (${ moment(sale.updated_at).fromNow() }) |
+                  <i class="edit icon"></i> ${ moment(sale.updated_at).format(dateFormat) }
+                  (${ moment(sale.updated_at).fromNow() })
+                </div>
+              </div>
+            </div>
+            `
+
+            var customer =
+            `
+            {{-- Customer Information Card --}}
+            <div class="ui raised card">
+              <div class="content">
+                <div class="ui top attached black center aligned large label">
+                  <i class="user icon"></i> Customer Information
+                </div>
+                <a href="/admin/users/${sale.customer.id}" class="header" target="_blank">
+                  ${sale.customer.name}
+                </a>
+
+                <div class="meta"><i class="user icon"></i> ${sale.customer.role}</div>
+                <div class="meta"><i class="university icon"></i> ${sale.customer.organization}</div>
+                <div class="description"><i class="map marker alternate icon"></i> ${sale.customer.address}</div>
+                <div class="description"><i class="phone icon"></i> ${sale.customer.phone}</div>
+                <div class="description"><i class="at icon"></i> ${sale.customer.email}</div>
+              </div>
+            </div>
+            `
+
+            {{-- Organization --}}
+            var organization =
+            `
+            {{-- Organization Information Card --}}
+            <div class="ui raised card">
+              <div class="content">
+                <div class="ui top attached black center aligned large label">
+                  <i class="university icon"></i> Organization Information
+                </div>
+                <a href="/admin/organizations/${sale.organization.id}" class="header" target="_blank">
+                  ${sale.organization.name}
+                </a>
+
+                <div class="meta"><i class="user icon"></i> ${sale.organization.type}</div>
+                <div class="description"><i class="map marker alternate icon"></i> ${sale.organization.address}</div>
+                <div class="description"><i class="phone icon"></i> ${sale.organization.phone}</div>
+              </div>
+            </div>
+            `
+            {{-- Events --}}
+            var events = ''
+
+            if (sale.events.length > 0) {
+              sale.events.forEach(function (ev)
+              {
+                  var tickets = ''
+                  ev.tickets.forEach(function (ticket) {
+                    tickets +=
+                    `
+                    <div class="ui black label" style="margin-left:0">
+                      <i class="ticket icon"></i> ${ticket.quantity}
+                      <div class="detail">${ticket.name}</div>
+                    </div>
+                    `
+                  })
+
+                  events +=
+                    `
+                    <div class="item">
+                      <h3 class="ui header">
+                        <img src="${ev.show.cover}" alt="" />
+                        <div class="content">
+                          <div class="sub header">
+                            ${moment(ev.start).format(dateFormat)}
+                            <div class="ui inverted circular label" style="background-color:${ev.color}">
+                              ${ev.type}
+                            </div>
+                          </div>
+                          <a href="/admin/events/${ev.id}" target="_blank">${ev.show.name}</a>
+                          <div class="sub header">
+                            ${tickets}
+                          </div>
+                        </div>
+                      </h3>
+                    </div>
+                    `
+                }
+              )
+            }
+
+            {{-- Products --}}
+            var products = ''
+
+            if (sale.products.length > 0) {
+              sale.products.forEach(function (product) {
+                products +=
+                `
+                <div class="item">
+                  <h3 class="ui header">
+                    <img src="${product.cover}" alt="" />
+                    <div class="content">
+                      <div class="sub header">
+                        <div class="ui black label">
+                          <i class="box icon"></i>
+                          <div class="detail">${product.quantity}</div>
+                        </div>
+                        <div class="ui black label">
+                          <i class="dollar icon"></i>
+                          <div class="detail">${parseFloat(product.price).toFixed(2)} each</div>
+                        </div>
+                        <div class="ui circular blue label">
+                          ${product.type}
+                        </div>
+                      </div>
+                      <a href="/admin/products/${product.id}/edit" target="_blank">${product.name}</a>
+                    </div>
+                  </h3>
+                </div>
+                `
+              })
+            }
+
+            {{-- Grades --}}
+            var grades = ''
+
+            if (sale.grades.length > 0) {
+              sale.grades.forEach(function (grade) {
+                grades +=
+                `
+                  <div class="ui black label">${grade.name}</div>
+                `
+              })
+            }
+
             var body = `
             <div class="scrolling content">
-              <div class="ui three doubling stackable cards">
+              <div class="ui ${ sale.organization.id != 1 ? `two` : `one` } doubling stackable cards">
+                {{-- Customer Information Card --}}
+                ${ sale.customer.id != 1 ? customer : `` }
+                ${ (sale.sell_to_organization && sale.organization.id != 1) ? organization : `` }
+              </div>
+              <div class="ui ${ sale.products.length > 0 ? `three` : `two` } doubling stackable cards">
+                <div class="ui raised card">
+                  <div class="ui top attached black center aligned large label">
+                    <i class="book icon"></i> Grades
+                  </div>
+                  <div class="content">
+                    ${grades}
+                  </div>
+                </div>
                 <div class="ui raised card">
                   <div class="content">
                     <div class="ui top attached black center aligned large label">
-                      <i class="dollar icon"></i> Sale Information
+                      <i class="calendar check icon"></i> Events and Tickets
                     </div>
-                    <div class="header">
-                      Sale #${sale.id} ${status()}
+                    <div class="ui list">
+                      ${events}
+                    </div>
+                  </div>
+                </div>
+                <div class="ui raised card">
+                  <div class="content">
+                    <div class="ui top attached black center aligned large label">
+                      <i class="box icon"></i> Extras
+                    </div>
+                    <div class="ui divided list">
+                      ${products}
                     </div>
                   </div>
                 </div>
