@@ -10,7 +10,7 @@
 
   <div class="ui black icon buttons">
     <div onclick="$('#admin-calendar').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
-    <div onclick="$('#admin-calendar').fullCalendar('today')" class="ui button"><i class="checked calendar icon"></i></div>
+    <div onclick="$('#admin-calendar').fullCalendar('today')" class="ui button"><i class="calendar outline icon"></i></div>
     <div onclick="$('#admin-calendar').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
   </div>
 
@@ -39,7 +39,15 @@
 
   <div class="ui right floated secondary floating dropdown labeled icon button" id="view">
     <i class="eye icon"></i>
-    <span class="text">Week</span>
+    <span class="text">
+      @if ($request->view == "agendaDay")
+        Single Day
+      @elseif ($request->view == "agendaWeek")
+        Week
+      @else
+        Month
+      @endif
+    </span>
     <div class="menu">
       <div onclick="$('#admin-calendar').fullCalendar('changeView', 'agendaDay')" class="{{ $request->view == 'agendaDay' ? 'active' : null }} item">Single Day</div>
       <div onclick="$('#admin-calendar').fullCalendar('changeView', 'agendaWeek')" class="{{ $request->view == 'agendaWeek' ? 'active' : null }} item">Week</div>
@@ -51,8 +59,8 @@
     <i class="calendar alternate outline icon"></i>
     <span class="text">Sales</span>
     <div class="menu">
-      <a href="{{ route('admin.calendar.events') }}" class="item">Events</a>
-      <a href="{{ route('admin.calendar.sales') }}" class="active item">Sales</a>
+      <div onclick="generateLink('events')" class="item">Events</div>
+      <div onclick="generateLink('sales')" class="active item">Sales</div>
     </div>
   </div>
 
@@ -88,8 +96,8 @@
     $('#admin-calendar').fullCalendar({
       header: false,
       views: null,
-      defaultView: 'agendaWeek',
-      defaultDate: moment().format('YYYY-MM-DD'),
+      defaultView: '{{ $request->view ?? 'agendaWeek' }}',
+      defaultDate: moment('{{ $request->date ?? today() }}').format('YYYY-MM-DD'),
       contentHeight: 'auto',
       hiddenDays: [0],
       navLinks: true,
@@ -104,6 +112,10 @@
       eventLimit: true,
       minTime: '08:00:00',
       titleFormat: 'dddd, MMMM D, YYYY',
+      eventSources: ['/api/calendar/sales'],
+      loading: function(isLoading, view) {
+        if (!isLoading) setTitle()
+      },
       eventClick: function(calEvent, jsEvent, view) {
         fetch(`/api/sale/${calEvent.id}`)
           .then(response => response.json())
@@ -448,10 +460,6 @@
     })
   }
 
-  function refetchEvents() {
-    $('#admin-calendar').fullCalendar('refetchEvents')
-  }
-
   function setTitle() {
     var title = $('#admin-calendar').fullCalendar('getView').title
     $('.header.active.item.hide-on-mobile').html(`<i class="calendar alternate icon"></i> Calendar | <strong>${title}</strong>`)
@@ -461,20 +469,19 @@
 
   $(document).ready(function() {
     loadCalendar()
-    $('#admin-calendar').fullCalendar('addEventSource', '/api/calendar')
-    setTitle()
-    @if (isSet($request->view))
-      $('#admin-calendar').fullCalendar('changeView', '{{ $request->view }}')
-    @endif
-    @if (isSet($request->date))
-      $('#admin-calendar').fullCalendar('gotoDate', $.fullCalendar.moment('{{ $request->date }}'))
-    @endif
   })
 
   $('.ui.button').click(setTitle)
 
 
-  setInterval(refetchEvents, 5000)
+  setInterval(() => { $('#admin-calendar').fullCalendar('refetchEvents') }, 5000)
+
+  function generateLink(type) {
+    var view = $('#admin-calendar').fullCalendar('getView').name
+    var date = $('#admin-calendar').fullCalendar('getView').start
+    date = moment(date).format('Y-MM-DD')
+    location.href=`/admin/calendar/${type}?date=${date}&view=${view}`
+  }
 
 
 </script>

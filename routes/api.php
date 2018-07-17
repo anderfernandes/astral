@@ -51,7 +51,7 @@ use Illuminate\Support\Facades\Auth;
 });*/
 
 // This API is consumed by /admin/calendar/sales in Full Calendar
-Route::get('calendar', function(Request $request) {
+Route::get('calendar/sales', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
   $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
   $sales = Sale::where([
@@ -320,7 +320,7 @@ Route::get('event/{event}', function(Event $event) {
 });
 
 // This API is consumed by Full Calendar in /admin/calendar/events
-Route::get('events', function(Request $request) {
+Route::get('/calendar/events', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
   $end = Date::parse($request->end)->endOfDay()->addMinute()->toDateTimeString();
   $type = isSet($request->type) ? $request->type : null;
