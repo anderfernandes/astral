@@ -56,7 +56,7 @@ Route::get('calendar', function(Request $request) {
   $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
   $sales = Sale::where([
                         ['customer_id',     '!=', 1],
-                        ['organization_id', '!=', 1],
+                        //['organization_id', '!=', 1],
                         ['refund', false],
                       ])->get();
   $eventsArray = [];
@@ -452,10 +452,26 @@ Route::get('customers', function(Request $request) {
 });
 
 Route::get('sale/{sale}', function(Sale $sale) {
-  $memosArray = [];
-  $eventsArray = [];
+  $memosArray    = [];
+  $eventsArray   = [];
   $productsArray = [];
-  $gradesArray = [];
+  $gradesArray   = [];
+  $paymentsArray = [];
+
+  foreach($sale->payments as $payment)
+  {
+    $paymentsArray = array_prepend($paymentsArray, [
+      'id'       => $payment->id,
+      'method'   => $payment->method->name,
+      'paid'     => number_format($payment->tendered - $payment->change_due, 2),
+      'tendered' => number_format($payment->tendered, 2),
+      'date'     => Date::parse($payment->created_at)->toDateTimeString(),
+      'cashier'  => [
+        'id'   => $payment->cashier->id,
+        'name' => $payment->cashier->firstname,
+      ],
+    ]);
+  }
 
   foreach($sale->grades as $grade)
   {
@@ -528,8 +544,14 @@ Route::get('sale/{sale}', function(Sale $sale) {
     'customer' => [
       'id'           => $sale->customer->id,
       'name'         => $sale->customer->fullname,
-      'role'         => $sale->customer->role->name,
-      'organization' => $sale->customer->organization->name,
+      'role'         => [
+        'id'   => $sale->customer->role->id,
+        'name' => $sale->customer->role->name,
+      ],
+      'organization' => [
+        'id' => $sale->customer->organization->id,
+        'name' => $sale->customer->organization->name,
+      ],
       'address'      => "{$sale->customer->address} {$sale->customer->city}, {$sale->customer->state} {$sale->customer->zip}",
       'phone'        => $sale->customer->phone,
       'email'        => $sale->customer->email,
@@ -546,6 +568,12 @@ Route::get('sale/{sale}', function(Sale $sale) {
     'grades'               => $gradesArray,
     'products'             => $productsArray,
     'sell_to_organization' => (bool)$sale->sell_to_organization,
+    'subtotal'             => number_format($sale->subtotal, 2),
+    'tax'                  => number_format($sale->total - $sale->subtotal, 2),
+    'total'                => number_format($sale->total, 2),
+    'paid'                 => number_format($sale->payments->sum('tendered') - $sale->payments->sum('change_due'), 2, '.', ''),
+    'balance'              => number_format((($sale->payments->sum('tendered') - $sale->payments->sum('change_due')) - $sale->total) * (- 1), 2, '.', ''),
+    'payments'             => $paymentsArray,
     'created_at'           => Date::parse($sale->created_at)->toDateTimeString(),
     'updated_at'           => Date::parse($sale->updated_at)->toDateTimeString(),
   ];

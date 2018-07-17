@@ -76,7 +76,7 @@
 
   @include('admin.partial.events._create')
 
-  <div class="ui large modal" id="event-detail"></div>
+  <div class="ui fullscreen modal" id="event-detail"></div>
 
   @include('admin.partial.help._event-colors')
 

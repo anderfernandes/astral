@@ -331,7 +331,6 @@ class SaleController extends Controller
         'tendered'                        => 'numeric',
         'change_due'                      => 'numeric',
         'memo'                            => 'max:255',
-
       ]);
 
       //dd($request->events);

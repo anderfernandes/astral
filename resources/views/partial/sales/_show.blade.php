@@ -43,7 +43,7 @@
 
 <h4 class="ui center aligned horizontal divider header"><i class="info circle icon"></i> Sale Data</h4>
 
-<div class="ui {{ ($sale->sell_to_organization and $sale->organization->id != 1) ? "three" : "two" }} doubling stackable cards">
+<div class="ui three doubling stackable cards">
 
     <div class="ui raised card">
       <div class="content">
@@ -88,12 +88,11 @@
         <div class="ui top attached black center aligned large label"><i class="user icon"></i> Customer Information</div>
         <a href="{{ route('admin.users.show', $sale->customer) }}" target="_blank" class="header">{{ $sale->customer->fullname }}</a>
         <div class="meta"><i class="user icon"></i> {{ $sale->customer->role->name }}</div>
+        @if ($sale->customer->organization_id != 1)
         <a href="{{ route('admin.organizations.show', $sale->customer->organization) }}" class="meta"><i class="university icon"></i>{{ $sale->customer->organization->name }}</a>
+        @endif
         <div class="description">
-          <i class="map marker alternate icon"></i> {{ $sale->customer->address }}
-        </div>
-        <div class="description">
-          <i class="map marker icon"></i> {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
+          <i class="map marker alternate icon"></i> {{ $sale->customer->address }} {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
         </div>
         <div class="description">
           <i class="phone icon"></i> {{ $sale->customer->phone}}
@@ -129,101 +128,97 @@
         @endisset
       </div>
     </div>
-
     @endif
 
-  </div>
+    {{-- Grades --}}
+    @if ($sale->grades->count() > 0)
+    <div class="ui raised card">
+      <div class="content">
+        <div class="ui top attached black center aligned large label"><i class="book icon"></i> Grades</div>
+        <div class="header">
+          <div class="ui large labels">
+            @foreach ($sale->grades as $grade)
+              <div class="ui black label">{{ $grade->name }}</div>
+            @endforeach
+          </div>
+        </div>
+      </div>
+    </div>
+    @endif
 
-<div class="ui {{ ($sale->grades->count() > 0) ? "three" : "two" }}  cards">
-
-  {{-- Grades --}}
-  @if ($sale->grades->count() > 0)
-  <div class="ui raised card">
-    <div class="content">
-      <div class="ui top attached black center aligned large label"><i class="book icon"></i> Grades</div>
-      <div class="header">
-        <div class="ui large labels">
-          @foreach ($sale->grades as $grade)
-            <div class="ui black label">{{ $grade->name }}</div>
+    {{-- Events and Attendance --}}
+    <div class="ui raised card">
+      <div class="content">
+        <div class="ui top attached black center aligned large label"><i class="calendar check icon"></i> Events and Tickets</div>
+        <div class="ui list">
+          @foreach($sale->events as $event)
+            <div class="item">
+            @if($event->show->id != 1)
+              @if ($sale->refund)
+                <h3 class="ui red header">
+              @endif
+            <h3 class="ui header">
+              <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}" class="ui image">
+              <div class="content">
+                <div class="sub header">
+                  {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
+                  <div class="ui circular label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
+                </div>
+                <a href="{{ route('admin.events.show', $event) }}" target="_blank">{{ $event->show->name }}</a>
+                <div class="sub header">
+                  @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
+                    <div class="ui black label" style="margin-left:0">
+                      <i class="ticket icon"></i>
+                      {{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}
+                      <div class="detail">
+                        {{ $ticket->type->name }}
+                      </div>
+                    </div>
+                  @endforeach
+                </div>
+              </div>
+            </h3>
+            @endif
+          </div>
           @endforeach
         </div>
       </div>
     </div>
-  </div>
-  @endif
 
-  {{-- Events and Attendance --}}
-  <div class="ui raised card">
-    <div class="content">
-      <div class="ui top attached black center aligned large label"><i class="calendar check icon"></i> Events and Tickets</div>
-      <div class="ui list">
-        @foreach($sale->events as $event)
-          <div class="item">
-          @if($event->show->id != 1)
-            @if ($sale->refund)
-              <h3 class="ui red header">
-            @endif
-          <h3 class="ui header">
-            <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}" class="ui image">
-            <div class="content">
-              <div class="sub header">
-                {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-                <div class="ui circular label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
-              </div>
-              <a href="{{ route('admin.events.show', $event) }}" target="_blank">{{ $event->show->name }}</a>
-              <div class="sub header">
-                @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
-                  <div class="ui black label" style="margin-left:0">
-                    <i class="ticket icon"></i>
-                    {{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}
-                    <div class="detail">
-                      {{ $ticket->type->name }}
+    @if($sale->products->count() > 0)
+    <div class="ui raised card">
+      <div class="content">
+        <div class="ui top attached black center aligned large label"><i class="box icon"></i> Extras</div>
+        {{-- Products --}}
+        <div class="ui divided list">
+          @foreach ($sale->products->unique('id') as $product)
+            <div class="item">
+              <h3 class="ui header">
+                <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}">
+                <div class="content">
+                  <div class="sub header">
+                    <div class="ui black label" style="margin-left:0">
+                      <i class="box icon"></i>
+                      {{ $sale->products->where('id', $product->id)->count() }}
                     </div>
+                    <div class="ui black label" style="margin-left:0">
+                      <i class="dollar icon"></i>
+                      {{ number_format($product->price, 2, '.', '') }} each
+                    </div>
+                    <div class="ui circular blue label" style="margin-left:0">{{ $product->type->name }}</div>
                   </div>
-                @endforeach
-              </div>
-            </div>
-          </h3>
-          @endif
-        </div>
-        @endforeach
-      </div>
-    </div>
-  </div>
-
-  @if($sale->products->count() > 0)
-  <div class="ui raised card">
-    <div class="content">
-      <div class="ui top attached black center aligned large label"><i class="box icon"></i> Extras</div>
-      {{-- Products --}}
-      <div class="ui divided list">
-        @foreach ($sale->products->unique('id') as $product)
-          <div class="item">
-            <h3 class="ui header">
-              <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}">
-              <div class="content">
-                <div class="sub header">
-                  <div class="ui black label" style="margin-left:0">
-                    <i class="box icon"></i>
-                    {{ $sale->products->where('id', $product->id)->count() }}
-                  </div>
-                  <div class="ui black label" style="margin-left:0">
-                    <i class="dollar icon"></i>
-                    {{ number_format($product->price, 2, '.', '') }} each
-                  </div>
-                  <div class="ui circular blue label" style="margin-left:0">{{ $product->type->name }}</div>
+                  <a href="{{ route('admin.products.edit', $product) }}" target="_blank">{{ $product->name }}</a>
                 </div>
-                <a href="{{ route('admin.products.edit', $product) }}" target="_blank">{{ $product->name }}</a>
-              </div>
-            </h3>
-          </div>
-        @endforeach
+              </h3>
+            </div>
+          @endforeach
+        </div>
       </div>
     </div>
-  </div>
-  @endif
+    @endif
 
-</div>
+
+  </div>
 
 {{-- Totals --}}
 

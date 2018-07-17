@@ -69,7 +69,7 @@ class UserController extends Controller
     {
         $roles = Role::where('type', '=', 'individuals')->orderBy('name', 'asc')->pluck('name', 'id');
         $organizations = Organization::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
-        $organizations->prepend('No Organization', 0);
+        $organizations->prepend('No Organization', 1);
 
         return view('admin.users.create')->withRoles($roles)
                                          ->withOrganizations($organizations);

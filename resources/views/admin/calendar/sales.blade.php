@@ -194,9 +194,8 @@
                 <a href="/admin/users/${sale.customer.id}" class="header" target="_blank">
                   ${sale.customer.name}
                 </a>
-
-                <div class="meta"><i class="user icon"></i> ${sale.customer.role}</div>
-                <div class="meta"><i class="university icon"></i> ${sale.customer.organization}</div>
+                ${sale.customer.organization.id != 1 ? `<div class="meta"><i class="university icon"></i> ${sale.customer.organization.name}</div>` : ``}
+                <div class="meta"><i class="user icon"></i> ${sale.customer.role.name}</div>
                 <div class="description"><i class="map marker alternate icon"></i> ${sale.customer.address}</div>
                 <div class="description"><i class="phone icon"></i> ${sale.customer.phone}</div>
                 <div class="description"><i class="at icon"></i> ${sale.customer.email}</div>
@@ -267,6 +266,7 @@
             {{-- Products --}}
             var products = ''
 
+
             if (sale.products.length > 0) {
               sale.products.forEach(function (product) {
                 products +=
@@ -277,12 +277,10 @@
                     <div class="content">
                       <div class="sub header">
                         <div class="ui black label">
-                          <i class="box icon"></i>
-                          <div class="detail">${product.quantity}</div>
+                          <i class="box icon"></i>${product.quantity}
                         </div>
                         <div class="ui black label">
-                          <i class="dollar icon"></i>
-                          <div class="detail">${parseFloat(product.price).toFixed(2)} each</div>
+                          <i class="dollar icon"></i>${parseFloat(product.price).toFixed(2)} each
                         </div>
                         <div class="ui circular blue label">
                           ${product.type}
@@ -296,6 +294,21 @@
               })
             }
 
+            var productsBox =
+            `
+            <div class="ui raised card">
+              <div class="content">
+              <div class="ui top attached black center aligned large label">
+                  <i class="box icon"></i> Extras
+              </div>
+              <div class="ui divided list">
+                  ${products}
+              </div>
+              </div>
+            </div>
+
+            `
+
             {{-- Grades --}}
             var grades = ''
 
@@ -308,22 +321,51 @@
               })
             }
 
+            var gradesBox =
+            `
+            <div class="ui raised card">
+              <div class="ui top attached black center aligned large label">
+                <i class="book icon"></i> Grades
+              </div>
+              <div class="content">
+                ${grades}
+              </div>
+            </div>
+            `
+
+            {{-- Payments --}}
+            var payments = ''
+
+            if (sale.payments.length > 0) {
+              sale.payments.forEach(function (payment) {
+                payments +=
+                `
+                <tr>
+                  <td><div class="ui header">${payment.id}</div></td>
+                  <td>${payment.method}</td>
+                  <td>${payment.paid}</td>
+                  <td>${payment.tendered}</td>
+                  <td>${moment(payment.date).format(dateFormat)}</td>
+                  <td>${payment.cashier.name}</td>
+                </tr>
+                `
+              })
+            } else {
+              payments +=
+              `
+              <tr class="warning center aligned">
+                <td colspan="6"><i class="info circle icon"></i> No payments have been received so far</td>
+              </tr>
+              `
+            }
+
             var body = `
             <div class="scrolling content">
-              <div class="ui ${ sale.organization.id != 1 ? `two` : `one` } doubling stackable cards">
+              <div class="ui three doubling stackable cards">
                 {{-- Customer Information Card --}}
                 ${ sale.customer.id != 1 ? customer : `` }
                 ${ (sale.sell_to_organization && sale.organization.id != 1) ? organization : `` }
-              </div>
-              <div class="ui ${ sale.products.length > 0 ? `three` : `two` } doubling stackable cards">
-                <div class="ui raised card">
-                  <div class="ui top attached black center aligned large label">
-                    <i class="book icon"></i> Grades
-                  </div>
-                  <div class="content">
-                    ${grades}
-                  </div>
-                </div>
+                ${sale.grades.length > 0 ? gradesBox : ``}
                 <div class="ui raised card">
                   <div class="content">
                     <div class="ui top attached black center aligned large label">
@@ -334,15 +376,50 @@
                     </div>
                   </div>
                 </div>
-                <div class="ui raised card">
-                  <div class="content">
-                    <div class="ui top attached black center aligned large label">
-                      <i class="box icon"></i> Extras
-                    </div>
-                    <div class="ui divided list">
-                      ${products}
-                    </div>
-                  </div>
+                ${sale.products.length > 0 ? productsBox : ``}
+              </div>
+
+              <h4 class="ui horizontal divider header">
+                <i class="money icon"></i> Payments
+              </h4>
+              <table class="ui selectable single line table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Method</th>
+                    <th>Paid</th>
+                    <th>Tendered</th>
+                    <th>Date</th>
+                    <th>Cashier</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${payments}
+                </tbody>
+              </table>
+              <h4 class="ui horizontal divider header">
+                <i class="dollar sign icon"></i> Totals
+              </h4>
+              <div class="ui tiny five statistics">
+                <div class="statistic">
+                  <div class="label">Subtotal</div>
+                  <div class="value"><i class="dollar sign icon"></i>${sale.subtotal}</div>
+                </div>
+                <div class="statistic">
+                  <div class="label">Tax</div>
+                  <div class="value"><i class="dollar sign icon"></i>${sale.tax}</div>
+                </div>
+                <div class="statistic">
+                  <div class="label">Total</div>
+                  <div class="value"><i class="dollar sign icon"></i>${sale.total}</div>
+                </div>
+                <div class="${sale.paid <= 0 ? `yellow` : `green`} statistic">
+                  <div class="label">Paid</div>
+                  <div class="value"><i class="dollar sign icon"></i>${sale.paid}</div>
+                </div>
+                <div class="${sale.balance > 0 ? `red` : `green`} statistic">
+                  <div class="label">Balance</div>
+                  <div class="value"><i class="dollar sign icon"></i>${sale.balance}</div>
                 </div>
               </div>
               <h4 class="ui horizontal divider header">
@@ -351,7 +428,6 @@
               ${sale.memos.length > 0 ? `<div class="ui comments">${memos}</div>` : memos}
             </div>
             `
-
             var footer = `
             <div class="actions">
               <a href="/admin/sales/${sale.id}/edit" class="ui yellow right labeled icon button">
