@@ -847,10 +847,11 @@
       total = subtotal + tax + productSubtotal
       totalBox.value = total.toFixed(2)
 
-      balance = total - (paid + tendered)
-      balanceBox.value = balance <= 0 ? (0).toFixed(2) : balance.toFixed(2)
+      balance = total - (parseFloat(paidBox.value) + tendered)
+      balanceBox.value = (balance <= 0 || isNaN(balance)) ? (0).toFixed(2) : balance.toFixed(2)
+      {{-- Get rid of NaN in the balance textbox if user deletes numbers form it --}}
 
-      changeDue = tendered - (total - paid)
+      changeDue = tendered - (total - parseFloat(paidBox.value))
       changeDueBox.value = changeDue <= 0 ? (0).toFixed(2) : changeDue.toFixed(2)
 
     }
