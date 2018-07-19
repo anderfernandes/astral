@@ -47,7 +47,7 @@
 
   @if(str_contains(Auth::user()->role->permissions['calendar'], "R"))
   {{-- Calendar --}}
-  <a class="ui dropdown item" href="{{ route('admin.calendar.events') }}?type=events&view=agendaWeek">
+  <a class="ui dropdown item" href="{{ route('admin.calendar.index') }}?type=events&view=agendaWeek">
     <i class="large calendar alternate icon"></i> Calendar
   </a>
   @endif

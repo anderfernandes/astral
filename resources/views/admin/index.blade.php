@@ -878,7 +878,6 @@ function loadCalendars() {
     titleFormat: 'dddd, MMMM D, YYYY',
     eventClick: function(calEvent, jsEvent, view) {
       var eventSource = $('#calendars').fullCalendar('option', 'events')
-      console.log(eventSource)
       if (eventSource == '/api/calendar/sales') {
         fetchSales(calEvent, jsEvent, view)
       } else {
