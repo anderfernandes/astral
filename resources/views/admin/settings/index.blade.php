@@ -72,8 +72,8 @@
       organization : ['empty'],
       seats        : ['number', 'empty'],
       tax          : ['number', 'empty'],
-      logo         : ['url', 'empty'],
-      cover        : ['url', 'empty'],
+      logo         : ['empty'],
+      cover        : ['empty'],
     }
   })
 

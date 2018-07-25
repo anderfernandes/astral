@@ -1,22 +1,21 @@
 @if (!$sale->refund)
   @if ($sale->payments->sum('total') > 0)
-  <div class="ui right floated buttons">
-    <div onclick="$('#refund-modal').modal('toggle')" class="ui red button">
-      <i class="reply icon"></i> Refund
+  <div class="ui right floated icon buttons">
+    <div onclick="$('#refund-modal').modal('toggle')" class="ui red button" title="Refund Sale">
+      <i class="reply icon"></i>
     </div>
   </div>
   @endif
 @endif
-<div class="ui left floated buttons">
-  <a href="{{ route('admin.sales.index') }}" class="ui default button">
+<div class="ui left floated icon buttons">
+  <a href="{{ route('admin.sales.index') }}" class="ui black basic button" title="Back to All Sales">
     <i class="left chevron icon"></i>
-    Back
   </a>
-  <a href="{{ Request::routeIs('admin.*') ? route('admin.sales.edit', $sale) : route('cashier.sales.edit', $sale) }}" class="ui yellow button">
-    <i class="edit icon"></i>Edit
+  <a href="{{ Request::routeIs('admin.*') ? route('admin.sales.edit', $sale) : route('cashier.sales.edit', $sale) }}" class="ui yellow button" title="Edit Sale">
+    <i class="edit icon"></i>
   </a>
-  <div class="ui floating secondary dropdown button">
-    <i class="copy icon"></i> Invoices <i class="dropdown icon"></i>
+  <div class="ui floating black dropdown button">
+    <i class="copy icon"></i>
     <div class="menu">
       @if ($sale->events->count() > 0)
         @if ($sale->status != "canceled")
@@ -32,9 +31,8 @@
     </div>
   </div>
   @if ($sale->customer_id != 1)
-    <div onclick="$('#email-confirmation-letter').modal('toggle')" class="ui primary button">
+    <div onclick="$('#email-confirmation-letter').modal('toggle')" class="ui black basic button">
       <i class="mail icon"></i>
-      Email Confirmation Letter
     </div>
   @endif
 </div>

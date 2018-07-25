@@ -11,7 +11,7 @@ use App\Mail\ConfirmationLetter;
 use Session;
 use PDF;
 use Jenssegers\Date\Date;
-use Illuminate\Support\Facades\{Log, Auth, Mail};
+use Illuminate\Support\Facades\{ Log, Auth, Mail };
 
 
 // Models
@@ -589,7 +589,8 @@ class SaleController extends Controller
     {
       if ($request->format == 'pdf')
       {
-        return PDF::loadView('admin.sales.invoice', ['sale' => $sale])->download("invoice.pdf");
+        return PDF::loadView('pdf.invoice', ['sale' => $sale])
+                  ->stream("Astral - Invoice #$sale->id.pdf");
       }
       else
       {

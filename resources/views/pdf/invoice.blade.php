@@ -1,46 +1,21 @@
-@extends('layout.report')
+@extends('layout.pdf')
 
-<?php
-
-// $title = $sale->organization->name != $sale->customer->fullname ? $sale->organization->name . '\'s' : $sale->organization->name . '\'s ' . $sale->customer->fullname;
-$title = 'Test';
-
-?>
-
-@section('title', $title . ' Invoice')
+@section('title', "Astral - " . App\Setting::find(1)->organization . " - Invoice #$sale->id")
 
 @section('content')
 
-  <style>
-    @media print {
-      .ui.icon.buttons {
-        display: none !important;
-      }
-      p, h4.ui.header, table, thead, tbody, ul, li, h4.ui.header .sub.header {
-        font-size: 0.78rem !important;
-      }
-    }
-  </style>
-
-  <div class="ui icon right floated buttons" style="margin-bottom:2rem">
-    <a href="{{ route('admin.sales.invoice', $sale) . '?format=pdf' }}" target="_blank" class="ui basic black button"><i class="file pdf outline icon"></i></a>
-    <div onclick="window.print()" class="ui black button"><i class="print icon"></i></div>
-    <div onclick="window.close()" class="ui red button"><i class="close icon"></i></div>
-  </div>
-
-  <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
-
-  <div class="ui center aligned big header" style="margin-top:8px; margin-bottom: 0">
-    <div class="content">Invoice # {{ $sale->id }}</div>
-  </div>
+  <center>
+    <img src="{{ App\Setting::find(1)->logo }}" style="width:35px; height:auto">
+    <h3>Invoice # {{ $sale->id }}</h3>
+  </center>
 
   <div class="ui clearing basic segment" style="padding:0 0 0 0">
 
-    <h4 class="ui left floated header">
+    <h4 class="ui left floated header" style="text-align:left">
       Date: {{ Date::now()->format('l, F j, Y') }}
     </h4>
 
-    <h4 class="ui right floated header" style="margin-right: 0">
+    <h4 class="ui right floated header" style="text-align:right">
       Terms: Due at showtime
     </h4>
 
@@ -72,6 +47,8 @@ $title = 'Test';
       @if ($sale->organization->id != 1)
         {{ $sale->organization->name }}
       @endif
+      {{ $sale->customer->address }} <br />
+      {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
     </h4>
 
   </div>
@@ -116,9 +93,7 @@ $title = 'Test';
       @endforeach
       @foreach($sale->products->unique('id') as $product)
         <tr>
-          <td>
-            <h4 class="ui header"></h4>
-          </td>
+          <td></td>
           <td>
             <h4 class="ui header">
               <div class="content">{{ $product->name }}</div>
@@ -216,7 +191,7 @@ $title = 'Test';
         <td></td>
         <td colspan="2" class="right aligned"><strong>Please pay this amount:</strong></td>
         <td class="right aligned"><strong>$</strong></td>
-        <td class="right aligned">
+        <td class="right aligned" style="padding-right:2px">
           <strong>
               {{ number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}
           </strong>
@@ -237,12 +212,15 @@ $title = 'Test';
 
   <h4 class="ui center aligned header">
     <div class="content">
-      {{ App\Setting::find(1)->organization }} <br /> {{ App\Setting::find(1)->address }}
+      <center>{{ App\Setting::find(1)->organization }} <br /> {{ App\Setting::find(1)->address }}</center>
+
       <div class="sub header">
-        <i class="phone icon"></i>{{ App\Setting::find(1)->phone }} |
-        <i class="at icon"></i>{{ App\Setting::find(1)->email }} |
-        <i class="globe icon"></i><a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> |
-        <img src="astral-logo-dark.png" style="width:10px"> Astral
+        <center>
+          <i class="phone icon"></i> {{ App\Setting::find(1)->phone }} |
+          <i class="at icon"></i> {{ App\Setting::find(1)->email }} |
+          <i class="globe icon"></i><a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> |
+          <img src="astral-logo-dark.png" style="width:10px"> Astral
+        </center>
       </div>
     </div>
   </h4>

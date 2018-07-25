@@ -146,16 +146,13 @@
 {!! \Illuminate\Mail\Markdown::parse(App\Setting::find(1)->confirmation_text) !!}
 
 <?php
-
   //$events = $sale->events->count();
   $numberOfEvents = 0;
-
   // Loop through all events
   foreach ($sale->events as $event) {
     // Add one to $numberOfEvents if eventis not "No Show"
     if ($event->id != '1') $numberOfEvents++;
   }
-
 ?>
 
 <ul>

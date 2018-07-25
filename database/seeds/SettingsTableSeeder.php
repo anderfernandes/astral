@@ -17,7 +17,10 @@ class SettingsTableSeeder extends Seeder
         'seats'        => 180,
         'tax'          => 8.25,
         'created_at'   => Date::now('America/Chicago')->toDateTimeString(),
-        'website'      => 'mynonprofit.org',
+        'website'      => 'starsatnight.org',
+        'address'      => 'Academic DR, Killeen, TX, 76549',
+        'phone'        => '(254) 526-1768',
+        'fax'          => '(254) 526-1799',
       ]);
     }
 }
