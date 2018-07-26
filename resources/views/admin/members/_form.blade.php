@@ -298,13 +298,20 @@
     fetch(`/api/membership-type/${membership_type_id}`)
       .then(response => response.json())
       .then(membership_type => {
+        {{-- if membership_type.max_secondaries == 0 then disable #secondaries and enable #paid_secondaries --}}
+        if (membership_type.max_secondaries < 1 ){
+          // enable paid secondaries
+          // check id of the actual semantic ui dropdown
+        } else {
+          {{-- enable free secondaries  --}}
+
+        }
         $('#secondaries').dropdown('clear')
         $('#paid_secondaries').dropdown('clear')
         var start = document.querySelector('#start').value
         var end = moment(start, 'dddd, MMMM D, YYYY').add(membership_type.duration, 'days').format('dddd, MMMM D, YYYY')
         $('#end').flatpickr({ defaultDate: end, dateFormat: 'l, F j, Y'})
         $($('.ui.multiple.selection.dropdown')[0]).dropdown({maxSelections: membership_type.max_secondaries - currentSecondaries})
-        console.log(membership_type.max_secondaries - currentSecondaries)
       })
       .then(() => { calculateTotals() })
   })

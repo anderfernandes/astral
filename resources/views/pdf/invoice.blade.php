@@ -93,7 +93,9 @@
       @endforeach
       @foreach($sale->products->unique('id') as $product)
         <tr>
-          <td></td>
+          <td>
+            <h4 class="ui header"></h4>
+          </td>
           <td>
             <h4 class="ui header">
               <div class="content">{{ $product->name }}</div>
@@ -107,91 +109,64 @@
         </tr>
       @endforeach
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td colspan="4" style="border-top: 0"></td>
         <td class="right aligned"><strong>Subtotal</strong></td>
         <td class="right aligned">$</td>
         <td class="right aligned">{{ number_format($sale->subtotal, 2) }}</td>
       </tr>
       <tr>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
+        <td colspan="4" style="border-top: 0"></td>
         <td class="right aligned"><strong>Tax</strong></td>
         <td class="right aligned">$</td>
         <td class="right aligned">{{ number_format($sale->tax, 2) }}</td>
       </tr>
       <tr>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
+        <td colspan="4" style="border-top: 0"></td>
         <td class="right aligned"><strong>Total</strong></td>
         <td class="right aligned">$</td>
         <td class="right aligned">{{ number_format($sale->total, 2) }}</td>
       </tr>
       @if ($sale->payments->count() < 2)
       <tr>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
+        <td colspan="4" style="border-top: 0"></td>
         <td class="right aligned"><strong>Amount Paid</strong></td>
         <td class="right aligned">$</td>
-        @if ($sale->payments->count() < 2)
-          <td class="right aligned" style="color:#cf3534"><strong>{{number_format($sale->payments->sum('tendered') * - 1, 2) }}</strong></td>
-        @else
-          @foreach ($sale->payments as $payment)
-            <td class="right aligned">{{ number_format($payment->tendered, 2) }}</td>
-          @endforeach
-        @endif
-      </tr>
+        <td class="right aligned">{{ number_format($sale->payments->sum('tendered'), 2) }}
+      </td>
       @else
-        @foreach ($sale->payments as $payment)
-          <tr>
-            <td><strong>Payments ({{ Date::parse($payment->created_at)->format('m/d/Y') }}) {{ $payment->method->name }}</strong></td>
-          </tr>
-        @endforeach
+      @foreach ($sale->payments as $payment)
+      <tr>
+        <td colspan="4" style="border-top: 0"></td>
+        <td class="right aligned"><strong>Payment ({{ Date::parse($payment->created_at)->format('m/d/Y') }}) {{ $payment->method->name }}</strong></td>
+        <td class="right aligned">$</td>
+        <td class="right aligned">{{ number_format($payment->tendered, 2) }}</td>
+      </tr>
+      @endforeach
       @endif
       @if ($sale->refund)
       <tr>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
+        <td colspan="4" style="border-top: 0"></td>
         <td class="right aligned"><strong>Refund</strong></td>
         <td class="right aligned">$</td>
         <td class="right aligned" style="color:#cf3534"><strong>({{ number_format($sale->total, 2) }})</strong></td>
       </tr>
       @endif
       <tr>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
+        <td colspan="4" style="border-top: 0"></td>
         <td class="right aligned"><strong>Change</strong></td>
         <td class="right aligned">$</td>
         <td class="right aligned">{{ number_format($sale->payments->sum('change_due'), 2) }}</td>
       </tr>
       <tr>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
-        <td style="border-top: 0"></td>
+        <td colspan="4" style="border-top: 0"></td>
         <td class="right aligned"><strong>Balance</strong></td>
         <td class="right aligned"><strong>$</strong></td>
         <td class="right aligned"><strong>{{ number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}</strong></td>
       </tr>
       <tr class="active">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td colspan="2" class="right aligned"><strong>Please pay this amount:</strong></td>
+        <td colspan="5" class="right aligned"><strong>Please pay this amount:</strong></td>
         <td class="right aligned"><strong>$</strong></td>
-        <td class="right aligned" style="padding-right:2px">
+        <td class="right aligned">
           <strong>
               {{ number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}
           </strong>
@@ -216,9 +191,9 @@
 
       <div class="sub header">
         <center>
-          <i class="phone icon"></i> {{ App\Setting::find(1)->phone }} |
-          <i class="at icon"></i> {{ App\Setting::find(1)->email }} |
-          <i class="globe icon"></i><a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> |
+          {{ App\Setting::find(1)->phone }} |
+          {{ App\Setting::find(1)->email }} |
+          <a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> |
           <img src="astral-logo-dark.png" style="width:10px"> Astral
         </center>
       </div>

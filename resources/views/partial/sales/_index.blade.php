@@ -82,7 +82,7 @@
                     <a class="item" target="_blank" href="{{ route('admin.sales.cancelation', $sale) }}">Cancelation Receipt</a>
                   @endif
                 @else
-                  <a class="item" href="{{ route('cashier.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>
+                  <a class="item" href="{{ route('admin.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>
                 @endif
 
               </div>

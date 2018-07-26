@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Jenssegers\Date\Date;
 use Session;
+use PDF;
 
 class MemberController extends Controller
 {
@@ -334,13 +335,21 @@ class MemberController extends Controller
       return view('admin.members.card')->withMember($member);
     }
 
-    public function receipt(Member $member)
+    public function receipt(Member $member, Request $request)
     {
       $sales = Sale::where('customer_id', $member->users[0]->id)->where('subtotal', $member->type->price)->get();
       // Ensure we get the last membership payment
       $sale = $sales->last();
 
-      return view('admin.members.receipt')->withMember($member)->withsale($sale);
+      if ($request->format == 'pdf')
+      {
+        return PDF::loadView('pdf.membership-receipt', ['sale' => $sale, 'member' => $member])
+                  ->stream("Astral - Invoice #$sale->id.pdf");
+      }
+      else
+      {
+        return view('admin.members.receipt')->withMember($member)->withsale($sale);
+      }
     }
 
     public function addSecondary(Request $request, Member $member)

@@ -14,19 +14,37 @@
   <a href="{{ Request::routeIs('admin.*') ? route('admin.sales.edit', $sale) : route('cashier.sales.edit', $sale) }}" class="ui yellow button" title="Edit Sale">
     <i class="edit icon"></i>
   </a>
-  <div class="ui floating black dropdown button">
+  <div class="ui black dropdown button">
     <i class="copy icon"></i>
     <div class="menu">
+      <div class="header">Sale Documents</div>
       @if ($sale->events->count() > 0)
-        @if ($sale->status != "canceled")
-          <a class="item" target="_blank" href="{{ route('admin.sales.confirmation', $sale) }}">Reservation Confirmation</a>
-          <a class="item" target="_blank" href="{{ route('admin.sales.invoice', $sale) }}">Invoice</a>
-          <a class="item" target="_blank" href="{{ route('admin.sales.receipt', $sale) }}">Receipt</a>
-        @else
-          <a class="item" target="_blank" href="{{ route('admin.sales.cancelation', $sale) }}">Cancelation Receipt</a>
-        @endif
+      <div class="item">
+        <i class="file icon"></i> In App <i class="dropdown icon"></i>
+        <div class="menu">
+          @if ($sale->status != "canceled")
+          <a class="item" href="{{ route('admin.sales.confirmation', $sale) }}" target="_blank"><i class="file icon"></i> Reservation Confirmation</a>
+          <a class="item" href="{{ route('admin.sales.invoice', $sale) }}" target="_blank"><i class="file icon"></i> Invoice</a>
+          <a class="item" href="{{ route('admin.sales.receipt', $sale) }}" target="_blank"><i class="file icon"></i> Receipt</a>
+          @else
+          <a class="item" href="{{ route('admin.sales.cancelation', $sale) }}" target="_blank"><i class="file icon"></i> Cancelation Receipt</a>
+          @endif
+        </div>
+      </div>
+      <div class="item">
+        <i class="file pdf icon"></i> As PDF <i class="dropdown icon"></i>
+        <div class="menu">
+          @if ($sale->status != "canceled")
+          <a class="item" href="{{ route('admin.sales.confirmation', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Reservation Confirmation</a>
+          <a class="item" href="{{ route('admin.sales.invoice', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Invoice</a>
+          <a class="item" href="{{ route('admin.sales.receipt', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Receipt</a>
+          @else
+          <a class="item" href="{{ route('admin.sales.cancelation', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Cancelation Receipt</a>
+          @endif
+        </div>
+      </div>
       @else
-        <a class="item" href="{{ route('cashier.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>
+      <a class="item" href="{{ route('admin.members.receipt', $sale->customer->member) }}" target="_blank"><i class="pdf file icon"></i> Membership Receipt</a>
       @endif
     </div>
   </div>

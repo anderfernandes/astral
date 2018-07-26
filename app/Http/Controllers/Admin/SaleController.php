@@ -580,9 +580,17 @@ class SaleController extends Controller
 
     }
 
-    public function confirmation(Sale $sale)
+    public function confirmation(Sale $sale, Request $request)
     {
-      return view('admin.sales.confirmation')->withSale($sale);
+      if ($request->format == 'pdf')
+      {
+        return PDF::loadView('pdf.confirmation', ['sale' => $sale])
+                  ->stream("Astral - Confirmation #$sale->id.pdf");
+      }
+      else
+      {
+        return view('admin.sales.confirmation')->withSale($sale);
+      }
     }
 
     public function invoice(Sale $sale, Request $request)
@@ -599,14 +607,30 @@ class SaleController extends Controller
 
     }
 
-    public function receipt(Sale $sale)
+    public function receipt(Sale $sale, Request $request)
     {
-      return view('admin.sales.receipt')->withSale($sale);
+      if ($request->format == 'pdf')
+      {
+        return PDF::loadView('pdf.receipt', ['sale' => $sale])
+                  ->stream("Astral - Receipt #$sale->id.pdf");
+      }
+      else
+      {
+        return view('admin.sales.receipt')->withSale($sale);
+      }
     }
 
-    public function cancelation(Sale $sale)
+    public function cancelation(Sale $sale, Request $request)
     {
-      return view('admin.sales.cancelation')->withSale($sale);
+      if ($request->format == 'pdf')
+      {
+        return PDF::loadView('pdf.cancelation', ['sale' => $sale])
+                  ->stream("Astral - Cancelation - Sale #$sale->id.pdf");
+      }
+      else
+      {
+        return view('admin.sales.cancelation')->withSale($sale);
+      }
     }
 
     public function mail(Request $request, Sale $sale)

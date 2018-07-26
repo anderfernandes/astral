@@ -1,45 +1,21 @@
-@extends('layout.report')
+@extends('layout.pdf')
 
-<?php
-
-$title = $sale->organization->name != $sale->customer->fullname ? $sale->organization->name . '\'s' : $sale->organization->name . '\'s ' . $sale->customer->fullname
-
-?>
-
-@section('title', $title . ' Receipt')
+@section('title', "Astral - " . App\Setting::find(1)->organization . " Cancelation - Sale #$sale->id")
 
 @section('content')
 
-  <style>
-    @media print {
-      .ui.icon.buttons {
-        display: none !important;
-      }
-      p, h4.ui.header, table, thead, tbody, ul, li, h4.ui.header .sub.header {
-        font-size: 0.78rem !important;
-      }
-    }
-  </style>
-
-  <div class="ui icon right floated buttons" style="margin-bottom:5rem">
-    <a href="{{ route('admin.sales.receipt', $sale)}}?format=pdf" target="_blank" class="ui basic black button"><i class="file pdf outline icon"></i></a>
-    <div onclick="window.print()" class="ui black button"><i class="print icon"></i></div>
-    <div onclick="window.close()" class="ui red button"><i class="close icon"></i></div>
-  </div>
-
-  <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
-
-  <div class="ui center aligned icon header" style="margin-top:8px">
-    <div class="content">Receipt</div>
-  </div>
+  <center>
+    <img src="{{ App\Setting::find(1)->logo }}" style="width:35px; height:auto">
+    <h3>Cancelation Receipt</h3>
+  </center>
 
   <div class="ui clearing basic segment" style="padding:0 0 0 0">
 
-    <h4 class="ui left floated header">
+    <h4 class="ui left floated header" style="text-align:left">
       Date: {{ Date::now()->format('l, F j, Y') }}
     </h4>
 
-    <h4 class="ui right floated header">
+    <h4 class="ui right floated header" style="text-align:right">
       Receipt # {{ $sale->id }}
     </h4>
 
@@ -61,6 +37,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
         {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
       @endif
     </h4>
+
   </div>
 
   <table class="ui very basic compact unstackable table">
@@ -177,7 +154,8 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
   </table>
 
   <p>
-    Thank you very much for choosing us. We sincerely appreciate your patronage and hope you enjoyed your shows.
+    Thank you very much for choosing us. Your shows are cancelled. Please come
+    back and visit us, we really missed you and wish for you to reschedule!
   </p>
 
   <p>Sincerely,</p>
@@ -186,11 +164,15 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
 
   <h4 class="ui center aligned header">
     <div class="content">
-      {{ App\Setting::find(1)->organization }} <br /> {{ App\Setting::find(1)->address }}
+      <center>{{ App\Setting::find(1)->organization }} <br /> {{ App\Setting::find(1)->address }}</center>
+
       <div class="sub header">
-        <i class="phone icon"></i>{{ App\Setting::find(1)->phone }} |
-        <i class="at icon"></i>{{ App\Setting::find(1)->email }} |
-        <i class="globe icon"></i><a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> | <i class="sun icon"></i>Astral
+        <center>
+          {{ App\Setting::find(1)->phone }} |
+          {{ App\Setting::find(1)->email }} |
+          <a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> |
+          <img src="astral-logo-dark.png" style="width:10px"> Astral
+        </center>
       </div>
     </div>
   </h4>

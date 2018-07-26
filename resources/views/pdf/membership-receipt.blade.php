@@ -1,41 +1,27 @@
-@extends('layout.report')
+@extends('layout.pdf')
 
-@section('title', $member->users[0]->firstname . ' ' . $member->users[0]->lastname.'\'s Membership Receipt')
+@section('title', "Astral - " . App\Setting::find(1)->organization . " - Membership Receipt - Member #$sale->id")
 
 @section('content')
 
-  <style>
-    @media print {
-      .ui.icon.buttons {
-        display: none !important;
-      }
-      p, h4.ui.header, table, thead, tbody, ul, li, h4.ui.header .sub.header {
-        font-size: 0.78rem !important;
-      }
-    }
-  </style>
-
-  <div class="ui icon right floated buttons" style="margin-bottom:2rem">
-    <a href="{{ route('admin.members.receipt', $member)}}?format=pdf" target="_blank" class="ui basic black button"><i class="file pdf outline icon"></i></a>
-    <div onclick="window.print()" class="ui black button"><i class="print icon"></i></div>
-    <div onclick="window.close()" class="ui red button"><i class="close icon"></i></div>
-  </div>
-
-  <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
-
-  <div class="ui center aligned big header" style="margin-top:8px; margin-bottom: 0">
-    <div class="content">Membership Receipt</div>
-  </div>
-
-  <h4 class="ui header">
-    {{ Date::now()->format('l, F j, Y') }}
-  </h4>
+  <center>
+    <img src="{{ App\Setting::find(1)->logo }}" style="width:35px; height:auto">
+    <h3>Membership Receipt</h3>
+  </center>
 
   <div class="ui clearing basic segment" style="padding:0 0 0 0">
+
+    <h4 class="ui left floated header" style="text-align:left">
+      {{ Date::now()->format('l, F j, Y') }}
+    </h4>
+
     <h4 class="ui right floated header">
       Sale # {{ $sale->id }}
     </h4>
+    
+  </div>
 
+  <div class="ui clearing basic segment" style="padding:0 0 0 0">
     <h4 class="ui left floated header">
       {{ $member->users[0]->fullname }}<br />
       {{ $member->users[0]->address }} </br>
@@ -137,16 +123,27 @@
     </tbody>
   </table>
 
-  {!! \Illuminate\Mail\Markdown::parse(App\Setting::find(1)->membership_text) !!}
+  {!! \Illuminate\Mail\Markdown::parse(App\Setting::find(1)->invoice_text) !!}
+
+  <p>
+    Thank you very much for choosing us. We sincerely appreciate your patronage and hope you enjoy our shows.
+  </p>
+
+  <p>Sincerely,</p>
+
+  <p>Visitor Services <br /> {{ App\Setting::find(1)->organization }}</p>
 
   <h4 class="ui center aligned header">
     <div class="content">
-      {{ App\Setting::find(1)->organization }} <br /> {{ App\Setting::find(1)->address }}
+      <center>{{ App\Setting::find(1)->organization }} <br /> {{ App\Setting::find(1)->address }}</center>
+
       <div class="sub header">
-        <i class="phone icon"></i>{{ App\Setting::find(1)->phone }} |
-        <i class="at icon"></i>{{ App\Setting::find(1)->email }} |
-        <i class="globe icon"></i><a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> |
-        <img src="/astral-logo-dark.png" style="width:10px"> Astral
+        <center>
+          {{ App\Setting::find(1)->phone }} |
+          {{ App\Setting::find(1)->email }} |
+          <a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> |
+          <img src="astral-logo-dark.png" style="width:10px"> Astral
+        </center>
       </div>
     </div>
   </h4>
