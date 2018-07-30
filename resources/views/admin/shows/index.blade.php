@@ -42,7 +42,11 @@
 {!! Form::close() !!}
 
 <div onclick="$('#add-show').modal('show')" class="ui secondary button">
-  <i class="icons"><i class="film icon"></i><i class="corner inverted add icon"></i></i> Add Show
+  <i class="ui icons">
+    <i class="film icon"></i>
+    <i class="inverted corner add icon"></i>
+  </i>
+  Add Show
 </div>
 
 <br /><br />
@@ -50,7 +54,7 @@
 @if (!isSet($shows) || ($shows->count()) > 0)
   <div class="ui five doubling link cards">
     @foreach($shows as $show)
-      <div class="card">
+      <div class="card" onclick="window.open('{{ route('admin.shows.show', $show) }}', '_blank')">
         <div class="content">
           <div class="header">
             {{ $show->name }}
@@ -59,9 +63,9 @@
             <div class="ui black label">{{ $show->type }}</div><div class="ui black label">{{ $show->duration }} minutes</div>
           </div>
         </div>
-        <a href="{{ route('admin.shows.show', $show) }}" class="image">
+        <div href="{{ route('admin.shows.show', $show) }}" class="image">
           <img src="{{ $show->cover }}">
-        </a>
+        </div>
       </div>
     @endforeach
   </div>

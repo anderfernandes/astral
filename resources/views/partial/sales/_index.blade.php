@@ -44,7 +44,7 @@
         </td>
         <td>
           @if ($sale->refund)
-            <span class="ui red label"><i class="reply icon"></i>refund</span>
+            <div class="ui red label"><i class="reply icon"></i>refund</span>
           @else
             @if ($sale->status == 'complete')
               <span class="ui green label"><i class="checkmark icon"></i>
@@ -59,7 +59,8 @@
             @else
               <span class="ui label">
             @endif
-            {{ $sale->status }}</span>
+              <div class="detail">{{ $sale->status }}</div>
+            </div>
           @endif
         </td>
         <td><i class="user circle icon"></i>{{ $sale->creator->firstname }}</td>
@@ -68,7 +69,7 @@
           <div class="ui icon buttons">
             @if (($sale->customer->membership_id == 1))
               <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
-              <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
+              <a href="{{ route('admin.sales.edit', $sale) }}" class="ui yellow button"><i class="edit icon"></i></a>
             @endif
             <div class="ui icon top left pointing dropdown secondary button">
               <i class="copy icon"></i>

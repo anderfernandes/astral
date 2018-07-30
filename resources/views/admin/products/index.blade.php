@@ -62,18 +62,22 @@
         </div>
         <div class="content">
           <a class="header">{{ $product->name }}</a>
-          <div class="ui green tag label" style="margin-left: 1rem !important">$ {{ number_format($product->price, 2, '.', ',')}}</div>
-          <div class="ui black label">{{ $product->type->name }}</div>
-          @if ($product->inventory)
-            <div class="ui {{ $product->stock < 10 ? 'red' : 'black' }} label" {!! $product->stock < 10 ? "data-tooltip='Only $product->stock in stock!' data-inverted=''" : ""!!}>
-              <i class="box icon"></i>{{ $product->stock }}
-            </div>
-          @endif
           <div class="extra">
-            @if ($product->creator_id != 1)
-              <p><i class="user circle icon"></i>{{ $product->creator->fullname }}</p>
+            <div class="ui green tag label" style="margin-right:0">$ {{ number_format($product->price, 2, '.', ',')}}</div>
+            <div class="ui black label" style="margin-right:0">{{ $product->type->name }}</div>
+            @if ($product->inventory)
+              <div class="ui {{ $product->stock < 10 ? 'red' : 'black' }} label" {!! $product->stock < 10 ? "data-tooltip='Only $product->stock in stock!' data-inverted=''" : ""!!} style="margin-right:0">
+                <i class="box icon"></i>
+                <div class="detail">{{ $product->stock }}</div>
+              </div>
             @endif
-            <p><i class="pencil icon"></i>{{ Date::parse($product->created_at)->format('l, F j, Y \a\t g:i A') }}</p>
+            @if ($product->creator_id != 1)
+              <div class="ui black label" style="margin-right:0">
+                <i class="user circle icon"></i>
+                <div class="detail">{{ $product->creator->fullname }}</div>
+              </div>
+            @endif
+            <p><i class="pencil icon"></i>{{ $product->created_at->format('l, F j, Y \a\t g:i A') }}</p>
             <p><i class="edit icon"></i>{{ Date::parse($product->updated_at)->format('l, F j, Y \a\t g:i A') }}</p>
           </div>
           <div class="meta">

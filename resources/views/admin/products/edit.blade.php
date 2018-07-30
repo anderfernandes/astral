@@ -8,6 +8,8 @@
 
 @section('content')
 
-@include('admin.products._form')
+  <div class="ui container">
+    @include('admin.products._form')
+  </div>
 
 @endsection

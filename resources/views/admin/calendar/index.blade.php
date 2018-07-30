@@ -15,14 +15,16 @@
   </div>
 
   @if (str_contains(Auth::user()->role->permissions['calendar'], "C"))
-  <a class="ui secondary button" onclick="$('#create-event').modal('toggle')" href="#">
+  <div class="ui black button" onclick="$('#create-event').modal('toggle')">
     <i class="calendar plus icon"></i> Create Event
-  </a>
+  </div>
   @endif
 
   @if (str_contains(Auth::user()->role->permissions['sales'], "C"))
-  <div class="ui floating secondary dropdown button">
-    <i class="icons"><i class="dollar icon"></i><i class="corner plus inverted icon"></i></i> Create Sale<i class="dropdown icon"></i>
+  <div class="ui dropdown black button">
+    <i class="icons"><i class="dollar icon"></i><i class="corner plus inverted icon"></i></i>
+    Create Sale
+    <i class="dropdown icon"></i>
     <div class="menu">
       @foreach (App\EventType::where('id', '!=', 1)->get() as $eventType)
         @if ($eventType->allowedTickets->count() > 0)
@@ -33,11 +35,15 @@
   </div>
   @endif
 
-  <div class="ui right floated icon black button" onclick="$('#event-colors').modal('toggle')">
+  <div class="ui right floated black icon button" onclick="$('#event-colors').modal('toggle')">
     <i class="help circle icon"></i>
   </div>
 
-  <div class="ui right floated secondary floating dropdown labeled icon button" id="view">
+  <div class="ui right floated black icon button" onclick="window.print()">
+    <i class="print icon"></i>
+  </div>
+
+  <div class="ui right floated secondary floating dropdown button" id="view">
     <i class="eye icon"></i>
     <span class="text">
       @if ($request->view == "agendaDay")
@@ -48,6 +54,7 @@
         Month
       @endif
     </span>
+    <i class="dropdown icon"></i>
     <div class="menu">
       <div onclick="$('#admin-calendar').fullCalendar('changeView', 'agendaDay')" class="{{ $request->view == 'agendaDay' ? 'active' : null }} item">Single Day</div>
       <div onclick="$('#admin-calendar').fullCalendar('changeView', 'agendaWeek')" class="{{ $request->view == 'agendaWeek' ? 'active' : null }} item">Week</div>
@@ -55,9 +62,10 @@
     </div>
   </div>
 
-  <div class="ui right floated secondary floating dropdown labeled icon button">
+  <div class="ui right floated secondary floating dropdown button">
     <i class="calendar alternate outline icon"></i>
     <span class="text">Events</span>
+    <i class="dropdown icon"></i>
     <div class="menu">
       <div onclick="toggleCalendar('events')" class="{{ $request->type == "events" ? "active" : "" }} item">Events</div>
       <div onclick="toggleCalendar('sales')" class="{{ $request->type == "sales" ? "active" : "" }} item">Sales</div>

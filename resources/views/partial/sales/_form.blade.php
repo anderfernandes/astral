@@ -12,8 +12,22 @@
 
   <div class="two fields">
 
+    <div class="field">
+      <a onclick="window.history.back()" class="ui basic black button">
+        <i class="left chevron icon"></i>
+        Back
+      </a>
+      <div class="ui green labeled submit icon button">
+        Save <i class="save icon"></i>
+      </div>
+    </div>
+
+    {{-- Save button --}}
+
+
+
     {{-- Sale Status --}}
-    <div class="inline required field">
+    <div class="inline required field" style="text-align:right">
       <label for="status">Status</label>
       <div class="ui selection dropdown" id="sale-status">
         <input type="hidden" id="status" name="status" value="{{ isSet($sale) ? $sale->status : old('status') == null ? 'open' : old('status') }}">
@@ -28,17 +42,6 @@
           <div class="item" data-value="tentative" style="background-color: #fbbd08 !important; border-color: #fbbd08; color: white"><i class="help icon"></i>Tentative</div>
           <div class="item" data-value="no show" style="background-color: #f2711c !important; border-color: #f2711c; color: white"><i class="thumbs outline down icon"></i>No Show</div>
         </div>
-      </div>
-    </div>
-
-    {{-- Save button --}}
-    <div class="field">
-      <div class="ui right floated buttons">
-        <div onclick="window.history.back()" class="ui default button">
-          <i class="left chevron icon"></i>
-          Back
-        </div>
-        <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
       </div>
     </div>
 
@@ -174,7 +177,7 @@
                           <div class="ui right labeled input">
                             <input type="text" name="events[{{ $loop->parent->index }}][tickets][{{ $loop->index }}][quantity]" value="{{ isSet($sale->tickets) ? $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticketType->id)->count() : old("events.{$event->id}.tickets.{$loop->index}.quantity") }}" size="1" class="ticket-amount">
                             <input type="hidden" name="events[{{ $loop->parent->index }}][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
-                            <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+                            <div class="ui basic label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
                           </div>
                         </td>
                       </tr>
@@ -258,7 +261,7 @@
 
           <br>
 
-          <div class="ui button" id="add-another-event">
+          <div class="ui black button" id="add-another-event">
             <i class="icons">
               <i class="calendar alternate icon"></i>
               <i class="add corner icon"></i>

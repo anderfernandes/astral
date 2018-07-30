@@ -1,59 +1,46 @@
 @if (!$sale->refund)
   @if ($sale->payments->sum('total') > 0)
-  <div class="ui right floated icon buttons">
-    <div onclick="$('#refund-modal').modal('toggle')" class="ui red button" title="Refund Sale">
-      <i class="reply icon"></i>
-    </div>
+  <div onclick="$('#refund-modal').modal('toggle')" class="ui right floated red button" title="Refund Sale">
+    <i class="reply icon"></i> Refund
   </div>
   @endif
 @endif
-<div class="ui left floated icon buttons">
+
   <a href="{{ route('admin.sales.index') }}" class="ui black basic button" title="Back to All Sales">
-    <i class="left chevron icon"></i>
+    <i class="left chevron icon"></i> Back
   </a>
   <a href="{{ Request::routeIs('admin.*') ? route('admin.sales.edit', $sale) : route('cashier.sales.edit', $sale) }}" class="ui yellow button" title="Edit Sale">
-    <i class="edit icon"></i>
+    <i class="edit icon"></i> Edit Sale
   </a>
   <div class="ui black dropdown button">
-    <i class="copy icon"></i>
+    <i class="copy icon"></i> Paperwork
+    <i class="dropdown icon"></i>
     <div class="menu">
       <div class="header">Sale Documents</div>
       @if ($sale->events->count() > 0)
-      <div class="item">
-        <i class="file icon"></i> In App <i class="dropdown icon"></i>
-        <div class="menu">
+
           @if ($sale->status != "canceled")
-          <a class="item" href="{{ route('admin.sales.confirmation', $sale) }}" target="_blank"><i class="file icon"></i> Reservation Confirmation</a>
+          <a class="item" href="{{ route('admin.sales.confirmation', $sale) }}" target="_blank"><i class="file icon"></i> Confirmation</a>
           <a class="item" href="{{ route('admin.sales.invoice', $sale) }}" target="_blank"><i class="file icon"></i> Invoice</a>
           <a class="item" href="{{ route('admin.sales.receipt', $sale) }}" target="_blank"><i class="file icon"></i> Receipt</a>
-          @else
-          <a class="item" href="{{ route('admin.sales.cancelation', $sale) }}" target="_blank"><i class="file icon"></i> Cancelation Receipt</a>
-          @endif
-        </div>
-      </div>
-      <div class="item">
-        <i class="file pdf icon"></i> As PDF <i class="dropdown icon"></i>
-        <div class="menu">
-          @if ($sale->status != "canceled")
-          <a class="item" href="{{ route('admin.sales.confirmation', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Reservation Confirmation</a>
+          <a class="item" href="{{ route('admin.sales.confirmation', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Confirmation</a>
           <a class="item" href="{{ route('admin.sales.invoice', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Invoice</a>
           <a class="item" href="{{ route('admin.sales.receipt', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Receipt</a>
           @else
+          <a class="item" href="{{ route('admin.sales.cancelation', $sale) }}" target="_blank"><i class="file icon"></i> Cancelation Receipt</a>
           <a class="item" href="{{ route('admin.sales.cancelation', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Cancelation Receipt</a>
           @endif
-        </div>
-      </div>
+        
       @else
       <a class="item" href="{{ route('admin.members.receipt', $sale->customer->member) }}" target="_blank"><i class="pdf file icon"></i> Membership Receipt</a>
       @endif
     </div>
   </div>
   @if ($sale->customer_id != 1)
-    <div onclick="$('#email-confirmation-letter').modal('toggle')" class="ui black basic button">
-      <i class="mail icon"></i>
+    <div onclick="$('#email-confirmation-letter').modal('toggle')" class="ui black button">
+      <i class="mail icon"></i> Email Confirmation
     </div>
   @endif
-</div>
 
 <br />
 

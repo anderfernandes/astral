@@ -9,25 +9,25 @@
 @section('content')
 
   <div class="ui container">
-
-    <div class="ui buttons">
-
-      <a href="{{ route('admin.shows.index') }}" class="ui basic black button">
-        <i class="left chevron icon"></i> Back
-      </a>
-      <a href="javascript:$('#edit-show').modal('show')" class="ui black button">
-        <i class="icons"><i class="film icon"></i><i class="corner inverted edit icon"></i></i> Edit Show
-      </a>
-      <a href="{{ route('admin.shows.create') }}" class="ui black button">
-        <i class="icons"><i class="film icon"></i><i class="corner inverted add icon"></i></i> Add Another Show
-      </a>
-      @if(str_contains(Auth::user()->role->permissions['shows'], "D"))
-        <div class="ui red button" onclick="$('#delete-show').modal('toggle')"><i class="trash icon"></i>Delete Show</div>
-      @endif
-
-    </div>
-
-
+    <a href="{{ route('admin.shows.index') }}" class="ui basic black button">
+      <i class="left chevron icon"></i> Back
+    </a>
+    <a href="javascript:$('#edit-show').modal('show')" class="ui yellow button">
+      <i class="edit icon"></i>
+      Edit Show
+    </a>
+    <a href="{{ route('admin.shows.create') }}" class="ui black button">
+      <i class="ui icons">
+        <i class="film icon"></i>
+        <i class="inverted corner add icon"></i>
+      </i>
+      Add Another Show
+    </a>
+    @if(str_contains(Auth::user()->role->permissions['shows'], "D"))
+      <div class="ui red button" onclick="$('#delete-show').modal('toggle')">
+        <i class="trash icon"></i>Delete Show
+      </div>
+    @endif
     <div class="ui items">
       <div class="item">
         <div class="ui rounded medium image">
@@ -37,33 +37,27 @@
           <div class="ui huge header">{{ $show->name }}</div>
           <div class="meta">
             <div class="ui black label">{{ $show->type }}</div>
-            <div class="ui black label">{{ $show->duration }} minutes</div>
-            <a href="{{ route('admin.users.show', $show->creator) }}" target="_blank" class="ui black label"><i class="user circle icon"></i> {{ $show->creator->fullname }}</a>
-          </div>
-          <div class="meta"></div>
-          <div class="extra">
             <div class="ui black label">
-              <i class="pencil icon"></i>
-              <div class="detail">
-                {{ $show->created_at->format('l, F j, Y \a\t g:i A') }} ({{ $show->created_at->diffForHumans() }})
-              </div>
+              <i class="clock icon"></i> <div class="detail">{{ $show->duration }} minutes</div>
             </div>
-            <div class="ui black label">
-              <i class="edit icon"></i>
-              <div class="detail">
-                {{ Date::parse($show->updated_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($show->updated_at)->diffForHumans() }})
-              </div>
+            <a href="{{ route('admin.users.show', $show->creator) }}" target="_blank" class="ui black label">
+              <i class="user circle icon"></i>
+              <span class="detail">{{ $show->creator->fullname }}</span>
+            </a>
+          </div>
+          <div class="ui header">
+            <div class="sub header">
+              <i class="pencil icon"></i> {{ $show->created_at->format('l, F j, Y \a\t g:i A') }} ({{ $show->created_at->diffForHumans() }}) |
+              <i class="edit icon"></i> {{ $show->updated_at->format('l, F j, Y \a\t g:i A') }} ({{ $show->updated_at->diffForHumans() }})
             </div>
           </div>
           <div class="description">
-            {!! \Illuminate\Mail\Markdown::parse($show->description) !!}</div>
+            {!! \Illuminate\Mail\Markdown::parse($show->description) !!}
+          </div>
         </div>
       </div>
     </div>
-
   </div>
-
-
 
   @include('admin.partial.shows._edit')
 
