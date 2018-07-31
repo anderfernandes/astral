@@ -50,7 +50,11 @@
   {!! Form::close() !!}
 
   <a class="ui secondary button" href="{{ route('admin.members.create') }}">
-    <i class="plus icon"></i> Add Member
+    <i class="ui icons">
+      <i class="address card icon"></i>
+      <i class="inverted corner add icon"></i>
+    </i>
+    Add Member
   </a>
 
   <br /><br />
@@ -58,22 +62,19 @@
   @if (!isSet($members) || count($members) > 0)
     <div class="ui four doubling link cards">
       @foreach($members as $member)
-        <div class="card">
+        <div class="card" onclick="window.location='{{ route('admin.members.show', $member) }}'">
           <div class="content">
             <img src="/{{ App\Setting::find(1)->logo }}" alt="" class="left floated mini ui image">
             <div class="right floated meta"># {{ $member->id }}</div>
             <div class="header">{{ $member->users[0]->fullname }}</div>
             <div class="meta">
-              <div class="ui label">{{ $member->type->name }}</div>
+              {{ $member->type->name }}
             </div>
             <div class="meta">
-              <i class="checked calendar icon"></i>
+              <i class="calendar alternate outline icon"></i>
               Expires {{ Date::parse($member->end)->format('l, F j, Y') }}
             </div>
           </div>
-          <a href="{{ route('admin.members.show', $member) }}" class="ui primary bottom attached button">
-            <i class="eye icon"></i> View
-          </a>
         </div>
       @endforeach
     </div>

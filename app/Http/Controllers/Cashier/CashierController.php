@@ -5,14 +5,10 @@ namespace App\Http\Controllers\Cashier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use Illuminate\Support\Facades\Auth;
-use App\Event;
+use Illuminate\Support\Facades\{ Auth, Log };
+use App\{ Event, Sale, Ticket, Payment, PaymentMethod, User };
+
 use Jenssegers\Date\Date;
-use App\Sale;
-use App\Ticket;
-use App\Payment;
-use App\PaymentMethod;
-use App\User;
 use Session;
 
 class CashierController extends Controller

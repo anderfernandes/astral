@@ -330,9 +330,18 @@ class MemberController extends Controller
         //
     }
 
-    public function card(Member $member)
+    public function card(Member $member, Request $request)
     {
-      return view('admin.members.card')->withMember($member);
+      if ($request->format == 'pdf')
+      {
+        return PDF::loadView('pdf.members.card', ['member' => $member])
+                  ->stream('Astral - Membership Card.pdf');
+      }
+      else
+      {
+        return view('admin.members.card')->withMember($member);
+      }
+
     }
 
     public function receipt(Member $member, Request $request)
@@ -343,7 +352,7 @@ class MemberController extends Controller
 
       if ($request->format == 'pdf')
       {
-        return PDF::loadView('pdf.membership-receipt', ['sale' => $sale, 'member' => $member])
+        return PDF::loadView('pdf.members.receipt', ['sale' => $sale, 'member' => $member])
                   ->stream("Astral - Invoice #$sale->id.pdf");
       }
       else

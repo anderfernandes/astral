@@ -27,7 +27,7 @@
       <div class="content">
         <img src="/{{ App\Setting::find(1)->logo }}" alt="" class="left floated tiny ui image">
         <div class="right floated meta"># {{ $member->id }}</div>
-        <div class="header">{{ $member->users[0]->firstname }} {{ $member->users[0]->lastname }}</div>
+        <div class="header">{{ $member->users[0]->fullname }}</div>
         <div class="meta">
           <div class="ui blue label">
             <i class="address card icon"></i>

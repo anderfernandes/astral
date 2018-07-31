@@ -68,7 +68,7 @@
         @endforeach
       @endif
     @endforeach
-    @foreach($sale->products as $product)
+    @foreach($sale->products->unique('id') as $product)
       <tr class="right aligned">
         <td>
           <h4 class="ui header"></h4>
