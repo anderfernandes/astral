@@ -10,7 +10,7 @@
   </div>
   <div class="field">
     {!! Form::label('sticky', 'Sticky') !!}
-    {!! Form::select('sticky', [true => 'Yes', false => 'No'], false, ['placeholder' => 'What is your post about?', 'class' => 'ui dropdown']) !!}
+    {!! Form::select('sticky', [true => 'Yes', false => 'No'], isSet($post) ? $post->sticky : false, ['placeholder' => 'What is your post about?', 'class' => 'ui dropdown']) !!}
   </div>
   <div class="field">
     {!! Form::label('status') !!}
@@ -27,12 +27,16 @@
 </div>
 <div class="field">
   @if (Request::routeIs('admin.posts.create') or Request::routeIs('admin.posts.edit'))
-    <div class="ui buttons">
-      <a href="{{ route('admin.posts.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
+    <a href="{{ route('admin.posts.index') }}" class="ui basic black button">
+      <i class="left chevron icon"></i> Back
+    </a>
+    <div class="ui positive right labeled submit icon button">
+      Save <i class="save icon"></i>
     </div>
   @else
-    <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
+    <div class="ui positive right floated right labeled submit icon button">
+      Save <i class="save icon"></i>
+    </div>
   @endif
 </div>
 {!! Form::close() !!}
@@ -56,6 +60,7 @@ if (document.querySelector('.ui.modal')) {
     toolbar: ['bold', 'italic', 'strikethrough', '|', 'code', '|', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'table', 'horizontal-rule', '|', 'preview', 'guide'],
   })
 }
+
 {{-- Client side Form Validation --}}
 $('form').form({
   inline: true,

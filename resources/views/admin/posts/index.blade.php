@@ -9,7 +9,13 @@
 @section('content')
 
   <div class="ui container">
-    <a href="{{ route('admin.posts.create') }}" class="ui black button"><i class="plus icon"></i> Create Post</a>
+    <a href="{{ route('admin.posts.create') }}" class="ui black button">
+      <i class="ui icons">
+        <i class="comment icon"></i>
+        <i class="inverted corner add icon"></i>
+      </i>
+      Create Post
+    </a>
 
     @if (!isSet($sticky) || $sticky->count() > 0)
       <div class="ui horizontal divider header">
@@ -21,7 +27,8 @@
             <i class="comments outline icon"></i>
             <div class="content"><a href="{{ route('admin.posts.show', $sticky) }}">{{ $sticky->title }}</a></div>
             <div class="sub header">
-              <i class="user circle icon"></i>{{ $sticky->author->firstname }}<div class="ui label">{{ $sticky->author->role->name }}</div> |
+              <i class="user circle icon"></i>{{ $sticky->author->firstname }}
+              <div class="ui black label">{{ $sticky->author->role->name }}</div> |
               <i class="calendar alternate outline icon"></i>{{ Date::parse($sticky->created_at)->diffForHumans() }} |
               <i class="comments icon"></i> {{ $sticky->replies->count() }} &nbsp; &nbsp; &nbsp;
               <div class="ui black tag label"><i class="tag icon"></i>{{ $sticky->category->name }}</div>

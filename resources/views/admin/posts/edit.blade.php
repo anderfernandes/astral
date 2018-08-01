@@ -8,6 +8,10 @@
 
 @section('content')
 
-  @include('admin.partial.posts._form', ['type' => 'edit'])
+  <div class="ui container">
+
+    @include('admin.partial.posts._form', ['type' => 'edit'])
+
+  </div>
 
 @endsection
