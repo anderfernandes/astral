@@ -47,7 +47,11 @@
   {!! Form::close() !!}
 
   <div class="ui secondary button" onclick="$('#add-organization').modal('show')">
-    <i class="plus icon"></i> Add Organization
+    <i class="ui icons">
+      <i class="university icon"></i>
+      <i class="inverted corner add icon"></i>
+    </i>
+    Add Organization
   </div>
 
   <br /><br />
@@ -60,7 +64,7 @@
         <i class="university huge right floated icon"></i>
         <div class="header">{{ $organization->name }}</div>
         <div class="meta">
-          <div class="ui label">{{ $organization->type->name }}</div>
+          <div class="ui black label">{{ $organization->type->name }}</div>
         </div>
         <div class="meta">
           <i class="phone icon"></i> {{ $organization->phone }}
@@ -73,7 +77,7 @@
         <a href="{{ route('admin.organizations.show', $organization) }}" class="ui black button">
           <i class="eye icon"></i> View
         </a>
-        <a href="{{ route('admin.organizations.edit', $organization ) }}" class="ui blue button">
+        <a href="{{ route('admin.organizations.edit', $organization ) }}" class="ui yellow button">
           <i class="edit icon"></i> Edit
         </a>
       </div>

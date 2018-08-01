@@ -25,7 +25,7 @@
     </a>
     @if(str_contains(Auth::user()->role->permissions['shows'], "D"))
       <div class="ui red button" onclick="$('#delete-show').modal('toggle')">
-        <i class="trash icon"></i>Delete Show
+        <i class="trash icon"></i> Delete Show
       </div>
     @endif
     <div class="ui items">

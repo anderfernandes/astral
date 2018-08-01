@@ -8,6 +8,10 @@
 
 @section('content')
 
-  @include('admin.partial.organizations._create')
+  <div class="ui container">
+
+    @include('admin.partial.organizations._create')
+
+  </div>
 
 @endsection

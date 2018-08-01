@@ -1,10 +1,8 @@
 {!! Form::open(['route' => 'admin.organizations.store', 'class' => 'ui form']) !!}
 @if (Request::routeIs('admin.organizations.create'))
 <div class="field">
-  <div class="ui buttons">
-    <a href="{{ route('admin.organizations.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-    {!! Form::button('Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right labeled icon button']) !!}
-  </div>
+  <a href="{{ route('admin.organizations.index') }}" class="ui basic black button"><i class="left chevron icon"></i> Back</a>
+  {!! Form::button('Save <i class="save icon"></i>', ['type' => 'submit', 'class' => 'ui positive right labeled icon button']) !!}
 </div>
 @endif
 <div class="two fields">
@@ -53,7 +51,7 @@
   <div class="field">
     {!! Form::label('website', 'Website') !!}
     <div class="ui labeled input">
-      <div class="ui label">http://</div>
+      <div class="ui black basic label">http://</div>
       {!! Form::text('website', null, ['placeholder' => 'Enter organization\'s website']) !!}
     </div>
   </div>
@@ -63,10 +61,10 @@
   @if (Request::routeIs('admin.shows.create'))
   <div class="ui buttons">
     <a href="{{ route('admin.organizations.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-    {!! Form::button('Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right labeled icon button']) !!}
+    {!! Form::button('Save <i class="save icon"></i>', ['type' => 'submit', 'class' => 'ui positive right labeled icon button']) !!}
   </div>
   @else
-    {!! Form::button('Save <i class="checkmark icon"></i>', ['type' => 'submit', 'class' => 'ui positive right floated right labeled icon button']) !!}
+    {!! Form::button('Save <i class="save icon"></i>', ['type' => 'submit', 'class' => 'ui positive right floated right labeled icon button']) !!}
   @endif
 </div>
 {!! Form::close() !!}
