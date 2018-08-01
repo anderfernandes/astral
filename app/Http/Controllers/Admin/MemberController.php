@@ -339,7 +339,7 @@ class MemberController extends Controller
       }
       else
       {
-        return view('admin.members.card')->withMember($member);
+        return view('admin.members.card')->withMember($member)->withRequest($request);
       }
 
     }
