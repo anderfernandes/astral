@@ -34,6 +34,7 @@ Route::group(
   Route::resource('members', 'MemberController');
   // Users resource
   Route::resource('users', 'UserController');
+  Route::get('users/{user}/delete', 'UserController@delete')->name('shows.delete');
   // Organizations resource
   Route::resource('organizations', 'OrganizationController');
   // Events resource
