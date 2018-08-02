@@ -8,6 +8,10 @@
 
 @section('content')
 
-  @include('admin.ticket-types._form', ['ticketType' => $ticketType])
+  <div class="ui container">
+
+    @include('admin.ticket-types._form', ['ticketType' => $ticketType])
+
+  </div>
 
 @endsection

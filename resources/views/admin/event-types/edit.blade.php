@@ -8,6 +8,10 @@
 
 @section('content')
 
-  @include('admin.event-types.partial._form', ['eventType' => $eventType])
+  <div class="ui container">
+
+    @include('admin.event-types._form', ['eventType' => $eventType])
+
+  </div>
 
 @endsection

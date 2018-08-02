@@ -12,19 +12,15 @@
       </p>
     </div>
   </div>
-  <div class="ui icon info message">
-    <i class="info circle icon"></i>
-    <i class="close icon"></i>
-    <div class="content">
-      <div class="header">
-        If you need to update a ticket price
-      </div>
-      <p>How about create a new ticket type with a different name and the new price?</p>
-    </div>
-  </div>
   <div class="ui one column doubling grid">
     <div class="column">
-      <div onclick="$('#add-ticket-type').modal('show')" class="ui black button"><i class="plus icon"></i>Add Ticket Type</div>
+      <div onclick="$('#add-ticket-type').modal('show')" class="ui green button">
+        <i class="icons">
+          <i class="ticket icon"></i>
+          <i class="inverted corner add icon"></i>
+        </i>
+        Add Ticket Type
+      </div>
       {{-- Add User Ticket Modal --}}
       @component('admin.partial._modal', [
           'id' => 'add-ticket-type',
@@ -74,7 +70,7 @@
                   No
                 @endif
               </td>
-              <td><a href="{{ route('admin.ticket-types.edit', $ticketType) }}" class="ui mini basic icon button"><i class="edit icon"></i></a></td>
+              <td><a href="{{ route('admin.ticket-types.edit', $ticketType) }}" class="ui yellow icon button"><i class="edit icon"></i></a></td>
             </tr>
             @endforeach
           @else

@@ -16,7 +16,7 @@
       <a class="item" data-tab="organization-types"><i class="university icon"></i>Organizations</a>
       <a class="item" data-tab="ticket-types"><i class="ticket icon"></i>Tickets</a>
       <a class="item" data-tab="payment-methods"><i class="money icon"></i>Payments</a>
-      <a class="item" data-tab="event-types"><i class="calendar icon"></i>Events</a>
+      <a class="item" data-tab="event-types"><i class="calendar alternate outline icon"></i>Events</a>
       <a class="item" data-tab="user-roles"><i class="users icon"></i>Users</a>
       <a class="item" data-tab="member-types"><i class="address card outline icon"></i>Membership</a>
       <a class="item" data-tab="bulletin"><i class="comments outline icon"></i>Bulletin</a>

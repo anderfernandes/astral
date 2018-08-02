@@ -8,6 +8,10 @@
 
 @section('content')
 
-  @include('admin.member-types._form')
+  <div class="ui container">
+
+    @include('admin.member-types._form')
+
+  </div>
 
 @endsection

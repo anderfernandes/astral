@@ -17,10 +17,8 @@
   {{ csrf_field() }}
 
   <div class="field">
-    <div class="ui buttons">
-      <a href="{{ route('admin.organizations.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      <div class="ui positive right labeled submit icon button">Save <i class="save icon"></i></div>
-    </div>
+    <a href="{{ route('admin.settings.index') }}#user-roles" class="ui basic black button"><i class="left chevron icon"></i> Back</a>
+    <div class="ui positive right labeled submit icon button">Save <i class="save icon"></i></div>
   </div>
 
   <div class="three fields">

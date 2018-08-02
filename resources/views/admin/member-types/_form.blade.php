@@ -17,7 +17,7 @@
     <div class="field">
       <label for="price">Price</label>
       <div class="ui labeled input">
-        <div class="ui label"><i class="dollar sign icon" style="margin: 0 0 0 0"></i></div>
+        <div class="ui basic label">$</div>
         <input type="text" name="price" value="{{ $memberType->price ?? old('price') }}" placeholder="Price of the memebrship">
       </div>
     </div>
@@ -32,17 +32,15 @@
     <div class="field">
       <label for="secondary_price">Non-free Secondry Price</label>
       <div class="ui labeled input">
-        <div class="ui label"><i class="dollar sign icon" style="margin: 0 0 0 0"></i></div>
+        <div class="ui basic label">$</div>
         <input type="text" name="secondary_price" value="{{ $memberType->secondary_price ?? old('secondary_price') }}" placeholder="Price of non-free secondaries">
       </div>
     </div>
   </div>
   <div class="field">
-    <div class="ui buttons">
-      <a href="{{ route('admin.settings.index') }}#member-types" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      <div class="ui yellow right floated right labeled clear icon button">Start Over <i class="eraser icon"></i></div>
-      <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
-    </div>
+    <a href="{{ route('admin.settings.index') }}#member-types" class="ui black basic button"><i class="left chevron icon"></i> Back</a>
+    <div class="ui positive right labeled submit icon button">Save <i class="save icon"></i></div>
+    <div class="ui yellow right labeled clear icon button">Start Over <i class="eraser icon"></i></div>
   </div>
 </form>
 

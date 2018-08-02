@@ -3,7 +3,7 @@
     {{ method_field('PUT') }}
   @endif
   {{ csrf_field() }}
-  <div class="required two fields">
+  <div class="three fields">
     <div class="field">
       <label for="name">Product Type Name</label>
       <input type="text" name="name" value="{{ isSet($productType) ? $productType->name : old('name') }}" placeholder="Enter name of product type">
@@ -12,9 +12,17 @@
       <label for="description">Product Type Description</label>
       <input type="text" name="description" value="{{ isSet($productType) ? $productType->description : old('description') }}" placeholder="What is this product type for?">
     </div>
-  </div>
-  <div class="field">
-    <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
+    <div class="field">
+      <label for="">&nbsp;</label>
+      @isset($productType)
+      <a href="{{ route('admin.settings.index') }}#product-types" class="ui black basic button">
+        <i class="left chevron icon"></i> Back
+      </a>
+      @endisset
+      <div class="ui positive right labeled submit icon button">
+        Save <i class="save icon"></i>
+      </div>
+    </div>
   </div>
 </form>
 

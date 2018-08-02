@@ -2,23 +2,16 @@
 
 @section('title', 'Product Types')
 
-@section('subtitle', "Edit Product Type {$productType->name}")
+@section('subtitle', "Edit {$productType->name}")
 
 @section('icon', 'setting')
 
 @section('content')
 
-  <div class="ui dividing header">
-    <i class="icons">
-      <i class="box icon"></i>
-      <i class="add corner icon"></i>
-    </i>
-    <div class="content">
-      Edit Product Type
-      <div class="sub header">{{ $productType->name }}</div>
-    </div>
-  </div>
+  <div class="ui container">
 
-@include('admin.product-types._form')
+    @include('admin.product-types._form')
+
+  </div>
 
 @endsection

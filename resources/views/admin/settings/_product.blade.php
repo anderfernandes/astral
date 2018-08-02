@@ -7,6 +7,7 @@
       <tr>
         <th>Product Type and Description</th>
         <th>Created by</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -24,9 +25,13 @@
         <td>
           <i class="user circle icon"></i>{{ $productType->creator_id == 1 ? 'system' : $productType->creator->fullname }}
         </td>
+        <td>
+          <a href="{{ route('admin.product-types.edit', $productType) }}" class="ui tiny yellow icon button"><i class="edit icon"></i></a>
+        </td>
       </tr>
       <?php $productType = null ?>
       @endforeach
     </tbody>
   </table>
+
 </div>

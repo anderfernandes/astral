@@ -89,7 +89,7 @@
   @if (str_contains(Auth::user()->role->permissions['sales'], "C"))
   <div class="ui secondary dropdown button">
     <i class="ui icons">
-      <i class="film icon"></i>
+      <i class="dollar icon"></i>
       <i class="inverted corner add icon"></i>
     </i>
     New Sale

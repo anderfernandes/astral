@@ -2,7 +2,7 @@
   {!! Form::model($setting, ['route' => ['admin.settings.update', $setting], 'class' => 'ui form', 'id' => 'general', 'method' => 'PUT']) !!}
     <div class="field">
       <div class="ui buttons">
-        {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+        {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui green right labeled icon button']) !!}
       </div>
     </div>
     <div class="four fields">
@@ -22,7 +22,7 @@
         {!! Form::label('tax', 'Tax (%)') !!}
         <div class="ui right labeled input">
           {!! Form::number('tax', null, ['placeholder' => 'Tax %', 'step' => '0.01']) !!}
-          <div class="ui label">%</div>
+          <div class="ui basic label">%</div>
         </div>
       </div>
     </div>
@@ -48,7 +48,7 @@
       <div class="field">
         {!! Form::label('website', 'Website') !!}
         <div class="ui labeled input">
-          <div class="ui label">http://</div>
+          <div class="ui basic label">http://</div>
           {!! Form::text('website', null, ['placeholder' => 'Enter organization\'s website']) !!}
         </div>
       </div>
@@ -87,7 +87,7 @@
     </div>
     <div class="field">
       <div class="ui buttons">
-        {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui primary button']) !!}
+        {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui green right labeled icon button']) !!}
       </div>
     </div>
   {!! Form::close() !!}

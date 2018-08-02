@@ -64,7 +64,7 @@
 <div id="extra-dates"></div>
 @if (!isSet($event))
 <div class="field" style="height:60px; margin-bottom;14px">
-  <div class="ui button" id="add-another-date"><i class="plus icon"></i>Add Another Date</div>
+  <div class="ui black button" id="add-another-date"><i class="plus icon"></i>Add Another Date</div>
 </div>
 @endif
 <div class="required field">
@@ -75,10 +75,10 @@
   @if (Request::routeIs('admin.events.create') or Request::routeIs('admin.events.edit'))
   <div class="ui buttons">
     <a href="{{ route('admin.calendar.index') . '?type=events&view=agendaWeek' }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-    <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
+    <div class="ui positive right labeled submit icon button">Save <i class="save icon"></i></div>
   </div>
   @else
-    <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
+    <div class="ui positive right labeled submit icon button">Save <i class="save icon"></i></div>
   @endif
 </div>
 {!! Form::close() !!}

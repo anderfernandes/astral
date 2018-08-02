@@ -30,10 +30,9 @@
             {{ $announcement->end->format('l, F j, Y \a\t g:i A') }}
           </td>
           <td>
-            <div class="ui label">
+            <div class="ui black label">
             {{ $announcement->end->isPast() ? "expired" : null }}
-            {{ $announcement->end->isFuture() ? "pending" : null }}
-            {{ $announcement->end == today() ? "active" : null }}
+            {{ $announcement->end->isFuture() ? "active" : null }}
             </div>
           </td>
           <td>
