@@ -111,7 +111,7 @@ class EventController extends Controller
         // Log created event
         Log::info(Auth::user()->fullname . ' created Event #' . $event->id .' using admin');
 
-        return redirect()->to(route('admin.calendar.events') . '?date=' . $date . '&view=agendaDay');
+        return redirect()->to(route('admin.calendar.index') . '?type=events&date=' . $date . '&view=agendaDay');
 
     }
 
@@ -204,7 +204,7 @@ class EventController extends Controller
       // Log edited event
       Log::info(Auth::user()->fullname . ' edited Event #' . $event->id .' using admin');
 
-      return redirect()->to(route('admin.calendar.events') . '?date=' . $date . '&view=agendaDay');
+      return redirect()->to(route('admin.calendar.index') . '?type=events&date=' . $date . '&view=agendaDay');
     }
 
     /**

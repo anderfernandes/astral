@@ -11,7 +11,7 @@ class CalendarController extends Controller
 {
     public function index(Request $request) {
       $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
-      $shows->prepend('No Show', 0);
+      $shows->prepend('No Show', 1);
       $eventTypes = EventType::where('id', '<>', 1)->orderBy('name', 'asc')->pluck('name', 'id');
 
       return view('admin.calendar.index', compact('shows'), compact('eventTypes'))->withRequest($request);
@@ -19,7 +19,7 @@ class CalendarController extends Controller
     //
     public function events(Request $request) {
       $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
-      $shows->prepend('No Show', 0);
+      $shows->prepend('No Show', 1);
       $eventTypes = EventType::where('id', '<>', 1)->orderBy('name', 'asc')->pluck('name', 'id');
 
       return view('admin.calendar.events', compact('shows'), compact('eventTypes'))->withRequest($request);
@@ -28,7 +28,7 @@ class CalendarController extends Controller
     //
     public function sales(Request $request) {
       $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
-      $shows->prepend('No Show', 0);
+      $shows->prepend('No Show', 1);
       $eventTypes = EventType::where('id', '<>', 1)->orderBy('name', 'asc')->pluck('name', 'id');
 
       return view('admin.calendar.sales', compact('shows'), compact('eventTypes'))->withRequest($request);

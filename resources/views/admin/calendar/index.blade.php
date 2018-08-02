@@ -495,6 +495,24 @@
 
         var dateFormat = response.allDay ? 'dddd, MMMM D, YYYY' : 'dddd, MMMM D, YYYY [at] h:mm A'
 
+        function getDescription() {
+
+          var description =
+          `
+          {{-- Show Description --}}
+          <h4 class="ui horizontal divider header">
+            <i class="film icon"></i> Show Description
+          </h4>
+          ${response.show.description}
+          <br><br>
+          Duration: ${response.show.duration} minutes
+          `
+
+          response.allDay ? description = `` : description = description
+
+          return description
+        }
+
         // Start this variable with a message box saying that there are no sales for this event
         var sales = ''
 
@@ -628,13 +646,7 @@
                       <i class="comment alternate outline icon"></i> Memos
                     </h4>
                     ${response.memos.length > 0 ? `<div class="ui comments">${memos}</div>` : memos}
-                    {{-- Show Description --}}
-                    <h4 class="ui horizontal divider header">
-                      <i class="film icon"></i> Show Description
-                    </h4>
-                    ${ (response.allDay || response.show.id == 1) ? `` : response.show.description }
-                    <br><br>
-                    Duration: ${response.show.duration} minutes
+                    ${getDescription()}
                   </div>
               </div>
             </div>
@@ -643,7 +655,7 @@
         `
         var deleteButton = ''
 
-        if (response.sales.length <= 0) {
+        if (response.tickets_sold == 0) {
           deleteButton =
           `
           <form action="/admin/events/${response.id}" method="POST" style="display:contents">

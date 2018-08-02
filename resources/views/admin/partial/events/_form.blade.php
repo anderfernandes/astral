@@ -73,10 +73,10 @@
 </div>
 <div class="field">
   @if (Request::routeIs('admin.events.create') or Request::routeIs('admin.events.edit'))
-  <div class="ui buttons">
-    <a href="{{ route('admin.calendar.index') . '?type=events&view=agendaWeek' }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
+    <a href="{{ route('admin.calendar.index') . '?type=events&view=agendaWeek' }}" class="ui black basic button">
+      <i class="left chevron icon"></i> Back
+    </a>
     <div class="ui positive right labeled submit icon button">Save <i class="save icon"></i></div>
-  </div>
   @else
     <div class="ui positive right labeled submit icon button">Save <i class="save icon"></i></div>
   @endif
