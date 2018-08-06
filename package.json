@@ -22,7 +22,7 @@
         "lodash": "^4.17.10",
         "semantic-ui": "^2.3.3",
         "simplemde": "^1.11.2",
-        "vue": "^2.5.7"
+        "vue": "^2.5.17"
     },
     "dependencies": {
         "immutability-helper": "^2.7.1",

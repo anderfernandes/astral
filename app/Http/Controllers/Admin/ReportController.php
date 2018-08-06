@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
-use App\{ Event, Sale, Ticket, Payment, PaymentMethod, User, Show };
+use App\{ Event, Sale, Ticket, Payment, PaymentMethod, User, Show, Product, ProductType };
 use App\{ TicketType, Member, Organization, EventType, OrganizationType };
 use Jenssegers\Date\Date;
 
@@ -31,13 +31,18 @@ class ReportController extends Controller
         $event_types->prepend('All Event Types', 0);
         $ticket_types = TicketType::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
         $ticket_types->prepend('All Ticket Types', 0);
+        $products = Product::orderBy('name', 'asc')->pluck('name', 'id')->prepend('All Products', 0);
+        $productTypes = ProductType::orderBy('name', 'asc')->pluck('name', 'id')->prepend('All Product Types', 0);
+
         return view('admin.reports.index')
                 ->withUsers($users)
                 ->withOrganizations($organizations)
                 ->with('organization_types', $organization_types)
-                ->with(['ticket_types' => $ticket_types])
-                ->with(['event_types' => $event_types])
-                ->withShows($shows);
+                ->with('ticket_types'      , $ticket_types)
+                ->with('event_types'      , $event_types)
+                ->with('shows'            , $shows)
+                ->with('products'         , $products)
+                ->with('productTypes'     , $productTypes);
     }
 
     /**
@@ -535,6 +540,36 @@ class ReportController extends Controller
                                                              ->withEvents($events)
                                                              ->with('ticket_type', $ticket_type);
         }
+      }
+    }
+
+    public function product(Request $request)
+    {
+      $start = Date::createFromTimestamp($request->start)->toDateTimeString();
+      $end = Date::createFromTimestamp($request->end)->toDateTimeString();
+
+      if ($request->data == '0')
+      {
+        if ($request->type == 'products')
+        {
+          $products = Product::orderBy('name', 'asc')->get();
+          return view('admin.reports.product.products')->withProducts($products)
+                                                       ->withStart($start)
+                                                       ->withEnd($end);
+        }
+      }
+
+      else
+      {
+
+        if ($request->type == 'products')
+        {
+          $product = Product::find($request->data);
+          return view('admin.reports.product.product')->withProduct($product)
+                                                       ->withStart($start)
+                                                       ->withEnd($end);
+        }
+
       }
     }
 }

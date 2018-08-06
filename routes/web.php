@@ -54,6 +54,7 @@ Route::group(
   Route::get('reports/overall', 'ReportController@overall')->name('reports.overall');
   Route::get('reports', 'ReportController@index')->name('reports.index');
   Route::get('reports/attendance', 'ReportController@attendance')->name('reports.attendance');
+  Route::get('reports/product', 'ReportController@product')->name('reports.product');
   // Sales Resource
   //Route::resource('sales', 'SaleController', ['except' => ['create']]);
   Route::resource('sales', 'SaleController');

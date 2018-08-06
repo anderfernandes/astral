@@ -82,24 +82,30 @@ function getAttendanceByType($ticketTypeID) {
     @if (str_contains(Auth::user()->role->permissions['dashboard'], "R"))
     {{-- Calendar --}}
     <div class="ui raised segment">
-      <div class="ui dividing header">
-        <i class="calendar alternate icon"></i>
-        <div class="content">
-          Calendar
-          <div class="sub header" id="calendar-title"></div>
+      <div class="ui two column grid">
+        <div class="column">
+          <div class="ui dividing header">
+            <i class="calendar alternate icon"></i>
+            <div class="content">
+              Calendar
+              <div class="sub header" id="calendar-title"></div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="ui black icon buttons" style="margin-bottom:0.5rem">
-        <div onclick="$('#calendars').fullCalendar('prev'); setTitle()" class="ui button"><i class="left chevron icon"></i></div>
-        <div onclick="$('#calendars').fullCalendar('today'); setTitle()" class="ui button"><i class="checked calendar icon"></i></div>
-        <div onclick="$('#calendars').fullCalendar('next'); setTitle()" class="ui button"><i class="right chevron icon"></i></div>
-      </div>
-      <div class="ui secondary right floated dropdown labeled icon button">
-        <i class="calendar alternate outline icon"></i>
-        <span class="text">Sales</span>
-        <div class="menu">
-          <div onclick="toggleCalendar('events')" class="item">Events</div>
-          <div onclick="toggleCalendar('sales')" class="active item">Sales</div>
+        <div class="column">
+          <div class="ui secondary right floated dropdown labeled icon button">
+            <i class="calendar alternate outline icon"></i>
+            <span class="text">Sales</span>
+            <div class="menu">
+              <div onclick="toggleCalendar('events')" class="item">Events</div>
+              <div onclick="toggleCalendar('sales')" class="active item">Sales</div>
+            </div>
+          </div>
+          <div class="ui black right floated icon buttons" style="margin-bottom:0.5rem">
+            <div onclick="$('#calendars').fullCalendar('prev'); setTitle()" class="ui button"><i class="left chevron icon"></i></div>
+            <div onclick="$('#calendars').fullCalendar('today'); setTitle()" class="ui button"><i class="checked calendar icon"></i></div>
+            <div onclick="$('#calendars').fullCalendar('next'); setTitle()" class="ui button"><i class="right chevron icon"></i></div>
+          </div>
         </div>
       </div>
       <div id="calendars"></div>
@@ -167,6 +173,55 @@ function getAttendanceByType($ticketTypeID) {
     </div>
     @endif
 
+    <?php
+
+    $products = App\Product::where('inventory', true)->where('stock', '<=', 10)->get();
+
+    ?>
+
+    @if (str_contains(Auth::user()->role->permissions['products'], "CRUD"))
+    {{-- Products --}}
+    <div class="ui raised segment">
+      <div class="ui dividing header">
+        <i class="box icon"></i>
+        <div class="content">
+          Products
+          <div class="sub header">
+            Stock
+          </div>
+        </div>
+      </div>
+      <div class="ui list">
+        @if ($products->count() > 0)
+          @foreach ($products as $product)
+          <div class="item">
+            <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}" class="ui avatar image">
+            <div class="content">
+              <a href="{{ route('admin.products.edit', $product) }}" target="_blank" class="header">
+                {{ $product->name }}
+                <div class="ui red label" data-tooltip="Only {{ $product->stock }} in stock!" style="margin-right:0">
+                  <i class="box icon"></i>
+                  <div class="detail">{{ $product->stock }}</div>
+                </div>
+              </a>
+              <div class="description">{{ $product->description }}</div>
+            </div>
+          </div>
+          @endforeach
+        @else
+        <div class="ui info icon message">
+          <i class="info circle icon"></i>
+          <div class="content">
+            <div class="header">All products are on stock of 10 or more!</div>
+            All products are on stock! Keep it up!
+          </div>
+        </div>
+        @endif
+
+      </div>
+    </div>
+    @endif
+
   </div>
 
   <div class="eight wide computer sixteen wide mobile column">
@@ -185,10 +240,10 @@ function getAttendanceByType($ticketTypeID) {
       </div>
       <div class="ui two column grid">
         <div class="column">
-          <canvas height="300" id="attendanceChart"></canvas>
+          <canvas height="200" id="attendanceChart"></canvas>
         </div>
         <div class="column">
-          <canvas height="300" id="secondAttendanceChart"></canvas>
+          <canvas height="200" id="secondAttendanceChart"></canvas>
         </div>
       </div>
     </div>
