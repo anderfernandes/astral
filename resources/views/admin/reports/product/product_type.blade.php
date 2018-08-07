@@ -46,7 +46,7 @@
       $sold += $sale->products->where('type_id', $productType->id)->count();
 
       // Looping through the products in each sale within that date/time range
-      foreach ($sale->products->unique() as $product)
+      foreach ($sale->products->where('type_id', $productType->id)->unique() as $product)
       {
 
         $revenue += $product->price * $sale->products->where('type_id', $productType->id)->count();

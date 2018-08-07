@@ -74,12 +74,14 @@ class EventController extends Controller
           $event->show_id        = $request->show_id;
           $event->type_id        = $request->type_id;
 
-          // If the event is "all day", set it to start at the beginning of the
-          // day and end at the end of the day. If not, keep original datetimes
-          // If the event is "all day", set it to start at the beginning of the
-          // day and end at the end of the day. If not, keep original datetimes
-          $event->start          = $request->has('allday') ? $start->startOfDay()->toDateTimeString() : $start;
-          $event->end            = $request->has('allday') ? $start->endOfDay()->toDateTimeString()   : $end;
+          /**
+          * If the event is "all day", set it to start at the beginning of the
+          * day and end at the end of the day. If not, keep original datetimes
+          * If the event is "all day", set it to start at the beginning of the
+          * day and end at the end of the day. If not, keep original datetimes
+          **/
+          $event->start          = (bool)$request->allday ? $start->startOfDay()->toDateTimeString() : $start;
+          $event->end            = (bool)$request->allday ? $start->endOfDay()->toDateTimeString()   : $end;
 
           $event->seats          = $request->seats;
 
@@ -160,9 +162,6 @@ class EventController extends Controller
           'public'         => 'required',
       ]);
 
-      $start = new Date($request->dates[0]['start']);
-      $end   = new Date($request->dates[0]['end']);
-
       // Setting a Date object for start and end times of this even
 
       $start = new Date($request->dates[0]['start']);
@@ -173,8 +172,8 @@ class EventController extends Controller
 
       // If the event is "all day", set it to start at the beginning of the
       // day and end at the end of the day. If not, keep original datetimes
-      $event->start          = $request->has('allday') ? $start->startOfDay()->toDateTimeString() : $start;
-      $event->end            = $request->has('allday') ? $start->endOfDay()->toDateTimeString()   : $end;
+      $event->start          = (bool)$request->allday ? $start->startOfDay()                       : $start;
+      $event->end            = (bool)$request->allday ? $start->hour(23)->minute(59)->second(59)   : $end;
 
       $event->seats          = $request->seats;
 

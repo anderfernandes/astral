@@ -11,13 +11,11 @@
     </div>
   </div>
   <div class="field">
-    <label for=""></label>
-    <div class="ui basic segment" style="text-align: right">
-      <div class="ui toggle checkbox">
-        <input type="checkbox" tabindex="0" name="allday">
-        <label for="allday">All Day</label>
-      </div>
-    </div>
+    <label for="">All Day?</label>
+    <select name="allday" id="" class="ui dropdown">
+      <option value="0" default>No</option>
+      <option value="1">Yes</option>
+    </select>
   </div>
 </div>
 <div class="two required fields">
@@ -47,7 +45,8 @@
 </div>
 <div class="two fields">
   <div class="required field">
-    <label for="dates[0][start]"><span id="start-word">Start</span> Date and Time</label>
+    <label for="dates[0][start]">
+      <span class="start-word">Start</span> Date <span class="start-word">and Time</span></label>
     <div class="ui left icon input">
       <input placeholder="Event Date and Time" data-validate="start_dates" name="dates[0][start]" type="text" readonly="readonly">
       <i class="calendar icon"></i>
@@ -86,8 +85,8 @@
 <script>
 
   @if (isSet($event))
-    document.querySelector('[name="dates[0][start]"]').value = moment("{{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}", 'dddd, MMMM D, YYYY h:mm A').format('dddd, MMMM D, YYYY h:mm A');
-    document.querySelector('[name="dates[0][end]"]').value = moment("{{ Date::parse($event->end)->format('l, F j, Y \a\t g:i A') }}", 'dddd, MMMM D, YYYY h:mm A').format('dddd, MMMM D, YYYY h:mm A');
+    document.querySelector('[name="dates[0][start]"]').value = moment("{{ $event->start->format('l, F j, Y \a\t g:i A') }}", 'dddd, MMMM D, YYYY h:mm A').format('dddd, MMMM D, YYYY h:mm A');
+    document.querySelector('[name="dates[0][end]"]').value = moment("{{ $event->end->format('l, F j, Y \a\t g:i A') }}", 'dddd, MMMM D, YYYY h:mm A').format('dddd, MMMM D, YYYY h:mm A');
     $('[name="dates[0][start]"]').flatpickr({enableTime:true, @if (str_contains(Auth::user()->role->permissions['calendar'], "CRUD")) minDate: 'today', @endif dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15});
     $('[name="dates[0][end]"]').flatpickr({enableTime:true, @if (str_contains(Auth::user()->role->permissions['calendar'], "CRUD")) minDate: 'today', @endif dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15});
   @else
@@ -151,11 +150,11 @@
 $('[name="allday"]').change(function() {
   $('#add-another-date').transition('fade')
   $('#end-datetime').transition('fade')
-  $('#start-word').transition('fade')
+  $('.start-word').transition('fade')
   //$('form').form('clear')
-  if ($(this).prop('checked')) {
+  if (this.value == 1) {
     $('[name="dates[0][start]"]').flatpickr({enableTime: false, @if (str_contains(Auth::user()->role->permissions['calendar'], "CRUD")) minDate: 'today', @endif dateFormat: 'l, F j, Y', defaultDate: '{{ isSet($event->start) ? Date::parse($event->start)->format('l, F j, Y') : null }}'});
-    $('[name="dates[0][end]"]').flatpickr({enableTime: false, @if (str_contains(Auth::user()->role->permissions['calendar'], "CRUD")) minDate: 'today', @endif dateFormat: 'l, F j, Y', defaultDate: ''});
+    $('[name="dates[0][end]"]').flatpickr({enableTime: false, @if (str_contains(Auth::user()->role->permissions['calendar'], "CRUD")) minDate: 'today', @endif dateFormat: 'l, F j, Y', defaultDate: '{{ isSet($event->end) ? Date::parse($event->start)->format('l, F j, Y') : null }}'});
   } else {
     $('[name="dates[0][start]"]').flatpickr({enableTime:true, @if (str_contains(Auth::user()->role->permissions['calendar'], "CRUD")) minDate: 'today', @endif dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15, defaultDate: ''});
     $('[name="dates[0][end]"]').flatpickr({enableTime:true, @if (str_contains(Auth::user()->role->permissions['calendar'], "CRUD")) minDate: 'today', @endif dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15, defaultDate: ''});
@@ -164,7 +163,8 @@ $('[name="allday"]').change(function() {
 
 $('[name="show_id"]').change(function() {
 
-  if (this.value == 1) $('#title-field').transition('show')
+  if (this.value == 1) $('#title-field').transition('fade in')
+  else $('#title-field').transition('fade out')
 })
 
 {{-- Client side form validation --}}
@@ -223,8 +223,18 @@ $('form').form({
   }
 })
 
+{{-- Making sure that validation is not required for the end date fields --}}
+$('[name="allday"]').change(function() {
+  if (this.value == 1) {
+    $('form').form('remove fields', 'end_dates')
+  } else {
+    $('form').form('add rule', 'end_dates', ['empty'])
+  }
+})
+
 @isset($event)
-  $('.ui.checkbox').checkbox('{{ Date::parse($event->start)->isStartOfDay() && Date::parse($event->end)->isEndOfDay() ? "check" : "uncheck" }}')
+  $('[name="allday"]').dropdown('set value', "{{ $event->start->isStartOfDay() && $event->end->isEndOfDay() ? 1 : 0 }}")
+  $('#title-field').transition('fade in')
 @endif
 
 </script>

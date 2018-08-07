@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    /**
+     * These variables will be mutated to dates
+     * @var Carbon\Carbon
+     */
+    protected $dates = ['created_at', 'updated_at', 'start', 'end'];
+
     public function show()
     {
       return $this->belongsTo('App\Show');
