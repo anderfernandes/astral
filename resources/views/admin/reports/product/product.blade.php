@@ -16,6 +16,7 @@
   </style>
 
   <?php
+    $tc = 0;
     $totalProducts = 0;
     $totalCost = 0;
   ?>
@@ -37,6 +38,8 @@
   <h4 class="ui header">
     {{ Date::now()->format('l, F j, Y \a\t g:i A') }}
   </h4>
+
+  <div class="ui horizontal divider header">Overview</div>
 
   <div class="ui items">
     <div class="item">
@@ -70,6 +73,25 @@
     </div>
   </div>
 
+  <div class="ui mini statistics">
+    <div class="statistic">
+      <div class="value">{{ $product->sales->where('created_at', '>=', $start)->where('created_at', '<=', $end)->count() }}</div>
+      <div class="label">Sold</div>
+    </div>
+    <?php
+      foreach($product->sales->where('created_at', '>=', $start)->where('created_at', '<=', $end)->unique() as $sale)
+      {
+        $tc += $sale->products->where('id', $product->id)->count() * $product->price;
+      }
+    ?>
+    <div class="statistic">
+      <div class="value">$ {{ number_format($tc, 2, '.', ',') }}</div>
+      <div class="label">Revenue</div>
+    </div>
+  </div>
+
+  <div class="ui horizontal divider header">Details</div>
+
   <table class="ui table">
     <thead>
       <tr>
@@ -92,15 +114,17 @@
           <td><i class="user circle icon"></i> {{ $sale->creator->firstname }}</td>
           <td>{{ $sale->products->where('id', $product->id)->count() }}</td>
           <td>
-            $ {{ number_format($sale->products->where('id', $product->id)->count() * $product->price, 2, '.', ',') }}
-            ($ {{ $sale->total }})
+            <div class="ui tiny header">
+              $ {{ number_format($sale->products->where('id', $product->id)->count() * $product->price, 2, '.', ',') }}
+              <div class="sub header">($ {{ $sale->total }})</div>
+            </div>
           </td>
         </tr>
       @endforeach
     </tbody>
     <tfoot>
       <tr>
-        <th colspan="3"></th>
+        <th colspan="3" class="right aligned"><strong>Totals:</strong></th>
         <th>
           {{ $totalProducts }}
         </th>

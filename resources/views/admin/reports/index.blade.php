@@ -401,7 +401,7 @@
             </div>
             <div class="field">
               <div class="ui checkbox">
-                {!! Form::checkbox('charts', 0, false, ['id' => 'products_charts', 'disabled' => true]) !!}
+                {!! Form::checkbox('charts', 0, false, ['id' => 'product_type_charts', 'disabled' => true]) !!}
                 <label for="product_type_charts">Show charts</label>
               </div>
             </div>

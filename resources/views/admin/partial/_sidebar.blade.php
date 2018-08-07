@@ -34,14 +34,6 @@
   {{-- Products --}}
   <div class="ui dropdown item" onclick="location.href='{{ route('admin.products.index') }}'">
     <i class="large box icon"></i> Products
-    <div class="menu">
-      <a class="item {{ Request::routeIs('admin.products.index') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
-        <i class="large box icon"></i> All Products
-      </a>
-      <a class="item {{ Request::routeIs('admin.products.create') ? 'active' : '' }}" href="{{ route('admin.products.create') }}">
-        <i class="add icon"></i> Add Product
-      </a>
-    </div>
   </div>
   @endif
 

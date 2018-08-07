@@ -14,4 +14,9 @@ class ProductType extends Model
     {
       return $this->belongsTo('App\User');
     }
+
+    public function products()
+    {
+      return $this->hasMany('App\Product', 'type_id');
+    }
 }

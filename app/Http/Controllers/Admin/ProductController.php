@@ -82,7 +82,7 @@ class ProductController extends Controller
         $product->creator_id  = Auth::user()->id;
         $product->inventory   = (bool)$request->inventory;
 
-        $product->stock = $product->inventory ? (int)$request->stock : 0;
+        $product->stock = (bool)$product->inventory ? (int)$request->stock : 0;
 
         $product->cover = $request->cover == null ? '/default.png' : $request->file('cover')->store('products');
 
@@ -141,7 +141,7 @@ class ProductController extends Controller
         $product->type_id     = $request->type_id;
         $product->inventory   = (bool)$request->inventory;
 
-        $product->stock = $product->inventory ? (int)$request->stock : 0;
+        $product->stock = (bool)$product->inventory ? (int)$request->stock : 0;
 
         // Delete previous uploaded file and store new one
         if ($request->cover == null)

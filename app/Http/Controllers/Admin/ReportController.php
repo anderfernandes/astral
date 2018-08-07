@@ -550,24 +550,31 @@ class ReportController extends Controller
 
       if ($request->data == '0')
       {
-        if ($request->type == 'products')
-        {
+
           $products = Product::orderBy('name', 'asc')->get();
           return view('admin.reports.product.products')->withProducts($products)
                                                        ->withStart($start)
                                                        ->withEnd($end);
-        }
+
       }
 
       else
       {
-
+        // Product
         if ($request->type == 'products')
         {
           $product = Product::find($request->data);
           return view('admin.reports.product.product')->withProduct($product)
-                                                       ->withStart($start)
-                                                       ->withEnd($end);
+                                                      ->withStart($start)
+                                                      ->withEnd($end);
+        }
+        // Product Types
+        else
+        {
+          $productType = ProductType::find($request->data);
+          return view('admin.reports.product.product_type')->withProductType($productType)
+                                                           ->withStart($start)
+                                                           ->withEnd($end);
         }
 
       }

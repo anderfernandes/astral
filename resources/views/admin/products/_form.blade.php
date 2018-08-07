@@ -44,8 +44,8 @@
       <div class="required field">
         <label for="inventory">Track Inventory?</label>
         <select class="ui dropdown" name="inventory" id="inventory" value="{{ isSet($product) ? $product->inventory : old('inventory') }}">
-          <option value="false">No</option>
-          <option value="true">Yes</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
         </select>
       </div>
       <div class="disabled field" id="current-stock">
