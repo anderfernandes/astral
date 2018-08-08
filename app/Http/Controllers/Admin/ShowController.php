@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Session;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\{ Auth, Log, Storage };
 
 class ShowController extends Controller
 {
@@ -74,6 +73,7 @@ class ShowController extends Controller
           'description' => 'required',
           'type'        => 'required',
           'duration'    => 'required|integer',
+          'cover'       => 'image',
         ]);
 
         $show = new Show;
@@ -83,16 +83,15 @@ class ShowController extends Controller
         $show->type        = $request->type;
         $show->duration    = $request->duration;
 
-        if ($request->cover == "")
-          $show->cover = "/default.png";
-        else
-          $show->cover       = $request->cover;
+        $show->cover = $request->cover == null ? '/default.png' : $request->cover->store('shows', 'public');
 
         $show->creator_id  = Auth::user()->id;
 
         $show->save();
 
-        Session::flash('success', "The <strong>{$show->type}</strong> show <strong>{$show->name}</strong> has been added successfully!");
+        Session::flash('success',
+          "The <strong>{$show->type}</strong> show <strong>{$show->name}</strong> has been added successfully!"
+        );
 
         // Log created event
         Log::info(Auth::user()->fullname . ' created Show ' . $show->name .' using admin');
@@ -144,10 +143,16 @@ class ShowController extends Controller
       $show->type        = $request->input('type');
       $show->duration    = $request->input('duration');
 
-      if ($request->cover == "")
-        $show->cover = "/default.png";
+      // Delete previous uploaded file and store new one
+      if ($request->cover == null)
+      {
+        $show->cover = '/default.png';
+      }
       else
-        $show->cover       = $request->cover;
+      {
+        Storage::disk('public')->delete($show->cover);
+        $show->cover = $request->cover->store('shows', 'public');
+      }
 
       $show->save();
 

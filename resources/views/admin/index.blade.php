@@ -12,7 +12,7 @@
 
 <style>
   .pusher {
-    background: linear-gradient(rgba(253,254,255,1), rgba(253,254,255,0.5)), url('{{ App\Setting::find(1)->cover }}') !important;
+    background: linear-gradient(rgba(253,254,255,1), rgba(253,254,255,0.5)), url('{{ $cover == '/cover.jpg' ? $cover : Storage::url($cover) }}') !important;
     background-size: cover !important;
   }
 
@@ -331,7 +331,7 @@ function getAttendanceByType($ticketTypeID) {
                   <div class="ui red label"><i class="info circle icon"></i> important</div>
                 @endif
               </div>
-              <div class="description"><i class="calendar outline alternate icon"></i>{{ Date::parse($post->created_at)->ago() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
+              <div class="description"><i class="calendar outline alternate icon"></i>{{ $post->created_at->diffForHumans() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
             </div>
           </div>
         @endforeach

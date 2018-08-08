@@ -1,5 +1,5 @@
 <div class="ui tab segment active" data-tab="general">
-  {!! Form::model($setting, ['route' => ['admin.settings.update', $setting], 'class' => 'ui form', 'id' => 'general', 'method' => 'PUT']) !!}
+  {!! Form::model($setting, ['route' => ['admin.settings.update', $setting], 'class' => 'ui form', 'id' => 'general', 'method' => 'PUT', 'enctype' => 'multipart/form-data']) !!}
     <div class="field">
       <div class="ui buttons">
         {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui green right labeled icon button']) !!}
@@ -55,22 +55,38 @@
     </div>
     <div class="two fields">
       <div class="field">
-        {!! Form::label('logo', 'Logo (URL)') !!}
-        {!! Form::text('logo', null, ['placeholder' => 'URL to a PNG or JPEG']) !!}
-        <br /><br />
+        <label for="cover">Logo</label>
+        <div class="ui action input">
+          <input type="text" id="logo-upload" readonly placeholder="Upload a logo">
+          <input type="file" name="logo" accept=".jpg,.jpeg,.png" style="display:none !important">
+          <div class="ui black logo upload button">
+            Choose Logo...
+          </div>
+        </div>
       </div>
       <div class="field">
-        {!! Form::label('cover', 'Cover (URL)') !!}
-        {!! Form::text('cover', null, ['placeholder' => 'URL to a PNG or JPEG']) !!}
-        <br /><br />
+        <div class="field">
+          <label for="cover">Cover</label>
+          <div class="ui action input">
+            <input type="text" id="cover-upload" readonly placeholder="Upload a wallpaper sized image">
+            <input type="file" name="cover" accept=".jpg,.jpeg,.png" style="display:none !important">
+            <div class="ui black cover upload button">
+              Choose Cover...
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="ui two column grid">
       <div class="column">
-        <div class="ui basic segment"><img src="{{ '/'.App\Setting::find(1)->logo }}" alt="" class="ui small image"></div>
+        <div class="ui basic segment">
+          <img src="{{ $setting->logo == '/logo.png' ? $setting->logo : Storage::url($setting->logo) }}" class="ui small centered image">
+        </div>
       </div>
       <div class="column">
-        <div class="ui basic segment"><img src="{{ '/'.App\Setting::find(1)->cover }}" alt="" class="ui medium image"></div>
+        <div class="ui basic segment">
+          <img src="{{ $setting->cover == '/cover.jpg' ? $setting->cover : Storage::url($setting->cover) }}" class="ui small centered image">
+        </div>
       </div>
     </div>
     <div class="field">
@@ -92,3 +108,25 @@
     </div>
   {!! Form::close() !!}
 </div>
+
+<script>
+{{-- Logo --}}
+$('#logo-upload, .ui.black.logo.upload.button').on('click', function(e) {
+  $('input:file[name="logo"]', $(e.target).parents()).click()
+})
+
+$('[name="logo"]').on('change', function(e) {
+  var name = e.target.files[0].name
+  $('input:text#logo-upload', $(e.target).parent()).val(name)
+})
+
+{{-- Cover --}}
+$('#cover-upload, .ui.black.cover.upload.button').on('click', function(e) {
+  $('input:file[name="cover"]', $(e.target).parents()).click()
+})
+
+$('[name="cover"]').on('change', function(e) {
+  var name = e.target.files[0].name
+  $('input:text#cover-upload', $(e.target).parent()).val(name)
+})
+</script>

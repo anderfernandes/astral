@@ -7,19 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Session;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{ Auth, Storage };
 
-use App\Organization;
-use App\OrganizationType;
-use App\Role;
-use App\TicketType;
-use App\PaymentMethod;
-use App\EventType;
-use App\MemberType;
-use App\Category;
-use App\ProductType;
-use App\Grade;
-use App\Announcement;
+use App\{ Organization, OrganizationType, Role, TicketType, PaymentMethod };
+use App\{ EventType, MemberType, Category, ProductType, Grade, Announcement };
 
 class SettingController extends Controller
 {
@@ -247,6 +238,17 @@ class SettingController extends Controller
       $setting->membership_text      = $request->membership_text;
       $setting->confirmation_text    = $request->confirmation_text;
       $setting->invoice_text         = $request->invoice_text;
+
+      if ($request->logo != null)
+      {
+        Storage::disk('public')->delete($setting->logo);
+        $setting->cover = $request->logo->store('settings', 'public');
+      }
+      if ($request->cover != null)
+      {
+        Storage::disk('public')->delete($setting->cover);
+        $setting->cover = $request->cover->store('settings', 'public');
+      }
 
       $setting->save();
 

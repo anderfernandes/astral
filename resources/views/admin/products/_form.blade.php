@@ -33,7 +33,7 @@
         <label for="cover">Cover</label>
         <div class="ui action input">
           <input type="text" readonly placeholder="Upload an image of the product">
-          <input type="file" name="cover" style="display:none !important">
+          <input type="file" name="cover" accept=".jpg,.jpeg,.png" style="display:none !important">
           <div class="ui black button">
             Choose Image...
           </div>

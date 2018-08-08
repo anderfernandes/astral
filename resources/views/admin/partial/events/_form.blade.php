@@ -234,7 +234,9 @@ $('[name="allday"]').change(function() {
 
 @isset($event)
   $('[name="allday"]').dropdown('set value', "{{ $event->start->isStartOfDay() && $event->end->isEndOfDay() ? 1 : 0 }}")
-  $('#title-field').transition('fade in')
+  @if ($event->allday)
+    $('#title-field').transition('fade in')
+  @endif
 @endif
 
 </script>

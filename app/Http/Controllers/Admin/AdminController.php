@@ -7,14 +7,16 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\{ Event, EventType, Show, Announcement };
+use App\{ Event, EventType, Show, Announcement, Setting };
 
 class AdminController extends Controller
 {
     public function index()
     {
       $announcements = Announcement::where('end', '>=', today()->toDateTimeString())->get();
-      return view('admin.index')->withAnnouncements($announcements);
+      $cover = Setting::find(1)->cover;
+      return view('admin.index')->withAnnouncements($announcements)
+                                ->withCover($cover);
     }
 
     public function calendar(Request $request)

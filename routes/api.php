@@ -2,16 +2,8 @@
 
 use Illuminate\Http\Request;
 
-use App\Event;
-use App\Setting;
-use App\User;
-use App\PaymentMethod;
-use App\Sale;
-use App\Organization;
-use App\EventType;
-use App\MemberType;
-
-use Illuminate\Support\Facades\Auth;
+use App\{ Event, Setting, User, PaymentMethod, Sale, Organization, EventType, MemberType };
+use Illuminate\Support\Facades\{ Auth, Storage };
 
 /*
 |--------------------------------------------------------------------------
@@ -83,7 +75,7 @@ Route::get('calendar/sales', function(Request $request) {
         'show'     => [
           'name'  => $event->show->name,
           'type'  => $event->show->type,
-          'cover' => $event->show->cover
+          'cover' => substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover),
         ],
         'color' => $sale->status == 'canceled' ? 'red' : $event->type->color,
         'backgroundColor' => $sale->status == 'canceled' ? 'red' : $event->type->color,
@@ -160,7 +152,7 @@ Route::get('calendar-events', function() {
           'name'     => $event->show->name,
           'type'     => $event->show->type,
           'duration' => $event->show->duration,
-          'cover'    => $event->show->cover,
+          'cover'    => substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover),
         ],
       ]);
     }
@@ -307,7 +299,7 @@ Route::get('event/{event}', function(Event $event) {
       'description' => $event->show->description,
       'type'        => $event->show->type,
       'duration'    => $event->show->duration,
-      'cover'       => $event->show->cover
+      'cover'       => substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover),
     ],
     'sales'   => $salesArray,
     'tickets_sold' => $ticketsSold,
@@ -353,7 +345,7 @@ Route::get('/calendar/events', function(Request $request) {
       'show'     => [
         'name'  => $event->show->name,
         'type'  => $event->show->type,
-        'cover' => $event->show->cover
+        'cover' => substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover),
         ],
       'allowedTickets' => $event->type->allowedTickets,
       'date'            => $start,
@@ -396,7 +388,7 @@ Route::get('events/{start}/{end}', function($start, $end) {
       'show'     => [
         'name'  => $event->show->name,
         'type'  => $event->show->type,
-        'cover' => $event->show->cover,
+        'cover' => substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover),
         ],
       'allowedTickets' => $event->type->allowedTickets->where('in_cashier', true),
       'date' => $start,
@@ -510,7 +502,7 @@ Route::get('sale/{sale}', function(Sale $sale) {
       'show' => [
         'id' => $event->show->id,
         'name'  => $event->show->name,
-        'cover' => $event->show->cover,
+        'cover' => substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover),
       ],
       'start' => Date::parse($event->start)->toDateTimeString(),
       'end'   => Date::parse($event->end)->toDateTimeString(),

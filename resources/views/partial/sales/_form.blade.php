@@ -264,7 +264,7 @@
           <div class="ui black button" id="add-another-event">
             <i class="icons">
               <i class="calendar alternate icon"></i>
-              <i class="add corner icon"></i>
+              <i class="inverted add corner icon"></i>
             </i>
             Add Another Event
           </div>

@@ -60,11 +60,12 @@
             {{ $show->name }}
           </div>
           <div class="meta">
-            <div class="ui black label">{{ $show->type }}</div><div class="ui black label">{{ $show->duration }} minutes</div>
+            <div class="ui black label">{{ $show->type }}</div>
+            <div class="ui black label">{{ $show->duration }} minutes</div>
           </div>
         </div>
         <div href="{{ route('admin.shows.show', $show) }}" class="image">
-          <img src="{{ $show->cover }}">
+          <img src="{{ substr($show->cover, 0, 4) == 'http' ? $show->cover : Storage::url($show->cover) }}">
         </div>
       </div>
     @endforeach

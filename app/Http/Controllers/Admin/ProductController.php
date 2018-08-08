@@ -150,7 +150,7 @@ class ProductController extends Controller
         }
         else
         {
-          Storage::delete($product->cover);
+          Storage::disk('public')->delete($product->cover);
           $product->cover = $request->cover->store('products', 'public');
         }
 

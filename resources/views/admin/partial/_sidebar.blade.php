@@ -32,9 +32,9 @@
 
   @if(str_contains(Auth::user()->role->permissions['products'], "R"))
   {{-- Products --}}
-  <div class="ui dropdown item" onclick="location.href='{{ route('admin.products.index') }}'">
+  <a class="ui dropdown item" href="{{ route('admin.products.index') }}">
     <i class="large box icon"></i> Products
-  </div>
+  </a>
   @endif
 
   @if(str_contains(Auth::user()->role->permissions['calendar'], "R"))

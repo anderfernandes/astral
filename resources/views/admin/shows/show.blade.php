@@ -31,7 +31,8 @@
     <div class="ui items">
       <div class="item">
         <div class="ui rounded medium image">
-          <img src="{{ $show->cover }}" alt="">
+          {{-- This will make Astral always show the right show cover wheter a URL or local storaged  --}}
+          <img src="{{ substr($show->cover, 0, 4) == 'http' ? $show->cover : Storage::url($show->cover) }}">
         </div>
         <div class="content">
           <div class="ui huge header">{{ $show->name }}</div>
