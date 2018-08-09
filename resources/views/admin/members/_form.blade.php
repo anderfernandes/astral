@@ -1,186 +1,188 @@
 <form action="{{ isSet($member) ? route('admin.members.update', $member) : route('admin.members.store') }}" id="members" class="ui form" method="POST">
-  @isset($member)
-    {{ method_field('PUT') }}
-  @endisset
-  {{ csrf_field() }}
-<div class="ui two column grid">
-  <div class="column">
-    <div class="required @isset($member) disabled @endisset field">
-      <label for="user_id">Name</label>
-      <div class="ui search selection dropdown" id="name">
-        <input type="hidden" name="user_id">
-        <i class="dropdown icon"></i>
-        <div class="default text">Select a customer</div>
-        <div class="menu">
-          @if (isSet($member))
-            <div class="item" data-value="{{ $member->users->first()->id }}">
-              <i class="user circle icon"></i>{{ $member->users->first()->fullname }} (<em>{{ $member->users->first()->role->name }}</em>)
+  <div class="ui container">
+    @isset($member)
+      {{ method_field('PUT') }}
+    @endisset
+    {{ csrf_field() }}
+    <div class="ui two column grid">
+      <div class="column">
+        <div class="required @isset($member) disabled @endisset field">
+          <label for="user_id">Name</label>
+          <div class="ui search selection dropdown" id="name">
+            <input type="hidden" name="user_id">
+            <i class="dropdown icon"></i>
+            <div class="default text">Select a customer</div>
+            <div class="menu">
+              @if (isSet($member))
+                <div class="item" data-value="{{ $member->users->first()->id }}">
+                  <i class="user circle icon"></i>{{ $member->users->first()->fullname }} (<em>{{ $member->users->first()->role->name }}</em>)
+                </div>
+              @else
+                @foreach ($users as $user)
+                  <div class="item" data-value="{{ $user->id }}">
+                    <i class="user circle icon"></i>{{ $user->fullname }} (<em>{{ $user->role->name }}</em>)
+                  </div>
+                @endforeach
+              @endif
             </div>
-          @else
-            @foreach ($users as $user)
-              <div class="item" data-value="{{ $user->id }}">
-                <i class="user circle icon"></i>{{ $user->fullname }} (<em>{{ $user->role->name }}</em>)
+          </div>
+        </div>
+        <div class="required field">
+          <label for="member_type_id">Memebrship Type</label>
+          <div class="ui search selection dropdown" id="member_type_id">
+            <input type="hidden" name="member_type_id">
+            <i class="dropdown icon"></i>
+            <div class="default text">Select a membership type</div>
+            <div class="menu">
+              @foreach ($memberTypes as $memberType)
+                <div class="item" data-value="{{ $memberType->id }}">
+                  <i class="user circle icon"></i>{{ $memberType->name }} -
+                  <strong>$ {{ number_format($memberType->price, 2) }}</strong>
+                </div>
+              @endforeach
+            </div>
+          </div>
+        </div>
+        <div class="required two fields">
+          <div class="field">
+            <label for="start">Start Date</label>
+            <div class="ui left icon input">
+              <input type="text" name="start" id="start" placeholder="Membership starting date">
+              <i class="calendar icon"></i>
+            </div>
+          </div>
+          <div class="field">
+            <label for="start">End Date</label>
+            <div class="ui left icon input">
+              <input type="text" name="end" id="end" placeholder="Membership ending date">
+              <i class="calendar icon"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Payment Information --}}
+
+      <div class="column">
+        <div class="two fields">
+          <div class="field">
+            <label for="required tendered">Tendered</label>
+            <div class="ui labeled input">
+              <div class="ui basic label">$ </div>
+              <input type="text" id="tendered" name="tendered" value="{{ number_format(old('tendered') ?? 0, 2) }}">
+            </div>
+          </div>
+          <div class="field">
+            <label for="change_due">Change Due</label>
+            <div class="ui labeled input">
+              <div class="ui basic label">$ </div>
+              <input type="text" name="change_due" id="change_due" value="{{ number_format(old('change_due') ?? 0, 2) }}" placeholder="Change Due" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="two fields">
+          <div class="required field">
+            <label for="payment_method_id">Payment Method</label>
+            <div class="ui selection dropdown" id="payment_method">
+              <input type="hidden" id="payment_method_id" name="payment_method_id" value="{{ old('payment_method_id') }}">
+              <i class="dropdown icon"></i>
+              <div class="default text">Select Payment Method</div>
+              <div class="menu">
+                @foreach ($paymentMethods as $paymentMethod)
+                <div class="item" data-value="{{ $paymentMethod->id }}">
+                  <i class="{{ $paymentMethod->icon }} icon"></i> {{ $paymentMethod->name }}
+                </div>
+                @endforeach
               </div>
-            @endforeach
-          @endif
-        </div>
-      </div>
-    </div>
-    <div class="required field">
-      <label for="member_type_id">Memebrship Type</label>
-      <div class="ui search selection dropdown" id="member_type_id">
-        <input type="hidden" name="member_type_id">
-        <i class="dropdown icon"></i>
-        <div class="default text">Select a membership type</div>
-        <div class="menu">
-          @foreach ($memberTypes as $memberType)
-            <div class="item" data-value="{{ $memberType->id }}">
-              <i class="user circle icon"></i>{{ $memberType->name }} -
-              <strong>$ {{ number_format($memberType->price, 2) }}</strong>
             </div>
-          @endforeach
-        </div>
-      </div>
-    </div>
-    <div class="required two fields">
-      <div class="field">
-        <label for="start">Start Date</label>
-        <div class="ui left icon input">
-          <input type="text" name="start" id="start" placeholder="Membership starting date">
-          <i class="calendar icon"></i>
-        </div>
-      </div>
-      <div class="field">
-        <label for="start">End Date</label>
-        <div class="ui left icon input">
-          <input type="text" name="end" id="end" placeholder="Membership ending date">
-          <i class="calendar icon"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {{-- Payment Information --}}
-
-  <div class="column">
-    <div class="three fields">
-      <div class="required field">
-        <label for="payment_method_id">Payment Method</label>
-        <div class="ui selection dropdown" id="payment_method">
-          <input type="hidden" id="payment_method_id" name="payment_method_id" value="{{ old('payment_method_id') }}">
-          <i class="dropdown icon"></i>
-          <div class="default text">Select Payment Method</div>
-          <div class="menu">
-            @foreach ($paymentMethods as $paymentMethod)
-            <div class="item" data-value="{{ $paymentMethod->id }}">
-              <i class="{{ $paymentMethod->icon }} icon"></i> {{ $paymentMethod->name }}
-            </div>
-            @endforeach
+          </div>
+          <div class="field">
+            <label for="reference">Reference</label>
+            <input type="text" name="reference" id="reference" placeholder="Credit Card or Check reference" value="{{ old('reference') }}">
           </div>
         </div>
-      </div>
-      <div class="field">
-        <label for="required tendered">Tendered</label>
-        <div class="ui labeled input">
-          <div class="ui black label">$ </div>
-          <input type="text" id="tendered" name="tendered" value="{{ number_format(old('tendered') ?? 0, 2) }}">
+        <div class="field">
+          <label for="memo">Memo</label>
+          <input type="text" placeholder="Memo" value="{{ old('memo') }}">
         </div>
       </div>
-      <div class="field">
-        <label for="change_due">Change Due</label>
-        <div class="ui labeled input">
-          <div class="ui black label">$ </div>
-          <input type="text" name="change_due" id="change_due" value="{{ number_format(old('change_due') ?? 0, 2) }}" placeholder="Change Due" readonly>
-        </div>
-      </div>
+    </div>
+    @isset($member)
+    <div class="field">
+      <label for="secondaries">Current Secondaries</label>
+      @foreach ($member->users as $user)
+        @if ($loop->index != 0)
+          <div class="ui basic label">
+            <i class="user circle icon"></i>{{ $user->fullname }}
+          </div>
+        @endif
+      @endforeach
+    </div>
+    @endisset
+    <div class="field">
+      <label for="secondaries">Free Secondaries</label>
+      <select name="secondaries[]" id="secondaries" multiple="" class="ui dropdown">
+        <option value="">Select secondaries</option>
+      </select>
     </div>
     <div class="field">
-      <label for="reference">Reference</label>
-      <input type="text" name="reference" id="reference" placeholder="Credit Card or Check reference" value="{{ old('reference') }}">
+      <label for="paid_secondaries[]">Non-free Secondaries</label>
+      <select name="paid_secondaries[]" id="paid_secondaries" multiple="" class="ui disabled dropdown">
+        <option value="">Select secondaries</option>
+      </select>
     </div>
+    <br /><br />
     <div class="field">
-      <label for="memo">Memo</label>
-      <input type="text" placeholder="Memo" value="{{ old('memo') }}">
+      <a href="{{ route('admin.members.index') }}" class="ui basic black button"><i class="left chevron icon"></i> Back</a>
+      <div class="ui yellow right floated right labeled clear icon button">Start Over <i class="eraser icon"></i></div>
+      <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
     </div>
   </div>
-</div>
-@isset($member)
-<div class="field">
-  <label for="secondaries">Current Secondaries</label>
-  @foreach ($member->users as $user)
-    @if ($loop->index != 0)
-      <div class="ui black label">
-        <i class="user circle icon"></i>{{ $user->fullname }}
-      </div>
-    @endif
-  @endforeach
-</div>
-@endisset
-<div class="field">
-  <label for="secondaries">Free Secondaries</label>
-  <select name="secondaries[]" id="secondaries" multiple="" class="ui dropdown">
-    <option value="">Select secondaries</option>
-  </select>
-</div>
-<div class="field">
-  <label for="paid_secondaries[]">Non-free Secondaries</label>
-  <select name="paid_secondaries[]" id="paid_secondaries" multiple="" class="ui disabled dropdown">
-    <option value="">Select secondaries</option>
-  </select>
-</div>
-<br /><br />
-<div class="field">
-  <div class="ui buttons">
-    <a href="{{ route('admin.members.index') }}" class="ui black button"><i class="left chevron icon"></i> Back</a>
-    <div class="ui yellow right floated right labeled clear icon button">Start Over <i class="eraser icon"></i></div>
-    <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
-  </div>
-</div>
-<div class="ui grid">
-  <div class="ui sixteen wide column" style="padding: 0 0 0 0 !important">
-    <div class="ui bottom fixed sticky" style="width:100%">
-      <div class="ui inverted segment" style="border-radius: 0 !important">
-        <div class="five fields">
-          <div class="field">
-            <label for="subtotal">Subtotal</label>
-            <div class="ui inverted transparent left icon input">
-              <i class="dollar icon"></i>
-              <input type="text" name="subtotal" id="subtotal" value="{{ number_format(0, 2) }}" placeholder="Subtotal" readonly>
+  <div class="ui grid">
+    <div class="ui sixteen wide column" style="padding: 0 0 0 0 !important">
+      <div class="ui bottom fixed sticky" style="width:100%">
+        <div class="ui inverted segment" style="border-radius: 0 !important">
+          <div class="five fields">
+            <div class="field">
+              <label for="subtotal">Subtotal</label>
+              <div class="ui inverted transparent left icon input">
+                <i class="dollar icon"></i>
+                <input type="text" name="subtotal" id="subtotal" value="{{ number_format(0, 2) }}" placeholder="Subtotal" readonly>
+              </div>
             </div>
-          </div>
-          <div class="field">
-            <label for="tax">Tax ({{ App\Setting::find(1)->tax }}%)</label>
-            <div class="ui inverted transparent left icon input">
-              <i class="dollar icon"></i>
-              <input type="text" name="tax" id="tax" placeholder="Tax" value="{{ number_format(0, 2) }}" readonly>
+            <div class="field">
+              <label for="tax">Tax ({{ App\Setting::find(1)->tax }}%)</label>
+              <div class="ui inverted transparent left icon input">
+                <i class="dollar icon"></i>
+                <input type="text" name="tax" id="tax" placeholder="Tax" value="{{ number_format(0, 2) }}" readonly>
+              </div>
             </div>
-          </div>
-          <div class="field">
-            <label for="total">Total</label>
-            <div class="ui inverted transparent left icon input">
-              <i class="dollar icon"></i>
-              <input type="text" name="total" id="total" value="{{ number_format(0, 2) }}" placeholder="Total" readonly>
+            <div class="field">
+              <label for="total">Total</label>
+              <div class="ui inverted transparent left icon input">
+                <i class="dollar icon"></i>
+                <input type="text" name="total" id="total" value="{{ number_format(0, 2) }}" placeholder="Total" readonly>
+              </div>
             </div>
-          </div>
-          <div class="field">
-            <label for="paid">Paid</label>
-            <div class="ui inverted transparent left icon input">
-              <i class="dollar icon"></i>
-              <input type="text" id="paid" name="paid" value="{{ number_format(0, 2) }}" readonly>
+            <div class="field">
+              <label for="paid">Paid</label>
+              <div class="ui inverted transparent left icon input">
+                <i class="dollar icon"></i>
+                <input type="text" id="paid" name="paid" value="{{ number_format(0, 2) }}" readonly>
+              </div>
             </div>
-          </div>
-          <div class="field">
-            <label for="paid">Balance</label>
-            <div class="ui inverted transparent left icon input">
-              <i class="dollar icon"></i>
-              <input type="text" id="balance" name="balance" value="{{ number_format(0, 2) }}" readonly>
+            <div class="field">
+              <label for="paid">Balance</label>
+              <div class="ui inverted transparent left icon input">
+                <i class="dollar icon"></i>
+                <input type="text" id="balance" name="balance" value="{{ number_format(0, 2) }}" readonly>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </form>
 
 <script>
