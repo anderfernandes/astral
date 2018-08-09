@@ -62,9 +62,9 @@ class MemberController extends Controller
      */
     public function create()
     {
-        $users = User::all()->where('type', 'individual')->where('role_id', '!=', 5);
+        $users = User::all()->where('type', '!=', 'walk-up')->where('role_id', '!=', 5)->sortBy('name');
         $users = $users->mapWithKeys(function($item) {
-          return [$item['id'] => $item['firstname'] . ' ' . $item['lastname']];
+          return [$item['id'] => "{$item['firstname']} {$item['lastname']}"];
         });
 
         $memberTypes = MemberType::all()->where('id', '!=', 1);
