@@ -42,8 +42,8 @@
       </a>
     @endif
 
-    <a href="{{ route('admin.members.edit', $member) }}" class="ui black button">
-      <i class="refresh icon"></i> Renew Membership
+    <a href="{{ route('admin.members.edit', $member) }}" class="ui yellow button">
+      <i class="edit icon"></i> Edit/Renew Membership
     </a>
     <div class="ui dropdown black button">
       <i class="copy icon"></i> Documents
@@ -58,9 +58,6 @@
         <a href="{{ route('admin.members.receipt', $member) }}?format=pdf" target="_blank" class="item">
           <i class="file pdf icon"></i>Receipt
         </a>
-        <!--<a href="{{ route('admin.members.card', $member) }}?format=pdf" target="_blank" class="item">
-          <i class="file pdf icon"></i> Card
-        </a>-->
       </div>
     </div>
 

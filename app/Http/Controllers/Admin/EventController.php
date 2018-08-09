@@ -80,8 +80,8 @@ class EventController extends Controller
           * If the event is "all day", set it to start at the beginning of the
           * day and end at the end of the day. If not, keep original datetimes
           **/
-          $event->start          = (bool)$request->allday ? $start->startOfDay()->toDateTimeString() : $start;
-          $event->end            = (bool)$request->allday ? $start->endOfDay()->toDateTimeString()   : $end;
+          $event->start          = (bool)$request->allday ? $start->startOfDay() : $start;
+          $event->end            = (bool)$request->allday ? $start->endOfDay()->hour(23)->minute(59)->second(59)   : $end;
 
           $event->seats          = $request->seats;
 

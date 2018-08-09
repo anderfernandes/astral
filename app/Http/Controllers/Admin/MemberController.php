@@ -79,7 +79,6 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         $this->validate($request, [
           'user_id'           => 'required|integer',
           'member_type_id'    => 'required|integer',
@@ -133,8 +132,8 @@ class MemberController extends Controller
         $member = new Member([
           'member_type_id' => $request->member_type_id,
           'creator_id'     => Auth::user()->id,
-          'start'          => Date::parse($request->start)->startOfDay()->toDateTimeString(),
-          'end'            => Date::parse($request->end)->startOfDay()->toDateTimeString(),
+          'start'          => Date::parse($request->start)->startOfDay(),
+          'end'            => Date::parse($request->end)->hour(23)->minute(59)->second(59),
         ]);
 
         $member->save();
@@ -226,9 +225,6 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-
-      //dd($request->total - $request->paid);
-
       $this->validate($request, [
         'user_id'           => 'required|integer',
         'member_type_id'    => 'required|integer',
@@ -280,8 +276,8 @@ class MemberController extends Controller
 
       // Updating membership
       $member->member_type_id = $request->member_type_id;
-      $member->start          = Date::parse($request->start)->startOfDay()->toDateTimeString();
-      $member->end            = Date::parse($request->end)->startOfDay()->toDateTimeString();
+      $member->start          = Date::parse($request->start)->startOfDay();
+      $member->end            = Date::parse($request->end)->hour(23)->minute(59)->second(59);
 
       $member->save();
 
