@@ -6,7 +6,7 @@
 
   <style>
     .blue.card {
-      background: linear-gradient(rgba(255,255,255,1), rgba(255,255,255,0.5)), url('{{ asset(App\Setting::find(1)->cover) }}') !important;
+      background: linear-gradient(rgba(255,255,255,1), rgba(255,255,255,0.5)), url('{{ \App\Setting::find(1)->cover == '/cover.jpg' ? \App\Setting::find(1)->cover : Storage::url(\App\Setting::find(1)->cover) }}') !important;
       background-size: cover !important;
       width: 320px !important;
       height: 202px !important;
@@ -26,7 +26,7 @@
 
   <div class="ui blue card" style="margin:0 0 0 0">
       <div class="content">
-        <img src="/{{ App\Setting::find(1)->logo }}" alt="" class="left floated mini ui image">
+        <img src="{{ \App\Setting::find(1)->logo == '/logo.png' ? \App\Setting::find(1)->logo : Storage::url(\App\Setting::find(1)->logo) }}" alt="" class="left floated mini ui image">
         <div class="right floated meta"># {{ $member->id }}</div>
         <div class="header">{{ $member->users[$request->index]->fullname }}</div>
         <div class="meta">

@@ -74,13 +74,30 @@
             <div class="ui icon top left pointing dropdown secondary button">
               <i class="copy icon"></i>
               <div class="menu">
+                <div class="header">Sale Documents</div>
                 @if ($sale->events->count() > 0)
                   @if ($sale->status != "canceled")
-                    <a class="item" target="_blank" href="{{ route('admin.sales.confirmation', $sale) }}">Reservation Confirmation</a>
-                    <a class="item" target="_blank" href="{{ route('admin.sales.invoice', $sale) }}">Invoice</a>
-                    <a class="item" target="_blank" href="{{ route('admin.sales.receipt', $sale) }}">Receipt</a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.confirmation', $sale) }}">
+                      <i class="file icon"></i>
+                      Reservation Confirmation
+                    </a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.invoice', $sale) }}">
+                      <i class="file icon"></i>
+                      Invoice
+                    </a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.receipt', $sale) }}">
+                      <i class="file icon"></i>
+                      Receipt
+                    </a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.tickets', $sale) }}">
+                      <i class="ticket icon"></i>
+                      Tickets
+                    </a>
                   @else
-                    <a class="item" target="_blank" href="{{ route('admin.sales.cancelation', $sale) }}">Cancelation Receipt</a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.cancelation', $sale) }}">
+                      <i class="file icon"></i>
+                      Cancelation Receipt
+                    </a>
                   @endif
                 @else
                   <a class="item" href="{{ route('admin.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>

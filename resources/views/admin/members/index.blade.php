@@ -64,7 +64,7 @@
       @foreach($members as $member)
         <div class="card" onclick="window.location='{{ route('admin.members.show', $member) }}'">
           <div class="content">
-            <img src="/{{ App\Setting::find(1)->logo }}" alt="" class="left floated mini ui image">
+            <img src="{{ \App\Setting::find(1)->logo == '/logo.png' ? \App\Setting::find(1)->logo : Storage::url(\App\Setting::find(1)->logo) }}" alt="" class="left floated mini ui image">
             <div class="right floated meta"># {{ $member->id }}</div>
             <div class="header">{{ $member->users[0]->fullname }}</div>
             <div class="meta">

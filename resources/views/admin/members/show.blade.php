@@ -53,7 +53,7 @@
           <i class="file icon"></i>Receipt
         </a>
         <a href="{{ route('admin.members.card', $member) }}?index=0" target="_blank" class="item">
-          <i class="file icon"></i> Card
+          <i class="address card icon"></i> Card
         </a>
         <a href="{{ route('admin.members.receipt', $member) }}?format=pdf" target="_blank" class="item">
           <i class="file pdf icon"></i>Receipt

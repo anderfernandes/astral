@@ -13,7 +13,7 @@
     <i class="edit icon"></i> Edit Sale
   </a>
   <div class="ui black dropdown button">
-    <i class="copy icon"></i> Paperwork
+    <i class="copy icon"></i> Documents
     <i class="dropdown icon"></i>
     <div class="menu">
       <div class="header">Sale Documents</div>
@@ -26,11 +26,12 @@
           <a class="item" href="{{ route('admin.sales.confirmation', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Confirmation</a>
           <a class="item" href="{{ route('admin.sales.invoice', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Invoice</a>
           <a class="item" href="{{ route('admin.sales.receipt', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Receipt</a>
+          <a class="item" target="_blank" href="{{ route('admin.sales.tickets', $sale) }}"><i class="ticket icon"></i>Tickets</a>
           @else
           <a class="item" href="{{ route('admin.sales.cancelation', $sale) }}" target="_blank"><i class="file icon"></i> Cancelation Receipt</a>
           <a class="item" href="{{ route('admin.sales.cancelation', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Cancelation Receipt</a>
           @endif
-        
+
       @else
       <a class="item" href="{{ route('admin.members.receipt', $sale->customer->member) }}" target="_blank"><i class="pdf file icon"></i> Membership Receipt</a>
       @endif

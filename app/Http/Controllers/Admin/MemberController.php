@@ -63,7 +63,7 @@ class MemberController extends Controller
      */
     public function create()
     {
-        $users = User::all()->where('type', 'individual')->where('role_id', '!=', 5);
+        $users = User::all()->where('type','!=', 'walk-up')->where('role_id', '!=', 5);
         $memberTypes = MemberType::all()->where('id', '!=', 1);
         $paymentMethods = PaymentMethod::all();
         return view('admin.members.create')->withUsers($users)
@@ -79,6 +79,7 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         $this->validate($request, [
           'user_id'           => 'required|integer',
           'member_type_id'    => 'required|integer',

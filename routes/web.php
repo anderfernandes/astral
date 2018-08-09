@@ -65,7 +65,7 @@ Route::group(
   Route::get('sales/{sale}/receipt', 'SaleController@receipt')->name('sales.receipt');
   Route::get('sales/{sale}/cancelation', 'SaleController@cancelation')->name('sales.cancelation');
   Route::get('sales/{sale}/mail', 'SaleController@mail')->name('sales.mail');
-  Route::get('sales/{sale}/tickets', 'SaleController@tickets')->name('sale.tickets');
+  Route::get('sales/{sale}/tickets', 'SaleController@tickets')->name('sales.tickets');
   // Setting resource
   Route::resource('settings', 'SettingController');
   // Roles
