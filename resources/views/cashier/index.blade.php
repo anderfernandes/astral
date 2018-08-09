@@ -14,13 +14,13 @@
 
     <div class="sixteen wide mobile eleven wide computer column">
 
-      <div class="ui doubling grid">
+      <div class="ui one column grid">
         @foreach($events as $event)
-          <div class="ui eight wide column">
+          <div class="column">
             <div class="ui unstackable items">
               <div class="item">
                 <div class="ui tiny rounded image">
-                  <img src={{ $event->show->cover }} />
+                  <img src="{{ substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover) }}">
                 </div>
                 <div class="content">
                   <div class="header">

@@ -92,7 +92,7 @@
       <i class="dollar icon"></i>
       <i class="inverted corner add icon"></i>
     </i>
-    New Sale
+    New Sale <i class="dropdown icon"></i>
     <div class="menu">
       @foreach ($eventTypes as $eventType)
         @if ($eventType->allowedTickets->count() > 0)

@@ -11,7 +11,7 @@ class Ticket extends Model
 
     public function sale()
     {
-      $this->belongsToMany('App\Sale');
+      return $this->belongsTo('App\Sale');
     }
 
     public function event()

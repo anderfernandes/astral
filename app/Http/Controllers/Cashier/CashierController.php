@@ -23,7 +23,8 @@ class CashierController extends Controller
       $startOfDay = Date::now('America/Chicago')->startOfDay()->toDateTimeString();
       $endOfDay = Date::now('America/Chicago')->endOfDay()->toDateTimeString();
       // Get all events going on today
-      $events = Event::where([['start', '>=', $startOfDay], ['start', '<=', $endOfDay]])
+      $events = Event::where('show_id', '!=', 1)
+                     ->where([['start', '>=', $startOfDay], ['start', '<=', $endOfDay]])
                      ->orderBy('start', 'asc')
                      ->get();
       // Get Available Payment Methods

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Ticket;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class TicketController extends Controller
 {
@@ -46,7 +47,9 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        //
+        $organization = \App\Setting::find(1);
+        return view('admin.tickets.ticket')->withTicket($ticket)
+                                           ->withOrganization($organization);
     }
 
     /**

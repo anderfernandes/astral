@@ -10,7 +10,7 @@
     "output": {
       "packaged": "../public/semantic/",
       "uncompressed": "dist/components/",
-      "compressed": "dist/components/",
+      "compressed": "../public/semantic/",
       "themes": "../public/semantic/themes/"
     },
     "clean": "dist/"

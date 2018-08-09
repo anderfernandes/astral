@@ -57,14 +57,14 @@
               Register
               <i class="right chevron icon"></i>
             </a>
+          </div>
 
+          <div class="field" style="text-align:center">
+            <a href="{{ route('password.request') }}">
+              Forgot Your Password?
+            </a>
+          </div>
 
-
-            <!-- <a href="{ /* route('password.request') */ }">
-            Forgot Your Password?
-          </a>-->
-
-        </div>
         </form>
         <h5 class="ui center aligned header">
           <div class="sub header">

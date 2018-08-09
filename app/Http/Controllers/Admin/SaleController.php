@@ -652,4 +652,16 @@ class SaleController extends Controller
       return redirect()->route('admin.sales.show', $sale);
     }
 
+    /**
+     * Routes user to a page with all tickets that belong to this sale
+     * @param  Sale   $sale Number of the Sale
+     * @return void         This function doesn't return anything
+     */
+    public function tickets(Sale $sale)
+    {
+      $organization = \App\Setting::find(1);
+      return view('admin.tickets.tickets')->withSale($sale)
+                                          ->withOrganization($organization);
+    }
+
 }

@@ -17,7 +17,6 @@
             <div class="header" style="text-align:center">Request Password Change</div>
             Enter your email below and we will send you a reset link.
           </div>
-
         </div>
 
         <form class="ui form <?php if (count($errors) > 0) echo 'error'?>" role="form" method="POST" action="{{ route('password.email') }}">
@@ -44,6 +43,7 @@
           </div>
 
         </form>
+
         <h5 class="ui center aligned header">
           <div class="sub header">
             &copy; 2017-2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a> <br><br>
