@@ -246,7 +246,7 @@
                       <div class="ui right labeled input">
                         <input type="text" name="events[0][tickets][{{ $loop->index }}][quantity]" value="0" size="1" class="ticket-amount">
                         <input type="hidden" name="events[0][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
-                        <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+                        <div class="ui basic label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
                       </div>
                     </td>
                   </tr>
@@ -304,7 +304,7 @@
                       <input type="text" name="products[{{ $loop->index }}][quantity]" value="{{ isSet($sale->products) ? $sale->products->where('id', $product->id)->count() : (old("products.{$loop->index}.quantity") == null ? 0 : old("products.{$loop->index}.quantity")) }}" size="1" class="product-amount">
                       <input type="hidden" name="products[{{ $loop->index }}][id]" value="{{ $product->id }}">
                       <input type="hidden" name="products[{{ $loop->index }}][type_id]" value="{{ $product->type_id }}">
-                      <div class="ui label product price">$ {{ number_format($product->price, 2) }} each</div>
+                      <div class="ui basic label product price">$ {{ number_format($product->price, 2) }} each</div>
                     </div>
                   </td>
                 </tr>
@@ -658,7 +658,7 @@
                     <div class="ui right labeled input">
                       <input type="text" name="events[${index}][tickets][{{ $loop->index }}][quantity]" value="0" size="1" class="ticket-amount">
                       <input type="hidden" name="events[${index}][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
-                      <div class="ui label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+                      <div class="ui basic label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
                     </div>
                   </td>
                 </tr>

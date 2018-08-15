@@ -369,6 +369,55 @@ Route::get('staff', function() {
   return $staff;
 });
 
+// This URL is consumed in the new Sales interface
+// This API is consumed by Full Calendar in /admin/calendar?type=events
+Route::get('events', function(Request $request) {
+  $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
+  $end = Date::parse($request->end)->endOfDay()->addMinute()->toDateTimeString();
+  $type = isSet($request->type) ? $request->type : null;
+  $events = Event::where([
+                          ['show_id', '!=', 1     ],
+                          ['start'  , '>=', $start],
+                          ['end'    , '<=', $end  ],
+                        ]);
+  $events = isSet($request->type) ? $events->where('type_id', $request->type)->get() : $events->get();
+  $eventsArray = [];
+  foreach ($events as $event) {
+    $ticketsSold = 0;
+    foreach ($event->sales as $sale) {
+        $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
+    }
+    $seats = $event->seats - $ticketsSold;
+    $isAllDay = (Date::parse($event->start)->isStartOfDay() && Date::parse($event->end)->isEndOfDay());
+    $eventsArray = array_prepend($eventsArray, [
+      'id'       => $event->id,
+      'type'     => $event->type->name,
+      'start'    => $isAllDay ? Date::parse($event->start)->format('Y-m-d') : Date::parse($event->start)->toDateTimeString(),
+      'end'      => $isAllDay ? '' : Date::parse($event->end)->toDateTimeString(),
+      // Take out tickets from shows that have been canceled!!!
+      'seats'    => $seats, // $event->seats - App\Ticket::where('event_id', $event->id)->count(),
+      'title'    => $event->show_id !=1 ? "{$event->show->name}, $seats seats left" : (isSet($event->memo) ? $event->memo : $event->type->name),
+      //'url'      => '/admin/events/' . $event->id,
+      'show'     => [
+        'name'  => $event->show->name,
+        'type'  => $event->show->type,
+        'cover' => $event->show->cover
+        ],
+      'allowedTickets' => $event->type->allowedTickets,
+      'date'            => $start,
+      'color'           => $event->type->color,
+      'backgroundColor' => $event->type->color,
+      'textColor'       => 'rgba(255, 255, 255, 0.8)',
+      'public'          => $event->public,
+      'allDay'          => $isAllDay,
+    ]);
+  }
+  $eventsCollect = collect($eventsArray);
+  $eventsCollect = $eventsCollect->sortBy('start');
+  $eventsCollect = $eventsCollect->values()->all();
+  return response($eventsCollect)->withHeaders(['Access-Control-Allow-Origin' => '*']);
+});
+
 // This is the URL for the /events slide show
 Route::get('events/{start}/{end}', function($start, $end) {
   $start = Date::parse($start)->startOfDay()->toDateTimeString();
