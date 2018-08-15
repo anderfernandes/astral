@@ -26,7 +26,7 @@
 
   <div class="ui blue card" style="margin:0 0 0 0">
       <div class="content">
-        <img src="{{ \App\Setting::find(1)->logo == '/logo.png' ? \App\Setting::find(1)->logo : Storage::url(\App\Setting::find(1)->logo) }}" alt="" class="left floated mini ui image">
+        <img src="{{ \App\Setting::find(1)->logo == '/logo.png' ? App\Setting::find(1)->logo : Storage::url(\App\Setting::find(1)->logo) }}" alt="" class="left floated mini ui image">
         <div class="right floated meta"># {{ $member->id }}</div>
         <div class="header">{{ $member->users[$request->index]->fullname }}</div>
         <div class="meta">

@@ -27,7 +27,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
     <div onclick="window.close()" class="ui red button"><i class="close icon"></i></div>
   </div>
 
-  <img src="{{ (App\Setting::find(1)->logo == '/logo.png') ? substr(App\Setting::find(1)->logo, 1) : Storage::url(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
+  <img src="{{ (App\Setting::find(1)->logo == '/logo.png') ? App\Setting::find(1)->logo : Storage::url(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
 
   <div class="ui center aligned big header" style="margin-top:8px">
     <div class="content">Reservation Confirmation</div>
