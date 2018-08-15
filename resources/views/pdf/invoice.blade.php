@@ -5,7 +5,7 @@
 @section('content')
 
   <center>
-    <img src="{{ App\Setting::find(1)->logo }}" style="width:35px; height:auto">
+    <img src="{{ (App\Setting::find(1)->logo == '/logo.png') ? "logo.png" : Storage::url(App\Setting::find(1)->logo) }}" style="width:35px; height:auto">
     <h3>Invoice # {{ $sale->id }}</h3>
   </center>
 

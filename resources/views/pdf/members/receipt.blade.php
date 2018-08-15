@@ -5,7 +5,7 @@
 @section('content')
 
   <center>
-    <img src="{{ App\Setting::find(1)->logo }}" style="width:35px; height:auto">
+    <img src="{{ (App\Setting::find(1)->logo == '/logo.png') ? "logo.png" : Storage::url(App\Setting::find(1)->logo) }}" style="width:35px; height:auto">
     <h3>Membership Receipt</h3>
   </center>
 
@@ -18,7 +18,7 @@
     <h4 class="ui right floated header">
       Sale # {{ $sale->id }}
     </h4>
-    
+
   </div>
 
   <div class="ui clearing basic segment" style="padding:0 0 0 0">
