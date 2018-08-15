@@ -242,7 +242,7 @@ class SettingController extends Controller
       if ($request->logo != null)
       {
         Storage::disk('public')->delete($setting->logo);
-        $setting->cover = $request->logo->store('settings', 'public');
+        $setting->logo = $request->logo->store('settings', 'public');
       }
       if ($request->cover != null)
       {

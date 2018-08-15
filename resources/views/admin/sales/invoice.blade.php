@@ -28,7 +28,7 @@ $title = 'Test';
     <div onclick="window.close()" class="ui red button"><i class="close icon"></i></div>
   </div>
 
-  <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
+  <img src="{{ (App\Setting::find(1)->logo == '/logo.png') ? substr(App\Setting::find(1)->logo, 1) : Storage::url(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
 
   <div class="ui center aligned big header" style="margin-top:8px; margin-bottom: 0">
     <div class="content">Invoice # {{ $sale->id }}</div>

@@ -5,7 +5,7 @@
 @section('content')
 
   <center>
-    <img src="{{ (App\Setting::find(1)->logo == '/logo.png') ? "logo.png" : Storage::url(App\Setting::find(1)->logo) }}" style="width:35px; height:auto">
+    <img src="{{ (App\Setting::find(1)->logo == '/logo.png') ? substr(App\Setting::find(1)->logo, 1) : substr(Storage::url(App\Setting::find(1)->logo), 1) }}" style="width:35px; height:auto">
     <h3>Cancelation Receipt</h3>
   </center>
 
