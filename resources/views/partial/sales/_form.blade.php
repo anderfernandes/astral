@@ -128,8 +128,6 @@
                     </div>
                   </div>
 
-                  <script>$($('.date')[{{ $loop->index }}]).trigger('change')</script>
-
                   {{-- Show --}}
                   <div class="required field">
                     <label for="second_event_id">Show</label>
@@ -687,7 +685,7 @@
         {{-- Fetch events of the selected event segment --}}
         fetchEvents(dateField, dropdownDiv, dropdownMenu)
       })
-      
+
       $($('.date')[index]).trigger("change")
 
       {{-- Toggle tickets table --}}
@@ -884,7 +882,6 @@
       $('[name="taxable"]').dropdown('set selected', {{ (int)$sale->taxable }})
       @foreach ($sale->events as $event)
       $($('.date')[{{ $loop->index }}]).flatpickr({dateFormat: 'l, F j, Y', defaultDate: '{{ Date::parse($event->start)->format('l, F j, Y') }}'})
-      console.log({{ $event->id }})
       @endforeach
     @else
       $('.date').flatpickr({dateFormat: 'l, F j, Y', defaultDate: 'today' })
@@ -901,6 +898,14 @@
       @else
         $("#customers").dropdown('set selected', {{ old('customer_id') }})
       @endif
+      @isset($sale)
+        @if ($sale->events->count() > 0)
+          @foreach ($sale->events as $event)
+            $($('.date')[{{ $loop->index }}]).trigger('change')
+            $($('.ui.search.selection.dropdown').not('#customers')[{{ $loop->index }}]).dropdown('set selected', {{ $event->id }})
+          @endforeach
+        @endif
+      @endisset
     }, 500)
   })
 
