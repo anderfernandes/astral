@@ -1,13 +1,4 @@
 @isset($sale)
-  <script>
-  
-    @if ($sale->events->count() > 0)
-      @foreach ($sale->events as $event)
-        $($('.date')[{{ $loop->index }}]).trigger('change', function() { $($('.ui.search.selection.dropdown').not('#customers')[{{ $loop->index }}]).dropdown('set selected', {{ $event->id }}) })
-      @endforeach
-    @endif
-
-  </script>
   @if ($sale->memos->count() > 0)
     {!! Session::flash('info', 'You are editing a sale. Don\'t forget to  <a href="#memo">write a memo</a> explaining why.') !!}
   @endif
@@ -692,7 +683,7 @@
         {{-- Getting the menu of this events' show dropdown --}}
         var dropdownMenu = $('.ui.search.selection.dropdown .menu').not('#users')[index]
         {{-- Fetch events of the selected event segment --}}
-        fetchEvents(dateField, dropdownDiv, dropdownMenu)
+        fetchEvents(dateField, dropdownDiv, dropdownMenu, index)
       })
 
       $($('.date')[index]).trigger("change")
@@ -731,7 +722,7 @@
     {{-- Getting the menu of this events' show dropdown --}}
     var dropdownMenu = $('.ui.search.selection.dropdown .menu').not('#users')[index]
     {{-- Fetch events of the selected event segment --}}
-    fetchEvents(dateField, dropdownDiv, dropdownMenu)
+    fetchEvents(dateField, dropdownDiv, dropdownMenu, index)
   })
 
   $('.show').change(function() {
@@ -743,7 +734,7 @@
   })
 
   {{-- Fetches events --}}
-  function fetchEvents(dateFieldId, dropdownDivId, dropdownMenuId) {
+  function fetchEvents(dateFieldId, dropdownDivId, dropdownMenuId, index) {
     var date = document.querySelector(dateFieldId).value
     var date = moment(date, 'dddd, MMMM D, YYYY h:mm A').format('Y-MM-DD')
     $(dropdownMenuId).empty()
@@ -761,6 +752,12 @@
               </div>
               `)
         })
+      })
+      .then(() => {
+        $($('.date')[index]).trigger('change')
+      })
+      .then(() => {
+        $($('.ui.search.selection.dropdown').not('#customers')[index]).dropdown('set selected', index)
       })
       .catch((error) => console.log(error))
   }
