@@ -760,7 +760,7 @@
   function fetchUsers() {
     $('#users').empty()
     $("#users").append(`<div class="item" data-value="1">Walk-up</div>`)
-    fetch('/api/customers/')
+    fetch('/api/customers')
       .then((response) => response.json())
       .then((customers) => {
         customers.map((customer, index) => {
