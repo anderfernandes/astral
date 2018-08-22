@@ -671,11 +671,11 @@
       {{-- Initialize show dropdown --}}
       $('.ui.dropdown').dropdown()
       {{-- Set default date for new date input --}}
-      $($('.date')[index]).flatpickr({dateFormat: 'l, F j, Y', defaultDate: 'today'})
+      $($('input.date')[index]).flatpickr({dateFormat: 'l, F j, Y', defaultDate: 'today'})
       {{-- Fetch Events --}}
-      $('.date').change(function() {
+      $('input.date').change(function() {
         {{-- Get index of the event --}}
-        var index = $('.date').index(this)
+        var index = $('input.date').index(this)
         {{-- Getting this events' date field --}}
         var dateField = `[name="events[${index}][date]"]`
         {{-- Getting this events' show dropdown --}}
@@ -686,7 +686,7 @@
         fetchEvents(dateField, dropdownDiv, dropdownMenu, index)
       })
 
-      $($('.date')[index]).trigger('change')
+      $($('input.date')[index]).trigger('change')
 
       {{-- Toggle tickets table --}}
       $('.show').change(function() {
@@ -712,9 +712,9 @@
 
   //$('.ui.bottom.fixed.sticky').sticky()
 
-  $('.date').change(function() {
+  $('input.date').change(function() {
     {{-- Get index of the event --}}
-    var index = $('.date').index(this)
+    var index = $('input.date').index(this)
     {{-- Getting this events' date field --}}
     var dateField = `[name="events[${index}][date]"]`
     {{-- Getting this events' show dropdown --}}
@@ -755,7 +755,7 @@
       })
       .then(() => {
         @isset($sale)
-        //$($('.date')[index]).trigger('change')
+        //$($('input.date')[index]).trigger('change')
         @endisset
       })
       .then(() => {
@@ -891,11 +891,11 @@
     @if (isSet($sale->events))
       $('[name="taxable"]').dropdown('set selected', {{ (int)$sale->taxable }})
       @foreach ($sale->events as $event)
-      $($('.date')[{{ $loop->index }}]).flatpickr({dateFormat: 'l, F j, Y'})
+      $($('input.date')[{{ $loop->index }}]).flatpickr({dateFormat: 'l, F j, Y'})
       @endforeach
     @else
-      $('.date').flatpickr({dateFormat: 'l, F j, Y', defaultDate: 'today' })
-      //$('.date').trigger('change')
+      $('input.date').flatpickr({dateFormat: 'l, F j, Y', defaultDate: 'today' })
+      //$('input.date').trigger('change')
     @endif
     {{-- Forcing change on date field so that new events can be fetched from the server --}}
     //$('.date').trigger('change')
