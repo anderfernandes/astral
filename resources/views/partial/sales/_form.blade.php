@@ -754,10 +754,14 @@
         })
       })
       .then(() => {
+        @isset($sale)
         $($('.date')[index]).trigger('change')
+        @endisset
       })
       .then(() => {
+        @isset($sale)
         $($('.ui.search.selection.dropdown').not('#customers')[index]).dropdown('set selected', index)
+        @endisset
       })
       .catch((error) => console.log(error))
   }
@@ -891,7 +895,7 @@
       @endforeach
     @else
       $('.date').flatpickr({dateFormat: 'l, F j, Y', defaultDate: 'today' })
-      $('.date').trigger('change')
+      //$('.date').trigger('change')
     @endif
     {{-- Forcing change on date field so that new events can be fetched from the server --}}
     //$('.date').trigger("change")
