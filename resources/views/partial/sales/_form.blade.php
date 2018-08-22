@@ -121,7 +121,7 @@
                         <label for="start">Date</label>
                         <div class="ui left icon input">
                           {{-- dateFieldId --}}
-                          <input type="text" name="events[{{ $loop->index }}][date]" placeholder="Second Event Date" class="date" readonly="readonly" data-validate="date">
+                          <input value="{{ $event->start->format('l, F j, Y') }}" type="text" name="events[{{ $loop->index }}][date]" placeholder="Second Event Date" class="date" readonly="readonly" data-validate="date">
                           <i class="calendar alternate outline icon"></i>
                         </div>
                       </div>
@@ -588,7 +588,7 @@
     if ($($('.show')[index]).val() == '1') {
       $('#event-add-error .content').html(`
         <p>You need to select a show for <strong>Event #${index + 1}</strong>
-        before you can add another events to this sale</p>.
+        before you can add another events to this sale.</p>
         `)
       $('#event-add-error').modal('toggle')
     } else {
@@ -686,7 +686,7 @@
         fetchEvents(dateField, dropdownDiv, dropdownMenu, index)
       })
 
-      $($('.date')[index]).trigger("change")
+      $($('.date')[index]).trigger('change')
 
       {{-- Toggle tickets table --}}
       $('.show').change(function() {
@@ -755,7 +755,7 @@
       })
       .then(() => {
         @isset($sale)
-        $($('.date')[index]).trigger('change')
+        //$($('.date')[index]).trigger('change')
         @endisset
       })
       .then(() => {
@@ -891,14 +891,14 @@
     @if (isSet($sale->events))
       $('[name="taxable"]').dropdown('set selected', {{ (int)$sale->taxable }})
       @foreach ($sale->events as $event)
-      $($('.date')[{{ $loop->index }}]).flatpickr({dateFormat: 'l, F j, Y', defaultDate: '{{ Date::parse($event->start)->format('l, F j, Y') }}'})
+      $($('.date')[{{ $loop->index }}]).flatpickr({dateFormat: 'l, F j, Y'})
       @endforeach
     @else
       $('.date').flatpickr({dateFormat: 'l, F j, Y', defaultDate: 'today' })
       //$('.date').trigger('change')
     @endif
     {{-- Forcing change on date field so that new events can be fetched from the server --}}
-    //$('.date').trigger("change")
+    //$('.date').trigger('change')
     setTimeout(function() {
       $("#sell_to_organization").dropdown('set selected', "{{ isSet($sale) ? $sale->sell_to_organization : old('sell_to_organization') }}")
       {{-- Set default events --}}
@@ -908,13 +908,6 @@
       @else
         $("#customers").dropdown('set selected', {{ old('customer_id') }})
       @endif
-      console.log('document is ready')
-      @isset($sale)
-
-
-
-
-      @endisset
     }, 500)
   })
 
