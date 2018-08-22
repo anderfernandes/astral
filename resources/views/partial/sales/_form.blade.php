@@ -1,4 +1,13 @@
 @isset($sale)
+  <script>
+  
+    @if ($sale->events->count() > 0)
+      @foreach ($sale->events as $event)
+        $($('.date')[{{ $loop->index }}]).trigger('change', function() { $($('.ui.search.selection.dropdown').not('#customers')[{{ $loop->index }}]).dropdown('set selected', {{ $event->id }}) })
+      @endforeach
+    @endif
+
+  </script>
   @if ($sale->memos->count() > 0)
     {!! Session::flash('info', 'You are editing a sale. Don\'t forget to  <a href="#memo">write a memo</a> explaining why.') !!}
   @endif
@@ -901,20 +910,11 @@
       console.log('document is ready')
       @isset($sale)
 
-        setTimeout(function() {
-          @if ($sale->events->count() > 0)
-            @foreach ($sale->events as $event)
-              $($('.date')[{{ $loop->index }}]).trigger('change')
-              $($('.ui.search.selection.dropdown').not('#customers')[{{ $loop->index }}]).dropdown('set selected', {{ $event->id }})
-            @endforeach
-          @endif
-          console.log('setting events in their dropdowns')
-        }, 500)
+
 
 
       @endisset
     }, 500)
-
   })
 
 
