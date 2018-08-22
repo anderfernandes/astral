@@ -898,19 +898,26 @@
       @else
         $("#customers").dropdown('set selected', {{ old('customer_id') }})
       @endif
+      console.log('document is ready')
+      @isset($sale)
+
+        setTimeout(function() {
+          @if ($sale->events->count() > 0)
+            @foreach ($sale->events as $event)
+              $($('.date')[{{ $loop->index }}]).trigger('change')
+              $($('.ui.search.selection.dropdown').not('#customers')[{{ $loop->index }}]).dropdown('set selected', {{ $event->id }})
+            @endforeach
+          @endif
+          console.log('setting events in their dropdowns')
+        }, 500)
+
+
+      @endisset
     }, 500)
+
   })
 
-  @isset($sale)
-    $(window).load(function() {
-      @if ($sale->events->count() > 0)
-        @foreach ($sale->events as $event)
-          $($('.date')[{{ $loop->index }}]).trigger('change')
-          $($('.ui.search.selection.dropdown').not('#customers')[{{ $loop->index }}]).dropdown('set selected', {{ $event->id }})
-        @endforeach
-      @endif
-    })
-  @endisset
+
 
   {{-- Change Sale Status color whenever the sale status changes --}}
   $('#status').change(changeSaleStatusColor)
