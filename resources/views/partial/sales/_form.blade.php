@@ -128,6 +128,8 @@
                     </div>
                   </div>
 
+                  <script>$($('.date')[{{ $loop->index }}]).trigger('change')</script>
+
                   {{-- Show --}}
                   <div class="required field">
                     <label for="second_event_id">Show</label>
@@ -685,25 +687,27 @@
         {{-- Fetch events of the selected event segment --}}
         fetchEvents(dateField, dropdownDiv, dropdownMenu)
       })
+      
       $($('.date')[index]).trigger("change")
-        {{-- Toggle tickets table --}}
-        $('.show').change(function() {
-          {{-- Get current index of the show dropdown --}}
-          var index = $('.show').index(this)
-          {{-- Get the ticket table class for this events' tickets --}}
-          var ticketsTableClass = '.ui.selectable.single.line.very.compact.table'
-          $('.show')[index].value == 1 ? $($(ticketsTableClass)[index]).css('display', 'none') : $($(ticketsTableClass)[index]).css('display', 'table')
-        })
-        {{-- ...change amount of tickets --}}
-        $('.ticket-amount').keyup(calculateTotals)
-        {{-- ...change amount of products --}}
-        $('.product-amount').keyup(calculateTotals)
-        {{-- ...change taxable --}}
-        $('[name="taxable"]').change(calculateTotals)
-        {{-- ...change second event because it could be 1 (no show) --}}
-        $('#second_event_id').change(calculateTotals)
-        {{-- ...change tendered amount --}}
-        $('[name="tendered"]').keyup(calculateTotals)
+
+      {{-- Toggle tickets table --}}
+      $('.show').change(function() {
+        {{-- Get current index of the show dropdown --}}
+        var index = $('.show').index(this)
+        {{-- Get the ticket table class for this events' tickets --}}
+        var ticketsTableClass = '.ui.selectable.single.line.very.compact.table'
+        $('.show')[index].value == 1 ? $($(ticketsTableClass)[index]).css('display', 'none') : $($(ticketsTableClass)[index]).css('display', 'table')
+      })
+      {{-- ...change amount of tickets --}}
+      $('.ticket-amount').keyup(calculateTotals)
+      {{-- ...change amount of products --}}
+      $('.product-amount').keyup(calculateTotals)
+      {{-- ...change taxable --}}
+      $('[name="taxable"]').change(calculateTotals)
+      {{-- ...change second event because it could be 1 (no show) --}}
+      $('#second_event_id').change(calculateTotals)
+      {{-- ...change tendered amount --}}
+      $('[name="tendered"]').keyup(calculateTotals)
     }
 
   })
@@ -880,6 +884,7 @@
       $('[name="taxable"]').dropdown('set selected', {{ (int)$sale->taxable }})
       @foreach ($sale->events as $event)
       $($('.date')[{{ $loop->index }}]).flatpickr({dateFormat: 'l, F j, Y', defaultDate: '{{ Date::parse($event->start)->format('l, F j, Y') }}'})
+      console.log({{ $event->id }})
       @endforeach
     @else
       $('.date').flatpickr({dateFormat: 'l, F j, Y', defaultDate: 'today' })
