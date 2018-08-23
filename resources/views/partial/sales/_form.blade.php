@@ -139,7 +139,7 @@
                       {{-- dropdownMenuId --}}
                       <div class="menu" id="second-show">
                         <div class="item" data-value="1">No Show</div>
-                        @foreach (App\Event::whereDate('start', Date::parse($event->start)->format('m-d-Y'))->get() as $e)
+                        @foreach (App\Event::whereDate('start', $event->start->format('m-d-Y'))->get() as $e)
                           <div class="item" data-value="{{ $e->id }}">
                             <strong>{{ $e->show->name }}</strong>
                             at <em>{{ Date::parse($e->start)->format('g:i A') }}</em>

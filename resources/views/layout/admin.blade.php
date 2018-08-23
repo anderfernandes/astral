@@ -25,33 +25,28 @@
 
 </head>
 <script>
-  $(document)
-    .ready(function() {
-      // create sidebar and attach to menu open
-      $('.ui.sidebar')
-      .sidebar('setting', 'transition', 'overlay')
-      .sidebar('setting', 'dimPage', true)
-      .sidebar('attach events', '.toc.item');
 
-      // close message alerts
-      $('.message .close').on('click', function() {
-        $(this).closest('.message').transition('fade');
-      });
+  window.onload = function() {
+    // create sidebar and attach to menu open
+    $('.ui.sidebar')
+    .sidebar('setting', 'transition', 'overlay')
+    .sidebar('setting', 'dimPage', true)
+    .sidebar('attach events', '.toc.item');
 
-      // Initialize Semantic UI components
-      $('.ui.radio.checkbox').checkbox();
-      $('.ui.dropdown').dropdown({'fullTextSearch': true});
-      $('.ui.dropdown.item').dropdown({on: 'hover'});
-      $('.ui.checkbox').checkbox()
-
-      /*jQuery('.datetimepicker').datetimepicker({
-        format:'dddd, MMMM DD, YYYY H:mm',
-        formatTime:'H:mm',
-        formatDate:'dddd, MMMM DD, YYYY',
-        minTime: '08:00',
-        maxTime: '24:00'
-      });*/
+    // close message alerts
+    $('.message .close').on('click', function() {
+      $(this).closest('.message').transition('fade');
     });
+
+    // Initialize Semantic UI components
+    $('.ui.radio.checkbox').checkbox();
+    $('.ui.dropdown').dropdown({'fullTextSearch': true});
+    $('.ui.dropdown.item').dropdown({on: 'hover'});
+    $('.ui.checkbox').checkbox()
+  }
+
+
+
 
 </script>
 
