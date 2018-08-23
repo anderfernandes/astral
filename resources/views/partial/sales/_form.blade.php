@@ -132,7 +132,7 @@
                   <div class="required field">
                     <label for="second_event_id">Show</label>
                     {{-- dropdownDivId --}}
-                    <div class="ui search selection dropdown" id="second-event">
+                    <div class="ui search selection events dropdown" id="second-event">
                       <input type="hidden" name="events[{{ $loop->index }}][id]" value="{{ $event->id }}" class="show" data-validate="show">
                       <i class="dropdown icon"></i>
                       <div class="default text">Select a Show</div>
@@ -209,7 +209,7 @@
                 <div class="required field">
                   <label for="first_event_id">Show</label>
                   {{-- dropdownDivId --}}
-                  <div class="ui search selection dropdown" id="first-event">
+                  <div class="ui search selection events dropdown" id="first-event">
                     <input type="hidden" name="events[0][id]" value="1" class="show" data-validate="show">
                     <i class="dropdown icon"></i>
                     <div class="default text">Select a Show</div>
@@ -621,7 +621,7 @@
             <div class="required field">
               <label for="second_event_id">Show</label>
               {{-- dropdownDivId --}}
-              <div class="ui search selection dropdown" id="second-event">
+              <div class="ui search selection events dropdown" id="second-event">
                 <input type="hidden" name="events[${index}][id]" value="1" class="show" data-validate="show">
                 <i class="dropdown icon"></i>
                 <div class="default text">Select a Show</div>
@@ -679,9 +679,9 @@
         {{-- Getting this events' date field --}}
         var dateField = `[name="events[${index}][date]"]`
         {{-- Getting this events' show dropdown --}}
-        var dropdownDiv = $('.ui.search.selection.dropdown').not('#customers')[index]
+        var dropdownDiv = $('.ui.search.selection.events.dropdown')[index]
         {{-- Getting the menu of this events' show dropdown --}}
-        var dropdownMenu = $('.ui.search.selection.dropdown .menu').not('#users')[index]
+        var dropdownMenu = $('.ui.search.selection.events.dropdown .menu')[index]
         {{-- Fetch events of the selected event segment --}}
         fetchEvents(dateField, dropdownDiv, dropdownMenu, index)
       })
@@ -718,9 +718,9 @@
     {{-- Getting this events' date field --}}
     var dateField = `[name="events[${index}][date]"]`
     {{-- Getting this events' show dropdown --}}
-    var dropdownDiv = $('.ui.search.selection.dropdown').not('#customers')[index]
+    var dropdownDiv = $('.ui.search.selection.events.dropdown')[index]
     {{-- Getting the menu of this events' show dropdown --}}
-    var dropdownMenu = $('.ui.search.selection.dropdown .menu').not('#users')[index]
+    var dropdownMenu = $('.ui.search.selection.events.dropdown .menu')[index]
     {{-- Fetch events of the selected event segment --}}
     fetchEvents(dateField, dropdownDiv, dropdownMenu, index)
   })
@@ -743,7 +743,7 @@
     fetch(`/api/events?start=${date}&end=${date}&type={{ $eventType->id }}`)
       .then((response) => response.json())
       .then((events) => {
-        events.map((event, index) => {
+        events.map((event, i) => {
           var date = moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('h:mm A')
           $(dropdownMenuId)
             .append(`
@@ -751,17 +751,8 @@
                 <strong>${event.show.name}</strong> at <em>${date}</em> (${event.seats} seats left)
               </div>
               `)
+              $($('.ui.search.selection.events.dropdown')[index]).dropdown('set selected', event.id)
         })
-      })
-      .then(() => {
-        @isset($sale)
-        //$($('input.date')[index]).trigger('change')
-        @endisset
-      })
-      .then(() => {
-        @isset($sale)
-        $($('.ui.search.selection.dropdown').not('#customers')[index]).dropdown('set selected', index)
-        @endisset
       })
       .catch((error) => console.log(error))
   }
