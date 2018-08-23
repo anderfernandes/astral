@@ -11,6 +11,19 @@
   </div>
 @endif
 
+@if (Session::has('warning'))
+  <div class="ui success icon message">
+    <i class="warning circle icon"></i>
+    <i class="close icon"></i>
+    <div class="content">
+      <div class="header">
+        Something went wrong...
+      </div>
+      <p>{!! Session::get('warning') !!}</p>
+    </div>
+  </div>
+@endif
+
 @if (Session::has('info'))
   <div class="ui info icon message">
     <i class="info circle icon"></i>

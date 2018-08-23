@@ -19,20 +19,32 @@
 
   <script>$('.ui.basic.modal').modal('show')</script>
 
-  {{--
-  <div class="ui success icon attached message" style="margin-top:3.5rem">
-    <i class="info circle icon"></i>
-    <i class="close icon"></i>
+  <?php Session::forget('success') ?>
+
+@endif
+
+@if (Session::has('warning'))
+
+  {{-- Modal --}}
+  <div class="ui basic modal">
+    <div class="ui icon header">
+      <i class="warning circle icon"></i>
+      Something went wrong...
+    </div>
     <div class="content">
-      <div class="header">
-        Success!
+      <p>{!! Session::get('warning') !!}</p>
+    </div>
+    <div class="actions">
+      <div class="ui yellow ok inverted button">
+        <i class="checkmark icon"></i>
+        Gotcha!!!
       </div>
-      <p>{!! Session::get('success') !!}</p>
     </div>
   </div>
-  --}}
 
-  <?php Session::forget('info') ?>
+  <script>$('.ui.basic.modal').modal('show')</script>
+
+  <?php Session::forget('success') ?>
 
 @endif
 
@@ -56,19 +68,6 @@
   </div>
 
   <script>$('.ui.basic.modal').modal('show')</script>
-
-  {{--
-  <div class="ui info icon message" style="margin-top:3.5rem">
-    <i class="info circle icon"></i>
-    <i class="close icon"></i>
-    <div class="content">
-      <div class="header">
-        Hey, you!
-      </div>
-      <p>{!! Session::get('info') !!}</p>
-    </div>
-  </div>
-  --}}
 
   <?php Session::forget('info') ?>
 
@@ -118,5 +117,5 @@
     </div>
   </div>
   --}}
-  
+
 @endif

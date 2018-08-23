@@ -645,9 +645,16 @@ class SaleController extends Controller
 
     public function mail(Request $request, Sale $sale)
     {
-      // Email customer with copies to the person who clicked the send button
-      Mail::to($sale->customer->email)->bcc(Auth::user()->email)
-                                      ->send(new ConfirmationLetter($sale));
+      try {
+        // Email customer with copies to the person who clicked the send button
+        Mail::to($sale->customer->email)->bcc(Auth::user()->email)
+                                        ->send(new ConfirmationLetter($sale));
+      } catch (\Exception $exception) {
+        $request->session()->flash('warning', "<strong>Fail to email confirmation letter.</strong>");
+        Log::info(Auth::user()->fullname . ' - Fail to email confirmation letter:');
+        return redirect()->route('admin.sales.show', $sale);
+      }
+
       // Write memo
       $sale->memo()->create([
         'author_id' => Auth::user()->id,
