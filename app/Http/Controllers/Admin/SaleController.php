@@ -296,8 +296,18 @@ class SaleController extends Controller
         $ticketTypes    = $eventType->allowedTickets;
         $products       = Product::all();
         $grades         = \App\Grade::all();
+        $events         = [];
+
+        foreach($sale->events as $event)
+        {
+          $event = Event::whereDate('start', $event->start->format('m-d-Y'))->get();
+          array_push($events, $event);
+        }
+
+        //dd($events);
 
         return view('admin.sales.edit')
+          ->withEvents($events)
           ->withGrades($grades)
           ->withTicketTypes($ticketTypes)
           ->withPaymentMethods($paymentMethods)

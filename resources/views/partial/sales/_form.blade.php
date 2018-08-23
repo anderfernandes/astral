@@ -139,13 +139,12 @@
                       {{-- dropdownMenuId --}}
                       <div class="menu" id="second-show">
                         <div class="item" data-value="1">No Show</div>
-                        @foreach (App\Event::whereDate('start', $event->start->format('m-d-Y'))->get() as $e)
+                        @foreach ($events[$loop->index] as $e)
                           <div class="item" data-value="{{ $e->id }}">
                             <strong>{{ $e->show->name }}</strong>
                             at <em>{{ Date::parse($e->start)->format('g:i A') }}</em>
                             ({{ $e->seats - App\Ticket::where('event_id', $e->id)->count() }} seats left)
                           </div>
-                          <?php $e = null ?>
                         @endforeach
                       </div>
                     </div>
@@ -734,51 +733,45 @@
   })
 
   {{-- Fetches events --}}
-  function fetchEvents(dateFieldId, dropdownDivId, dropdownMenuId, index) {
+  async function fetchEvents(dateFieldId, dropdownDivId, dropdownMenuId, index) {
     var date = document.querySelector(dateFieldId).value
     var date = moment(date, 'dddd, MMMM D, YYYY h:mm A').format('Y-MM-DD')
     $(dropdownMenuId).empty()
     $(dropdownMenuId).append(`<div class="item" data-value="1">No Show</div>`)
     $(dropdownDivId).dropdown('set selected', 1)
-    fetch(`/api/events?start=${date}&end=${date}&type={{ $eventType->id }}`)
-      .then((response) => response.json())
-      .then((events) => {
-        events.map((event, i) => {
-          var date = moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('h:mm A')
-          $(dropdownMenuId)
-            .append(`
-              <div class="item" data-value="${event.id}">
-                <strong>${event.show.name}</strong> at <em>${date}</em> (${event.seats} seats left)
-              </div>
-              `)
-              $($('.ui.search.selection.events.dropdown')[index]).dropdown('set selected', event.id)
-        })
-      })
-      .catch((error) => console.log(error))
+    var response = await fetch(`/api/events?start=${date}&end=${date}&type={{ $eventType->id }}`)
+    var events = await response.json()
+    events.map((event, i) => {
+      var date = moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('h:mm A')
+      $(dropdownMenuId)
+        .append(`
+          <div class="item" data-value="${event.id}">
+            <strong>${event.show.name}</strong> at <em>${date}</em> (${event.seats} seats left)
+          </div>
+          `)
+          $($('.ui.search.selection.events.dropdown')[index]).dropdown('set selected', event.id)
+    })
   }
 
   $('.menu .item').tab({ history: true })
 
   {{-- Get Users for the user selecion dropdown --}}
-  function fetchUsers() {
+  async function fetchUsers() {
     $('#users').empty()
     $("#users").append(`<div class="item" data-value="1">Walk-up</div>`)
-    fetch('/api/customers')
-      .then((response) => response.json())
-      .then((customers) => {
-        customers.map((customer, index) => {
-          $("#users")
-            .append(`
-              <div class="item" data-value="${customer.id}">
-              <i class="user circle icon"></i>
-                ${customer.name}
-                (<em>${customer.role}</em>${customer.organization.id != 1 ? `, <strong>${customer.organization.name}</strong>` : ``})
-              </div>
-              `)
-          //$('#taxable').dropdown('set selected', customer.taxable)
-        })
-      })
-      .catch((error) => console.log(error))
+    var response = await fetch('/api/customers')
+    var customers = await response.json()
+    customers.map((customer, index) => {
+      $("#users")
+        .append(`
+          <div class="item" data-value="${customer.id}">
+          <i class="user circle icon"></i>
+            ${customer.name}
+            (<em>${customer.role}</em>${customer.organization.id != 1 ? `, <strong>${customer.organization.name}</strong>` : ``})
+          </div>
+          `)
+      //$('#taxable').dropdown('set selected', customer.taxable)
+    })
   }
 
   $("#customer_id").change(function() {

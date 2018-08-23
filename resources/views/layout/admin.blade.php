@@ -25,28 +25,25 @@
 
 </head>
 <script>
+  $(document)
+    .ready(function() {
+      // create sidebar and attach to menu open
+      $('.ui.sidebar')
+      .sidebar('setting', 'transition', 'overlay')
+      .sidebar('setting', 'dimPage', true)
+      .sidebar('attach events', '.toc.item');
 
-  window.onload = function() {
-    // create sidebar and attach to menu open
-    $('.ui.sidebar')
-    .sidebar('setting', 'transition', 'overlay')
-    .sidebar('setting', 'dimPage', true)
-    .sidebar('attach events', '.toc.item');
+      // close message alerts
+      $('.message .close').on('click', function() {
+        $(this).closest('.message').transition('fade');
+      });
 
-    // close message alerts
-    $('.message .close').on('click', function() {
-      $(this).closest('.message').transition('fade');
+      // Initialize Semantic UI components
+      $('.ui.radio.checkbox').checkbox();
+      $('.ui.dropdown').dropdown({'fullTextSearch': true});
+      $('.ui.dropdown.item').dropdown({on: 'hover'});
+      $('.ui.checkbox').checkbox()
     });
-
-    // Initialize Semantic UI components
-    $('.ui.radio.checkbox').checkbox();
-    $('.ui.dropdown').dropdown({'fullTextSearch': true});
-    $('.ui.dropdown.item').dropdown({on: 'hover'});
-    $('.ui.checkbox').checkbox()
-  }
-
-
-
 
 </script>
 
