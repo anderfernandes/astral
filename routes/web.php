@@ -123,6 +123,8 @@ Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier
     Route::get('members/{member}/receipt', 'MemberController@receipt')->name('members.receipt');
     // Membersihp Secondary
     Route::put('members/{member}/addSecondary', 'MemberController@addSecondary')->name('members.addSecondary');
+    // New
+    Route::get('new', function() { return view('cashier.new'); })->name('new');
   });
 
 Auth::routes();

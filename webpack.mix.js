@@ -11,12 +11,12 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js');
-   //.sass('resources/assets/sass/app.scss', 'public/css');
+mix.js('resources/assets/js/app.js', 'public/js')
+   .sass('resources/assets/sass/app.scss', 'public/css');
 
+// Vendor stuff, non-js
 
-   // Vendor stufff
-
+/*
 mix.scripts([
 'node_modules/jquery/dist/jquery.min.js',
 'node_modules/jquery-address/src/jquery.address.js',
@@ -32,3 +32,4 @@ mix.styles([
 'node_modules/flatpickr/dist/flatpickr.min.css',
 'node_modules/fullcalendar/dist/fullcalendar.min.css'
 ], 'public/css/vendor.css');
+*/

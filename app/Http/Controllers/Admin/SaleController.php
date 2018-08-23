@@ -300,7 +300,7 @@ class SaleController extends Controller
 
         foreach($sale->events as $event)
         {
-          $event = Event::whereDate('start', $event->start->format('m-d-Y'))->get();
+          $event = Event::whereDate('start', $event->start->format('Y-m-d'))->get();
           array_push($events, $event);
         }
 
