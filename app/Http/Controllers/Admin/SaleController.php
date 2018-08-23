@@ -656,8 +656,10 @@ class SaleController extends Controller
 
       Session::flash('success', '<strong>Confirmation Letter</strong> successfully sent to <strong>' . $sale->customer->email . '</strong>!');
 
-      // Log refunded payment
-      Log::info(Auth::user()->fullname . ' refunded Payment #' . $payment->id . ' which belongs to Sale #' . $sale->id .' using admin');
+      $customer = $sale->customer->fullname == $sale->organization->name ? $sale->organization->name : $sale->customer->name;
+
+      // Log email sent
+      Log::info(Auth::user()->fullname . ' sent a Confirmation letter to ' . $customer .' using admin');
 
       return redirect()->route('admin.sales.show', $sale);
     }
