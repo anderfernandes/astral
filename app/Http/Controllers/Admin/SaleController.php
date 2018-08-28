@@ -650,8 +650,8 @@ class SaleController extends Controller
         Mail::to($sale->customer->email)->bcc(Auth::user()->email)
                                         ->send(new ConfirmationLetter($sale));
       } catch (\Exception $exception) {
-        $request->session()->flash('warning', "<strong>Fail to email confirmation letter.</strong>");
-        Log::info(Auth::user()->fullname . ' - Fail to email confirmation letter:');
+        $request->session()->flash('warning', "<strong>Failed to email confirmation letter. Please send it manually.</strong>");
+        Log::info(Auth::user()->fullname . ' - Failed to email confirmation letter.');
         return redirect()->route('admin.sales.show', $sale);
       }
 

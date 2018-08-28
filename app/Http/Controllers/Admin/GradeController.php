@@ -40,7 +40,7 @@ class GradeController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-          'name' => 'required|min:5',
+          'name' => 'required|min:3',
           'description' => 'required|min:5',
         ]);
 
