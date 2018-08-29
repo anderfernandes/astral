@@ -51,7 +51,7 @@
   <div class="field">
     {!! Form::label('website', 'Website') !!}
     <div class="ui labeled input">
-      <div class="ui black basic label">http://</div>
+      <div class="ui basic label">http://</div>
       {!! Form::text('website', null, ['placeholder' => 'Enter organization\'s website']) !!}
     </div>
   </div>

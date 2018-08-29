@@ -79,6 +79,7 @@ Route::group(
   // Settings Resources
   Route::resource('ticket-types', 'TicketTypeController');
   Route::resource('event-types', 'EventTypeController');
+  Route::resource('organization-types', 'OrganizationTypeController');
   // HTTP PUT route for adding managing Organization Types
   Route::post('settings/addOrganizationType', 'SettingController@addOrganizationType')->name('settings.addOrganizationType');
   // HTTP PUT route for adding managing Payment Methods
