@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 
-use App\{ Event, Setting, User, PaymentMethod, Sale, Organization, EventType, MemberType };
+use App\{ Event, Setting, User, PaymentMethod, Sale, Organization, EventType };
+use App\{ MemberType, Show };
 use Illuminate\Support\Facades\{ Auth, Storage };
 
 /*
@@ -41,6 +42,17 @@ use Illuminate\Support\Facades\{ Auth, Storage };
   }
   return $eventsArray;
 });*/
+
+Route::get('shows', function(Request $request) {
+  $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->get();
+  return $shows;
+
+});
+
+Route::get('shows/{id}', function($id) {
+  $show = Show::find($id);
+  return $show;
+});
 
 // This API is consumed by /admin/calendar/sales in Full Calendar
 Route::get('calendar/sales', function(Request $request) {
