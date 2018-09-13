@@ -358,6 +358,7 @@ Route::get('/calendar/events', function(Request $request) {
         'name'  => $event->show->name,
         'type'  => $event->show->type,
         'cover' => substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover),
+        'duration' => $event->show->duration,
         ],
       'allowedTickets' => $event->type->allowedTickets,
       'date'            => $start,
