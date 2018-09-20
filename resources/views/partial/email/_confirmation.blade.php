@@ -155,6 +155,7 @@
   }
 ?>
 
+@if ($sale->tickets->count() != 0)
 <ul>
   <li>
     We reserved {{ $numberOfEvents == 1 ? $sale->tickets->count() : $sale->tickets->count() / $numberOfEvents }} seats per show for you. If more than {{ $numberOfEvents == 1 ? $sale->tickets->count() : $sale->tickets->count() / $numberOfEvents }} people show up,
@@ -162,6 +163,7 @@
     choose, include them in your payment or they may buy their own tickets at show time.
   </li>
 </ul>
+@endif
 
 <br>
 

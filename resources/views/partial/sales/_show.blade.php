@@ -33,7 +33,14 @@
           @endif
 
       @else
-      <a class="item" href="{{ route('admin.members.receipt', $sale->customer->member) }}" target="_blank"><i class="pdf file icon"></i> Membership Receipt</a>
+        @if ($sale->customer->membership_id > 1)
+          <a class="item" href="{{ route('admin.members.receipt', $sale->customer->member) }}" target="_blank"><i class="pdf file icon"></i> Membership Receipt</a>
+        @else
+          <a class="item" href="{{ route('admin.sales.invoice', $sale) }}" target="_blank"><i class="file icon"></i> Invoice</a>
+          <a class="item" href="{{ route('admin.sales.receipt', $sale) }}" target="_blank"><i class="file icon"></i> Receipt</a>
+          <a class="item" href="{{ route('admin.sales.invoice', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Invoice</a>
+          <a class="item" href="{{ route('admin.sales.receipt', $sale) }}?format=pdf" target="_blank"><i class="pdf file icon"></i> Receipt</a>
+        @endif
       @endif
     </div>
   </div>
@@ -151,6 +158,7 @@
     @endif
 
     {{-- Events and Attendance --}}
+    @if ($sale->events->count() > 0)
     <div class="ui raised card">
       <div class="content">
         <div class="ui top attached black center aligned large label"><i class="calendar check icon"></i> Events and Tickets</div>
@@ -188,7 +196,8 @@
         </div>
       </div>
     </div>
-
+    @endif
+    
     @if($sale->products->count() > 0)
     <div class="ui raised card">
       <div class="content">
@@ -233,11 +242,11 @@
   <div class="ui tiny five statistics">
     <div class="statistic">
       <div class="label">Subtotal</div>
-      <div class="value"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2) }}</div>
+      <div class="value"><i class="dollar sign icon"></i> {{ number_format($sale->subtotal, 2, ".", ",") }}</div>
     </div>
     <div class="statistic">
       <div class="label">Tax</div>
-      <div class="value"><i class="dollar sign icon"></i> {{ number_format($sale->total - $sale->subtotal, 2) }}</div>
+      <div class="value"><i class="dollar sign icon"></i> {{ number_format($sale->total - $sale->subtotal, 2, ".", ",") }}</div>
     </div>
     <div class="statistic">
       <div class="label">Total</div>

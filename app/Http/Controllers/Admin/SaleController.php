@@ -122,6 +122,11 @@ class SaleController extends Controller
 
           ]);
 
+          // Filtering numbers to ensure formating
+          $request->subtotal = str_replace(",", "", $request->subtotal);
+          $request->tax      = str_replace(",", "", $request->tax);
+          $request->total    = str_replace(",", "", $request->total);
+
           // Get user's organization
           $user = User::find($request->customer_id);
 
@@ -264,7 +269,7 @@ class SaleController extends Controller
      */
     public function show(Sale $sale)
     {
-        $paid = number_format($sale->payments->sum('tendered') - $sale->payments->sum('change_due'), 2, '.', '');
+        $paid = number_format($sale->payments->sum('tendered') - $sale->payments->sum('change_due'), 2, '.', ',');
         $balance = number_format(($sale->payments->sum('tendered') - $sale->payments->sum('change_due')) - $sale->total, 2, '.', '');
         $memos = \App\SaleMemo::where('sale_id', $sale->id)->orderBy('updated_at', 'desc')->get();
 
@@ -292,7 +297,7 @@ class SaleController extends Controller
     public function edit(Sale $sale)
     {
         $paymentMethods = PaymentMethod::all();
-        $eventType      = EventType::find($sale->events[0]->type_id);
+        $eventType      = EventType::find($sale->events[0]->type_id ?? 1);
         $ticketTypes    = $eventType->allowedTickets;
         $products       = Product::all();
         $grades         = \App\Grade::all();
@@ -343,7 +348,10 @@ class SaleController extends Controller
         'memo'                            => 'max:255',
       ]);
 
-      //dd($request->events);
+      // Filtering numbers to ensure formating
+      $request->subtotal = str_replace(",", "", $request->subtotal);
+      $request->tax      = str_replace(",", "", $request->tax);
+      $request->total    = str_replace(",", "", $request->total);
 
       // Get user's organization
       $user = User::find($request->customer_id);

@@ -176,7 +176,7 @@
                           <div class="ui right labeled input">
                             <input type="text" name="events[{{ $loop->parent->index }}][tickets][{{ $loop->index }}][quantity]" value="{{ isSet($sale->tickets) ? $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticketType->id)->count() : old("events.{$event->id}.tickets.{$loop->index}.quantity") }}" size="1" class="ticket-amount">
                             <input type="hidden" name="events[{{ $loop->parent->index }}][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
-                            <div class="ui basic label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+                            <div class="ui basic label">$ <span class="ticket price">{{ number_format($ticketType->price, 2) }}</span> each</div>
                           </div>
                         </td>
                       </tr>
@@ -245,7 +245,7 @@
                       <div class="ui right labeled input">
                         <input type="text" name="events[0][tickets][{{ $loop->index }}][quantity]" value="0" size="1" class="ticket-amount">
                         <input type="hidden" name="events[0][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
-                        <div class="ui basic label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+                        <div class="ui basic label">$ <span class="ticket price">{{ number_format($ticketType->price, 2) }}</span> each</div>
                       </div>
                     </td>
                   </tr>
@@ -303,7 +303,7 @@
                       <input type="text" name="products[{{ $loop->index }}][quantity]" value="{{ isSet($sale->products) ? $sale->products->where('id', $product->id)->count() : (old("products.{$loop->index}.quantity") == null ? 0 : old("products.{$loop->index}.quantity")) }}" size="1" class="product-amount">
                       <input type="hidden" name="products[{{ $loop->index }}][id]" value="{{ $product->id }}">
                       <input type="hidden" name="products[{{ $loop->index }}][type_id]" value="{{ $product->type_id }}">
-                      <div class="ui basic label product price">$ {{ number_format($product->price, 2) }} each</div>
+                      <div class="ui basic label">$ <span class="product price">{{ number_format($product->price, 2) }}</span> each</div>
                     </div>
                   </td>
                 </tr>
@@ -657,7 +657,7 @@
                     <div class="ui right labeled input">
                       <input type="text" name="events[${index}][tickets][{{ $loop->index }}][quantity]" value="0" size="1" class="ticket-amount">
                       <input type="hidden" name="events[${index}][tickets][{{ $loop->index }}][type_id]" value="{{ $ticketType->id }}">
-                      <div class="ui basic label ticket price">$ {{ number_format($ticketType->price, 2) }} each</div>
+                      <div class="ui basic label">$ <span class="ticket price">{{ number_format($ticketType->price, 2) }}</span> each</div>
                     </div>
                   </td>
                 </tr>
@@ -782,9 +782,9 @@
   function calculateTotals() {
 
       var ticketAmounts = document.querySelectorAll('.ticket-amount')
-      var ticketPrices = document.querySelectorAll('.ui.label.ticket.price')
+      var ticketPrices = document.querySelectorAll('.ticket.price')
       var productAmounts = document.querySelectorAll('.product-amount')
-      var productPrices = document.querySelectorAll('.ui.label.product.price')
+      var productPrices = document.querySelectorAll('.product.price')
       var subtotalBox = document.querySelector('#subtotal')
       var subtotalArray = []
       var productSubtotalArray = []
@@ -803,7 +803,7 @@
       var changeDue = 0
       var changeDueBox = document.querySelector('[name="change_due"]')
       var tenderedBox = document.querySelector('[name="tendered"]')
-      var tendered = parseFloat(tenderedBox.value)
+      var tendered = parseFloat(tenderedBox.value.replace(",", ""))
 
       @if (isSet($sale))
         var paid = {{ number_format($sale->payments->sum('tendered'), 2) }}
@@ -815,14 +815,25 @@
       var balance = 0
       var balanceBox = document.querySelector('#balance')
 
+      @if (isset($sale)) {{-- If the sale exists in the database --}}
+        @if ($sale->events->count() > 0) {{-- If the sale has events --}}
+        ticketAmounts.forEach(function(item, index) {
+          {{-- Multiply the number of tickets by the price and adding them to a subtotal array --}}
+          subtotalArray[index] = ticketAmounts[index].value * parseFloat((ticketPrices[index].innerHTML).replace(",", ""))
+        })
+        @else {{-- If the sale does not have events --}}
+        subtotalArray = [0];
+        @endif
+      @else {{-- If the sale is new --}}
       ticketAmounts.forEach(function(item, index) {
         {{-- Multiply the number of tickets by the price and adding them to a subtotal array --}}
-        subtotalArray[index] = ticketAmounts[index].value * parseFloat(ticketPrices[index].innerHTML.split(" ")[1])
+        subtotalArray[index] = ticketAmounts[index].value * parseFloat((ticketPrices[index].innerHTML).replace(",", ""))
       })
+      @endif
 
       productAmounts.forEach(function(item, index) {
         {{-- Multiply the number of desired products by their price --}}
-        productSubtotalArray[index] = productAmounts[index].value * parseFloat(productPrices[index].innerHTML.split(" ")[1])
+        productSubtotalArray[index] = productAmounts[index].value * parseFloat((productPrices[index].innerHTML).replace(",", ""))
       })
 
       subtotal = subtotalArray.reduce(function(accumulator, currentValue) {
@@ -835,23 +846,23 @@
 
       //subtotal = secondShow.value == "1" ? subtotal : subtotal * 2
 
-      subtotalBox.value = (parseFloat(subtotal.toFixed(2)) + parseFloat(productSubtotal.toFixed(2))).toFixed(2)
+      subtotalBox.value = (parseFloat(subtotal.toFixed(2)) + parseFloat(productSubtotal)).toLocaleString("en-US", {minimumFractionDigits: 2})
 
 
       tax = taxable.value == "1" ? (subtotal + productSubtotal) * ({{ App\Setting::find(1)->tax }} / 100) : 0
 
       tax = Number(Math.round(tax+'e2')+'e-2')
 
-      taxBox.value = tax.toFixed(2)
+      taxBox.value = parseFloat(tax.toFixed(2)).toLocaleString("en-US", {minimumFractionDigits: 2})
       total = subtotal + tax + productSubtotal
-      totalBox.value = total.toFixed(2)
+      totalBox.value = total.toLocaleString("en-US", {minimumFractionDigits: 2})
 
       balance = total - (parseFloat(paidBox.value) + tendered)
-      balanceBox.value = (balance <= 0 || isNaN(balance)) ? (0).toFixed(2) : balance.toFixed(2)
+      balanceBox.value = (balance <= 0 || isNaN(balance)) ? parseFloat(0).toLocaleString("en-US", {minimumFractionDigits: 2}) : balance.toLocaleString("en-US", {minimumFractionDigits: 2})
       {{-- Get rid of NaN in the balance textbox if user deletes numbers form it --}}
 
       changeDue = tendered - (total - parseFloat(paidBox.value))
-      changeDueBox.value = changeDue <= 0 ? (0).toFixed(2) : changeDue.toFixed(2)
+      changeDueBox.value = changeDue <= 0 ? (0).toLocaleString("en-US", {minimumFractionDigits: 2}) : changeDue.toLocaleString("en-US", {minimumFractionDigits: 2})
 
     }
 
