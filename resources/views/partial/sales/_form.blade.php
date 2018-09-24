@@ -739,7 +739,7 @@
     $(dropdownMenuId).empty()
     $(dropdownMenuId).append(`<div class="item" data-value="1">No Show</div>`)
     $(dropdownDivId).dropdown('set selected', 1)
-    var response = await fetch(`/api/events?start=${date}&end=${date}&type={{ $eventType->id }}`)
+    var response = await fetch(`/api/events?start=${date}&type={{ $eventType->id }}`)
     var events = await response.json()
     events.map((event, i) => {
       var date = moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('h:mm A')

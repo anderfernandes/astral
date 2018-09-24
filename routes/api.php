@@ -387,13 +387,17 @@ Route::get('staff', function() {
 // This API is consumed by Full Calendar in /admin/calendar?type=events
 Route::get('events', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
-  $end = Date::parse($request->end)->endOfDay()->addMinute()->toDateTimeString();
+  $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
+  $eventsQuery = [
+    ['show_id', '!=', 1     ],
+    ['start'  , '>=', $start],
+  ];
+  if ($request->has('end'))
+  {
+    array_push($eventsQuery, ['end', '<=', $end]);
+  }
   $type = isSet($request->type) ? $request->type : null;
-  $events = Event::where([
-                          ['show_id', '!=', 1     ],
-                          ['start'  , '>=', $start],
-                          ['end'    , '<=', $end  ],
-                        ]);
+  $events = Event::where($eventsQuery);
   $events = isSet($request->type) ? $events->where('type_id', $request->type)->get() : $events->get();
   $eventsArray = [];
   foreach ($events as $event) {
