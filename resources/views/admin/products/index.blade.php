@@ -77,6 +77,9 @@
                 <div class="detail">{{ $product->creator->fullname }}</div>
               </div>
             @endif
+            <div class="ui basic {{ $product->active ? "green" : "red" }} label">
+              {{ $product->active ? "active" : "inactive" }}
+            </div>
             <p><i class="pencil icon"></i>{{ $product->created_at->format('l, F j, Y \a\t g:i A') }}</p>
             <p><i class="edit icon"></i>{{ Date::parse($product->updated_at)->format('l, F j, Y \a\t g:i A') }}</p>
           </div>

@@ -398,7 +398,12 @@ function fetchSales(calEvent, jsEvent, view) {
       var getStatus = function() {
 
         switch(sale.status) {
-          case `open`: return `<div class="ui violet label"><i class="unlock icon"></i>${sale.status}</div>`
+          case 'complete'  : return `<div class="ui green label"><i class="checkmark icon"></i>${sale.status}</div>`
+          case 'no show'   : return `<div class="ui orange label"><i class="thumbs outline down icon"></i>${sale.status}</div>`
+          case 'open'      : return `<div class="ui violet label"><i class="unlock icon"></i>${sale.status}</div>`
+          case 'tentative' : return `<div class="ui yellow label"><i class="help icon"></i>${sale.status}</div>`
+          case 'canceled'  : return `<div class="ui red label"><i class="remove icon"></i>${sale.status}</div>`
+          case 'confirmed'  : return `<div class="ui basic green label"><i class="thumbs up icon"></i>${sale.status}</div>`
         }
 
       }
@@ -773,6 +778,7 @@ function  fetchEvents(calEvent, jsEvent, view) {
               case 'open'      : return `<div class="ui violet label"><i class="unlock icon"></i>${status}</div>`
               case 'tentative' : return `<div class="ui yellow label"><i class="help icon"></i>${status}</div>`
               case 'canceled'  : return `<div class="ui red label"><i class="remove icon"></i>${status}</div>`
+              case 'confirmed'  : return `<div class="ui basic green label"><i class="thumbs up icon"></i>${status}</div>`
             }
           }
 

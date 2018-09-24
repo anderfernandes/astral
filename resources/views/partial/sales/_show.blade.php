@@ -76,6 +76,8 @@
             <span class="ui yellow label"><i class="help icon"></i>
           @elseif ($sale->status == 'canceled')
             <span class="ui red label"><i class="remove icon"></i>
+          @elseif ($sale->status == 'confirmed')
+            <span class="ui basic green label"><i class="thumbs up icon"></i>
           @else
             <span class="ui label">
           @endif
@@ -197,7 +199,7 @@
       </div>
     </div>
     @endif
-    
+
     @if($sale->products->count() > 0)
     <div class="ui raised card">
       <div class="content">

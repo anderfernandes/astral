@@ -44,24 +44,24 @@
         </td>
         <td>
           @if ($sale->refund)
-            <div class="ui red label"><i class="reply icon"></i>refund</span>
-          @else
-            @if ($sale->status == 'complete')
-              <span class="ui green label"><i class="checkmark icon"></i>
-            @elseif ($sale->status == 'no show')
-              <span class="ui orange label"><i class="thumbs outline down icon"></i>
-            @elseif ($sale->status == 'open')
-              <span class="ui violet label"><i class="unlock icon"></i>
-            @elseif ($sale->status == 'tentative')
-              <span class="ui yellow label"><i class="help icon"></i>
-            @elseif ($sale->status == 'canceled')
-              <span class="ui red label"><i class="remove icon"></i>
-            @else
-              <span class="ui label">
-            @endif
-              <div class="detail">{{ $sale->status }}</div>
-            </div>
+            <div class="ui red label"><i class="reply icon"></i> Refund</div>
           @endif
+          @if ($sale->status == 'complete')
+            <span class="ui green label"><i class="checkmark icon"></i>
+          @elseif ($sale->status == 'no show')
+            <span class="ui orange label"><i class="thumbs outline down icon"></i>
+          @elseif ($sale->status == 'open')
+            <span class="ui violet label"><i class="unlock icon"></i>
+          @elseif ($sale->status == 'tentative')
+            <span class="ui yellow label"><i class="help icon"></i>
+          @elseif ($sale->status == 'canceled')
+            <span class="ui red label"><i class="remove icon"></i>
+          @elseif ($sale->status == 'confirmed')
+            <span class="ui basic green label"><i class="thumbs up icon"></i>
+          @else
+            <span class="ui label">
+          @endif
+          {{ $sale->status }}</span>
         </td>
         <td><i class="user circle icon"></i>{{ $sale->creator->firstname }}</td>
         <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->created_at)->diffForHumans() }})</td>

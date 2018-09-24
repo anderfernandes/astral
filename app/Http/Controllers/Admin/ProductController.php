@@ -80,7 +80,8 @@ class ProductController extends Controller
         $product->price       = $request->price;
         $product->type_id     = $request->type_id;
         $product->creator_id  = Auth::user()->id;
-        $product->inventory   = (bool)$request->inventory;
+        $product->inventory   = (boolean)$request->inventory;
+        $product->active      = (boolean)$request->active;
 
         $product->stock = (bool)$product->inventory ? (int)$request->stock : 0;
 
@@ -139,9 +140,10 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->price       = $request->price;
         $product->type_id     = $request->type_id;
-        $product->inventory   = (bool)$request->inventory;
+        $product->inventory   = (boolean)$request->inventory;
+        $product->active      = (boolean)$request->active;
 
-        $product->stock = (bool)$product->inventory ? (int)$request->stock : 0;
+        $product->stock = (boolean)$product->inventory ? (int)$request->stock : 0;
 
         // Delete previous uploaded file and store new one
         if ($request->cover == null)

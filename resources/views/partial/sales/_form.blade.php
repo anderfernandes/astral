@@ -34,13 +34,26 @@
         <i class="dropdown icon"></i>
         <div class="default text">Sale Status</div>
         <div class="menu">
-          <div class="item" data-value="open" style="background-color: #6435c9 !important; border-color: #6435c9; color: white"><i class="unlock icon"></i>Open</div>
-          <div class="item" data-value="complete" style="background-color: #21ba45 !important; border-color: #21ba45; color: white"><i class="checkmark icon"></i>Complete</div>
+          <div class="item" data-value="open" style="background-color: #6435c9 !important; border-color: #6435c9; color: white">
+            <i class="unlock icon"></i>Open
+          </div>
+          <div class="item" data-value="confirmed" style="background-color: white !important; border-color: #21ba45; color: #21ba45">
+            <i class="thumbs up icon"></i>Confirmed
+          </div>
+          <div class="item" data-value="complete" style="background-color: #21ba45 !important; border-color: #21ba45; color: white">
+            <i class="checkmark icon"></i>Complete
+          </div>
           @if (!Request::routeIs('*.*.create'))
-          <div class="item" data-value="canceled" style="background-color: #cf3534 !important; border-color: #cf3534; color: white"><i class="remove icon"></i>Canceled</div>
+          <div class="item" data-value="canceled" style="background-color: #cf3534 !important; border-color: #cf3534; color: white">
+            <i class="remove icon"></i>Canceled
+          </div>
           @endif
-          <div class="item" data-value="tentative" style="background-color: #fbbd08 !important; border-color: #fbbd08; color: white"><i class="help icon"></i>Tentative</div>
-          <div class="item" data-value="no show" style="background-color: #f2711c !important; border-color: #f2711c; color: white"><i class="thumbs outline down icon"></i>No Show</div>
+          <div class="item" data-value="tentative" style="background-color: #fbbd08 !important; border-color: #fbbd08; color: white">
+            <i class="help icon"></i>Tentative
+          </div>
+          <div class="item" data-value="no show" style="background-color: #f2711c !important; border-color: #f2711c; color: white">
+            <i class="thumbs outline down icon"></i>No Show
+          </div>
         </div>
       </div>
     </div>
@@ -870,11 +883,12 @@
   function changeSaleStatusColor() {
       $('#sale-status').css('color', 'white')
       switch(document.querySelector('#status').value) {
-        case 'open'      : $('#sale-status').css('background-color', '#6435c9'); break;
-        case 'complete' : $('#sale-status').css('background-color', '#21ba45'); break;
-        case 'canceled' : $('#sale-status').css('background-color', '#cf3534'); break;
-        case 'no show' : $('#sale-status').css('background-color', '#f2711c'); break;
-        case 'tentative' : $('#sale-status').css('background-color', '#fbbd08'); break;
+        case 'open'      : $('#sale-status').css('background-color', '#6435c9').css('border-color', '#6435c9'); break;
+        case 'complete' : $('#sale-status').css('background-color', '#21ba45').css('border-color', '#21ba45'); break;
+        case 'canceled' : $('#sale-status').css('background-color', '#cf3534').css('border-color', '#cf3534'); break;
+        case 'no show' : $('#sale-status').css('background-color', '#f2711c').css('border-color', '#f2711c'); break;
+        case 'tentative' : $('#sale-status').css('background-color', '#fbbd08').css('border-color', '#fbbd08'); break;
+        case 'confirmed' : $('#sale-status').css('background-color', 'white').css('color', '#21ba45').css('border-color', '#21ba45'); break;
         default: $('#sale-status').css('background-color', 'white').css('color', 'black');
       }
     }

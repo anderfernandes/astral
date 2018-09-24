@@ -4,6 +4,15 @@
   @endif
   {{ csrf_field() }}
   <div class="three fields">
+    <div class="field">
+      <label for="active">Active</label>
+      <select name="active" id="active" class="ui dropdown">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </div>
+  </div>
+  <div class="three fields">
     <div class="required field">
       <label for="name">Name</label>
       <input type="text" placeholder="Product Name" name="name" value="{{ isSet($product) ? $product->name : old('name') }}">
@@ -91,6 +100,8 @@
     @endif
 
   @endisset
+
+  $("#active").dropdown('set selected', {{ isset($product->active) ? $product->active : old('active') }})
 
   $('#inventory').change(function() {
     this.value == 'true' ? $('#current-stock').removeClass('disabled') : $('#current-stock').addClass('disabled')

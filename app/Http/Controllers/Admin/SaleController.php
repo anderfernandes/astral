@@ -84,7 +84,7 @@ class SaleController extends Controller
         $paymentMethods = PaymentMethod::all();
         $eventType      = EventType::find($request->eventType);
         $ticketTypes    = $eventType->allowedTickets;
-        $products       = Product::all();
+        $products       = Product::where('active', true)->get();
         $grades         = \App\Grade::all();
 
         return view('admin.sales.create')
@@ -299,7 +299,7 @@ class SaleController extends Controller
         $paymentMethods = PaymentMethod::all();
         $eventType      = EventType::find($sale->events[0]->type_id ?? 1);
         $ticketTypes    = $eventType->allowedTickets;
-        $products       = Product::all();
+        $products       = Product::where('active', true)->get();
         $grades         = \App\Grade::all();
         $events         = [];
 
