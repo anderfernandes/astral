@@ -38,6 +38,7 @@
             <th>Price</th>
             <th>Allowed In</th>
             <th>Active?</th>
+            <th>Public</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -63,13 +64,8 @@
                   <div class="ui mini label" style="background-color: {{ $eventType->color }}; color: rgba(255, 255, 255, 0.8)">{{ $eventType->name }}</div>
                 @endforeach
               </td>
-              <td>
-                @if ($ticketType->active)
-                  Yes
-                @else
-                  No
-                @endif
-              </td>
+              <td>{{ $ticketType->active ? "Yes" : "No" }}</td>
+              <td>{{ $ticketType->public ? "Yes" : "No" }}</td>
               <td><a href="{{ route('admin.ticket-types.edit', $ticketType) }}" class="ui yellow icon button"><i class="edit icon"></i></a></td>
             </tr>
             @endforeach

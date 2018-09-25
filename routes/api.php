@@ -106,20 +106,20 @@ Route::get('sales', function() {
 
   foreach ($allSales as $sale) {
     $sales = array_prepend($sales, [
-      'id'       => $sale->id,
-      'creator'  => $sale->creator->firstname,
-      'status'   => $sale->status,
-      'source'   => $sale->source,
-      'taxable'  => boolval($sale->taxable),
-      'subtotal' => $sale->subtotal,
-      'tax'      => $sale->tax,
-      'total'    => $sale->total,
-      'balance'  => number_format($sale->total - $sale->payments->sum('tendered'), 2),
-      'refund'   => $sale->refund,
-      'customer' => $sale->customer->fullname,
-      'organization' => $sale->organization->name,
+      'id'                 => $sale->id,
+      'creator'            => $sale->creator->firstname,
+      'status'             => $sale->status,
+      'source'             => $sale->source,
+      'taxable'            => boolval($sale->taxable),
+      'subtotal'           => $sale->subtotal,
+      'tax'                => $sale->tax,
+      'total'              => $sale->total,
+      'balance'            => number_format($sale->total - $sale->payments->sum('tendered'), 2),
+      'refund'             => $sale->refund,
+      'customer'           => $sale->customer->fullname,
+      'organization'       => $sale->organization->name,
       'sellToOrganization' => boolval($sale->sell_to_organization),
-      'payments' => $sale->payments
+      'payments'           => $sale->payments
     ]);
   };
 
@@ -427,7 +427,7 @@ Route::get('events', function(Request $request) {
         'cover'       => $event->show->cover,
         'description' => $event->show->description,
         ],
-      'allowedTickets' => $event->type->allowedTickets,
+      'allowedTickets'  => $event->type->allowedTickets->where('public', true),
       'date'            => $start,
       'color'           => $event->type->color,
       'backgroundColor' => $event->type->color,

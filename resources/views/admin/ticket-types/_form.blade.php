@@ -16,7 +16,11 @@
     </div>
   </div>
 </div>
-<div class="two fields">
+<div class="three fields">
+  <div class="field">
+    {!! Form::label('public', 'Public?') !!}
+    {!! Form::select('public', [true => 'Yes', false => 'No'], ($ticketType->public ?? old('ticket_type')), ['class' => 'ui dropdown', 'data-validate' => 'tt_public']) !!}
+  </div>
   <div class="field">
     {!! Form::label('active', 'Active?') !!}
     {!! Form::select('active', [true => 'Yes', false => 'No'], true, ['class' => 'ui dropdown', 'data-validate' => 'tt_active']) !!}

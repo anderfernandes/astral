@@ -45,6 +45,7 @@ class TicketTypeController extends Controller
           'price'               => 'required|numeric',
           'allowed_in_events.*' => 'required',
           'active'              => 'required',
+          'public'              => 'required',
           'description'         => 'required|max:255',
           'in_cashier'          => 'required',
         ]);
@@ -58,6 +59,7 @@ class TicketTypeController extends Controller
         $ticketType->active      = $request->active;
         $ticketType->description = $request->description;
         $ticketType->in_cashier  = $request->in_cashier;
+        $ticketType->public      = (boolean)$request->public;
 
         $ticketType->creator_id  = Auth::user()->id;
 
@@ -106,6 +108,7 @@ class TicketTypeController extends Controller
         'name'                => 'required',
         'price'               => 'required|numeric',
         'allowed_in_events.*' => 'required',
+        'public'              => 'required',
         'active'              => 'required',
         'description'         => 'required|max:255',
         'in_cashier'          => 'required',
@@ -120,6 +123,7 @@ class TicketTypeController extends Controller
       $ticketType->active      = $request->active;
       $ticketType->description = $request->description;
       $ticketType->in_cashier  = $request->in_cashier;
+      $ticketType->public      = (boolean)$request->public;
 
       $ticketType->save();
 
