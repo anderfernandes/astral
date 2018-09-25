@@ -399,6 +399,8 @@ Route::get('events', function(Request $request) {
   array_push($q, ['start', '>=', $start], ['end', '<=', $end]);
 
   if ($request->has('type')) array_push($q, ['type_id', $request->type]);
+  if ($request->has('public')) array_push($q, ['public', $request->public]);
+
   $type = isSet($request->type) ? $request->type : null;
   $events = Event::where($q)->get();
   $eventsArray = [];
@@ -421,6 +423,7 @@ Route::get('events', function(Request $request) {
       'show'     => [
         'name'        => $event->show->name,
         'type'        => $event->show->type,
+        'duration'    => (int)$event->show->duration,
         'cover'       => $event->show->cover,
         'description' => $event->show->description,
         ],
