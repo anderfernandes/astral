@@ -143,16 +143,7 @@ class ShowController extends Controller
       $show->type        = $request->input('type');
       $show->duration    = $request->input('duration');
 
-      // Delete previous uploaded file and store new one
-      if ($request->cover == null)
-      {
-        $show->cover = '/default.png';
-      }
-      else
-      {
-        Storage::disk('public')->delete($show->cover);
-        $show->cover = $request->cover->store('shows', 'public');
-      }
+      $show->cover = $request->cover == null ? '/default.png' : $request->cover->store('shows', 'public');
 
       $show->save();
 

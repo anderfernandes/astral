@@ -8,7 +8,8 @@ class EventType extends Model
 {
   public function allowedTickets()
   {
-    return $this->belongsToMany('App\TicketType', 'allowed_ticket_events', 'event_type_id', 'ticket_type_id');
+    return $this->belongsToMany('App\TicketType', 'allowed_ticket_events', 'event_type_id', 'ticket_type_id')
+                 ->where('active', true);
   }
   public function creator()
   {

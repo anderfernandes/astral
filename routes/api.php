@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Mail\Markdown;
 
 use App\{ Event, Setting, User, PaymentMethod, Sale, Organization, EventType };
 use App\{ MemberType, Show };
@@ -387,18 +388,19 @@ Route::get('staff', function() {
 // This API is consumed by Full Calendar in /admin/calendar?type=events
 Route::get('events', function(Request $request) {
   $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
-  $end = Date::parse($request->end)->endOfDay()->toDateTimeString();
-  $eventsQuery = [
-    ['show_id', '!=', 1     ],
-    ['start'  , '>=', $start],
+
+  $end = $request->has('end')
+          ? Date::parse($request->end)->endOfDay()->toDateTimeString()
+          : Date::parse($request->start)->endOfDay()->toDateTimeString();
+
+  $q = [
+    ['show_id', '!=', 1],
   ];
-  if ($request->has('end'))
-  {
-    array_push($eventsQuery, ['end', '<=', $end]);
-  }
+  array_push($q, ['start', '>=', $start], ['end', '<=', $end]);
+
+  if ($request->has('type')) array_push($q, ['type_id', $request->type]);
   $type = isSet($request->type) ? $request->type : null;
-  $events = Event::where($eventsQuery);
-  $events = isSet($request->type) ? $events->where('type_id', $request->type)->get() : $events->get();
+  $events = Event::where($q)->get();
   $eventsArray = [];
   foreach ($events as $event) {
     $ticketsSold = 0;
@@ -406,20 +408,21 @@ Route::get('events', function(Request $request) {
         $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
     }
     $seats = $event->seats - $ticketsSold;
-    $isAllDay = (Date::parse($event->start)->isStartOfDay() && Date::parse($event->end)->isEndOfDay());
+    $isAllDay = (($event->start->isStartOfDay()) && ($event->end->isEndOfDay()));
     $eventsArray = array_prepend($eventsArray, [
       'id'       => $event->id,
       'type'     => $event->type->name,
-      'start'    => $isAllDay ? Date::parse($event->start)->format('Y-m-d') : Date::parse($event->start)->toDateTimeString(),
-      'end'      => $isAllDay ? '' : Date::parse($event->end)->toDateTimeString(),
+      'start'    => $isAllDay ? $event->start->format('Y-m-d') : $event->start->toDateTimeString(),
+      'end'      => $isAllDay ? '' : $event->end->toDateTimeString(),
       // Take out tickets from shows that have been canceled!!!
       'seats'    => $seats, // $event->seats - App\Ticket::where('event_id', $event->id)->count(),
       'title'    => $event->show_id !=1 ? "{$event->show->name}, $seats seats left" : (isSet($event->memo) ? $event->memo : $event->type->name),
       //'url'      => '/admin/events/' . $event->id,
       'show'     => [
-        'name'  => $event->show->name,
-        'type'  => $event->show->type,
-        'cover' => $event->show->cover
+        'name'        => $event->show->name,
+        'type'        => $event->show->type,
+        'cover'       => $event->show->cover,
+        'description' => $event->show->description,
         ],
       'allowedTickets' => $event->type->allowedTickets,
       'date'            => $start,

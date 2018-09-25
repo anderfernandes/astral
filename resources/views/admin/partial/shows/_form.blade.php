@@ -92,13 +92,6 @@
           { type: 'maxLength[3]', prompt: '{name} should be at most {ruleValue} characters long'}
         ]
       },
-      cover: {
-        identifier: 'cover',
-        rules: [
-          { type: 'empty', prompt: 'Select an image to be the cover.' },
-        ]
-      },
-
     }
   })
 

@@ -235,6 +235,6 @@ class EventController extends Controller
         // Log deleted event
         Log::info(Auth::user()->fullname . ' deleted Event #' . $event->id .' using admin');
 
-        return redirect()->to(route('admin.calendar.events') . '?date=' . $date . '&view=agendaDay');
+        return redirect()->to(route('admin.calendar.index') . '?date=' . $date . '&view=agendaDay');
     }
 }

@@ -39,7 +39,7 @@
       {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
-{!! Form::close() !!}
+  {!! Form::close() !!}
 
 <div onclick="$('#add-show').modal('show')" class="ui secondary button">
   <i class="ui icons">
@@ -54,7 +54,7 @@
 @if (!isSet($shows) || ($shows->count()) > 0)
   <div class="ui five doubling link cards">
     @foreach($shows as $show)
-      <div class="card" onclick="window.open('{{ route('admin.shows.show', $show) }}', '_blank')">
+      <div class="card" onclick="location.href='{{ route('admin.shows.show', $show) }}'">
         <div class="content">
           <div class="header">
             {{ $show->name }}
@@ -65,7 +65,7 @@
           </div>
         </div>
         <div href="{{ route('admin.shows.show', $show) }}" class="image">
-          <img src="{{ substr($show->cover, 0, 4) == 'http' ? $show->cover : Storage::url($show->cover) }}">
+          <img src="{{ (substr($show->cover, 0, 4) == ('http') || $show->cover == '/default.png') ? $show->cover : Storage::url($show->cover) }}">
         </div>
       </div>
     @endforeach
