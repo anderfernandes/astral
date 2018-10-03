@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Show extends Model
+class ShowType extends Model
 {
   /**
    * The attributes that should be mutaded to dates
@@ -20,10 +20,5 @@ class Show extends Model
   public function creator()
   {
     return $this->belongsTo('App\User');
-  }
-
-  public function category()
-  {
-    return $this->belongsTo('App\ShowType', 'type_id');
   }
 }

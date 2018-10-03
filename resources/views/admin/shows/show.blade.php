@@ -37,7 +37,7 @@
         <div class="content">
           <div class="ui huge header">{{ $show->name }}</div>
           <div class="meta">
-            <div class="ui black label">{{ $show->type }}</div>
+            <div class="ui black label">{{ $show->category->name }}</div>
             <div class="ui black label">
               <i class="clock icon"></i> <div class="detail">{{ $show->duration }} minutes</div>
             </div>
@@ -63,11 +63,11 @@
   @include('admin.partial.shows._edit')
 
   @include('admin.partial._basic-modal', [
-    'id'       => 'delete-show',
-    'icon'     => 'trash',
-    'title'    => "You are about to delete a show!",
-    'subtitle' => "Are you sure you want to permanently delete the <strong>{$show->type}</strong> show <strong>{$show->name}</strong> ?",
-    'actions'  => "<a href='/admin/shows/{$show->id}/delete' class='ui inverted red button'><i class='trash icon'></i>Yes, Delete {$show->name}</a>"
+    'id'        => 'delete-show',
+    'icon'      => 'trash',
+    'title'     => "You are about to delete a show!",
+    'subtitle'  => "Are you sure you want to permanently delete the <strong>{$show->category->name}</strong> show <strong>{$show->name}</strong> ?",
+    'actions'   => "<a href='/admin/shows/{$show->id}/delete' class='ui inverted red button'><i class='trash icon'></i>Yes, Delete {$show->name}</a>",
   ])
 
 @endsection

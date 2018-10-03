@@ -29,10 +29,11 @@
       </div>
     </div>
     <div class="field">
-      <select id="showType" class="ui dropdown" name="type">
+      <select id="showType" class="ui dropdown" name="type_id">
         <option value="">All Types</option>
-        <option value="Planetarium">Planetarium</option>
-        <option value="Laser Light">Laser Light</option>
+        @foreach($showTypes as $id => $name)
+        <option value="{{ $id }}">{{ $name }}</option>
+        @endforeach
       </select>
     </div>
     <div class="field">
@@ -60,7 +61,7 @@
             {{ $show->name }}
           </div>
           <div class="meta">
-            <div class="ui black label">{{ $show->type }}</div>
+            <div class="ui black label">{{ $show->category->name }}</div>
             <div class="ui black label">{{ $show->duration }} minutes</div>
           </div>
         </div>

@@ -165,6 +165,12 @@
       <a class="item" href="{{ route('admin.settings.index') }}/#product-types">
         <i class="large box icon"></i> Products
       </a>
+      <a class="item" href="{{ route('admin.settings.index') }}/#grades">
+        <i class="large book icon"></i> Grades
+      </a>
+      <a class="item" href="{{ route('admin.settings.index') }}/#show-types">
+        <i class="large film icon"></i> Show
+      </a>
     </div>
   </div>
   @endif

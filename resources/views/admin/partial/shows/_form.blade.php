@@ -9,11 +9,9 @@
     {!! Form::text('name', null, ['placeholder' => 'What\'s the name of the show?']) !!}
   </div>
   <div class="field">
-    {!! Form::label('type', 'Type') !!}
-    {!! Form::select('type',
-      ['Planetarium' => 'Planetarium', 'Laser Light' => 'Laser Light'],
-      null,
-      ['placeholder' => 'Planetarium or Laser?', 'class' => 'ui dropdown']) !!}
+    {!! Form::label('type_id', 'Type') !!}
+    {!! Form::select('type_id', $showTypes, null,
+      ['placeholder' => 'What kind of show is this?', 'class' => 'ui dropdown']) !!}
   </div>
 </div>
 <div class="two fields">

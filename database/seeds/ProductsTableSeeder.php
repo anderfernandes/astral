@@ -20,6 +20,7 @@ class ProductsTableSeeder extends Seeder
           'price'       => 0,
           'inventory'   => false,
           'stock'       => 0,
+          'active'      =>true,
           'created_at'  => Date::now()->toDateTimeString(),
         ]);
         DB::table('products')->insert([
@@ -31,6 +32,7 @@ class ProductsTableSeeder extends Seeder
           'inventory'   => false,
           'stock'       => 0,
           'price'       => 0,
+          'active'      => true,
           'created_at'  => Date::now()->toDateTimeString(),
         ]);
     }

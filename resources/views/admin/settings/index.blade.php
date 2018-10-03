@@ -22,6 +22,7 @@
       <a class="item" data-tab="bulletin"><i class="comments outline icon"></i>Bulletin</a>
       <a class="item" data-tab="product-types"><i class="box icon"></i>Products</a>
       <a class="item" data-tab="grade"><i class="book icon"></i>Grades</a>
+      <a class="item" data-tab="show-types"><i class="film icon"></i>Show Types</a>
     </div>
   </div>
 
@@ -59,6 +60,9 @@
 
     {{-- Grades --}}
     @include('admin.settings._grade')
+
+    {{-- Shows --}}
+    @include('admin.settings._shows')
 
 </div>
 

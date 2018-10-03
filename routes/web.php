@@ -45,6 +45,9 @@ Route::group(
   Route::resource('member-types', 'MemberTypeController');
   // Grades
   Route::resource('grades', 'GradeController');
+  // Show Types
+  Route::resource('show-types', 'ShowTypeController');
+  //Announcements
   Route::resource('announcements', 'AnnouncementController');
   // Reports
   Route::get('reports/closeout', 'ReportController@closeout')->name('reports.closeout');

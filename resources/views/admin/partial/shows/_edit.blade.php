@@ -7,6 +7,7 @@
   'subtitle' => $show->name,
 ])
   @slot('content')
-    @component('admin.partial.shows._form', ['type' => 'edit', 'show' => $show])@endcomponent
+    @component('admin.partial.shows._form', ['type' => 'edit', 'show' => $show, 'showTypes' => $showTypes])
+    @endcomponent
   @endslot
 @endcomponent

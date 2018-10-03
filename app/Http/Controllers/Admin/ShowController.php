@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Show;
+use App\{ Show, ShowType };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -24,6 +24,7 @@ class ShowController extends Controller
 
 
         $shows = Show::where('id', '!=', 1);
+        $showTypes = ShowType::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
 
         if (count($request->query()) > 0)
         {
@@ -36,7 +37,7 @@ class ShowController extends Controller
           }
 
           if (isSet($request->type)) {
-            $shows = $shows->where('type', $request->type);
+            $shows = $shows->where('type_id', $request->type_id);
           }
 
           $showIds = $shows->pluck('id');
@@ -47,7 +48,8 @@ class ShowController extends Controller
           $shows = $shows->orderBy('name', 'asc')->paginate(10);
         }
 
-        return view('admin.shows.index')->withShows($shows);
+        return view('admin.shows.index')->withShowTypes($showTypes)
+                                        ->withShows($shows);
     }
 
     /**
@@ -57,7 +59,8 @@ class ShowController extends Controller
      */
     public function create()
     {
-        return view('admin.shows.create');
+        $showTypes = ShowType::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+        return view('admin.shows.create')->withShowTypes($showTypes);
     }
 
     /**
@@ -71,7 +74,7 @@ class ShowController extends Controller
         $this->validate($request, [
           'name'        => 'required|unique:shows',
           'description' => 'required',
-          'type'        => 'required',
+          'type_id'     => 'required',
           'duration'    => 'required|integer',
           'cover'       => 'image',
         ]);
@@ -80,7 +83,8 @@ class ShowController extends Controller
 
         $show->name        = $request->name;
         $show->description = $request->description;
-        $show->type        = $request->type;
+        //$show->type        = $request->type;
+        $show->type_id     = $request->type_id;
         $show->duration    = $request->duration;
 
         $show->cover = $request->cover == null ? '/default.png' : $request->cover->store('shows', 'public');
@@ -107,7 +111,10 @@ class ShowController extends Controller
      */
     public function show(Show $show)
     {
-        return view('admin.shows.show')->withShow($show);
+        $showTypes = ShowType::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+
+        return view('admin.shows.show')->with(['showTypes' => $showTypes])
+                                       ->withShow($show);
     }
 
     /**
@@ -130,20 +137,21 @@ class ShowController extends Controller
      */
     public function update(Request $request, Show $show)
     {
-
+      
       $this->validate($request, [
         'name'        => 'required',
         'description' => 'required',
-        'type'        => 'required',
+        'type_id'        => 'required',
         'duration'    => 'required|integer',
       ]);
 
       $show->name        = $request->input('name');
       $show->description = $request->input('description');
-      $show->type        = $request->input('type');
+      //$show->type        = $request->type;
+      $show->type_id     = $request->type_id;
       $show->duration    = $request->input('duration');
 
-      $show->cover = $request->cover == null ? '/default.png' : $request->cover->store('shows', 'public');
+      $request->has('cover') ? $show->cover =  $request->cover->store('shows', 'public') : null;
 
       $show->save();
 
