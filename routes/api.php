@@ -396,9 +396,10 @@ Route::get('events', function(Request $request) {
   $q = [
     ['show_id', '!=', 1],
   ];
-  array_push($q, ['start', '>=', $start], ['end', '<=', $end]);
 
-  if ($request->has('type')) array_push($q, ['type_id', $request->type]);
+  if ($request->has('start'))  array_push($q, ['start', '>=', $start]);
+  if ($request->has('end'))    array_push($q, ['end', '<=', $end]);
+  if ($request->has('type'))   array_push($q, ['type_id', $request->type]);
   if ($request->has('public')) array_push($q, ['public', $request->public]);
 
   $type = isSet($request->type) ? $request->type : null;
