@@ -143,22 +143,6 @@
     </div>
     @endif
 
-    {{-- Grades --}}
-    @if ($sale->grades->count() > 0)
-    <div class="ui raised card">
-      <div class="content">
-        <div class="ui top attached black center aligned large label"><i class="book icon"></i> Grades</div>
-        <div class="header">
-          <div class="ui large labels">
-            @foreach ($sale->grades as $grade)
-              <div class="ui black label">{{ $grade->name }}</div>
-            @endforeach
-          </div>
-        </div>
-      </div>
-    </div>
-    @endif
-
     {{-- Events and Attendance --}}
     @if ($sale->events->count() > 0)
     <div class="ui raised card">
@@ -203,7 +187,7 @@
     @if($sale->products->count() > 0)
     <div class="ui raised card">
       <div class="content">
-        <div class="ui top attached black center aligned large label"><i class="box icon"></i> Extras</div>
+        <div class="ui top attached black center aligned large label"><i class="box icon"></i> Products</div>
         {{-- Products --}}
         <div class="ui divided list">
           @foreach ($sale->products->unique('id') as $product)
@@ -231,11 +215,23 @@
       </div>
     </div>
     @endif
-
-
   </div>
 
-{{-- Totals --}}
+  {{-- Grades --}}
+  @if ($sale->grades->count() > 0)
+  <h4 class="ui horizontal divider center aligned header">
+    <i class="book icon"></i> Grades
+  </h4>
+  <div class="ui center aligned basic segment container">
+    @foreach ($sale->grades as $grade)
+    <div class="ui black label">{{ $grade->name }}</div>
+    @endforeach
+  </div>
+
+
+  @endif
+
+  {{-- Totals --}}
 
   <h4 class="ui horizontal divider center aligned header">
     <i class="dollar icon"></i> Totals

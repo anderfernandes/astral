@@ -539,14 +539,6 @@ Route::get('sale/{sale}', function(Sale $sale) {
     ]);
   }
 
-  foreach($sale->grades as $grade)
-  {
-    $gradesArray = array_prepend($gradesArray, [
-      'id' => $grade->id,
-      'name' => $grade->name,
-    ]);
-  }
-
   foreach($sale->products->unique('id') as $product)
   {
     $productsArray = array_prepend($productsArray, [
@@ -631,7 +623,7 @@ Route::get('sale/{sale}', function(Sale $sale) {
       'email'        => $sale->customer->email,
     ],
     'events'               => $eventsArray,
-    'grades'               => $gradesArray,
+    'grades'               => $sale->grades,
     'products'             => $productsArray,
     'sell_to_organization' => (bool)$sale->sell_to_organization,
     'subtotal'             => number_format($sale->subtotal, 2),

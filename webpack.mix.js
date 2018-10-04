@@ -16,20 +16,19 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 // Vendor stuff, non-js
 
-/*
 mix.scripts([
-'node_modules/jquery/dist/jquery.min.js',
-'node_modules/jquery-address/src/jquery.address.js',
-'node_modules/moment/min/moment.min.js',
-'node_modules/simplemde/dist/simplemde.min.js',
-'node_modules/flatpickr/dist/flatpickr.min.js',
-'node_modules/fullcalendar/dist/fullcalendar.min.js',
-'node_modules/chart.js/dist/Chart.min.js'
-], 'public/js/vendor.js');
+  'node_modules/jquery/dist/jquery.min.js',
+  'node_modules/jquery-address/src/jquery.address.js',
+  'node_modules/moment/min/moment.min.js',
+  'node_modules/simplemde/dist/simplemde.min.js',
+  'node_modules/flatpickr/dist/flatpickr.min.js',
+  'node_modules/fullcalendar/dist/fullcalendar.min.js',
+  'node_modules/chart.js/dist/Chart.min.js',
+  'node_modules/marked/marked.min.js'
+  ], 'public/js/vendor.js');
 
 mix.styles([
-'node_modules/simplemde/dist/simplemde.min.css',
-'node_modules/flatpickr/dist/flatpickr.min.css',
-'node_modules/fullcalendar/dist/fullcalendar.min.css'
-], 'public/css/vendor.css');
-*/
+  'node_modules/simplemde/dist/simplemde.min.css',
+  'node_modules/flatpickr/dist/flatpickr.min.css',
+  'node_modules/fullcalendar/dist/fullcalendar.min.css'
+  ], 'public/css/vendor.css');

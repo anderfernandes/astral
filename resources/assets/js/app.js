@@ -11,10 +11,10 @@ Vue.prototype.moment = moment
 Vue.config.productionTip = false
 
 // ElementUI
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+//import ElementUI from 'element-ui';
+//import 'element-ui/lib/theme-chalk/index.css';
 
-Vue.use(ElementUI)
+//Vue.use(ElementUI)
 
 // Cashier
 import Cashier from './components/Cashier'
