@@ -18,11 +18,12 @@
             </div>
             <div class="sub header">
               @foreach ($eventType->allowedTickets as $ticketType)
-                <div class="ui black label">
-                  <i class="ticket icon"></i>
-                  <div class="detail">{{ $ticketType->name }}</div>
+                <div class="ui black label" data-inverted="" data-tooltip="{{ $ticketType->name }} tickets {{ $ticketType->in_cashier ? "ARE" : "ARE NOT" }} available in cashier.">
+                  $ {{ number_format($ticketType->price, 2, ".", ",") }}/{{ $ticketType->name }}
                   @if ($ticketType->in_cashier)
-                    <div class="detail" data-tooltip="{{ $ticketType->name }} tickets are available in cashier."><i class="inbox icon"></i></div>
+                    <div class="detail">
+                      <i class="inbox icon"></i>
+                    </div>
                   @endif
                 </div>
               @endforeach

@@ -21,11 +21,20 @@
 <div class="two required fields">
   <div class="field">
     {!! Form::label('show_id', 'Show') !!}
-    {!! Form::select('show_id', $shows, null, ['placeholder' => 'Select a show', 'class' => 'ui search dropdown']) !!}
+    {!! Form::select(
+      'show_id',
+      $shows,
+      null,
+      [
+        'placeholder' => 'Select a show',
+        'class' => 'ui search dropdown'
+      ]
+      )
+    !!}
   </div>
   <div class="field">
     {!! Form::label('type_id', 'Type') !!}
-    {!! Form::select('type_id', $eventTypes, null, ['placeholder' => 'Select event type', 'class' => 'ui dropdown']) !!}
+    {!! Form::select('type_id', $eventTypes, null, ['placeholder' => 'Select event type', 'class' => 'ui search dropdown']) !!}
   </div>
 </div>
 <div class="two required fields">

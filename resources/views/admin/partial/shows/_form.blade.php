@@ -3,7 +3,7 @@
 @else
   {!! Form::model($show, ['route' => ['admin.shows.update', $show], 'class' => 'ui form', 'method' => 'PUT', 'enctype' => 'multipart/form-data']) !!}
 @endif
-<div class="two fields">
+<div class="three fields">
   <div class="field">
     {!! Form::label('name', 'Name') !!}
     {!! Form::text('name', null, ['placeholder' => 'What\'s the name of the show?']) !!}
@@ -12,6 +12,14 @@
     {!! Form::label('type_id', 'Type') !!}
     {!! Form::select('type_id', $showTypes, null,
       ['placeholder' => 'What kind of show is this?', 'class' => 'ui dropdown']) !!}
+  </div>
+  <div class="field">
+    {!! Form::label('active', 'Active') !!}
+    {!! Form::select('active',
+      ['1' => 'Yes', '0' => 'No'],
+      isset($show) ? (old('active') ?? $show->active) : old('active'),
+      ['class' => 'ui dropdown'])
+    !!}
   </div>
 </div>
 <div class="two fields">

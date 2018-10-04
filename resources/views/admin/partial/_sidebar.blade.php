@@ -169,7 +169,7 @@
         <i class="large book icon"></i> Grades
       </a>
       <a class="item" href="{{ route('admin.settings.index') }}/#show-types">
-        <i class="large film icon"></i> Show
+        <i class="large film icon"></i> Shows
       </a>
     </div>
   </div>

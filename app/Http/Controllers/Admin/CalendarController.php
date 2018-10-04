@@ -10,7 +10,11 @@ use App\{Show, EventType};
 class CalendarController extends Controller
 {
     public function index(Request $request) {
-      $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+      $shows = Show::where('id', '!=', 1)
+                   ->where('active', true)
+                   ->orderBy('name', 'asc')
+                   ->pluck('name', 'id');
+                   
       $shows->prepend('No Show', 1);
       $eventTypes = EventType::where('id', '<>', 1)->orderBy('name', 'asc')->pluck('name', 'id');
 

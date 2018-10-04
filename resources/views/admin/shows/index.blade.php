@@ -6,7 +6,7 @@
 @section('content')
 
   {!! Form::open(['route' => 'admin.shows.index', 'class' => 'ui form', 'method' => 'get', 'id' => 'search']) !!}
-  <div class="four fields">
+  <div class="five fields">
     <div class="field">
       <div class="ui selection search dropdown" id="show-id">
         <input type="hidden" name="id">
@@ -37,6 +37,13 @@
       </select>
     </div>
     <div class="field">
+      <select id="isActive" class="ui dropdown" name="active">
+        <option value="">Active or Inactive</option>
+        <option value="1">Active</option>
+        <option value="0">Inactive</option>
+      </select>
+    </div>
+    <div class="field">
       {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
     </div>
   </div>
@@ -63,6 +70,11 @@
           <div class="meta">
             <div class="ui black label">{{ $show->category->name }}</div>
             <div class="ui black label">{{ $show->duration }} minutes</div>
+            @if (!$show->active)
+            <div class="ui red basic label">
+              inactive
+            </div>
+            @endif
           </div>
         </div>
         <div href="{{ route('admin.shows.show', $show) }}" class="image">
@@ -96,11 +108,14 @@
 @include('admin.partial.shows._create')
 
 <script>
-  @if (app('request')->id)
+  @if (app('request')->has('id'))
     $('#show-id').dropdown('set exactly', {{ app('request')->id }})
   @endif
-  @if (app('request')->type)
+  @if (app('request')->has('type'))
     $('#showType').dropdown('set exactly', "{{ app('request')->type }}")
+  @endif
+  @if (app('request')->has('active'))
+    $('#isActive').dropdown('set exactly', "{{ app('request')->active }}")
   @endif
 </script>
 

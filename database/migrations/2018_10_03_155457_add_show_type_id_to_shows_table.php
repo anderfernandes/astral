@@ -16,6 +16,7 @@ class AddShowTypeIdToShowsTable extends Migration
         Schema::table('shows', function (Blueprint $table) {
           $table->integer('type_id')->unsigned()->default(1);
           $table->foreign('type_id')->references('id')->on('show_types');
+          $table->boolean('active')->default(false);
         });
     }
 
@@ -28,6 +29,7 @@ class AddShowTypeIdToShowsTable extends Migration
     {
         Schema::table('shows', function (Blueprint $table) {
             $table->dropForeign('type_id');
+            $table->dropColumn('active');
         });
     }
 }

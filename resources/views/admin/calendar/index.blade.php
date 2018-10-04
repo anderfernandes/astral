@@ -10,7 +10,7 @@
 
   <div class="ui black icon buttons">
     <div onclick="$('#admin-calendar').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
-    <div onclick="$('#admin-calendar').fullCalendar('today')" class="ui button"><i class="calendar outline icon"></i></div>
+    <div class="ui change date button"><i class="calendar alternate icon"></i></div>
     <div onclick="$('#admin-calendar').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
   </div>
 
@@ -160,6 +160,11 @@
 
   setInterval(() => { $('#admin-calendar').fullCalendar('refetchEvents') }, 5000)
 
+  $('.ui.change.date.button').flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      $('#admin-calendar').fullCalendar('gotoDate', dateStr)
+    }
+  })
 
 </script>
 

@@ -45,6 +45,11 @@
               <i class="user circle icon"></i>
               <span class="detail">{{ $show->creator->fullname }}</span>
             </a>
+            @if (!$show->active)
+            <div class="ui red basic label">
+              inactive
+            </div>
+            @endif
           </div>
           <div class="ui header">
             <div class="sub header">

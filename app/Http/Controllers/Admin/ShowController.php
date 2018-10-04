@@ -40,6 +40,10 @@ class ShowController extends Controller
             $shows = $shows->where('type_id', $request->type_id);
           }
 
+          if (isSet($request->active)) {
+            $shows = $shows->where('active', '=', (bool)$request->active);
+          }
+
           $showIds = $shows->pluck('id');
           $shows = Show::whereIn('id', $showIds)->orderBy('name', 'asc')->paginate(10);
         }
@@ -86,6 +90,7 @@ class ShowController extends Controller
         //$show->type        = $request->type;
         $show->type_id     = $request->type_id;
         $show->duration    = $request->duration;
+        $show->active      = (bool)$request->active;
 
         $show->cover = $request->cover == null ? '/default.png' : $request->cover->store('shows', 'public');
 
@@ -137,7 +142,7 @@ class ShowController extends Controller
      */
     public function update(Request $request, Show $show)
     {
-      
+
       $this->validate($request, [
         'name'        => 'required',
         'description' => 'required',
@@ -150,6 +155,7 @@ class ShowController extends Controller
       //$show->type        = $request->type;
       $show->type_id     = $request->type_id;
       $show->duration    = $request->input('duration');
+      $show->active      = (bool)$request->active;
 
       $request->has('cover') ? $show->cover =  $request->cover->store('shows', 'public') : null;
 
