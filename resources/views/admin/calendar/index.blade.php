@@ -137,7 +137,10 @@
   }
 
   function setTitle() {
-    var title = $('#admin-calendar').fullCalendar('getView').title
+    var view = $('#admin-calendar').fullCalendar('getView')
+    var title = (view.name == 'month')
+      ? moment(view.intervalStart).format('MMMM YYYY')
+      : view.title
     $('.header.active.item.hide-on-mobile').html(`<i class="calendar alternate icon"></i> Calendar | <strong>${title}</strong>`)
   }
 
