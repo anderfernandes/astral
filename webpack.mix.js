@@ -23,8 +23,8 @@ mix.scripts([
   'node_modules/simplemde/dist/simplemde.min.js',
   'node_modules/flatpickr/dist/flatpickr.min.js',
   'node_modules/fullcalendar/dist/fullcalendar.min.js',
+  'node_modules/marked/marked.min.js',
   'node_modules/chart.js/dist/Chart.min.js',
-  'node_modules/marked/marked.min.js'
   ], 'public/js/vendor.js');
 
 mix.styles([
