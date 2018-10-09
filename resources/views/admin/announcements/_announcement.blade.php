@@ -15,8 +15,8 @@
           <i class="user circle icon"></i>{{ $announcement->creator->firstname }}
           <div class="ui black tiny label">{{ $announcement->creator->role->name }}</div>
           <i class="calendar alternate outline icon"></i>
-          {{ $announcement->created_at->format('l, F j, Y \a\t g:i A') }}
-          ({{ $announcement->created_at->diffForHumans() }})
+          {{ $announcement->updated_at->format('l, F j, Y \a\t g:i A') }}
+          ({{ $announcement->updated_at->diffForHumans() }})
         </div>
       </div>
     </div>

@@ -1,10 +1,10 @@
 @extends('layout.admin')
 
-@section('title', 'Dashboard')
+@section('title', "Edit Announcement")
 
-@section('subtitle', Auth::user()->fullname)
+@section('subtitle', $announcement->title)
 
-@section('icon', 'dashboard')
+@section('icon', 'announcement')
 
 @section('content')
 

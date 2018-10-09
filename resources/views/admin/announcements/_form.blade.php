@@ -1,4 +1,8 @@
-<form action="{{ isSet($announcement) ? route('admin.announcements.update', $announcement) : route('admin.announcements.store') }}" id="announcements" class="ui form" method="POST">
+<form action="{{
+  isSet($announcement)
+  ? route('admin.announcements.update', $announcement)
+  : route('admin.announcements.store')
+}}" id="announcements" class="ui form" method="POST">
   @isset($announcement)
     {{ method_field('PUT') }}
   @endisset
@@ -25,7 +29,7 @@
   </div>
   <div class="required field">
     <label for="content">Content</label>
-    <textarea name="content" id="content" cols="30" rows="10" placeholder="Enter the text of the announcement" value="{{ isSet($announcement) ? $announcement->content : old('content') }}"></textarea>
+    <textarea name="content" id="content" cols="30" rows="10" placeholder="Enter the text of the announcement"></textarea>
   </div>
   <div class="field">
     <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
@@ -45,16 +49,28 @@
     }
   })
 
-  $('[name="start"]').flatpickr({enableTime: true, minDate: 'today', defaultDate: '{{ isSet($announcement) ? $announcement->start->format('l, F j, Y \a\t g:i A') : 'today' }}', dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15})
-  $('[name="end"]').flatpickr({enableTime: true, minDate: 'today', dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15})
+  $('[name="start"]').flatpickr({
+    enableTime: true,
+    minDate: 'today',
+    defaultDate: '{{ isSet($announcement) ? $announcement->start->format('l, F j, Y \a\t g:i A') : 'today' }}',
+    dateFormat: 'l, F j, Y h:i K',
+    minuteIncrement: 15
+  })
+
+  $('[name="end"]').flatpickr({
+    enableTime: true,
+    minDate: 'today',
+    defaultDate: '{{ isSet($announcement) ? $announcement->end->format('l, F j, Y \a\t g:i A') : 'today' }}',
+    dateFormat: 'l, F j, Y h:i K',
+    minuteIncrement: 15
+  })
 
   window.simplemde = new SimpleMDE({
     element: document.querySelector('#content'),
     toolbar: ['bold', 'italic', 'strikethrough', '|', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'table', 'horizontal-rule', '|', 'preview', 'guide'],
   })
 
-  @if (isSet($announcement))
-    simplemde.value(`{{ $announcement->content }}`)
-  @endif
+
+  simplemde.value(`{!! isSet($announcement) ? \Illuminate\Mail\Markdown::parse($announcement->content) : \Illuminate\Mail\Markdown::parse(old('content')) !!}`)
 
 </script>
