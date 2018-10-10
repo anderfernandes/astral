@@ -68,6 +68,22 @@
         @endforeach
       @endif
     @endforeach
+    @foreach($sale->products->unique('id') as $product)
+      <tr class="right aligned">
+        <td>
+          <h4 class="ui header"></h4>
+        </td>
+        <td>
+          <h4 class="ui header">
+            <div class="content">{{ $product->name }}</div>
+          </h4>
+        </td>
+        <td>{{ $product->type->name }}</td>
+        <td>${{ number_format($product->price, 2, '.', '') }}</td>
+        <td>{{ $sale->products->where('id', $product->id)->count() }}</td>
+        <td>$ {{ number_format($product->price * $sale->products->where('id', $product->id)->count(), 2, '.' , ',') }}</td>
+      </tr>
+    @endforeach
     <tr class="right aligned">
       <td></td>
       <td></td>
@@ -130,18 +146,16 @@
 {!! \Illuminate\Mail\Markdown::parse(App\Setting::find(1)->confirmation_text) !!}
 
 <?php
-
   //$events = $sale->events->count();
   $numberOfEvents = 0;
-
   // Loop through all events
   foreach ($sale->events as $event) {
     // Add one to $numberOfEvents if eventis not "No Show"
     if ($event->id != '1') $numberOfEvents++;
   }
-
 ?>
 
+@if ($sale->tickets->count() != 0)
 <ul>
   <li>
     We reserved {{ $numberOfEvents == 1 ? $sale->tickets->count() : $sale->tickets->count() / $numberOfEvents }} seats per show for you. If more than {{ $numberOfEvents == 1 ? $sale->tickets->count() : $sale->tickets->count() / $numberOfEvents }} people show up,
@@ -149,6 +163,7 @@
     choose, include them in your payment or they may buy their own tickets at show time.
   </li>
 </ul>
+@endif
 
 <br>
 

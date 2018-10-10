@@ -10,7 +10,7 @@
     "output": {
       "packaged": "../public/semantic/",
       "uncompressed": "dist/components/",
-      "compressed": "dist/components/",
+      "compressed": "../public/semantic/",
       "themes": "../public/semantic/themes/"
     },
     "clean": "dist/"
@@ -18,5 +18,5 @@
   "permission": false,
   "autoInstall": false,
   "rtl": false,
-  "version": "2.3.1"
+  "version": "2.4.0"
 }

@@ -55,7 +55,7 @@ class OrganizationController extends Controller
      */
     public function create()
     {
-        $organizationTypes = OrganizationType::where('name', '!=', 'System')->pluck('name', 'id');
+        $organizationTypes = OrganizationType::where('name', '!=', 'System')->orderBy('name', 'asc')->pluck('name', 'id');
         return view('admin.organizations.create')->withOrganizationTypes($organizationTypes);
     }
 
@@ -160,7 +160,7 @@ class OrganizationController extends Controller
      */
     public function edit(Organization $organization)
     {
-        $organizationTypes = OrganizationType::where('id', '!=', 1)->pluck('name', 'id');
+        $organizationTypes = OrganizationType::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
         return view('admin.organizations.edit')
           ->withOrganizationTypes($organizationTypes)
           ->withOrganization($organization);

@@ -42,15 +42,7 @@
       $('.ui.radio.checkbox').checkbox();
       $('.ui.dropdown').dropdown({'fullTextSearch': true});
       $('.ui.dropdown.item').dropdown({on: 'hover'});
-
-
-      /*jQuery('.datetimepicker').datetimepicker({
-        format:'dddd, MMMM DD, YYYY H:mm',
-        formatTime:'H:mm',
-        formatDate:'dddd, MMMM DD, YYYY',
-        minTime: '08:00',
-        maxTime: '24:00'
-      });*/
+      $('.ui.checkbox').checkbox()
     });
 
 </script>
@@ -67,10 +59,16 @@
 
   .fc-content { font-weight: bold !important }
 
+  .ui.label { margin-left:0 !important }
+
   @media only screen and (max-width:700px) {
-    .hide-on-mobile {
-      display:none !important;
-    }
+    .hide-on-mobile { display:none !important }
+    .ui.label       { margin-left:0 !important }
+  }
+
+  @media print {
+    .ui.borderless.inverted.fixed.top.menu {display: none !important}
+    .ui.basic.segment {margin-top: 0 !important}
   }
 </style>
 
@@ -103,10 +101,9 @@
 
     <!-- Messages -->
 
+    @include('admin.partial._message')
 
     <div class="ui basic segment" style="margin-top:3.5rem">
-
-      @include('admin.partial._message')
 
       @yield('content')
 
@@ -130,7 +127,7 @@
   </script>
 
   {{-- Astral JS --}}
-  <script src="{{ asset('js/app.js') }}"></script>
+  {{---- <script src="{{ asset('js/app.js') }}"></script> --}}
 
 
 </body>

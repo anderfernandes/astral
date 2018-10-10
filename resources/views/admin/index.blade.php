@@ -8,8 +8,14 @@
 
 @section('content')
 
+@include('admin.announcements._announcement')
+
 <style>
-/*.ui..raised.center.aligned.segment {display: none}*/
+  .pusher {
+    background: linear-gradient(rgba(253,254,255,1), rgba(253,254,255,0.5)), url('{{ $cover == '/cover.jpg' ? $cover : Storage::url($cover) }}') !important;
+    background-size: cover !important;
+  }
+
 </style>
 
 <?php
@@ -50,22 +56,14 @@ function getAttendanceByType($ticketTypeID) {
 }
 
 ?>
-{{-- Welcome Box --}}
+
 <div class="ui grid">
-  <div class="sixteen wide column" style="margin-bottom: -1rem">
-    <div class="ui icon message">
-      <i class="announcement icon"></i>
-      <div class="content">
-        <div class="header">Welcome, {{ Auth::user()->firstname }}!</div>
-        If you are new, make sure you visit our <a href="http://astral.anderfernandes.com/docs" target="_blank">documentation website</a> for instructions
-        on how to use Astral.
-      </div>
-      </div>
-  </div>
 
   <div class="eight wide computer sixteen wide mobile column">
+
+    @if(str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Overall Earnings --}}
-    <div class="ui segment">
+    <div class="ui raised segment">
       <div class="ui dividing header">
         <i class="money icon"></i>
         <div class="content">
@@ -79,34 +77,44 @@ function getAttendanceByType($ticketTypeID) {
         <canvas height="200" id="earningsChart"></canvas>
       </div>
     </div>
+    @endif
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "R"))
     {{-- Calendar --}}
-    <div class="ui segment">
-      <div class="ui dividing header">
-        <i class="calendar alternate icon"></i>
-        <div class="content">
-          Calendar
-          <div class="sub header">
-          {{ App\Setting::find(1)->organization }}
+    <div class="ui raised segment">
+      <div class="ui two column grid">
+        <div class="column">
+          <div class="ui dividing header">
+            <i class="calendar alternate icon"></i>
+            <div class="content">
+              Calendar
+              <div class="sub header" id="calendar-title"></div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="ui black icon buttons">
-        <div onclick="$('#calendars').fullCalendar('prev')" class="ui button"><i class="left chevron icon"></i></div>
-        <div onclick="$('#calendars').fullCalendar('today')" class="ui button"><i class="checked calendar icon"></i></div>
-        <div onclick="$('#calendars').fullCalendar('next')" class="ui button"><i class="right chevron icon"></i></div>
-      </div>
-      <div class="ui secondary floating dropdown labeled icon button" style="margin-bottom: 0.5rem">
-        <i class="calendar alternate outline icon"></i>
-        <span class="text">Reservations</span>
-        <div class="menu">
-          <div onclick="toggleCalendar('calendar')" class="active item">Reservations</div>
-          <div onclick="toggleCalendar('events')" class="item">Events</div>
+        <div class="column">
+          <div class="ui secondary right floated dropdown labeled icon button">
+            <i class="calendar alternate outline icon"></i>
+            <span class="text">Sales</span>
+            <div class="menu">
+              <div onclick="toggleCalendar('events')" class="item">Events</div>
+              <div onclick="toggleCalendar('sales')" class="active item">Sales</div>
+            </div>
+          </div>
+          <div class="ui black right floated icon buttons" style="margin-bottom:0.5rem">
+            <div onclick="$('#calendars').fullCalendar('prev'); setTitle()" class="ui button"><i class="left chevron icon"></i></div>
+            <div onclick="$('#calendars').fullCalendar('today'); setTitle()" class="ui button"><i class="checked calendar icon"></i></div>
+            <div onclick="$('#calendars').fullCalendar('next'); setTitle()" class="ui button"><i class="right chevron icon"></i></div>
+          </div>
         </div>
       </div>
       <div id="calendars"></div>
     </div>
-    {{-- Charts --}}
-    <div class="ui horizontal segments">
+    @endif
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
+    {{-- Overview --}}
+    <div class="ui horizontal raised segments">
       <div class="ui center aligned segment">
         <div class="ui small statistic">
           <div class="value">
@@ -151,12 +159,76 @@ function getAttendanceByType($ticketTypeID) {
           </div>
         </div>
       </div>
+      <div class="ui center aligned segment">
+        <div class="ui small statistic">
+          <div class="value">
+            <i class="box icon"></i>
+            {{ App\Product::all()->count() }}
+          </div>
+          <div class="label">
+            Products
+          </div>
+        </div>
+      </div>
     </div>
+    @endif
+
+    <?php
+
+    $products = App\Product::where('inventory', true)->where('stock', '<=', 10)->get();
+
+    ?>
+
+    @if (str_contains(Auth::user()->role->permissions['products'], "CRUD"))
+    {{-- Products --}}
+    <div class="ui raised segment">
+      <div class="ui dividing header">
+        <i class="box icon"></i>
+        <div class="content">
+          Products
+          <div class="sub header">
+            Stock
+          </div>
+        </div>
+      </div>
+      <div class="ui list">
+        @if ($products->count() > 0)
+          @foreach ($products as $product)
+          <div class="item">
+            <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}" class="ui avatar image">
+            <div class="content">
+              <a href="{{ route('admin.products.edit', $product) }}" target="_blank" class="header">
+                {{ $product->name }}
+                <div class="ui red label" data-tooltip="Only {{ $product->stock }} in stock!" style="margin-right:0">
+                  <i class="box icon"></i>
+                  <div class="detail">{{ $product->stock }}</div>
+                </div>
+              </a>
+              <div class="description">{{ $product->description }}</div>
+            </div>
+          </div>
+          @endforeach
+        @else
+        <div class="ui info icon message">
+          <i class="info circle icon"></i>
+          <div class="content">
+            <div class="header">All products are on stock of 10 or more!</div>
+            All products are on stock! Keep it up!
+          </div>
+        </div>
+        @endif
+
+      </div>
+    </div>
+    @endif
+
   </div>
 
   <div class="eight wide computer sixteen wide mobile column">
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Attendance --}}
-    <div class="ui segment">
+    <div class="ui raised segment">
       <div class="ui dividing header">
         <i class="child icon"></i>
         <div class="content">
@@ -175,38 +247,11 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
     </div>
-    {{-- Bulletin --}}
-    <div class="ui segment">
-      <div class="ui dividing header">
-        <i class="comments outline icon"></i>
-        <div class="content">
-          Bulletin
-          <div class="sub header">
-          Open posts
-          </div>
-        </div>
-      </div>
-      <div class="ui relaxed divided list">
-        @foreach (\App\Post::where('open', true)->latest()->take(5)->get() as $post)
-          <div class="item">
-            <i class="big user circle icon"></i>
-            <div class="content">
-              <div class="header">
-                <a href="{{ route('admin.users.show', $post->author) }}" target="_blank">{{ $post->author->firstname }}</a>
-                created a post <a href="{{ route('admin.posts.show', $post->id) }}" target="_blank">{{ $post->title }}</a>
-                <div class="ui black label"><i class="tag icon"></i>{{ $post->category->name }}</div>
-                @if ($post->sticky)
-                  <div class="ui red label"><i class="info circle icon"></i> important</div>
-                @endif
-              </div>
-              <div class="description"><i class="calendar outline alternate icon"></i>{{ Date::parse($post->created_at)->ago() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
-            </div>
-          </div>
-        @endforeach
-      </div>
-    </div>
+    @endif
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Feed --}}
-    <div class="ui segment">
+    <div class="ui raised segment">
       <div class="ui small dividing header">
         <i class="feed icon"></i>
         <div class="content">
@@ -259,10 +304,48 @@ function getAttendanceByType($ticketTypeID) {
         @endforeach
       </div>
     </div>
+    @endif
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "C"))
+    {{-- Bulletin --}}
+    <div class="ui raised segment">
+      <div class="ui dividing header">
+        <i class="comments outline icon"></i>
+        <div class="content">
+          Bulletin
+          <div class="sub header">
+          Open posts
+          </div>
+        </div>
+      </div>
+      <div class="ui relaxed divided list">
+        @foreach (\App\Post::where('open', true)->latest()->take(5)->get() as $post)
+          <div class="item">
+            <i class="big user circle icon"></i>
+            <div class="content">
+              <div class="header">
+                <a href="{{ route('admin.users.show', $post->author) }}" target="_blank">{{ $post->author->firstname }}</a>
+                created a post <a href="{{ route('admin.posts.show', $post->id) }}" target="_blank">{{ $post->title }}</a>
+                <div class="ui black label"><i class="tag icon"></i>{{ $post->category->name }}</div>
+                @if ($post->sticky)
+                  <div class="ui red label"><i class="info circle icon"></i> important</div>
+                @endif
+              </div>
+              <div class="description"><i class="calendar outline alternate icon"></i>{{ $post->created_at->diffForHumans() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
+            </div>
+          </div>
+        @endforeach
+      </div>
+    </div>
+    @endif
+
   </div>
 </div>
 
-<div class="ui large modal" id="event-detail"></div>
+<div class="ui fullscreen modal" id="details"></div>
+
+@include('admin.calendar._fetch-sales')
+@include('admin.calendar._fetch-events')
 
 <script>
 
@@ -277,160 +360,38 @@ function loadCalendars() {
     editable: false,
     eventLimit: true,
     minTime: '08:00:00',
-    events: '/api/calendar',
+    events: '/api/calendar/sales',
+    titleFormat: 'dddd, MMMM D, YYYY',
     eventClick: function(calEvent, jsEvent, view) {
-      fetch(`/api/event/${calEvent.id}`)
-        .then(response => response.json())
-        .then(response => {
-
-          // Start this variable with a message box saying that there are no sales for this event
-          var sales = ''
-
-          if (response.sales.length > 0) {
-            response.sales.forEach(function (sale)
-            {
-              var tickets = ``
-              sale.tickets.forEach(function (ticket) {
-                tickets +=
-                `
-                <div class="ui black label" style="margin-left:0">
-                <i class="ticket icon"></i>
-                ${ticket.quantity} <div class="detail">${ticket.type}</div>
-                </div>
-                `
-              })
-              sales +=
-              `
-              <h3 class="ui dividing header">
-                <div class="content">
-                  <a class="sub header" href="/admin/sales/${sale.id}" target="_blank">Sale # ${sale.id}</a>
-                  ${sale.organization.id != 1 ? `<a href="/admin/organizations/${sale.organization.id}" target="_blank">${sale.organization.name}</a>`  : `` }
-                  ${sale.organization.name == sale.customer.name ? `` : `| <a href="/admin/users/${sale.customer.id}" target="_blank">${sale.customer.name}</a>`}
-                  <div class="sub header">
-                    <div class="ui green tag label">$ ${parseFloat(sale.total).toFixed(2)}</div>
-                    ${tickets}
-                  </div>
-                </div>
-              </h3>
-              `
-            }
-          )
-          } else {
-            sales =
-            `
-            <div class="ui info icon message">
-              <i class="info circle icon"></i>
-              <div class="content">
-                <div class="header">
-                  No Group Sales!
-                </div>
-                <p>There are no group sales for this show.</p>
-              </div>
-            </div>
-            `
-          }
-
-          if (response.memo == null) {
-            response.memo =
-            `
-            <div class="ui info icon message">
-              <i class="info circle icon"></i>
-              <div class="content">
-                <div class="header">
-                  No Memos
-                </div>
-                <p>No one has left a memo for this event yet.</p>
-              </div>
-            </div>
-            `
-          }
-
-          var header = `
-          <i class="close icon" style="color: white"></i>
-          <div class="ui header">
-            <i class="calendar check icon"></i>
-            <div class="content">
-              Event Details
-              <div class="sub header">Event #${response.id}</div>
-            </div>
-          </div>
-          `
-          var body = `
-          <div class="content">
-            <div class="ui items">
-              <div class="ui item">
-                <div class="ui small rounded image"><img src="${response.show.cover}"></div>
-                <div class="content">
-                  <div class="meta">
-                  <div class="ui label" style="background-color: ${response.color}; color: rgba(255, 255, 255, 0.8)">${response.type}</div>
-                    <div class="ui label">${response.show.duration} ${response.show.duration > 1 ? `minutes` : `minute`}</div>
-                    <div class="ui label">${response.tickets_sold} tickets sold</div>
-                  </div>
-                  <div class="ui large header">
-                    ${response.show.name}
-                    <div class="sub header">
-                      <i class="calendar alternate icon"></i>
-                      ${moment(response.start).calendar()}
-                    </div>
-                  </div>
-                  <div class="extra">
-                    <p>Created by ${response.creator.name} on ${moment(response.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')}</p>
-                    <p>Updated on ${moment(response.updated_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')}</p>
-                  </div>
-                  <div class="description">
-                    <h4 class="ui horizontal divider header">
-                      <i class="comment alternate outline icon"></i> Memo
-                    </h4>
-                    ${response.memo}
-                  </div>
-                </div>
-              </div>
-              <div class="ui item">
-                <div class="content">
-                  <div class="extra">
-                  <h4 class="ui horizontal divider header">
-                    <i class="dollar icon"></i> Sales
-                  </h4>
-                  ${sales}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          `
-          var footer = `
-          <div class="actions">
-            <a href="/admin/events/${response.id}/edit" class="ui yellow right labeled icon button">
-              Edit
-              <i class="edit icon"></i>
-            </a>
-            <div class="ui black deny button">
-              Close
-            </div>
-          </div>
-          </div>
-          `
-
-        document.querySelector('#event-detail').innerHTML = header + body + footer
-        $('#event-detail').modal('show')
-      });
+      var eventSource = $('#calendars').fullCalendar('option', 'events')
+      if (eventSource == '/api/calendar/sales') {
+        fetchSales(calEvent, jsEvent, view)
+      } else {
+        fetchEvents(calEvent, jsEvent, view)
+      }
     }
   })
+  setTitle()
 }
 
 function refetchEvents() {
-  $('#events').fullCalendar('refetchEvents')
   $('#calendars').fullCalendar('refetchEvents')
 }
 
-$(document).ready(loadCalendars)
-
-setInterval(refetchEvents, 5000)
+function setTitle() {
+  var title = $('#calendars').fullCalendar('getView').title
+  $('#calendar-title').html(title)
+}
 
 function toggleCalendar(type) {
   $('#calendars').fullCalendar('removeEventSources')
-  $('#calendars').fullCalendar('addEventSource', '/api/' + type)
+  $('#calendars').fullCalendar('option', 'events', `/api/calendar/${type}`)
+  $('#calendars').fullCalendar('addEventSource', `/api/calendar/${type}`)
 }
+
+$(document).ready(function() {
+  loadCalendars()
+})
 
 window.onload = function() {
   var earningsCanvas = document.getElementById("earningsChart").getContext("2d");
@@ -536,7 +497,7 @@ window.onload = function() {
 
   var secondAttendanceCanvas = document.getElementById("secondAttendanceChart").getContext("2d");
   var secondAttendanceChart = new Chart(secondAttendanceCanvas, {
-    type: 'pie',
+    type: 'polarArea',
     data: {
       labels: [
               <?php
@@ -574,11 +535,6 @@ window.onload = function() {
       }
   });
 }
-
-
-
-//$('.ui..raised.center.aligned.segment')
-//.transition({animation:'vertical flip', duration: 2000, interval: 1000 })
 
 </script>
 

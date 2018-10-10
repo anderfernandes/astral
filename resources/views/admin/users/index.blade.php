@@ -87,7 +87,7 @@
         <i class="user circle huge right floated icon"></i>
         <div class="header">{{ $u->fullname }} @if ($u->staff) <i class="star icon"></i>@endif </div>
         <div class="meta">
-          <div class="ui label">{{ $u->role->name }}</div>
+          <div class="ui black label">{{ $u->role->name }}</div>
         </div>
         <div class="meta">
           <i class="mail icon"></i> {{ $u->email }}
@@ -97,7 +97,7 @@
         <a href="{{ route('admin.users.show', $u) }}" class="ui black button">
           <i class="eye icon"></i> View
         </a>
-        <a href="{{ route('admin.users.edit', $u ) }}" class="ui blue button">
+        <a href="{{ route('admin.users.edit', $u ) }}" class="ui yellow button">
           <i class="edit icon"></i> Edit
         </a>
       </div>

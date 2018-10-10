@@ -8,34 +8,45 @@
 
 @section('content')
 
-  <div class="ui buttons">
-    <a href="{{ route('admin.organizations.index') }}" class="ui default button">
+  <div class="ui container">
+
+    <a href="{{ route('admin.organizations.index') }}" class="ui basic black button">
       <i class="left chevron icon"></i> Back
     </a>
     <a href="{{ route('admin.organizations.edit', $organization) }}" class="ui yellow button">
-      <i class="edit icon"></i> Edit This Organization
+      <i class="edit icon"></i> Edit Organization
     </a>
-    <a href="{{ route('admin.organizations.create') }}" class="ui primary button">
-      <i class="calendar plus icon"></i> Add Another Organization
+    <a href="{{ route('admin.organizations.create') }}" class="ui black button">
+      <i class="ui icons">
+        <i class="university icon"></i>
+        <i class="inverted corner add icon"></i>
+      </i>
+      Add Another Organization
     </a>
-  </div>
+
 
   <div class="ui large dividing header">
       <i class="university icon"></i>
       <div class="content">
-        {{ $organization->name }} <div class="ui label" style="margin-left:0">{{ $organization->type->name }}</div>
-        <div class="ui label" style="margin-left:0">
+        {{ $organization->name }} <div class="ui black label" style="margin-left:0">{{ $organization->type->name }}</div>
+        <div class="ui black label" style="margin-left:0">
           {{ $pastSales->count() + $futureSales->count() }}
           {{ $pastSales->count() + $futureSales->count() == 1 ? 'visit' : 'visits'}}
         </div>
         <div class="sub header">
           {{-- Display creator only if it is a no user --}}
           @if ($organization->creator_id == 1)
-            Created on {{ Date::parse($organization->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($organization->created_at)->diffForHumans()}}) <br />
+            <i class="pencil icon"></i> {{ $organization->created_at->format('l, F j, Y \a\t g:i:s A') }}
+            ({{ $organization->created_at->diffForHumans()}}) <br />
           @else
-            Created by <strong>{{ $organization->creator->fullname }}</strong> on {{ Date::parse($organization->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($organization->created_at)->diffForHumans()}}) <br />
+            <i class="user circle icon"></i> <strong>{{ $organization->creator->fullname }}</strong> |
+            {{ $organization->created_at->format('l, F j, Y \a\t g:i:s A') }}
+            ({{ $organization->created_at->diffForHumans()}}) <br />
           @endif
-          Updated on {{ Date::parse($organization->updated_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($organization->created_at)->diffForHumans()}})
+          @isset($organization->updated_at)
+            <i class="edit icon"></i> {{ $organization->updated_at->format('l, F j, Y \a\t g:i:s A') }}
+            ({{ Date::parse($organization->created_at)->diffForHumans() }})
+          @endisset
         </div>
       </div>
   </div>
@@ -188,6 +199,6 @@
   </div>
   @endif
 
-
+  </div>
 
 @endsection

@@ -3,11 +3,26 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Product;
 
 class Sale extends Model
 {
 
-    public $fillable = ['ticket_id'];
+    public $fillable = ['ticket_id', 'product_id'];
+
+    /**
+     * Return products included in this sale
+     * @return App\Product An instance of the Product model.
+     */
+    public function products()
+    {
+      return $this->belongsToMany('App\Product', 'sale_product', 'sale_id', 'product_id');
+    }
+
+    public function grades()
+    {
+      return $this->belongsToMany('App\Grade', 'sale_grade', 'sale_id', 'grade_id');
+    }
 
     public function tickets()
     {

@@ -2,12 +2,12 @@
 
 @section('title', 'Sales')
 
-@section ('subtitle', 'New Sale')
+@section ('subtitle', "New {$eventType->name} Sale")
 
 @section ('icon', 'dollar')
 
 @section('content')
 
-  @include('partial.form._sale')
+  @include('partial.sales._form')
 
 @endsection

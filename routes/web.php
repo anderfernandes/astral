@@ -22,17 +22,33 @@ Route::group(
   // Index
   Route::get('/', 'AdminController@index')->name('index');
   // Calendar
-  Route::get('calendar/', 'AdminController@calendar')->name('calendar.index');
+  Route::get('calendar', 'CalendarController@index')->name('calendar.index');
+  Route::get('calendar/events', 'CalendarController@events')->name('calendar.events');
+  Route::get('calendar/sales', 'CalendarController@sales')->name('calendar.sales');
+  // Shows resource
+  Route::resource('products', 'ProductController');
   // Shows resource
   Route::resource('shows', 'ShowController');
+  Route::get('shows/{show}/delete', 'ShowController@delete')->name('shows.delete');
   // Members Resource
   Route::resource('members', 'MemberController');
   // Users resource
   Route::resource('users', 'UserController');
+  Route::get('users/{user}/delete', 'UserController@delete')->name('shows.delete');
   // Organizations resource
   Route::resource('organizations', 'OrganizationController');
   // Events resource
   Route::resource('events', 'EventController');
+  // Product Types
+  Route::resource('product-types', 'ProductTypeController');
+  // Member Types
+  Route::resource('member-types', 'MemberTypeController');
+  // Grades
+  Route::resource('grades', 'GradeController');
+  // Show Types
+  Route::resource('show-types', 'ShowTypeController');
+  //Announcements
+  Route::resource('announcements', 'AnnouncementController');
   // Reports
   Route::get('reports/closeout', 'ReportController@closeout')->name('reports.closeout');
   Route::get('reports/transactionDetail', 'ReportController@transactionDetail')->name('reports.transactionDetail');
@@ -40,6 +56,8 @@ Route::group(
   Route::get('reports/newMembers', 'ReportController@newMembers')->name('reports.newMembers');
   Route::get('reports/overall', 'ReportController@overall')->name('reports.overall');
   Route::get('reports', 'ReportController@index')->name('reports.index');
+  Route::get('reports/attendance', 'ReportController@attendance')->name('reports.attendance');
+  Route::get('reports/product', 'ReportController@product')->name('reports.product');
   // Sales Resource
   //Route::resource('sales', 'SaleController', ['except' => ['create']]);
   Route::resource('sales', 'SaleController');
@@ -50,6 +68,7 @@ Route::group(
   Route::get('sales/{sale}/receipt', 'SaleController@receipt')->name('sales.receipt');
   Route::get('sales/{sale}/cancelation', 'SaleController@cancelation')->name('sales.cancelation');
   Route::get('sales/{sale}/mail', 'SaleController@mail')->name('sales.mail');
+  Route::get('sales/{sale}/tickets', 'SaleController@tickets')->name('sales.tickets');
   // Setting resource
   Route::resource('settings', 'SettingController');
   // Roles
@@ -63,6 +82,7 @@ Route::group(
   // Settings Resources
   Route::resource('ticket-types', 'TicketTypeController');
   Route::resource('event-types', 'EventTypeController');
+  Route::resource('organization-types', 'OrganizationTypeController');
   // HTTP PUT route for adding managing Organization Types
   Route::post('settings/addOrganizationType', 'SettingController@addOrganizationType')->name('settings.addOrganizationType');
   // HTTP PUT route for adding managing Payment Methods
@@ -77,6 +97,8 @@ Route::group(
   Route::put('members/{member}/addSecondary', 'MemberController@addSecondary')->name('members.addSecondary');
   // Mail Preview
   Route::get('mail/confirmation/{sale}', function(App\Sale $sale) { return new App\Mail\ConfirmationLetter($sale); });
+  // Tickets
+  Route::resource('tickets', 'TicketController');
 });
 // Cashier Routes
 Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier', 'middleware' => 'auth'],
@@ -105,6 +127,8 @@ Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier
     Route::get('members/{member}/receipt', 'MemberController@receipt')->name('members.receipt');
     // Membersihp Secondary
     Route::put('members/{member}/addSecondary', 'MemberController@addSecondary')->name('members.addSecondary');
+    // New
+    Route::get('new', function() { return view('cashier.new'); })->name('new');
   });
 
 Auth::routes();

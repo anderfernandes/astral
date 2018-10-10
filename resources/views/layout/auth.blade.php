@@ -41,12 +41,6 @@
 <script>
   $(document)
     .ready(function() {
-      // create sidebar and attach to menu open
-      $('.ui.sidebar')
-      .sidebar('setting', 'transition', 'overlay')
-      .sidebar('setting', 'dimPage', false)
-      .sidebar('attach events', '.toc.item');
-
       // close message alerts
       $('.message .close').on('click', function() {
         $(this).closest('.message').transition('fade');
@@ -57,7 +51,7 @@
 <style>
     #left {
         padding-top: 2.5rem;
-        background: linear-gradient(rgba(0,0,0,1), rgba(255,255,255,0.5)), url('{{ App\Setting::find(1)->cover }}');
+        background: linear-gradient(rgba(0,0,0,1), rgba(255,255,255,0.5)), url('{{ (App\Setting::find(1)->cover == '/cover.jpg') ? App\Setting::find(1)->cover : Storage::url(App\Setting::find(1)->cover) }}');
         background-size: cover;
         min-height: 100vh
     }

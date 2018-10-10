@@ -89,19 +89,37 @@
 
         <div class="field">
           <div class="ui two buttons">
-            <button type="submit" class="ui primary button">
+            <button type="submit" class="ui secondary button">
                 <i class="sign in icon"></i> Register
             </button>
-            <div class="ui secondary button" onclick="$('form').form('clear')"><i class="eraser icon"></i> Clear</div>
+            <div class="ui basic black clear button"><i class="eraser icon"></i> Clear</div>
           </div>
         </div>
       </form>
       <h5 class="ui center aligned header">
         <div class="sub header">
-          Created by <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>. <a href="http://astral.anderfernandes.com" target="_blank">Astral</a> {{ config('app.version') }}.
+          &copy; 2017-2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a> <br><br>
+          <a href="http://astral.anderfernandes.com" target="blank" class="ui black tiny image label">
+            <img src="/astral-logo-light.png" alt="Astral">
+            {{ config('app.version') }}
+          </a>
         </div>
       </h5>
     </div>
   </div>
 </div>
+
+<script>
+  $('form').form({
+    inline: true,
+    on: 'blur',
+    fields: {
+      firstname:         ['empty', 'minLength[2]', 'maxLength[64]'],
+      lastname:          ['empty', 'minLength[2]', 'maxLength[64]'],
+      email:             ['empty', 'email', 'minLength[5]', 'maxLength[64]'],
+      password:          ['empty', 'minLength[5]'],
+      confirm_password:  ['empty', 'minLength[5]'],
+    }
+  })
+</script>
 @endsection

@@ -5,14 +5,10 @@ namespace App\Http\Controllers\Cashier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use Illuminate\Support\Facades\Auth;
-use App\Event;
+use Illuminate\Support\Facades\{ Auth, Log };
+use App\{ Event, Sale, Ticket, Payment, PaymentMethod, User };
+
 use Jenssegers\Date\Date;
-use App\Sale;
-use App\Ticket;
-use App\Payment;
-use App\PaymentMethod;
-use App\User;
 use Session;
 
 class CashierController extends Controller
@@ -27,7 +23,8 @@ class CashierController extends Controller
       $startOfDay = Date::now('America/Chicago')->startOfDay()->toDateTimeString();
       $endOfDay = Date::now('America/Chicago')->endOfDay()->toDateTimeString();
       // Get all events going on today
-      $events = Event::where([['start', '>=', $startOfDay], ['start', '<=', $endOfDay]])
+      $events = Event::where('show_id', '!=', 1)
+                     ->where([['start', '>=', $startOfDay], ['start', '<=', $endOfDay]])
                      ->orderBy('start', 'asc')
                      ->get();
       // Get Available Payment Methods
@@ -129,11 +126,13 @@ class CashierController extends Controller
           $sale->memo()->create([
             'author_id' => Auth::user()->id,
             'message'   => $request->memo,
-            'sale_id'   => $sale->id,
           ]);
         }
 
         Session::flash('success', count($request->input('ticket')). ' ticket(s) sold successfully');
+
+        // Log created sale
+        Log::info(Auth::user()->fullname . ' created Sale #' . $sale->id .' using cashier');
 
         return redirect()->route('cashier.index');
 

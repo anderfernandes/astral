@@ -47,7 +47,7 @@
     </div>
     <div class="field">
       <div class="ui labeled input">
-        <div class="ui label">$</div>
+        <div class="ui basic label">$</div>
         <input type="text" value="{{ $request->saleTotal ? $request->saleTotal : "" }}" name="saleTotal" id="saleTotal" placeholder="Sale Total">
       </div>
     </div>
@@ -86,8 +86,13 @@
   </div>
   {!! Form::close() !!}
 
+  @if (str_contains(Auth::user()->role->permissions['sales'], "C"))
   <div class="ui secondary dropdown button">
-    <i class="plus icon"></i> New Sale<i class="dropdown icon"></i>
+    <i class="ui icons">
+      <i class="dollar icon"></i>
+      <i class="inverted corner add icon"></i>
+    </i>
+    New Sale <i class="dropdown icon"></i>
     <div class="menu">
       @foreach ($eventTypes as $eventType)
         @if ($eventType->allowedTickets->count() > 0)
@@ -96,6 +101,7 @@
       @endforeach
     </div>
   </div>
+  @endif
 
 
 @include('partial.sales._index')

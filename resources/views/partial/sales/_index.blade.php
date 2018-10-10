@@ -11,6 +11,7 @@
       <th>Balance</th>
       <th>Status</th>
       <th>Created by</th>
+      <th>Created on</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -27,15 +28,11 @@
             @if ($sale->customer->firstname == "Walk-up" or $sale->customer->firstname == $sale->organization->name)
               {{ $sale->customer->firstname }}
             @else
-              @if ($sale->sell_to_organization)
-                {{ $sale->customer->fullname }}
-                @if ($sale->organization->id != 1)
-                <div class="sub header">
-                  {{ $sale->organization->name }}
-                </div>
-                @endif
-              @else
-                {{ $sale->customer->fullname }}
+              {{ $sale->customer->fullname }}
+              @if ($sale->organization->id != 1)
+              <div class="sub header">
+                {{ $sale->organization->name }}
+              </div>
               @endif
 
             @endif
@@ -47,44 +44,63 @@
         </td>
         <td>
           @if ($sale->refund)
-            <span class="ui red label"><i class="reply icon"></i>refund</span>
-          @else
-            @if ($sale->status == 'complete')
-              <span class="ui green label"><i class="checkmark icon"></i>
-            @elseif ($sale->status == 'no show')
-              <span class="ui orange label"><i class="thumbs outline down icon"></i>
-            @elseif ($sale->status == 'open')
-              <span class="ui violet label"><i class="unlock icon"></i>
-            @elseif ($sale->status == 'tentative')
-              <span class="ui yellow label"><i class="help icon"></i>
-            @elseif ($sale->status == 'canceled')
-              <span class="ui red label"><i class="remove icon"></i>
-            @else
-              <span class="ui label">
-            @endif
-            {{ $sale->status }}</span>
+            <div class="ui red label"><i class="reply icon"></i> Refund</div>
           @endif
+          @if ($sale->status == 'complete')
+            <span class="ui green label"><i class="checkmark icon"></i>
+          @elseif ($sale->status == 'no show')
+            <span class="ui orange label"><i class="thumbs outline down icon"></i>
+          @elseif ($sale->status == 'open')
+            <span class="ui violet label"><i class="unlock icon"></i>
+          @elseif ($sale->status == 'tentative')
+            <span class="ui yellow label"><i class="help icon"></i>
+          @elseif ($sale->status == 'canceled')
+            <span class="ui red label"><i class="remove icon"></i>
+          @elseif ($sale->status == 'confirmed')
+            <span class="ui basic green label"><i class="thumbs up icon"></i>
+          @else
+            <span class="ui label">
+          @endif
+          {{ $sale->status }}</span>
         </td>
-        <td>{{ $sale->creator->firstname }}</td>
+        <td><i class="user circle icon"></i>{{ $sale->creator->firstname }}</td>
+        <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->created_at)->diffForHumans() }})</td>
         <td>
           <div class="ui icon buttons">
             @if (($sale->customer->membership_id == 1))
               <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
-              <a href="{{ route('admin.sales.edit', $sale) }}" class="ui primary button"><i class="edit icon"></i></a>
+              <a href="{{ route('admin.sales.edit', $sale) }}" class="ui yellow button"><i class="edit icon"></i></a>
             @endif
             <div class="ui icon top left pointing dropdown secondary button">
               <i class="copy icon"></i>
               <div class="menu">
+                <div class="header">Sale Documents</div>
                 @if ($sale->events->count() > 0)
                   @if ($sale->status != "canceled")
-                    <a class="item" target="_blank" href="{{ route('admin.sales.confirmation', $sale) }}">Reservation Confirmation</a>
-                    <a class="item" target="_blank" href="{{ route('admin.sales.invoice', $sale) }}">Invoice</a>
-                    <a class="item" target="_blank" href="{{ route('admin.sales.receipt', $sale) }}">Receipt</a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.confirmation', $sale) }}">
+                      <i class="file icon"></i>
+                      Reservation Confirmation
+                    </a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.invoice', $sale) }}">
+                      <i class="file icon"></i>
+                      Invoice
+                    </a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.receipt', $sale) }}">
+                      <i class="file icon"></i>
+                      Receipt
+                    </a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.tickets', $sale) }}">
+                      <i class="ticket icon"></i>
+                      Tickets
+                    </a>
                   @else
-                    <a class="item" target="_blank" href="{{ route('admin.sales.cancelation', $sale) }}">Cancelation Receipt</a>
+                    <a class="item" target="_blank" href="{{ route('admin.sales.cancelation', $sale) }}">
+                      <i class="file icon"></i>
+                      Cancelation Receipt
+                    </a>
                   @endif
                 @else
-                  <a class="item" href="{{ route('cashier.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>
+                  <a class="item" href="{{ route('admin.members.receipt', $sale->customer->member) }}" target="_blank">Membership Receipt</a>
                 @endif
 
               </div>

@@ -4,105 +4,169 @@
 
 @section('subtitle', $member->users[0]->firstname.' '.$member->users[0]->lastname)
 
-@section('icon', 'user')
+@section('icon', 'address card')
 
 @section('content')
 
-  <div class="ui buttons">
-    <a href="javascript:window.history.back()" class="ui default button">
+  <div class="ui container">
+
+    <a href="{{ route('admin.members.index') }}" class="ui basic black button">
       <i class="left chevron icon"></i> Back
     </a>
-    <a href="{{ route('admin.users.edit', $member->users[0]) }}" class="ui primary button">
+    <a href="{{ route('admin.users.edit', $member->users[0]) }}" class="ui yellow button">
       <i class="edit icon"></i> Edit Member
     </a>
-    <a href="{{ route('admin.members.create') }}" class="ui secondary button"><i class="plus icon"></i> Add Another Member</a>
-  </div>
+    <a href="{{ route('admin.members.create') }}" class="ui secondary button">
+      <i class="ui icons">
+        <i class="address card icon"></i>
+        <i class="inverted corner add icon"></i>
+      </i>
+      Add Another Member
+    </a>
 
-  <div class="ui unstackable items">
-    <div class="item">
-      <i class="address card massive icon"></i>
-      <div class="content">
-        <h1 class="ui huge header">
-          {{ $member->users[0]->fullname }}
-          <div class="sub header"># {{ $member->id }}</div>
-          <div class="sub header">{{ $member->users[0]->email }}</div>
-        </h1>
-        <div class="meta">
-          <div class="ui label">{{ $member->type->name }}</div>
-        </div>
-        <div class="meta">
-          <i class="checked calendar icon"></i>
-          Expires {{ Date::parse($member->end)->format('l, F j, Y') }}
-        </div>
-        <div class="description">
-          {{-- Display creator only if it is a no user --}}
-          @if ($member->creator_id == 1)
-            <p>Created on {{ Date::parse($member->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($member->created_at)->diffForHumans()}})</p>
-          @else
-            <p>Created by <i class="user circle icon"></i> {{ $member->creator->fullname }} on {{ Date::parse($member->created_at)->format('l, F j, Y \a\t g:i:s A') }} ({{ Date::parse($member->created_at)->diffForHumans()}})</p>
-          @endif
-          <p>Updated on {{ Date::parse($member->updated_at)->format('l, F j, Y \a\t h:i:s A') }} ({{ Date::parse($member->updated_at)->diffForHumans()}})</p>
-        </div>
-        <div class="extra"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="ui buttons">
-
-    @if ($member->users->count() >= $member->type->max_secondaries)
-      <a href="javascript:$('#secondary').modal('show')" class="ui default disabled button">
-        <i class="plus icon"></i> Add a Secondary
+    @if ($member->users->count() - 1 >= $member->type->max_secondaries)
+      <a onclick="$('#secondary').modal('show')" class="ui black disabled button">
+        <i class="ui icons">
+          <i class="address card icon"></i>
+          <i class="inverted corner add icon"></i>
+        </i>
+        Add a Secondary
       </a>
     @else
-      <a href="javascript:$('#secondary').modal('show')" class="ui default button">
-        <i class="plus icon"></i> Add a Secondary
+      <a onclick="$('#secondary').modal('show')" class="ui black button">
+        <i class="ui icons">
+          <i class="address card icon"></i>
+          <i class="inverted corner add icon"></i>
+        </i>
+        Add a Secondary
       </a>
     @endif
 
-    <a href="{{ route('admin.members.edit', $member) }}" class="ui primary button">
-      <i class="refresh icon"></i> Renew Membership
+    <a href="{{ route('admin.members.edit', $member) }}" class="ui yellow button">
+      <i class="edit icon"></i> Edit/Renew Membership
     </a>
-    <a href="{{ route('admin.members.receipt', $member) }}" target="_blank" class="ui secondary button">
-      <i class="file text icon"></i> View Membership Receipt
-      <i class="right chevron icon"></i>
-    </a>
-    <a href="{{ route('admin.members.card', $member) }}" target="_blank" class="ui yellow button">
-      <i class="address card icon"></i> View Card
-      <i class="right chevron icon"></i>
-    </a>
+    <div class="ui dropdown black button">
+      <i class="copy icon"></i> Documents
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <a href="{{ route('admin.members.receipt', $member) }}" target="_blank" class="item">
+          <i class="file icon"></i>Receipt
+        </a>
+        <a href="{{ route('admin.members.card', $member) }}?index=0" target="_blank" class="item">
+          <i class="address card icon"></i> Card
+        </a>
+        <a href="{{ route('admin.members.receipt', $member) }}?format=pdf" target="_blank" class="item">
+          <i class="file pdf icon"></i>Receipt
+        </a>
+      </div>
+    </div>
+
+    <div class="ui large dividing header">
+      <i class="address card icon"></i>
+      <div class="content">
+        {{ $member->users[0]->fullname }}
+        <div class="ui black label">{{ $member->type->name }}</div>
+        <div class="sub header">
+          @if ($member->creator_id != 1)
+          <i class="user circle icon"></i> {{ $member->creator->firstname }} |
+          @endif
+          <i class="pencil icon"></i>{{ $member->created_at->format('l, F j, Y \a\t g:i:s A') }}
+          ({{ $member->created_at->diffForHumans() }}) |
+          <i class="edit icon"></i>{{ $member->updated_at->format('l, F j, Y \a\t g:i:s A') }}
+        </div>
+      </div>
+    </div>
+    <div class="ui four column stackable grid">
+      <div class="column">
+        <div class="ui header">
+          {{ $member->users[0]->address }}
+          <div class="sub header">Address</div>
+        </div>
+        <div class="ui header">
+          {{ $member->users[0]->email }}
+          <div class="sub header">Email</div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui header">
+          {{ $member->users[0]->city }}
+          <div class="sub header">City</div>
+        </div>
+        <div class="ui header">
+          {{ $member->start->format('l, F j, Y') }}
+          <div class="sub header">Start Date</div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui header">
+          {{ $member->users[0]->state }}
+          <div class="sub header">State</div>
+        </div>
+        <div class="ui header">
+          {{ $member->end->format('l, F j, Y') }}
+          <div class="sub header">Expiration Date</div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui header">
+          {{ $member->users[0]->zip }}
+          <div class="sub header">ZIP</div>
+        </div>
+      </div>
+    </div>
+
+    <br />
+
+    @if ($member->users->count() == 1)
+      <div class="ui icon info message">
+        <i class="info circle icon"></i>
+        <div class="content">
+          <div class="header">No secondaries</div>
+          <p>This membership has no secondaries.</p>
+        </div>
+      </div>
+    @else
+      <table class="ui very basic unstackable table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($member->users as $user)
+            @if ($loop->index != 0)
+              <tr>
+                <td>
+                  <a class="ui small header" href="{{ route('admin.users.show', $user) }}">
+                    <i class="address card icon"></i>
+                    <div class="content">
+                      {{ $user->fullname }}
+                      <div class="sub header">
+                        {{ $member->type->name }}
+                        @if ($loop->index != 0)
+                          (Secondary)
+                        @endif
+                      </div>
+                    </div>
+                  </a>
+                </td>
+                <td>
+                  <div class="ui icon buttons">
+                    <a href="{{ route('admin.members.card', $member) }}?index={{ $loop->index }}" target="_blank" class="ui black button">
+                      <i class="address card icon"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            @endif
+          @endforeach
+        </tbody>
+      </table>
+    @endif
+
   </div>
 
-  <table class="ui very basic unstackable table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach($member->users as $key => $user)
-      <tr>
-        <td>
-          <h4 class="ui header">
-            <i class="address card icon"></i>
-            <div class="content">
-              {{ $user->firstname . ' ' . $user->lastname }}
-              <div class="sub header">
-                {{ $member->type->name }}
-                @if ($key != 0)
-                  (Secondary)
-                @endif
-              </div>
-            </div>
-          </h4>
-        </td>
-        <td></td>
-      </tr>
-      @endforeach
-
-    </tbody>
-  </table>
 
   <div class="ui basic modal" id="secondary">
     <div class="ui icon header">

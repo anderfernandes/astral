@@ -9,12 +9,16 @@
 </div>
 <div class="field">
   @if (Request::routeIs('admin.posts.create') or Request::routeIs('admin.posts.edit'))
-    <div class="ui buttons">
-      <a href="{{ route('admin.posts.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      <div class="ui positive right floated right labeled submit icon button">Reply <i class="checkmark icon"></i></div>
+    <a href="{{ route('admin.posts.index') }}" class="ui basic black button">
+      <i class="left chevron icon"></i> Back
+    </a>
+    <div class="ui positive right floated right labeled submit icon button">
+      Reply <i class="save icon"></i>
     </div>
   @else
-    <div class="ui positive right floated right labeled submit icon button">Reply <i class="checkmark icon"></i></div>
+    <div class="ui positive right floated right labeled submit icon button">
+      Reply <i class="save icon"></i>
+    </div>
   @endif
 </div>
 <input type="hidden" name="post_id" value="{{ $post->id }}">

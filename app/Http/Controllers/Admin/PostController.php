@@ -59,7 +59,7 @@ class PostController extends Controller
 
         $post->title = $request->title;
         $post->category_id = $request->category_id;
-        $post->sticky = $request->sticky;
+        $post->sticky = (bool)$request->sticky;
         $post->message = $request->message;
         $post->open = $request->status;
         $post->author_id = Auth::user()->id;
@@ -115,7 +115,7 @@ class PostController extends Controller
 
         $post->title       = $request->title;
         $post->category_id = $request->category_id;
-        $post->sticky      = $request->sticky;
+        $post->sticky      = (bool)$request->sticky;
         $post->message     = $request->message;
         $post->open        = $request->status;
 

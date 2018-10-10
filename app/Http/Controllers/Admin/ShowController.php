@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Show;
+use App\{ Show, ShowType };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Session;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{ Auth, Log, Storage };
 
 class ShowController extends Controller
 {
@@ -24,6 +24,7 @@ class ShowController extends Controller
 
 
         $shows = Show::where('id', '!=', 1);
+        $showTypes = ShowType::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
 
         if (count($request->query()) > 0)
         {
@@ -36,7 +37,11 @@ class ShowController extends Controller
           }
 
           if (isSet($request->type)) {
-            $shows = $shows->where('type', $request->type);
+            $shows = $shows->where('type_id', $request->type_id);
+          }
+
+          if (isSet($request->active)) {
+            $shows = $shows->where('active', '=', (bool)$request->active);
           }
 
           $showIds = $shows->pluck('id');
@@ -47,7 +52,8 @@ class ShowController extends Controller
           $shows = $shows->orderBy('name', 'asc')->paginate(10);
         }
 
-        return view('admin.shows.index')->withShows($shows);
+        return view('admin.shows.index')->withShowTypes($showTypes)
+                                        ->withShows($shows);
     }
 
     /**
@@ -57,7 +63,8 @@ class ShowController extends Controller
      */
     public function create()
     {
-        return view('admin.shows.create');
+        $showTypes = ShowType::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+        return view('admin.shows.create')->withShowTypes($showTypes);
     }
 
     /**
@@ -71,27 +78,33 @@ class ShowController extends Controller
         $this->validate($request, [
           'name'        => 'required|unique:shows',
           'description' => 'required',
-          'type'        => 'required',
+          'type_id'     => 'required',
           'duration'    => 'required|integer',
+          'cover'       => 'image',
         ]);
 
         $show = new Show;
 
         $show->name        = $request->name;
         $show->description = $request->description;
-        $show->type        = $request->type;
+        //$show->type        = $request->type;
+        $show->type_id     = $request->type_id;
         $show->duration    = $request->duration;
+        $show->active      = (bool)$request->active;
 
-        if ($request->cover == "")
-          $show->cover = "/default.png";
-        else
-          $show->cover       = $request->cover;
+        $show->cover = $request->cover == null ? '/default.png' : $request->cover->store('shows', 'public');
 
         $show->creator_id  = Auth::user()->id;
 
         $show->save();
 
-        Session::flash('success', 'The '.$show->type.' show '.$show->name.' has been added successfully!');
+        Session::flash('success',
+          "The <strong>{$show->type}</strong> show <strong>{$show->name}</strong> has been added successfully!"
+        );
+
+        // Log created event
+        Log::info(Auth::user()->fullname . ' created Show ' . $show->name .' using admin');
+
         return redirect()->route('admin.shows.show', $show);
     }
 
@@ -103,7 +116,10 @@ class ShowController extends Controller
      */
     public function show(Show $show)
     {
-        return view('admin.shows.show')->withShow($show);
+        $showTypes = ShowType::where('id', '!=', 1)->orderBy('name', 'asc')->pluck('name', 'id');
+
+        return view('admin.shows.show')->with(['showTypes' => $showTypes])
+                                       ->withShow($show);
     }
 
     /**
@@ -130,23 +146,25 @@ class ShowController extends Controller
       $this->validate($request, [
         'name'        => 'required',
         'description' => 'required',
-        'type'        => 'required',
+        'type_id'        => 'required',
         'duration'    => 'required|integer',
       ]);
 
       $show->name        = $request->input('name');
       $show->description = $request->input('description');
-      $show->type        = $request->input('type');
+      //$show->type        = $request->type;
+      $show->type_id     = $request->type_id;
       $show->duration    = $request->input('duration');
+      $show->active      = (bool)$request->active;
 
-      if ($request->cover == "")
-        $show->cover = "/default.png";
-      else
-        $show->cover       = $request->cover;
+      $request->has('cover') ? $show->cover =  $request->cover->store('shows', 'public') : null;
 
       $show->save();
 
-      Session::flash('success', 'The '.$show->type.' show '.$show->name.' has been updated successfully!');
+      Session::flash('success', "The <strong>{$show->type}</strong> show <strong>{$show->name}</strong> has been updated successfully!");
+
+      // Log created event
+      Log::info(Auth::user()->fullname . ' edited Show ' . $show->name .' using admin');
 
       return redirect()->route('admin.shows.show', $show);
     }
@@ -159,6 +177,9 @@ class ShowController extends Controller
      */
     public function destroy(Show $show)
     {
+        // Log created event
+        Log::info(Auth::user()->fullname . ' deleted Show ' . $show->name .' using admin');
+
         $temp = $show;
 
         $show->delete();
@@ -166,6 +187,40 @@ class ShowController extends Controller
         Session::flash('success', 'The '.$temp->type.' show '.$temp->name.' was successfully deleted.');
 
         return redirect()->route('admin.shows.index');
+    }
+
+    public function delete(Show $show)
+    {
+        // How many events this show is part of, past and future
+        $showings = \App\Event::where('show_id', $show->id)->count();
+
+        // Check if there are any events have this show
+
+        if ($showings == 0)
+        {
+
+          // Log created event
+          Log::info(Auth::user()->fullname . ' deleted Show ' . $show->name .' using admin');
+
+          $temp = $show;
+
+          $show->delete();
+
+          Session::flash('success', "The <strong>{$temp->type}</strong> show <strong>{$temp->name}</strong> was successfully deleted.");
+
+          return redirect()->route('admin.shows.index');
+
+        }
+        else
+        {
+
+          Session::flash('info', "Unable to delete <strong>{$show->name}</strong> because it is/will be featured in <strong>$showings or more events</strong>.");
+
+          return redirect()->route('admin.shows.show', $show);
+
+        }
+
+
     }
 
 }

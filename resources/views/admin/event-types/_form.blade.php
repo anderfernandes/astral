@@ -24,12 +24,15 @@
       </div>
     </div>
   </div>
-  <div class="field">
-    {!! Form::label('description', 'Description') !!}
-    {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
-  </div>
-  <div class="field">
-    <div class="ui {{ Request::routeIs('admin.settings.*') ? 'primary' : 'positive' }} right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
+  <div class="two fields">
+    <div class="field">
+      {!! Form::label('description', 'Description') !!}
+      {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
+    </div>
+    <div class="field">
+      <label for="">&nbsp;</label>
+      <div class="ui green right labeled submit icon button">Save <i class="save icon"></i></div>
+    </div>
   </div>
 {!! Form::close() !!}
 

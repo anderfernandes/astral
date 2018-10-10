@@ -3,7 +3,7 @@
 return [
 
     // Astral Version
-    'version' => '1.0.0-alpha2',
+    'version' => '1.0.0-alpha3',
 
     /*
     |--------------------------------------------------------------------------
@@ -124,7 +124,9 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
+    'log' => 'single',
+
+    'log_channel' => 'astral',
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
@@ -228,6 +230,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'PDF' => Barryvdh\DOMPDF\Facade::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
 

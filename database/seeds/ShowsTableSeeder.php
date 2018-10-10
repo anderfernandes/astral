@@ -19,7 +19,10 @@ class ShowsTableSeeder extends Seeder
         'description' => 'Write a description here.',
         'cover'       => 'https://semantic-ui.com/images/wireframe/image.png',
         'creator_id'  => 1,
+        'active'      => false,
+        'type_id'     => 1,
         'created_at'  => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
+        'updated_at'  => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
       ]);
       // Planetarium example show seed
       DB::table('shows')->insert([
@@ -29,7 +32,10 @@ class ShowsTableSeeder extends Seeder
         'description' => 'Write a description here.',
         'cover'       => 'http://www.starsatnight.org/sciencetheater/assets/File/200x300_blackholes.png',
         'creator_id'  => 2,
+        'active'      => true,
+        'type_id'     => 2,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
+        'updated_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
 
       // Laser Light example show seed
@@ -40,7 +46,10 @@ class ShowsTableSeeder extends Seeder
         'description' => 'Write a description here.',
         'cover'       => 'http://www.starsatnight.org/sciencetheater/assets/File/200x300_daftpunk.png',
         'creator_id'  => 2,
+        'active'      => true,
+        'type_id'     => 2,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
+        'updated_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
     }
 }

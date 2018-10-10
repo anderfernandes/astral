@@ -8,6 +8,10 @@
 
 @section('content')
 
-@include('admin.partial.users._form', ['type' => 'edit', 'user' => $user])
+  <div class="ui container">
+
+    @include('admin.partial.users._form', ['type' => 'edit', 'user' => $user])
+
+  </div>
 
 @endsection

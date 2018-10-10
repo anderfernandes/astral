@@ -23,8 +23,8 @@ class CreateSettingsTable extends Migration
             $table->string('email')->nullable();
             $table->string('website')->nullable();
             $table->integer('seats');
-            $table->string('logo')->nullable()->default('logo.png');
-            $table->string('cover')->nullable()->default('cover.jpg');
+            $table->string('logo')->nullable()->default('/logo.png');
+            $table->string('cover')->nullable()->default('/cover.jpg');
             $table->float('tax')->nullable()->default(8.25);
             $table->string('membership_text')->nullable();
 

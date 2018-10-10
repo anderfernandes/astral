@@ -11,7 +11,9 @@ use App\Http\Controllers\Controller;
 use App\Show;
 use Session;
 use Jenssegers\Date\Date;
-Use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -65,12 +67,26 @@ class EventController extends Controller
 
           $event = new Event;
 
+          // Setting a Date object for start and end times of this even
+          $start = new Date($date['start']);
+          $end   = new Date($date['end']);
+
           $event->show_id        = $request->show_id;
           $event->type_id        = $request->type_id;
-          $event->start          = new Date($date['start']);
-          $event->end            = new Date($date['end']);
+
+          /**
+          * If the event is "all day", set it to start at the beginning of the
+          * day and end at the end of the day. If not, keep original datetimes
+          * If the event is "all day", set it to start at the beginning of the
+          * day and end at the end of the day. If not, keep original datetimes
+          **/
+          $event->start          = (bool)$request->allday ? $start->startOfDay() : $start;
+          $event->end            = (bool)$request->allday ? $start->endOfDay()->hour(23)->minute(59)->second(59)   : $end;
+
           $event->seats          = $request->seats;
-          //$event->memo           = $request->memo;
+
+          // The old memo field will serve as a title for the event if it is all day
+          $event->memo           = $request->show_id == 1 ? $request->title : null;
           $event->creator_id     = Auth::user()->id;
           $event->public         = $request->public;
 
@@ -87,12 +103,18 @@ class EventController extends Controller
 
         }
 
-        $date = Date::parse($event->start)->format('Y-m-d');
+        $date = Date::parse($event->start)->format('l, F j, Y \a\t h:i A');
 
         Session::flash('success',
-            'The event(s) <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> been added successfully!');
+          "The <strong>{$event->type->name}</strong> show <strong>{$event->show->name}</strong> on <strong>{$date}</strong> has been added successfully!");
 
-        return redirect()->to(route('admin.calendar.index') . '/?type=events&date=' . $date . '&view=agendaDay');
+        $date = Date::parse($event->start)->format('Y-m-d');
+
+        // Log created event
+        Log::info(Auth::user()->fullname . ' created Event #' . $event->id .' using admin');
+
+        return redirect()->to(route('admin.calendar.index') . '?type=events&date=' . $date . '&view=agendaDay');
+
     }
 
     /**
@@ -140,12 +162,24 @@ class EventController extends Controller
           'public'         => 'required',
       ]);
 
+      // Setting a Date object for start and end times of this even
+
+      $start = new Date($request->dates[0]['start']);
+      $end   = new Date($request->dates[0]['end']);
+
       $event->show_id        = $request->show_id;
       $event->type_id        = $request->type_id;
-      $event->start          = new Date($request->dates[0]['start']);
-      $event->end            = new Date($request->dates[0]['end']);
+
+      // If the event is "all day", set it to start at the beginning of the
+      // day and end at the end of the day. If not, keep original datetimes
+      $event->start          = (bool)$request->allday ? $start->startOfDay()                       : $start;
+      $event->end            = (bool)$request->allday ? $start->hour(23)->minute(59)->second(59)   : $end;
+
       $event->seats          = $request->seats;
-      //$event->memo           = $request->memo;
+
+      // The old memo field will serve as a title for the event if it is all day
+      $event->memo           = $request->show_id == 1 ? $request->title : null;
+      $event->creator_id     = Auth::user()->id;
       $event->public         = $request->public;
 
       $event->save();
@@ -159,12 +193,17 @@ class EventController extends Controller
         ]);
       }
 
-      $date = Date::parse($event->start)->format('Y-m-d');
+      $date = Date::parse($event->start)->format('l, F j, Y \a\t h:i A');
 
       Session::flash('success',
-          'The <strong>'.$event->type->name.'</strong> show <strong>'.Show::find($event->show_id)->name.'</strong> on <strong>'.Date::parse($event->start)->format('l, F j, Y \a\t h:i A').'</strong> has been updated successfully!');
+        "The <strong>{$event->type->name}</strong> show <strong>{$event->show->name}</strong> on <strong>{$date}</strong> has been edited successfully!");
 
-      return redirect()->to(route('admin.calendar.index') . '/?type=events&date=' . $date . '&view=agendaDay');
+      $date = Date::parse($event->start)->format('Y-m-d');
+
+      // Log edited event
+      Log::info(Auth::user()->fullname . ' edited Event #' . $event->id .' using admin');
+
+      return redirect()->to(route('admin.calendar.index') . '?type=events&date=' . $date . '&view=agendaDay');
     }
 
     /**
@@ -188,13 +227,14 @@ class EventController extends Controller
         {
           $word = $event->sales->count() == 1 ? 'sale' : 'sales';
           Session::flash('info',
-          "The <strong>{$event->type->name}</strong> show <strong>{$event->show->name}</strong> on <strong>{$date}</strong> cannot be deleted because it contains {$event->sales->count()} {$word} that depend on it");
+          "The <strong>{$event->type->name} {$event->show->name}</strong> on <strong>{$date}</strong> cannot be deleted because it contains {$event->sales->count()} {$word} that depend on it");
         }
 
         $date = Date::parse($event->start)->format('Y-m-d');
 
+        // Log deleted event
+        Log::info(Auth::user()->fullname . ' deleted Event #' . $event->id .' using admin');
 
-
-        return redirect()->to(route('admin.calendar.index') . '/?type=events&date=' . $date . '&view=agendaDay');
+        return redirect()->to(route('admin.calendar.index') . '?date=' . $date . '&view=agendaDay');
     }
 }

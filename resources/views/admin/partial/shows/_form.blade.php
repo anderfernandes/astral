@@ -1,19 +1,25 @@
 @if ($type == 'create')
-  {!! Form::open(['route' => 'admin.shows.store', 'class' => 'ui form']) !!}
+  {!! Form::open(['route' => 'admin.shows.store', 'class' => 'ui form', 'enctype' => 'multipart/form-data']) !!}
 @else
-  {!! Form::model($show, ['route' => ['admin.shows.update', $show], 'class' => 'ui form', 'method' => 'PUT']) !!}
+  {!! Form::model($show, ['route' => ['admin.shows.update', $show], 'class' => 'ui form', 'method' => 'PUT', 'enctype' => 'multipart/form-data']) !!}
 @endif
-<div class="two fields">
+<div class="three fields">
   <div class="field">
     {!! Form::label('name', 'Name') !!}
     {!! Form::text('name', null, ['placeholder' => 'What\'s the name of the show?']) !!}
   </div>
   <div class="field">
-    {!! Form::label('type', 'Type') !!}
-    {!! Form::select('type',
-      ['Planetarium' => 'Planetarium', 'Laser Light' => 'Laser Light'],
-      null,
-      ['placeholder' => 'Planetarium or Laser?', 'class' => 'ui dropdown']) !!}
+    {!! Form::label('type_id', 'Type') !!}
+    {!! Form::select('type_id', $showTypes, null,
+      ['placeholder' => 'What kind of show is this?', 'class' => 'ui dropdown']) !!}
+  </div>
+  <div class="field">
+    {!! Form::label('active', 'Active') !!}
+    {!! Form::select('active',
+      ['1' => 'Yes', '0' => 'No'],
+      isset($show) ? (old('active') ?? $show->active) : old('active'),
+      ['class' => 'ui dropdown'])
+    !!}
   </div>
 </div>
 <div class="two fields">
@@ -21,12 +27,18 @@
       {!! Form::label('duration', 'Duration') !!}
       <div class="ui right labeled input">
         {!! Form::text('duration', null, ['placeholder' => 'How long is the show?']) !!}
-        <div class="ui label">minutes</div>
+        <div class="ui basic label">minutes</div>
+      </div>
+  </div>
+  <div class="field">
+    <label for="cover">Cover</label>
+    <div class="ui action input">
+      <input type="text" readonly placeholder="Upload a 9:16 cover image of show">
+      <input type="file" name="cover" accept=".jpg,.jpeg,.png" style="display:none !important">
+      <div class="ui black button">
+        Choose Image...
       </div>
     </div>
-    <div class="field">
-    {!! Form::label('cover', 'Cover') !!}
-    {!! Form::text('cover', null, ['placeholder' => 'URL of the cover (PNG or JPEG)']) !!}
   </div>
 </div>
 <div class="field">
@@ -35,12 +47,10 @@
 </div>
 <div class="field">
   @if (Request::routeIs('admin.shows.create') or Request::routeIs('admin.shows.edit'))
-    <div class="ui buttons">
-      <a href="{{ route('admin.shows.index') }}" class="ui default button"><i class="left chevron icon"></i> Back</a>
-      <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
-    </div>
+    <a href="{{ route('admin.shows.index') }}" class="ui basic black button"><i class="left chevron icon"></i> Back</a>
+    <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
   @else
-    <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
+    <div class="ui positive right floated right labeled submit icon button">Save <i class="save icon"></i></div>
   @endif
 </div>
 {!! Form::close() !!}
@@ -52,7 +62,7 @@
         if (!window.simplemde) {
           window.simplemde = new SimpleMDE({
             element: document.querySelectorAll('#description')[0],
-            toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list'],
+            toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list', '|', 'preview'],
 
           })
         }
@@ -61,7 +71,7 @@
   } else {
     window.simplemde = new SimpleMDE({
       element: document.querySelector('#description'),
-      toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list'],
+      toolbar: ['bold', 'italic', 'unordered-list', 'ordered-list', '|', 'preview'],
     })
   }
   {{-- Client side Form Validation --}}
@@ -88,15 +98,15 @@
           { type: 'maxLength[3]', prompt: '{name} should be at most {ruleValue} characters long'}
         ]
       },
-      cover: {
-        identifier: 'cover',
-        rules: [
-          { type: 'empty', prompt: 'Enter the link to the cover of the show' },
-          { type: 'url', prompt: 'The link to the show cover must be a public URL to a JPEG or PNG' },
-          { type: 'minLength[5]', prompt: '{name} should be at least {ruleValue} characters long'}
-        ]
-      },
-
     }
+  })
+
+  $('input:text, .ui.button', '.ui.action.input').on('click', function(e) {
+    $('input:file', $(e.target).parents()).click()
+  })
+
+  $('input:file', '.ui.action.input').on('change', function(e) {
+    var name = e.target.files[0].name
+    $('input:text', $(e.target).parent()).val(name)
   })
 </script>

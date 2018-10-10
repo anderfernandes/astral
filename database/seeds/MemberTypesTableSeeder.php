@@ -18,6 +18,7 @@ class MemberTypesTableSeeder extends Seeder
         'price'           => 0,
         'duration'        => 0,
         'max_secondaries' => 0,
+        'secondary_price' => 0,
         'creator_id'      => 1,
         'created_at'      => Date::now('America/Chicago')->toDateTimeString(),
       ]);
@@ -27,7 +28,8 @@ class MemberTypesTableSeeder extends Seeder
         'description'     => 'Individual Membership',
         'price'           => 50,
         'duration'        => 365,
-        'max_secondaries' => 0,
+        'max_secondaries' => 1,
+        'secondary_price' => 25,
         'creator_id'      => 1,
         'created_at'      => Date::now('America/Chicago')->toDateTimeString(),
       ]);
@@ -38,6 +40,7 @@ class MemberTypesTableSeeder extends Seeder
         'price'           => 100,
         'duration'        => 365,
         'max_secondaries' => 2,
+        'secondary_price' => 25,
         'creator_id'      => 1,
         'created_at'      => Date::now('America/Chicago')->toDateTimeString(),
       ]);
@@ -48,6 +51,7 @@ class MemberTypesTableSeeder extends Seeder
         'price'           => 135,
         'duration'        => 365,
         'max_secondaries' => 4,
+        'secondary_price' => 25,
         'creator_id'      => 1,
         'created_at'      => Date::now('America/Chicago')->toDateTimeString(),
       ]);

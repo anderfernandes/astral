@@ -11,21 +11,21 @@
     },
     "devDependencies": {
         "axios": "^0.16.2",
-        "babel-preset-env": "^1.6.1",
+        "babel-preset-env": "^1.7.0",
         "babel-preset-stage-0": "^6.24.1",
         "chart.js": "^2.7.0",
-        "cross-env": "^5.1.4",
-        "flatpickr": "^4.4.4",
+        "cross-env": "^5.2.0",
+        "flatpickr": "^4.5.2",
         "fullcalendar": "^3.8.2",
         "jquery-address": "^1.6.0",
         "laravel-mix": "^1.7.2",
-        "lodash": "^4.17.10",
-        "semantic-ui": "^2.3.1",
+        "lodash": "^4.17.11",
+        "marked": "^0.5.1",
+        "semantic-ui": "^2.4.0",
         "simplemde": "^1.11.2",
-        "vue": "^2.5.7"
+        "vue": "^2.5.17"
     },
     "dependencies": {
-        "immutability-helper": "^2.6.5",
-        "moment": "^2.22.1"
+        "moment": "^2.22.2"
     }
 }

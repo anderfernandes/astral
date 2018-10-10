@@ -11,12 +11,16 @@
   <div class="field">
     {!! Form::label('taxable', 'Price') !!}
     <div class="ui labeled input">
-      <div class="ui label">$ </div>
+      <div class="ui basic label">$ </div>
       {!! Form::text('price', null, ['placeholder' => 'Price of the ticket', 'data-validate' => 'tt_price']) !!}
     </div>
   </div>
 </div>
-<div class="two fields">
+<div class="three fields">
+  <div class="field">
+    {!! Form::label('public', 'Public?') !!}
+    {!! Form::select('public', [true => 'Yes', false => 'No'], ($ticketType->public ?? old('ticket_type')), ['class' => 'ui dropdown', 'data-validate' => 'tt_public']) !!}
+  </div>
   <div class="field">
     {!! Form::label('active', 'Active?') !!}
     {!! Form::select('active', [true => 'Yes', false => 'No'], true, ['class' => 'ui dropdown', 'data-validate' => 'tt_active']) !!}
@@ -38,7 +42,14 @@
     ['id' => 'allow_in_events', 'data-validate' => 'event_types', 'placeholder' => 'Choose all that apply', 'class' => 'ui dropdown', 'multiple' => true]) !!}
 </div>
 <div class="field">
-  <div class="ui positive right floated right labeled submit icon button">Save <i class="checkmark icon"></i></div>
+  @isset($ticketType)
+  <a href="{{ route('admin.settings.index') }}#ticket-types" class="ui basic black button">
+    <i class="left chevron icon"></i> Back
+  </a>
+  @endisset
+  <div class="ui positive right labeled submit icon button">
+    Save <i class="save icon"></i>
+  </div>
 </div>
 {!! Form::close() !!}
 

@@ -7,16 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Session;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{ Auth, Storage };
 
-use App\Organization;
-use App\OrganizationType;
-use App\Role;
-use App\TicketType;
-use App\PaymentMethod;
-use App\EventType;
-use App\MemberType;
-use App\Category;
+use App\{ Organization, OrganizationType, Role, TicketType, PaymentMethod };
+use App\{ EventType, MemberType, Category, ProductType, Grade, Announcement, ShowType };
 
 class SettingController extends Controller
 {
@@ -35,6 +29,10 @@ class SettingController extends Controller
         $eventTypes = EventType::where('name', '!=', 'system')->get();
         $memberTypes = MemberType::where('id', '!=', 1)->get();
         $categories = Category::all();
+        $productTypes = ProductType::all();
+        $grades = Grade::all();
+        $showTypes = ShowType::where('id', '!=', 1)->get();
+        $announcements = Announcement::all();
         $colors = [
           'red'    => '#cf3534',
           'orange' => '#f2711c',
@@ -60,7 +58,11 @@ class SettingController extends Controller
           ->withMemberTypes($memberTypes)
           ->withEventTypes($eventTypes)
           ->withColors($colors)
-          ->withCategories($categories);
+          ->withCategories($categories)
+          ->withProductTypes($productTypes)
+          ->withGrades($grades)
+          ->withShowTypes($showTypes)
+          ->withAnnouncements($announcements);
     }
 
     public function addOrganizationType(Request $request)
@@ -138,8 +140,8 @@ class SettingController extends Controller
     public function addMemberType(Request $request)
     {
       $this->validate($request, [
-        'name'            => 'required',
-        'description'     => 'required',
+        'name'            => 'required|min:3',
+        'description'     => 'required|min:3',
         'price'           => 'required|numeric',
         'duration'        => 'required|numeric',
         'max_secondaries' => 'required|numeric'
@@ -238,6 +240,17 @@ class SettingController extends Controller
       $setting->membership_text      = $request->membership_text;
       $setting->confirmation_text    = $request->confirmation_text;
       $setting->invoice_text         = $request->invoice_text;
+
+      if ($request->logo != null)
+      {
+        Storage::disk('public')->delete($setting->logo);
+        $setting->logo = $request->logo->store('settings', 'public');
+      }
+      if ($request->cover != null)
+      {
+        Storage::disk('public')->delete($setting->cover);
+        $setting->cover = $request->cover->store('settings', 'public');
+      }
 
       $setting->save();
 
