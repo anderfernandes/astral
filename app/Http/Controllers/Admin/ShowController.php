@@ -36,7 +36,7 @@ class ShowController extends Controller
             $shows = $shows->where('duration', $request->duration);
           }
 
-          if (isSet($request->type)) {
+          if (isSet($request->type_id)) {
             $shows = $shows->where('type_id', $request->type_id);
           }
 
