@@ -87,7 +87,7 @@ class ShowController extends Controller
 
         $show->name        = $request->name;
         $show->description = $request->description;
-        //$show->type        = $request->type;
+        $show->type        = ShowType::find($request->type_id)->name;
         $show->type_id     = $request->type_id;
         $show->duration    = $request->duration;
         $show->active      = (bool)$request->active;
@@ -152,7 +152,7 @@ class ShowController extends Controller
 
       $show->name        = $request->input('name');
       $show->description = $request->input('description');
-      //$show->type        = $request->type;
+      $show->type        = ShowType::find($request->type_id)->name;
       $show->type_id     = $request->type_id;
       $show->duration    = $request->input('duration');
       $show->active      = (bool)$request->active;
