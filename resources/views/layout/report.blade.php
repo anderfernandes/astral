@@ -31,11 +31,11 @@
   </script>-->
 
   <!-- Libraries -->
-  <link rel="stylesheet" href="{{ asset('css/vendor.css')}}">
-  <script src="{{asset('js/vendor.js')}}"></script>
+  <link rel="stylesheet" href="/css/vendor.css">
+  <script src="/js/vendor.js"></script>
 
-  <link rel="stylesheet" href="{{ asset('semantic/semantic.min.css') }}">
-  <script src="{{ asset('semantic/semantic.min.js') }}"></script>
+  <link rel="stylesheet" href="/semantic/semantic.min.css">
+  <script src="/semantic/semantic.min.js"></script>
 
 </head>
 <script>

@@ -7,8 +7,8 @@
 
     <title>{{ config('app.name', 'Astral') }} - {{ App\Setting::find(1)->organization }} | @yield('title')</title>
 
-    <link rel="stylesheet" href="{{ asset('semantic/button.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('semantic/icon.min.css') }}">
+    <link rel="stylesheet" href="/semantic/button.min.css">
+    <link rel="stylesheet" href="/semantic/icon.min.css">
 
   </head>
 
