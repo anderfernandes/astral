@@ -2,8 +2,9 @@
 
 return [
 
-    // Astral Version
+    // Astral Variables
     'version' => '1.0.0-alpha3',
+    'force_https' => env('FORCE_HTTPS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -16,7 +17,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Astral'),
 
     /*
     |--------------------------------------------------------------------------
