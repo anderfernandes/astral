@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="/css/vendor.css">
   <script src="/js/vendor.js"></script>
 
-  <link rel="stylesheet" href="semantic/semantic.min.css">
+  <link rel="stylesheet" href="/semantic/semantic.min.css">
   <script src="/semantic/semantic.min.js"></script>
 
 </head>
