@@ -47,7 +47,7 @@ class ProductController extends Controller
 
         if (config('app.force_https'))
         {
-          $shows->setPath('/admin/products');
+          $products->setPath('/admin/products');
         }
 
         return view('admin.products.index')->withRequest($request)
