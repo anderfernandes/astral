@@ -59,7 +59,7 @@ class UserController extends Controller
 
         if (config('app.force_https'))
         {
-          $shows->setPath('/users');
+          $shows->setPath('/admin/users');
         }
 
         return view('admin.users.index')->withUsers($users)

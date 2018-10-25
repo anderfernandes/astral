@@ -76,7 +76,7 @@ class SaleController extends Controller
 
         if (config('app.force_https'))
         {
-          $shows->setPath('/sales');
+          $shows->setPath('/admin/sales');
         }
 
         return view('admin.sales.index')->withSales($sales)->withEventTypes($eventTypes)->withRequest($request);

@@ -47,7 +47,7 @@ class OrganizationController extends Controller
 
       if (config('app.force_https'))
       {
-        $shows->setPath('/organizations');
+        $shows->setPath('/admin/organizations');
       }
 
       return view('admin.organizations.index')->withOrganizations($organizations)

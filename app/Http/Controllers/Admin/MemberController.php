@@ -57,7 +57,7 @@ class MemberController extends Controller
 
         if (config('app.force_https'))
         {
-          $shows->setPath('/members');
+          $shows->setPath('/admin/members');
         }
 
         return view('admin.members.index')->withRequest($request)->withMembers($members);
