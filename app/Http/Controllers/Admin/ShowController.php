@@ -28,6 +28,7 @@ class ShowController extends Controller
 
         if (count($request->query()) > 0)
         {
+          // In the future, change this to $request->has
           if (isSet($request->id)) {
             $shows = $shows->where('id', $request->id);
           }
@@ -50,6 +51,13 @@ class ShowController extends Controller
         else
         {
           $shows = $shows->orderBy('name', 'asc')->paginate(10);
+        }
+
+        // if app.force_https is true, make pagination links have https in them
+
+        if (config('app.force_https'))
+        {
+          $shows->setPath('/');
         }
 
         return view('admin.shows.index')->withShowTypes($showTypes)
