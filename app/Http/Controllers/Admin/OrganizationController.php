@@ -43,6 +43,13 @@ class OrganizationController extends Controller
         $organizations = $organizations->orderBy('name', 'asc')->paginate(12);
       }
 
+      // if app.force_https is true, make pagination links have https in them
+
+      if (config('app.force_https'))
+      {
+        $shows->setPath('/organizations');
+      }
+
       return view('admin.organizations.index')->withOrganizations($organizations)
                                               ->withRequest($request)
                                               ->withOrganizationTypes($organizationTypes);

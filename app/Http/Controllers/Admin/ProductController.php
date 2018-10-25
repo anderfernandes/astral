@@ -43,6 +43,13 @@ class ProductController extends Controller
           $products = Product::orderBy('name', 'asc')->paginate(10);
         }
 
+        // if app.force_https is true, make pagination links have https in them
+
+        if (config('app.force_https'))
+        {
+          $shows->setPath('/products');
+        }
+
         return view('admin.products.index')->withRequest($request)
                                            ->withProducts($products)
                                            ->withProductTypes($productTypes);

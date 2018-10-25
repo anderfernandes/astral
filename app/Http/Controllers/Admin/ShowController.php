@@ -57,7 +57,7 @@ class ShowController extends Controller
 
         if (config('app.force_https'))
         {
-          $shows->setPath('/');
+          $shows->setPath('/shows');
         }
 
         return view('admin.shows.index')->withShowTypes($showTypes)

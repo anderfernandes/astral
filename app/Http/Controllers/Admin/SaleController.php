@@ -71,6 +71,14 @@ class SaleController extends Controller
           //$sales = Sale::whereIn('id', $salesIds)->orderBy('id', 'desc')->paginate(10);
           $sales = Sale::orderBy('id', 'desc')->paginate(10);
         }
+
+        // if app.force_https is true, make pagination links have https in them
+
+        if (config('app.force_https'))
+        {
+          $shows->setPath('/sales');
+        }
+
         return view('admin.sales.index')->withSales($sales)->withEventTypes($eventTypes)->withRequest($request);
     }
 

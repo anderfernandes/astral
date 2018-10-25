@@ -54,6 +54,14 @@ class UserController extends Controller
         {
           $users = $users->orderBy('firstname', 'asc')->paginate(12);
         }
+
+        // if app.force_https is true, make pagination links have https in them
+
+        if (config('app.force_https'))
+        {
+          $shows->setPath('/users');
+        }
+
         return view('admin.users.index')->withUsers($users)
                                         ->withRoles($roles)
                                         ->withRequest($request)

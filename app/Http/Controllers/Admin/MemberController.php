@@ -53,6 +53,13 @@ class MemberController extends Controller
           $members = $members->paginate(12);
         }
 
+        // if app.force_https is true, make pagination links have https in them
+
+        if (config('app.force_https'))
+        {
+          $shows->setPath('/members');
+        }
+
         return view('admin.members.index')->withRequest($request)->withMembers($members);
     }
 
