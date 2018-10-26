@@ -1,32 +1,34 @@
 <template>
   <div class="ui grid">
     <div class="row">
-      <div class="ui items" style="margin-top:0">
-        <div class="item" style="width:100vw">
-          <div class="ui medium rounded image">
-            <img :src="nextEvent.show.cover" alt="">
-          </div>
-          <div class="content">
-            <div class="ui huge header">
-              {{ nextEvent.show.name }}
+      <div class="column">
+        <div class="ui items" style="margin-top:0">
+          <div class="item" style="width:100vw">
+            <div class="ui medium rounded image">
+              <img :src="nextEvent.show.cover" alt="">
             </div>
-            <div class="meta">
-              <div v-if="moment(nextEvent.start).diff(moment(), 'minutes') <= 15" class="ui large black label">Now Seating</div>
-              <div class="ui large blue label">{{ nextEvent.show.type }}</div>
-              <div class="ui basic large label">
-                <i class="clock outline icon"></i>
-                {{ moment(nextEvent.start).format("dddd, MMMM D, YYYY [at] h:mm A") }}
-                <div class="detail">({{ moment(nextEvent.start).fromNow() }})</div>
-              </div>
-            </div>
-            <div class="description">
+            <div class="content">
               <div class="ui huge header">
-                <div class="sub header" v-html="marked(nextEvent.show.description)"></div>
+                {{ nextEvent.show.name }}
               </div>
-            </div>
-            <div class="description">
-              <div v-for="ticket in nextEvent.allowedTickets" class="ui large green tag label">
-                $ {{ parseFloat(ticket.price).toFixed(2) }} / {{ ticket.name }}
+              <div class="meta">
+                <div v-if="moment(nextEvent.start).diff(moment(), 'minutes') <= 15" class="ui large black label">Now Seating</div>
+                <div class="ui large blue label">{{ nextEvent.show.type }}</div>
+                <div class="ui basic large label">
+                  <i class="clock outline icon"></i>
+                  {{ moment(nextEvent.start).format("dddd, MMMM D, YYYY [at] h:mm A") }}
+                  <div class="detail">({{ moment(nextEvent.start).fromNow() }})</div>
+                </div>
+              </div>
+              <div class="description">
+                <div class="ui huge header">
+                  <div class="sub header" v-html="marked(nextEvent.show.description)"></div>
+                </div>
+              </div>
+              <div class="description">
+                <div v-for="ticket in nextEvent.allowedTickets" class="ui large green tag label">
+                  $ {{ parseFloat(ticket.price).toFixed(2) }} / {{ ticket.name }}
+                </div>
               </div>
             </div>
           </div>
@@ -34,13 +36,17 @@
       </div>
     </div>
     <div class="row">
-      <div class="ui divider"></div>
-      <div class="ui cards">
-        <div class="card" v-for="event in upcomingEvents">
-          <div class="image"><img :src="event.show.cover" alt=""></div>
-          <div class="ui black top right attached label">{{ moment(event.start).format('h:mm A') }}</div>
+      <div class="column">
+        <div class="ui five cards">
+          <div class="card" v-for="event in upcomingEvents">
+            <div class="image"><img :src="event.show.cover" alt=""></div>
+            <div class="ui black top right attached label">
+              <i class="clock outline icon"></i>{{ moment(event.start).format('h:mm A') }}
+            </div>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -68,7 +74,7 @@ export default ({
         return []
     },
     upcomingEvents() {
-      return this.events
+      return this.events.slice(0, 5)
     }
   },
   methods: {
