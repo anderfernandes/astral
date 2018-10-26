@@ -3,9 +3,11 @@ import Vue from 'vue'
 
 // Importing dependencies
 import moment from 'moment'
+import marked from 'marked'
 
 // Prototyping
 Vue.prototype.moment = moment
+Vue.prototype.marked = marked
 
 // Disable production tip
 Vue.config.productionTip = false

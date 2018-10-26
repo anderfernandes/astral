@@ -161,7 +161,7 @@ function fetchEvents(calEvent, jsEvent, view) {
       <div class="scrolling content">
         <div class="ui items">
           <div class="ui item">
-            ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui rounded image"><img src="${response.show.cover}"></div>`}
+            ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui medium rounded image"><img src="${response.show.cover}"></div>`}
             <div class="content">
               <div class="meta">
                 <div class="ui label" style="background-color: ${response.color}; color: rgba(255, 255, 255, 0.8)"><i class="calendar alternate icon"></i> <div class="detail">${response.type}</div></div>

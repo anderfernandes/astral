@@ -143,4 +143,4 @@ Route::get('/logout', 'Auth\LoginController@logout');
 
 Route::get('/events', function() { return view('events'); })->name('events');
 
-Route::get('/sales', function() { return view('sales'); })->name('sales'); // PROTECT THIS ROUTE IN A FUTURE RELEASE!
+Route::get('/sales', function() { return view('sales'); })->name('sales')->middleware('auth'); // PROTECT THIS ROUTE IN A FUTURE RELEASE!

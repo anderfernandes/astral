@@ -1,27 +1,44 @@
 <template>
-  <div class="ui grid" style="margin-top: 2rem">
-    <div v-show="events.length > 0" class="ui four wide column" v-for="event in events" :key="event.id">
-      <img class="ui medium centered image" :src="event.show.cover" :alt="event.show.name">
-      <div class="ui centered header" style="margin-top: 0.5rem">
-        <div class="content">
-          {{ moment(event.start).calendar() }}
-          <div class="sub header">
-            <div class="ui blue label">{{ event.show.type }}</div>
-            <div class="ui red label">{{ event.type }}</div>
+  <div class="ui grid">
+    <div class="row">
+      <div class="ui items" style="margin-top:0">
+        <div class="item" style="width:100vw">
+          <div class="ui medium rounded image">
+            <img :src="nextEvent.show.cover" alt="">
           </div>
-          <div class="sub header">
-            <div class="ui label" v-for="ticket in event.allowedTickets">$ {{ parseFloat(ticket.price) }} / {{ ticket.name }}</div>
+          <div class="content">
+            <div class="ui huge header">
+              {{ nextEvent.show.name }}
+            </div>
+            <div class="meta">
+              <div v-if="moment(nextEvent.start).diff(moment(), 'minutes') <= 15" class="ui large black label">Now Seating</div>
+              <div class="ui large blue label">{{ nextEvent.show.type }}</div>
+              <div class="ui basic large label">
+                <i class="clock outline icon"></i>
+                {{ moment(nextEvent.start).format("dddd, MMMM D, YYYY [at] h:mm A") }}
+                <div class="detail">({{ moment(nextEvent.start).fromNow() }})</div>
+              </div>
+            </div>
+            <div class="description">
+              <div class="ui huge header">
+                <div class="sub header" v-html="marked(nextEvent.show.description)"></div>
+              </div>
+            </div>
+            <div class="description">
+              <div v-for="ticket in nextEvent.allowedTickets" class="ui large green tag label">
+                $ {{ parseFloat(ticket.price).toFixed(2) }} / {{ ticket.name }}
+              </div>
+            </div>
           </div>
-          <div class="sub header">{{ event.seats }} seats left</div>
         </div>
       </div>
     </div>
-    <div v-show="events.length <= 0" class="ui sixteen wide column">
-      <div class="ui info icon floating massive message">
-        <i class="info circle icon"></i>
-        <div class="content">
-          <div class="header">No events</div>
-          <p>No events coming up in the next 7 days. Please check back soon!</p>
+    <div class="row">
+      <div class="ui divider"></div>
+      <div class="ui cards">
+        <div class="card" v-for="event in upcomingEvents">
+          <div class="image"><img :src="event.show.cover" alt=""></div>
+          <div class="ui black top right attached label">{{ moment(event.start).format('h:mm A') }}</div>
         </div>
       </div>
     </div>
@@ -39,17 +56,28 @@ export default ({
       events: [],
     }
   },
-  created() {
+  mounted() {
     this.fetchEvents()
     setInterval(() => this.fetchEvents(), 10000)
   },
+  computed: {
+    nextEvent() {
+      if (this.events.length > 0)
+        return this.events.shift()
+      else
+        return []
+    },
+    upcomingEvents() {
+      return this.events
+    }
+  },
   methods: {
-    fetchEvents() {
+    async fetchEvents() {
       // Last seven days
       let start = moment().format('YYYY-MM-DD')
       let end = moment().add(7, 'days').format('YYYY-MM-DD')
-      axios.get(`/api/events/${start}/${end}`)
-        .then(response => this.events = response.data)
+      const response = await axios.get(`/api/events/${start}/${end}`)
+      this.events = response.data
     }
   }
 })

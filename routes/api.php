@@ -460,9 +460,10 @@ Route::get('events/{start}/{end}', function($start, $end) {
       'title'    => $event->show->name .' - ' . $event->type->name . ' - ' . $seats . ' seats left',
       'url'      => '/admin/events/' . $event->id,
       'show'     => [
-        'name'  => $event->show->name,
-        'type'  => $event->show->category->name,
-        'cover' => substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover),
+        'name'        => $event->show->name,
+        'type'        => $event->show->category->name,
+        'cover'       => substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover),
+        'description' => $event->show->description,
         ],
       'allowedTickets' => $event->type->allowedTickets->where('in_cashier', true),
       'date' => $start,
