@@ -19,6 +19,7 @@
                   {{ moment(nextEvent.start).format("dddd, MMMM D, YYYY [at] h:mm A") }}
                   <div class="detail">({{ moment(nextEvent.start).fromNow() }})</div>
                 </div>
+                <div class="ui large blue label">{{ nextEvent.seats }} seats left</div>
               </div>
               <div class="description">
                 <div class="ui huge header">
