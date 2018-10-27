@@ -77,8 +77,7 @@ export default ({
       let now = moment().subtract(15, 'minutes')
       // Get shows with start time less thasn 15 minutes past their start time
       let upcomingEvents = this.events.filter(event => moment(event.start).isAfter(now))
-      console.log(upcomingEvents[0].start)
-      return upcomingEvents.slice(0, 5)
+      return upcomingEvents.slice(0, 6)
     }
   },
   methods: {
