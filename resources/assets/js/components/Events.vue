@@ -41,7 +41,7 @@
           <div class="card" v-for="event in upcomingEvents">
             <div class="image"><img :src="event.show.cover" alt=""></div>
             <div class="ui black top right attached label">
-              <i class="clock outline icon"></i>{{ moment(event.start).format('h:mm A') }}
+              <i class="clock outline icon"></i>{{ moment(event.start).calendar() }}
             </div>
           </div>
         </div>
@@ -69,12 +69,16 @@ export default ({
   computed: {
     nextEvent() {
       if (this.events.length > 0)
-        return this.events.shift()
+        return this.upcomingEvents.shift()
       else
         return []
     },
     upcomingEvents() {
-      return this.events.slice(0, 5)
+      let now = moment().subtract(15, 'minutes')
+      // Get shows with start time less thasn 15 minutes past their start time
+      let upcomingEvents = this.events.filter(event => moment(event.start).isAfter(now))
+      console.log(upcomingEvents[0].start)
+      return upcomingEvents.slice(0, 5)
     }
   },
   methods: {
