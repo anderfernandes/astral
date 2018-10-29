@@ -376,7 +376,7 @@ Route::get('/calendar/events', function(Request $request) {
   $eventsCollect = $eventsCollect->sortBy('start');
 
   $eventsCollect = $eventsCollect->values()->all();
-  return response($eventsCollect)->withHeaders(['Access-Control-Allow-Origin' => '*']);
+  return response($eventsCollect);
 });
 
 Route::get('staff', function() {
@@ -440,7 +440,7 @@ Route::get('events', function(Request $request) {
   $eventsCollect = collect($eventsArray);
   $eventsCollect = $eventsCollect->sortBy('start');
   $eventsCollect = $eventsCollect->values()->all();
-  return response($eventsCollect)->withHeaders(['Access-Control-Allow-Origin' => '*']);
+  return response($eventsCollect);
 });
 
 // This is the URL for the /events slide show
@@ -495,7 +495,7 @@ Route::get('membership-type/{id}', function($id) {
 
 Route::get('settings', function() {
   $settings = \App\Setting::find(1);
-  return response($settings)->withHeaders(['Access-Control-Allow-Origin' => '*']);
+  return response($settings);
 });
 
 Route::get('customers', function(Request $request) {
