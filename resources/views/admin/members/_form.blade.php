@@ -14,8 +14,8 @@
             <div class="default text">Select a customer</div>
             <div class="menu">
               @if (isSet($member))
-                <div class="item" data-value="{{ $member->users->first()->id }}">
-                  <i class="user circle icon"></i>{{ $member->users->first()->fullname }} (<em>{{ $member->users->first()->role->name }}</em>)
+                <div class="item" data-value="{{ $member->primary->id }}">
+                  <i class="user circle icon"></i>{{ $member->primary->fullname }} (<em>{{ $member->primary->role->name }}</em>)
                 </div>
               @else
                 @foreach ($users as $user)
@@ -108,16 +108,16 @@
       </div>
     </div>
     @isset($member)
-    <div class="field">
-      <label for="secondaries">Current Secondaries</label>
-      @foreach ($member->users as $user)
-        @if ($loop->index != 0)
-          <div class="ui basic label">
-            <i class="user circle icon"></i>{{ $user->fullname }}
+      @if ($member->secondaries->count() > 0)
+      <div class="field">
+        <label for="secondaries">Current Secondaries</label>
+        @foreach ($member->secondaries as $secondary)
+          <div class="ui basic black label">
+            <i class="card address icon"></i> {{ $secondary->fullname }}
           </div>
-        @endif
-      @endforeach
-    </div>
+        @endforeach
+      </div>
+      @endif
     @endisset
     <div class="field">
       <label for="secondaries">Free Secondaries</label>
@@ -206,7 +206,7 @@
         var balance = parseFloat(balanceString)
         var tendered = document.querySelector('#tendered').value
         var tenderedString = parseFloat(tendered)
-        var paid = {{ isSet($member) ? $sale->payments->last()->total : 0 }}
+        var paid = 0
         var paidString = paid.toFixed(2)
         balance = (total - tendered)
         balance = (balance - paid)
@@ -251,7 +251,7 @@
 
             if (isSet($member))
             {
-              $secondaries = $member->users->pluck('id');
+              $secondaries = $member->secondaries->pluck('id');
               echo "$('#secondaries').dropdown('set value', $secondaries) \n";
             }
 
@@ -296,7 +296,7 @@
   {{-- Getting membership duration and filling in atomatically --}}
   $('#member_type_id').change(function() {
     var membership_type_id = $(this).dropdown('get value')
-    var currentSecondaries = {{ isSet($member) ? $member->users->count() - 1 : 0 }}
+    var currentSecondaries = {{ isSet($member) ? $member->secondaries->count() : 0 }}
     fetch(`/api/membership-type/${membership_type_id}`)
       .then(response => response.json())
       .then(membership_type => {
@@ -321,7 +321,7 @@
   {{-- Free Secondaries --}}
   $('#secondaries').change(function() {
     {{-- Get the number of secondaries --}}
-    var currentSecondaries = {{ isSet($member) ? $member->users->count() - 1 : 0 }}
+    var currentSecondaries = {{ isSet($member) ? $member->secondaries->count() : 0 }}
     var membership_type_id = $('#member_type_id').dropdown('get value')
     fetch(`/api/membership-type/${membership_type_id}`)
     .then(response => response.json())
@@ -355,7 +355,7 @@
   })
 
   $(document).ready(function() {
-    $('#name').dropdown('set selected', {{ isSet($member) ? $member->users[0]->id : old('name') }})
+    $('#name').dropdown('set selected', {{ isSet($member) ? $member->primary->id : old('name') }})
     $('#member_type_id').dropdown('set selected', {{ isSet($member) ? $member->type->id : old('member_type_id')  }})
     $('#payment_method').dropdown('set selected', {{ old('payment_method_id') }})
     $('#name').dropdown('get value') != null ? $('#name').dropdown('set selected', {{ old('user_id') }}) : null

@@ -1,6 +1,10 @@
 @extends('layout.report')
 
-@section('title', $member->users[0]->firstname . ' ' . $member->users[0]->lastname.'\'s Membership Card')
+@if ($request->has('index'))
+  @section('title', " {$member->secondaries[$request->index]->fullname}'s Membership Card")
+@else
+  @section('title', " {$member->primary->fullname}'s Membership Card")
+@endif
 
 @section('content')
 
@@ -28,12 +32,14 @@
       <div class="content">
         <img src="{{ \App\Setting::find(1)->logo == '/logo.png' ? App\Setting::find(1)->logo : Storage::url(\App\Setting::find(1)->logo) }}" alt="" class="left floated mini ui image">
         <div class="right floated meta"># {{ $member->id }}</div>
-        <div class="header">{{ $member->users[$request->index]->fullname }}</div>
+        <div class="header">
+          {{ $request->has('index') ? $member->secondaries[$request->index]->fullname : $member->primary->fullname }}
+        </div>
         <div class="meta">
           <div class="ui basic black tiny label" style="background-color:transparent !important">
             <i class="address card icon"></i>
             {{ $member->type->name }}
-            @if($request->index != 0)
+            @if ($request->has('index'))
               ( Secondary )
             @endif
           </div>

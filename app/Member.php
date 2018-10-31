@@ -16,7 +16,7 @@ class Member extends Model
      * Defining mass assignment properties of this model
      * @var array
      */
-    protected $fillable = ['member_type_id', 'start', 'end'];
+    protected $fillable = ['member_type_id', 'start', 'end', 'primary_id', 'creator_id'];
 
     /**
      * Returns the type of membership
@@ -33,9 +33,27 @@ class Member extends Model
      *
      * @return App\User Returns all App\User objects under this membership with the first always being the primary.
      */
-    public function users()
+    public function secondaries()
     {
-      return $this->hasMany('App\User', 'membership_id');
+      return $this->hasMany('App\User', 'membership_id')->where('id', '!=', $this->primary_id);
+    }
+
+    /**
+     * Returns the primary on the current membership
+     * @return App\User Returns the primary on the current membership
+     */
+    public function primary()
+    {
+      return $this->belongsTo('App\User');
+    }
+
+    public function getUsersAttribute()
+    {
+      $primary = $this->primary;
+      $secondaries = $this->secondaries->all();
+
+      return array_prepend($secondaries, $primary);
+
     }
 
     /**

@@ -68,7 +68,6 @@ class CashierController extends Controller
         $sale = new Sale;
 
         $sale->creator_id           = Auth::user()->id;
-        $sale->taxable              = User::find($request->customer_id)->organization->type->taxable;
         $sale->subtotal             = $request->subtotal;
         $sale->total                = $request->total;
         $sale->organization_id      = User::find($request->customer_id)->organization->id;
@@ -77,6 +76,7 @@ class CashierController extends Controller
         $sale->customer_id          = $request->customer_id;
         $sale->status               = 'complete';
         $sale->tax                  = $request->total - $request->subtotal;
+        $sale->taxable              = ($sale->tax > 0) ? true : false;
         $sale->sell_to_organization = false;
 
         $sale->save();

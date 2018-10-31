@@ -2,7 +2,7 @@
 
 @section('title', 'Renew Membership')
 
-@section('subtitle', $member->users[0]->firstname . ' ' . $member->users[0]->lastname)
+@section('subtitle', $member->primary->firstname . ' ' . $member->primary->lastname)
 
 @section('icon', 'address card')
 

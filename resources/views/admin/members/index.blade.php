@@ -19,7 +19,7 @@
           <div class="item" data-value="">All Members</div>
           @foreach (App\Member::where('id', '!=', 1)->get() as $member)
             <div class="item" data-value="{{ $member->id }}">
-              {{ $member->users[0]->fullname }}
+              {{ $member->primary->fullname }}
             </div>
           @endforeach
         </div>
@@ -66,7 +66,7 @@
           <div class="content">
             <img src="{{ \App\Setting::find(1)->logo == '/logo.png' ? \App\Setting::find(1)->logo : Storage::url(\App\Setting::find(1)->logo) }}" alt="" class="left floated mini ui image">
             <div class="right floated meta"># {{ $member->id }}</div>
-            <div class="header">{{ $member->users[0]->fullname }}</div>
+            <div class="header">{{ $member->primary->fullname }}</div>
             <div class="meta">
               {{ $member->type->name }}
             </div>

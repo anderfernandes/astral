@@ -141,6 +141,7 @@ class MemberController extends Controller
           'creator_id'     => Auth::user()->id,
           'start'          => Date::parse($request->start)->startOfDay(),
           'end'            => Date::parse($request->end)->hour(23)->minute(59)->second(59),
+          'primary_id'     => $user->id,
         ]);
 
         $member->save();
@@ -204,13 +205,12 @@ class MemberController extends Controller
      */
     public function edit(Member $member)
     {
-        $users = User::all()->where('type', 'individual')->where('role_id', '!=', 5);
         $memberTypes = MemberType::all()->where('id', '!=', 1);
         $paymentMethods = PaymentMethod::all();
         // Passing membership payments
 
         // IN ORDER TO GET THE LATEST MEMBERSHIP PAYMENT, QUERY THE DATABASE FOR A PAYMENT THAT...
-        $sales = Sale::where('customer_id', $member->users[0]->id) // ...HAS THE PRIMARY MEMBER AS A CUSTOMER...
+        $sales = Sale::where('customer_id', $member->primary->id) // ...HAS THE PRIMARY MEMBER AS A CUSTOMER...
                       ->where('subtotal', '>=', $member->type->price) // ...SUBTOTAL >= MEMBERSHIP TYPE PRICE
                       ->whereDate('created_at', $member->created_at->format('Y-m-d'))->get(); // .. WAS CREATED THE SAME DAY THE MEMBERSHIP WAS CREATED
         // Ensure we get the last membership payment
@@ -218,7 +218,6 @@ class MemberController extends Controller
 
         return view ('admin.members.edit')->withMember($member)
                                           ->withSale($sale)
-                                          ->withUsers($users)
                                           ->withMemberTypes($memberTypes)
                                           ->withPaymentMethods($paymentMethods);
     }
@@ -318,7 +317,7 @@ class MemberController extends Controller
         }
       }
 
-      Session::flash('success','<strong>' . $member->users[0]->fullname . ', Member # '. $member->id .' ('. $member->type->name .')</strong> edited successfully!');
+      Session::flash('success','<strong>' . $member->primary->fullname . ', Member # '. $member->id .' ('. $member->type->name .')</strong> edited successfully!');
 
       return redirect()->route('admin.members.index');
     }
@@ -350,7 +349,7 @@ class MemberController extends Controller
 
     public function receipt(Member $member, Request $request)
     {
-      $sales = Sale::where('customer_id', $member->users[0]->id)->where('subtotal', $member->type->price)->get();
+      $sales = Sale::where('customer_id', $member->primary->id)->where('subtotal', $member->type->price)->get();
       // Ensure we get the last membership payment
       $sale = $sales->last();
 
@@ -370,9 +369,9 @@ class MemberController extends Controller
       $user = User::find($request->user_id);
       $user->role_id = 5;
 
-      $member->users()->save($user);
+      $member->secondaries()->save($user);
 
-      Session::flash('success','<strong>' . $member->users[1]->fullname . '</strong> has been added as a secondary to <strong>Member # '. $member->id .' (' . $member->users[0]->fullname . ' / ' . $member->type->name .')</strong> successfully!');
+      Session::flash('success','<strong>' . $user->fullname . '</strong> has been added as a secondary to <strong>Member # '. $member->id .' (' . $member->primary->fullname . ' / ' . $member->type->name .')</strong> successfully!');
 
       return redirect()->route('admin.members.show', $member);
     }

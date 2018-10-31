@@ -333,7 +333,7 @@
           <div class="four fields">
             <div class="required field">
               <label for="taxable">Taxable</label>
-              <select name="taxable" value="{{ isSet($sale) ? $sale->taxable : old('taxable') }}" class="ui dropdown">
+              <select name="taxable" value="" class="ui taxable dropdown">
                 <option value="0">No</option>
                 <option value="1">Yes</option>
               </select>
@@ -975,7 +975,7 @@
     this.value != 1 ? $('form').form('add rule', 'reference', ['empty']) : $('form').form('remove fields', ['reference'])
   })
 
-
+  $('.ui.taxable.dropdown').dropdown('set selected', '{{ isSet($sale) ? $sale->taxable : old('taxable') }}')
 
 </script>
 

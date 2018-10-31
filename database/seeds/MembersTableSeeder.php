@@ -18,6 +18,7 @@ class MembersTableSeeder extends Seeder
           'end'            => Date::create(1970, 1, 1, 0, 0, 0, 'America/Chicago')->toDateTimeString(),
           'creator_id'     => 1,
           'created_at'     => Date::now()->toDateTimeString(),
+          'primary_id'     => 1,
         ]);
     }
 }

@@ -2,7 +2,7 @@
 
 @section('title', 'Member Information')
 
-@section('subtitle', $member->users[0]->firstname.' '.$member->users[0]->lastname)
+@section('subtitle', $member->primary->fullname)
 
 @section('icon', 'address card')
 
@@ -13,7 +13,7 @@
     <a href="{{ route('admin.members.index') }}" class="ui basic black button">
       <i class="left chevron icon"></i> Back
     </a>
-    <a href="{{ route('admin.users.edit', $member->users[0]) }}" class="ui yellow button">
+    <a href="{{ route('admin.users.edit', $member->primary) }}" class="ui yellow button">
       <i class="edit icon"></i> Edit Member
     </a>
     <a href="{{ route('admin.members.create') }}" class="ui secondary button">
@@ -24,7 +24,7 @@
       Add Another Member
     </a>
 
-    @if ($member->users->count() - 1 >= $member->type->max_secondaries)
+    @if ($member->secondaries->count() >= $member->type->max_secondaries)
       <a onclick="$('#secondary').modal('show')" class="ui black disabled button">
         <i class="ui icons">
           <i class="address card icon"></i>
@@ -52,7 +52,7 @@
         <a href="{{ route('admin.members.receipt', $member) }}" target="_blank" class="item">
           <i class="file icon"></i>Receipt
         </a>
-        <a href="{{ route('admin.members.card', $member) }}?index=0" target="_blank" class="item">
+        <a href="{{ route('admin.members.card', $member) }}" target="_blank" class="item">
           <i class="address card icon"></i> Card
         </a>
         <a href="{{ route('admin.members.receipt', $member) }}?format=pdf" target="_blank" class="item">
@@ -64,7 +64,7 @@
     <div class="ui large dividing header">
       <i class="address card icon"></i>
       <div class="content">
-        {{ $member->users[0]->fullname }}
+        {{ $member->primary->fullname }}
         <div class="ui black label">{{ $member->type->name }}</div>
         <div class="sub header">
           @if ($member->creator_id != 1)
@@ -79,17 +79,17 @@
     <div class="ui four column stackable grid">
       <div class="column">
         <div class="ui header">
-          {{ $member->users[0]->address }}
+          {{ $member->primary->address }}
           <div class="sub header">Address</div>
         </div>
         <div class="ui header">
-          {{ $member->users[0]->email }}
+          {{ $member->primary->email }}
           <div class="sub header">Email</div>
         </div>
       </div>
       <div class="column">
         <div class="ui header">
-          {{ $member->users[0]->city }}
+          {{ $member->primary->city }}
           <div class="sub header">City</div>
         </div>
         <div class="ui header">
@@ -99,7 +99,7 @@
       </div>
       <div class="column">
         <div class="ui header">
-          {{ $member->users[0]->state }}
+          {{ $member->primary->state }}
           <div class="sub header">State</div>
         </div>
         <div class="ui header">
@@ -109,7 +109,7 @@
       </div>
       <div class="column">
         <div class="ui header">
-          {{ $member->users[0]->zip }}
+          {{ $member->primary->zip }}
           <div class="sub header">ZIP</div>
         </div>
       </div>
@@ -117,7 +117,7 @@
 
     <br />
 
-    @if ($member->users->count() == 1)
+    @if ($member->secondaries->count() == 0)
       <div class="ui icon info message">
         <i class="info circle icon"></i>
         <div class="content">
@@ -134,32 +134,30 @@
           </tr>
         </thead>
         <tbody>
-          @foreach($member->users as $user)
-            @if ($loop->index != 0)
+          @foreach($member->secondaries as $secondary)
               <tr>
                 <td>
-                  <a class="ui small header" href="{{ route('admin.users.show', $user) }}">
+                  <a class="ui small header" href="{{ route('admin.users.show', $secondary) }}">
                     <i class="address card icon"></i>
                     <div class="content">
-                      {{ $user->fullname }}
+                      {{ $secondary->fullname }}
                       <div class="sub header">
-                        {{ $member->type->name }}
-                        @if ($loop->index != 0)
-                          (Secondary)
-                        @endif
+                        {{ $member->type->name }} (Secondary)
                       </div>
                     </div>
                   </a>
                 </td>
                 <td>
                   <div class="ui icon buttons">
+                    <a href="{{ route('admin.users.edit', $secondary) }}" target="_blank" class="ui yellow button">
+                      <i class="edit icon"></i>
+                    </a>
                     <a href="{{ route('admin.members.card', $member) }}?index={{ $loop->index }}" target="_blank" class="ui black button">
                       <i class="address card icon"></i>
                     </a>
                   </div>
                 </td>
               </tr>
-            @endif
           @endforeach
         </tbody>
       </table>
