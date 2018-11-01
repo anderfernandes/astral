@@ -99,6 +99,8 @@ Route::group(
   Route::get('mail/confirmation/{sale}', function(App\Sale $sale) { return new App\Mail\ConfirmationLetter($sale); });
   // Tickets
   Route::resource('tickets', 'TicketController');
+  // Logs
+  Route::get('logs', 'LogController@index')->name('logs');
 });
 // Cashier Routes
 Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier', 'middleware' => 'auth'],

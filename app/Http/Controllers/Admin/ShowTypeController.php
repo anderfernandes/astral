@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\ShowType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{ Auth, Log };
 use Session;
 
 class ShowTypeController extends Controller
@@ -54,6 +54,7 @@ class ShowTypeController extends Controller
         $showType->save();
 
         Session::flash("success", "Show Type <strong>{$showType->name}</strong> created successfully!");
+
 
         return redirect()->to(route('admin.settings.index').'#show-types');
     }
