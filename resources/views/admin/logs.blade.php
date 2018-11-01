@@ -20,15 +20,16 @@
         </select>
       </div>
       <div class="field">
-        <a href="#" class="ui basic red button">
-          <i class="eraser icon"></i> Clean
+        <a href="{{ route('admin.logs.clear') }}" class="ui basic red button">
+          <i class="eraser icon"></i> Clear
         </a>
       </div>
     </div>
   </form>
 
   <div class="ui message" style="text-align: center">
-    There are <strong>{{ count($logs) }} messages</strong> in the log.
+    There {{ count($logs) == 1 ? "is" : "are"}}
+    <strong>{{ count($logs) }} messag{{ count($logs) == 1 ? "e" : "es"}}</strong> in the log.
   </div>
 
   @foreach ($logs as $log)

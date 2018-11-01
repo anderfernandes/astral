@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\{Auth, Carbon};
+use Session;
 
 class LogController extends Controller
 {
@@ -17,10 +18,10 @@ class LogController extends Controller
 
       $log_types = ["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"];
 
-      // Path to log files
-      $path = storage_path('logs/laravel.log');
+      // Path to log file
+      $file = storage_path('logs/laravel.log');
       // Read log file and assign it to a variable
-      $logs = file($path);
+      $logs = file($file);
       // Create an empty array that will received each line from the file
       $filtered_logs = [];
       // Loop through each line
@@ -77,6 +78,13 @@ class LogController extends Controller
 
     public function clear()
     {
-      
+      // Path to log file
+      $file = storage_path('logs/laravel.log');
+      // Read log file and assign it to a variable
+      $logs = file_put_contents($file, "");
+
+      Session::flash('success', "Application logs cleared successfully!");
+
+      return redirect()->route('admin.logs');
     }
 }
