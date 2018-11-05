@@ -16,7 +16,9 @@
     <a href="javascript:$('#edit-user').modal('show')" class="ui yellow button">
       <i class="edit icon"></i> Edit User
     </a>
-    <a href="{{ route('admin.users.create') }}" class="ui secondary button"><i class="add user icon"></i> Add User</a>
+    <a href="{{ route('admin.users.create') }}" class="ui secondary button">
+      <i class="add user icon"></i> Add Another User
+    </a>
     @if(str_contains(Auth::user()->role->permissions['users'], "D"))
       <div class="ui red button" onclick="$('#delete-user').modal('toggle')">
         <i class="trash icon"></i> Delete User

@@ -500,7 +500,7 @@ Route::get('settings', function() {
 
 Route::get('customers', function(Request $request) {
   $customerArray = [];
-  $customers = User::where('type', 'individual')->where('id', '!=', $request->primary)->where('membership_id', 1)->orderBy('firstname', 'asc')->get();
+  $customers = User::where('type', 'individual')->where('id', '!=', $request->primary)->orderBy('firstname', 'asc')->get();
   foreach ($customers as $customer) {
     array_push($customerArray, [
       'id' => $customer->id,

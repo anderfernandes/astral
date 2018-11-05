@@ -9,7 +9,7 @@
 @section('content')
 
   {{ Session::flash('info',
-    'Make sure you make the right person a member. Membership status will only be granted upon payment')
+    'Make sure you make the right person a member. Membership status will only be granted upon payment.')
   }}
 
   @include('admin.members._form')

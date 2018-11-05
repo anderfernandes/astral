@@ -55,7 +55,7 @@
 <h4 class="ui center aligned horizontal divider header"><i class="info circle icon"></i> Sale Data</h4>
 
 <div class="ui three doubling stackable cards">
-
+    {{-- Sale Information --}}
     <div class="ui raised card">
       <div class="content">
         <div class="ui top attached black center aligned large label">
@@ -120,6 +120,7 @@
 
     @if ($sale->sell_to_organization and $sale->organization_id != 1)
 
+    {{-- Organization Information Card --}}
     <div class="ui raised card">
       <div class="content">
         <div class="ui top attached black center aligned large label"><i class="university icon"></i> Organization Information</div>
@@ -142,6 +143,8 @@
       </div>
     </div>
     @endif
+  </div>
+  <div class="ui two doubling stackable cards">
 
     {{-- Events and Attendance --}}
     @if ($sale->events->count() > 0)
@@ -215,7 +218,10 @@
       </div>
     </div>
     @endif
+
   </div>
+
+
 
   {{-- Grades --}}
   @if ($sale->grades->count() > 0)

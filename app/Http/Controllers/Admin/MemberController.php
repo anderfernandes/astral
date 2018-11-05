@@ -157,9 +157,8 @@ class MemberController extends Controller
           {
             $u = User::find($secondary);
             $u->role_id = 5;
+            $u->membership_id = $member->id;
             $u->save();
-
-            $member->users()->save($u);
           }
         }
 
@@ -170,9 +169,8 @@ class MemberController extends Controller
           {
             $p = User::find($paid_secondary);
             $p->role_id = 5;
+            $p->membership_id = $member->id;
             $p->save();
-
-            $member->users()->save($p);
           }
         }
 
@@ -298,9 +296,8 @@ class MemberController extends Controller
         {
           $u = User::find($secondary);
           $u->role_id = 5;
+          $u->membership_id = $member->id;
           $u->save();
-
-          $member->users()->save($u);
         }
       }
 
@@ -311,9 +308,8 @@ class MemberController extends Controller
         {
           $p = User::find($paid_secondary);
           $p->role_id = 5;
+          $p->membership_id = $member->id;
           $p->save();
-
-          $member->users()->save($p);
         }
       }
 
@@ -368,8 +364,8 @@ class MemberController extends Controller
     {
       $user = User::find($request->user_id);
       $user->role_id = 5;
-
-      $member->secondaries()->save($user);
+      $user->membership_id = $member->id;
+      $user->save();
 
       Session::flash('success','<strong>' . $user->fullname . '</strong> has been added as a secondary to <strong>Member # '. $member->id .' (' . $member->primary->fullname . ' / ' . $member->type->name .')</strong> successfully!');
 
