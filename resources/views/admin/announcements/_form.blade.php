@@ -52,7 +52,8 @@
   $('[name="start"]').flatpickr({
     enableTime: true,
     minDate: 'today',
-    defaultDate: '{{ isSet($announcement) ? $announcement->start->format('l, F j, Y \a\t g:i A') : 'today' }}',
+    defaultDate: '{{ isSet($announcement) ? $announcement->start->format('l, F j, Y g:i A')
+                                          : now()->format('l, F j, Y g:i A') }}',
     dateFormat: 'l, F j, Y h:i K',
     minuteIncrement: 15
   })
@@ -60,7 +61,8 @@
   $('[name="end"]').flatpickr({
     enableTime: true,
     minDate: 'today',
-    defaultDate: '{{ isSet($announcement) ? $announcement->end->format('l, F j, Y \a\t g:i A') : 'today' }}',
+    defaultDate: '{{ isSet($announcement) ? $announcement->end->format('l, F j, Y g:i A')
+                                          : now()->addDay()->endOfDay()->format('l, F j, Y g:i A') }}',
     dateFormat: 'l, F j, Y h:i K',
     minuteIncrement: 15
   })
@@ -72,5 +74,9 @@
 
 
   simplemde.value(`{!! isSet($announcement) ? \Illuminate\Mail\Markdown::parse($announcement->content) : \Illuminate\Mail\Markdown::parse(old('content')) !!}`)
+
+  document.querySelector('[name="start"]').onchange = function() {
+    document.querySelector('[name="end"]').value = moment(this.value).add(1, 'day').endOf('day').format('dddd, MMMM D, YYYY h:mm:ss A')
+  }
 
 </script>

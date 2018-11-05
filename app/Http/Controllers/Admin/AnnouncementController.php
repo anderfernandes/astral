@@ -120,6 +120,9 @@ class AnnouncementController extends Controller
      */
     public function destroy(Announcement $announcement)
     {
+      $announcement->delete();
+      Session::flash('success', "Announcement <strong>{$announcement->title}</strong> deleted successfully!");
 
+      return redirect()->to(route('admin.settings.index').'#announcements');
     }
 }

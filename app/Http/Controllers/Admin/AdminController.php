@@ -13,7 +13,7 @@ class AdminController extends Controller
 {
     public function index()
     {
-      $announcements = Announcement::where('end', '>=', today()->toDateTimeString())->get();
+      $announcements = Announcement::where('end', '>=', now()->toDateTimeString())->get();
       $cover = Setting::find(1)->cover;
       return view('admin.index')->withAnnouncements($announcements)
                                 ->withCover($cover);
