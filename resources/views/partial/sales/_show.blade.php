@@ -54,7 +54,8 @@
 
 <h4 class="ui center aligned horizontal divider header"><i class="info circle icon"></i> Sale Data</h4>
 
-<div class="ui three doubling stackable cards">
+<div class="ui {{ $sale->customer->organization_id == 1 ? "two": "three" }} doubling stackable cards">
+
     {{-- Sale Information --}}
     <div class="ui raised card">
       <div class="content">
@@ -95,7 +96,7 @@
     </div>
 
     @if ($sale->customer_id != 1 )
-
+    {{-- Customer Information --}}
     <div class="ui raised card">
       <div class="content">
         <div class="ui top attached black center aligned large label"><i class="user icon"></i> Customer Information</div>
