@@ -62,7 +62,7 @@ class TicketTypesTableSeeder extends Seeder
       $matinee->active      = true;
       $matinee->description = "Matinee unique price ticket, adult or child";
       $matinee->creator_id  = 1;
-      $member->in_cashier  = true;
+      $matinee->in_cashier  = true;
 
       $matinee->save();
 
@@ -77,7 +77,7 @@ class TicketTypesTableSeeder extends Seeder
       $adult->active      = true;
       $adult->description = "Adult tickets for Weekend shows";
       $adult->creator_id  = 1;
-      $member->in_cashier  = true;
+      $adult->in_cashier  = true;
 
       $adult->save();
 
@@ -92,7 +92,7 @@ class TicketTypesTableSeeder extends Seeder
       $child->active      = true;
       $child->description = "Adult tickets for Weekend shows";
       $child->creator_id  = 1;
-      $member->in_cashier  = true;
+      $child->in_cashier  = true;
 
       $child->save();
 

@@ -385,20 +385,20 @@ Route::get('staff', function() {
 });
 
 // This URL is consumed in the new Sales interface
-// This API is consumed by Full Calendar in /admin/calendar?type=events
 Route::get('events', function(Request $request) {
-  $start = Date::parse($request->start)->startOfDay()->toDateTimeString();
+  $start = Date::parse($request->start)->startOfDay();
 
   $end = $request->has('end')
-          ? Date::parse($request->end)->endOfDay()->toDateTimeString()
-          : Date::parse($request->start)->endOfDay()->toDateTimeString();
+          ? Date::parse($request->end)->endOfDay()
+          : Date::parse($request->start)->endOfDay();
 
   $q = [
     ['show_id', '!=', 1],
   ];
 
-  if ($request->has('start'))  array_push($q, ['start', '>=', $start]);
-  if ($request->has('end'))    array_push($q, ['end', '<=', $end]);
+  if ($request->has('start'))  array_push($q, ['start', '>=', $start->startOfDay()->toDateTimeString()]);
+  // There's already a check in place to make the end date something if the request doesn't have an end date!
+  array_push($q, ['end', '<=', $end->endOfDay()->toDateTimeString()]);
   if ($request->has('type'))   array_push($q, ['type_id', $request->type]);
   if ($request->has('public')) array_push($q, ['public', $request->public]);
 

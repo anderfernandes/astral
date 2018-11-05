@@ -104,7 +104,7 @@
         </div>
         <div class="ui header">
           {{ $member->end->format('l, F j, Y') }}
-          <div class="sub header">Expiration Date</div>
+          <div class="sub header">Expiration Date ({{ $member->start->diffInDays($member->end) }} days left)</div>
         </div>
       </div>
       <div class="column">
