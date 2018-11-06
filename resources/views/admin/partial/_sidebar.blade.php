@@ -56,22 +56,22 @@
   <div class="ui dropdown item" onclick="location.href='{{ route('admin.reports.index') }}'">
     <i class="large file text icon"></i> Reports
     <div class="menu">
-      <a class="item" href="{{ route('admin.reports.index') }}/#cashier">
+      <a class="item" href="{{ route('admin.reports.index') }}#cashier">
         <i class="large inbox icon"></i> Cashier
       </a>
-      <a class="item" href="{{ route('admin.reports.index') }}/#attendance">
+      <a class="item" href="{{ route('admin.reports.index') }}#attendance">
         <i class="large ticket icon"></i> Attendance
       </a>
-      <a class="item" href="{{ route('admin.reports.index') }}/#royalties">
+      <a class="item" href="{{ route('admin.reports.index') }}#royalties">
         <i class="large money icon"></i> Royalties
       </a>
-      <a class="item" href="{{ route('admin.reports.index') }}/#membership">
+      <a class="item" href="{{ route('admin.reports.index') }}#membership">
         <i class="large address card icon"></i> Membership
       </a>
-      <a class="item" href="{{ route('admin.reports.index') }}/#product">
+      <a class="item" href="{{ route('admin.reports.index') }}#product">
         <i class="large box icon"></i> Product
       </a>
-      <a class="item" href="{{ route('admin.reports.index') }}/#system">
+      <a class="item" href="{{ route('admin.reports.index') }}#system">
         <i class="large setting icon"></i> System
       </a>
     </div>
@@ -138,37 +138,37 @@
       <a class="item" href="{{ route('admin.settings.index') }}">
         <i class="large setting icon"></i> General
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#announcements">
+      <a class="item" href="{{ route('admin.settings.index') }}#announcements">
         <i class="large announcement icon"></i> Announcements
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#organization-types">
+      <a class="item" href="{{ route('admin.settings.index') }}#organization-types">
         <i class="large university icon"></i> Organizations
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#ticket-types">
+      <a class="item" href="{{ route('admin.settings.index') }}#ticket-types">
         <i class="large ticket icon"></i> Tickets
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#payment-methods">
+      <a class="item" href="{{ route('admin.settings.index') }}#payment-methods">
         <i class="large money icon"></i> Payments
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#event-types">
+      <a class="item" href="{{ route('admin.settings.index') }}#event-types">
         <i class="large calendar icon"></i> Events
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#user-roles">
+      <a class="item" href="{{ route('admin.settings.index') }}#user-roles">
         <i class="large users icon"></i> Users
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#member-types">
+      <a class="item" href="{{ route('admin.settings.index') }}#member-types">
         <i class="large address card icon"></i> Membership
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#bulletin">
+      <a class="item" href="{{ route('admin.settings.index') }}#bulletin">
         <i class="large comments outline icon"></i> Bulletin
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#product-types">
+      <a class="item" href="{{ route('admin.settings.index') }}#product-types">
         <i class="large box icon"></i> Products
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#grades">
+      <a class="item" href="{{ route('admin.settings.index') }}#grades">
         <i class="large book icon"></i> Grades
       </a>
-      <a class="item" href="{{ route('admin.settings.index') }}/#show-types">
+      <a class="item" href="{{ route('admin.settings.index') }}#show-types">
         <i class="large film icon"></i> Shows
       </a>
     </div>
