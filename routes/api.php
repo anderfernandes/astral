@@ -221,8 +221,10 @@ Route::get('event/{event}', function(Event $event) {
   $ticketsArray  = [];
   $productsArray = [];
   $ticketsSold   = 0;
+  //$ticketsSold += App\Ticket::where('event_id', $event->id)->count();
   foreach ($event->sales as $sale) {
-    $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
+    if ($sale->status != 'canceled')
+      $ticketsSold += App\Ticket::where([['event_id', $event->id], ['sale_id', $sale->id]])->count();
     if ($sale->tickets->count() > 1) {
       // Loop through tickets for this sale, get type and quantity for each type
       $tickets = $sale->tickets->where('event_id', $event->id)->unique('ticket_type_id')->all();
