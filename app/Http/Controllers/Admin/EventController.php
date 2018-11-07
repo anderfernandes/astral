@@ -42,6 +42,7 @@ class EventController extends Controller
         $shows = Show::pluck('name', 'id');
         $eventTypes = EventType::where('id', '<>', 1)->pluck('name', 'id');
 
+        // Getting conflicting events, which here will come from store()
         $conflicting_events = $request->session()->pull('conflicting_events');
 
 
@@ -159,11 +160,17 @@ class EventController extends Controller
      * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function edit(Event $event)
+    public function edit(Event $event, Request $request)
     {
         $shows = Show::pluck('name', 'id');
         $eventTypes = EventType::where('id', '<>', 1)->pluck('name', 'id');
-        return view('admin.events.edit', compact('shows'), compact('eventTypes'))->withEvent($event);
+
+        // Getting conflicting events, which here will come from update()
+        $conflicting_events = $request->session()->pull('conflicting_events');
+
+        return view('admin.events.edit', compact('shows'), compact('eventTypes'))
+                  ->withEvent($event)
+                  ->with(['conflicting_events' => $conflicting_events]);
     }
 
     /**
@@ -176,21 +183,39 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
       $this->validate($request, [
-          'show_id'        => 'required',
           'type_id'        => 'required',
           'dates.*.start'  => 'required',
           'dates.*.end'    => 'required',
+          'dates.*.show_id'    => 'required',
           'seats'          => 'required',
           'memo'           => 'required',
           'public'         => 'required',
       ]);
+
+      // Loop through events and make sure their start time doesn't mach some other events
+      $confEventsBucket = collect();
+      foreach ($request->dates as $date)
+      {
+        $beginning = new Carbon($date['start']);
+        $conflicting_events = Event::where('start', $beginning->toDateTimeString())->get();
+        foreach ($conflicting_events as $conflicting_event)
+        {
+          $confEventsBucket->push($conflicting_event);
+        }
+      }
+
+      if ($confEventsBucket->count() > 0)
+      {
+        session(['conflicting_events' => $confEventsBucket]);
+        return redirect()->route('admin.events.edit', $event)->withInput();
+      }
 
       // Setting a Date object for start and end times of this even
 
       $start = new Date($request->dates[0]['start']);
       $end   = new Date($request->dates[0]['end']);
 
-      $event->show_id        = $request->show_id;
+      $event->show_id        = $request->dates[0]['show_id'];
       $event->type_id        = $request->type_id;
 
       // If the event is "all day", set it to start at the beginning of the

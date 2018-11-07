@@ -77,7 +77,7 @@
       {!! Form::select(
         'dates[0][show_id]',
         $shows,
-        null,
+        isset($event) ? $event->show->id : null,
         [ 'placeholder' => 'Select a show', 'class' => 'ui search dropdown']
         )
       !!}
