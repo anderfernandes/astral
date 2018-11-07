@@ -15,9 +15,9 @@
   </div>
 
   @if (str_contains(Auth::user()->role->permissions['calendar'], "C"))
-  <div class="ui black button" onclick="$('#create-event').modal('toggle')">
+  <a class="ui black button" href="{{ route('admin.events.create') }}">
     <i class="calendar plus icon"></i> Create Event
-  </div>
+  </a>
   @endif
 
   @if (str_contains(Auth::user()->role->permissions['sales'], "C"))

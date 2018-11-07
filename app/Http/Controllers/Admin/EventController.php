@@ -12,8 +12,8 @@ use App\Show;
 use Session;
 use Jenssegers\Date\Date;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\{ Auth, Log };
+use Illuminate\Support\Carbon;
 
 class EventController extends Controller
 {
@@ -37,12 +37,16 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $shows = Show::pluck('name', 'id');
         $eventTypes = EventType::where('id', '<>', 1)->pluck('name', 'id');
 
-        return view('admin.events.create', compact('shows'), compact('eventTypes'));
+        $conflicting_events = $request->session()->pull('conflicting_events');
+
+
+        return view('admin.events.create', compact('shows'), compact('eventTypes'))
+                   ->with(['conflicting_events' => $conflicting_events]);
     }
 
     /**
@@ -54,14 +58,33 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'show_id'        => 'required',
             'type_id'        => 'required',
             'dates.*.start'  => 'required',
             'dates.*.end'    => 'required',
+            'dates.*.show_id' => 'required',
             'seats'          => 'required|min:0',
             'memo'           => 'required',
             'public'         => 'required',
         ]);
+
+        // Loop through events and make sure their start time doesn't mach some other events
+        $confEventsBucket = collect();
+        foreach ($request->dates as $date)
+        {
+          $beginning = new Carbon($date['start']);
+          $conflicting_events = Event::where('start', $beginning->toDateTimeString())->get();
+          foreach ($conflicting_events as $conflicting_event)
+          {
+            $confEventsBucket->push($conflicting_event);
+          }
+        }
+
+        if ($confEventsBucket->count() > 0)
+        {
+          session(['conflicting_events' => $confEventsBucket]);
+          return redirect()->route('admin.events.create')->withInput();
+        }
+
 
         foreach ($request->dates as $date) {
 
@@ -71,7 +94,7 @@ class EventController extends Controller
           $start = new Date($date['start']);
           $end   = new Date($date['end']);
 
-          $event->show_id        = $request->show_id;
+          $event->show_id        = $date['show_id'];
           $event->type_id        = $request->type_id;
 
           /**
