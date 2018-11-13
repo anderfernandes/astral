@@ -4,7 +4,7 @@
   <div class="ui basic modal">
     <div class="ui icon header">
       <i class="thumbs up icon"></i>
-      Success!
+      Success, {{ Auth::user()->firstname }}!
     </div>
     <div class="content">
       <p>{!! Session::get('success') !!}</p>
@@ -29,7 +29,7 @@
   <div class="ui basic modal">
     <div class="ui icon header">
       <i class="warning circle icon"></i>
-      Something went wrong...
+      Something went wrong, {{ Auth::user()->firstname }}...
     </div>
     <div class="content">
       <p>{!! Session::get('warning') !!}</p>
@@ -54,7 +54,7 @@
   <div class="ui basic modal">
     <div class="ui icon header">
       <i class="info circle icon"></i>
-      Hey, you!
+      Hey, {{ Auth::user()->firstname }}!
     </div>
     <div class="content">
       <p>{!! Session::get('info') !!}</p>

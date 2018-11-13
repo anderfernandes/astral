@@ -1,13 +1,19 @@
 <div class="ui container">
 
   @isset($conflicting_events)
+
+  <?php
+    $verb = $conflicting_events->count() == 1 ? "is": "are";
+    $noun = $conflicting_events->count() == 1 ? "event":"events";
+    $message = "There {$verb} {$conflicting_events->count()}
+    {$noun} conflicting with the one you are trying to create!"
+  ?>
+
   <div class="ui warning icon message">
     <i class="info circle icon"></i>
     <div class="content">
       <div class="header">
-        There {{ $conflicting_events->count() == 1 ? "is":"are" }} {{ $conflicting_events->count() }}
-        {{ $conflicting_events->count() == 1 ? "event":"events" }} conflicting with the one you are
-        trying to create:
+        {{ $message }}
       </div>
       <ul class="list">
         @foreach ($conflicting_events as $conflicting_event)
@@ -19,14 +25,41 @@
           {{ $conflicting_event->created_at->format('l, F j, Y \a\t g:i A') }}
           ({{ $conflicting_event->created_at->diffForHumans() }}).
         </li>
-        <p>
-          Please change the date and/or time(s) of the event(s) you're trying to schedule or just
-          add a new sale to this event if it is for a different customer.
-        </p>
         @endforeach
       </ul>
+      <p>
+        Please change the date and/or time(s) of the event(s) you're trying to schedule or just
+        add a new sale to {{ $conflicting_events->count() == 1 ? "the event" : " to one of the events" }}
+        listed above if it is for a different customer.
+      </p>
     </div>
   </div>
+  {{ Session::flash('info', $message) }}
+  @endisset
+
+  @isset($event)
+    @if ($event->sales->count() > 0)
+    <div class="ui warning icon message">
+      <i class="info circle icon"></i>
+      <div class="content">
+        <div class="header">
+          The following sales are attached to this event:
+        </div>
+        <ul class="list">
+          @foreach ($event->sales as $sale)
+          <li>
+            Sale #{{ $sale->id }},
+            {{ $sale->customer->fullname }},
+            {{ $sale->tickets->count() }} tickets sold, created by
+            {{ $sale->creator->firstname }} on
+            {{ $sale->created_at->format('l, F j, Y \a\t g:i A') }}
+            ({{ $sale->created_at->diffForHumans() }}).
+          </li>
+          @endforeach
+        </ul>
+      </div>
+    </div>
+    @endif
   @endisset
 
   @if ($type == 'create')
