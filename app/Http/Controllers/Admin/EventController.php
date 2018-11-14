@@ -200,7 +200,9 @@ class EventController extends Controller
         $conflicting_events = Event::where('start', $beginning->toDateTimeString())->get();
         foreach ($conflicting_events as $conflicting_event)
         {
-          $confEventsBucket->push($conflicting_event);
+          // Making sure that we can change anything in events with the same id
+          if ($event->id != $conflicting_event->id)
+            $confEventsBucket->push($conflicting_event);
         }
       }
 
