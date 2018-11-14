@@ -917,7 +917,7 @@
       @else
         $("#customers").dropdown('set selected', {{ old('customer_id') }})
       @endif
-    }, 500)
+    }, 600)
   })
 
 

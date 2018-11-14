@@ -67,10 +67,8 @@
         <td>{{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->created_at)->diffForHumans() }})</td>
         <td>
           <div class="ui icon buttons">
-            @if (($sale->customer->membership_id == 1))
-              <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
-              <a href="{{ route('admin.sales.edit', $sale) }}" class="ui yellow button"><i class="edit icon"></i></a>
-            @endif
+            <a href="{{ route('admin.sales.show', $sale) }}" class="ui secondary button"><i class="eye icon"></i></a>
+            <a href="{{ route('admin.sales.edit', $sale) }}" class="ui yellow button"><i class="edit icon"></i></a>
             <div class="ui icon top left pointing dropdown secondary button">
               <i class="copy icon"></i>
               <div class="menu">
