@@ -119,7 +119,7 @@
 
     @endif
 
-    @if ($sale->sell_to_organization and $sale->organization_id != 1)
+    @if (($sale->sell_to_organization) || ($sale->organization_id != 1))
 
     {{-- Organization Information Card --}}
     <div class="ui raised card">

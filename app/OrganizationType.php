@@ -11,4 +11,9 @@ class OrganizationType extends Model
     {
       return $this->belongsTo('App\User');
     }
+
+    public function organizations()
+    {
+      return $this->hasMany('App\Organization', 'type_id');
+    }
 }

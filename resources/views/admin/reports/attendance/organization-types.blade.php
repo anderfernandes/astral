@@ -37,7 +37,7 @@
   </div>
 
   <h4 class="ui header">
-    {{ Date::now()->format('l, F j, Y \a\t g:i A') }}
+    {{today()->format('l, F j, Y \a\t g:i A') }}
   </h4>
 
   {{-- Overview --}}
@@ -56,7 +56,7 @@
     </div>
     <div class="statistic" style="margin-right: 0">
       <div class="value">
-        {{ $number_of_events_collection->sum() }}
+        {{ $events->count() }}
       </div>
       <div class="label">
         Events
@@ -64,7 +64,7 @@
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $number_of_visitors_collection->sum() }}
+        {{ $tickets_purchased }}
       </div>
       <div class="label">
         Tickets Purchased
@@ -72,7 +72,7 @@
     </div>
     <div class="statistic">
       <div class="value">
-        <i class="dollar icon"></i> {{ number_format($revenue_collection->sum(), 2, '.', ',') }}
+        <i class="dollar icon"></i>  {{ number_format($revenue, 2, '.', ',') }}
       </div>
       <div class="label">
         Revenue
@@ -98,52 +98,52 @@
     </thead>
     <tbody>
       @foreach ($organizations as $organization)
-        @if ($organization->events->where('start', '>=', $start)->where('end', '<=', $end)->count() > 0)
-        <tr>
 
+      <tr>
         {{-- Name --}}
         <td>
           <h5 class="ui header">
             {{ $organization->name }}
             <div class="ui tiny black label">{{ $organization->type->name }}</div>
-              @foreach ($organization->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
-                <div class="sub header">{{ $event->show->name }} on {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}</div>
-              @endforeach
-            </div>
           </h5>
         </td>
 
-        {{-- Visitors --}}
-        <td>
-          {{ $number_of_visitors_collection->all()[$loop->index] }}
+        {{-- Tickets --}}
+        <td class="right aligned">
+          <?php
+            $tickets = 0;
+            foreach ($sales->where('organization_id', $organization->id) as $sale)
+            {
+              $tickets+= $sale->tickets->count();
+              echo $tickets;
+            }
+          ?>
         </td>
 
         {{-- Sales --}}
-        <td>
-          {{ $number_of_sales_collection->all()[$loop->index] }}
-
+        <td class="right aligned">
+          {{ $sales->where('organization_id', $organization->id)->where('status', 'complete')->count() }}
         </td>
 
         {{-- Events --}}
-        <td>
-          {{ $number_of_events_collection->all()[$loop->index] }}
+        <td class="right aligned">
+          {{ $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->count() }}
         </td>
 
         {{-- Revenue --}}
-        <td>
-          $ {{ number_format($revenue_collection->all()[$loop->index], 2, '.', ',') }}
+        <td class="right aligned">
+          $ {{ number_format($organization->sales->where('status', 'complete')->sum('total'), "2", ".", ",") }}
         </td>
       </tr>
-        @endif
       @endforeach
     </tbody>
     <tfoot>
       <tr>
         <th class="right aligned"><h5 class="ui header">Totals:</h5></th>
-        <th><h5 class="ui header">{{ $number_of_visitors_collection->sum() }}</h5></th>
-        <th><h5 class="ui header">{{ $number_of_sales_collection->sum() }}</h5></th>
-        <th><h5 class="ui header">{{ $number_of_events_collection->sum() }}</h5></th>
-        <th><h5 class="ui header">$ {{ number_format($revenue_collection->sum(), 2, '.', ',') }}</h5></th>
+        <th class="right aligned"><h5 class="ui header">{{ $tickets_purchased }}</h5></th>
+        <th class="right aligned"><h5 class="ui header">{{ $sales->count() }}</h5></th>
+        <th class="right aligned"><h5 class="ui header">{{ $events->count() }}</h5></th>
+        <th class="right aligned"><h5 class="ui header">$ {{ number_format($revenue, '2', '.', ',') }}</h5></th>
       </tr>
     </tfoot>
   </table>

@@ -4,23 +4,6 @@
 
 @section('content')
 
-  <?php
-
-    $number_of_tickets = 0;
-    $attendance = 0;
-    $beforeTax = 0;
-    $afterTax = 0;
-    $number_of_events = 0;
-    foreach ($organization->sales->where('status', 'complete') as $sale)
-    {
-      $number_of_tickets += $sale->tickets->count();
-      $sale->events->count() == 1 ? $attendance += $sale->tickets->count() : $attendance += $sale->tickets->count()/$sale->events->count();
-      $afterTax += $sale->total;
-      $number_of_events += $sale->events->count();
-    }
-
-  ?>
-
   <style>
     @media print {
       .ui.icon.buttons {
@@ -60,19 +43,22 @@
   </h4>
 
   {{-- Overview --}}
-  <div class="ui dividing header">Overview</div>
-  <div class="ui mini statistics">
+  <div class="ui horizontal divider header">
+    <i class="file alternate icon"></i>
+    Overview
+  </div>
+  <div class="ui four mini statistics">
     <div class="statistic" style="margin-right: 0">
       <div class="value">
-        {{ $organization->sales->count() }}
+        {{ $events->count() }}
       </div>
       <div class="label">
-        {{ $organization->sales->count() > 1 ? 'Visits' : 'Visit' }}
+        {{ $sales->count() > 1 ? 'Visits' : 'Visit' }}
       </div>
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $number_of_tickets }}
+        {{ $tickets_purchased }}
       </div>
       <div class="label">
         Tickets Purchased
@@ -80,32 +66,16 @@
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $attendance }}
+        {{ $events->count() }}
       </div>
       <div class="label">
-        Attendance
-      </div>
-    </div>
-    <div class="statistic">
-      <div class="value">
-        {{ $number_of_events }}
-      </div>
-      <div class="label">
-        {{ $number_of_events > 1 ? 'Events' : 'Event' }}
-      </div>
-    </div>
-    <div class="statistic">
-      <div class="value">
-        {{ $number_of_events }}
-      </div>
-      <div class="label">
-        {{ $number_of_events > 1 ? 'Shows' : 'Show' }}
+        {{ $events->count() > 1 ? 'Events' : 'Event' }}
       </div>
     </div>
     <div class="statistic">
       <div class="value">
         <i class="dollar icon"></i>
-        {{ number_format($afterTax, 2, '.', ',') }}
+        {{ number_format($sales->sum('total'), 2, '.', ',') }}
       </div>
       <div class="label">
         Revenue
@@ -114,7 +84,10 @@
   </div>
 
   {{-- Users and Organizations --}}
-  <div class="ui dividing header">Visits and Attendance</div>
+  <div class="ui horizontal divider header">
+    <i class="bus icon"></i>
+    Visits and Attendance
+  </div>
   <div class="ui grid">
     @foreach ($events as $event)
     <div class="ui eight wide column">

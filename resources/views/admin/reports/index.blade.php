@@ -194,7 +194,7 @@
       <i class="ticket icon"></i>
       <div class="content">
         Attendance
-        <div class="sub header">These reports contain information on attendance on a given date/time range</div>
+        <div class="sub header">These reports contain information on attendance on a given date/time range for all sales marked as "complete".</div>
       </div>
     </h3>
     <div class="ui four doubling cards">
@@ -223,7 +223,7 @@
             </div>
             <div class="field">
               <div class="ui checkbox">
-                {!! Form::checkbox('charts', 0, false, ['id' => 'attendance_organization_charts']) !!}
+                {!! Form::checkbox('charts', 0, false, ['id' => 'attendance_organization_charts', 'disabled' => true]) !!}
                 <label for="attendance_organization_charts">Show charts</label>
               </div>
             </div>

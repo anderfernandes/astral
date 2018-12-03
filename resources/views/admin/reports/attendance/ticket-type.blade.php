@@ -64,7 +64,15 @@
     </div>
     <div class="statistic" style="margin-right: 0">
       <div class="value">
-        {{ $events->count() }}
+        <?php
+          $count = 0;
+          foreach ($event_types as $event_type)
+          {
+            if ($event_type->allowedTickets->contains('id', $ticket_type->id))
+              $count += 1;
+          }
+          echo $count;
+        ?>
       </div>
       <div class="label">
         Events

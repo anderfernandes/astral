@@ -390,43 +390,47 @@ class ReportController extends Controller
 
       if ($request->data == 0)
       {
-        $organizations = Organization::where('id', '!=', 1)->orderBy('type_id')->get();
+        // Varible that will have total tickets
+        $tickets_purchased = 0;
+        // Collection that will hold all events
+        $events = collect();
+        // Collection that will hold all sales
+        $sales = collect();
+        // Organizations
+        $organizations = Organization::where('id', '!=', 1)->where('type_id', '!=', 1)->get();
+        // Get all organization types
         $organization_types = OrganizationType::where('id', '!=', 1)->get();
-        $sales = Sale::all();
-        $event_ids = null;
-        $number_of_events_collection = collect();
-        $number_of_visitors_collection = collect();
-        $number_of_sales_collection = collect();
-        $revenue_collection = collect();
+        // Loop through all organizations...
         foreach ($organizations as $organization)
         {
-          $event_ids = $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->pluck('id');
-          $number_of_visitors = $organization->tickets->whereIn('event_id', $event_ids)->count();
-          $number_of_visitors_collection->push($number_of_visitors);
-          $number_of_sales = 0;
-          foreach ($organization->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
+          // Loop through organization sales
+          foreach ($organization->sales->where('status', 'complete') as $sale)
           {
-            $number_of_sales += $event->sales->where('organization_id', $organization->id)->count();
+            $sales->push($sale);
+            $tickets_purchased += $sale->tickets->count();
+
+            foreach ($sale->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
+            {
+              $events->push($event);
+            }
           }
-          $number_of_sales_collection->push($number_of_sales);
-          $number_of_events = $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->count();
-          $number_of_events_collection->push($number_of_events);
-          $revenue = 0;
-          foreach ($organization->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
-          {
-            $revenue += $event->sales->where('organization_id', $organization->id)->sum('total');
-          }
-          $revenue_collection->push($revenue);
         }
+        $events = $events->pluck('id')->all();
+        $events = Event::whereIn('id', $events)->get();
+        // Loop through all the sales that belong to the events filtered above
+        $sales = $sales->pluck('id')->unique()->all();
+        $sales = Sale::whereIn('id', $sales)->get();
+        $revenue = $sales->sum('total');
+        // Get all visitors
+
         // This is a different view from the previous report data
         return view('admin.reports.attendance.organization-types')
                 ->withStart($start)
                 ->withEnd($end)
-                ->with('number_of_sales_collection', $number_of_sales_collection)
-                ->with('number_of_events_collection', $number_of_events_collection)
-                ->with('number_of_visitors_collection', $number_of_visitors_collection)
-                ->with('number_of_events_collection', $number_of_events_collection)
-                ->with('revenue_collection', $revenue_collection)
+                ->with('sales', $sales)
+                ->with('events', $events)
+                ->with('tickets_purchased', $tickets_purchased)
+                ->with('revenue', $revenue)
                 ->with('organization_types', $organization_types)
                 ->with('with_charts', $with_charts)
                 ->withOrganizations($organizations);
@@ -435,94 +439,85 @@ class ReportController extends Controller
       {
         if ($request->type == 'attendance_organization')
         {
+          $events = collect();
+          $sales = collect();
+          $tickets_purchased = 0;
           // Get organization
           $organization = Organization::find($request->data);
-          $events = $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->sortBy('start');
-          foreach ($events as $event)
+          foreach ($organization->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
           {
-            $sales->prepend($event->sales->all());
+            $events->push($event);
+            $tickets_purchased += $event->tickets->where('organization_id', $organization->id)->count();
+
+            foreach ($event->sales->where('status', 'complete') as $sale)
+            {
+              $sales->push($sale);
+            }
           }
+
           return view('admin.reports.attendance.organization')
                   ->withStart($start)
                   ->withEvents($events)
                   ->withSales($sales)
                   ->withEnd($end)
+                  ->with('tickets_purchased', $tickets_purchased)
                   ->with('with_charts', $with_charts)
                   ->withOrganization($organization);
         }
         else if ($request->type == 'attendance_organization_type')
         {
-
-            $organizations = Organization::where('id', '!=', 1)->orderBy('type_id')->get();
-            $organization_types = OrganizationType::where('id', '!=', 1)->get();
-            $sales = Sale::all();
-            $event_ids = null;
-            $number_of_events_collection = collect();
-            $number_of_visitors_collection = collect();
-            $number_of_sales_collection = collect();
-            $revenue_collection = collect();
-
-            foreach ($organizations as $organization)
+            $events = collect();
+            $sales = collect();
+            $tickets_purchased = 0;
+            $organization_type = OrganizationType::find($request->data);
+            foreach ($organization_type->organizations as $organization)
             {
-
-              $event_ids = $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->pluck('id');
-
-              $number_of_visitors = $organization->tickets->whereIn('event_id', $event_ids)->count();
-              $number_of_visitors_collection->push($number_of_visitors);
-
-              $number_of_sales = 0;
-
               foreach ($organization->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
               {
-                $number_of_sales += $event->sales->where('organization_id', $organization->id)->count();
+                $events->push($event);
+                $tickets_purchased += $event->tickets->count();
+
+                foreach ($event->sales->where('status', 'complete') as $sale)
+                {
+                  $sales->push($sale);
+                }
               }
-
-              $number_of_sales_collection->push($number_of_sales);
-
-              $number_of_events = $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->count();
-              $number_of_events_collection->push($number_of_events);
-
-              $revenue = 0;
-
-              foreach ($organization->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
-              {
-                $revenue += $event->sales->where('organization_id', $organization->id)->sum('total');
-              }
-
-              $revenue_collection->push($revenue);
-
             }
 
             // This is a different view from the previous report data
-            return view('admin.reports.attendance.organization-types')->withStart($start)
-                                                                 ->withEnd($end)
-                                                                 ->with('number_of_sales_collection', $number_of_sales_collection)
-                                                                 ->with('number_of_events_collection', $number_of_events_collection)
-                                                                 ->with('number_of_visitors_collection', $number_of_visitors_collection)
-                                                                 ->with('number_of_events_collection', $number_of_events_collection)
-                                                                 ->with('revenue_collection', $revenue_collection)
-                                                                 ->with('organization_types', $organization_types)
-                                                                 ->with('with_charts', $with_charts)
-                                                                 ->withOrganizations($organizations);
+            return view('admin.reports.attendance.organization-type')->withStart($start)
+                   ->withEnd($end)
+                   ->with('events', $events)
+                   ->with('sales', $sales)
+                   ->with('tickets_purchased', $tickets_purchased)
+                   ->with('organization_type', $organization_type);
         }
 
         else if ($request->type == 'attendance_event_type')
         {
+          $sales = collect();
+          $tickets_purchased = 0;
           $event_type = EventType::find($request->data);
-          $events = Event::where('start', '>=', $start)->where('end', '<=', $end)->where('type_id', $event_type->id)->get();
+          $events = Event::where('start', '>=', $start)
+                         ->where('end', '<=', $end)
+                         ->where('type_id', $event_type->id)
+                         ->get();
           foreach ($events as $event)
           {
-            foreach ($event->sales as $s)
+            $tickets_purchased += $event->tickets->count();
+            foreach ($event->sales->where('status', 'complete') as $sale)
             {
-              $sales->prepend($s->id);
+              $sales->push($sale);
             }
           }
-          $sales = $sales->unique()->all();
-          $sales = Sale::whereIn('id', $sales)->get();
+
+          //$sales = $sales->unique('id');
+
           return view('admin.reports.attendance.event-type')->withStart($start)
                                                             ->withEnd($end)
                                                             ->withEvents($events)
                                                             ->with('event_type', $event_type)
+                                                            ->with('tickets_purchased', $tickets_purchased)
                                                             ->withSales($sales);
 
         }
@@ -531,11 +526,14 @@ class ReportController extends Controller
         {
           $ticket_type = TicketType::find($request->data);
           $events = Event::where('start', '>=', $start)->where('end', '<=', $end)->get();
+          $event_types = EventType::all();
+          $event_types = $event_types->unique('id');
           $event_ids = Event::where('start', '>=', $start)->where('end', '<=', $end)->pluck('id');
           $tickets = Ticket::where('ticket_type_id', $ticket_type->id)->whereIn('event_id', $event_ids);
 
           return view('admin.reports.attendance.ticket-type')->withStart($start)
                                                              ->withEnd($end)
+                                                             ->with('event_types', $event_types)
                                                              ->withTickets($tickets)
                                                              ->withEvents($events)
                                                              ->with('ticket_type', $ticket_type);

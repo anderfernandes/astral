@@ -73,7 +73,9 @@ class EventController extends Controller
         foreach ($request->dates as $date)
         {
           $beginning = new Carbon($date['start']);
-          $conflicting_events = Event::where('start', $beginning->toDateTimeString())->get();
+          $conflicting_events = Event::where('start', $beginning->toDateTimeString())
+                                     ->where('type_id', $request->type_id)
+                                     ->get();
           foreach ($conflicting_events as $conflicting_event)
           {
             $confEventsBucket->push($conflicting_event);
@@ -183,13 +185,13 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
       $this->validate($request, [
-          'type_id'        => 'required',
-          'dates.*.start'  => 'required',
-          'dates.*.end'    => 'required',
-          'dates.*.show_id'    => 'required',
-          'seats'          => 'required',
-          'memo'           => 'required',
-          'public'         => 'required',
+          'type_id'         => 'required',
+          'dates.*.start'   => 'required',
+          'dates.*.end'     => 'required',
+          'dates.*.show_id' => 'required',
+          'seats'           => 'required',
+          'memo'            => 'required',
+          'public'          => 'required',
       ]);
 
       // Loop through events and make sure their start time doesn't mach some other events
@@ -197,7 +199,9 @@ class EventController extends Controller
       foreach ($request->dates as $date)
       {
         $beginning = new Carbon($date['start']);
-        $conflicting_events = Event::where('start', $beginning->toDateTimeString())->get();
+        $conflicting_events = Event::where('start', $beginning->toDateTimeString())
+                                   ->where('type_id', $request->type_id)
+                                   ->get();
         foreach ($conflicting_events as $conflicting_event)
         {
           // Making sure that we can change anything in events with the same id
