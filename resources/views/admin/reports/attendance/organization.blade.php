@@ -58,18 +58,18 @@
     </div>
     <div class="statistic">
       <div class="value">
-        {{ $tickets_purchased }}
-      </div>
-      <div class="label">
-        Tickets Purchased
-      </div>
-    </div>
-    <div class="statistic">
-      <div class="value">
         {{ $events->count() }}
       </div>
       <div class="label">
         {{ $events->count() > 1 ? 'Events' : 'Event' }}
+      </div>
+    </div>
+    <div class="statistic">
+      <div class="value">
+        {{ $tickets_purchased }}
+      </div>
+      <div class="label">
+        Tickets Purchased
       </div>
     </div>
     <div class="statistic">
@@ -88,20 +88,24 @@
     <i class="bus icon"></i>
     Visits and Attendance
   </div>
-  <div class="ui grid">
-    @foreach ($events as $event)
-    <div class="ui eight wide column">
-      <div class="ui tiny header">
-        <div class="content">
-          Event # {{ $event->id }} - {{ $event->show->name }}
-        </div>
-        <div class="sub header">
-          {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-        </div>
-        <div class="sub header">
-          <div class="ui small green tag label">
-            <i class="dollar icon"></i> {{ number_format($event->sales->sum('total'), 2, '.', ',') }}
+  <table class="ui celled table">
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Tickets Purchased</th>
+        <th>Revenue</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach ($events as $event)
+      <tr>
+        <td>
+          <div class="ui small header">
+            {{ $event->show->name }} (#{{ $event->id }})
+            <div class="sub header">{{ $event->start->format('l, F j, Y \a\t g:i A') }}</div>
           </div>
+        </td>
+        <td class="right aligned">
           <div class="ui small basic label" style="margin-left: 0">
             <i class="ticket icon"></i> {{ $event->tickets->where('organization_id', $organization->id)->where('event_id', $event->id)->count() }}
             <div class="detail">Tickets</div>
@@ -112,10 +116,34 @@
               <div class="detail">{!! $ticket->type->name !!}</div>
             </div>
           @endforeach
-        </div>
-      </div>
-    </div>
-    @endforeach
+        </td>
+        <td class="right aligned">
+          $ {{ number_format($event->sales->where('organization_id', $organization->id)->sum('total'), 2, '.', ',') }}
+        </td>
+      </tr>
+      @endforeach
+    </tbody>
+    <tfoot>
+      <tr>
+        <th class="right aligned">
+          <div class="ui tiny header">
+            Total: {{ $events->count() }}
+          </div>
+        </th>
+        <th class="right aligned">
+          <div class="ui tiny header">
+            {{ $tickets_purchased }}
+          </div>
+        </th>
+        <th class="right aligned">
+          <div class="ui tiny header">
+            $ {{ number_format($sales->sum('total'), 2, '.', ',') }}
+          </div>
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+  <div class="ui grid">
     @if ($with_charts)
     <div class="sixteen wide column">
       <canvas height="350" id="visitsAttendance"></canvas>

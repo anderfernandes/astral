@@ -1,6 +1,6 @@
 @extends('layout.report')
 
-@section('title', "Attendance Report")
+@section('title', "Attendance Report - All Organization Types")
 
 @section('content')
 
@@ -30,7 +30,7 @@
   <img src="{{ asset(App\Setting::find(1)->logo) }}" alt="" class="ui centered mini image">
 
   <div class="ui center aligned icon header" style="margin-top:8px">
-    <div class="content">Attendance Report</div>
+    <div class="content">Attendance Report - All Organization Types</div>
     <div class="sub header">
       {{ Date::parse($start)->format('l, F j, Y') }} | {{ Date::parse($end)->format('l, F j, Y') }}
     </div>
@@ -48,10 +48,10 @@
   <div class="ui four mini statistics">
     <div class="statistic" style="margin-right: 0">
       <div class="value">
-        {{ number_format($organizations->count(), 0, null, ',') }}
+        {{ $organization_types->count() }}
       </div>
       <div class="label">
-        Organizations
+        Organization Types
       </div>
     </div>
     <div class="statistic" style="margin-right: 0">
@@ -97,42 +97,54 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($organizations as $organization)
+      @foreach ($organization_types as $organization_type)
 
       <tr>
         {{-- Name --}}
         <td>
           <h5 class="ui header">
-            {{ $organization->name }}
-            <div class="ui tiny black label">{{ $organization->type->name }}</div>
+            <div class="ui tiny black label">
+              {{ $organization_type->name }}
+              <div class="detail">{{ $organization_type->organizations->count() }}</div>
+            </div>
           </h5>
         </td>
 
         {{-- Tickets --}}
         <td class="right aligned">
           <?php
-            $tickets = 0;
-            foreach ($sales->where('organization_id', $organization->id) as $sale)
+            $org_ids = $organization_type->organizations->pluck('id')->all();
+            $ticket_count = 0;
+            foreach ($sales as $sale)
             {
-              $tickets+= $sale->tickets->count();
-              echo $tickets;
+              $ticket_count += $sale->tickets->whereIn('organization_id', $org_ids)->count();
             }
+            echo $ticket_count;
           ?>
         </td>
 
         {{-- Sales --}}
         <td class="right aligned">
-          {{ $sales->where('organization_id', $organization->id)->where('status', 'complete')->count() }}
+          {{ $sales->whereIn('organization_id', $org_ids)->count() }}
         </td>
 
         {{-- Events --}}
         <td class="right aligned">
-          {{ $organization->events->where('start', '>=', $start)->where('end', '<=', $end)->count() }}
+          <?php
+          $event_count = 0;
+          $org_revenue = 0;
+          foreach ($sales->whereIn('organization_id', $org_ids) as $sale)
+          {
+            $event_count += $sale->events->count();
+            $org_revenue += $sale->total;
+          }
+          echo $event_count;
+          ?>
         </td>
 
         {{-- Revenue --}}
         <td class="right aligned">
-          $ {{ number_format($organization->sales->where('status', 'complete')->sum('total'), "2", ".", ",") }}
+          $ {{ number_format($org_revenue, 2, '.', ',') }}
         </td>
       </tr>
       @endforeach

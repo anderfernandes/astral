@@ -399,15 +399,13 @@ class ReportController extends Controller
         // Organizations
         $organizations = Organization::where('id', '!=', 1)->where('type_id', '!=', 1)->get();
         // Get all organization types
-        $organization_types = OrganizationType::where('id', '!=', 1)->get();
+        $organization_types = OrganizationType::where('id', '!=', 1)->orderBy('name', 'asc')->get();
         // Loop through all organizations...
         foreach ($organizations as $organization)
         {
           // Loop through organization sales
           foreach ($organization->sales->where('status', 'complete') as $sale)
           {
-            $sales->push($sale);
-            $tickets_purchased += $sale->tickets->count();
 
             foreach ($sale->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
             {
@@ -417,23 +415,54 @@ class ReportController extends Controller
         }
         $events = $events->pluck('id')->all();
         $events = Event::whereIn('id', $events)->get();
+        foreach ($events as $event)
+        {
+
+          // Getting the sales for the events whithin the given timeframe
+          foreach ($event->sales->where('status', 'complete') as $sale)
+          {
+            $sales->push($sale);
+          }
+        }
         // Loop through all the sales that belong to the events filtered above
         $sales = $sales->pluck('id')->unique()->all();
         $sales = Sale::whereIn('id', $sales)->get();
         $revenue = $sales->sum('total');
-        // Get all visitors
 
+        foreach ($sales as $sale)
+        {
+          $tickets_purchased += $sale->tickets->count();
+        }
+
+        $view = "";
+
+        if ($request->type == 'attendance_organization')
+        {
+          $view = 'admin.reports.attendance.organizations';
+        }
+        else if ($request->type = 'attendance_organization_type')
+        {
+          $view = 'admin.reports.attendance.organization-types';
+        }
+        else if ($request->type = 'attendance_event_type')
+        {
+          $view = 'admin.reports.attendance.event-types';
+        }
+        else if ($request->type == 'attendance_ticket-type')
+        {
+          $view = 'admin.reports.attendance.ticket-types';
+        }
         // This is a different view from the previous report data
-        return view('admin.reports.attendance.organization-types')
-                ->withStart($start)
-                ->withEnd($end)
-                ->with('sales', $sales)
-                ->with('events', $events)
-                ->with('tickets_purchased', $tickets_purchased)
-                ->with('revenue', $revenue)
-                ->with('organization_types', $organization_types)
-                ->with('with_charts', $with_charts)
-                ->withOrganizations($organizations);
+        return view($view)
+                  ->withStart($start)
+                  ->withEnd($end)
+                  ->with('sales', $sales)
+                  ->with('events', $events)
+                  ->with('tickets_purchased', $tickets_purchased)
+                  ->with('revenue', $revenue)
+                  ->with('organization_types', $organization_types)
+                  ->with('with_charts', $with_charts)
+                  ->withOrganizations($organizations);
       }
       else
       {
@@ -475,13 +504,24 @@ class ReportController extends Controller
               foreach ($organization->events->where('start', '>=', $start)->where('end', '<=', $end) as $event)
               {
                 $events->push($event);
-                $tickets_purchased += $event->tickets->count();
-
-                foreach ($event->sales->where('status', 'complete') as $sale)
-                {
-                  $sales->push($sale);
-                }
               }
+            }
+
+            $events = $events->unique('id');
+
+            foreach ($events as $event)
+            {
+              foreach ($event->sales->where('status', 'complete') as $sale)
+              {
+                $sales->push($sale);
+              }
+            }
+
+            $sales = $sales->unique('id');
+
+            foreach ($sales as $sale)
+            {
+              $tickets_purchased += $sale->tickets->count();
             }
 
             // This is a different view from the previous report data
