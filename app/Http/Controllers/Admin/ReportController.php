@@ -396,6 +396,8 @@ class ReportController extends Controller
         $events = collect();
         // Collection that will hold all sales
         $sales = collect();
+        // Event Types
+        $event_types = EventType::where('id', '!=', 1)->get();
         // Organizations
         $organizations = Organization::where('id', '!=', 1)->where('type_id', '!=', 1)->get();
         // Get all organization types
@@ -440,11 +442,11 @@ class ReportController extends Controller
         {
           $view = 'admin.reports.attendance.organizations';
         }
-        else if ($request->type = 'attendance_organization_type')
+        else if ($request->type == 'attendance_organization_type')
         {
           $view = 'admin.reports.attendance.organization-types';
         }
-        else if ($request->type = 'attendance_event_type')
+        else if ($request->type == 'attendance_event_type')
         {
           $view = 'admin.reports.attendance.event-types';
         }
@@ -453,6 +455,7 @@ class ReportController extends Controller
           $view = 'admin.reports.attendance.ticket-types';
         }
         // This is a different view from the previous report data
+
         return view($view)
                   ->withStart($start)
                   ->withEnd($end)
@@ -462,6 +465,7 @@ class ReportController extends Controller
                   ->with('revenue', $revenue)
                   ->with('organization_types', $organization_types)
                   ->with('with_charts', $with_charts)
+                  ->with('event_types', $event_types)
                   ->withOrganizations($organizations);
       }
       else
@@ -535,7 +539,6 @@ class ReportController extends Controller
 
         else if ($request->type == 'attendance_event_type')
         {
-          $sales = collect();
           $tickets_purchased = 0;
           $event_type = EventType::find($request->data);
           $events = Event::where('start', '>=', $start)
@@ -544,12 +547,15 @@ class ReportController extends Controller
                          ->get();
           foreach ($events as $event)
           {
-            $tickets_purchased += $event->tickets->count();
+            //$tickets_purchased = $event->tickets->count();
             foreach ($event->sales->where('status', 'complete') as $sale)
             {
               $sales->push($sale);
+              $tickets_purchased += $sale->tickets->where('event_id', $event->id)->count();
             }
           }
+
+          $sales = $sales->unique('id');
 
           //$sales = $sales->unique('id');
 

@@ -49,14 +49,6 @@
   <div class="ui four mini statistics">
     <div class="statistic" style="margin-right: 0">
       <div class="value">
-        {{ $sales->count() }}
-      </div>
-      <div class="label">
-        Sales
-      </div>
-    </div>
-    <div class="statistic" style="margin-right: 0">
-      <div class="value">
         {{ $events->count() }}
       </div>
       <div class="label">
@@ -86,50 +78,48 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Sales</th>
-        <th>Tickets Purchased</th>
+        <th>Tickets Sold</th>
         <th>Revenue</th>
       </tr>
     </thead>
     <tbody>
       @foreach ($events as $event)
+        @if ($event->tickets->count() > 0)
+          <tr>
+            {{-- Name --}}
+            <td>
+              <div class="ui tiny header">
+                {{ $event->show->name }} (#{{ $event->id }})
+                <div class="sub header">
+                  {{ $event->start->format('l, F j, Y \a\t g:i A') }}
+                </div>
+              </div>
+            </td>
 
-      <tr>
-        {{-- Name --}}
-        <td>
-          <div class="ui tiny header">
-            {{ $event->show->name }} (#{{ $event->id }})
-            <div class="sub header">
-              {{ $event->start->format('l, F j, Y \a\t g:i A') }}
-            </div>
-          </div>
-        </td>
-        {{-- Sales --}}
-        <td class="right aligned">
-          {{ $event->sales->where('status', 'complete')->count() }}
-        </td>
+            {{-- Tickets Purchased --}}
+            <td class="right aligned">
+              <?php
+              $ticket_count = 0;
+              foreach ($event->sales->where('status', 'complete') as $sale)
+              {
+                $ticket_count += $sale->tickets->where('event_id', $event->id)->count();
+              }
+              echo $ticket_count;
+              ?>
+            </td>
 
-        {{-- Tickets Purchased --}}
-        <td class="right aligned">
-          {{ $event->tickets->count() }}
-        </td>
-
-        {{-- Revenue --}}
-        <td class="right aligned">
-          $ {{ number_format($event->sales->where('status', 'complete')->sum('total'), 2, '.', ',') }}
-        </td>
-      </tr>
+            {{-- Revenue --}}
+            <td class="right aligned">
+              $ {{ number_format($event->sales->where('status', 'complete')->sum('total'), 2, '.', ',') }}
+            </td>
+          </tr>
+        @endif
       @endforeach
     </tbody>
     <tfoot>
       <tr>
         <th class="right aligned">
           <h5 class="ui header">Totals:</h5>
-        </th>
-        <th class="right aligned">
-          <h5 class="ui header">
-          {{ $sales->count() }}
-          </h5>
         </th>
         <th class="right aligned">
           <h5 class="ui header">
