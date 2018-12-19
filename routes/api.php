@@ -414,6 +414,15 @@ Route::get('events', function(Request $request) {
     }
     $seats = $event->seats - $ticketsSold;
     $isAllDay = (($event->start->isStartOfDay()) && ($event->end->isEndOfDay()));
+    $allowedTicketsArray = [];
+    foreach ($event->type->allowedTickets as $allowedTicket)
+    {
+      $allowedTicketsArray = array_prepend($allowedTicketsArray, [
+        'id' => $allowedTicket->id,
+        'name' => $allowedTicket->name,
+        'price' => (double)$allowedTicket->price,
+      ]);
+    }
     $eventsArray = array_prepend($eventsArray, [
       'id'       => $event->id,
       'type'     => $event->type->name,
@@ -430,7 +439,7 @@ Route::get('events', function(Request $request) {
         'cover'       => $event->show->cover,
         'description' => $event->show->description,
         ],
-      'allowedTickets'  => $event->type->allowedTickets->where('public', true)->all(),
+      'allowedTickets'  => $allowedTicketsArray,
       'date'            => $start,
       'color'           => $event->type->color,
       'backgroundColor' => $event->type->color,
