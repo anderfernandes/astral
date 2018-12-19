@@ -46,10 +46,10 @@
     <i class="file alternate outline icon"></i>
     Overview
   </div>
-  <div class="ui four mini statistics">
+  <div class="ui three mini statistics">
     <div class="statistic" style="margin-right: 0">
       <div class="value">
-        {{ $events->count() }}
+        {{ $events->unique('id')->count() }}
       </div>
       <div class="label">
         Events
@@ -84,7 +84,7 @@
     </thead>
     <tbody>
       @foreach ($events as $event)
-        @if ($event->tickets->count() > 0)
+        @if ($event->tickets->whereIn('sale_id', $sales->pluck('id'))->count() > 0)
           <tr>
             {{-- Name --}}
             <td>
@@ -100,9 +100,11 @@
             <td class="right aligned">
               <?php
               $ticket_count = 0;
+              $number_of_events = 0;
               foreach ($event->sales->where('status', 'complete') as $sale)
               {
                 $ticket_count += $sale->tickets->where('event_id', $event->id)->count();
+                $number_of_events = $sale->events->count();
               }
               echo $ticket_count;
               ?>
@@ -110,7 +112,18 @@
 
             {{-- Revenue --}}
             <td class="right aligned">
-              $ {{ number_format($event->sales->where('status', 'complete')->sum('total'), 2, '.', ',') }}
+              $
+              <?php
+                if ($ticket_count > 0)
+                {
+                  $revenue = $event->sales->where('status', 'complete')->sum('total') / $number_of_events;
+                }
+                else
+                {
+                  $revenue = 0;
+                }
+                echo number_format($revenue, 2, '.', ',');
+              ?>
             </td>
           </tr>
         @endif

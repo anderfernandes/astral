@@ -430,7 +430,7 @@ Route::get('events', function(Request $request) {
         'cover'       => $event->show->cover,
         'description' => $event->show->description,
         ],
-      'allowedTickets'  => $event->type->allowedTickets->where('public', true),
+      'allowedTickets'  => $event->type->allowedTickets->where('public', true)->all(),
       'date'            => $start,
       'color'           => $event->type->color,
       'backgroundColor' => $event->type->color,

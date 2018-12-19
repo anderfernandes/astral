@@ -557,8 +557,6 @@ class ReportController extends Controller
 
           $sales = $sales->unique('id');
 
-          //$sales = $sales->unique('id');
-
           return view('admin.reports.attendance.event-type')->withStart($start)
                                                             ->withEnd($end)
                                                             ->withEvents($events)
