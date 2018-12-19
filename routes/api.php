@@ -415,7 +415,7 @@ Route::get('events', function(Request $request) {
     $seats = $event->seats - $ticketsSold;
     $isAllDay = (($event->start->isStartOfDay()) && ($event->end->isEndOfDay()));
     $allowedTicketsArray = [];
-    foreach ($event->type->allowedTickets as $allowedTicket)
+    foreach ($event->type->allowedTickets->where('public', true) as $allowedTicket)
     {
       $allowedTicketsArray = array_prepend($allowedTicketsArray, [
         'id' => $allowedTicket->id,
