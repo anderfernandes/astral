@@ -415,8 +415,10 @@ class ReportController extends Controller
             }
           }
         }
-        $events = $events->pluck('id')->all();
+        $events = $events->pluck('id')
+                         ->all();
         $events = Event::whereIn('id', $events)->get();
+        
         foreach ($events as $event)
         {
 
@@ -427,7 +429,10 @@ class ReportController extends Controller
           }
         }
         // Loop through all the sales that belong to the events filtered above
-        $sales = $sales->pluck('id')->unique()->all();
+        $sales = $sales->pluck('id')
+                       ->unique()
+                       ->all();
+
         $sales = Sale::whereIn('id', $sales)->get();
         $revenue = $sales->sum('total');
 
@@ -450,23 +455,22 @@ class ReportController extends Controller
         {
           $view = 'admin.reports.attendance.event-types';
         }
-        else if ($request->type == 'attendance_ticket-type')
+        else if ($request->type == 'attendance_ticket_type')
         {
           $view = 'admin.reports.attendance.ticket-types';
         }
         // This is a different view from the previous report data
 
-        return view($view)
-                  ->withStart($start)
-                  ->withEnd($end)
-                  ->with('sales', $sales)
-                  ->with('events', $events)
-                  ->with('tickets_purchased', $tickets_purchased)
-                  ->with('revenue', $revenue)
-                  ->with('organization_types', $organization_types)
-                  ->with('with_charts', $with_charts)
-                  ->with('event_types', $event_types)
-                  ->withOrganizations($organizations);
+        return view($view)->withStart($start)
+                          ->withEnd($end)
+                          ->with('sales', $sales)
+                          ->with('events', $events)
+                          ->with('tickets_purchased', $tickets_purchased)
+                          ->with('revenue', $revenue)
+                          ->with('organization_types', $organization_types)
+                          ->with('with_charts', $with_charts)
+                          ->with('event_types', $event_types)
+                          ->withOrganizations($organizations);
       }
       else
       {
@@ -569,11 +573,16 @@ class ReportController extends Controller
         else if ($request->type = 'attendance_ticket_type')
         {
           $ticket_type = TicketType::find($request->data);
-          $events = Event::where('start', '>=', $start)->where('end', '<=', $end)->get();
+          $events = Event::where('start', '>=', $start)
+                         ->where('end', '<=', $end)
+                         ->get();
           $event_types = EventType::all();
           $event_types = $event_types->unique('id');
-          $event_ids = Event::where('start', '>=', $start)->where('end', '<=', $end)->pluck('id');
-          $tickets = Ticket::where('ticket_type_id', $ticket_type->id)->whereIn('event_id', $event_ids);
+          $event_ids = Event::where('start', '>=', $start)
+                            ->where('end', '<=', $end)
+                            ->pluck('id');
+          $tickets = Ticket::where('ticket_type_id', $ticket_type->id)
+                           ->whereIn('event_id', $event_ids);
 
           return view('admin.reports.attendance.ticket-type')->withStart($start)
                                                              ->withEnd($end)
