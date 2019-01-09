@@ -8,11 +8,11 @@ Astral will be a system that will allow non-profit organizations (such as Planet
 
 ### Thanks
 
-I would like to thank Prof. Chad Burrows for his help with this project, as well as Fed Chavez, Clifford Bailey, David Cantwell, Killian Brooks and Donald Hubbs for their ideas and my mother for hanging out with me while I work on this almost every evening.
+I would like to thank Prof. Chad Burrows for his help with this project, as well as Fed Chavez, Clifford Bailey, David Cantwell, Killian Brooks and Donald Hubbs for their ideas, my mother for hanging out with me when I first started working on this project, my friends Dani, Che and Mauri and their families for pretty much adopting me and Sol for showing me so much.
 
 ### Contributing
 
-Pull requests will not be taken at this moment because the system is at a very early stage of development. Anderson works on this project on his free time so it may take a while until we are accepting pull requests.
+Pull requests will not be taken at this moment because the system is at a very early stage of development. I work on this project on my free time so it may take a while until we are accepting pull requests.
 
 ### License
 

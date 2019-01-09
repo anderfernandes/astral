@@ -337,10 +337,24 @@ Route::get('/calendar/events', function(Request $request) {
                         ]);
   $events = isSet($request->type) ? $events->where('type_id', $request->type)->get() : $events->get();
   $eventsArray = [];
-  foreach ($events as $event) {
+  foreach ($events as $event)
+  {
     $ticketsSold = 0;
-    foreach ($event->sales as $sale) {
-        $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
+    foreach ($event->sales as $sale)
+    {
+      // If event is canceled, calculate attendance
+      if ($sale->status != 'canceled')
+      {
+        // If there's only one event, show number of tickets sold...
+        if ($sale->events->count() == 1)
+          $ticketsSold += $sale->tickets->count();
+        // ...else, divide the number of tickets in the sale by the number of events in the sale
+        else
+          $ticketsSold += ($sale->tickets->count() / $sale->events->count());
+      }
+      else
+        $ticketsSold += 0;
+      // $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
     }
     $seats = $event->seats - $ticketsSold;
     $isAllDay = (Date::parse($event->start)->isStartOfDay() && Date::parse($event->end)->isEndOfDay());
