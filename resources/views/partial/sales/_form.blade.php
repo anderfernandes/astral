@@ -10,78 +10,84 @@
 
   {{ csrf_field() }}
 
-  <div class="two fields">
 
-    <div class="field">
-      <a onclick="window.history.back()" class="ui basic black button">
-        <i class="left chevron icon"></i>
-        Back
-      </a>
-      <div class="ui green labeled submit icon button">
-        Save <i class="save icon"></i>
-      </div>
-    </div>
+  <div class="ui grid">
+    <div class="sixteen wide column" style="position:fixed;z-index:1; padding-bottom: 0">
+        <div class="ui grid" style="background-color:white;">
+          <div class="ui sixteen wide column">
+            <div class="ui container">
+              <div class="two fields" style="margin-bottom:0">
 
-    {{-- Save button --}}
+              <div class="field">
+                <a onclick="window.history.back()" class="ui basic black button">
+                  <i class="left chevron icon"></i>
+                  Back
+                </a>
+                <div class="ui green labeled submit icon button">
+                  Save <i class="save icon"></i>
+                </div>
+              </div>
 
+              {{-- Sale Status --}}
+              <div class="inline required field" style="text-align:right">
+                <label for="status">Status</label>
+                <div class="ui selection dropdown" id="sale-status">
+                  <input type="hidden" id="status" name="status" value="{{ isSet($sale) ? $sale->status : old('status') == null ? 'open' : old('status') }}">
+                  <i class="dropdown icon"></i>
+                  <div class="default text">Sale Status</div>
+                  <div class="menu">
+                    <div class="item" data-value="open" style="background-color: #6435c9 !important; border-color: #6435c9; color: white">
+                      <i class="unlock icon"></i>Open
+                    </div>
+                    <div class="item" data-value="confirmed" style="background-color: white !important; border-color: #21ba45; color: #21ba45">
+                      <i class="thumbs up icon"></i>Confirmed
+                    </div>
+                    <div class="item" data-value="complete" style="background-color: #21ba45 !important; border-color: #21ba45; color: white">
+                      <i class="checkmark icon"></i>Complete
+                    </div>
+                    @if (!Request::routeIs('*.*.create'))
+                    <div class="item" data-value="canceled" style="background-color: #cf3534 !important; border-color: #cf3534; color: white">
+                      <i class="remove icon"></i>Canceled
+                    </div>
+                    @endif
+                    <div class="item" data-value="tentative" style="background-color: #fbbd08 !important; border-color: #fbbd08; color: white">
+                      <i class="help icon"></i>Tentative
+                    </div>
+                    <div class="item" data-value="no show" style="background-color: #f2711c !important; border-color: #f2711c; color: white">
+                      <i class="thumbs outline down icon"></i>No Show
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-
-    {{-- Sale Status --}}
-    <div class="inline required field" style="text-align:right">
-      <label for="status">Status</label>
-      <div class="ui selection dropdown" id="sale-status">
-        <input type="hidden" id="status" name="status" value="{{ isSet($sale) ? $sale->status : old('status') == null ? 'open' : old('status') }}">
-        <i class="dropdown icon"></i>
-        <div class="default text">Sale Status</div>
-        <div class="menu">
-          <div class="item" data-value="open" style="background-color: #6435c9 !important; border-color: #6435c9; color: white">
-            <i class="unlock icon"></i>Open
-          </div>
-          <div class="item" data-value="confirmed" style="background-color: white !important; border-color: #21ba45; color: #21ba45">
-            <i class="thumbs up icon"></i>Confirmed
-          </div>
-          <div class="item" data-value="complete" style="background-color: #21ba45 !important; border-color: #21ba45; color: white">
-            <i class="checkmark icon"></i>Complete
-          </div>
-          @if (!Request::routeIs('*.*.create'))
-          <div class="item" data-value="canceled" style="background-color: #cf3534 !important; border-color: #cf3534; color: white">
-            <i class="remove icon"></i>Canceled
-          </div>
-          @endif
-          <div class="item" data-value="tentative" style="background-color: #fbbd08 !important; border-color: #fbbd08; color: white">
-            <i class="help icon"></i>Tentative
-          </div>
-          <div class="item" data-value="no show" style="background-color: #f2711c !important; border-color: #f2711c; color: white">
-            <i class="thumbs outline down icon"></i>No Show
+            </div>
+            </div>
           </div>
         </div>
-      </div>
+    </div>
+  </div>
+
+  <div class="ui container">
+
+    {{-- Error message from the client side form validation --}}
+    <div class="field">
+
+      <div class="ui error message"></div>
+
     </div>
 
-  </div>
-
-  {{-- Error message from the client side form validation --}}
-  <div class="field">
-
-    <div class="ui error message"></div>
-
-  </div>
-
-  <div class="ui grid" style="margin-bottom:90px">
+    <div class="ui grid" style="margin-bottom:120px; margin-top:66px">
 
       <div class="ui sixteen wide column">
-
         {{-- Tabs --}}
         <div class="ui top attached tabular menu">
           <a class="active item" data-tab="sale-information"><i class="dollar icon"></i>Sale Information</a>
           <a class="item" data-tab="payment-information"><i class="money icon"></i>Payment Information</a>
         </div>
-
         {{-- Sale Information Tab --}}
         <div class="ui bottom attached active tab segment" data-tab="sale-information">
 
           {{-- Customer Information --}}
-          <div class="two fields">
 
             {{-- Sell To --}}
             <div class="required field">
@@ -91,7 +97,6 @@
                 <option value="1">Organization</option>
               </select>
             </div>
-
             {{-- Customer --}}
             <div class="required field">
               <label for="Customer">Customer</label>
@@ -104,19 +109,16 @@
                 </div>
               </div>
             </div>
-
-          </div>
-
-          {{-- Grade --}}
-          <div class="field">
-            <label for="grades">Grade(s)</label>
-            <select name="grades[]" multiple="" id="grades" class="ui dropdown">
-              <option value="">N/A</option>
-              @foreach ($grades as $grade)
-                <option value="{{ $grade->id }}">{{ $grade->name }}</option>
-              @endforeach
-            </select>
-          </div>
+            {{-- Grade --}}
+            <div class="field">
+              <label for="grades">Grade(s)</label>
+              <select name="grades[]" multiple="" id="grades" class="ui dropdown">
+                <option value="">N/A</option>
+                @foreach ($grades as $grade)
+                  <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+                @endforeach
+              </select>
+            </div>
 
           {{-- Pre-existing events for edit view --}}
           @if (isSet($sale))
@@ -125,44 +127,40 @@
 
                 <h4 class="ui horizontal divider header"><i class="calendar check icon"></i> Event #{{ $loop->index + 1 }}</h4>
 
-                <div class="two fields">
+                {{-- Event Date --}}
+                <div class="required field">
+                  <div class="field">
+                    <div class="required field">
+                      <label for="start">Date</label>
+                      <div class="ui left icon input">
+                        {{-- dateFieldId --}}
+                        <input value="{{ $event->start->format('l, F j, Y') }}" type="text" name="events[{{ $loop->index }}][date]" placeholder="Second Event Date" class="date" readonly="readonly" data-validate="date">
+                        <i class="calendar alternate outline icon"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                  {{-- Event Date --}}
-                  <div class="required field">
-                    <div class="field">
-                      <div class="required field">
-                        <label for="start">Date</label>
-                        <div class="ui left icon input">
-                          {{-- dateFieldId --}}
-                          <input value="{{ $event->start->format('l, F j, Y') }}" type="text" name="events[{{ $loop->index }}][date]" placeholder="Second Event Date" class="date" readonly="readonly" data-validate="date">
-                          <i class="calendar alternate outline icon"></i>
+                {{-- Show --}}
+                <div class="required field">
+                  <label for="second_event_id">Show</label>
+                  {{-- dropdownDivId --}}
+                  <div class="ui search selection events dropdown" id="second-event">
+                    <input type="hidden" name="events[{{ $loop->index }}][id]" value="{{ $event->id }}" class="show" data-validate="show">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select a Show</div>
+                    {{-- dropdownMenuId --}}
+                    <div class="menu" id="second-show">
+                      <div class="item" data-value="1">No Show</div>
+                      @foreach ($events[$loop->index] as $e)
+                        <div class="item" data-value="{{ $e->id }}">
+                          <strong>{{ $e->show->name }}</strong>
+                          at <em>{{ Date::parse($e->start)->format('g:i A') }}</em>
+                          ({{ $e->seats - App\Ticket::where('event_id', $e->id)->count() }} seats left)
                         </div>
-                      </div>
+                      @endforeach
                     </div>
                   </div>
-
-                  {{-- Show --}}
-                  <div class="required field">
-                    <label for="second_event_id">Show</label>
-                    {{-- dropdownDivId --}}
-                    <div class="ui search selection events dropdown" id="second-event">
-                      <input type="hidden" name="events[{{ $loop->index }}][id]" value="{{ $event->id }}" class="show" data-validate="show">
-                      <i class="dropdown icon"></i>
-                      <div class="default text">Select a Show</div>
-                      {{-- dropdownMenuId --}}
-                      <div class="menu" id="second-show">
-                        <div class="item" data-value="1">No Show</div>
-                        @foreach ($events[$loop->index] as $e)
-                          <div class="item" data-value="{{ $e->id }}">
-                            <strong>{{ $e->show->name }}</strong>
-                            at <em>{{ Date::parse($e->start)->format('g:i A') }}</em>
-                            ({{ $e->seats - App\Ticket::where('event_id', $e->id)->count() }} seats left)
-                          </div>
-                        @endforeach
-                      </div>
-                    </div>
-                  </div>
-
                 </div>
 
                 {{-- Tickets --}}
@@ -205,8 +203,6 @@
 
               <h4 class="ui horizontal divider inverted header"><i class="calendar check icon"></i> Event #1</h4>
 
-              <div class="two fields">
-
                 {{-- First Event Date --}}
                 <div class="required field">
                   <label for="event[0][date]">Date</label>
@@ -231,8 +227,6 @@
                     </div>
                   </div>
                 </div>
-
-              </div>
 
               {{-- Tickets --}}
               <table class="ui selectable single line very compact table" style="display:none">
@@ -327,7 +321,6 @@
           </div>
 
         </div>
-
         {{-- Payment Information Tab --}}
         <div class="ui bottom attached tab segment" data-tab="payment-information">
           <div class="four fields">
@@ -339,45 +332,43 @@
               </select>
             </div>
           </div>
-
-        <div class="four fields">
-          <div class="field">
-            {!! Form::label('payment_method_id', 'Payment Method') !!}
-            <div class="ui fluid selection dropdown">
-              <input type="hidden" name="payment_method_id" value="{{ old('payment_method_id') }}">
-              <i class="dropdown icon"></i>
-              <div class="default text">Select Payment Method</div>
-              <div class="menu">
-                @foreach ($paymentMethods as $paymentMethod)
-                <div class="item" data-value="{{ $paymentMethod->id }}">
-                  <i class="{{ $paymentMethod->icon }} icon"></i> {{ $paymentMethod->name }}
+          <div class="four fields">
+            <div class="field">
+              {!! Form::label('payment_method_id', 'Payment Method') !!}
+              <div class="ui fluid selection dropdown">
+                <input type="hidden" name="payment_method_id" value="{{ old('payment_method_id') }}">
+                <i class="dropdown icon"></i>
+                <div class="default text">Select Payment Method</div>
+                <div class="menu">
+                  @foreach ($paymentMethods as $paymentMethod)
+                  <div class="item" data-value="{{ $paymentMethod->id }}">
+                    <i class="{{ $paymentMethod->icon }} icon"></i> {{ $paymentMethod->name }}
+                  </div>
+                  @endforeach
                 </div>
-                @endforeach
               </div>
             </div>
-          </div>
-          <div class="field">
-            <label for="tendered">Tendered</label>
-            <div class="ui labeled input">
-              <div class="ui label">$ </div>
-              <input type="text" name="tendered" value="{{ number_format(0, 2) }}" placeholder="Tendered">
+            <div class="field">
+              <label for="tendered">Tendered</label>
+              <div class="ui labeled input">
+                <div class="ui label">$ </div>
+                <input type="text" name="tendered" value="{{ number_format(0, 2) }}" placeholder="Tendered">
+              </div>
+            </div>
+            <div class="field">
+              <label for="change_due">Change Due</label>
+              <div class="ui labeled input">
+                <div class="ui label">$ </div>
+                <input type="text" name="change_due" value="{{ number_format(0, 2) }}" placeholder="Change due" readonly>
+              </div>
+            </div>
+            <div class="field">
+              <label for="reference">Reference</label>
+              <input type="text" name="reference" placeholder="Credit Card or Check reference">
             </div>
           </div>
-          <div class="field">
-            <label for="change_due">Change Due</label>
-            <div class="ui labeled input">
-              <div class="ui label">$ </div>
-              <input type="text" name="change_due" value="{{ number_format(0, 2) }}" placeholder="Change due" readonly>
-            </div>
-          </div>
-          <div class="field">
-            <label for="reference">Reference</label>
-            <input type="text" name="reference" placeholder="Credit Card or Check reference">
-          </div>
-        </div>
-
-        {{-- Payment Table --}}
-        <table class="ui selectable single line table">
+          {{-- Payment Table --}}
+          <table class="ui selectable single line table">
           <thead>
             <tr class="payments">
               <th>#</th>
@@ -445,10 +436,7 @@
             </tr>
           </tbody>
         </table>
-
-      </div>
-
-      {{-- Memos --}}
+        </div>
       </div>
 
       <div class="ui sixteen wide column">
@@ -457,7 +445,7 @@
 
       </div>
 
-      <div class="ui eight wide column">
+      <div class="ui sixteen wide column">
         @if (isSet($sale->memos))
           @if ($sale->memos->count() > 0)
             <div class="ui comments">
@@ -502,20 +490,29 @@
         @endif
       </div>
 
-      <div class="ui eight wide column">
+      <div class="ui sixteen wide column">
         <div class="field">
           <label for="memo">Message</label>
           <textarea name="memo" rows="8" cols="3" placeholder="Write a memo here"></textarea>
         </div>
       </div>
 
-      {{-- Totals --}}
+    </div>
 
-      <div class="ui sixteen wide column" style="padding: 0 0 0 0 !important">
+  </div>
 
-        <div class="ui bottom fixed sticky" style="width:100%">
+  {{-- Totals --}}
+  <div class="ui grid">
 
-          <div class="ui inverted segment" style="border-radius: 0 !important">
+    <div class="sixteen wide column" style="padding: 0 0 0 0 !important">
+
+      <div class="ui bottom fixed sticky" style="width:100%">
+
+        <div class="ui inverted segment" style="border-radius: 0 !important">
+
+          <div class="ui container">
+
+            <div class="ui inverted form">
 
               <div class="five fields">
 
@@ -566,15 +563,20 @@
 
               </div>
 
+            </div>
+
           </div>
 
         </div>
 
       </div>
 
+    </div>
   </div>
 
 </form>
+
+
 
 <div class="ui basic modal" id="event-add-error">
   <div class="ui icon header">
@@ -613,8 +615,6 @@
 
           <h4 class="ui horizontal divider header"><i class="calendar check icon"></i> Event #${index + 1}</h4>
 
-          <div class="two fields">
-
             {{-- Second Event Date --}}
             <div class="required field">
               <div class="field">
@@ -644,7 +644,7 @@
               </div>
             </div>
 
-          </div>
+
 
           {{-- Tickets --}}
           <table class="ui selectable single line very compact table" style="display:none">
@@ -944,30 +944,54 @@
     inline: true,
     on    : 'blur',
     fields: {
-      sell_to_organization: 'empty',
-      customer_id       : ['integer', 'empty'],
-      taxable           : 'empty',
-      payment_method_id : {!! isSet($sale) ? "['number', 'empty']" : "'number'" !!},
-      tendered          : {!! isSet($sale) ? "['number', 'empty']" : "'number'" !!},
+      {{-- Sell To Organization Validation --}}
+      sell_to_organization: {
+        rules: [
+          { type  : 'integer', prompt: 'Are you selling to an organization or individual?' },
+          { type  : 'empty', prompt: 'Are you selling to an organization or individual?' }
+        ]
+      },
+      {{-- Customer ID validation --}}
+      customer_id : {
+        rules: [{
+          type  : 'notExactly[1]',
+          @if (isset($sale))
+          prompt: 'Walk-up sales are only allowed in cashier. The current customer for this sale is {{ $sale->customer->fullname }}.'
+          @else
+          prompt: 'Walk-up sales are only allowed in cashier.'
+          @endif 
+        }]
+      },
+      {{-- Taxable Validation --}}
+      taxable: {
+        rules: [{ type  : 'empty', prompt: 'Is this sale taxable?' }]
+      },
+
+      {{-- Tendered Validation --}}
+      tendered: {
+        rules: [
+          { type  : 'number', prompt: 'Make sure you only enter numbers' },
+          { type  : 'empty',  prompt: 'Make sure you enter a value'      },
+        ]
+      },
+      @isset($sale)
+      {{-- Memo Validation --}}
+      memo: {
+        rules: [{ type  : 'empty', prompt: 'Why are you changing this sale?' }]
+      },
+      @endisset
     }
   })
 
   @isset($sale)
 
-  $('form').form({
-    on: 'blur',
-    fields: {
-      memo : ['empty', 'minLength[5]'],
-    }
-  })
+    @if ($sale->grades->count() > 0)
 
-  @if ($sale->grades->count() > 0)
+      @foreach ($sale->grades as $g)
+        $('#grades').dropdown('set selected', {{ $g->id }})
+      @endforeach
 
-    @foreach ($sale->grades as $g)
-      $('#grades').dropdown('set selected', {{ $g->id }})
-    @endforeach
-
-  @endif
+    @endif
 
   @endisset
 
@@ -975,10 +999,17 @@
     this.value != 1 ? $('form').form('add rule', 'reference', ['empty']) : $('form').form('remove fields', ['reference'])
   })
 
+  $('[name="tendered"]').change(function() {
+    if (this.value > 0)
+      $('form').form('add rule', 'payment_method_id', ['empty', 'number'])
+    else
+      $('form').form('remove fields', ['payment_method_id'])
+  })
+
   $('.ui.taxable.dropdown').dropdown('set selected', '{{ isSet($sale) ? $sale->taxable : old('taxable') }}')
 
 </script>
 
 <style>
-  input#subtotal, input#tax, input#total, input#paid, input#balance {font-weight: bold !important}
+  input#subtotal, input#tax, input#total, input#paid, input#balance {font-weight: bold !important; color: #FFF}
 </style>
