@@ -33395,7 +33395,7 @@ var render = function() {
         _vm._m(0),
         _vm._v(" "),
         _c("div", { staticClass: "ui grid" }, [
-          _c("div", { staticClass: "five wide column" }, [
+          _c("div", { staticClass: "six wide column" }, [
             _c("img", {
               staticClass: "ui large image",
               attrs: { src: _vm.event.show.cover, alt: "" }
@@ -33404,7 +33404,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "eleven wide column" },
+            { staticClass: "ten wide column" },
             [
               _c("div", { staticClass: "ui basic blue large label" }, [
                 _c("i", { staticClass: "clock outline icon" }),

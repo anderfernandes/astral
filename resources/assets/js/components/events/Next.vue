@@ -9,10 +9,10 @@
       </div>
     </div>
     <div class="ui grid">
-      <div class="five wide column">
+      <div class="six wide column">
         <img :src="event.show.cover" class="ui large image" alt="">
       </div>
-      <div class="eleven wide column">
+      <div class="ten wide column">
         <div class="ui basic blue large label">
           <i class="clock outline icon"></i>
           {{ moment(event.start).format("dddd, MMMM D, YYYY [at] h:mm A") }}
