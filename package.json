@@ -16,16 +16,16 @@
         "chart.js": "^2.7.3",
         "cross-env": "^5.2.0",
         "flatpickr": "^4.5.2",
-        "fullcalendar": "^3.8.2",
+        "fullcalendar": "^3.10.0",
         "jquery-address": "^1.6.0",
         "laravel-mix": "^1.7.2",
         "lodash": "^4.17.11",
         "marked": "^0.5.2",
         "semantic-ui": "^2.4.2",
         "simplemde": "^1.11.2",
-        "vue": "^2.5.17"
+        "vue": "^2.5.22"
     },
     "dependencies": {
-        "moment": "^2.22.2"
+        "moment": "^2.23.0"
     }
 }

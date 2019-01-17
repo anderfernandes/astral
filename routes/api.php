@@ -471,7 +471,7 @@ Route::get('events', function(Request $request) {
 // This is the URL for the /events slide show
 Route::get('events/{start}/{end}', function($start, $end) {
   $start = Date::parse($start)->startOfDay()->toDateTimeString();
-  $end = Date::parse($end)->endOfDay()->toDateTimeString();
+  $end   = Date::parse($end)->endOfDay()->toDateTimeString();
   $events = Event::where('start', '>=', $start)->where('end', '<', $end)->where('public', true)->get();
   $eventsArray = [];
   foreach ($events as $event) {
@@ -479,15 +479,18 @@ Route::get('events/{start}/{end}', function($start, $end) {
     $eventsArray = array_prepend($eventsArray, [
       'id'       => $event->id,
       'type'     => $event->type->name,
-      'start'    => Date::parse($event->start)->toDateTimeString(),
-      'end'      => Date::parse($event->end)->toDateTimeString(),
+      'color'    => $event->type->color,
+      'start'    => $event->start->toDateTimeString(),
+      'end'      => $event->end->toDateTimeString(),
       'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-      'title'    => $event->show->name .' - ' . $event->type->name . ' - ' . $seats . ' seats left',
+      'title'    => "{$event->show->name} - {$event->type->name} - $seats seats left",
       'url'      => '/admin/events/' . $event->id,
       'show'     => [
         'name'        => $event->show->name,
         'type'        => $event->show->category->name,
-        'cover'       => substr($event->show->cover, 0, 4) == 'http' ? $event->show->cover : Storage::url($event->show->cover),
+        'cover'       => substr($event->show->cover, 0, 4) == 'http'
+                           ? $event->show->cover
+                           : Storage::url($event->show->cover),
         'description' => $event->show->description,
         ],
       'allowedTickets' => $event->type->allowedTickets->where('in_cashier', true),
