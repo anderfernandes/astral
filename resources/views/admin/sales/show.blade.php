@@ -8,6 +8,10 @@
 
 @section('content')
 
-  @include('partial.sales._show')
+  <div class="ui container">
+
+    @include('partial.sales._show')
+
+  </div>
 
 @endsection
