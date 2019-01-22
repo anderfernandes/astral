@@ -142,6 +142,7 @@
       ? moment(view.intervalStart).format('MMMM YYYY')
       : view.title
     $('.header.active.item.hide-on-mobile').html(`<i class="calendar alternate icon"></i> Calendar | <strong>${title}</strong>`)
+    document.title = ` Calendar | ${title}`
   }
 
   //$(document).ready(loadCalendar)
@@ -158,7 +159,7 @@
     $('#admin-calendar').fullCalendar('addEventSource', `/api/calendar/${type}`)
   }
 
-  setInterval(() => { $('#admin-calendar').fullCalendar('refetchEvents') }, 5000)
+  setInterval(() => { $('#admin-calendar').fullCalendar('refetchEvents') }, 15000)
 
   $('.ui.change.date.button').flatpickr({
     onChange: function(selectedDates, dateStr, instance) {
