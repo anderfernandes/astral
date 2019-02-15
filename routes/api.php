@@ -4,8 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Mail\Markdown;
 
 use App\{ Event, Setting, User, PaymentMethod, Sale, Organization, EventType };
-use App\{ MemberType, Show };
+use App\{ MemberType, Show, TicketType };
 use Illuminate\Support\Facades\{ Auth, Storage };
+use Illuminate\Support\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -713,4 +714,334 @@ Route::post('new-sale', function(Request $request) {
 */
 
   return response()->json($request);
+});
+
+Route::group(["prefix" =>"public"], function() {
+  // This route is responsible for returning available events based on the number of seats available
+  Route::get("findAvailableEvents", function(Request $request) {
+    $date            = Date::parse($request->date)->format("Y-m-d");
+    $seats_needed    = (int)$request->seats;
+    $available_events = Event::whereDate("start", $date)->get();
+    $events          = collect();
+    foreach ($available_events as $available_event)
+    {
+      $seats_taken     = App\Ticket::where("event_id", $available_event->id)->count();
+      $seats_available =  $available_event->seats - $seats_taken;
+      $start           = $available_event->start;
+      $end             = $available_event->end;
+
+      // This is an array!
+      $event = [
+        "title" => "Not Available",
+        "start" => $start->toDateTimeString(),
+        "end"   => $end->toDateTimeString(),
+      ];
+
+      $events->push($event);
+      $event = [];
+    }
+    return response([ "data" => $events ])->header("Access-Control-Allow-Origin", "*");
+    //return [ "data" => $events];
+  });
+  Route::post("createReservation", function(Request $request) {
+
+    // Check for organization, add it if it doesn't exist
+    $organization = Organization::where("name", $request->school)->first();
+    if (!$organization)
+    {
+      $organization             = new Organization;
+
+      $organization->name       = $request->school;
+      $organization->address    = $request->address;
+      $organization->city       = $request->city;
+      $organization->state      = $request->state;
+      $organization->country    = "United States";
+      $organization->zip        = $request->zip;
+      $organization->phone      = $request->phone;
+      $organization->fax        = null;
+      $organization->email      = str_replace(" ", "", "{$request->school}@astral");
+      $organization->website    = null;
+      $organization->type_id    = 2;
+      $organization->creator_id = 1;
+
+      $organization->save();
+
+      $organization = Organization::where("name", $request->school)->first();
+
+      // Create Organization User Account?
+    }
+
+    // Check if user exists, add if he/she doesn't
+    $user = User::where("email", $request->email)->first();
+    if (!$user)
+    {
+      $user                  = new User;
+
+      $user->firstname       = $request->firstname;
+      $user->lastname        = $request->lastname;
+      $user->email           = $request->email;
+      $user->type            = "individual";
+      $user->role_id         = \App\Role::where("name", "teacher")->first()->id;
+      $user->organization_id = $organization->id;
+      $user->membership_id   = 1;
+      $user->address         = $request->address;
+      $user->city            = $request->city;
+      $user->state           = $request->state;
+      $user->zip             = $request->zip;
+      $user->country         = "United States";
+      $user->phone           = $request->cell;
+      $user->active          = true;
+      $user->staff           = false;
+      $user->creator_id      = 1;
+      $user->password        = bcrypt(str_random(10));
+
+      $user->save();
+
+      $user = User::where("email", $request->email)->first();
+    }
+
+    // Create event
+    $firstEvent             = new Event;
+
+    $firstEvent->start      = Carbon::parse($request->firstShowTime);
+    $firstEvent->end        = $firstEvent->start->addHour();
+    $firstEvent->memo       = null;
+    $firstEvent->seats      = 180;
+    $firstEvent->creator_id = 1;
+    $firstEvent->type_id    = EventType::where("name", "School Groups")->first()->id;
+    $firstEvent->public     = false;
+    $firstEvent->show_id    = Show::find((int)$request->firstShow)->id;
+
+    $firstEvent->save();
+
+    // Add first event to $events array
+    $events_array = [];
+    array_push($events_array, $firstEvent->id);
+
+    $firstEvent->memo()->create([
+      "author_id" => 1,
+      "message"   => "Created orgininally for {$user->fullname}, {$organization->name} (website).",
+    ]);
+
+    $secondEvent             = new Event; // avoid undefined error in json response
+
+    if ($request->secondShowTime != null)
+    {
+
+      $secondEvent->start      = Carbon::parse($request->secondShowTime);
+      $secondEvent->end        = $secondEvent->start->addHour();
+      $secondEvent->memo       = null;
+      $secondEvent->seats      = 180;
+      $secondEvent->creator_id = 1;
+      $secondEvent->type_id    = EventType::where("name", "School Groups")->first()->id;
+      $secondEvent->public     = false;
+      $secondEvent->show_id    = Show::find((int)$request->secondShow)->id; // change this to id
+
+      $secondEvent->save();
+
+      // Add first event to $events array
+      array_push($events_array, $secondEvent->id);
+
+      $secondEvent->memo()->create([
+        "author_id" => 1,
+        "message"   => "Created orgininally for {$user->fullname}, {$organization->name} (website).",
+      ]);
+
+    }
+    // Calculate price
+
+    // if one show
+    if ($request->secondShowTime == null)
+    {
+      $student_ticket = TicketType::where("name", "Student")->first();
+      $teacher_ticket = TicketType::where("name", "Teacher")->first();
+      $parent_ticket  = TicketType::where("name", "Parent")->first();
+
+      $student_subtotal = (double)$request->students * (double)$student_ticket->price;
+
+      $teacher_subtotal = (double)$request->teacher  * (double)$teacher_ticket->price;
+
+      $parent_subtotal  = (double)$request->parents  * (double)$parent_ticket->price;
+    }
+    // if multishow
+    else
+    {
+      $student_ticket = TicketType::where("name", "Student Multishow")->first();
+      $teacher_ticket = TicketType::where("name", "Teacher")->first();
+      $parent_ticket  = TicketType::where("name", "Parent Multishow")->first();
+
+      $student_subtotal = (double)$request->students * (double)$student_ticket->price * 2;
+
+      $teacher_subtotal = (double)$request->teachers * (double)$teacher_ticket->price * 2;
+
+      $parent_subtotal  = (double)$request->parents  * (double)$parent_ticket->price * 2;
+    }
+
+    // Need to figure out how to get custom ticket names for this
+
+    // Create sale
+    $sale                       = new Sale;
+
+    $sale->creator_id           = 1;
+    $sale->status               = "tentative";
+    $sale->source               = "website";
+    $sale->taxable              = $request->taxable == "true"; // add field for this on frontend
+    $sale->subtotal             = (double)($student_subtotal + $teacher_subtotal + $parent_subtotal);
+    $sale->tax                  = $sale->taxable ? ((double)$sale->subtotal * ((double)\App\Setting::find(1)->tax/100)) : 0;
+    $sale->total                = (double)$sale->subtotal + (double)$sale->tax;
+    $sale->refund               = false;
+    $sale->customer_id          = $user->id;
+    $sale->organization_id      = $organization->id;
+    $sale->sell_to_organization = false;
+
+    $sale->save();
+
+    $sale->memo()->create([
+      "author_id" => 1,
+      "message" => "Created orgininally for {$user->fullname}, {$organization->name} (website).",
+    ]);
+
+    // Atach events to sale
+
+    $sale->events()->attach($events_array);
+
+    if ($request->memo != null)
+    {
+      $sale->memo()->create([
+        "author_id" => $user->id,
+        "message"   => $request->memo,
+      ]);
+    }
+
+    // Create tickets and attach it to events
+
+    $tickets = [];
+
+    // ** First Event ** //
+
+    // Student Tickets , First Event
+
+    for ($s = 0; $s < (int)$request->students; $s++)
+    {
+      $tickets = array_prepend($tickets, [
+        'ticket_type_id'  => $student_ticket->id,
+        'event_id'        => $firstEvent->id    ,
+        'customer_id'     => $user->id          ,
+        'cashier_id'      => 1                  ,
+        'organization_id' => $organization->id  ,
+      ]);
+    }
+
+    // Teacher Tickets, First Event
+
+    for ($t = 0; $t < (int)$request->teachers; $t++)
+    {
+      $tickets = array_prepend($tickets, [
+        'ticket_type_id'  => $teacher_ticket->id,
+        'event_id'        => $firstEvent->id    ,
+        'customer_id'     => $user->id          ,
+        'cashier_id'      => 1                  ,
+        'organization_id' => $organization->id  ,
+      ]);
+    }
+
+    // Parent Tickets, First Event
+    if ((int)$request->parents > 0)
+    {
+      for ($p = 0; $p < (int)$request->parents; $p++)
+      {
+        $tickets = array_prepend($tickets, [
+          'ticket_type_id'  => $parent_ticket->id,
+          'event_id'        => $firstEvent->id   ,
+          'customer_id'     => $user->id         ,
+          'cashier_id'      => 1                 ,
+          'organization_id' => $organization->id ,
+        ]);
+      }
+    }
+
+    // ** Second Event ** //
+
+    if ($request->secondShowTime != null)
+    {
+      // Student Tickets , Second Event
+      for ($s = 0; $s < (int)$request->students; $s++)
+      {
+        $tickets = array_prepend($tickets, [
+          'ticket_type_id'  => $parent_ticket->id,
+          'event_id'        => $secondEvent->id  ,
+          'customer_id'     => $user->id         ,
+          'cashier_id'      => 1                 ,
+          'organization_id' => $organization->id ,
+        ]);
+      }
+
+      // Teacher Tickets, Second Event
+      for ($t = 0; $t < (int)$request->teachers; $t++)
+      {
+        $tickets = array_prepend($tickets, [
+          'ticket_type_id'  => $teacher_ticket->id,
+          'event_id'        => $secondEvent->id   ,
+          'customer_id'     => $user->id          ,
+          'cashier_id'      => 1                  ,
+          'organization_id' => $organization->id  ,
+        ]);
+      }
+
+      // Parent Tickets, Second Event
+      if ((int)$request->parents > 0)
+      {
+        for ($p = 0; $p < (int)$request->parents; $p++)
+        {
+          $tickets = array_prepend($tickets, [
+            'ticket_type_id'  => $parent_ticket->id,
+            'event_id'        => $secondEvent->id  ,
+            'customer_id'     => $user->id         ,
+            'cashier_id'      => 1                 ,
+            'organization_id' => $organization->id ,
+          ]);
+        }
+      }
+    }
+
+    $sale->tickets()->createMany($tickets);
+
+    // Products? (star talk, uniview)
+
+    return response(["message" => [
+        "type"         => "success",
+        "content"      => "Reservation created successfully!",
+        "taxable"      => $sale->taxable,
+      ]])->header("Access-Control-Allow-Origin", "*");
+  });
+  // This route will return shows in the database
+  Route::get("shows", function(Request $request) {
+    $shows = Show::where("active", true);
+
+    if ($request->type)
+    {
+      $show_type = \App\ShowType::where("name", $request->type)->first();
+      $shows = $shows->where("type_id", $show_type->id);
+    }
+
+    $shows = $shows->get();
+
+    $shows_array = [];
+
+    foreach ($shows as $show)
+    {
+      array_push($shows_array, [
+        "id"          => $show->id,
+        "name"        => $show->name,
+        "type"        => $show->category->name,
+        "description" => $show->description,
+        "cover"       => $show->cover,
+        "duration"    => (int)$show->duration,
+      ]);
+    }
+
+    return response([
+      "data" => $shows_array
+    ])->header("Access-Control-Allow-Origin", "*");
+  });
 });

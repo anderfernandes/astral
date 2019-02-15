@@ -90,7 +90,9 @@
             <div class="default text">Payment Method</div>
             <div class="menu">
               @foreach (App\PaymentMethod::all() as $paymentMethod)
-                <div class="item" data-value="{{ $paymentMethod->id}}"><i class="{{ $paymentMethod->icon }} icon"></i>{{ $paymentMethod->name }}</div>
+                <div class="item" data-value="{{ $paymentMethod->id}}">
+                  <i class="{{ $paymentMethod->icon }} icon"></i>{{ $paymentMethod->name }}
+                </div>
               @endforeach
             </div>
           </div>

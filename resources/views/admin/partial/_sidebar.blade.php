@@ -189,6 +189,6 @@
     </div>
   </div>
   <div class="item" style="text-align: center">
-    2017-2018 <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>
+    &copy; 2017-{{ today()->format('Y') }} <a href="http://anderfernandes.com" target="_blank">@anderfernandes</a>
   </div>
 </div>

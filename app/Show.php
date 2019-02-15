@@ -22,6 +22,7 @@ class Show extends Model
     return $this->belongsTo('App\User');
   }
 
+  // NEED TO DELETE CURRENT SHOW TYPE PROPERTY AND HAVE THIS ONE TAKE OVER INSTEAD
   public function category()
   {
     return $this->belongsTo('App\ShowType', 'type_id');
