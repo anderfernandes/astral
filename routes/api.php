@@ -743,6 +743,7 @@ Route::group(["prefix" =>"public"], function() {
     return response([ "data" => $events ])->header("Access-Control-Allow-Origin", "*");
     //return [ "data" => $events];
   });
+  // This route creates the reservations
   Route::post("createReservation", function(Request $request) {
 
     // Check for organization, add it if it doesn't exist
@@ -1042,6 +1043,22 @@ Route::group(["prefix" =>"public"], function() {
 
     return response([
       "data" => $shows_array
+    ])->header("Access-Control-Allow-Origin", "*");
+  });
+  // This route will return shows in the database
+  Route::get("organizations", function(Request $request) {
+    $organizations = Organization::where("id", "!=", 1)->get();
+    $organization_array = [];
+    foreach ($organizations as $organization)
+    {
+      array_push($organization_array, [
+        "id"   => $organization->id,
+        "name" => $organization->name,
+        "type" => $organization->type->name,
+      ]);
+    }
+    return response([
+      "data" => $organization_array
     ])->header("Access-Control-Allow-Origin", "*");
   });
 });
