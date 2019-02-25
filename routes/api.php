@@ -7,6 +7,7 @@ use App\{ Event, Setting, User, PaymentMethod, Sale, Organization, EventType };
 use App\{ MemberType, Show, TicketType };
 use Illuminate\Support\Facades\{ Auth, Storage };
 use Illuminate\Support\Carbon;
+use App\Product;
 
 /*
 |--------------------------------------------------------------------------
@@ -740,34 +741,41 @@ Route::group(["prefix" =>"public"], function() {
       $events->push($event);
       $event = [];
     }
-    return response([ "data" => $events ])->header("Access-Control-Allow-Origin", "*");
+    return response([ "data" => $events ]);
     //return [ "data" => $events];
   });
   // This route creates the reservations
   Route::post("createReservation", function(Request $request) {
-
     // Check for organization, add it if it doesn't exist
-    $organization = Organization::where("name", $request->school)->first();
-    if (!$organization)
+    if ($request->schoolId)
+      $organization = Organization::find((int)$request->schoolId);
+    else
     {
-      $organization             = new Organization;
-
-      $organization->name       = $request->school;
-      $organization->address    = $request->address;
-      $organization->city       = $request->city;
-      $organization->state      = $request->state;
-      $organization->country    = "United States";
-      $organization->zip        = $request->zip;
-      $organization->phone      = $request->phone;
-      $organization->fax        = null;
-      $organization->email      = str_replace(" ", "", "{$request->school}@astral");
-      $organization->website    = null;
-      $organization->type_id    = 2;
-      $organization->creator_id = 1;
-
-      $organization->save();
-
+      // I do not trust users. Look for custom entered schools anyway.
       $organization = Organization::where("name", $request->school)->first();
+
+      // If organization really doesnt exist then add it
+      if (!$organization)
+      {
+        $organization             = new Organization;
+
+        $organization->name       = $request->school;
+        $organization->address    = $request->address;
+        $organization->city       = $request->city;
+        $organization->state      = $request->state;
+        $organization->country    = "United States";
+        $organization->zip        = $request->zip;
+        $organization->phone      = $request->phone;
+        $organization->fax        = null;
+        $organization->email      = str_replace(" ", "", "{$request->school}@astral");
+        $organization->website    = null;
+        $organization->type_id    = 2;
+        $organization->creator_id = 1;
+
+        $organization->save();
+
+        $organization = Organization::where("name", $request->school)->first();
+      }
 
       // Create Organization User Account?
     }
@@ -824,9 +832,9 @@ Route::group(["prefix" =>"public"], function() {
       "message"   => "Created orgininally for {$user->fullname}, {$organization->name} (website).",
     ]);
 
-    $secondEvent             = new Event; // avoid undefined error in json response
+    $secondEvent = new Event; // avoid undefined error in json response
 
-    if ($request->secondShowTime != null)
+    if ($request->secondShowTime)
     {
 
       $secondEvent->start      = Carbon::parse($request->secondShowTime);
@@ -852,10 +860,11 @@ Route::group(["prefix" =>"public"], function() {
     // Calculate price
 
     // if one show
-    if ($request->secondShowTime == null)
+    $teacher_ticket = TicketType::where("name", "Teacher")->first();
+    if (!$request->secondShowTime)
     {
       $student_ticket = TicketType::where("name", "Student")->first();
-      $teacher_ticket = TicketType::where("name", "Teacher")->first();
+      //$teacher_ticket = TicketType::where("name", "Teacher")->first();
       $parent_ticket  = TicketType::where("name", "Parent")->first();
 
       $student_subtotal = (double)$request->students * (double)$student_ticket->price;
@@ -868,7 +877,7 @@ Route::group(["prefix" =>"public"], function() {
     else
     {
       $student_ticket = TicketType::where("name", "Student Multishow")->first();
-      $teacher_ticket = TicketType::where("name", "Teacher")->first();
+      //$teacher_ticket = TicketType::where("name", "Teacher")->first();
       $parent_ticket  = TicketType::where("name", "Parent Multishow")->first();
 
       $student_subtotal = (double)$request->students * (double)$student_ticket->price * 2;
@@ -888,7 +897,7 @@ Route::group(["prefix" =>"public"], function() {
     $sale->source               = "website";
     $sale->taxable              = $request->taxable == "true"; // add field for this on frontend
     $sale->subtotal             = (double)($student_subtotal + $teacher_subtotal + $parent_subtotal);
-    $sale->tax                  = $sale->taxable ? ((double)$sale->subtotal * ((double)\App\Setting::find(1)->tax/100)) : 0;
+    $sale->tax                  = $sale->taxable == "true" ? ((double)$sale->subtotal * ((double)\App\Setting::find(1)->tax/100)) : 0;
     $sale->total                = (double)$sale->subtotal + (double)$sale->tax;
     $sale->refund               = false;
     $sale->customer_id          = $user->id;
@@ -905,6 +914,13 @@ Route::group(["prefix" =>"public"], function() {
     // Atach events to sale
 
     $sale->events()->attach($events_array);
+
+    // Attach uniview or startalk to sale
+    $product = \App\Product::where("name", $request->postShow)->first();
+
+    $sale->products()->attach($product);
+
+    // Add user created memo to sale
 
     if ($request->memo != null)
     {
@@ -1012,9 +1028,9 @@ Route::group(["prefix" =>"public"], function() {
     return response(["message" => [
         "type"         => "success",
         "content"      => "Reservation created successfully!",
-        "taxable"      => $sale->taxable,
-      ]])->header("Access-Control-Allow-Origin", "*");
+      ]]);
   });
+
   // This route will return shows in the database
   Route::get("shows", function(Request $request) {
     $shows = Show::where("active", true);
@@ -1043,7 +1059,7 @@ Route::group(["prefix" =>"public"], function() {
 
     return response([
       "data" => $shows_array
-    ])->header("Access-Control-Allow-Origin", "*");
+    ]);
   });
   // This route will return shows in the database
   Route::get("organizations", function(Request $request) {
@@ -1059,6 +1075,6 @@ Route::group(["prefix" =>"public"], function() {
     }
     return response([
       "data" => $organization_array
-    ])->header("Access-Control-Allow-Origin", "*");
+    ]);
   });
 });
