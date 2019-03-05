@@ -176,7 +176,7 @@ class MemberController extends Controller
 
         Session::flash('success','<strong>' . $member->users[0]->fullname . ', Member # '. $member->id .' ('. $member->type->name .')</strong> added successfully!');
 
-        return redirect()->route('admin.members.index');
+        return redirect()->route('admin.members.show', $member);
     }
 
     /**
@@ -315,7 +315,7 @@ class MemberController extends Controller
 
       Session::flash('success','<strong>' . $member->primary->fullname . ', Member # '. $member->id .' ('. $member->type->name .')</strong> edited successfully!');
 
-      return redirect()->route('admin.members.index');
+      return redirect()->route('admin.members.show', $member);
     }
 
     /**

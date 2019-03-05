@@ -142,7 +142,8 @@
     <div class="ui sixteen wide column" style="padding: 0 0 0 0 !important">
       <div class="ui bottom fixed sticky" style="width:100%">
         <div class="ui inverted segment" style="border-radius: 0 !important">
-          <div class="five fields">
+          <div class="ui container">
+            <div class="five fields">
             <div class="field">
               <label for="subtotal">Subtotal</label>
               <div class="ui inverted transparent left icon input">
@@ -178,6 +179,7 @@
                 <input type="text" id="balance" name="balance" value="{{ number_format(0, 2) }}" readonly>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -387,8 +389,26 @@
     on: 'blur',
     inline: true,
     fields: {
-      name: ['empty']
+      name              : ['empty'],
+      membership_type_id: ["empty"],
+      @if (isset($member->start))
+      start: ["empty", "not[{{ $member->start->format('l, F j, Y') }}]"],
+      end  : ["empty", "not[{{ $member->end->format('l, F j, Y')}}]"],
+      @else
+      start: ["empty"],
+      end  : ["empty"],
+      @endif
+      tendered         : ["empty"],
+      change_due       : ["empty"],
+      payment_method_id: ["empty"]
     }
+  })
+
+  $("#payment_method_id").change(function() {
+    if (this.value != "1")
+      $("#members").form("add rule", "reference", ["empty"])
+    else
+      $("#members").form("remove fields", ["reference"])
   })
 
 </script>
