@@ -678,6 +678,56 @@ Route::get('event-types', function() {
   return $eventTypes;
 });
 
+// This route will return grades
+// PUT ALL DATA BEHIND AN OBJECT CALLED DATA!!!
+Route::get("grades", function(Request $request) {
+  $grades = \App\Grade::all(["id", "name", "description"]);
+  return response([
+    "data" => $grades
+  ]);
+});
+
+// This route will return allowed tickets for a particular event type
+Route::get("allowedTickets", function(Request $request) {
+  $tickets = EventType::find($request->event_type)->allowedTickets;
+  $tickets = $tickets->map(function($ticket) {
+    return [
+      "id"          => $ticket->id,
+      "name"        => $ticket->name,
+      "description" => $ticket->description,
+      "price"       => (double)number_format($ticket->price, "2", ".", ","),
+      "active"      => (boolean)($ticket->active),
+      "in_cashier"  => (boolean)$ticket->in_cashier,
+      "public"      => (boolean)($ticket->public),
+    ];
+  });
+  return response([
+    "data" => $tickets
+  ]);
+});
+
+// This route will return
+Route::get("products", function(Request $request) {
+  $products = Product::all();
+  $products = $products->map(function($product) {
+    return [
+      "id"          => $product->id,
+      "name"        => $product->name,
+      "price"       => (double)number_format($product->price, "2", ".", ","),
+      "cover"       => asset($product->cover),
+      "description" => $product->description,
+      "type"        => [
+        "id"          => $product->type->id,
+        "name"        => $product->type->name,
+        "description" => $product->type->description,
+      ],
+    ];
+  });
+  return response([
+    "data" => $products
+  ]);
+});
+
 Route::middleware('auth:api')->get('user', function (Request $request) {
     return $request->user()->id;
 });
@@ -747,7 +797,7 @@ Route::group(["prefix" =>"public"], function() {
   // This route creates the reservations
   Route::post("createReservation", function(Request $request) {
     // Check for organization, add it if it doesn't exist
-    if ($request->schoolId)
+    if ((int)$request->schoolId != 0)
       $organization = Organization::find((int)$request->schoolId);
     else
     {
