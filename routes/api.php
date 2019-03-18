@@ -936,9 +936,9 @@ Route::group(["prefix" =>"public"], function() {
     // if multishow
     else
     {
-      $student_ticket = TicketType::where("name", "Student Multishow")->first();
+      $student_ticket = TicketType::where("name", "Multishow Student")->first();
       //$teacher_ticket = TicketType::where("name", "Teacher")->first();
-      $parent_ticket  = TicketType::where("name", "Parent Multishow")->first();
+      $parent_ticket  = TicketType::where("name", "Multishow Parent")->first();
 
       $student_subtotal = (double)$request->students * (double)$student_ticket->price * 2;
 
