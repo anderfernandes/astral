@@ -843,14 +843,22 @@ Route::group(["prefix" =>"public"], function() {
       $user->role_id         = \App\Role::where("name", "Teacher")->first()->id;
       $user->organization_id = $organization->id;
       $user->membership_id   = 1;
-      $user->address         = ((int)$request->schoolId == 0) 
+      $user->address         = ((int)$request->schoolId == 0)
                                 ? $request->address
                                 : $organization->address;
-      $user->city            = $request->city;
-      $user->state           = $request->state;
-      $user->zip             = $request->zip;
+      $user->city            = ((int)$request->schoolId == 0)
+                                ? $request->city
+                                : $organization->city;
+      $user->state           = ((int)$request->schoolId == 0)
+                                ? $request->state
+                                : $organization->state;
+      $user->zip             = ((int)$request->schoolId == 0)
+                                ? $request->zip
+                                : $organization->zip;
       $user->country         = "United States";
-      $user->phone           = $request->cell;
+      $user->phone           = ((int)$request->schoolId == 0)
+                                ? $request->cell
+                                : $organization->cell;
       $user->active          = true;
       $user->staff           = false;
       $user->creator_id      = 1;
