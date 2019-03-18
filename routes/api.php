@@ -843,7 +843,9 @@ Route::group(["prefix" =>"public"], function() {
       $user->role_id         = \App\Role::where("name", "Teacher")->first()->id;
       $user->organization_id = $organization->id;
       $user->membership_id   = 1;
-      $user->address         = $request->address;
+      $user->address         = ((int)$request->schoolId == 0) 
+                                ? $request->address
+                                : $organization->address;
       $user->city            = $request->city;
       $user->state           = $request->state;
       $user->zip             = $request->zip;
