@@ -857,7 +857,7 @@ Route::group(["prefix" =>"public"], function() {
                                 : $organization->zip;
       $user->country         = "United States";
       $user->phone           = ((int)$request->schoolId == 0)
-                                ? $request->cell
+                                ? ($request->cell ?? $request->phone)
                                 : $organization->cell;
       $user->active          = true;
       $user->staff           = false;
