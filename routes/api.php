@@ -728,6 +728,66 @@ Route::get("products", function(Request $request) {
   ]);
 });
 
+// This route will return member data
+Route::get("membership", function (Request $request) {
+  $membership = \App\Member::find($request->id);
+
+  if ($membership != null && ($membership->id != 1))
+  {
+    $secondaries = $membership->secondaries;
+
+    $secondaries = $secondaries->map(function($secondary) {
+      return [
+        "id"      => $secondary->id,
+        "name"    => $secondary->fullname,
+        "email"   => $secondary->email,
+        "address" => $secondary->address,
+        "city"    => $secondary->city,
+        "state"   => $secondary->state,
+        "zip"     => $secondary->zip,
+        "country" => $secondary->country,
+        "phone"   => $secondary->phone,
+      ];
+    });
+
+    return response([
+      "data" => [
+        "id"    => $membership->id,
+        "type"  => [
+          "id"          => $membership->type->id,
+          "name"        => $membership->type->name,
+          "duration"    => (int)$membership->duration,
+          "price"       => (double)$membership->price,
+          "secondaries" => [
+            "free"  => (int)$membership->max_secondaries,
+            "price" => (double)$membership->secondary_price,
+          ],
+        ],
+        "start" => $membership->start->toDateTimeString(),
+        "end"   => $membership->end->toDateTimeString(),
+        "left"  => $membership->end->diffInDays(now()),
+        "primary" => [
+          "id"      => $membership->primary->id,
+          "name"    => $membership->primary->fullname,
+          "email"   => $membership->primary->email,
+          "address" => $membership->primary->address,
+          "city"    => $membership->primary->city,
+          "state"   => $membership->primary->state,
+          "zip"     => $membership->primary->zip,
+          "country" => $membership->primary->country,
+          "phone"   => $membership->primary->phone,
+        ],
+        "secondaries" => $secondaries,
+      ]
+    ]);
+  }
+  else {
+    return response([
+      "data" => null
+    ]);
+  }
+});
+
 Route::middleware('auth:api')->get('user', function (Request $request) {
     return $request->user()->id;
 });
