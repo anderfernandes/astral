@@ -756,7 +756,7 @@ Route::get("membership", function (Request $request) {
         "type"  => [
           "id"          => $membership->type->id,
           "name"        => $membership->type->name,
-          "duration"    => (int)$membership->duration,
+          "duration"    => (int)$membership->type->duration,
           "price"       => (double)$membership->price,
           "secondaries" => [
             "free"  => (int)$membership->max_secondaries,
