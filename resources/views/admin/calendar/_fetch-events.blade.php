@@ -17,8 +17,8 @@ function fetchEvents(calEvent, jsEvent, view) {
             <div class="avatar"><i class="user circle big icon"></i></div>
             <div class="content">
               <div class="author">
-                ${memo.author.name}
-                <div class="ui tiny black label">${memo.author.role}</div>
+                ${memo.author.id == 1 ? "System" : memo.author.name}
+                <div class="ui tiny black label">${memo.author.id == 1 ? "System" : memo.author.role}</div>
                 <div class="metadata">
                   <span class="date">${moment(memo.created_at).calendar()}</span>
                 </div>
