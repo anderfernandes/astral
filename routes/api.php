@@ -706,7 +706,7 @@ Route::get("allowedTickets", function(Request $request) {
   ]);
 });
 
-// This route will return
+// This route will return products
 Route::get("products", function(Request $request) {
   $products = Product::all();
   $products = $products->map(function($product) {
@@ -725,6 +725,14 @@ Route::get("products", function(Request $request) {
   });
   return response([
     "data" => $products
+  ]);
+});
+
+// This route will return available payment options
+Route::get("payment-methods", function (Request $request) {
+  $payment_methods = PaymentMethod::all(["id", "name", "icon", "description"]);
+  return response([
+    "data" => $payment_methods
   ]);
 });
 

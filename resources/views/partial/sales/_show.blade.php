@@ -84,7 +84,10 @@
           @endif
           {{ $sale->status }}</span>
         </div>
-        <a href="{{ route('admin.users.show', $sale->creator) }}" target="_blank" class="meta"><i class="user circle icon"></i> {{ $sale->creator->fullname }}</a>
+        <a href="{{ route('admin.users.show', $sale->creator) }}" target="_blank" class="meta">
+          <i class="user circle icon"></i>
+          {{ $sale->creator->id == 1 ? "System" : $sale->creator->fullname }}
+        </a>
         <div class="meta"><i class="inbox icon"></i> {{ $sale->source }}</div>
         <div class="description">
           <i class="pencil icon"></i> {{ Date::parse($sale->created_at)->format('l, F j, Y \a\t g:i A') }} ({{ Date::parse($sale->created_at)->diffForHumans() }})

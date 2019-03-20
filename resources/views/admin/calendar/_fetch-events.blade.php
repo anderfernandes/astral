@@ -117,14 +117,14 @@ function fetchEvents(calEvent, jsEvent, view) {
                   ${getSaleStatus(sale.status)}
                 </div>
               </div>
-              <a class="meta" href="/admin/users/${sale.creator.id}" target="_blank">
-                <i class="user circle icon"></i> ${sale.creator.name}
-              </a>
+              <div class="meta" target="_blank">
+                <i class="user circle icon"></i> ${sale.creator.id == 1 ? "System" : sale.creator.name}
+              </div>
               <div class="meta">
                 <i class="pencil icon"></i> ${moment(sale.created_at).format('dddd, MMMM D, YYYY [at] h:mm:ss A')} (${moment(sale.created_at).fromNow()})
               </div>
                 ${sale.organization.name == sale.customer.name ? `` : `<a class="meta" href="/admin/users/${sale.customer.id}" target="_blank"><i class="user icon"></i> ${sale.customer.name}</a>`}
-                ${sale.organization.id == 1 || !sale.sell_to_organization ? `` : ` | <a class="meta" href="/admin/organizations/${sale.organization.id}" target="_blank"><i class="university icon"></i> ${sale.organization.name}</a>` }
+                ${sale.organization.id == 1 ? `` : ` | <a class="meta" href="/admin/organizations/${sale.organization.id}" target="_blank"><i class="university icon"></i> ${sale.organization.name}</a>` }
                 <br><br>
               <div class="description">${tickets} ${products}</div>
             </div>
@@ -178,7 +178,7 @@ function fetchEvents(calEvent, jsEvent, view) {
                 </div>
                 <div class="extra">
                   <p>
-                    <i class="user circle icon"></i> ${response.creator.name} |
+                    <i class="user circle icon"></i> ${response.creator.id == 1 ? "System" : response.creator.name} |
                     <i class="pencil icon"></i> ${moment(response.created_at).format(dateFormat)} (${moment(response.created_at).fromNow()}) |
                     <i class="edit icon"></i> ${moment(response.updated_at).format(dateFormat)} (${moment(response.updated_at).fromNow()})
                   </p>

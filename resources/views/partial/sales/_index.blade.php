@@ -133,7 +133,8 @@
           @endif
         </td>
         <td>
-          <i class="user circle icon"></i>{{ $sale->creator->firstname }}
+          <i class="user circle icon"></i>
+          {{ $sale->creator->id == 1 ? "System" : $sale->creator->firstname }}
         </td>
         <td>
           {{ $sale->created_at->format('l, F j, Y \a\t g:i A') }} <br />

@@ -71,10 +71,10 @@ function fetchSales(calEvent, jsEvent, view) {
         <div class="content">
           Sale #${sale.id} ${getStatus()}
           <div class="sub header">
-            <a href="/admin/users/${sale.creator.id}" target="_blank" style="color:rgba(0,0,0,.4)">
+            <div target="_blank" style="color:rgba(0,0,0,.4)">
               <i class="user circle icon"></i>
-              <span class="detail">${sale.creator.name}</span>
-            </a> |
+              <span class="detail">${sale.creator.id == 1 ? "System" : sale.creator.name}</span>
+            </div> |
             <i class="inbox icon"></i> ${sale.source} |
             <i class="pencil icon"></i> ${ moment(sale.created_at).format(dateFormat) }
             (${ moment(sale.updated_at).fromNow() }) |
