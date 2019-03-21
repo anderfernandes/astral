@@ -290,6 +290,7 @@ Route::get('event/{event}', function(Event $event) {
       'id'         => $memo->id,
       'message'    => $memo->message,
       'author'     => [
+        'id'   => $memo->author->id,
         'name' => $memo->author->fullname,
         'role' => $memo->author->role->name,
       ],
@@ -613,6 +614,7 @@ Route::get('sale/{sale}', function(Sale $sale) {
       'id'         => $memo->id,
       'message'    => $memo->message,
       'author'     => [
+        'id'   => $memo->author->id,
         'name' => $memo->author->fullname,
         'role' => $memo->author->role->name,
       ],
