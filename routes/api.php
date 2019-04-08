@@ -101,32 +101,57 @@ Route::get('calendar/sales', function(Request $request) {
   return $eventsArray;
 });
 
-Route::get('sales', function() {
-  $allSales = Sale::all();
+Route::get('sales', function(Request $request) {
+  if (isset($request->status))
+    $sales = Sale::where('status', 'tentative')->get();
+  else
+    $sales = Sale::all();
 
-  $sales = [];
-
-  foreach ($allSales as $sale) {
-    $sales = array_prepend($sales, [
+  $sales = $sales->map(function($sale) {
+    return [
       'id'                 => $sale->id,
       'creator'            => $sale->creator->firstname,
       'status'             => $sale->status,
       'source'             => $sale->source,
       'taxable'            => boolval($sale->taxable),
-      'subtotal'           => $sale->subtotal,
-      'tax'                => $sale->tax,
-      'total'              => $sale->total,
+      'subtotal'           => number_format($sale->subtotal, 2, ".", ","),
+      'tax'                => number_format($sale->tax, 2, ".", ","),
+      'total'              => number_format($sale->total, 2, ".", ","),
       'balance'            => number_format($sale->total - $sale->payments->sum('tendered'), 2),
       'refund'             => $sale->refund,
       'customer'           => $sale->customer->fullname,
       'organization'       => $sale->organization->name,
       'sellToOrganization' => boolval($sale->sell_to_organization),
-      'payments'           => $sale->payments
-    ]);
-  };
+      'payments'           => $sale->payments,
+      'created_at'         => $sale->created_at->toDateTimeString(),
+      'customer'           => [
+        'id'               => $sale->customer->id,
+        'name'             => $sale->customer->fullname,
+      ],
+      'events'             => $sale->events->map(function($event) {
+        return [
+          'id'    => $event->id,
+          'start' => $event->start->toDateTimeString(),
+          'end'   => $event->end->toDateTimeString(),
+          'show'  => [
+            'id'       => $event->show->id,
+            'name'     => $event->show->name,
+            'cover'    => $event->show->cover,
+            'duration' => (int)$event->show->duration,
+            'type' => [
+              'id'   => $event->show->type_id,
+              'name' => $event->show->type,
+            ]
+          ]
+        ];
+      }),
+    ];
+  });
 
   return $sales;
 });
+
+
 
 Route::get('calendar-events', function() {
   $today = Date::parse()->format('Y-m-d');
