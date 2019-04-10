@@ -13,7 +13,7 @@
             </div>
             <div class="content">
               <div class="header">
-                {{ event.show.name }}
+                {{ event.memo || event.show.name }}
               </div>
               <div class="description">
                 {{ moment(event.start).format("dddd, MMMM D, YYYY [at] h:mm A") }}
@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class="extra content">
-              <div class="ui large blue label">
+              <div class="ui large blue label" v-if="event.show.type != 'No Type'">
                 {{ event.show.type }}
               </div>
               <div class="ui large label" :style="{ backgroundColor : event.color, color: 'white'}">

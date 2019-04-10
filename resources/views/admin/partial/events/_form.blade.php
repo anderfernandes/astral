@@ -67,11 +67,20 @@
   @else
     {!! Form::model($event, ['route' => ['admin.events.update', $event], 'class' => 'ui form', 'method' => 'PUT']) !!}
   @endif
-  <div class="field" style="display:none;height:60px; margin-bottom;14px" id="title-field">
-    <label for="title">Title</label>
-    <input type="text" name="title" placeholder="Enter the title of the event"
-      value="{{ isSet($event) ? $event->memo : old('title') }}">
-  </div>
+  @if (isset($event->memo))
+    <div class="field" style="height:60px; margin-bottom;14px" id="title-field">
+      <label for="title">Title</label>
+      <input type="text" name="title" placeholder="Enter the title of the event"
+        value="{{ isSet($event) ? $event->memo : old('title') }}">
+    </div>
+  @else
+    <div class="field" style="display:none;height:60px; margin-bottom;14px" id="title-field">
+      <label for="title">Title</label>
+      <input type="text" name="title" placeholder="Enter the title of the event"
+        value="{{ isSet($event) ? $event->memo : old('title') }}">
+    </div>
+  @endif
+
   <div class="four required fields">
     <div class="field">
       <label for="">All Day?</label>
@@ -111,7 +120,7 @@
         'dates[0][show_id]',
         $shows,
         isset($event) ? $event->show->id : null,
-        [ 'placeholder' => 'Select a show', 'class' => 'ui search dropdown']
+        [ 'placeholder' => 'Select a show', 'class' => 'ui search show dropdown']
         )
       !!}
     </div>
@@ -149,7 +158,7 @@
   @endif
   <div class="required field">
     {!! Form::label('memo', 'Memo') !!}
-    {!! Form::textarea('memo', null, ['placeholder' => 'Tell us why you are creating this event', 'rows' => 2]) !!}
+    <textarea name="memo" rows="2" placeholder="Tell us why you are {{ isset($event) ? "editing" : "creating" }} this event"></textarea>
   </div>
   <div class="field">
     @if (Request::routeIs('admin.events.create') or Request::routeIs('admin.events.edit'))
@@ -278,11 +287,11 @@ $('[name="allday"]').change(function() {
     $('[name="dates[0][start]"]').flatpickr({enableTime:true, @if (str_contains(Auth::user()->role->permissions['calendar'], "CRUD")) minDate: 'today', @endif dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15, defaultDate: ''});
     $('[name="dates[0][end]"]').flatpickr({enableTime:true, @if (str_contains(Auth::user()->role->permissions['calendar'], "CRUD")) minDate: 'today', @endif dateFormat: 'l, F j, Y h:i K', minuteIncrement: 15, defaultDate: ''});
   }
-  toggleEventTitle()
+  //toggleEventTitle()
 })
 
 $('[name="show_id"]').change(function() {
-  toggleEventTitle()
+  //toggleEventTitle()
 })
 
 {{-- Client side form validation --}}
@@ -355,5 +364,20 @@ $('[name="allday"]').change(function() {
     $('#title-field').transition('fade in')
   @endif
 @endif
+
+$(document).ready(function() {
+  $('.ui.search.show.dropdown').dropdown({
+    onChange: function(value, text, $choice) {
+      if (value == 1) {
+        if (!$('#title-field').transition('is visible'))
+          $('#title-field').transition('fade in')
+      }
+      else {
+        if ($('#title-field').transition('is visible'))
+          $('#title-field').transition('fade out')
+      }
+    }
+  })
+})
 
 </script>

@@ -23,7 +23,7 @@
         <div v-if="moment(event.start).diff(moment(), 'minutes') <= 15" class="ui huge black label">
           Now Seating
         </div>
-        <div class="ui blue large label">
+        <div class="ui blue large label" v-if="event.show.type != 'No Type'">
           {{ event.show.type }}
         </div>
         <div class="ui large label" :style="{ backgroundColor : event.color, color: 'white'}">
@@ -33,12 +33,12 @@
           {{ event.seats }} seats left
         </div>
         <div class="ui massive dividing header">
-          {{ event.show.name }}
+          {{ event.memo || event.show.name }}
         </div>
-        <div class="ui large header">
+        <div class="ui large header" v-if="event.show.name != 'No Show'">
           <div class="sub header" v-html="marked(event.show.description)" style="font-size:0.75em"></div>
         </div>
-        <div class="ui divider"></div>
+        <div class="ui divider" v-if="event.show.name != 'No Show'"></div>
         <div v-for="ticket in event.allowedTickets" :key="ticket.id" class="ui large green tag label">
           $ {{ parseFloat(ticket.price).toFixed(2) }} / {{ ticket.name }}
         </div>

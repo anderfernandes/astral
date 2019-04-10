@@ -112,7 +112,7 @@ class EventController extends Controller
           $event->seats          = $request->seats;
 
           // The old memo field will serve as a title for the event if it is all day
-          $event->memo           = $request->show_id == 1 ? $request->title : null;
+          $event->memo           = $request->title ?? null;
           $event->creator_id     = Auth::user()->id;
           $event->public         = $request->public;
 
@@ -232,7 +232,7 @@ class EventController extends Controller
       $event->seats          = $request->seats;
 
       // The old memo field will serve as a title for the event if it is all day
-      $event->memo           = $request->show_id == 1 ? $request->title : null;
+      $event->memo           = $request->title ?? null;
       $event->creator_id     = Auth::user()->id;
       $event->public         = $request->public;
 
