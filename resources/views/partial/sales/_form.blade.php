@@ -759,7 +759,7 @@
       $(dropdownMenuId)
         .append(`
           <div class="item" data-value="${event.id}">
-            <strong>${event.show.name}</strong> at <em>${date}</em> (${event.seats} seats left)
+            <strong>${ event.show.id == 1 ? event.memo : event.show.name}</strong> at <em>${date}</em> (${event.seats} seats left)
           </div>
           `)
           $($('.ui.search.selection.events.dropdown')[index]).dropdown('set selected', event.id)
@@ -959,7 +959,7 @@
           prompt: 'Walk-up sales are only allowed in cashier. The current customer for this sale is {{ $sale->customer->fullname }}.'
           @else
           prompt: 'Walk-up sales are only allowed in cashier.'
-          @endif 
+          @endif
         }]
       },
       {{-- Taxable Validation --}}
