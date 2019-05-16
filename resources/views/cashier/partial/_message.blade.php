@@ -1,25 +1,26 @@
 @if (Session::has('success'))
-<div class="ui success icon message">
-  <i class="info circle icon"></i>
-  <i class="close icon"></i>
-  <div class="content">
-    <div class="header">
-      Success!
+
+  {{-- Modal --}}
+  <div class="ui basic modal">
+    <div class="ui icon header">
+      <i class="thumbs up icon"></i>
+      Success, {{ Auth::user()->firstname }}!
     </div>
-    <p>{!! Session::get('success') !!}</p>
-  </div>
-</div>
-@elseif (Session::has('error'))
-<div class="ui error icon message">
-  <i class="info circle icon"></i>
-  <i class="close icon"></i>
-  <div class="content">
-    <div class="header">
-      Error!
+    <div class="content">
+      <p>{!! Session::get('success') !!}</p>
     </div>
-    <p>{{ Session::get('error') }}</p>
+    <div class="actions">
+      <div class="ui green ok inverted button">
+        <i class="checkmark icon"></i>
+        Gotcha!!!
+      </div>
+    </div>
   </div>
-</div>
+
+  <script>$('.ui.basic.modal').modal('show')</script>
+
+  <?php Session::forget('success') ?>
+
 @endif
 
 @if (count($errors) > 0)
