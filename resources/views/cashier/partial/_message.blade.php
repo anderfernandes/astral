@@ -1,7 +1,7 @@
 @if (Session::has('success'))
 
   {{-- Modal --}}
-  <div class="ui basic modal">
+  <div class="ui basic modal" id="session">
     <div class="ui icon header">
       <i class="thumbs up icon"></i>
       Success, {{ Auth::user()->firstname }}!
@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <script>$('.ui.basic.modal').modal('show')</script>
+  <script>$('#session').modal('show')</script>
 
   <?php Session::forget('success') ?>
 
