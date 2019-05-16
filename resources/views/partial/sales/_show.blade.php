@@ -103,13 +103,18 @@
     <div class="ui raised card">
       <div class="content">
         <div class="ui top attached black center aligned large label"><i class="user icon"></i> Customer Information</div>
-        <a href="{{ route('admin.users.show', $sale->customer) }}" target="_blank" class="header">{{ $sale->customer->fullname }}</a>
+        <a href="{{ route('admin.users.show', $sale->customer) }}" target="_blank" class="header">
+          {{ $sale->customer->fullname }}
+        </a>
         <div class="meta"><i class="user icon"></i> {{ $sale->customer->role->name }}</div>
         @if ($sale->customer->organization_id != 1)
-        <a href="{{ route('admin.organizations.show', $sale->customer->organization) }}" class="meta"><i class="university icon"></i>{{ $sale->customer->organization->name }}</a>
+        <a href="{{ route('admin.organizations.show', $sale->customer->organization) }}" class="meta">
+          <i class="university icon"></i>{{ $sale->customer->organization->name }}
+        </a>
         @endif
         <div class="description">
-          <i class="map marker alternate icon"></i> {{ $sale->customer->address }} {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
+          <i class="map marker alternate icon"></i> {{ $sale->customer->address }} {{ $sale->customer->city }},
+          {{ $sale->customer->state }} {{ $sale->customer->zip }}
         </div>
         <div class="description">
           <i class="phone icon"></i> {{ $sale->customer->phone}}

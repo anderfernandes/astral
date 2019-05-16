@@ -17,6 +17,7 @@ class CreateSalesTable extends Migration
             $table->increments('id');
             $table->integer('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users');
+            // CHANGE "COMPLETE" TO "COMPLETED"
             $table->enum('status', ['open', 'confirmed', 'tentative', 'no show', 'complete', 'canceled']);
             $table->enum('source', ['admin', 'cashier']);
             $table->boolean('taxable');

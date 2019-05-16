@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Mail\Markdown;
 
-use App\{ Event, Setting, User, PaymentMethod, Sale, Organization, EventType };
+use App\{ Event, Setting, User, Payment, PaymentMethod, Sale, Organization, EventType };
 use App\{ MemberType, Show, TicketType };
 use Illuminate\Support\Facades\{ Auth, Storage };
 use Illuminate\Support\Carbon;
@@ -102,55 +102,35 @@ Route::get('calendar/sales', function(Request $request) {
 });
 
 Route::get('sales', function(Request $request) {
-  if (isset($request->status))
-    $sales = Sale::where('status', 'tentative')->get();
-  else
-    $sales = Sale::all();
+  // Get sales and models
+  $sales = Sale::with([
+    "organization", "creator", "customer.role", "events", "events.type", "events.show.category", 
+    "payments", "products",
+  ]);
 
-  $sales = $sales->map(function($sale) {
-    return [
-      'id'                 => $sale->id,
-      'creator'            => $sale->creator->firstname,
-      'status'             => $sale->status,
-      'source'             => $sale->source,
-      'taxable'            => boolval($sale->taxable),
-      'subtotal'           => number_format($sale->subtotal, 2, ".", ","),
-      'tax'                => number_format($sale->tax, 2, ".", ","),
-      'total'              => number_format($sale->total, 2, ".", ","),
-      'balance'            => number_format($sale->total - $sale->payments->sum('tendered'), 2),
-      'refund'             => $sale->refund,
-      'customer'           => $sale->customer->fullname,
-      'organization'       => $sale->organization->name,
-      'sellToOrganization' => boolval($sale->sell_to_organization),
-      'payments'           => $sale->payments,
-      'created_at'         => $sale->created_at->toDateTimeString(),
-      'customer'           => [
-        'id'               => $sale->customer->id,
-        'name'             => $sale->customer->fullname,
-      ],
-      'events'             => $sale->events->map(function($event) {
-        return [
-          'id'    => $event->id,
-          'start' => $event->start->toDateTimeString(),
-          'end'   => $event->end->toDateTimeString(),
-          'show'  => [
-            'id'       => $event->show->id,
-            'name'     => $event->show->name,
-            'cover'    => $event->show->cover,
-            'duration' => (int)$event->show->duration,
-            'type' => [
-              'id'   => $event->show->type_id,
-              'name' => $event->show->type,
-            ]
-          ]
-        ];
-      }),
-    ];
-  });
+  if ($request->has("id"))
+    $sales = $sales->where("id", $request->id);
+
+  if ($request->has("status"))
+    $sales = $sales->where("status", $request->status);
+
+  if ($request->has("customer_id"))
+    $sales = $sales->where("customer_id", $request->customer_id);
+
+  if ($request->has("organization_id"))
+    $sales = $sales->where("organization_id", $request->organization_id);
+  
+  if ($request->has("cashier_id"))
+    $sales = $sales->where("creator_id", $request->cashier_id);
+
+  $sales = $sales->orderBy($request->orderBy ?? "id", $request->sort ?? "desc");
+
+  $sales = $sales->paginate(4);
 
   return response($sales);
 });
 
+// Route for the new sales interface
 Route::post('sales', function(Request $request) {
 
   $user    = User::find($request->customer);
@@ -163,9 +143,9 @@ Route::post('sales', function(Request $request) {
   $sale->customer_id          = $user->id;
   $sale->status               = $request->saleStatus;
   $sale->taxable              = $request->taxable;
-  $sale->subtotal             = $request->subtotal;
-  $sale->tax                  = $request->tax;
-  $sale->total                = $request->total;
+  $sale->subtotal             = (double)$request->subtotal;
+  $sale->tax                  = (double)$request->tax;
+  $sale->total                = (double)$request->total;
   $sale->refund               = false;
   $sale->source               = "admin";
   $sale->sell_to_organization = $request->sellTo;
@@ -185,11 +165,11 @@ Route::post('sales', function(Request $request) {
   {
     $payment = new Payment;
 
-    $payment->cashier_id        = $request->creator_id;
+    $payment->cashier_id        = $cashier->id;
     $payment->payment_method_id = $request->paymentMethod;
-    $payment->tendered          = double($request->tendered);
-    $payment->total             = double($request->total);
-    $payment->change_due        = $request->change_due;
+    $payment->tendered          = (double)$request->tendered;
+    $payment->total             = (double)$request->total;
+    $payment->change_due        = (double)$request->change_due;
     $payment->reference         = $request->reference;
     $payment->source            = "admin";
 
@@ -201,7 +181,7 @@ Route::post('sales', function(Request $request) {
   // Mark sale as completed if it has been paid in full
   if ($sale->status != "canceled")
   {
-    if ($sale->payments->sum("tendered") > $sale->total)
+    if ($sale->payments->sum("tendered") >= $sale->total)
     {
       $sale->status = "complete";
       $sale->save();
@@ -216,7 +196,7 @@ Route::post('sales', function(Request $request) {
   {
     foreach ($ticketsArray as $ticket) // Looping through all the tickets for a particular event
     {
-      if ((int)$ticket['amount'] > 0)
+      if ((int)$ticket['amount'] != 0)
       {
         for ($i = 1; $i <= (int)$ticket['amount']; $i++)
         {
@@ -258,15 +238,176 @@ Route::post('sales', function(Request $request) {
   $sale->organization->events()->attach($request->events);
 
   return response([
-    "message" => "Success!",
-    "data"    => [
-      "sale"     => $sale,
-      "products" => $products,
-      "grades"   => $request->grades,
-    ]
+    "message" => "Sale #$sale->id created successfully!",
+    "data"    => $sale,
   ]);
 
 });
+
+// Route for the new sales interface
+Route::post('sales/{id}', function (Request $request, $id) {
+  
+  $sale = Sale::find($id);
+
+  $user    = User::find($request->customer);
+  $cashier = User::find($request->creator_id);
+
+  $sale->creator_id           = $cashier->id;
+  $sale->organization_id      = $user->organization_id;
+  $sale->customer_id          = $user->id;
+  $sale->status               = $request->saleStatus;
+  $sale->taxable              = $request->taxable;
+  $sale->subtotal             = (double)$request->subtotal;
+  $sale->tax                  = (double)$request->tax;
+  $sale->total                = (double)$request->total;
+  $sale->refund               = false;
+  $sale->source               = "admin";
+  $sale->sell_to_organization = $request->sellTo;
+
+  $sale->save();
+
+  // Remove current existing events from sale...
+  $sale->events()->detach();
+  // ...and replace them with the new events
+  $sale->events()->attach($request->events);
+
+  if (isset($request->memo))
+    $sale->memo()->create([
+      'author_id' => $request->creator_id,
+      'message'   => $request->memo,
+      'sale_id'   => $sale->id,
+    ]);
+
+  if (isset($request->paymentMethod) && ($request->tendered > 0))
+  {
+    $payment = new Payment;
+
+    $payment->cashier_id        = $cashier->id;
+    $payment->payment_method_id = $request->paymentMethod;
+    $payment->tendered          = (double)$request->tendered;
+    $payment->total             = (double)$request->total;
+    $payment->change_due        = (double)$request->change_due;
+    $payment->reference         = $request->reference;
+    $payment->source            = "admin";
+
+    $sale->payments()->save($payment);
+
+    // Log created payment
+  }
+
+  // Mark sale as completed if it has been paid in full
+  if ($sale->status != "canceled")
+  {
+    if ($sale->payments->sum("tendered") >= $sale->total)
+    {
+      $sale->status = "complete";
+      $sale->save();
+    }
+  }
+
+
+  // Detach and delete tickets
+  //$sale->tickets()->detach();
+  $sale->tickets()->delete();
+
+  // Tickets
+  $tickets = [];
+  // $request->tickets is an array of arrays with objects that
+  // contain ticket amount, event, etc.
+  foreach ($request->tickets as $ticketsArray) // Looping through all the tickets
+  {
+    foreach ($ticketsArray as $ticket) // Looping through all the tickets for a particular event
+    {
+      if ((int)$ticket['amount'] > 0)
+      {
+        for ($i = 1; $i <= (int)$ticket['amount']; $i++)
+        {
+          $tickets = array_prepend($tickets, [
+            'ticket_type_id'  => $ticket['type']['id'],
+            'event_id'        => $ticket['event']['id'], // this is not coming through
+            'customer_id'     => $user->id,
+            'cashier_id'      => $cashier->id,
+            'organization_id' => $user->organization_id,
+          ]);
+        }
+      }
+    }
+  }
+
+  $sale->tickets()->createMany($tickets);
+
+  // Detach products and attach them. In the future, do this only if they differ
+  $sale->products()->detach();
+
+  $products = [];
+
+  foreach ($request->products as $product)
+  {
+    if((int)$product['amount'] > 0)
+    {
+      // Add product quantities
+      for ($i = 1; $i <= $product['amount']; $i++)
+      array_push($products, $product['id']);
+    }
+  }
+
+  $sale->products()->attach($products);
+
+  // Update grades. In the future, do this only if they differ
+  $sale->grades()->detach();
+
+  // Attaching grades if they exist
+  if (isset($request->grades))
+    if (count($request->grades) > 0)
+      $sale->grades()->attach($request->grades);
+
+  // Attaching an array of events to an organization
+  $sale->organization->events()->attach($request->events);
+
+  return response([
+    "message" => "Sale #$sale->id updated successfully!",
+    "data"    => $sale
+  ]);
+});
+
+// Refund for new sale
+Route::get('sales/{id}/refund', function (Request $request, $id) {
+  
+  $sale = Sale::find($id);
+
+  $user    = User::find($request->customer);
+  $cashier = User::find($request->creator_id);
+
+  $sale->memo()->create([
+    "author_id" => $cashier->id,
+    "message"   => $request->memo,
+    "sale_id"   => $sale->id,
+  ]);
+
+  $refund = new Payment([
+    "cashier_id"        => $cashier->id,
+    "payment_method_id" => $sale->payments->first->payment_method_id,
+    "tendered"          => - (double)$sale->payments->sum("tendered"),
+    "total"             => - (double)$sale->payments->sum("total"),
+    "change_due"        => - (double)$sale->payments->sum("change_due"),
+    "source"            => "admin",
+    "sale_id"           => $sale->id,
+    "refunded"          => false, 
+  ]);
+
+  $sale->payments()->save($refund);
+
+  $sale->status != "canceled" ? "complete" : "canceled";
+
+  $sale->tickets()->delete();
+
+  $sale->save();
+
+  return response([
+    "message" => "Sale #$sale->id refunded succesfully!",
+    "data"    => $sale,
+  ]);
+}); 
 
 Route::get('calendar-events', function() {
   $today = Date::parse()->format('Y-m-d');
@@ -374,6 +515,7 @@ Route::get('event/{event}', function(Event $event) {
         $quantity = $sale->tickets->where('ticket_type_id', $ticket->ticket_type_id)->where('event_id', $event->id)->count();
         //$quantity = $sale->events[0]->show_id == 1 ? $q : $q/2;
         $ticketsArray = array_prepend($ticketsArray, [
+          'id'       => $ticket->type->id,
           'type'     => $ticket->type->name,
           'price'    => $ticket->type->price,
           'quantity' => $quantity,
@@ -542,7 +684,7 @@ Route::get('/calendar/events', function(Request $request) {
 });
 
 Route::get('staff', function() {
-  $staff = User::where('staff', true)->orderBy('name', 'asc')->get();
+  $staff = User::where('staff', true)->orderBy('firstname', 'asc')->get();
   return $staff;
 });
 
@@ -694,6 +836,11 @@ Route::get('customers', function(Request $request) {
   return $customerArray;
 });
 
+Route::get('organizations', function(Request $request) {
+  $organizations = Organization::where("id", "!=", 1)->with(["type"])->get();
+  return response($organizations);
+});
+
 Route::get('sale/{sale}', function(Sale $sale) {
   $memosArray    = [];
   $eventsArray   = [];
@@ -704,11 +851,13 @@ Route::get('sale/{sale}', function(Sale $sale) {
   foreach($sale->payments as $payment)
   {
     $paymentsArray = array_prepend($paymentsArray, [
-      'id'       => $payment->id,
-      'method'   => $payment->method->name,
-      'paid'     => number_format($payment->tendered - $payment->change_due, 2),
-      'tendered' => number_format($payment->tendered, 2),
-      'date'     => Date::parse($payment->created_at)->toDateTimeString(),
+      'id'         => $payment->id,
+      'method'     => $payment->method->name,
+      'paid'       => number_format($payment->tendered - $payment->change_due, 2),
+      'tendered'   => number_format($payment->tendered, 2),
+      'total'      => number_format($payment->total, 2, ".", ","),
+      'date'       => Date::parse($payment->created_at)->toDateTimeString(),
+      'created_at' => Date::parse($payment->created_at)->toDateTimeString(),
       'cashier'  => [
         'id'   => $payment->cashier->id,
         'name' => $payment->cashier->firstname,
@@ -719,12 +868,17 @@ Route::get('sale/{sale}', function(Sale $sale) {
   foreach($sale->products->unique('id') as $product)
   {
     $productsArray = array_prepend($productsArray, [
-      'id'       => $product->id,
-      'type'     => $product->type->name,
-      'name'     => $product->name,
-      'price'    => $product->price,
-      'cover'    => $product->cover,
-      'quantity' => $sale->products->where('id', $product->id)->count(),
+      'id'          => $product->id,
+      'type'        => [
+        'id'          => $product->type->id,
+        'name'        => $product->type->name,
+        'description' => $product->type->description,
+      ],
+      'name'        => $product->name,
+      'price'       => (double)$product->price,
+      'cover'       => asset($product->cover),
+      'quantity'    => $sale->products->where('id', $product->id)->count(),
+      'description' => $product->description,
     ]);
   }
 
@@ -734,13 +888,22 @@ Route::get('sale/{sale}', function(Sale $sale) {
     foreach($event->tickets->unique('ticket_type_id') as $ticket)
     {
       $ticketsArray = array_prepend($ticketsArray, [
-        'name' => $ticket->type->name,
-        'quantity' => $event->tickets->where('ticket_type_id', $ticket->ticket_type_id)->count(),
+        'id'          => $ticket->type->id,
+        'name'        => $ticket->type->name,
+        'event'       => [ 'id' => $event->id ],
+        'type'        => [ 'id' => $event->type->id ],
+        'amount'      => $event->tickets->where('sale_id', $sale->id)->where('ticket_type_id', $ticket->ticket_type_id)->count(),
+        'description' => $ticket->type->description,
+        'price'       => (double)$ticket->type->price,
+        'active'      => (bool)$ticket->type->active,
+        'icon'        => 'ticket',
+        'in_cashier'  => (bool)$ticket->type->in_cashier,
+        'public'      => (bool)$ticket->type->public,
       ]);
     }
     $eventsArray = array_prepend($eventsArray, [
       'id'    => $event->id,
-      'type'  => $event->type->name,
+      'type'  => $event->type,
       'color' => $event->type->color,
       'show' => [
         'id' => $event->show->id,
@@ -769,6 +932,7 @@ Route::get('sale/{sale}', function(Sale $sale) {
   }
   return [
     'id'      => $sale->id,
+    'refund'  => (bool)$sale->refund,
     'status'  => $sale->status,
     'source'  => $sale->source,
     'memos'   => $memosArray,
@@ -812,6 +976,7 @@ Route::get('sale/{sale}', function(Sale $sale) {
     'payments'             => $paymentsArray,
     'created_at'           => Date::parse($sale->created_at)->toDateTimeString(),
     'updated_at'           => Date::parse($sale->updated_at)->toDateTimeString(),
+    'taxable'              => $sale->taxable,
   ];
 });
 
@@ -821,7 +986,7 @@ Route::get('payment-methods', function() {
 });
 
 Route::get('event-types', function() {
-  $eventTypes = EventType::where('id', '!=', 1)->orderBy('name', 'asc')->get();
+  $eventTypes = EventType::where('id', '!=', 1)->orderBy('name', 'asc')->with("allowedTickets")->get();
   return $eventTypes;
 });
 
@@ -841,6 +1006,7 @@ Route::get("allowedTickets", function(Request $request) {
     return [
       "id"          => $ticket->id,
       "name"        => $ticket->name,
+      "type"        => [ "id" => $ticket->id ],
       "description" => $ticket->description,
       "price"       => (double)number_format($ticket->price, "2", ".", ","),
       "active"      => (boolean)($ticket->active),

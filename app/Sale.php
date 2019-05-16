@@ -64,4 +64,9 @@ class Sale extends Model
       return $this->hasMany('App\SaleMemo');
     }
 
+    public function setRefundAttribute($value)
+    {
+      $this->attributes['refund'] = (bool)$value;
+    }
+
 }
