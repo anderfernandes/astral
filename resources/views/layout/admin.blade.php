@@ -23,6 +23,8 @@
   <link rel="stylesheet" href="/semantic/semantic.min.css">
   <script src="/semantic/semantic.min.js"></script>
 
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+
 </head>
 <script>
   $(document)
@@ -40,8 +42,10 @@
 
       // Initialize Semantic UI components
       $('.ui.radio.checkbox').checkbox();
+      @if (!Request::routeIs("admin.sales.index"))
       $('.ui.dropdown').dropdown({'fullTextSearch': true});
       $('.ui.dropdown.item').dropdown({on: 'hover'});
+      @endif
       $('.ui.checkbox').checkbox()
     });
 
@@ -127,7 +131,7 @@
   </script>
 
   {{-- Astral JS --}}
-  {{---- <script src="{{ asset('js/app.js') }}"></script> --}}
+  <script src="{{ mix('js/app.js') }}"></script>
 
 
 </body>

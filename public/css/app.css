@@ -1,1 +1,490 @@
-body{font-family:Arial,Helvetica Neue,sans-serif;margin:0}
+/* theme color */
+
+/* icon font path, required */
+
+/*body {
+  font-family: Arial, "Helvetica Neue", sans-serif;
+  margin: 0 0 0 0;
+}*/
+
+.observer {
+  height: 1px !important;
+}
+
+textarea {
+  font: inherit;
+}
+
+#top {
+  position: fixed;
+  z-index: 1;
+  padding: 0 0 0 0 !important;
+  margin-top: -1em;
+  width: 100vw !important;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.ui.segment#event-type:hover {
+  background-color: transparent !important;
+  border-width: 1px;
+  border-color: white;
+  cursor: pointer;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.ui.segment#event-type {
+  cursor: pointer;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.card#event-type:hover > .content > .description {
+  color: black !important;
+}
+
+.header > .ui.label {
+  border-color: white !important;
+  border-width: 1px !important;
+  color: white;
+  background-color: transparent;
+}
+
+.ui.sale.segment {
+  cursor: pointer !important;
+}
+
+.list-enter-active,
+.list-leave-active,
+.list-move {
+  -webkit-transition: 0.5s cubic-bezier(0.6, 0.12, 0.34, 0.95);
+  transition: 0.5s cubic-bezier(0.6, 0.12, 0.34, 0.95);
+  -webkit-transition-property: opacity, -webkit-transform;
+  transition-property: opacity, -webkit-transform;
+  transition-property: opacity, transform;
+  transition-property: opacity, transform, -webkit-transform;
+}
+
+.list-enter {
+  opacity: 0;
+  -webkit-transform: translateX(50px) scaleY(0.5);
+          transform: translateX(50px) scaleY(0.5);
+}
+
+.list-enter-to {
+  opacity: 1;
+  -webkit-transform: translateX(0) scaleY(1);
+          transform: translateX(0) scaleY(1);
+}
+
+.list-leave-active {
+  position: absolute;
+}
+
+.list-leave-to {
+  opacity: 0;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
+  -webkit-transform-origin: center-top;
+          transform-origin: center-top;
+}
+
+/*.list-enter, .list-leave-to {
+  opacity: 0;
+  transition: translateY(30px);
+}*/
+
+.ui.sale.segment .header,
+.ui.sale.segment .meta {
+  color: white !important;
+}
+
+/** OPEN SALE STYLES **/
+
+/** Switching color of sale box **/
+
+.ui.open.sale.segment {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: #6435c9 !important;
+  border: white 1px solid !important;
+}
+
+.ui.open.sale.segment:hover {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: white   !important;
+  border: #6435c9 1px solid !important;
+}
+
+/** Switching text color of sale box **/
+
+.ui.open.sale.segment .header,
+.ui.open.sale.segment .meta {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.open.sale.segment:hover .header,
+.ui.open.sale.segment:hover .meta,
+.ui.open.sale.segment:hover .ui.label:not(.violet) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #6435c9 !important;
+}
+
+.ui.open.sale.segment:hover .ui.event-type.label {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.open.sale.segment:hover .ui.label:not(.event-type) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border: #6435c9 1px solid !important;
+}
+
+/** COMPLETE SALE STYLES **/
+
+/** Switching color of sale box **/
+
+.ui.complete.sale.segment {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: #21ba45 !important;
+  border: white 1px solid !important;
+}
+
+.ui.complete.sale.segment:hover {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: white   !important;
+  border: #21ba45 1px solid !important;
+}
+
+/** Switching text color of sale box **/
+
+.ui.complete.sale.segment .header,
+.ui.complete.sale.segment .meta {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.complete.sale.segment:hover .header,
+.ui.complete.sale.segment:hover .meta,
+.ui.complete.sale.segment:hover .ui.label:not(.green) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #21ba45 !important;
+}
+
+.ui.complete.sale.segment:hover .ui.event-type.label {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.complete.sale.segment:hover .ui.label:not(.event-type) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border: #21ba45 1px solid !important;
+}
+
+/** TENTATIVE SALE STYLES **/
+
+/** Switching color of sale box **/
+
+.ui.tentative.sale.segment {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: #fbbd08 !important;
+  border: white 1px solid !important;
+}
+
+.ui.tentative.sale.segment:hover {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: white   !important;
+  border: #fbbd08 1px solid !important;
+}
+
+/** Switching text color of sale box **/
+
+.ui.tentative.sale.segment .header,
+.ui.tentative.sale.segment .meta {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.tentative.sale.segment:hover .header,
+.ui.tentative.sale.segment:hover .meta,
+.ui.tentative.sale.segment:hover .ui.label:not(.yellow) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #fbbd08 !important;
+}
+
+.ui.tentative.sale.segment:hover .ui.event-type.label {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.tentative.sale.segment:hover .ui.label:not(.event-type) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border: #fbbd08 1px solid !important;
+}
+
+/** NO SHOW SALE STYLES **/
+
+/** Switching color of sale box **/
+
+.ui.no.show.sale.segment {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: db2828 !important;
+  border: white 1px solid !important;
+}
+
+.ui.no.show.sale.segment:hover {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: white   !important;
+  border: #f2711c 1px solid !important;
+}
+
+/** Switching text color of sale box **/
+
+.ui.no.show.sale.segment .header,
+.ui.no.show.sale.segment .meta {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.no.show.sale.segment:hover .header,
+.ui.no.show.sale.segment:hover .meta,
+.ui.no.show.sale.segment:hover .ui.label:not(.orange) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #f2711c !important;
+}
+
+.ui.no.show.sale.segment:hover .ui.event-type.label {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.no.show.sale.segment:hover .ui.label:not(.event-type) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border: #f2711c 1px solid !important;
+}
+
+/** CANCELED SALE STYLES **/
+
+/** Switching color of sale box **/
+
+.ui.canceled.sale.segment {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: db2828 !important;
+  border: white 1px solid !important;
+}
+
+.ui.canceled.sale.segment:hover {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: white   !important;
+  border: #db2828 1px solid !important;
+}
+
+/** Switching text color of sale box **/
+
+.ui.canceled.sale.segment .header,
+.ui.canceled.sale.segment .meta {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.canceled.sale.segment:hover .header,
+.ui.canceled.sale.segment:hover .meta,
+.ui.canceled.sale.segment:hover .ui.label:not(.red) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #db2828 !important;
+}
+
+.ui.canceled.sale.segment:hover .ui.event-type.label {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.canceled.sale.segment:hover .ui.label:not(.event-type) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border: #db2828 1px solid !important;
+}
+
+/** CONFIRMED SALE STYLES **/
+
+/** Switching color of sale box **/
+
+.ui.confirmed.sale.segment {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: white !important;
+  border: #21ba45 1px solid !important;
+}
+
+.ui.confirmed.sale.segment .ui.label:not(.event-type) {
+  background-color: white !important;
+  border: #21ba45 1px solid !important;
+  color: #21ba45 !important;
+}
+
+.ui.confirmed.sale.segment:hover {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: black   !important;
+  border: black 1px solid !important;
+}
+
+/** Switching text color of sale box **/
+
+.ui.confirmed.sale.segment .header,
+.ui.confirmed.sale.segment .meta {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #21ba45 !important;
+}
+
+.ui.confirmed.sale.segment:hover .header,
+.ui.confirmed.sale.segment:hover .meta,
+.ui.confirmed.sale.segment:hover .ui.label:not(.green) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #21ba45 !important;
+}
+
+.ui.confirmed.sale.segment:hover .ui.event-type.label {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: white !important;
+}
+
+.ui.confirmed.sale.segment:hover .ui.pointing.green.label {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #21ba45 !important;
+  background-color: white !important;
+}
+
+.ui.confirmed.sale.segment:hover .ui.label:not(.event-type) {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border: #21ba45 1px solid !important;
+  background-color: black !important;
+}
+
+/** CANCELED LABEL STYLES **/
+
+.ui.confirmed.sale.segment:hover .ui.red.label,
+.ui.confirmed.sale.segment .ui.red.label,
+.ui.complete.sale.segment:hover .ui.red.label,
+.ui.no.show.sale.segment:hover .ui.red.label,
+.ui.open.sale.segment:hover .ui.red.label,
+.ui.tentative.sale.segment:hover .ui.red.label {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border: #db2828 1px solid !important;
+  background-color: #db2828 !important;
+  color: white !important;
+}
+
+.ui.pointing.label {
+  z-index: 0 !important;
+}
+
+/** Slider **/
+
+input[type=range] {
+  -webkit-appearance: none;
+  /* Hides the slider so that custom slider can be made */
+  width: 100%;
+  /* Specific width is required for Firefox. */
+  background: transparent;
+  /* Otherwise white in Chrome */
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none;
+  /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  /* Hides the slider so custom styles can be added */
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  /* Hides the slider so that custom slider can be made */
+  width: 100%;
+  /* Specific width is required for Firefox. */
+  background: transparent;
+  /* Otherwise white in Chrome */
+}
+
+/* Special styling for WebKit/Blink */
+
+input[type=range]::-webkit-slider-thumb {
+  height: 1.5em;
+  width: 1.5em;
+  background: #FFFFFF -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.5)));
+  background: #FFFFFF linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+  border-radius: 100%;
+  -webkit-box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15), 0 0 0 1px rgba(34, 36, 38, 0.15) inset;
+  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15), 0 0 0 1px rgba(34, 36, 38, 0.15) inset;
+  -webkit-transition: background 0.3s ease;
+  transition: background 0.3s ease;
+  margin-top: -7px;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.05);
+  height: 0.4em;
+  border-color: white;
+}
+
