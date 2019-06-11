@@ -155,6 +155,7 @@
       await this.fetchCustomers()
       await this.fetchOrganizations()
       await this.fetchCashiers()
+      await this.fetchSales()
       
       this.isLoading = await false
     },

@@ -1,16 +1,18 @@
 <template>
-  <div class="ui container">
+  <div class="ui container" style="min-height:100vh !important">
     
     <sui-dimmer :active="isLoading" inverted>
       <sui-loader content="Loading..."></sui-loader>
     </sui-dimmer>
     
-    <div class="ui basic segment">
+    <div class="ui basic segment" v-if="!isLoading">
     
       <modal></modal>
     
       <transition name="fade" mode="out-in">
-        <div id="form" v-if="!isLoading">
+
+        <div id="form">
+
           <!--- Buttons --->
           <div class="ui form">
             <div class="four inline fields" id="sale-form-fixed">
@@ -40,7 +42,7 @@
           <!-- Form -->
           <div class="ui container">
             
-            <br>
+            <br><br>
 
             <!--- Sale --->
             <div class="ui segment">
@@ -50,7 +52,7 @@
               <sui-form>
                 <sui-form-field required>
                   <label>Sell to</label>
-                  <sui-dropdown fluid selection direction="upward" v-if="sell_to"
+                  <sui-dropdown fluid selection v-if="sell_to"
                                 v-model="sale.sell_to"
                                 :options="sell_to"
                                 placeholder="Sell To"
@@ -162,7 +164,7 @@
                               <div class="ui right labeled input">
                                 <input type="text" 
                                         style="width:auto"
-                                        size="1"
+                                        size="2"
                                         min="0" 
                                         v-model.number="product.amount"
                                         @input="$store.commit('CALCULATE_TOTALS')" 
@@ -235,8 +237,8 @@
                           {{ errors.reference[0] }}
                         </sui-label>
                         <sui-label basic color="red" pointing 
-                        v-if="!hasReference">
-                          What's the reference of the Credit Card or Check?
+                          v-if="!hasReference">
+                          What's the reference of the {{ getPaymentMethod(this.sale.payment_method) }}?
                         </sui-label>
                     </transition>
                   </sui-form-field>
@@ -309,18 +311,32 @@
                 <textarea v-model="sale.memo" 
                           cols="8" 
                           rows="2" 
-                          placeholder="Write a memo" 
-                          style="margin-bottom:10em"></textarea>
-              </div>
-              <transition mode="out-in" name="fade">
+                          placeholder="Write a memo"></textarea>
+                <transition mode="out-in" name="fade">
                   <sui-label basic color="red" pointing 
                               v-if="errors && errors.hasOwnProperty('memo')">
                     {{ errors.memo[0] }}
                   </sui-label>
                 </transition>
+                <transition mode="out-in" name="fade">
+                  <sui-label basic color="red" pointing 
+                              v-if="$route.name == 'edit' && sale.memo.length < 5">
+                              Why are you changing this sale?
+                  </sui-label>
+                </transition>
+              </div>
             </div>
             
           </div>
+
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+
           <!--- Totals --->
           <div class="ui grid">
             <div class="sixteen wide column" style="padding: 0 0 0 0 !important">
@@ -407,8 +423,6 @@
   import Modal     from "../Modal.vue"
   import EventForm from "../forms/EventSale.vue"
 
-  const SERVER = "http://10.51.150.214:8000"
-
   export default {
     data: () => ({
       active_tab: 0,
@@ -466,6 +480,12 @@
     },
 
     methods: {
+
+      getPaymentMethod(id) {
+        let name = this.payment_methods.find(payment_method => payment_method.value == id)
+        return name.text
+      },
+
       // Set tendered to sale total automatically if sale isn't cash, set it to 0 if it is cash
       setTendered() {
         this.sale.tendered = this.sale.payment_method == 1 ? 0 : this.total
@@ -473,7 +493,7 @@
 
       async fetchSale() {
         try {
-          const response = await axios.get(`${SERVER}/api/sale/${this.$route.params.id}`)
+          const response = await axios.get(`/api/sale/${this.$route.params.id}`)
           
           let sale = await response.data
 
@@ -523,7 +543,7 @@
 
           sale.products = sale.products.map(product => product.id)
 
-          sale.payment_method = 1
+          sale.payment_method = null
 
           Object.assign(this.sale, sale)
 
@@ -569,12 +589,12 @@
           let response = {}
           
           if (this.$route.name == "create") {
-            response = await axios.post(`${SERVER}/api/sales`, data)
+            response = await axios.post(`/api/sales`, data)
             let sale = response.data.data
           }
             
           else if (this.$route.name == "edit") {
-            response = await axios.post(`${SERVER}/api/sales/${this.$route.params.id}`, data)
+            response = await axios.post(`/api/sales/${this.$route.params.id}`, data)
           }
 
           const sale = response.data.data
@@ -608,10 +628,11 @@
       },
 
       enableSubmit() {
+        let hasMemo              = this.$route.name == "edit" ? this.sale.memo.length >= 5 : true
         let hasSellTo            = this.sale.sell_to != null
         let hasSaleStatus        = this.sale.status != null
         let hasProductsOrTickets = (this.sale.tickets.length > 0 || this.sale.products.length > 0)
-        return (hasSellTo && hasSaleStatus && hasProductsOrTickets && this.hasReference)
+        return (hasSellTo && hasSaleStatus && hasProductsOrTickets && this.hasReference && hasMemo)
       },
       
       ...mapGetters(['customers', 'organizations', 'statuses', 'sell_to', 'taxable', 
@@ -651,7 +672,7 @@
     width: 77.3%;
     z-index: 100;
     background-color: white;
-    margin-top: -3rem;
+    margin-top: -1rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
   }

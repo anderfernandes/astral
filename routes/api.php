@@ -897,7 +897,7 @@ Route::get('sale/{sale}', function(Sale $sale) {
       'description' => $product->description,
     ]);
   }
-
+  $eventsArray = [];
   foreach($sale->events as $event)
   {
     $ticketsArray = [];
@@ -918,7 +918,8 @@ Route::get('sale/{sale}', function(Sale $sale) {
           'public'      => (bool)$ticket->type->public,
         ]);
     }
-    $eventsArray = array_prepend($eventsArray, [
+    
+    array_push($eventsArray, [
       'id'    => $event->id,
       'start' => Date::parse($event->start)->toDateTimeString(),
       'end'   => Date::parse($event->end)->toDateTimeString(),

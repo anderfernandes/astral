@@ -132,6 +132,10 @@
 
   {{-- Astral JS --}}
   <script src="{{ mix('js/app.js') }}"></script>
+  
+  <style>
+    #app { margin-top: -2rem !important }
+  </style>
 
 
 </body>

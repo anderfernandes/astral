@@ -52,7 +52,7 @@
 </script>
 
 
-<style>
+<style scoped>
   .observer {
     height: 1px !important;
   }

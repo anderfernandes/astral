@@ -1,7 +1,5 @@
 import axios from "axios"
 
-const SERVER = "http://10.51.150.214:8000"
-
 let getDefaultState = () => ({
     // Sale data
     sale: {
@@ -22,7 +20,7 @@ let getDefaultState = () => ({
       change_due        : 0,
       reference         : null,
       payments          : [],
-      memo              : null, // New memo
+      memo              : "", // New memo
       memos             : [],
       subtotal          : 0,
       tax               : 0,
@@ -192,7 +190,7 @@ export default {
     // Fetch grades
     async fetchGrades({ commit }) {
       try {
-        const response = await axios.get(`${SERVER}/api/grades`)
+        const response = await axios.get(`/api/grades`)
         let grades     = response.data.data.map(grade => ({
           key  : grade.id,
           text : grade.name,
@@ -208,7 +206,7 @@ export default {
     async fetchProducts({ commit }) {
       try {
         let product_options = []
-        const response = await axios.get(`${SERVER}/api/products`)
+        const response = await axios.get(`/api/products`)
         let products   = response.data.data.map(product => {
           Object.assign(product, { amount : 1 })
           product_options.push(product)
@@ -229,7 +227,7 @@ export default {
     // Fetch payment methods
     async fetchPaymentMethods({ commit }) {
       try {
-        const response = await axios.get(`${SERVER}/api/payment-methods`)
+        const response = await axios.get(`/api/payment-methods`)
         let payment_methods = response.data.data.map(payment_method => ({
 					key  : payment_method.id, 
 					text : payment_method.name,
@@ -245,7 +243,7 @@ export default {
     // Fetch settings
     async fetchSettings({ commit }) {
       try {
-        const response = await axios.get(`${SERVER}/api/settings`)
+        const response = await axios.get(`/api/settings`)
         let tax        = parseFloat(response.data.tax) / 100
         await commit('SET_SETTINGS', { tax: tax })
         //await context.commit('HAS_SETTINGS', true)

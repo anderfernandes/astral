@@ -144,8 +144,6 @@
   import flatpickr from 'vue-flatpickr-component'
   import 'flatpickr/dist/flatpickr.css'
 
-  const SERVER = "http://10.51.150.214:8000"
-
   export default {
     data: () => ({
       flatpickrConfig: {
@@ -196,7 +194,7 @@
       async fetchEventOptions() {
         let date = format(new Date(this.date), "YYYY-MM-DD")
         try {
-          const response = await axios.get(`${SERVER}/api/events?start=${date}&type=${ this.event_type_id }`)
+          const response = await axios.get(`/api/events?start=${date}&type=${ this.event_type_id }`)
           // Array with all event objects to show in box below event selection dropdown
           this.eventOptions = response.data.map(event => {
             this.events_data.push(event)
@@ -216,7 +214,7 @@
       // Fetch Sale Tickets
       async fetchSaleTickets() {
         try {
-          const response = await axios.get(`${SERVER}/api/sale/${this.$route.params.id}`)
+          const response = await axios.get(`/api/sale/${this.$route.params.id}`)
           let tickets = response.data.events[this.$vnode.key - 1].tickets.map(ticket => ticket.id)
           //await this.$store.dispatch("setSelectedTickets", tickets)
           this.tickets = tickets
@@ -232,7 +230,7 @@
       // Fetch Tickets Types
       async fetchTicketsTypes() {
         try {
-          const response = await axios.get(`${SERVER}/api/allowedTickets?event_type=${ this.event_type_id }`)
+          const response = await axios.get(`/api/allowedTickets?event_type=${ this.event_type_id }`)
           this.ticketOptions = response.data.data.map(ticket => {
             Object.assign(ticket, { amount: 1, event: { id: 1 } })
             this.tickets_data.push(ticket)
@@ -323,3 +321,9 @@
     },
   }
 </script>
+
+<style scope>
+
+  input { padding-right: 0 !important }
+
+</style>

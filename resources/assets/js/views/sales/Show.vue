@@ -406,8 +406,6 @@
   import axios          from "axios"
   import Modal from '../../components/Modal.vue'
   
-  const SERVER = "http://10.51.150.214:8000"
-  
   export default {
     
     data: () => ({
@@ -457,7 +455,7 @@
       
       async fetchSale() {
         try {
-          const response = await axios.get(`${SERVER}/api/sale/${this.$route.params.id}`)
+          const response = await axios.get(`/api/sale/${this.$route.params.id}`)
           this.sale = await response.data
         } catch (error) {
           alert(`Error in fetchSale: ${error.message}`)
@@ -474,7 +472,7 @@
 
         try {
           
-          const response = await axios.post(`${SERVER}/api/memos`, data)
+          const response = await axios.post(`/api/memos`, data)
           
           this.memo = null
           
@@ -507,7 +505,7 @@
             memo       : this.refund_memo,
           }
           
-          const response = await axios.post(`${SERVER}/api/sales/${this.$route.params.id}/refund`, data)
+          const response = await axios.post(`/api/sales/${this.$route.params.id}/refund`, data)
 
           await this.fetchSale()
             
@@ -521,7 +519,7 @@
             this.$store.commit("TOGGLE_SHOW_ALERT", true)
 
         } catch (error) {
-
+          alert(`Error submitting sale: ${ error.message }`)
         }
       }
     }
