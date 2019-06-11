@@ -2,8 +2,8 @@
   <div class="item">
     <div class="content">
       <!-- Header-->
-      <div class="header">
-        <sui-dropdown class="icon small black" icon="sidebar" button pointing floating>
+      <div class="sale box header">
+        <sui-dropdown class="icon small black" icon="ellipsis vertical" button pointing floating >
           <sui-dropdown-menu>
             <sui-dropdown-item @click="$router.push({name: 'show', params: { id: sale.id }})">
               <sui-icon name="eye"></sui-icon>
@@ -12,22 +12,6 @@
             <sui-dropdown-item @click="$router.push({name: 'edit', params: { id: sale.id }})">
               <sui-icon name="edit"></sui-icon>
               Edit
-            </sui-dropdown-item>
-            <sui-dropdown-item>
-              <sui-icon name="file"></sui-icon>
-              Confirmation
-            </sui-dropdown-item>
-            <sui-dropdown-item>
-              <sui-icon name="file"></sui-icon>
-              Invoice
-            </sui-dropdown-item>
-            <sui-dropdown-item>
-              <sui-icon name="file"></sui-icon>
-              Receipt
-            </sui-dropdown-item>
-            <sui-dropdown-item>
-              <sui-icon name="ticket"></sui-icon>
-              Tickets
             </sui-dropdown-item>
           </sui-dropdown-menu>
         </sui-dropdown>
@@ -155,5 +139,12 @@
     },
   }
 </script>
+
+<style scoped>
+
+  .ui.small.black.button { background-color: transparent }
+
+</style>
+
 
   

@@ -52,7 +52,7 @@
 </script>
 
 
-<style scoped>
+<style>
   .observer {
     height: 1px !important;
   }
@@ -94,7 +94,7 @@
     color: black !important;
   }
 
-  .header > .ui.label {
+  .sale.box.header .ui.label {
     border-color: white !important;
     border-width: 1px !important;
     color: white !important;
@@ -160,6 +160,7 @@
 
   .ui.open.sale.segment:hover .header,
   .ui.open.sale.segment:hover .meta,
+  .ui.open.sale.segment:hover .ui.black.button,
   .ui.open.sale.segment:hover .ui.label:not(.violet) { 
     transition: all 0.5s;
     color: #6435c9 !important;
@@ -200,6 +201,7 @@
 
   .ui.complete.sale.segment:hover .header,
   .ui.complete.sale.segment:hover .meta,
+  .ui.complete.sale.segment:hover     .ui.black.button,
   .ui.complete.sale.segment:hover .ui.label:not(.green) { 
     transition: all 0.5s;
     color: #21ba45 !important;
@@ -240,6 +242,7 @@
 
   .ui.tentative.sale.segment:hover .header,
   .ui.tentative.sale.segment:hover .meta,
+  .ui.tentative.sale.segment:hover .ui.black.button,
   .ui.tentative.sale.segment:hover .ui.label:not(.yellow) { 
     transition: all 0.5s;
     color: #fbbd08 !important;
@@ -279,6 +282,7 @@
 
   .ui.no.show.sale.segment:hover .header,
   .ui.no.show.sale.segment:hover .meta,
+  .ui.no.show.sale.segment:hover .ui.black.button,
   .ui.no.show.sale.segment:hover .ui.label:not(.orange) { 
     transition: all 0.5s;
     color: #f2711c !important;
@@ -319,6 +323,7 @@
 
   .ui.canceled.sale.segment:hover .header,
   .ui.canceled.sale.segment:hover .meta,
+  .ui.canceled.sale.segment:hover .ui.black.button,
   .ui.canceled.sale.segment:hover .ui.label:not(.red) { 
     transition: all 0.5s;
     color: #db2828 !important;
@@ -366,6 +371,7 @@
 
   .ui.confirmed.sale.segment:hover .header,
   .ui.confirmed.sale.segment:hover .meta,
+  .ui.confirmed.sale.segment:hover .ui.black.button,
   .ui.confirmed.sale.segment:hover .ui.label:not(.green) { 
     transition: all 0.5s;
     color: #21ba45 !important;
@@ -384,11 +390,15 @@
 
   /** CANCELED LABEL STYLES **/
   .ui.confirmed.sale.segment:hover .ui.red.label,
-  .ui.confirmed.sale.segment .ui.red.label,
-  .ui.complete.sale.segment:hover .ui.red.label,
-  .ui.no.show.sale.segment:hover .ui.red.label,
-  .ui.open.sale.segment:hover .ui.red.label,
-  .ui.tentative.sale.segment:hover .ui.red.label {
+  .ui.confirmed.sale.segment       .ui.red.label,
+  .ui.complete.sale.segment:hover  .ui.red.label,
+  .ui.complete.sale.segment        .ui.red.label,
+  .ui.no.show.sale.segment:hover   .ui.red.label,
+  .ui.no.show.sale.segment         .ui.red.label,
+  .ui.open.sale.segment:hover      .ui.red.label,
+  .ui.open.sale.segment            .ui.red.label,
+  .ui.tentative.sale.segment:hover .ui.red.label,
+  .ui.tentative.sale.segment .ui.red.label {
     transition: all 0.5s;
     border: #db2828 1px solid !important;
     background-color: #db2828 !important;

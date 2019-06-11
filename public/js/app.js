@@ -40430,19 +40430,19 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(362)
+  __webpack_require__(834)
 }
 var normalizeComponent = __webpack_require__(6)
 /* script */
 var __vue_script__ = __webpack_require__(365)
 /* template */
-var __vue_template__ = __webpack_require__(366)
+var __vue_template__ = __webpack_require__(836)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-50e73d1e"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -40475,46 +40475,8 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 362 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(363);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(31)("b55bddd8", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-50e73d1e\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./App.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-50e73d1e\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./App.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 363 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(24)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n.observer[data-v-50e73d1e] {\n  height: 1px !important;\n}\ntextarea[data-v-50e73d1e] {\n  font: inherit;\n}\n#top[data-v-50e73d1e] {\n  position: fixed;\n  z-index: 1;\n  padding: 0 0 0 0 !important;\n  margin-top: -1em;\n  width: 100vw !important;\n}\n.fade-enter-active[data-v-50e73d1e], .fade-leave-active[data-v-50e73d1e] {\n  -webkit-transition: opacity 0.5s;\n  transition: opacity 0.5s;\n}\n.fade-enter[data-v-50e73d1e], .fade-leave-to[data-v-50e73d1e] {\n  opacity: 0;\n}\n.ui.segment#event-type[data-v-50e73d1e]:hover {\n  background-color: transparent !important;\n  border-width: 1px;\n  border-color: white;\n  cursor: pointer;\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n}\n.ui.segment#event-type[data-v-50e73d1e] {\n  cursor: pointer;\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n}\n.card#event-type:hover > .content > .description[data-v-50e73d1e] {\n  color: black !important;\n}\n.header > .ui.label[data-v-50e73d1e] {\n  border-color: white !important;\n  border-width: 1px !important;\n  color: white !important;\n  background-color: transparent !important;\n}\n.ui.sale.segment[data-v-50e73d1e] {\n  cursor: pointer !important;\n}\n.list-enter-active[data-v-50e73d1e], .list-leave-active[data-v-50e73d1e], .list-move[data-v-50e73d1e] {\n  -webkit-transition: 0.5s cubic-bezier(0.6, 0.12, 0.34, 0.95);\n  transition: 0.5s cubic-bezier(0.6, 0.12, 0.34, 0.95);\n  -webkit-transition-property: opacity, -webkit-transform;\n  transition-property: opacity, -webkit-transform;\n  transition-property: opacity, transform;\n  transition-property: opacity, transform, -webkit-transform;\n}\n.list-enter[data-v-50e73d1e] {\n  opacity: 0;\n  -webkit-transform: translateX(50px) scaleY(0.5);\n          transform: translateX(50px) scaleY(0.5);\n}\n.list-enter-to[data-v-50e73d1e] {\n  opacity: 1;\n  -webkit-transform: translateX(0) scaleY(1);\n          transform: translateX(0) scaleY(1);\n}\n.list-leave-active[data-v-50e73d1e] { position: absolute;\n}\n.list-leave-to[data-v-50e73d1e] {\n  opacity: 0;\n  -webkit-transform: scaleY(0);\n          transform: scaleY(0);\n  -webkit-transform-origin: center-top;\n          transform-origin: center-top;\n}\n\n/*.list-enter, .list-leave-to {\n  opacity: 0;\n  transition: translateY(30px);\n}*/\n.ui.sale.segment .header[data-v-50e73d1e], .ui.sale.segment .meta[data-v-50e73d1e] {\n  color: white !important;\n}\n\n/** OPEN SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.open.sale.segment[data-v-50e73d1e]       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: #6435c9 !important;\n  border: white 1px solid !important;\n}\n.ui.open.sale.segment[data-v-50e73d1e]:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white   !important; \n  border: #6435c9 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.open.sale.segment .header[data-v-50e73d1e], \n.ui.open.sale.segment .meta[data-v-50e73d1e] { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.open.sale.segment:hover .header[data-v-50e73d1e],\n.ui.open.sale.segment:hover .meta[data-v-50e73d1e],\n.ui.open.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.violet) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #6435c9 !important;\n}\n.ui.open.sale.segment:hover .ui.event-type.label[data-v-50e73d1e] {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.open.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #6435c9 1px solid !important;\n  color: #6435c9 !important;\n}\n\n/** COMPLETE SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.complete.sale.segment[data-v-50e73d1e]       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: #21ba45 !important;\n  border: white 1px solid !important;\n}\n.ui.complete.sale.segment[data-v-50e73d1e]:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white   !important; \n  border: #21ba45 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.complete.sale.segment .header[data-v-50e73d1e], \n.ui.complete.sale.segment .meta[data-v-50e73d1e] { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.complete.sale.segment:hover .header[data-v-50e73d1e],\n.ui.complete.sale.segment:hover .meta[data-v-50e73d1e],\n.ui.complete.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.green) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #21ba45 !important;\n}\n.ui.complete.sale.segment:hover .ui.event-type.label[data-v-50e73d1e] {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.complete.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #21ba45 1px solid !important;\n  color : #21ba45 !important;\n}\n\n/** TENTATIVE SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.tentative.sale.segment[data-v-50e73d1e]       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: #fbbd08 !important;\n  border: white 1px solid !important;\n}\n.ui.tentative.sale.segment[data-v-50e73d1e]:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white   !important; \n  border: #fbbd08 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.tentative.sale.segment .header[data-v-50e73d1e], \n.ui.tentative.sale.segment .meta[data-v-50e73d1e] { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.tentative.sale.segment:hover .header[data-v-50e73d1e],\n.ui.tentative.sale.segment:hover .meta[data-v-50e73d1e],\n.ui.tentative.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.yellow) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #fbbd08 !important;\n}\n.ui.tentative.sale.segment:hover .ui.event-type.label[data-v-50e73d1e] {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.tentative.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #fbbd08 1px solid !important;\n}\n\n/** NO SHOW SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.no.show.sale.segment[data-v-50e73d1e]       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: db2828 !important;\n  border: white 1px solid !important;\n}\n.ui.no.show.sale.segment[data-v-50e73d1e]:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white   !important; \n  border: #f2711c 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.no.show.sale.segment .header[data-v-50e73d1e], \n.ui.no.show.sale.segment .meta[data-v-50e73d1e] { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.no.show.sale.segment:hover .header[data-v-50e73d1e],\n.ui.no.show.sale.segment:hover .meta[data-v-50e73d1e],\n.ui.no.show.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.orange) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #f2711c !important;\n}\n.ui.no.show.sale.segment:hover .ui.event-type.label[data-v-50e73d1e] {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.no.show.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #f2711c 1px solid !important;\n  color: #f2711c !important;\n}\n\n/** CANCELED SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.canceled.sale.segment[data-v-50e73d1e]       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: db2828 !important;\n  border: white 1px solid !important;\n}\n.ui.canceled.sale.segment[data-v-50e73d1e]:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white   !important; \n  border: #db2828 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.canceled.sale.segment .header[data-v-50e73d1e], \n.ui.canceled.sale.segment .meta[data-v-50e73d1e] { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.canceled.sale.segment:hover .header[data-v-50e73d1e],\n.ui.canceled.sale.segment:hover .meta[data-v-50e73d1e],\n.ui.canceled.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.red) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #db2828 !important;\n}\n.ui.canceled.sale.segment:hover .ui.event-type.label[data-v-50e73d1e] {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.canceled.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #db2828 1px solid !important;\n  color: #db2828 !important;\n}\n\n\n/** CONFIRMED SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.confirmed.sale.segment[data-v-50e73d1e]       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white !important;\n  border: #21ba45 1px solid !important;\n}\n.ui.confirmed.sale.segment .ui.label[data-v-50e73d1e]:not(.event-type) {\n  background-color: white !important;\n  border: #21ba45 1px solid !important;\n  color: #21ba45 !important;\n}\n.ui.confirmed.sale.segment[data-v-50e73d1e]:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: black   !important; \n  border: black 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.confirmed.sale.segment .header[data-v-50e73d1e], \n.ui.confirmed.sale.segment .meta[data-v-50e73d1e] { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #21ba45 !important;\n}\n.ui.confirmed.sale.segment:hover .header[data-v-50e73d1e],\n.ui.confirmed.sale.segment:hover .meta[data-v-50e73d1e],\n.ui.confirmed.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.green) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #21ba45 !important;\n}\n.ui.confirmed.sale.segment:hover .ui.event-type.label[data-v-50e73d1e] {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.confirmed.sale.segment:hover .ui.label[data-v-50e73d1e]:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #21ba45 1px solid !important;\n  background-color: black !important;\n}\n\n/** CANCELED LABEL STYLES **/\n.ui.confirmed.sale.segment:hover .ui.red.label[data-v-50e73d1e],\n.ui.confirmed.sale.segment .ui.red.label[data-v-50e73d1e],\n.ui.complete.sale.segment:hover .ui.red.label[data-v-50e73d1e],\n.ui.no.show.sale.segment:hover .ui.red.label[data-v-50e73d1e],\n.ui.open.sale.segment:hover .ui.red.label[data-v-50e73d1e],\n.ui.tentative.sale.segment:hover .ui.red.label[data-v-50e73d1e] {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #db2828 1px solid !important;\n  background-color: #db2828 !important;\n  color: white !important;\n}\n\n/** Slider **/\ninput[type=range][data-v-50e73d1e] {\n  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */\n  width: 100%; /* Specific width is required for Firefox. */\n  background: transparent; /* Otherwise white in Chrome */\n}\ninput[type=range][data-v-50e73d1e]::-webkit-slider-thumb {\n  -webkit-appearance: none;\n}\ninput[type=range][data-v-50e73d1e]:focus {\n  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */\n}\ninput[type=range][data-v-50e73d1e]::-ms-track {\n  width: 100%;\n  cursor: pointer;\n\n  /* Hides the slider so custom styles can be added */\n  background: transparent;\n  border-color: transparent;\n  color: transparent;\n}\ninput[type=range][data-v-50e73d1e] {\n  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */\n  width: 100%; /* Specific width is required for Firefox. */\n  background: transparent; /* Otherwise white in Chrome */\n}\n\n/* Special styling for WebKit/Blink */\ninput[type=range][data-v-50e73d1e]::-webkit-slider-thumb {\n  height: 1.5em;\n  width: 1.5em;\n  background: #FFFFFF -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.5)));\n  background: #FFFFFF linear-gradient(transparent, rgba(0, 0, 0, 0.5));\n  border-radius: 100%;\n  -webkit-box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15), 0 0 0 1px rgba(34, 36, 38, 0.15) inset;\n  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15), 0 0 0 1px rgba(34, 36, 38, 0.15) inset;\n  -webkit-transition: background 0.3s ease;\n  transition: background 0.3s ease;\n  margin-top: -7px;\n}\ninput[type=range][data-v-50e73d1e]::-webkit-slider-thumb:hover {\n  cursor: pointer;\n}\ninput[type=range][data-v-50e73d1e]::-webkit-slider-runnable-track {\n  border-radius: 4px;\n  background-color: rgba(0, 0, 0, 0.05);\n  height: 0.4em;\n  border-color: white;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
+/* 362 */,
+/* 363 */,
 /* 364 */
 /***/ (function(module, exports) {
 
@@ -40615,102 +40577,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 366 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { id: "app" } },
-    [
-      _c(
-        "transition",
-        { attrs: { mode: "out-in", name: "fade" } },
-        [_c("router-view")],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "sui-modal",
-        {
-          attrs: { basic: "" },
-          model: {
-            value: _vm.open,
-            callback: function($$v) {
-              _vm.open = $$v
-            },
-            expression: "open"
-          }
-        },
-        [
-          _vm.alert != null
-            ? _c(
-                "div",
-                {
-                  staticClass: "ui icon header",
-                  staticStyle: { "padding-bottom": "0" }
-                },
-                [
-                  _c("sui-icon", { attrs: { name: _vm.alert.icon } }),
-                  _vm._v(" " + _vm._s(_vm.alert.title) + "\n    ")
-                ],
-                1
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.alert != null
-            ? _c(
-                "div",
-                { staticClass: "content", staticStyle: { "padding-top": "0" } },
-                [_c("p", [_vm._v(_vm._s(_vm.alert.message))])]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.alert != null
-            ? _c(
-                "div",
-                { staticClass: "actions" },
-                [
-                  _c(
-                    "sui-button",
-                    {
-                      attrs: {
-                        color: _vm.buttonColor,
-                        inverted: "",
-                        icon: "check"
-                      },
-                      on: {
-                        click: function($event) {
-                          _vm.open = false
-                        }
-                      }
-                    },
-                    [_vm._v("\n        Gotcha!\n      ")]
-                  )
-                ],
-                1
-              )
-            : _vm._e()
-        ]
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-50e73d1e", module.exports)
-  }
-}
-
-/***/ }),
+/* 366 */,
 /* 367 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -44481,17 +44348,21 @@ if (hadRuntime) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(831)
+}
 var normalizeComponent = __webpack_require__(6)
 /* script */
 var __vue_script__ = __webpack_require__(374)
 /* template */
-var __vue_template__ = __webpack_require__(375)
+var __vue_template__ = __webpack_require__(833)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = null
+var __vue_scopeId__ = "data-v-b7d7f3c6"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -44540,22 +44411,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -44750,342 +44605,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 });
 
 /***/ }),
-/* 375 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "item" }, [
-    _c("div", { staticClass: "content" }, [
-      _c(
-        "div",
-        { staticClass: "header" },
-        [
-          _c(
-            "sui-dropdown",
-            {
-              staticClass: "icon small black",
-              attrs: { icon: "sidebar", button: "", pointing: "", floating: "" }
-            },
-            [
-              _c(
-                "sui-dropdown-menu",
-                [
-                  _c(
-                    "sui-dropdown-item",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.$router.push({
-                            name: "show",
-                            params: { id: _vm.sale.id }
-                          })
-                        }
-                      }
-                    },
-                    [
-                      _c("sui-icon", { attrs: { name: "eye" } }),
-                      _vm._v("\n            View\n          ")
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "sui-dropdown-item",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.$router.push({
-                            name: "edit",
-                            params: { id: _vm.sale.id }
-                          })
-                        }
-                      }
-                    },
-                    [
-                      _c("sui-icon", { attrs: { name: "edit" } }),
-                      _vm._v("\n            Edit\n          ")
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "sui-dropdown-item",
-                    [
-                      _c("sui-icon", { attrs: { name: "file" } }),
-                      _vm._v("\n            Confirmation\n          ")
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "sui-dropdown-item",
-                    [
-                      _c("sui-icon", { attrs: { name: "file" } }),
-                      _vm._v("\n            Invoice\n          ")
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "sui-dropdown-item",
-                    [
-                      _c("sui-icon", { attrs: { name: "file" } }),
-                      _vm._v("\n            Receipt\n          ")
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "sui-dropdown-item",
-                    [
-                      _c("sui-icon", { attrs: { name: "ticket" } }),
-                      _vm._v("\n            Tickets\n          ")
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v("\n      Sale #" + _vm._s(_vm.sale.id) + " \n      "),
-          _vm.sale.refund == true
-            ? _c("div", { staticClass: "ui red label" }, [
-                _c("i", { staticClass: "reply icon" }),
-                _vm._v("\n        refund\n      ")
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c("div", { class: _vm.getSaleLabelColor(_vm.sale.status) }, [
-            _c("i", { class: _vm.getSaleIcon(_vm.sale.status) }),
-            _vm._v("\n        " + _vm._s(_vm.sale.status) + "\n      ")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "ui label" }, [
-            _vm._v(
-              "\n          $ " +
-                _vm._s(parseFloat(_vm.sale.total).toFixed(2)) +
-                " "
-            ),
-            _c("div", { staticClass: "detail" }, [_vm._v("total")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "ui label" }, [
-            _vm._v("\n        $ " + _vm._s(_vm.paid) + " \n        "),
-            _c("div", { staticClass: "detail" }, [_vm._v("paid")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "ui label" }, [
-            _vm._v("\n          $ " + _vm._s(_vm.balance) + " "),
-            _c("div", { staticClass: "detail" }, [_vm._v("balance")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "ui top right attached basic label" }, [
-            _c("i", { staticClass: "user circle icon" }),
-            _vm._v(
-              "\n        " +
-                _vm._s(_vm.sale.customer.firstname) +
-                " " +
-                _vm._s(_vm.sale.customer.lastname) +
-                "\n        "
-            ),
-            _vm.sale.customer.role.id != 1
-              ? _c("span", [
-                  _vm._v("(" + _vm._s(_vm.sale.customer.role.name) + ")")
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.sale.organization.id != 1
-              ? _c("div", { staticClass: "detail" }, [
-                  _c("i", { staticClass: "university icon" }),
-                  _vm._v(_vm._s(_vm.sale.organization.name) + "\n        ")
-                ])
-              : _vm._e()
-          ])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "meta" }, [
-        _c("i", { staticClass: "user circle icon" }),
-        _vm._v(" \n      " + _vm._s(_vm.sale.creator.firstname) + " |\n      "),
-        _c("i", { staticClass: "pencil icon" }),
-        _vm._v(
-          "      \n      " +
-            _vm._s(
-              _vm.format(new Date(_vm.sale.created_at), _vm.$dateFormat.long)
-            ) +
-            "\n      (" +
-            _vm._s(
-              _vm.distanceInWords(new Date(), new Date(_vm.sale.created_at), {
-                addSuffix: true
-              })
-            ) +
-            ")\n      "
-        ),
-        _vm.sale.updated_at != _vm.sale.created_at
-          ? _c("span", [
-              _vm._v("\n        | "),
-              _c("i", { staticClass: "edit icon" }),
-              _vm._v(
-                " \n        " +
-                  _vm._s(
-                    _vm.format(
-                      new Date(_vm.sale.updated_at),
-                      _vm.$dateFormat.long
-                    )
-                  ) +
-                  "\n        (" +
-                  _vm._s(
-                    _vm.distanceInWords(
-                      new Date(),
-                      new Date(_vm.sale.updated_at),
-                      { addSuffix: true }
-                    )
-                  ) +
-                  ")\n      "
-              )
-            ])
-          : _vm._e()
-      ]),
-      _vm._v(" "),
-      _vm.sale.events.length > 0
-        ? _c(
-            "div",
-            { staticClass: "ui two column grid" },
-            _vm._l(_vm.sale.events, function(event) {
-              return _c("div", { key: event.id, staticClass: "column" }, [
-                _c("div", { staticClass: "ui items" }, [
-                  _c("div", { staticClass: "item" }, [
-                    _c("div", { staticClass: "ui tiny image" }, [
-                      _c("img", {
-                        attrs: { src: event.show.cover, alt: event.show.name }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "content" }, [
-                      _c("div", { staticClass: "meta" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "ui label",
-                            staticStyle: {
-                              border: "white 1px solid",
-                              "background-color": "transparent",
-                              color: "white"
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                  " +
-                                _vm._s(event.show.type) +
-                                "\n                "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "ui event-type label",
-                            style: {
-                              color: "white",
-                              backgroundColor: event.type.color,
-                              border: "white 1px solid"
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                  " +
-                                _vm._s(event.type.name) +
-                                "\n                "
-                            )
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "header" }, [
-                        _vm._v(_vm._s(event.show.name))
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "meta" }, [
-                        _vm._v(
-                          "\n                  " +
-                            _vm._s(
-                              _vm.format(
-                                new Date(event.start),
-                                _vm.$dateFormat.long
-                              )
-                            ) +
-                            "\n                  (" +
-                            _vm._s(
-                              _vm.distanceInWords(
-                                new Date(),
-                                new Date(event.start),
-                                { addSuffix: true }
-                              )
-                            ) +
-                            ")\n              "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "meta" },
-                        _vm._l(_vm.products, function(product) {
-                          return _c(
-                            "div",
-                            {
-                              key: product.id,
-                              staticClass: "ui label",
-                              staticStyle: {
-                                "border-color": "white",
-                                "background-color": "transparent",
-                                color: "white",
-                                "border-width": "1px"
-                              }
-                            },
-                            [
-                              _c("i", { staticClass: "box icon" }),
-                              _vm._v(_vm._s(product.name)),
-                              _c("div", { staticClass: "detail" }, [
-                                _vm._v(
-                                  "\n                    " +
-                                    _vm._s(product.quantity) +
-                                    "\n                  "
-                                )
-                              ])
-                            ]
-                          )
-                        }),
-                        0
-                      )
-                    ])
-                  ])
-                ])
-              ])
-            }),
-            0
-          )
-        : _vm._e()
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-b7d7f3c6", module.exports)
-  }
-}
-
-/***/ }),
+/* 375 */,
 /* 376 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -73524,7 +73044,7 @@ var block = {
   heading: /^ *(#{1,6}) *([^\n]+?) *(?:#+ *)?(?:\n+|$)/,
   nptable: noop,
   blockquote: /^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/,
-  list: /^( *)(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,
+  list: /^( {0,3})(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,
   html: '^ {0,3}(?:' // optional indentation
     + '<(script|pre|style)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)' // (1)
     + '|comment[^\\n]*(\\n+|$)' // (2)
@@ -73532,8 +73052,8 @@ var block = {
     + '|<![A-Z][\\s\\S]*?>\\n*' // (4)
     + '|<!\\[CDATA\\[[\\s\\S]*?\\]\\]>\\n*' // (5)
     + '|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:\\n{2,}|$)' // (6)
-    + '|<(?!script|pre|style)([a-z][\\w-]*)(?:attribute)*? */?>(?=\\h*\\n)[\\s\\S]*?(?:\\n{2,}|$)' // (7) open tag
-    + '|</(?!script|pre|style)[a-z][\\w-]*\\s*>(?=\\h*\\n)[\\s\\S]*?(?:\\n{2,}|$)' // (7) closing tag
+    + '|<(?!script|pre|style)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:\\n{2,}|$)' // (7) open tag
+    + '|</(?!script|pre|style)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:\\n{2,}|$)' // (7) closing tag
     + ')',
   def: /^ {0,3}\[(label)\]: *\n? *<?([^\s>]+)>?(?:(?: +\n? *| *\n *)(title))? *(?:\n+|$)/,
   table: noop,
@@ -73549,8 +73069,8 @@ block.def = edit(block.def)
   .replace('title', block._title)
   .getRegex();
 
-block.bullet = /(?:[*+-]|\d+\.)/;
-block.item = /^( *)(bull) [^\n]*(?:\n(?!\1bull )[^\n]*)*/;
+block.bullet = /(?:[*+-]|\d{1,9}\.)/;
+block.item = /^( *)(bull) ?[^\n]*(?:\n(?!\1bull ?)[^\n]*)*/;
 block.item = edit(block.item, 'gm')
   .replace(/bull/g, block.bullet)
   .getRegex();
@@ -73596,7 +73116,7 @@ block.normal = merge({}, block);
  */
 
 block.gfm = merge({}, block.normal, {
-  fences: /^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]*?)\n? *\1 *(?:\n+|$)/,
+  fences: /^ {0,3}(`{3,}|~{3,})([^`\n]*)\n(?:|([\s\S]*?)\n)(?: {0,3}\1[~`]* *(?:\n+|$)|$)/,
   paragraph: /^/,
   heading: /^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/
 });
@@ -73736,7 +73256,7 @@ Lexer.prototype.token = function(src, top) {
       src = src.substring(cap[0].length);
       this.tokens.push({
         type: 'code',
-        lang: cap[2],
+        lang: cap[2] ? cap[2].trim() : cap[2],
         text: cap[3] || ''
       });
       continue;
@@ -73754,7 +73274,7 @@ Lexer.prototype.token = function(src, top) {
     }
 
     // table no leading pipe (gfm)
-    if (top && (cap = this.rules.nptable.exec(src))) {
+    if (cap = this.rules.nptable.exec(src)) {
       item = {
         type: 'table',
         header: splitCells(cap[1].replace(/^ *| *\| *$/g, '')),
@@ -73847,7 +73367,7 @@ Lexer.prototype.token = function(src, top) {
         // Remove the list item's bullet
         // so it is seen as the next token.
         space = item.length;
-        item = item.replace(/^ *([*+-]|\d+\.) +/, '');
+        item = item.replace(/^ *([*+-]|\d+\.) */, '');
 
         // Outdent whatever the
         // list item contains. Hacky.
@@ -73860,9 +73380,10 @@ Lexer.prototype.token = function(src, top) {
 
         // Determine whether the next list item belongs here.
         // Backpedal if it does not belong in this list.
-        if (this.options.smartLists && i !== l - 1) {
+        if (i !== l - 1) {
           b = block.bullet.exec(cap[i + 1])[0];
-          if (bull !== b && !(bull.length > 1 && b.length > 1)) {
+          if (bull.length > 1 ? b.length === 1
+            : (b.length > 1 || (this.options.smartLists && b !== bull))) {
             src = cap.slice(i + 1).join('\n') + src;
             i = l - 1;
           }
@@ -73951,12 +73472,12 @@ Lexer.prototype.token = function(src, top) {
     }
 
     // table (gfm)
-    if (top && (cap = this.rules.table.exec(src))) {
+    if (cap = this.rules.table.exec(src)) {
       item = {
         type: 'table',
         header: splitCells(cap[1].replace(/^ *| *\| *$/g, '')),
         align: cap[2].replace(/^ *|\| *$/g, '').split(/ *\| */),
-        cells: cap[3] ? cap[3].replace(/(?: *\| *)?\n$/, '').split('\n') : []
+        cells: cap[3] ? cap[3].replace(/\n$/, '').split('\n') : []
       };
 
       if (item.header.length === item.align.length) {
@@ -74045,13 +73566,18 @@ var inline = {
   link: /^!?\[(label)\]\(href(?:\s+(title))?\s*\)/,
   reflink: /^!?\[(label)\]\[(?!\s*\])((?:\\[\[\]]?|[^\[\]\\])+)\]/,
   nolink: /^!?\[(?!\s*\])((?:\[[^\[\]]*\]|\\[\[\]]|[^\[\]])*)\](?:\[\])?/,
-  strong: /^__([^\s])__(?!_)|^\*\*([^\s])\*\*(?!\*)|^__([^\s][\s\S]*?[^\s])__(?!_)|^\*\*([^\s][\s\S]*?[^\s])\*\*(?!\*)/,
-  em: /^_([^\s_])_(?!_)|^\*([^\s*"<\[])\*(?!\*)|^_([^\s][\s\S]*?[^\s_])_(?!_|[^\s.])|^_([^\s_][\s\S]*?[^\s])_(?!_|[^\s.])|^\*([^\s"<\[][\s\S]*?[^\s*])\*(?!\*)|^\*([^\s*"<\[][\s\S]*?[^\s])\*(?!\*)/,
+  strong: /^__([^\s_])__(?!_)|^\*\*([^\s*])\*\*(?!\*)|^__([^\s][\s\S]*?[^\s])__(?!_)|^\*\*([^\s][\s\S]*?[^\s])\*\*(?!\*)/,
+  em: /^_([^\s_])_(?!_)|^\*([^\s*"<\[])\*(?!\*)|^_([^\s][\s\S]*?[^\s_])_(?!_|[^\spunctuation])|^_([^\s_][\s\S]*?[^\s])_(?!_|[^\spunctuation])|^\*([^\s"<\[][\s\S]*?[^\s*])\*(?!\*)|^\*([^\s*"<\[][\s\S]*?[^\s])\*(?!\*)/,
   code: /^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,
   br: /^( {2,}|\\)\n(?!\s*$)/,
   del: noop,
-  text: /^(`+|[^`])[\s\S]*?(?=[\\<!\[`*]|\b_| {2,}\n|$)/
+  text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<!\[`*]|\b_|$)|[^ ](?= {2,}\n))|(?= {2,}\n))/
 };
+
+// list of punctuation marks from common mark spec
+// without ` and ] to workaround Rule 17 (inline code blocks/links)
+inline._punctuation = '!"#$%&\'()*+,\\-./:;<=>?@\\[^_{|}~';
+inline.em = edit(inline.em).replace(/punctuation/g, inline._punctuation).getRegex();
 
 inline._escapes = /\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/g;
 
@@ -74069,8 +73595,8 @@ inline.tag = edit(inline.tag)
   .replace('attribute', inline._attribute)
   .getRegex();
 
-inline._label = /(?:\[[^\[\]]*\]|\\[\[\]]?|`[^`]*`|[^\[\]\\])*?/;
-inline._href = /\s*(<(?:\\[<>]?|[^\s<>\\])*>|(?:\\[()]?|\([^\s\x00-\x1f\\]*\)|[^\s\x00-\x1f()\\])*?)/;
+inline._label = /(?:\[[^\[\]]*\]|\\[\[\]]?|`[^`]*`|`(?!`)|[^\[\]\\`])*?/;
+inline._href = /\s*(<(?:\\[<>]?|[^\s<>\\])*>|[^\s\x00-\x1f]*)/;
 inline._title = /"(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)/;
 
 inline.link = edit(inline.link)
@@ -74114,13 +73640,10 @@ inline.gfm = merge({}, inline.normal, {
   url: /^((?:ftp|https?):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/,
   _backpedal: /(?:[^?!.,:;*_~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_~)]+(?!$))+/,
   del: /^~+(?=\S)([\s\S]*?\S)~+/,
-  text: edit(inline.text)
-    .replace(']|', '~]|')
-    .replace('|$', '|https?://|ftp://|www\\.|[a-zA-Z0-9.!#$%&\'*+/=?^_`{\\|}~-]+@|$')
-    .getRegex()
+  text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<!\[`*~]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@))|(?= {2,}\n|[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@))/
 });
 
-inline.gfm.url = edit(inline.gfm.url)
+inline.gfm.url = edit(inline.gfm.url, 'i')
   .replace('email', inline.gfm._extended_email)
   .getRegex();
 /**
@@ -74129,7 +73652,7 @@ inline.gfm.url = edit(inline.gfm.url)
 
 inline.breaks = merge({}, inline.gfm, {
   br: edit(inline.br).replace('{2,}', '*').getRegex(),
-  text: edit(inline.gfm.text).replace('{2,}', '*').getRegex()
+  text: edit(inline.gfm.text).replace(/\{2,\}/g, '*').getRegex()
 });
 
 /**
@@ -74190,44 +73713,7 @@ InlineLexer.prototype.output = function(src) {
     // escape
     if (cap = this.rules.escape.exec(src)) {
       src = src.substring(cap[0].length);
-      out += cap[1];
-      continue;
-    }
-
-    // autolink
-    if (cap = this.rules.autolink.exec(src)) {
-      src = src.substring(cap[0].length);
-      if (cap[2] === '@') {
-        text = escape(this.mangle(cap[1]));
-        href = 'mailto:' + text;
-      } else {
-        text = escape(cap[1]);
-        href = text;
-      }
-      out += this.renderer.link(href, null, text);
-      continue;
-    }
-
-    // url (gfm)
-    if (!this.inLink && (cap = this.rules.url.exec(src))) {
-      if (cap[2] === '@') {
-        text = escape(cap[0]);
-        href = 'mailto:' + text;
-      } else {
-        // do extended autolink path validation
-        do {
-          prevCapZero = cap[0];
-          cap[0] = this.rules._backpedal.exec(cap[0])[0];
-        } while (prevCapZero !== cap[0]);
-        text = escape(cap[0]);
-        if (cap[1] === 'www.') {
-          href = 'http://' + text;
-        } else {
-          href = text;
-        }
-      }
-      src = src.substring(cap[0].length);
-      out += this.renderer.link(href, null, text);
+      out += escape(cap[1]);
       continue;
     }
 
@@ -74255,6 +73741,13 @@ InlineLexer.prototype.output = function(src) {
 
     // link
     if (cap = this.rules.link.exec(src)) {
+      var lastParenIndex = findClosingBracket(cap[2], '()');
+      if (lastParenIndex > -1) {
+        var linkLen = cap[0].length - (cap[2].length - lastParenIndex) - (cap[3] || '').length;
+        cap[2] = cap[2].substring(0, lastParenIndex);
+        cap[0] = cap[0].substring(0, linkLen).trim();
+        cap[3] = '';
+      }
       src = src.substring(cap[0].length);
       this.inLink = true;
       href = cap[2];
@@ -74328,6 +73821,43 @@ InlineLexer.prototype.output = function(src) {
     if (cap = this.rules.del.exec(src)) {
       src = src.substring(cap[0].length);
       out += this.renderer.del(this.output(cap[1]));
+      continue;
+    }
+
+    // autolink
+    if (cap = this.rules.autolink.exec(src)) {
+      src = src.substring(cap[0].length);
+      if (cap[2] === '@') {
+        text = escape(this.mangle(cap[1]));
+        href = 'mailto:' + text;
+      } else {
+        text = escape(cap[1]);
+        href = text;
+      }
+      out += this.renderer.link(href, null, text);
+      continue;
+    }
+
+    // url (gfm)
+    if (!this.inLink && (cap = this.rules.url.exec(src))) {
+      if (cap[2] === '@') {
+        text = escape(cap[0]);
+        href = 'mailto:' + text;
+      } else {
+        // do extended autolink path validation
+        do {
+          prevCapZero = cap[0];
+          cap[0] = this.rules._backpedal.exec(cap[0])[0];
+        } while (prevCapZero !== cap[0]);
+        text = escape(cap[0]);
+        if (cap[1] === 'www.') {
+          href = 'http://' + text;
+        } else {
+          href = text;
+        }
+      }
+      src = src.substring(cap[0].length);
+      out += this.renderer.link(href, null, text);
       continue;
     }
 
@@ -74420,7 +73950,8 @@ function Renderer(options) {
   this.options = options || marked.defaults;
 }
 
-Renderer.prototype.code = function(code, lang, escaped) {
+Renderer.prototype.code = function(code, infostring, escaped) {
+  var lang = (infostring || '').match(/\S*/)[0];
   if (this.options.highlight) {
     var out = this.options.highlight(code, lang);
     if (out != null && out !== code) {
@@ -74451,13 +73982,13 @@ Renderer.prototype.html = function(html) {
   return html;
 };
 
-Renderer.prototype.heading = function(text, level, raw) {
+Renderer.prototype.heading = function(text, level, raw, slugger) {
   if (this.options.headerIds) {
     return '<h'
       + level
       + ' id="'
       + this.options.headerPrefix
-      + raw.toLowerCase().replace(/[^\w]+/g, '-')
+      + slugger.slug(raw)
       + '">'
       + text
       + '</h'
@@ -74606,6 +74137,7 @@ function Parser(options) {
   this.options.renderer = this.options.renderer || new Renderer();
   this.renderer = this.options.renderer;
   this.renderer.options = this.options;
+  this.slugger = new Slugger();
 }
 
 /**
@@ -74684,7 +74216,8 @@ Parser.prototype.tok = function() {
       return this.renderer.heading(
         this.inline.output(this.token.text),
         this.token.depth,
-        unescape(this.inlineText.output(this.token.text)));
+        unescape(this.inlineText.output(this.token.text)),
+        this.slugger);
     }
     case 'code': {
       return this.renderer.code(this.token.text,
@@ -74747,9 +74280,11 @@ Parser.prototype.tok = function() {
     case 'list_item_start': {
       body = '';
       var loose = this.token.loose;
+      var checked = this.token.checked;
+      var task = this.token.task;
 
       if (this.token.task) {
-        body += this.renderer.checkbox(this.token.checked);
+        body += this.renderer.checkbox(checked);
       }
 
       while (this.next().type !== 'list_item_end') {
@@ -74757,8 +74292,7 @@ Parser.prototype.tok = function() {
           ? this.parseText()
           : this.tok();
       }
-
-      return this.renderer.listitem(body);
+      return this.renderer.listitem(body, task, checked);
     }
     case 'html': {
       // TODO parse inline content if parameter markdown=1
@@ -74770,7 +74304,46 @@ Parser.prototype.tok = function() {
     case 'text': {
       return this.renderer.paragraph(this.parseText());
     }
+    default: {
+      var errMsg = 'Token with "' + this.token.type + '" type was not found.';
+      if (this.options.silent) {
+        console.log(errMsg);
+      } else {
+        throw new Error(errMsg);
+      }
+    }
   }
+};
+
+/**
+ * Slugger generates header id
+ */
+
+function Slugger () {
+  this.seen = {};
+}
+
+/**
+ * Convert string to unique id
+ */
+
+Slugger.prototype.slug = function (value) {
+  var slug = value
+    .toLowerCase()
+    .trim()
+    .replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '')
+    .replace(/\s/g, '-');
+
+  if (this.seen.hasOwnProperty(slug)) {
+    var originalSlug = slug;
+    do {
+      this.seen[originalSlug]++;
+      slug = originalSlug + '-' + this.seen[originalSlug];
+    } while (this.seen.hasOwnProperty(slug));
+  }
+  this.seen[slug] = 0;
+
+  return slug;
 };
 
 /**
@@ -74960,6 +74533,26 @@ function rtrim(str, c, invert) {
   return str.substr(0, str.length - suffLen);
 }
 
+function findClosingBracket(str, b) {
+  if (str.indexOf(b[1]) === -1) {
+    return -1;
+  }
+  var level = 0;
+  for (var i = 0; i < str.length; i++) {
+    if (str[i] === '\\') {
+      i++;
+    } else if (str[i] === b[0]) {
+      level++;
+    } else if (str[i] === b[1]) {
+      level--;
+      if (level < 0) {
+        return i;
+      }
+    }
+  }
+  return -1;
+}
+
 /**
  * Marked
  */
@@ -75106,6 +74699,8 @@ marked.lexer = Lexer.lex;
 
 marked.InlineLexer = InlineLexer;
 marked.inlineLexer = InlineLexer.output;
+
+marked.Slugger = Slugger;
 
 marked.parse = marked;
 
@@ -75418,6 +75013,488 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 830 */,
+/* 831 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(832);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(31)("0678036e", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b7d7f3c6\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./SaleBox.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b7d7f3c6\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./SaleBox.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 832 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(24)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.ui.small.black.button[data-v-b7d7f3c6] { background-color: transparent\n}\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 833 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "item" }, [
+    _c("div", { staticClass: "content" }, [
+      _c(
+        "div",
+        { staticClass: "sale box header" },
+        [
+          _c(
+            "sui-dropdown",
+            {
+              staticClass: "icon small black",
+              attrs: {
+                icon: "ellipsis vertical",
+                button: "",
+                pointing: "",
+                floating: ""
+              }
+            },
+            [
+              _c(
+                "sui-dropdown-menu",
+                [
+                  _c(
+                    "sui-dropdown-item",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.$router.push({
+                            name: "show",
+                            params: { id: _vm.sale.id }
+                          })
+                        }
+                      }
+                    },
+                    [
+                      _c("sui-icon", { attrs: { name: "eye" } }),
+                      _vm._v("\n            View\n          ")
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "sui-dropdown-item",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.$router.push({
+                            name: "edit",
+                            params: { id: _vm.sale.id }
+                          })
+                        }
+                      }
+                    },
+                    [
+                      _c("sui-icon", { attrs: { name: "edit" } }),
+                      _vm._v("\n            Edit\n          ")
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v("\n      Sale #" + _vm._s(_vm.sale.id) + " \n      "),
+          _vm.sale.refund == true
+            ? _c("div", { staticClass: "ui red label" }, [
+                _c("i", { staticClass: "reply icon" }),
+                _vm._v("\n        refund\n      ")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { class: _vm.getSaleLabelColor(_vm.sale.status) }, [
+            _c("i", { class: _vm.getSaleIcon(_vm.sale.status) }),
+            _vm._v("\n        " + _vm._s(_vm.sale.status) + "\n      ")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "ui label" }, [
+            _vm._v(
+              "\n          $ " +
+                _vm._s(parseFloat(_vm.sale.total).toFixed(2)) +
+                " "
+            ),
+            _c("div", { staticClass: "detail" }, [_vm._v("total")])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "ui label" }, [
+            _vm._v("\n        $ " + _vm._s(_vm.paid) + " \n        "),
+            _c("div", { staticClass: "detail" }, [_vm._v("paid")])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "ui label" }, [
+            _vm._v("\n          $ " + _vm._s(_vm.balance) + " "),
+            _c("div", { staticClass: "detail" }, [_vm._v("balance")])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "ui top right attached basic label" }, [
+            _c("i", { staticClass: "user circle icon" }),
+            _vm._v(
+              "\n        " +
+                _vm._s(_vm.sale.customer.firstname) +
+                " " +
+                _vm._s(_vm.sale.customer.lastname) +
+                "\n        "
+            ),
+            _vm.sale.customer.role.id != 1
+              ? _c("span", [
+                  _vm._v("(" + _vm._s(_vm.sale.customer.role.name) + ")")
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.sale.organization.id != 1
+              ? _c("div", { staticClass: "detail" }, [
+                  _c("i", { staticClass: "university icon" }),
+                  _vm._v(_vm._s(_vm.sale.organization.name) + "\n        ")
+                ])
+              : _vm._e()
+          ])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "meta" }, [
+        _c("i", { staticClass: "user circle icon" }),
+        _vm._v(" \n      " + _vm._s(_vm.sale.creator.firstname) + " |\n      "),
+        _c("i", { staticClass: "pencil icon" }),
+        _vm._v(
+          "      \n      " +
+            _vm._s(
+              _vm.format(new Date(_vm.sale.created_at), _vm.$dateFormat.long)
+            ) +
+            "\n      (" +
+            _vm._s(
+              _vm.distanceInWords(new Date(), new Date(_vm.sale.created_at), {
+                addSuffix: true
+              })
+            ) +
+            ")\n      "
+        ),
+        _vm.sale.updated_at != _vm.sale.created_at
+          ? _c("span", [
+              _vm._v("\n        | "),
+              _c("i", { staticClass: "edit icon" }),
+              _vm._v(
+                " \n        " +
+                  _vm._s(
+                    _vm.format(
+                      new Date(_vm.sale.updated_at),
+                      _vm.$dateFormat.long
+                    )
+                  ) +
+                  "\n        (" +
+                  _vm._s(
+                    _vm.distanceInWords(
+                      new Date(),
+                      new Date(_vm.sale.updated_at),
+                      { addSuffix: true }
+                    )
+                  ) +
+                  ")\n      "
+              )
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _vm.sale.events.length > 0
+        ? _c(
+            "div",
+            { staticClass: "ui two column grid" },
+            _vm._l(_vm.sale.events, function(event) {
+              return _c("div", { key: event.id, staticClass: "column" }, [
+                _c("div", { staticClass: "ui items" }, [
+                  _c("div", { staticClass: "item" }, [
+                    _c("div", { staticClass: "ui tiny image" }, [
+                      _c("img", {
+                        attrs: { src: event.show.cover, alt: event.show.name }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "content" }, [
+                      _c("div", { staticClass: "meta" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "ui label",
+                            staticStyle: {
+                              border: "white 1px solid",
+                              "background-color": "transparent",
+                              color: "white"
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                  " +
+                                _vm._s(event.show.type) +
+                                "\n                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "ui event-type label",
+                            style: {
+                              color: "white",
+                              backgroundColor: event.type.color,
+                              border: "white 1px solid"
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                  " +
+                                _vm._s(event.type.name) +
+                                "\n                "
+                            )
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "header" }, [
+                        _vm._v(_vm._s(event.show.name))
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "meta" }, [
+                        _vm._v(
+                          "\n                  " +
+                            _vm._s(
+                              _vm.format(
+                                new Date(event.start),
+                                _vm.$dateFormat.long
+                              )
+                            ) +
+                            "\n                  (" +
+                            _vm._s(
+                              _vm.distanceInWords(
+                                new Date(),
+                                new Date(event.start),
+                                { addSuffix: true }
+                              )
+                            ) +
+                            ")\n              "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "meta" },
+                        _vm._l(_vm.products, function(product) {
+                          return _c(
+                            "div",
+                            {
+                              key: product.id,
+                              staticClass: "ui label",
+                              staticStyle: {
+                                "border-color": "white",
+                                "background-color": "transparent",
+                                color: "white",
+                                "border-width": "1px"
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "box icon" }),
+                              _vm._v(_vm._s(product.name)),
+                              _c("div", { staticClass: "detail" }, [
+                                _vm._v(
+                                  "\n                    " +
+                                    _vm._s(product.quantity) +
+                                    "\n                  "
+                                )
+                              ])
+                            ]
+                          )
+                        }),
+                        0
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            }),
+            0
+          )
+        : _vm._e()
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-b7d7f3c6", module.exports)
+  }
+}
+
+/***/ }),
+/* 834 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(835);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(31)("208df14f", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-50e73d1e\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./App.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-50e73d1e\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./App.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 835 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(24)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.observer {\n  height: 1px !important;\n}\ntextarea {\n  font: inherit;\n}\n#top {\n  position: fixed;\n  z-index: 1;\n  padding: 0 0 0 0 !important;\n  margin-top: -1em;\n  width: 100vw !important;\n}\n.fade-enter-active, .fade-leave-active {\n  -webkit-transition: opacity 0.5s;\n  transition: opacity 0.5s;\n}\n.fade-enter, .fade-leave-to {\n  opacity: 0;\n}\n.ui.segment#event-type:hover {\n  background-color: transparent !important;\n  border-width: 1px;\n  border-color: white;\n  cursor: pointer;\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n}\n.ui.segment#event-type {\n  cursor: pointer;\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n}\n.card#event-type:hover > .content > .description {\n  color: black !important;\n}\n.sale.box.header .ui.label {\n  border-color: white !important;\n  border-width: 1px !important;\n  color: white !important;\n  background-color: transparent !important;\n}\n.ui.sale.segment {\n  cursor: pointer !important;\n}\n.list-enter-active, .list-leave-active, .list-move {\n  -webkit-transition: 0.5s cubic-bezier(0.6, 0.12, 0.34, 0.95);\n  transition: 0.5s cubic-bezier(0.6, 0.12, 0.34, 0.95);\n  -webkit-transition-property: opacity, -webkit-transform;\n  transition-property: opacity, -webkit-transform;\n  transition-property: opacity, transform;\n  transition-property: opacity, transform, -webkit-transform;\n}\n.list-enter {\n  opacity: 0;\n  -webkit-transform: translateX(50px) scaleY(0.5);\n          transform: translateX(50px) scaleY(0.5);\n}\n.list-enter-to {\n  opacity: 1;\n  -webkit-transform: translateX(0) scaleY(1);\n          transform: translateX(0) scaleY(1);\n}\n.list-leave-active { position: absolute;\n}\n.list-leave-to {\n  opacity: 0;\n  -webkit-transform: scaleY(0);\n          transform: scaleY(0);\n  -webkit-transform-origin: center-top;\n          transform-origin: center-top;\n}\n\n/*.list-enter, .list-leave-to {\n  opacity: 0;\n  transition: translateY(30px);\n}*/\n.ui.sale.segment .header, .ui.sale.segment .meta {\n  color: white !important;\n}\n\n/** OPEN SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.open.sale.segment       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: #6435c9 !important;\n  border: white 1px solid !important;\n}\n.ui.open.sale.segment:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white   !important; \n  border: #6435c9 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.open.sale.segment .header, \n.ui.open.sale.segment .meta { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.open.sale.segment:hover .header,\n.ui.open.sale.segment:hover .meta,\n.ui.open.sale.segment:hover .ui.black.button,\n.ui.open.sale.segment:hover .ui.label:not(.violet) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #6435c9 !important;\n}\n.ui.open.sale.segment:hover .ui.event-type.label {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.open.sale.segment:hover .ui.label:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #6435c9 1px solid !important;\n  color: #6435c9 !important;\n}\n\n/** COMPLETE SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.complete.sale.segment       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: #21ba45 !important;\n  border: white 1px solid !important;\n}\n.ui.complete.sale.segment:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white   !important; \n  border: #21ba45 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.complete.sale.segment .header, \n.ui.complete.sale.segment .meta { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.complete.sale.segment:hover .header,\n.ui.complete.sale.segment:hover .meta,\n.ui.complete.sale.segment:hover     .ui.black.button,\n.ui.complete.sale.segment:hover .ui.label:not(.green) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #21ba45 !important;\n}\n.ui.complete.sale.segment:hover .ui.event-type.label {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.complete.sale.segment:hover .ui.label:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #21ba45 1px solid !important;\n  color : #21ba45 !important;\n}\n\n/** TENTATIVE SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.tentative.sale.segment       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: #fbbd08 !important;\n  border: white 1px solid !important;\n}\n.ui.tentative.sale.segment:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white   !important; \n  border: #fbbd08 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.tentative.sale.segment .header, \n.ui.tentative.sale.segment .meta { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.tentative.sale.segment:hover .header,\n.ui.tentative.sale.segment:hover .meta,\n.ui.tentative.sale.segment:hover .ui.black.button,\n.ui.tentative.sale.segment:hover .ui.label:not(.yellow) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #fbbd08 !important;\n}\n.ui.tentative.sale.segment:hover .ui.event-type.label {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.tentative.sale.segment:hover .ui.label:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #fbbd08 1px solid !important;\n}\n\n/** NO SHOW SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.no.show.sale.segment       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: db2828 !important;\n  border: white 1px solid !important;\n}\n.ui.no.show.sale.segment:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white   !important; \n  border: #f2711c 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.no.show.sale.segment .header, \n.ui.no.show.sale.segment .meta { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.no.show.sale.segment:hover .header,\n.ui.no.show.sale.segment:hover .meta,\n.ui.no.show.sale.segment:hover .ui.black.button,\n.ui.no.show.sale.segment:hover .ui.label:not(.orange) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #f2711c !important;\n}\n.ui.no.show.sale.segment:hover .ui.event-type.label {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.no.show.sale.segment:hover .ui.label:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #f2711c 1px solid !important;\n  color: #f2711c !important;\n}\n\n/** CANCELED SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.canceled.sale.segment       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: db2828 !important;\n  border: white 1px solid !important;\n}\n.ui.canceled.sale.segment:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white   !important; \n  border: #db2828 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.canceled.sale.segment .header, \n.ui.canceled.sale.segment .meta { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.canceled.sale.segment:hover .header,\n.ui.canceled.sale.segment:hover .meta,\n.ui.canceled.sale.segment:hover .ui.black.button,\n.ui.canceled.sale.segment:hover .ui.label:not(.red) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #db2828 !important;\n}\n.ui.canceled.sale.segment:hover .ui.event-type.label {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.canceled.sale.segment:hover .ui.label:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #db2828 1px solid !important;\n  color: #db2828 !important;\n}\n\n\n/** CONFIRMED SALE STYLES **/\n\n/** Switching color of sale box **/\n.ui.confirmed.sale.segment       { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: white !important;\n  border: #21ba45 1px solid !important;\n}\n.ui.confirmed.sale.segment .ui.label:not(.event-type) {\n  background-color: white !important;\n  border: #21ba45 1px solid !important;\n  color: #21ba45 !important;\n}\n.ui.confirmed.sale.segment:hover { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  background-color: black   !important; \n  border: black 1px solid !important;\n}\n\n/** Switching text color of sale box **/\n.ui.confirmed.sale.segment .header, \n.ui.confirmed.sale.segment .meta { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #21ba45 !important;\n}\n.ui.confirmed.sale.segment:hover .header,\n.ui.confirmed.sale.segment:hover .meta,\n.ui.confirmed.sale.segment:hover .ui.black.button,\n.ui.confirmed.sale.segment:hover .ui.label:not(.green) { \n  -webkit-transition: all 0.5s; \n  transition: all 0.5s;\n  color: #21ba45 !important;\n}\n.ui.confirmed.sale.segment:hover .ui.event-type.label {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  color: white !important;\n}\n.ui.confirmed.sale.segment:hover .ui.label:not(.event-type) {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #21ba45 1px solid !important;\n  background-color: black !important;\n}\n\n/** CANCELED LABEL STYLES **/\n.ui.confirmed.sale.segment:hover .ui.red.label,\n.ui.confirmed.sale.segment       .ui.red.label,\n.ui.complete.sale.segment:hover  .ui.red.label,\n.ui.complete.sale.segment        .ui.red.label,\n.ui.no.show.sale.segment:hover   .ui.red.label,\n.ui.no.show.sale.segment         .ui.red.label,\n.ui.open.sale.segment:hover      .ui.red.label,\n.ui.open.sale.segment            .ui.red.label,\n.ui.tentative.sale.segment:hover .ui.red.label,\n.ui.tentative.sale.segment .ui.red.label {\n  -webkit-transition: all 0.5s;\n  transition: all 0.5s;\n  border: #db2828 1px solid !important;\n  background-color: #db2828 !important;\n  color: white !important;\n}\n\n/** Slider **/\ninput[type=range] {\n  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */\n  width: 100%; /* Specific width is required for Firefox. */\n  background: transparent; /* Otherwise white in Chrome */\n}\ninput[type=range]::-webkit-slider-thumb {\n  -webkit-appearance: none;\n}\ninput[type=range]:focus {\n  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */\n}\ninput[type=range]::-ms-track {\n  width: 100%;\n  cursor: pointer;\n\n  /* Hides the slider so custom styles can be added */\n  background: transparent;\n  border-color: transparent;\n  color: transparent;\n}\ninput[type=range] {\n  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */\n  width: 100%; /* Specific width is required for Firefox. */\n  background: transparent; /* Otherwise white in Chrome */\n}\n\n/* Special styling for WebKit/Blink */\ninput[type=range]::-webkit-slider-thumb {\n  height: 1.5em;\n  width: 1.5em;\n  background: #FFFFFF -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.5)));\n  background: #FFFFFF linear-gradient(transparent, rgba(0, 0, 0, 0.5));\n  border-radius: 100%;\n  -webkit-box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15), 0 0 0 1px rgba(34, 36, 38, 0.15) inset;\n  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15), 0 0 0 1px rgba(34, 36, 38, 0.15) inset;\n  -webkit-transition: background 0.3s ease;\n  transition: background 0.3s ease;\n  margin-top: -7px;\n}\ninput[type=range]::-webkit-slider-thumb:hover {\n  cursor: pointer;\n}\ninput[type=range]::-webkit-slider-runnable-track {\n  border-radius: 4px;\n  background-color: rgba(0, 0, 0, 0.05);\n  height: 0.4em;\n  border-color: white;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 836 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { attrs: { id: "app" } },
+    [
+      _c(
+        "transition",
+        { attrs: { mode: "out-in", name: "fade" } },
+        [_c("router-view")],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "sui-modal",
+        {
+          attrs: { basic: "" },
+          model: {
+            value: _vm.open,
+            callback: function($$v) {
+              _vm.open = $$v
+            },
+            expression: "open"
+          }
+        },
+        [
+          _vm.alert != null
+            ? _c(
+                "div",
+                {
+                  staticClass: "ui icon header",
+                  staticStyle: { "padding-bottom": "0" }
+                },
+                [
+                  _c("sui-icon", { attrs: { name: _vm.alert.icon } }),
+                  _vm._v(" " + _vm._s(_vm.alert.title) + "\n    ")
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.alert != null
+            ? _c(
+                "div",
+                { staticClass: "content", staticStyle: { "padding-top": "0" } },
+                [_c("p", [_vm._v(_vm._s(_vm.alert.message))])]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.alert != null
+            ? _c(
+                "div",
+                { staticClass: "actions" },
+                [
+                  _c(
+                    "sui-button",
+                    {
+                      attrs: {
+                        color: _vm.buttonColor,
+                        inverted: "",
+                        icon: "check"
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.open = false
+                        }
+                      }
+                    },
+                    [_vm._v("\n        Gotcha!\n      ")]
+                  )
+                ],
+                1
+              )
+            : _vm._e()
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-50e73d1e", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
