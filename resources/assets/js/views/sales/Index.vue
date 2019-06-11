@@ -59,7 +59,7 @@
                           :options="statuses" 
                           fluid selection />
           </div>
-          <div class="field">
+          <div class="field" style="padding-right:0">
             <sui-dropdown placeholder="All Cashiers" 
                           v-model="query.cashier_id" 
                           :options="cashiers" 

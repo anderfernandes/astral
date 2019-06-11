@@ -252,7 +252,7 @@
               <div class="label">Subtotal</div>
               <div class="value">
                 <i class="dollar sign icon"></i> 
-                {{ sale.subtotal }}
+                {{ subtotal }}
               </div>
             </div>
             <div class="statistic">
@@ -266,7 +266,7 @@
               <div class="label">Total</div>
               <div class="value">
                 <i class="dollar sign icon"></i> 
-                {{ sale.total }}
+                {{ total }}
               </div>
             </div>
             <div v-if="paid && paid < 0" class="ui red statistic">
@@ -428,6 +428,20 @@
     
       ...mapGetters(['errors', 'currencySettings']),
 
+      subtotal() {
+        if (this.sale.subtotal != undefined)
+          return this.sale.subtotal.toLocaleString("en-US", this.currencySettings)
+        else 
+          return 0
+      },
+
+      total() {
+        if (this.sale.total != undefined)
+          return this.sale.total.toLocaleString("en-US", this.currencySettings)
+        else
+          return 0
+      },
+
       tax() {
         if (this.sale.tax != undefined)
           return this.sale.tax.toLocaleString("en-US", this.currencySettings)
@@ -440,7 +454,7 @@
         else return 0
       },
       balance() {
-        return (parseFloat(this.sale.total) - parseFloat(this.paid)).toLocaleString("en-US", this.currencySettings)
+        return (this.sale.total - parseFloat(this.paid)).toLocaleString("en-US", this.currencySettings)
       },
     
     // Loading spinner

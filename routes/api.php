@@ -294,6 +294,21 @@ Route::post('sales/{id}', function (Request $request, $id) {
     // Log created payment
   }
 
+  // Partial refunds
+  if ((double)$request->balance < 0)
+  {
+    $partial_refund = new Payment;
+    $partial_refund->cashier_id        = $cashier->id;
+    $partial_refund->payment_method_id = $sale->payments->last()->payment_method_id;
+    $partial_refund->tendered          = (double)$request->balance;
+    $partial_refund->total             = (double)$request->balance;
+    $partial_refund->change_due        = 0;
+    $partial_refund->reference         = $sale->payments->last()->reference;
+    $partial_refund->source            = "admin";
+
+    $sale->payments()->save($partial_refund);
+  }
+
   // Mark sale as completed if it has been paid in full
   if ($sale->status != "canceled")
   {
@@ -712,7 +727,7 @@ Route::get('events', function(Request $request) {
     foreach ($event->sales as $sale) {
         $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
     }
-    $seats = $event->seats - $ticketsSold;
+    $seats = $event->seats - App\Ticket::where("event_id", $event->id)->count();
     $isAllDay = (($event->start->isStartOfDay()) && ($event->end->isEndOfDay()));
     $allowedTicketsArray = [];
     foreach ($event->type->allowedTickets->where('public', true) as $allowedTicket)
@@ -869,9 +884,9 @@ Route::get('sale/{sale}', function(Sale $sale) {
       'id'         => $payment->id,
       'method'     => $payment->method->name,
       'icon'       => $payment->method->icon,
-      'paid'       => number_format($payment->tendered - $payment->change_due, 2),
-      'tendered'   => number_format($payment->tendered, 2),
-      'total'      => number_format($payment->total, 2, ".", ","),
+      'paid'       => (double)($payment->tendered - $payment->change_due),
+      'tendered'   => (double)$payment->tendered,
+      'total'      => (double)$payment->total,
       'date'       => Date::parse($payment->created_at)->toDateTimeString(),
       'created_at' => Date::parse($payment->created_at)->toDateTimeString(),
       'cashier'  => [
@@ -996,11 +1011,11 @@ Route::get('sale/{sale}', function(Sale $sale) {
     'grades'               => $sale->grades,
     'products'             => $productsArray,
     'sell_to_organization' => (bool)$sale->sell_to_organization,
-    'subtotal'             => number_format($sale->subtotal, 2),
-    'tax'                  => number_format($sale->total - $sale->subtotal, 2),
-    'total'                => number_format($sale->total, 2),
-    'paid'                 => number_format($sale->payments->sum('tendered') - $sale->payments->sum('change_due'), 2, '.', ''),
-    'balance'              => number_format((($sale->payments->sum('tendered') - $sale->payments->sum('change_due')) - $sale->total) * (- 1), 2, '.', ''),
+    'subtotal'             => (double)$sale->subtotal,
+    'tax'                  => (double)$sale->total - $sale->subtotal,
+    'total'                => (double)$sale->total,
+    'paid'                 => (double)($sale->payments->sum('tendered') - $sale->payments->sum('change_due')),
+    'balance'              => (double)((($sale->payments->sum('tendered') - $sale->payments->sum('change_due')) - $sale->total) * (- 1)),
     'payments'             => $paymentsArray,
     'created_at'           => Date::parse($sale->created_at)->toDateTimeString(),
     'updated_at'           => Date::parse($sale->updated_at)->toDateTimeString(),

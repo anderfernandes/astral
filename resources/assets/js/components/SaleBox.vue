@@ -115,8 +115,6 @@
   import { mapGetters } from "vuex"
   import axios from "axios"
 
-  const SERVER = "http://10.51.150.214:8000"
-
   export default {
     props    : ["sale"],
     
@@ -131,7 +129,7 @@
     methods: {
       async fetchProducts() {
         try {
-          const response = await axios.get(`${SERVER}/api/sale/${this.sale.id}`)
+          const response = await axios.get(`/api/sale/${this.sale.id}`)
           this.products  = response.data.products
         } catch (error) {
           alert(`Unable to fetch products: ${ error.message }`)

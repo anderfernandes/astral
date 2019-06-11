@@ -1,7 +1,5 @@
 import axios from "axios"
 
-const SERVER = "http://10.51.150.214:8000"
-
 const saleStatuses = [
   { key: "open",      text: "Open",      value: "open",      icon: "unlock"     },
   { key: "confirmed", text: "Confirmed", value: "confirmed", icon: "thumbs up"  },
@@ -32,8 +30,9 @@ export default {
     showModal     : false,
     
     currencySettings  : {
-			minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+			minimumFractionDigits : 2,
+      maximumFractionDigits : 2,
+      useGrouping           : false,
     },
   },
   // Mutations
@@ -89,7 +88,7 @@ export default {
     async fetchSales({ state, commit }) {
       try {
         
-        const url = new URL(`${SERVER}/api/sales?sort=desc&orderBy=id`)
+        const url = new URL("/api/sales?sort=desc&orderBy=id", window.location.origin)
 
         const params = new URLSearchParams(url.search)
 
@@ -121,7 +120,7 @@ export default {
     // Fetch customers
     async fetchCustomers({ commit }) {
       try {
-        const response = await axios.get(`${SERVER}/api/customers`)
+        const response = await axios.get(`/api/customers`)
         
         let withOrganization = response.data.map(customer => ({
           key   : customer.id,
@@ -146,7 +145,7 @@ export default {
     // Fetch organizations
     async fetchOrganizations({ commit }) {
       try {
-        const response = await axios.get(`${SERVER}/api/organizations`)
+        const response = await axios.get(`/api/organizations`)
         let organizations = response.data.map(organization => ({
           key   : organization.id,
           value : organization.id,
@@ -166,7 +165,7 @@ export default {
     // Fetch cashiers
     async fetchCashiers({ commit }) {
       try {
-        const response = await axios.get(`${SERVER}/api/staff`)
+        const response = await axios.get(`/api/staff`)
         let cashiers   = await response.data.map(cashier => ({
           icon  : "user circle",
           key   : cashier.id,
@@ -187,7 +186,7 @@ export default {
     // Fetch event types
     async fetchEventTypes({ commit }) {
       try {
-        const response = await axios.get(`${SERVER}/api/event-types`)
+        const response = await axios.get(`/api/event-types`)
         commit("SET_EVENT_TYPES", response.data)
       } catch (error) {
         alert(`Error in actions.fetchEventTypes: ${error.message}`)

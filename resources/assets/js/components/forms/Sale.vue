@@ -230,7 +230,7 @@
                   </sui-form-field>
                   <sui-form-field :error="errors && errors.hasOwnProperty('reference')">
                     <label>Reference</label>
-                    <sui-input placeholder="Reference" :error="!hasReference" v-model.number="sale.reference" />
+                    <sui-input placeholder="Reference" :error="!hasReference" v-model="sale.reference" />
                     <transition mode="in-out" name="fade">
                         <sui-label basic color="red" pointing 
                         v-if="errors && errors.hasOwnProperty('reference')">
@@ -560,8 +560,8 @@
         event.preventDefault()
         
         let data = {
-          balance        : this.balance,
-          change_due     : this.change_due,
+          balance        : parseFloat(this.sale.balance),
+          change_due     : parseFloat(this.change_due),
           creator_id     : this.sale.creator_id,
           customer       : this.sale.customer,
           dates          : this.sale.dates,
@@ -576,12 +576,12 @@
           reference      : this.sale.reference,
           sell_to        : this.sale.sell_to,
           status         : this.sale.status,
-          subtotal       : this.subtotal,
-          tax            : this.tax,
+          subtotal       : parseFloat(this.subtotal),
+          tax            : parseFloat(this.tax),
           taxable        : this.sale.taxable,
-          tendered       : this.sale.tendered,
+          tendered       : parseFloat(this.sale.tendered),
           tickets        : this.sale.selected_tickets,
-          total          : this.total,
+          total          : parseFloat(this.total),
           
         }
 
@@ -658,7 +658,8 @@
       
       change_due() {
         return this.sale.change_due.toLocaleString("en-US", this.currencySettings)    
-      }
+      },
+      
     },
   }
 </script>
