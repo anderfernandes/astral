@@ -23,7 +23,8 @@ Vue.mixin({
 
   filters : {
     currency(value) {
-      return value.toLocaleString("en-US", store.getters.currencySettings)
+      if (value)
+        return value.toLocaleString("en-US", store.getters.currencySettings)
     }
   },
 

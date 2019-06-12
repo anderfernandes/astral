@@ -8,7 +8,7 @@ export default {
     errors     : null,
     alert      : null,
     show_alert : false,
-    user       : null,
+    user       : localStorage.getItem("u"),
   },
 
   mutations : {
@@ -27,22 +27,10 @@ export default {
       Object.assign(state, { show_alert : payload })
     },
 
-    SET_USER(state, payload) {
-      Object.assign(state, { user : payload })
-    }
-
   },
 
   actions : {
     
-    async fetchUser({ commit }) {
-      try {
-        const response = axios.get("/api/user")
-        commit("SET_USER", response.data)
-      } catch (error) {
-        alert(`Error in global.fetchUser : ${ error.message }`)
-      }
-    }
 
   },
 
@@ -51,7 +39,7 @@ export default {
     errors     : state => state.errors,
     alert      : state => state.alert,
     show_alert : state => state.show_alert,
-
+    user       : state => state.user,
     
   },
 }

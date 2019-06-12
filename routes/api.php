@@ -249,7 +249,7 @@ Route::post('sales/{id}', function (Request $request, $id) {
   
   $sale = Sale::find($id);
 
-  $user    = User::find($request->customer);
+  $user    = auth()->user();
   $cashier = User::find($request->creator_id);
 
   $sale->creator_id           = $cashier->id;
@@ -857,6 +857,7 @@ Route::get('organizations', function(Request $request) {
 });
 
 Route::post('memos', function (Request $request) {
+  
   $sale = Sale::find($request->sale_id);
 
   $sale->memo()->create([
@@ -1160,8 +1161,8 @@ Route::get("membership", function (Request $request) {
   }
 });
 
-Route::middleware('auth:api')->get('user', function (Request $request) {
-    return auth()->user();
+Route::get('user', function (Request $request) {
+    return $request->user();
 });
 
 Route::post('new-sale', function(Request $request) {

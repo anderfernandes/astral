@@ -562,7 +562,7 @@
         let data = {
           balance        : parseFloat(this.sale.balance),
           change_due     : parseFloat(this.change_due),
-          creator_id     : this.sale.creator_id,
+          creator_id     : this.$store.getters.user,
           customer       : this.sale.customer,
           dates          : this.sale.dates,
           events         : this.sale.events,

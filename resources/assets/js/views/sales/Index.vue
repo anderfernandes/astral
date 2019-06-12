@@ -150,7 +150,7 @@
       document.title = `Astral - Sales`
       
       this.isLoading = await true
-      
+      await this.$store.commit("SET_PAGE", 1)
       await this.fetchEventTypes()
       await this.fetchCustomers()
       await this.fetchOrganizations()

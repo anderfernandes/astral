@@ -27,7 +27,7 @@
           </div>
           <sui-button color="yellow" inverted icon="refresh" :disabled="refund_memo == null || refund_memo.length < 10"
                       @click.prevent="submitRefund">
-            Confirm Refund of $ {{ sale.total }}
+            Confirm Refund of $ {{ sale.total | currency }}
           </sui-button>
         </div>
       </modal>
@@ -481,7 +481,7 @@
         const data = {
           sale_id    : this.sale.id,
           memo       : this.memo,
-          creator_id : 3,
+          creator_id : this.$store.getters.user,
         }
 
         try {
@@ -515,7 +515,7 @@
 
         try {
           const data = {
-            creator_id : 3,
+            creator_id : this.$store.getters.user,
             memo       : this.refund_memo,
           }
           
