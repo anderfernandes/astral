@@ -22,33 +22,40 @@
 </template>
 
 <script>
+  
   export default {
-    computed: {
-      
-      alert: {
-        set(value) { this.$store.commit('SET_ALERT', value) },
-        get()      { return this.$store.getters.alert },
-      },
-      
-      open : {
-        set(value) { 
-          this.$store.commit('TOGGLE_SHOW_ALERT', value)
-          if (value == false)
-            this.alert = null
-        },
-        get()      { return this.$store.getters.show_alert }
-      },
 
-      buttonColor() {
-        switch (this.alert.type) {
-          case "info"    : return "blue"
-          case "warning" : return "yellow"
-          case "error"   : return "red"
-          case "success" : return "green"
-        }
-      }
+    async created() {
+      await this.$store.dispatch("fetchUser")
     },
-  }
+  
+    computed: {
+        
+        alert: {
+          set(value) { this.$store.commit('SET_ALERT', value) },
+          get()      { return this.$store.getters.alert },
+        },
+        
+        open : {
+          set(value) { 
+            this.$store.commit('TOGGLE_SHOW_ALERT', value)
+            if (value == false)
+              this.alert = null
+          },
+          get()      { return this.$store.getters.show_alert }
+        },
+
+        buttonColor() {
+          switch (this.alert.type) {
+            case "info"    : return "blue"
+            case "warning" : return "yellow"
+            case "error"   : return "red"
+            case "success" : return "green"
+          }
+        }
+      },
+    }
+
 </script>
 
 

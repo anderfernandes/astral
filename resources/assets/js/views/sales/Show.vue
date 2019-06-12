@@ -314,9 +314,9 @@
                   <sui-icon :name="payment.icon" />
                   {{ payment.method }}
                 </td>
-                <td>$ {{ payment.paid }}</td>
-                <td>$ {{ payment.tendered }}</td>
-                <td>$ {{ (parseFloat(payment.tendered) - parseFloat(payment.paid)).toFixed(2) }}</td>
+                <td>$ {{ payment.paid | currency }}</td>
+                <td>$ {{ payment.tendered | currency }}</td>
+                <td>$ {{ (parseFloat(payment.tendered) - parseFloat(payment.paid)).toFixed(2) | currency }}</td>
                 <td>
                   {{ format(new Date(payment.created_at), $dateFormat.long) }}
                   ({{ distanceInWords(new Date(), new Date(payment.created_at), { addSuffix: true }) }})

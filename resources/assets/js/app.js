@@ -20,9 +20,19 @@ import { format, distanceInWords } from "date-fns"
 Vue.config.productionTip = false
 
 Vue.mixin({
+
+  filters : {
+    currency(value) {
+      return value.toLocaleString("en-US", store.getters.currencySettings)
+    }
+  },
+
   methods: {
+    
     format,
+    
     distanceInWords,
+    
     getSaleColor(status) {
       let color = null
       switch(status)
@@ -36,6 +46,7 @@ Vue.mixin({
       }
       return color
     },
+    
     getSaleLabelColor(status) {
       let className = null
       switch(status)
@@ -49,6 +60,7 @@ Vue.mixin({
       }
       return className
     },
+    
     getSaleIcon(status) {
       let className = null
       switch(status)

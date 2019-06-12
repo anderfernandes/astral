@@ -1161,7 +1161,7 @@ Route::get("membership", function (Request $request) {
 });
 
 Route::middleware('auth:api')->get('user', function (Request $request) {
-    return $request->user()->id;
+    return auth()->user();
 });
 
 Route::post('new-sale', function(Request $request) {

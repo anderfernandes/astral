@@ -19,7 +19,7 @@
             <div class="sub header">
               Available tickets:
               <div class="ui label" v-for="ticket in event_type.allowed_tickets" :key="ticket.id"
-                  style="background-color: transparent; border-width: 1px; border-color:white">
+                  style="background-color: transparent; border-width: 1px; border-color:white; color: white">
                   <i class="ticket icon"></i> {{ ticket.name }}
                   <div class="detail">$ {{ parseFloat(ticket.price).toFixed(2) }}</div>
               </div>

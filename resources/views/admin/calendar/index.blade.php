@@ -21,18 +21,10 @@
   @endif
 
   @if (str_contains(Auth::user()->role->permissions['sales'], "C"))
-  <div class="ui dropdown black button">
+  <a href="{{ @route('admin.sales.index') }}" class="ui black button">
     <i class="icons"><i class="dollar icon"></i><i class="corner plus inverted icon"></i></i>
     Create Sale
-    <i class="dropdown icon"></i>
-    <div class="menu">
-      @foreach (App\EventType::where('id', '!=', 1)->get() as $eventType)
-        @if ($eventType->allowedTickets->count() > 0)
-        <a href="{{ route('admin.sales.create') }}?eventType={{ $eventType->id }}" class="item">{{ $eventType->name }}</a>
-        @endif
-      @endforeach
-    </div>
-  </div>
+  </a>
   @endif
 
   <div class="ui right floated black icon button" onclick="$('#event-colors').modal('toggle')">
