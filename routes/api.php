@@ -249,7 +249,7 @@ Route::post('sales/{id}', function (Request $request, $id) {
   
   $sale = Sale::find($id);
 
-  $user    = auth()->user();
+  $user    = User::find($request->customer);
   $cashier = User::find($request->creator_id);
 
   $sale->creator_id           = $cashier->id;
@@ -926,6 +926,7 @@ Route::get('sale/{sale}', function(Sale $sale) {
           'event'       => [ 'id' => $event->id ],
           'type'        => [ 'id' => $event->type->id ],
           'amount'      => $event->tickets->where('sale_id', $sale->id)->where('ticket_type_id', $ticket->ticket_type_id)->count(),
+          'quantity'    => $event->tickets->where('sale_id', $sale->id)->where('ticket_type_id', $ticket->ticket_type_id)->count(),
           'description' => $ticket->type->description,
           'price'       => (double)$ticket->type->price,
           'active'      => (bool)$ticket->type->active,

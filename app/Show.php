@@ -27,4 +27,19 @@ class Show extends Model
   {
     return $this->belongsTo('App\ShowType', 'type_id');
   }
+
+  /**
+   * Fixes the URL of the show cover
+   * 
+   * @param String $value
+   * @return String
+   */
+  public function getCoverAttribute($value)
+  {
+
+    $value = substr($value, 0, 4) == "http"
+                                    ? $value
+                                    : asset("storage/$value");
+    return $value;
+  }
 }

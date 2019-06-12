@@ -150,7 +150,7 @@ function fetchSales(calEvent, jsEvent, view) {
                     <div class="sub header">
                       ${moment(ev.start).format(dateFormat)}
                       <div class="ui inverted circular label" style="background-color:${ev.color}">
-                        ${ev.type}
+                        ${ev.type.name}
                       </div>
                     </div>
                     <a href="/admin/events/${ev.id}" target="_blank">${ev.show.name}</a>
@@ -185,7 +185,7 @@ function fetchSales(calEvent, jsEvent, view) {
                     <i class="dollar icon"></i>${parseFloat(product.price).toFixed(2)} each
                   </div>
                   <div class="ui circular blue label">
-                    ${product.type}
+                    ${product.type.name}
                   </div>
                 </div>
                 <a href="/admin/products/${product.id}/edit" target="_blank">${product.name}</a>
@@ -302,23 +302,23 @@ function fetchSales(calEvent, jsEvent, view) {
         <div class="ui tiny five statistics">
           <div class="statistic">
             <div class="label">Subtotal</div>
-            <div class="value"><i class="dollar sign icon"></i>${sale.subtotal}</div>
+            <div class="value"><i class="dollar sign icon"></i>${sale.subtotal.toFixed(2)}</div>
           </div>
           <div class="statistic">
             <div class="label">Tax</div>
-            <div class="value"><i class="dollar sign icon"></i>${sale.tax}</div>
+            <div class="value"><i class="dollar sign icon"></i>${sale.tax.toFixed(2)}</div>
           </div>
           <div class="statistic">
             <div class="label">Total</div>
-            <div class="value"><i class="dollar sign icon"></i>${sale.total}</div>
+            <div class="value"><i class="dollar sign icon"></i>${sale.total.toFixed(2)}</div>
           </div>
           <div class="${sale.paid <= 0 ? `yellow` : `green`} statistic">
             <div class="label">Paid</div>
-            <div class="value"><i class="dollar sign icon"></i>${sale.paid}</div>
+            <div class="value"><i class="dollar sign icon"></i>${sale.paid.toFixed(2)}</div>
           </div>
           <div class="${sale.balance > 0 ? `red` : `green`} statistic">
             <div class="label">Balance</div>
-            <div class="value"><i class="dollar sign icon"></i>${sale.balance}</div>
+            <div class="value"><i class="dollar sign icon"></i>${sale.balance.toFixed(2)}</div>
           </div>
         </div>
         <h4 class="ui horizontal divider header">
