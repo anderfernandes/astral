@@ -3,7 +3,7 @@
 return [
 
     // Astral Variables
-    'version' => '1.0.0-alpha3',
+    'version' => '1.0.0-alpha4',
     'force_https' => env('FORCE_HTTPS', false),
 
     /*

@@ -69,7 +69,7 @@ class UsersTableSeeder extends Seeder
         'zip'             => '76549',
         'country'         => 'United States',
         'phone'           => '(254) 526-7161',
-        'active'          => false,
+        'active'          => true,
         'staff'           => true,
         'creator_id'      => 1,
         'created_at'      => Date::now('America/Chicago'),

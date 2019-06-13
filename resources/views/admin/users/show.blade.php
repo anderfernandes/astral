@@ -40,6 +40,11 @@
           {{ $pastSales->count() + $futureSales->count() }}
           {{ $pastSales->count() + $futureSales->count() == 1 ? 'visit' : 'visits'}}
         </div>
+        @if ($user->active)
+        <div class="ui green label">active</div>
+        @else
+        <div class="ui red label">inactive</div>
+        @endif
         <div class="sub header">
           {{-- Display creator only if it is a no user --}}
           @if ($user->creator_id == 1)

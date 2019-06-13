@@ -102,6 +102,7 @@ class UserController extends Controller
           'state'                 => 'required',
           'zip'                   => 'required|numeric',
           'phone'                 => 'required',
+          'active'                => 'required|boolean',
         ]);
 
         $user = new User;
@@ -120,7 +121,7 @@ class UserController extends Controller
         $user->state           = $request->state;
         $user->zip             = $request->zip;
         $user->phone           = $request->phone;
-        $user->active          = true;
+        $user->active          = $request->active;
         $user->staff           = Role::find($request->role_id)->staff;
 
         $user->creator_id      = Auth::user()->id;
@@ -202,6 +203,7 @@ class UserController extends Controller
           'state'                 => 'required',
           'zip'                   => 'required|numeric',
           'phone'                 => 'required',
+          'active'                => 'required|boolean',
         ]);
 
         $user->firstname       = $request->firstname;
@@ -217,7 +219,7 @@ class UserController extends Controller
         $user->state           = $request->state;
         $user->zip             = $request->zip;
         $user->phone           = $request->phone;
-        $user->active          = true;
+        $user->active          = $request->active;
         $user->staff           = Role::find($request->role_id)->staff;
 
         if ($request->password == null) {

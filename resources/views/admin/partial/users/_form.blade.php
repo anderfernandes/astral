@@ -1,8 +1,33 @@
+@isset ($user)
+  @if (!$user->active)
+  <div class="ui icon message">
+    <i class="info circle icon"></i>
+    <div class="content">
+      <div class="header">
+        This account is currently disabled!
+      </div>
+      <p>Make sure you check with a supervisor and the user before activating it.</p>
+    </div>
+  </div>
+  @endif
+@endisset
+
 @if ($type == 'create')
   {!! Form::open(['route' => 'admin.users.store', 'class' => 'ui form']) !!}
 @else
   {!! Form::model($user, ['route' => ['admin.users.update', $user], 'class' => 'ui form', 'method' => 'PUT']) !!}
 @endif
+<div class="two fields">
+  <div class="field"></div>
+  <div class="field">
+    <label>Account Status</label>
+    @if(isset($user))
+      {!! Form::select('active', [true => "Active", false => "Inactive"], $user->active, ['class' => 'ui search selection dropdown']) !!}
+    @else
+    {!! Form::select('active', [true => "Active", false => "Inactive"], null, ['class' => 'ui search selection dropdown']) !!}
+    @endif
+  </div>
+</div>
 <div class="two fields">
   <div class="required field">
     {!! Form::label('firstname', 'First Name') !!}

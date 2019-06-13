@@ -134,7 +134,11 @@ Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier
     Route::get('new', function() { return view('cashier.new'); })->name('new');
   });
 
+
 Auth::routes();
+
+Route::get("/login", "Auth\LoginController@login")->name("login");
+Route::post("/login", "Auth\LoginController@authenticate");
 
 Route::put('account/selfupdate', 'Admin\UserController@selfupdate')->middleware('auth')->name('selfupdate');
 
