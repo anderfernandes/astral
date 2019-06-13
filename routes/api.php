@@ -105,7 +105,7 @@ Route::get('sales', function(Request $request) {
   // Get sales and models
   $sales = Sale::with([
     "organization", "creator", "customer.role", "events", "events.type", "events.show.category", 
-    "payments", "products",
+    "payments", "products", "memos"
   ]);
 
   if ($request->has("id"))
@@ -1041,6 +1041,11 @@ Route::get('payment-methods', function() {
 Route::get('event-types', function() {
   $eventTypes = EventType::where('id', '!=', 1)->orderBy('name', 'asc')->with("allowedTickets")->get();
   return $eventTypes;
+});
+
+Route::get("event-types/{id}", function(int $id) {
+  $event_type = EventType::find($id);
+  return ["data" => $event_type];
 });
 
 // This route will return grades

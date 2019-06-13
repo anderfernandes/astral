@@ -189,98 +189,102 @@
 
             <br>
 
-            <!--- Payments --->
-            <div class="ui segment">
-              <div class="ui horizontal divider header">
-                <i class="money icon"></i> Payments
+            <transition mode="out-in" name="fade">
+
+              <!--- Payments --->
+              <div class="ui segment" v-if="sale.balance > 0">
+                <div class="ui horizontal divider header">
+                  <i class="money icon"></i> Payments
+                </div>
+                <sui-form>
+                  <div class="four fields">
+                    <div class="required field">
+                      <label>Taxable</label>
+                      <sui-dropdown v-model="sale.taxable" direction="upward" v-if="taxable"
+                                    :options="taxable" icon=""
+                                    placeholder="Taxable"
+                                    selection />
+                    </div>
+                  </div>
+                  <div class="four fields">
+                    <div class="field">
+                      <label>Payment Method</label>
+                      <sui-dropdown fluid direction="upward" v-if="payment_methods"
+                                    v-model="sale.payment_method"
+                                    :options="payment_methods"
+                                    placeholder="Payment Method"
+                                    selection />
+                    </div>
+                    <div class="field">
+                      <label>Tendered</label>
+                      <div class="ui labeled input">
+                        <div class="ui basic label">$</div>
+                        <input type="text" placeholder="Tendered" 
+                          v-model.number="sale.tendered">
+                      </div>
+                    </div>
+                    <sui-form-field :error="parseFloat(change_due) < 0">
+                      <label>Change Due</label>
+                      <div class="ui labeled input">
+                        <div class="ui basic label">$</div>
+                        <input placeholder="Change Due" v-model="change_due" readonly>
+                      </div>
+                    </sui-form-field>
+                    <sui-form-field :error="errors && errors.hasOwnProperty('reference')">
+                      <label>Reference</label>
+                      <sui-input placeholder="Reference" :error="!hasReference" v-model="sale.reference" />
+                      <transition mode="in-out" name="fade">
+                          <sui-label basic color="red" pointing 
+                          v-if="errors && errors.hasOwnProperty('reference')">
+                            {{ errors.reference[0] }}
+                          </sui-label>
+                          <sui-label basic color="red" pointing 
+                            v-if="!hasReference">
+                            What's the reference of the {{ getPaymentMethod(this.sale.payment_method) }}?
+                          </sui-label>
+                      </transition>
+                    </sui-form-field>
+                  </div>
+                  <div class="ui small horizontal divider header" v-if="sale.payments.length > 0">
+                    <i class="money icon"></i>
+                    Payments
+                  </div>
+                  <table class="ui selectable single table" v-if="sale.payments.length > 0">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Method</th>
+                        <th>Amount Paid</th>
+                        <th>Date</th>
+                        <th>Cashier</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="payment in sale.payments" :key="payment.id">
+                        <td>
+                          <div class="ui header">
+                            {{ payment.id }}
+                          </div>
+                        </td>
+                        <td><i class="cc visa icon"></i>
+                          {{ payment.method }}
+                        </td>
+                        <td>$ {{ payment.total }}</td>
+                        <td>
+                            {{ format(new Date(payment.created_at), $dateFormat.long) }}
+                            ({{ distanceInWords(new Date(), new Date(payment.created_at), { addSuffix: true }) }})
+                        </td>
+                        <td>
+                          <i class="user circle icon"></i>
+                          {{ payment.cashier.name }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </sui-form>
               </div>
-              <sui-form>
-                <div class="four fields">
-                  <div class="required field">
-                    <label>Taxable</label>
-                    <sui-dropdown v-model="sale.taxable" direction="upward" v-if="taxable"
-                                  :options="taxable" icon=""
-                                  placeholder="Taxable"
-                                  selection />
-                  </div>
-                </div>
-                <div class="four fields">
-                  <div class="field">
-                    <label>Payment Method</label>
-                    <sui-dropdown fluid direction="upward" v-if="payment_methods"
-                                  v-model="sale.payment_method"
-                                  :options="payment_methods"
-                                  placeholder="Payment Method"
-                                  selection />
-                  </div>
-                  <div class="field">
-                    <label>Tendered</label>
-                    <div class="ui labeled input">
-                      <div class="ui basic label">$</div>
-                      <input type="text" placeholder="Tendered" 
-                        v-model.number="sale.tendered">
-                    </div>
-                  </div>
-                  <sui-form-field :error="parseFloat(change_due) < 0">
-                    <label>Change Due</label>
-                    <div class="ui labeled input">
-                      <div class="ui basic label">$</div>
-                      <input placeholder="Change Due" v-model="change_due" readonly>
-                    </div>
-                  </sui-form-field>
-                  <sui-form-field :error="errors && errors.hasOwnProperty('reference')">
-                    <label>Reference</label>
-                    <sui-input placeholder="Reference" :error="!hasReference" v-model="sale.reference" />
-                    <transition mode="in-out" name="fade">
-                        <sui-label basic color="red" pointing 
-                        v-if="errors && errors.hasOwnProperty('reference')">
-                          {{ errors.reference[0] }}
-                        </sui-label>
-                        <sui-label basic color="red" pointing 
-                          v-if="!hasReference">
-                          What's the reference of the {{ getPaymentMethod(this.sale.payment_method) }}?
-                        </sui-label>
-                    </transition>
-                  </sui-form-field>
-                </div>
-                <div class="ui small horizontal divider header" v-if="sale.payments.length > 0">
-                  <i class="money icon"></i>
-                  Payments
-                </div>
-                <table class="ui selectable single table" v-if="sale.payments.length > 0">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Method</th>
-                      <th>Amount Paid</th>
-                      <th>Date</th>
-                      <th>Cashier</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="payment in sale.payments" :key="payment.id">
-                      <td>
-                        <div class="ui header">
-                          {{ payment.id }}
-                        </div>
-                      </td>
-                      <td><i class="cc visa icon"></i>
-                        {{ payment.method }}
-                      </td>
-                      <td>$ {{ payment.total }}</td>
-                      <td>
-                          {{ format(new Date(payment.created_at), $dateFormat.long) }}
-                          ({{ distanceInWords(new Date(), new Date(payment.created_at), { addSuffix: true }) }})
-                      </td>
-                      <td>
-                        <i class="user circle icon"></i>
-                        {{ payment.cashier.name }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </sui-form>
-            </div>
+
+            </transition>
 
             <!--- Memos --->
             <div class="ui small horizontal divider header" v-if="sale.memos.length > 0">

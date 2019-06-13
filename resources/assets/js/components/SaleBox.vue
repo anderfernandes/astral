@@ -55,6 +55,9 @@
           {{ format(new Date(sale.updated_at), $dateFormat.long) }}
           ({{ distanceInWords(new Date(), new Date(sale.updated_at), { addSuffix: true }) }})
         </span>
+        <span v-if="sale.memos && sale.memos.length > 0">
+          | <i class="comment alternate icon"></i> {{ sale.memos.length }}
+        </span>
       </div>
 
       <div class="ui two column grid" v-if="sale.events.length > 0">

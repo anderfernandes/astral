@@ -1,8 +1,9 @@
 <template>
   <sui-segment inverted :loading="isLoading">
     
-    <div class="ui inverted horizontal divider header">
-      <i class="calendar check icon"></i> Event # {{ $vnode.key + 1 }}
+    <div class="ui inverted horizontal divider header" v-if="event_type && event_type.name">
+      <i class="calendar check icon"></i> Event # {{ $vnode.key + 1 }} | 
+      {{ event_type.name }}
     </div>
     
     <div class="required field">
@@ -69,7 +70,7 @@
     <transition appear mode="out-in" name="fade">
       <div class="required field" v-if="event">
         <label>Tickets</label>
-        <sui-dropdown fluid selection direction="upward"
+        <sui-dropdown fluid selection direction="upward" v-if="ticketOptions && ticketOptions[0] && ticketOptions[0].hasOwnProperty('icon')"
                       multiple 
                       placeholder="Select tickets"
                       :options="ticketOptions"
@@ -147,17 +148,18 @@
   export default {
     data: () => ({
       flatpickrConfig: {
-        dateFormat: "l, F j, Y",
-        defaultDate: "today",
+        dateFormat  : "l, F j, Y",
+        defaultDate : "today",
       },
-      eventOptions     : [],
-      events_data      : [],
+      eventOptions  : [],
+      events_data   : [],
       
-      ticketOptions    : [],
-      tickets_data     : [],
+      ticketOptions : [],
+      tickets_data  : [],
       
-      isLoading        : true,
-      event_type_id    : null,
+      isLoading     : true,
+      event_type_id : null,
+      event_type    : {},
     }),
 
     components: { flatpickr },
@@ -246,6 +248,17 @@
         }
       },
 
+      // Fetch Event Types
+      async fetchEventType() {
+        try {
+          const response = await axios.get(`/api/event-types/${ this.event_type_id }`)
+          this.event_type = response.data.data
+
+        } catch (error) {
+          alert(`Unable to fetch event types: ${ error.message }`)
+        }
+      },
+
       // Remove ticket from state
       removeTicket(id) {
         this.$store.commit('REMOVE_TICKET', { index: this.$vnode.key, id })
@@ -256,14 +269,14 @@
 
       this.isLoading = true
       
-      this.event_type_id = this.$route.query.type
+      this.event_type_id = await this.$route.query.type
 
       await this.fetchTicketsTypes()
 
       await this.fetchEventOptions()
-      
-      
 
+      await this.fetchEventType()
+      
       this.isLoading = false
     },
     

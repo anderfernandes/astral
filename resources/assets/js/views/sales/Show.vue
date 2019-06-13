@@ -142,7 +142,7 @@
               </div>
             </div>
             
-            <div class="ui raised card" v-if="sale.organization">
+            <div class="ui raised card" v-if="sale.organization && sale.organization.id != 1">
               <div class="content">
                 <div class="ui top attached black center aligned large label">
                   <i class="university icon"></i> Organization Information</div>
