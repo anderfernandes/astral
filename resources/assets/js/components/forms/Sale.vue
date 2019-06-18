@@ -14,35 +14,65 @@
         <div id="form">
 
           <!--- Buttons --->
-          <div class="ui form">
-            <div class="four inline fields" id="sale-form-fixed">
-              <div class="field">
-                <sui-button basic color="black" icon="left chevron" 
-                            @click="$router.push({ name: 'index' })">
-                  Back
-                </sui-button>
-                <sui-button @click="submit" label-position="left" color="green" icon="save"
-                            :disabled="!enableSubmit">
-                  Save
-                </sui-button>
-              </div>
-              <div class="field"></div>
-              <div class="required field" style="text-align: right">
-                <label>Status</label>
-              </div>
-              <div class="required field" style="padding-right: 0">
-                <sui-dropdown fluid selection direction="downward" v-if="statuses"
-                              v-model="sale.status" label="Status"
-                              :options="statuses"
-                              placeholder="Sale Status"
-                />
+          <div class="ui grid">
+            <div class="sixteen wide column" style="padding: 0 0 0 0 !important">
+              <div class="ui top fixed sticky" style="width:100%; right:0; margin-top:3.5rem">
+                <div class="ui segment" style="border-radius: 0 !important; padding-top:1rem; padding-bottom:0">
+                  <div class="ui container">
+                    <div class="ui form">
+                      <div class="four inline fields">
+                        <div class="field">
+                          <sui-button basic color="black" icon="left chevron" 
+                                      @click="$router.push({ name: 'index' })">
+                            Back
+                          </sui-button>
+                          <sui-button @click="submit" label-position="left" color="green" icon="save"
+                                      :disabled="!enableSubmit">
+                            Save
+                          </sui-button>
+                        </div>
+                        <div class="field"></div>
+                        <div class="required field" style="text-align: right">
+                          <label>Status</label>
+                        </div>
+                        <div class="required field" style="padding-right: 0">
+                          <sui-dropdown fluid selection direction="downward" v-if="statuses"
+                                        v-model="sale.status" label="Status"
+                                        :options="statuses"
+                                        placeholder="Sale Status"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          <br>
+          <br>
+          <br>
+          
           <!-- Form -->
           <div class="ui container">
             
             <br><br>
+
+            <transition mode="out-in" name="fade">
+              <div class="ui error icon message" v-if="!enableSubmit">
+                <i class="exclamation circle icon"></i>
+                <div class="content">
+                  <div class="header">Please fix the following problems:</div>
+                  <ul>
+                    <li v-if="!hasMemo">Please leave a memo explaining why you are changing this sale</li>
+                    <li v-if="!hasReference">Please leave a reference for the sale payment</li>
+                    <li v-if="!hasSellTo">Please select who the sale is for: a customer or an organization</li>
+                    <li v-if="!hasProductsOrTickets">Please add a product or events/tickets to the sale</li>
+                  </ul>
+                </div>
+              </div>
+            </transition>
 
             <!--- Sale --->
             <div class="ui segment">
@@ -332,6 +362,21 @@
             </div>
             
           </div>
+
+          <transition mode="out-in" name="fade">
+            <div class="ui error icon message" v-if="!enableSubmit">
+              <i class="exclamation circle icon"></i>
+              <div class="content">
+                <div class="header">Please fix the following problems:</div>
+                <ul>
+                  <li v-if="!hasMemo">Please leave a memo explaining why you are changing this sale</li>
+                  <li v-if="!hasReference">Please leave a reference for the sale payment</li>
+                  <li v-if="!hasSellTo">Please select who the sale is for: a customer or an organization</li>
+                  <li v-if="!hasProductsOrTickets">Please add a product or events/tickets to the sale</li>
+                </ul>
+              </div>
+            </div>
+          </transition>
 
           <br>
           <br>
@@ -631,6 +676,22 @@
         get()      { return this.$store.getters.sale       },
       },
 
+      hasMemo() {
+        return this.$route.name == "edit" ? this.sale.memo.length >= 5 : true
+      },
+
+      hasSellTo() {
+        return this.sale.sell_to != null
+      },
+
+      hasSaleStatus() {
+        return this.sale.status != null
+      },
+
+      hasProductsOrTickets() {
+        return (this.sale.tickets.length > 0 || this.sale.products.length > 0)
+      },
+
       enableSubmit() {
         let hasMemo              = this.$route.name == "edit" ? this.sale.memo.length >= 5 : true
         let hasSellTo            = this.sale.sell_to != null
@@ -680,6 +741,7 @@
     margin-top: -1rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+    max-width: 1127px;
   }
 
 </style>

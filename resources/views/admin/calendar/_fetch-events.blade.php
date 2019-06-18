@@ -111,7 +111,7 @@ function fetchEvents(calEvent, jsEvent, view) {
           <div class="ui ${sale.status == 'canceled' ? `red raised` : `raised`} card">
             <div class="content">
               <div class="header">
-                <a href="/admin/sales/${sale.id}" target="_blank" style="padding: 0 0 0 0">Sale # ${sale.id}</a>
+                <a href="/admin/sales#/${sale.id}" target="_blank" style="padding: 0 0 0 0">Sale # ${sale.id}</a>
                 <div class="right floated">
                   <div class="ui black tag label"><i class="dollar icon"></i> ${parseFloat(sale.total).toFixed(2)}</div>
                   ${getSaleStatus(sale.status)}

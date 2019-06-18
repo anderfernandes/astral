@@ -987,8 +987,9 @@ Route::get('sale/{sale}', function(Sale $sale) {
       'role' => $sale->creator->role->name,
     ],
     'customer' => [
-      'id'           => $sale->customer->id,
-      'name'         => $sale->customer->fullname,
+      'id'            => $sale->customer->id,
+      'name'          => $sale->customer->fullname,
+      'membership_id' => $sale->customer->membership_id,
       'role'         => [
         'id'   => $sale->customer->role->id,
         'name' => $sale->customer->role->name,

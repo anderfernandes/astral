@@ -43,20 +43,54 @@
       </div>
 
       <sui-dropdown class="black labeled icon" icon="copy" button pointing text="Documents">
-        <sui-dropdown-menu>
-          <sui-dropdown-item>
-            <i class="file icon"></i>
-            Confirmation
-          </sui-dropdown-item>
-          <sui-dropdown-item>
-            <i class="file icon"></i>
-            Invoice
-          </sui-dropdown-item>
-          <sui-dropdown-item>
+        <sui-dropdown-menu v-if="sale.events && sale.events.length == 0 && sale.products && sale.products.length == 0 && sale.customer.membership_id != null">
+          <sui-dropdown-header>Membership Documents</sui-dropdown-header>
+          <sui-dropdown-item @click="open(`/admin/members/${sale.customer.membership_id}/receipt`, `_blank`)">
             <i class="file icon"></i>
             Receipt
           </sui-dropdown-item>
-          <sui-dropdown-item>
+          <sui-dropdown-item @click="open(`/admin/members/${sale.customer.membership_id}/receipt/pdf`, `_blank`)">
+            <i class="pdf file icon"></i>
+            Receipt (PDF)
+          </sui-dropdown-item>
+          <sui-dropdown-item @click="open(`/admin/members/${sale.customer.membership_id}/card`, `_blank`)">
+            <i class="address card icon"></i>
+            Card
+          </sui-dropdown-item>
+          <sui-dropdown-item @click="open(`/admin/members/${sale.customer.membership_id}`, `_blank`)">
+            <i class="info circle icon"></i>
+            Member Info
+          </sui-dropdown-item>
+        </sui-dropdown-menu>
+        <sui-dropdown-menu v-else>
+          <sui-dropdown-header>Sale Documents (Web)</sui-dropdown-header>
+          <sui-dropdown-item @click="open(`/admin/sales/${sale.id}/confirmation`, '_blank')">
+            <i class="file icon"></i>
+            Confirmation
+          </sui-dropdown-item>
+          <sui-dropdown-item @click="open(`/admin/sales/${sale.id}/invoice`, '_blank')">
+            <i class="file icon"></i>
+            Invoice
+          </sui-dropdown-item>
+          <sui-dropdown-item @click="open(`/admin/sales/${sale.id}/receipt`, '_blank')">
+            <i class="file icon"></i>
+            Receipt
+          </sui-dropdown-item>
+          <sui-dropdown-header>Sale Documents (PDF)</sui-dropdown-header>
+          <sui-dropdown-item @click="open(`/admin/sales/${sale.id}/confirmation?format=pdf`, '_blank')">
+            <i class="file pdf icon"></i>
+            Confirmation (PDF)
+          </sui-dropdown-item>
+          <sui-dropdown-item @click="open(`/admin/sales/${sale.id}/invoice?format=pdf`, '_blank')">
+            <i class="file pdf icon"></i>
+            Invoice (PDF)
+          </sui-dropdown-item>
+          <sui-dropdown-item @click="open(`/admin/sales/${sale.id}/receipt?format=pdf`, '_blank')">
+            <i class="file pdf icon"></i>
+            Receipt (PDF)
+          </sui-dropdown-item>
+          <sui-dropdown-header>Tickets</sui-dropdown-header>
+          <sui-dropdown-item @click="open(`/admin/sales/${sale.id}/tickets`, '_blank')">
             <i class="ticket icon"></i>
             Tickets
           </sui-dropdown-item>
@@ -77,7 +111,7 @@
         
         <div id="sale-data" v-if="!isLoading">
 
-          <div class="ui three doubling stackable cards">
+          <div :class="saleDataTopClass">
             
             <div class="ui raised card">
               <div class="content">
@@ -165,7 +199,7 @@
           
           </div>
           
-          <div class="ui two doubling stackable cards">
+          <div :class="saleDataBottomClass">
 
             <div class="ui raised card" v-if="sale.events && sale.events.length > 0">
               <div class="content">
@@ -425,6 +459,20 @@
     },
     
     computed: {
+
+      saleDataTopClass() {
+        if (!this.sale.events || this.sale.events.length == 0 || this.sale.customer.id == 1 || this.sale.organization.id == 1)
+          return 'ui two doubling stackable cards'
+        else
+          return 'ui three doubling stackable cards'
+      },
+
+      saleDataBottomClass() {
+        if (!this.sale.products || this.sale.products.length == 0 || !this.sale.events || this.sale.products.length == 0)
+          return 'ui one doubling stackable cards'
+        else
+          return 'ui two doubling stackable cards'
+      },
     
       ...mapGetters(['errors', 'currencySettings']),
 
@@ -466,6 +514,11 @@
     },
     
     methods : {
+
+      open(URL, target)
+      {
+        window.open(URL, target)
+      },
       
       async fetchSale() {
         try {

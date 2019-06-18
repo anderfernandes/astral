@@ -329,7 +329,7 @@ function fetchSales(calEvent, jsEvent, view) {
       `
       var footer = `
       <div class="actions">
-        <a href="/admin/sales/${sale.id}/edit" class="ui yellow right labeled icon button">
+        <a href="/admin/sales#/${sale.id}/edit" class="ui yellow right labeled icon button">
           Edit
           <i class="edit icon"></i>
         </a>
