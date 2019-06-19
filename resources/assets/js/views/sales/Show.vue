@@ -149,7 +149,7 @@
               </div>
             </div>
             
-            <div class="ui raised card" v-if="sale.customer && sale.organization && sale.customer.role">
+            <div class="ui raised card" v-if="sale.customer && sale.customer.id != 1 && sale.organization && sale.customer.role">
               <div class="content">
                 <div class="ui top attached black center aligned large label">
                   <i class="user icon"></i> Customer Information
@@ -461,7 +461,9 @@
     computed: {
 
       saleDataTopClass() {
-        if (!this.sale.events || this.sale.events.length == 0 || this.sale.customer.id == 1 || this.sale.organization.id == 1)
+        if (this.sale.customer && this.sale.customer.id == 1)
+          return 'ui one doubling stackable cards'
+        else if (!this.sale.events || this.sale.events.length == 0 || this.sale.organization.id == 1)
           return 'ui two doubling stackable cards'
         else
           return 'ui three doubling stackable cards'

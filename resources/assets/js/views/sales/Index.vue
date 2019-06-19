@@ -8,24 +8,28 @@
     <div class="ui basic segment" v-if="!isLoading">
 
       <modal id="event-type">
-        <sui-header icon="info circle">Select the event type</sui-header>
-        <sui-segment :style="{ backgroundColor: event_type.color, color: 'white' }" id="event-type"
-                      @click="$router.push({ name: 'create', query: { type: event_type.id } }); $store.commit('TOGGLE_MODAL', false)"
-                      v-for="event_type in event_types" :key="event_type.id">
-          <div class="ui inverted small header">
-            {{ event_type.name }}
-            <div class="sub header">{{ event_type.description }}</div>
-            <div class="ui divider"></div>
-            <div class="sub header">
-              Available tickets:
-              <div class="ui label" v-for="ticket in event_type.allowed_tickets" :key="ticket.id"
-                  style="background-color: transparent; border-width: 1px; border-color:white; color: white">
-                  <i class="ticket icon"></i> {{ ticket.name }}
-                  <div class="detail">$ {{ parseFloat(ticket.price).toFixed(2) }}</div>
-              </div>
+        <sui-header icon="info circle">Select an event type</sui-header>
+        <sui-modal-content scrolling>
+          <div class="ui two column grid">
+            <div class="column"  v-for="event_type in event_types" :key="event_type.id">
+              <sui-segment :style="{ backgroundColor: event_type.color, color: 'white' }" id="event-type"
+                        @click="$router.push({ name: 'create', query: { type: event_type.id } }); $store.commit('TOGGLE_MODAL', false)"
+                       >
+                <div class="ui inverted small header">
+                  {{ event_type.name }}
+                  <div class="sub header">{{ event_type.description }}</div> <br>
+                  <div class="sub header" v-if="event_type.allowed_tickets && event_type.allowed_tickets.length > 0">
+                    <div class="ui tiny label" v-for="ticket in event_type.allowed_tickets" :key="ticket.id"
+                        style="background-color: transparent; border-width: 1px; border-color:white; color: white">
+                        <i class="ticket icon"></i> {{ ticket.name }}
+                        <div class="detail">$ {{ parseFloat(ticket.price).toFixed(2) }}</div>
+                    </div>
+                  </div>
+                </div>
+              </sui-segment>
             </div>
           </div>
-        </sui-segment>
+        </sui-modal-content>
         <sui-modal-actions>
             <sui-button inverted @click="$store.commit('TOGGLE_MODAL', false)" icon="close">
               Close

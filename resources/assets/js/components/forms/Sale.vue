@@ -122,8 +122,8 @@
                 <div id="events">
                   <transition-group mode="out-in" name="fade">    
                     <event-form v-if="sale.customer != null" 
-                                v-for="(n, i) in numberOfEvents"
-                                :key="i"
+                                v-for="n in numberOfEvents"
+                                :key="n - 1"
                     />
                   </transition-group>
                 </div>
@@ -222,7 +222,7 @@
             <transition mode="out-in" name="fade">
 
               <!--- Payments --->
-              <div class="ui segment" v-if="sale.balance > 0">
+              <div class="ui segment" v-if="sale.balance >= 0">
                 <div class="ui horizontal divider header">
                   <i class="money icon"></i> Payments
                 </div>
