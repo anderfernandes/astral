@@ -65,7 +65,7 @@
         <div class="card" onclick="window.location='{{ route('admin.members.show', $member) }}'">
           <div class="content">
             <img src="{{ \App\Setting::find(1)->logo == '/logo.png' ? \App\Setting::find(1)->logo : Storage::url(\App\Setting::find(1)->logo) }}" alt="" class="left floated mini ui image">
-            <div class="right floated meta"># {{ $member->id }}</div>
+            <div class="right floated meta"># {{ $member->number }}</div>
             <div class="header">{{ $member->primary->fullname }}</div>
             <div class="meta">
               {{ $member->type->name }}

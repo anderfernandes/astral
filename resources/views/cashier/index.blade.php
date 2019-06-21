@@ -61,7 +61,7 @@
           <div class="ui form">
             <div class="field">
               {!! Form::label('customer_id', 'Customer') !!}
-              {!! Form::select('customer_id', $customers, 1, ['placeholder' => 'Taxable?', 'class' => 'ui search selection dropdown']) !!}
+              {!! Form::select('customer_id', $customers, 1, ['placeholder' => 'Taxable?', 'class' => 'ui customer search selection dropdown', 'autofocus' =>  true]) !!}
             </div>
           </div>
         </div>

@@ -83,4 +83,10 @@ class User extends Authenticatable
     {
       return "{$this->firstname} {$this->lastname}";
     }
+
+    public function getMembershipNumberAttribute()
+    {
+        
+        return $this->member->number;
+    }
 }

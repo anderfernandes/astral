@@ -64,6 +64,7 @@
     <div class="ui large dividing header">
       <i class="address card icon"></i>
       <div class="content">
+        # {{ $member->number }} - 
         {{ $member->primary->fullname }}
         <div class="ui black label">{{ $member->type->name }}</div>
         <div class="sub header">

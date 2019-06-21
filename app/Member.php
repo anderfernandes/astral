@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Member extends Model
 {
+    protected $appends = ['number'];
     /**
      * The attributes that should be mutaded to dates
      * @var [type]
@@ -64,5 +65,16 @@ class Member extends Model
     public function creator()
     {
       return $this->belongsTo('App\User');
+    }
+
+    /**
+    * Return the membership number formatted to the length defined in settings
+    *
+    * @return string
+    */
+    public function getNumberAttribute() 
+    {
+        $length = (int)\App\Setting::find(1)->membership_number_length;
+        return str_pad($this->attributes['id'], $length, '0', STR_PAD_LEFT);
     }
 }

@@ -65,7 +65,7 @@
       <tr>
         <td>
           <h4 class="ui header">
-            {{ $member->id }}
+            {{ $member->number }}
           </h4>
         </td>
         <td>
@@ -87,7 +87,7 @@
       <tr>
         <td>
           <h4 class="ui header">
-            {{ $member->id }}
+            {{ $member->number }}
           </h4>
         </td>
         <td>

@@ -12,8 +12,8 @@
     .blue.card {
       background: linear-gradient(rgba(255,255,255,1), rgba(255,255,255,0.5)), url('{{ \App\Setting::find(1)->cover == '/cover.jpg' ? \App\Setting::find(1)->cover : Storage::url(\App\Setting::find(1)->cover) }}') !important;
       background-size: cover !important;
-      width: 320px !important;
-      height: 202px !important;
+      width: {{ App\Setting::find(1)->membership_card_width  }}in !important;
+      height: {{ App\Setting::find(1)->membership_card_height  }}in !important;
     }
 
     @media print {
@@ -31,7 +31,7 @@
   <div class="ui blue card" style="margin:0 0 0 0">
       <div class="content">
         <img src="{{ \App\Setting::find(1)->logo == '/logo.png' ? App\Setting::find(1)->logo : Storage::url(\App\Setting::find(1)->logo) }}" alt="" class="left floated mini ui image">
-        <div class="right floated meta"># {{ $member->id }}</div>
+        <div class="right floated meta"># {{ $member->number }}</div>
         <div class="header">
           {{ $request->has('index') ? $member->secondaries[$request->index]->fullname : $member->primary->fullname }}
         </div>
@@ -56,7 +56,7 @@
         <br />
         <?php
           $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
-          echo '<img class="ui small image" src="data:image/png;base64,' . base64_encode($generator->getBarcode($member->id, $generator::TYPE_UPC_A)) . '" />'
+          echo '<img class="ui small image" src="data:image/png;base64,' . base64_encode($generator->getBarcode($member->number, $generator::TYPE_UPC_A)) . '" />'
         ?>
 
 

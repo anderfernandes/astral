@@ -42,7 +42,7 @@ class CashierController extends Controller
           if ($item['id'] == 1)
             $data = $item['fullname'];
           else
-            $data = "{$item['membership_id']} {$item['fullname']}";
+            $data = "{$item['membership_number']} {$item['fullname']}";
           return [ $item['id'] => $data];
         });
       else
