@@ -64,7 +64,7 @@
 
       // Initialize Semantic UI components
       $('.ui.radio.checkbox').checkbox();
-      $('.ui.dropdown').dropdown();
+      $('.ui.dropdown').dropdown({ fullTextSearch : true });
       $('.ui.dropdown.item').dropdown({on: 'hover'});
     });
 </script>

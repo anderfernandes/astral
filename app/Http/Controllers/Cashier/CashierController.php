@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\{ Auth, Log };
-use App\{ Event, Sale, Ticket, Payment, PaymentMethod, User };
+use App\{ Event, Sale, Ticket, Payment, PaymentMethod, User, Setting };
 
 use Jenssegers\Date\Date;
 use Session;
@@ -29,12 +29,27 @@ class CashierController extends Controller
                      ->get();
       // Get Available Payment Methods
       $paymentMethods = PaymentMethod::all();
-      $allCustomers = User::all();
 
-      $customers = $allCustomers->mapWithKeys(function ($item) {
-        return [ $item['id'] => $item['fullname']];
-      });
+      $settings = Setting::find(1);
+      
+      $allCustomers = $settings->cashier_customer_dropdown
+                      ? User::where('membership_id', '!=', 1)->orWhere('id', 1)->get()
+                      : User::all();
 
+      if ($settings->cashier_customer_dropdown)
+        $customers = $allCustomers->mapWithKeys(function ($item) 
+        {
+          if ($item['id'] == 1)
+            $data = $item['fullname'];
+          else
+            $data = "{$item['membership_id']} {$item['fullname']}";
+          return [ $item['id'] => $data];
+        });
+      else
+        $customers = $allCustomers->mapWithKeys(function ($item) { 
+          return [ $item['id'] => $item['fullname']];
+        });
+      
       return view('cashier.index')->withUser($user)
                                   ->withPaymentMethods($paymentMethods)
                                   ->withCustomers($customers)

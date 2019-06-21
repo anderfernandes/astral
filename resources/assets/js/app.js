@@ -2,6 +2,7 @@ import "./bootstrap"
 
 import Vue    from 'vue'
 import App    from './views/App.vue'
+import Shifts from './views/shifts/Shifts.vue'
 import router from './router'
 import store  from './store'
 

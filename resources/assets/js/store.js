@@ -10,6 +10,9 @@ import Index from './modules/index'
 // Sales Create Vuex Module
 import Sale from './modules/sale'
 
+// Shifts Module
+import  Shift from './modules/shift'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -17,5 +20,6 @@ export default new Vuex.Store({
     Global,
     Index,
     Sale,
+    Shift,
   }
 })

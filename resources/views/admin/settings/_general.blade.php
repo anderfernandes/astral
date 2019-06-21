@@ -101,11 +101,55 @@
       {!! Form::label('invoice_text', 'Invoice Text') !!}
       {!! Form::textarea('invoice_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
     </div>
+    <div class="four fields">
+      <div class="field">
+        <label>Mebership Card Width</label>
+        <div class="ui right labeled input">
+          {!! Form::text('membership_card_width', null, [
+            'placeholder'   => 'Membership Card Width', 
+            'data-validate' => 'membership_card_width', 
+            'type'          => 'number',
+            'min'           => 0]) !!}
+          <div class="ui basic label">inches</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Membership Card Height</label>
+        <div class="ui right labeled input">
+          {!! Form::number('membership_card_height', null, [
+            'placeholder'   => 'Membership Card Height', 
+            'data-validate' => 'membership_card_height', 
+            'min'           => 0]) 
+          !!}
+          <div class="ui basic label">inches</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Membership Number Length</label>
+        <div class="ui right labeled input">
+          {!! Form::number('membership_number_length', null, [
+            'placeholder'   => 'Membership Card Width', 
+            'data-validate' => 'memebership_number_length',
+            'min'           => strlen((string)App\Member::all()->last()->id) ]) !!}
+          <div class="ui basic label">numbers</div>
+        </div>
+      </div>
+    </div>
+    <div class="four fields">
+      <div class="field">
+        <label>Cashier Customer Dropdown</label>
+        {!! Form::select('cashier_customer_dropdown', [ 
+          0 => 'Show All Customers', 
+          1 => 'Show Members Only'
+          ], null, ['class' => 'ui dropdown']) !!}
+      </div>
+    </div>
     <div class="field">
       <div class="ui buttons">
         {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui green right labeled icon button']) !!}
       </div>
     </div>
+
   {!! Form::close() !!}
 </div>
 

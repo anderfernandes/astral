@@ -240,6 +240,10 @@ class SettingController extends Controller
       $setting->membership_text      = $request->membership_text;
       $setting->confirmation_text    = $request->confirmation_text;
       $setting->invoice_text         = $request->invoice_text;
+      $setting->membership_card_width     = $request->membership_card_width;
+      $setting->membership_card_height    = $request->membership_card_height;
+      $setting->membership_number_length  = $request->membership_number_length;
+      $setting->cashier_customer_dropdown = $request->cashier_customer_dropdown;
 
       if ($request->logo != null)
       {

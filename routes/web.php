@@ -102,6 +102,8 @@ Route::group(
   // Logs
   Route::get('logs', 'LogController@index')->name('logs');
   Route::get('logs/clear', 'LogController@clear')->name('logs.clear');
+  // Shifts
+  Route::resource('shifts', 'ShiftController');
 });
 // Cashier Routes
 Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier', 'middleware' => 'auth'],
