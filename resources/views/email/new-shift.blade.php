@@ -21,7 +21,7 @@
 
 <table class="ui single line striped table">
   <thead>
-    <tr>
+    <tr class="right aligned" style="text-align:right !important">
       <th>Employee</th>
       <th>Position</th>
       <th>From</th>
@@ -31,9 +31,9 @@
   <tbody>
     @foreach ($shift->employees as $employee)
     @if ($employee->id == $user->id) 
-    <tr style="font-weight: bold !important">
+    <tr style="font-weight: bold !; text-align:left !important">
     @else
-    <tr>
+    <tr style="text-align:left !important">
     @endif
       <td>{{ $employee->firstname }}</td>
       <td>{{ $shift->positions[$loop->index]->name }}</td>

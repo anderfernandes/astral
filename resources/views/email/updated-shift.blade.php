@@ -32,11 +32,10 @@
     </tr>
   </thead>
   <tbody>
-    @foreach ($shift->employees as $employee)
     @if ($employee->id == $user->id) 
-    <tr style="font-weight: bold !important">
+    <tr style="font-weight: bold !; text-align:left !important">
     @else
-    <tr>
+    <tr style="text-align:left !important">
     @endif
       <td>{{ $employee->firstname }}</td>
       <td>{{ $shift->positions[$loop->index]->name }}</td>

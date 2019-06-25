@@ -37,7 +37,7 @@ class UpdatedShift extends Mailable
 
         $organization = \App\Setting::find(1)->organization;
 
-        $subject = "$user->firstname, you have been added to new a shift - $organization";
+        $subject = "$user->firstname, a shift that you are a part of has been updated - $organization";
 
         return $this->subject($subject)
                     ->view('email.updated-shift');
