@@ -18,6 +18,10 @@
     <a href="{{ route('admin.shifts.edit', $shift) }}" class="ui yellow left labeled icon button">
       <i class="edit icon"></i> Edit
     </a>
+
+    <a href="{{ route('admin.shifts.create') }}" class="ui black button">
+      <i class="pencil icon"></i> Create Another Shift
+    </a>
   
     <div class="ui dividing header">
       <i class="clock alternate icon"></i>

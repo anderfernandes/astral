@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\{ Event, EventType, Show, Announcement, Setting };
+use App\{ Event, EventType, Show, Announcement, Setting, Shift };
 
 class AdminController extends Controller
 {
@@ -15,7 +15,12 @@ class AdminController extends Controller
     {
       $announcements = Announcement::where('end', '>=', now()->toDateTimeString())->get();
       $cover = Setting::find(1)->cover;
+      $shifts = Shift::where('start', '>=', now()->toDateTimeString())
+                     ->whereHas('employees', function($query) {
+        $query->where('user_id', auth()->user()->id);
+      })->get();
       return view('admin.index')->withAnnouncements($announcements)
+                                ->withShifts($shifts)
                                 ->withCover($cover);
     }
 

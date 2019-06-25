@@ -7,7 +7,7 @@
 <br>
 
 <p>
-  Shift {{ $shift->id }} has been <strong>updated</strong> an you have been added to it. 
+  Shift #{{ $shift->id }} has been <strong>updated</strong>. 
   The shift is described in the table below.
 </p>
 

@@ -61,6 +61,33 @@ function getAttendanceByType($ticketTypeID) {
 
   <div class="eight wide computer sixteen wide mobile column">
 
+      @if (auth()->user()->staff && isset($shifts))
+    
+      <div class="ui raised segment">
+        <div class="ui dividing header">
+          <i class="clock outline icon"></i>
+          <div class="content">
+            Upcoming shifts
+            <div class="sub header">{{ auth()->user()->fullname }}</div>
+          </div>
+        </div>
+        @foreach ($shifts as $shift)
+        <div class="ui dividing tiny header">
+          Shift #{{ $shift->id }} | 
+          {{ $shift->start->format('l, F j, Y') }} |
+          {{ $shift->start->format('h:i A') }} - {{ $shift->end->format('h:i A') }} ({{ $shift->start->diffForHumans() }})
+        </div>
+        @foreach ($shift->employees as $employee)
+          <div class="ui black label">
+            <i class="user circle icon"></i>{{ $employee->firstname }}
+            <div class="detail">{{ $shift->positions[$loop->index]->name }}</div>
+          </div>
+          @endforeach
+        @endforeach
+      </div>
+  
+    @endif
+
     @if(str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Overall Earnings --}}
     <div class="ui raised segment">

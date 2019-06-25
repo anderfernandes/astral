@@ -61,6 +61,30 @@
         </div>
       </div>
       @endforeach
+
+      @for ($i = 1; $i <= $employees - $shift->employees->count(); $i++)
+      <div class="two fields">
+        <div class="field">
+          <label>Employee</label>
+          <select class="ui fluid dropdown" name="employees[{{ $i + $shift->employees->count() - 1 }}][user_id]">
+            <option value="">Select an employee</option>
+            @foreach ($users as $user)
+            <option value="{{ $user->id }}">{{ $user->firstname }}</option>
+            @endforeach
+          </select>
+        </div>
+        <div class="field">
+          <label>Position</label>
+          <select class="ui fluid dropdown" name="employees[{{ $i + $shift->employees->count() - 1 }}][position_id]">
+              <option value="">Select a position</option>
+              @foreach($positions as $position)
+                <option value="{{ $position->id }}">{{ $position->name }}</option>
+              @endforeach
+            </select>  
+        </div>
+      </div>
+      @endfor
+
     @else
 
       @for ($i = 1; $i <= $employees; $i++)
@@ -91,13 +115,13 @@
     <div class="two fields">
       <div class="field">
       <a class="ui blue labeled icon button" href="{{ isset($shift)
-                                                    ? route('admin.shifts.edit',   [ 'employees' => $employees + 1 ])
+                                                    ? route('admin.shifts.edit', ['shift' => $shift, 'employees' => $employees + 1])
                                                     : route('admin.shifts.create', [ 'employees' => $employees + 1 ]) }}">
           <i class="plus icon"></i> Add Another Employee
         </a>
       </div>
       <div class="field" style="text-align: right">
-        <button type="submit" class="ui labeled icon green button">
+        <button type="submit" class="ui labeled icon positive button">
           <i class="save icon"></i> Save
         </button>
         <button type="reset" class="ui labeled icon yellow button">

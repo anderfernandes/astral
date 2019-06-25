@@ -18,7 +18,7 @@ class ShiftController extends Controller
     public function index()
     {
         //$shifts = Shift::whereDate("start", now()->toDateString())->get();
-        $shifts = Shift::all();
+        $shifts = Shift::where('start', '>=', now()->toDateTimeString())->get();
 
         return view("admin.shifts.index")->withShifts($shifts);
     }
@@ -67,8 +67,10 @@ class ShiftController extends Controller
         $shift->save();
 
         //dd(array_column($request->employees, 'position_id'));
-        $shift->employees()->attach(array_column($request->employees, 'user_id'));
-        $shift->positions()->attach(array_column($request->employees, 'position_id'));
+        $employees = array_column($request->employees, 'user_id');
+        $positions = array_column($request->employees, 'position_id');
+        $shift->employees()->attach($employees);
+        $shift->positions()->attach($positions);
 
         /*foreach ($request->employees as $employee)
         {
@@ -113,13 +115,15 @@ class ShiftController extends Controller
      * @param  \App\Shift  $shift
      * @return \Illuminate\Http\Response
      */
-    public function edit(Shift $shift)
+    public function edit(Shift $shift, Request $request)
     {
         $positions = Position::all();
 
         $users = User::where("staff", true)->get();
 
-        $employees = $request->employees ?? $shift->employees->count();
+        $employees = $request->has("employees")
+                     ? $request->employees
+                     : $shift->employees->count();
 
 
         return view("admin.shifts.edit")->withShift($shift)

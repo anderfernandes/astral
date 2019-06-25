@@ -130,6 +130,13 @@
   </a>
   @endif
 
+  
+  {{-- Bulletin --}}
+  <a class="item {{ Request::routeIs('admin.shifts.index') ? 'active' : '' }}" href="{{ route('admin.shifts.index') }}">
+    <i class="large clock outline icon"></i> Shifts
+  </a>
+  
+
   @if(str_contains(Auth::user()->role->permissions['settings'], "R"))
   {{-- Settings --}}
   <div class="ui dropdown item" onclick="location.href='{{ route('admin.settings.index') }}'">

@@ -16,9 +16,9 @@ class CreateShiftPositionTable extends Migration
         Schema::create('shift_position', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('shift_id')->unsigned();
-            $table->foreign('shift_id')->references('id')->on('users');
+            //$table->foreign('shift_id')->references('id')->on('users'); // disabled due to MSSQL bug
             $table->integer('position_id')->unsigned();
-            $table->foreign('position_id')->references('id')->on('positions');
+            //$table->foreign('position_id')->references('id')->on('positions');
         });
     }
 

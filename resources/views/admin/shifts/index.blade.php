@@ -10,7 +10,7 @@
 
   <div class="ui text container">
 
-    <a class="ui black labeled icon button" href="{{ route('admin.shifts.create') }}">
+    <a class="ui black button" href="{{ route('admin.shifts.create') }}">
       <i class="pencil icon"></i>
       Create New Shift
     </a>
