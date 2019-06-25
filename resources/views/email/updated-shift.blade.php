@@ -32,6 +32,7 @@
     </tr>
   </thead>
   <tbody>
+    @foreach ($shift->employees as $employee)
     @if ($employee->id == $user->id) 
     <tr style="font-weight: bold !; text-align:left !important">
     @else
