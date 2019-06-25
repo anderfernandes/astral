@@ -19,7 +19,7 @@ class UpdatedShift extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Shift $shift, User $user)
     {
         $this->shift = $shift;
         $this->user  = $user;
