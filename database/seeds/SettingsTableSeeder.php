@@ -23,7 +23,7 @@ class SettingsTableSeeder extends Seeder
         'fax'                       => '(254) 526-1799',
         'membership_card_width'     => 3.37,
         'membership_card_height'    => 2.125,
-        'memebership_number_length' => 3,
+        'membership_number_length' => 3,
         'cashier_customer_dropdown' => 1,
       ]);
     }

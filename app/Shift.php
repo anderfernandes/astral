@@ -13,6 +13,17 @@ class Shift extends Model
 
   public function employees()
   {
-    return $this->hasManyThrough('App\User', 'App\Position', 'user_id', 'position_id', 'id', 'id');
+    return $this->belongsToMany('App\User', 'shift_user', 'shift_id', 'user_id');
   }
+
+  public function positions()
+  {
+    return $this->belongsToMany('App\Position', 'shift_position', 'shift_id', 'position_id');
+  }
+
+  public function creator()
+  {
+    return $this->belongsTo('App\User');
+  }
+
 }

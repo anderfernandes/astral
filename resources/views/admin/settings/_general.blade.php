@@ -109,7 +109,7 @@
             'placeholder'   => 'Membership Card Width', 
             'data-validate' => 'membership_card_width', 
             'type'          => 'number',
-            'min'           => 0]) !!}
+            'min'           => '0.00']) !!}
           <div class="ui basic label">inches</div>
         </div>
       </div>
@@ -119,7 +119,8 @@
           {!! Form::number('membership_card_height', null, [
             'placeholder'   => 'Membership Card Height', 
             'data-validate' => 'membership_card_height', 
-            'min'           => 0]) 
+            'min'           => '0.00',
+            'step'          => '0.01']) 
           !!}
           <div class="ui basic label">inches</div>
         </div>
@@ -130,7 +131,9 @@
           {!! Form::number('membership_number_length', null, [
             'placeholder'   => 'Membership Card Width', 
             'data-validate' => 'memebership_number_length',
-            'min'           => strlen((string)App\Member::all()->last()->id) ]) !!}
+            'min'           => strlen((string)App\Member::all()->last()->id),
+            'step'          => '0.01']) 
+          !!}
           <div class="ui basic label">numbers</div>
         </div>
       </div>

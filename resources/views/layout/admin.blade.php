@@ -130,8 +130,10 @@
     })
   </script>
 
+  @if (Request::routeIs('admin.sales.*'))
   {{-- Astral JS --}}
   <script src="{{ mix('js/app.js') }}"></script>
+  @endif
   
   <style>
     #app { margin-top: -2rem !important }

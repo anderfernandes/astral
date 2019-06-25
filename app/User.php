@@ -89,4 +89,10 @@ class User extends Authenticatable
         
         return $this->member->number;
     }
+
+    public function shifts()
+    {
+      return $this->belongsToMany('App\Shift', 'shift_user', 'user_id', 'shift_id');
+    }
+    
 }
