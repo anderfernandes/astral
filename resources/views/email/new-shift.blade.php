@@ -4,19 +4,24 @@
 
 <p>Dear {{ $user->firstname }},</p>
 
+<br>
+
 <p>You have been added to the shift described in the table below.</p>
 
-<div class="ui dividing header">
-  Shift #{{ $shift->id }}
-  <div class="sub header">
-    {{ $shift->start->format('l, F j, Y') }} |
-    {{ $shift->start->format('h:i A') }} - {{ $shift->end->format('h:i A') }}
-  </div>
-</div>
+<br>
 
-<table class="ui single line struped table">
+<h4>
+  Shift #{{ $shift->id }}
+  <br>
+  {{ $shift->start->format('l, F j, Y') }} |
+  {{ $shift->start->format('h:i A') }} - {{ $shift->end->format('h:i A') }}
+</h4>
+
+<br>
+
+<table class="ui single line striped table">
   <thead>
-    <tr class="right aligned" style="text-align:right !important">
+    <tr>
       <th>Employee</th>
       <th>Position</th>
       <th>From</th>
@@ -30,7 +35,7 @@
     @else
     <tr>
     @endif
-      <td>{{ $employee->name }}</td>
+      <td>{{ $employee->firstname }}</td>
       <td>{{ $shift->positions[$loop->index]->name }}</td>
       <td>{{ $shift->start->format('h:i A') }}</td>
       <td>{{ $shift->end->format('h:i A') }}</td>
