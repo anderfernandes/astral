@@ -11,6 +11,9 @@ class UpdatedShift extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $shift;
+    public $user;
+
     /**
      * Create a new message instance.
      *

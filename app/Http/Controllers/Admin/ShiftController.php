@@ -165,7 +165,7 @@ class ShiftController extends Controller
           try {
             Mail::to($employee->email)
                 ->bcc(auth()->user()->email)
-                ->send(new \App\Mail\UpdatedShift($shift));
+                ->send(new \App\Mail\UpdatedShift($shift, $employee));
           } catch (\Swift_TransportException $exception) {
             session()->flash('warning', "Unable send email to $employee->email: " . $exception->getMessage());
             Log::error($exception->getMessage());
