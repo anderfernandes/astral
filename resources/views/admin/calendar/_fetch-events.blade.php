@@ -167,7 +167,7 @@ function fetchEvents(calEvent, jsEvent, view) {
                 <div class="ui label" style="background-color: ${response.color}; color: rgba(255, 255, 255, 0.8)"><i class="calendar alternate icon"></i> <div class="detail">${response.type}</div></div>
                   ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui black label"><i class="clock outline icon"></i><div class="detail">${response.show.duration} minutes</div></div>`}
                   ${ (response.allDay || response.show.id == 1) ? `` : `<div class="ui black label"><i class="ticket icon"></i><div class="detail">${response.tickets_sold} tickets sold</div></div>`}
-                  <div class="ui black label"><i class="${response.public ? `users` : `user`} icon"></i><div class="detail">${response.public ? `Public` : `Private`}</div></div>
+                  <div class="ui black label"><i class="eye icon"></i><div class="detail">${response.public ? `Public` : `Private`}</div></div>
                 </div>
                 <div class="ui large header">
                   ${ (response.allDay || response.show.id == 1) ? response.memo : response.show.name}

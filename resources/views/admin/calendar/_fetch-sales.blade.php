@@ -243,8 +243,8 @@ function fetchSales(calEvent, jsEvent, view) {
           <tr>
             <td><div class="ui header">${payment.id}</div></td>
             <td>${payment.method}</td>
-            <td>${payment.paid}</td>
-            <td>${payment.tendered}</td>
+            <td>$ ${payment.paid.toFixed(2)}</td>
+            <td>$ ${payment.tendered.toFixed(2)}</td>
             <td>${moment(payment.date).format(dateFormat)}</td>
             <td>${payment.cashier.name}</td>
           </tr>

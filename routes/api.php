@@ -623,6 +623,7 @@ Route::get('event/{event}', function(Event $event) {
     'updated_at' => Date::parse($event->updated_at)->toDateTimeString(),
     'memos'      => $memosArray,
     'allDay'     => $isAllDay,
+    'public'     => (bool)$event->public,
   ];
 });
 
