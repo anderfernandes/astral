@@ -61,7 +61,7 @@ function getAttendanceByType($ticketTypeID) {
 
   <div class="eight wide computer sixteen wide mobile column">
 
-      @if (auth()->user()->staff && isset($shifts))
+      @if (auth()->user()->staff && isset($shifts) && $shifts->count() > 0)
     
       <div class="ui raised segment">
         <div class="ui dividing header">

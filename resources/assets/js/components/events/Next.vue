@@ -10,7 +10,17 @@
     </div>
     <div class="ui grid">
       <div class="six wide column">
-        <img :src="event.show.cover" class="ui large image" alt="">
+        <div class="ui fluid large image">
+          <div v-if="moment(event.start).diff(moment(), 'minutes') <= 15 && !moment().isAfter(event.start)" class="ui green ribbon label">
+            <i class="thumbs up icon"></i>
+            Now Seating
+          </div>
+          <div v-else-if="moment().isAfter(event.start)" class="ui blue ribbon label">
+            <i class="play icon"></i>
+            Now Playing
+          </div>
+          <img :src="event.show.cover" :alt="event.show.name">
+        </div>
       </div>
       <div class="ten wide column">
         <div class="ui basic blue large label">
@@ -31,9 +41,6 @@
         </div>
         <div class="ui massive dividing header">
           {{ event.memo || event.show.name }}
-          <div v-if="moment(event.start).diff(moment(), 'minutes') <= 15" class="ui green label">
-            Now Seating
-          </div>
         </div>
         <div class="ui large header" v-if="event.show.name != 'No Show'">
           <div class="sub header" v-html="marked(event.show.description)" style="font-size:0.75em"></div>
@@ -63,8 +70,8 @@ export default ({
   methods: {
     async fetchEvents() {
       // Next seven days
-      let start = moment().format('YYYY-MM-DD')
-      let end   = moment().add(7, 'days').format('YYYY-MM-DD')
+      let start = moment().subtract(30, 'minutes').format()
+      let end   = moment().endOf('day').format()
       const response = await axios.get(`/api/events/${start}/${end}`)
       // Update data only if there are updates
       if (this.event != response.data[0])

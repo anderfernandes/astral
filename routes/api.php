@@ -775,8 +775,8 @@ Route::get('events', function(Request $request) {
 
 // This is the URL for the /events slide show
 Route::get('events/{start}/{end}', function($start, $end) {
-  $start = Date::parse($start)->startOfDay()->toDateTimeString();
-  $end   = Date::parse($end)->endOfDay()->toDateTimeString();
+  $start = Date::parse($start)->toDateTimeString();
+  $end   = Date::parse($end)->toDateTimeString();
   $events = Event::where('start', '>=', $start)->where('end', '<', $end)->where('public', true)->get();
   $eventsArray = [];
   foreach ($events as $event) {
