@@ -18,6 +18,7 @@ class AddMemberCardDimensionsToSettings extends Migration
             $table->unsignedDecimal('membership_card_height', 8)->default(2.125);
             $table->unsignedSmallInteger('membership_number_length', false)->default(3);
             $table->unsignedSmallInteger('cashier_customer_dropdown', false)->default(1);
+            $table->boolean("membership_card_barcode")->default(true);
         });
     }
 

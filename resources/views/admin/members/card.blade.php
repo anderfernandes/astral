@@ -54,9 +54,13 @@
           <img src="/astral-logo-dark.png" style="width:20px; height: 20px">
         </div>
         <br />
+        
         <?php
-          $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
-          echo '<img class="ui small image" src="data:image/png;base64,' . base64_encode($generator->getBarcode($member->number, $generator::TYPE_UPC_A)) . '" />'
+          if ((bool)\App\Setting::find(1)->membership_card_barcode)
+          {
+            $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+            echo '<img class="ui small image" src="data:image/png;base64,' . base64_encode($generator->getBarcode($member->number, $generator::TYPE_UPC_A)) . '" />';
+          }
         ?>
 
 

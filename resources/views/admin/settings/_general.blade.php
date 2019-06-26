@@ -137,6 +137,13 @@
           <div class="ui basic label">numbers</div>
         </div>
       </div>
+      <div class="field">
+        <label>UPC-A Barcode in Membership Cards</label>
+        {!! Form::select('membership_card_barcode', [ 
+          0 => 'No', 
+          1 => 'Yes'
+          ], null, ['class' => 'ui dropdown']) !!}
+      </div>
     </div>
     <div class="four fields">
       <div class="field">
