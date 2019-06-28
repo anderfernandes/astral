@@ -26,4 +26,9 @@ class Shift extends Model
     return $this->belongsTo('App\User');
   }
 
+  public function events()
+  {
+    return $this->belongsToMany('App\Event', 'shift_event', 'shift_id', 'event_id');
+  }
+
 }

@@ -30,6 +30,7 @@
         <div class="sub header">
           {{ $shift->start->format('l, F j, Y') }} |
           {{ $shift->start->format('h:i A') }} - {{ $shift->end->format('h:i A') }}
+          ({{ $shift->start->diffForHumans() }})
         </div>
         <div class="sub header">
           <i class="user circle icon"></i> {{ $shift->creator->firstname }} |
@@ -50,6 +51,28 @@
       {{ $employee->firstname }}
       <div class="detail">
         {{ $shift->positions[$loop->index]->name }}
+      </div>
+    </div>
+    @endforeach
+
+    @foreach ($shift->events as $event)
+    <div class="ui header">
+      <img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}">
+      <div class="content">
+        <div class="sub header">
+          <div class="ui basic black label">{{ $event->type->name }}</div>
+          <div class="ui basic black label">{{ $event->show->type }}</div>
+          <div class="ui basic black label">{{ $event->seats }} seats left</div>
+          <div class="ui basic black label">
+            {{ $event->sales->count() }} {{ $event->sales->count() == 1 ? "sale" :"sales" }}
+          </div>
+        </div>
+        {{ $event->show->name }}
+        <div class="sub header">
+          <i class="calendar alternate icon"></i>
+          {{ $event->start->format('l, F j, Y \a\t g:i A') }}
+          ({{ $event->start->diffForHumans() }})
+        </div>
       </div>
     </div>
     @endforeach

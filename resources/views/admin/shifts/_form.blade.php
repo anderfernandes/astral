@@ -10,23 +10,47 @@
 
     <div class="two fields">
       <div class="field">
-        <label>Date Time</label>
-        <input type="date" id="start" name="start[date]" value="{{ isset($shift) ? $shift->start->toDateString() : old('start.date') ?? now()->toDateString() }}">
+        <label>Start Date</label>
+        <input type="date" id="start-date" name="start[date]" value="{{ isset($shift) ? $shift->start->toDateString() : old('start.date') ?? null }}">
       </div>
       <div class="field">
         <label>Start Time</label>
-        <input type="time" name="start[time]" value="{{ isset($shift) ? $shift->start->toTimeString() : old('start.time') ?? '08:00' }}">
+        <input type="time" id="start-time" name="start[time]" value="{{ isset($shift) ? $shift->start->toTimeString() : old('start.time') ?? '08:00' }}">
       </div>
     </div>
 
     <div class="two fields">
       <div class="field">
         <label>End Date</label>
-        <input type="date" id="end" name="end[date]" value="{{ isset($shift) ? $shift->end->toDateString() : old('end.date') ?? now()->toDateString() }}">
+        <input type="date" id="end-date" name="end[date]" value="{{ isset($shift) ? $shift->end->toDateString() : old('end.date') ?? null }}">
       </div>
       <div class="field">
         <label>End Time</label>
-        <input type="time" name="end[time]" value="{{ isset($shift) ? $shift->end->toTimeString() : old('end.time') ?? '13:00' }}">
+        <input type="time" id="end-time" name="end[time]" value="{{ isset($shift) ? $shift->end->toTimeString() : old('end.time') ?? '13:00' }}">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="events">Events</label>
+      <div class="ui multiple selection fluid events dropdown">
+        @if (isset($shift->events))
+        <input type="hidden" name="events" value="{{ $shift->events }}">
+        @else
+        <input type="hidden" name="events">
+        @endif
+        <div class="default text">Select no, one or more events</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          @isset($shift->events)
+            @foreach($events as $event)
+              <div class="item" data-value="{{$event->id}}">
+                {{ substr($event->start->format('ga'), 0, 2) }}-{{ substr($event->end->format('ga'), 0, 2) }} |
+                Event #{{ $event->id }} ({{ $event->seats }} seats) {{ $event->show->name }} 
+                ({{ $event->type->name }})
+              </div>
+            @endforeach
+          @endif
+        </div>
       </div>
     </div>
 
@@ -135,8 +159,47 @@
 
 <script>
 
-  document.querySelector('#start').addEventListener('change', function() {
-    document.querySelector('#end').value = this.value
+  async function fetchEvents() {
+    let start = document.querySelector('#start-date').value + 'T' + document.querySelector('#start-time').value
+    let end   = document.querySelector('#end-date').value + 'T' + document.querySelector('#end-time').value
+
+    let response = await fetch(`/api/calendar/events?start=${start}&end=${end}&all_day=false`)
+    let events   = await response.json()
+
+    if (events.length > 0) {
+      events = events.map(event => ({
+        value : event.id.toString(),
+        name  : `${event.title} (${event.type})`,
+      }))
+      $('.ui.fluid.events.dropdown')
+      .dropdown('clear')
+      .dropdown({ useLabels : false })
+      .dropdown('setup menu', { values : [] })
+      .dropdown('setup menu', { values : events })
+    } else {
+      $('.ui.fluid.events.dropdown')
+      .dropdown('clear')
+      .dropdown('setup menu', { values : [] })
+    }
+  }
+
+  document.querySelector('#start-date').addEventListener('change', function() {
+    document.querySelector('#end-date').value = this.value
+    fetchEvents()
   })
+
+  document.querySelector('#end-date').addEventListener('change', fetchEvents)
+  document.querySelector('#start-time').addEventListener('change', fetchEvents)
+  document.querySelector('#end-time').addEventListener('change', fetchEvents)
+
+  @isset($shift)
+    $(document).ready(function() {
+      $('.ui.fluid.events.dropdown')
+      .dropdown({ useLabels : false })
+      .dropdown('set exactly', {!! $shift->events->pluck('id')->map(function($id) { return (string)$id; }) !!})
+      
+    })
+  
+  @endif
 
 </script>

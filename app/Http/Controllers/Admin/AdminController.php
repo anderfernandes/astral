@@ -15,7 +15,7 @@ class AdminController extends Controller
     {
       $announcements = Announcement::where('end', '>=', now()->toDateTimeString())->get();
       $cover = Setting::find(1)->cover;
-      $shifts = Shift::where('start', '>=', now()->toDateTimeString())
+      $shifts = Shift::where('start', '>=', now()->startOfDay()->toDateTimeString())
                      ->whereHas('employees', function($query) {
         $query->where('user_id', auth()->user()->id);
       })->get();
