@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\{ Shift, Position, User, Event };
+use App\{ Shift, Position, User, Event, Schedule };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
@@ -18,9 +18,16 @@ class ShiftController extends Controller
     public function index()
     {
         //$shifts = Shift::whereDate("start", now()->toDateString())->get();
-        $shifts = Shift::where('start', '>=', now()->startOfDay()->toDateTimeString())->get();
+        $shifts = Shift::where('start', '>=', now()->startOfDay()->toDateTimeString())
+                       ->orderBy('start', 'asc')
+                       ->get();
 
-        return view("admin.shifts.index")->withShifts($shifts);
+        $schedules = Schedule::whereHas('shifts', function($query) {
+          $query->where('start', '>=', now()->startOfDay()->toDateTimeString());
+        })->get();
+
+
+        return view("admin.shifts.index")->withShifts($shifts)->withSchedules($schedules);
     }
 
     /**
@@ -187,21 +194,6 @@ class ShiftController extends Controller
     public function destroy(Shift $shift)
     {
         //
-    }
-
-    public function overview(Request $request)
-    {
-      $request->shifts = str_getcsv($request->shifts);
-      
-      $shifts = [];
-      
-      foreach ($request->shifts as $shift)
-      {
-        $shift = Shift::find($shift);
-        array_push($shifts, $shift);
-      }
-
-      return view('admin.shifts.overview')->withShifts($shifts);
     }
 
     public function mail() {

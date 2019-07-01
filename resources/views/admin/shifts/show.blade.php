@@ -29,7 +29,7 @@
         Shift #{{ $shift->id }}
         <div class="sub header">
           {{ $shift->start->format('l, F j, Y') }} |
-          {{ $shift->start->format('h:i A') }} - {{ $shift->end->format('h:i A') }}
+          {{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }}
           ({{ $shift->start->diffForHumans() }})
         </div>
         <div class="sub header">

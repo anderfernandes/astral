@@ -31,4 +31,9 @@ class Shift extends Model
     return $this->belongsToMany('App\Event', 'shift_event', 'shift_id', 'event_id');
   }
 
+  public function schedules()
+  {
+    return $this->belongsToMany('App\Schedule', 'schedule_shift', 'shift_id', 'schedule_id');
+  }
+
 }
