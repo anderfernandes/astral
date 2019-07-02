@@ -68,6 +68,7 @@
     <tr>
       @foreach ($schedule->shifts as $shift)
         @if ($shift->events->count() > 0)
+        @foreach ($shift->events as $event)
         <th colspan="2">
           {{ $event->start->format('g:i A') }} | {{ $event->type->name }} <br>
           {{ $event->tickets->count() }} 
@@ -75,6 +76,7 @@
           {{ $event->sales->count() }} {{ $event->sales->count() == 1 ? "sale" : "sales" }}
         </th>
         @endif
+        @endforeach
       @endforeach
     </tr>
   </tbody>
