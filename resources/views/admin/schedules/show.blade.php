@@ -98,6 +98,7 @@
       @endforeach
     </div>
 
+    @if ($schedule->memo)
     <!-- Memo -->
     <div class="ui comments">
       <h3 class="ui dividing header">Memo</h3>
@@ -120,6 +121,7 @@
         </div>
       </div>
     </div>
+    @endif
 
     <div class="ui basic modal" id="schedule">
       <div class="ui icon header">
