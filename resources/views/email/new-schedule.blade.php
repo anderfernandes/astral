@@ -2,6 +2,10 @@
 
 @section('content')
 
+<style>
+  table, th, td { border: 1px solid; }
+</style>
+
 <h4 class="ui header">
   {{ now()->format('l, F j, Y') }}
 </h4>
@@ -16,11 +20,13 @@
   <p>A new work schedule has been posted:</p>
 @endif
 
+<br>
+
 <p>Note: This schedule is not final, as it may change to accommodate new, updated or canceled events.</p>
 
 <br>
 
-<div class="ui very basic compact unstackable table">
+<table style="border: 1px solid">
   <thead>
     <tr>
       <th colspan="{{ $schedule->shifts->count() * 2 }}">
@@ -34,11 +40,6 @@
     </tr>
     <tr>
       @foreach ($schedule->shifts as $shift)
-        <th colspan="2"></th>
-      @endforeach
-    </tr>
-    <tr>
-      @foreach ($schedule->shifts as $shift)
         <th>Employee</th>
         <th>Time</th>
       @endforeach
@@ -46,16 +47,22 @@
   </thead>
   <tbody>
     <tr>
-      @foreach($schedule->shifts as $shift)
-        @foreach ($shift->employees as $employee)
-        <th style="text-align: center">
-          {{ $employee->firstname }} <br>
-          {{ $shift->positions[$loop->index]->name }}
-        </th>
-        <th>
-          {{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }}
-        </th>
-        @endforeach
+      @foreach ($schedule->shifts as $shift)
+      <td colspan="2">
+        <table style="border: 0">
+          @foreach ($shift->employees as $employee)
+          <tr>
+            <td style="border: 0; text-align: center">
+              {{ $employee->firstname }} <br>
+              {{ $shift->positions[$loop->index]->name }}
+            </td>
+            <td style="border: 0; text-align: center">
+              {{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }}
+            </td>
+          </tr>
+          @endforeach
+        </table>
+      </td>
       @endforeach
     </tr>
     <tr>
@@ -67,20 +74,17 @@
     </tr>
     <tr>
       @foreach ($schedule->shifts as $shift)
-        @if ($shift->events->count() > 0)
+      <td colspan="2" style="text-align:center">
         @foreach ($shift->events as $event)
-        <th colspan="2">
-          {{ $event->start->format('g:i A') }} | {{ $event->type->name }} <br>
-          {{ $event->tickets->count() }} 
-          {{ $event->tickets->count() == 1 ? "seat" : "seats" }} reserved |
-          {{ $event->sales->count() }} {{ $event->sales->count() == 1 ? "sale" : "sales" }}
-        </th>
+      <p>#{{ $event->id }} - {{ $event->show->name }}, {{ $event->start->format('g:i A') }}</p>
         @endforeach
-        @endif
+      </td>
       @endforeach
     </tr>
   </tbody>
-</div>
+</table>
+
+<br><br>
 
 <p>
   {{ auth()->user()->fullname }}     <br />
