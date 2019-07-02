@@ -108,6 +108,7 @@ Route::group(
   Route::post('shifts/mail', 'ShiftController@mail')->name('shifts.mail');
   // Schedules
   Route::resource('schedules', 'ScheduleController');
+  Route::get('schedules/mail', 'ScheduleController@mail')->name('schedules.mail');
 });
 // Cashier Routes
 Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier', 'middleware' => 'auth'],
