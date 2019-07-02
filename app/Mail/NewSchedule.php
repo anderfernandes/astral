@@ -23,6 +23,7 @@ class NewSchedule extends Mailable
     public function __construct(Schedule $schedule, User $user)
     {
         $this->schedule = $schedule;
+        $this->user     = $user;
     }
 
     /**
@@ -33,6 +34,7 @@ class NewSchedule extends Mailable
     public function build()
     {
         $schedule = $this->schedule;
+        $user     = $this->user;
 
         $organization = \App\Setting::find(1)->organization;
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\{ Schedule, Shift };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\{ Mail, Log };
 
 class ScheduleController extends Controller
 {
@@ -120,12 +120,12 @@ class ScheduleController extends Controller
         foreach($shift->employees as $employee)
           array_push($employees, $employee);
       
-      $employees = $employees->unique();
+      $employees = array_unique($employees);
 
-      foreach ($employee as $user)
+      foreach ($employees as $user)
       {
         try {
-          Mail::to($user->email)->send(new \App\Mail\NewSchedule($schedule));
+          Mail::to($user->email)->send(new \App\Mail\NewSchedule($schedule, $user));
         } catch (\Swift_TransportException $exception) {
           session()->flash('warning', "Unable send email to $user->email: " . $exception->getMessage());
           Log::error($exception->getMessage());
