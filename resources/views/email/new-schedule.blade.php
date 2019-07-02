@@ -47,13 +47,15 @@
   <tbody>
     <tr>
       @foreach($schedule->shifts as $shift)
+        @foreach ($shift->employee as $employee)
         <th style="text-align: center">
-          {{ $shift->employee->firstname }} <br>
+          {{ $employee->firstname }} <br>
           {{ $shift->positions[$loop->index]->name }}
         </th>
         <th>
           {{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }}
         </th>
+        @endforeach
       @endforeach
     </tr>
     <tr>
