@@ -75,8 +75,8 @@
           {{ $event->tickets->count() == 1 ? "seat" : "seats" }} reserved |
           {{ $event->sales->count() }} {{ $event->sales->count() == 1 ? "sale" : "sales" }}
         </th>
-        @endif
         @endforeach
+        @endif
       @endforeach
     </tr>
   </tbody>
