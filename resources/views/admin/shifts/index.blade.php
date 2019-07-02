@@ -15,10 +15,12 @@
       Create New Shift
     </a>
 
+    @if ($shifts->count() > 0)
     <div class="ui black button" onclick="$('#schedule').modal('toggle')">
       <i class="pencil icon"></i>
       Create New Schedule
     </div>
+    @endif
 
     <!--- Modal --->
     <div class="ui basic modal" id="schedule">

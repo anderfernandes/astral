@@ -38,7 +38,7 @@
       Edit
     </div>
 
-    <div class="ui green labeled icon button">
+    <div class="ui blue labeled icon button">
       <i class="mail icon"></i>
       Email
     </div>
@@ -76,6 +76,29 @@
       @endforeach
     </div>
 
+    <!-- Memo -->
+    <div class="ui comments">
+      <h3 class="ui dividing header">Memo</h3>
+      <div class="comment">
+        <div class="avatar">
+          <i class="big user circle icon"></i>
+        </div>
+        <div class="content">
+          <div class="author">
+            {{ $schedule->creator->firstname }} 
+            <div class="ui black label">{{ $schedule->creator->role->name }}</div>
+            <div class="metadata">
+              <span class="date">{{ $schedule->created_at->format('l, F j, Y \a\t g:i A') }}</span>
+            </div>
+          </div>
+          
+          <div class="text">
+            {{ $schedule->memo }}
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="ui basic modal" id="schedule">
       <div class="ui icon header">
         <i class="edit icon"></i>
@@ -86,6 +109,7 @@
         <form action="{{ route('admin.schedules.update', $schedule) }}"  
               method="post"
               class="ui form">
+          {{ method_field('PUT') }}
           {{ csrf_field() }}
           <div class="ui multiple fluid selection dropdown">
             <input type="hidden" name="shifts">

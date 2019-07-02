@@ -49,7 +49,7 @@ class ScheduleController extends Controller
 
       session()->flash('success', "Schedule created successfully!");
 
-      return redirect()->route('admin.schedule.show', $schedule);
+      return redirect()->route('admin.schedules.show', $schedule);
     }
 
     /**
@@ -87,7 +87,18 @@ class ScheduleController extends Controller
      */
     public function update(Request $request, Schedule $schedule)
     {
-        //
+
+        $schedule->memo = $request->memo;
+
+        $schedule->save();
+
+        $shifts = Shift::whereIn('id', str_getcsv($request->shifts))->pluck('id')->all();
+
+        $schedule->shifts()->sync($shifts);
+
+        session()->flash('success', "Schedule created successfully!");
+
+        return redirect()->route('admin.schedules.show', $schedule);
     }
 
     /**
