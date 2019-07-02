@@ -36,7 +36,7 @@
       Edit
     </div>
 
-    <a href="{{ route('admin.schedules.mail') }}" class="ui positive labeled icon button">
+    <a href="{{ route('admin.schedules.mail', $schedule) }}" class="ui positive labeled icon button">
       <i class="mail icon"></i>
       Email
     </a>
