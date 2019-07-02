@@ -18,11 +18,9 @@
           <i class="user circle icon"></i> {{ $schedule->creator->firstname }} |
           <i class="pencil icon"></i> {{ $schedule->created_at->format('l, F j, Y \a\t g:i A') }}
           @if (isset($schedule->updated_at) && $schedule->updated_at != $schedule->created_at )
-          <i class="edit icon"></i> {{ $schedule->updated_at->format('l, F j, Y \a\t g:i A') }}
+          | <i class="edit icon"></i> {{ $schedule->updated_at->format('l, F j, Y \a\t g:i A') }}
           @endif
-        </div>
-        <div class="sub header">
-          {{ $schedule->shifts->count() }} 
+          | {{ $schedule->shifts->count() }} 
           {{ $schedule->shifts->count() == 1 ? "shift" : "shifts" }} 
         </div>
       </div>
@@ -45,7 +43,7 @@
 
     <br><br>
 
-    <div class="ui four raised doubling link cards">
+    <div class="ui three raised doubling link cards">
       @foreach ($schedule->shifts as $shift)
       <div class="card">
         <div class="content">
@@ -58,13 +56,37 @@
             ({{ $shift->end->diffInMinutes($shift->start) / 60 }} hours)
           </div>
           <div class="description">
-            @foreach($shift->employees as $employee) 
+            <div class="ui sub header">Staff</div>
+            @foreach ($shift->employees as $employee) 
             <div class="ui fluid black label" style="margin-bottom:0.5rem">
               <i class="user circle icon"></i>
               {{ $employee->firstname }}
               <div class="detail">{{ $shift->positions[$loop->index]->name }}</div>
             </div>
-            @endforeach  
+            @endforeach
+            <div class="ui comments">
+              <div class="ui sub header">Events</div>
+              @foreach ($shift->events as $event)
+                <div class="comment">
+                  
+                  <div class="content">
+                    <div class="author">
+                      {{ $event->show->name }}
+                      <div class="ui tiny black basic label">{{ $event->show->type }}</div>
+                    </div>
+                    <div class="metadata">
+                      <span class="date">
+                        {{ $event->start->format('g:i A') }} | 
+                        {{ $event->type->name }} |
+                        {{ $event->tickets->count() }} 
+                        {{ $event->tickets->count() == 1 ? "seat" : "seats" }} reserved |
+                        {{ $event->sales->count() }} {{ $event->sales->count() == 1 ? "sale" : "sales" }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              @endforeach
+            </div>
           </div>
         </div>
         <div class="extra content">

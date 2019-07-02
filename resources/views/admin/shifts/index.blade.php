@@ -76,6 +76,7 @@
               <div class="content">
                 <div class="header">Shift #{{ $shift->id }}</div>
                 <div class="meta">
+                  <i class="calendar alternate outline icon"></i>
                   {{ $shift->start->format('l, F j, Y') }} |
                   {{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }} |
                   {{ $shift->events->count() }} {{ $shift->events->count() == 1 ? "event" : "events" }}
@@ -135,18 +136,18 @@
                   @if (isset($schedule->updated_at) && $schedule->updated_at != $schedule->created_at )
                   <i class="edit icon"></i> {{ $schedule->updated_at->format('l, F j, Y \a\t g:i A') }}
                   @endif
-                </div>
-                <div class="meta">
-                  {{ $schedule->shifts->count() }} {{ $schedule->shifts->count() == 1 ? "shift" : "shifts" }}
+                  | {{ $schedule->shifts->count() }} 
+                  {{ $schedule->shifts->count() == 1 ? "shift" : "shifts" }}
                 </div>
                 <div class="description">
                   @foreach($schedule->shifts as $shift)
-                  <div class="ui black label">
+                  <a href="{{ route('admin.shifts.show', $shift) }}" class="ui black label">
                     <i class="user circle icon"></i>Shift #{{ $shift->id }}
                     <div class="detail">
-                      {{ $shift->start->format('l, F j, Y') }} ({{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }})
+                      {{ $shift->start->format('l, F j, Y') }} 
+                      ({{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }})
                     </div>
-                  </div>
+                  </a>
                   @endforeach
                 </div>
                 <div class="extra">
