@@ -1,4 +1,4 @@
-@extends('layout.email')
+@extends('layout.email-semantic')
 
 @section('content')
 
