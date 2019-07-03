@@ -66,6 +66,39 @@ function fetchEvents(calEvent, jsEvent, view) {
         return description
       }
 
+      var staff = ''
+      
+      if (response.shifts.length > 0) {
+        
+        response.shifts.forEach(function (shift) {
+        
+          shift.employees.forEach(function (employee, index) {
+            staff += 
+            `
+            <div class="ui black label" style="margin-left:0">
+              <i class="user circle icon"></i>
+              ${employee.firstname} <div class="detail">${shift.positions[index].name}</div>
+            </div>
+            `
+          })
+        })
+
+      } else {
+        staff = 
+        `
+        <div class="ui info icon message">
+          <i class="info circle icon"></i>
+          <div class="content">
+            <div class="header">
+              There are no work shifts covering this event!
+            </div>
+            <p>Make sure you create and/or assign a <a href="/admin/shifts">shift</a> to cover this event.</p>
+          </div>
+        </div>
+        `
+      }
+      
+
       // Start this variable with a message box saying that there are no sales for this event
       var sales = ''
 
@@ -94,7 +127,7 @@ function fetchEvents(calEvent, jsEvent, view) {
             `
           })
 
-          {{-- This function gets the sale status and returns it prettified in the modal --}}
+          // {{-- This function gets the sale status and returns it prettified in the modal --}}
           function getSaleStatus(status) {
             switch(status) {
               case 'complete'  : return `<div class="ui green label"><i class="checkmark icon"></i>${status}</div>`
@@ -184,6 +217,13 @@ function fetchEvents(calEvent, jsEvent, view) {
                   </p>
                 </div>
                 <div class="description">
+                  {{--- Shifts ---}}
+                  <h4 class="ui horizontal divider header">
+                    <i class="user circle icon"></i> Staff
+                  </h4>
+
+                  ${ staff }
+
                   {{-- Sales --}}
                   ${ (response.allDay || response.show.id == 1) ? `` :
                     `

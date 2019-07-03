@@ -46,4 +46,9 @@ class Event extends Model
     {
       return $this->hasMany('App\Ticket');
     }
+
+    public function shifts()
+    {
+      return $this->belongsToMany('App\Shift', 'shift_event', 'event_id', 'shift_id');
+    }
 }
