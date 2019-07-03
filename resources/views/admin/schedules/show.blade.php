@@ -22,6 +22,7 @@
           @endif
           | {{ $schedule->shifts->count() }} 
           {{ $schedule->shifts->count() == 1 ? "shift" : "shifts" }} 
+          | <i class="envelope icon"></i> {{ $schedule->emailed }}
         </div>
       </div>
     </div>

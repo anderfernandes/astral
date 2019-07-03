@@ -18,6 +18,7 @@ class CreateSchedulesTable extends Migration
             $table->text("memo")->nullable();
             $table->integer('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users');
+            $table->tinyInteger('emailed')->nullable();
             $table->timestamps();
         });
     }

@@ -38,15 +38,7 @@ class NewSchedule extends Mailable
 
         $organization = \App\Setting::find(1)->organization;
 
-        /*foreach ($schedule->shifts as $shift)
-          foreach($shift->employees as $employee)
-            array_push($employees, $employee);*/
-        
-        //$employees = $employees->unique();
-
-        // Send two emails to schedule creator if they are on the schedule?
-
-        $subject = "$user->firstname, a new work schedule has been posted and you are on it - $organization";
+        $subject = "$user->firstname, a new work schedule has been created - $organization";
         
 
         return $this->subject($subject)

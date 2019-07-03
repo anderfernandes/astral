@@ -44,6 +44,8 @@ class ScheduleController extends Controller
 
       $schedule->creator_id = auth()->user()->id;
 
+      $schedule->emailed = 0;
+
       $schedule->save();
 
       $schedule->shifts()->sync($shifts);
@@ -125,7 +127,15 @@ class ScheduleController extends Controller
       foreach ($employees as $user)
       {
         try {
-          Mail::to($user->email)->send(new \App\Mail\NewSchedule($schedule, $user));
+          if ($schedule->emailed == 0)
+            Mail::to($user->email)->send(new \App\Mail\NewSchedule($schedule, $user));
+          else
+            Mail::to($user->email)->send(new \App\Mail\UpdatedSchedule($schedule, $user));
+
+          $schedule->emailed++;
+
+          $schedule->save();
+
         } catch (\Swift_TransportException $exception) {
           session()->flash('warning', "Unable send email to $user->email: " . $exception->getMessage());
           Log::error($exception->getMessage());

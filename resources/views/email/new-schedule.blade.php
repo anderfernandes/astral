@@ -25,7 +25,7 @@
         @if (isset($schedule->memo))
         {{ $schedule->memo }}
         @else
-          A new work schedule has been posted:
+          A new work schedule has been posted.
         @endif
       </td>
     </tr>

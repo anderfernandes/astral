@@ -129,7 +129,7 @@
           <div class="ui items">
             <div class="item">
               <div class="content">
-                <div class="header">Schedule #{{ $schedule->id }}</div>
+              <a href="{{ route('admin.schedules.show', $schedule) }}" class="header">Schedule #{{ $schedule->id }}</a>
                 <div class="meta">
                   <i class="user circle icon"></i> {{ $schedule->creator->firstname }} |
                   <i class="pencil icon"></i> {{ $schedule->created_at->format('l, F j, Y \a\t g:i A') }}
@@ -138,6 +138,7 @@
                   @endif
                   | {{ $schedule->shifts->count() }} 
                   {{ $schedule->shifts->count() == 1 ? "shift" : "shifts" }}
+                  | <i class="envelope icon"></i> {{ $schedule->emailed }}
                 </div>
                 <div class="description">
                   @foreach($schedule->shifts as $shift)
@@ -149,11 +150,6 @@
                     </div>
                   </a>
                   @endforeach
-                </div>
-                <div class="extra">
-                  <a class="ui right floated blue labeled icon button" href="{{ route('admin.schedules.show', $schedule) }}">
-                    <i class="eye icon"></i> Details
-                  </a>
                 </div>
               </div>
             </div>
