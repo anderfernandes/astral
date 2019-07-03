@@ -40,6 +40,7 @@ class UpdatedSchedule extends Mailable
 
         $subject = "$user->firstname, work schedule $schedule->id has been updated - $organization";
 
-        return $this->view('email.updated-schedule');
+        return $this->subject($subject)
+                    ->view('email.updated-schedule');
     }
 }

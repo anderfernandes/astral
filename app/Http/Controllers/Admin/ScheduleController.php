@@ -132,16 +132,16 @@ class ScheduleController extends Controller
           else
             Mail::to($user->email)->send(new \App\Mail\UpdatedSchedule($schedule, $user));
 
-          $schedule->emailed++;
-
-          $schedule->save();
-
         } catch (\Swift_TransportException $exception) {
           session()->flash('warning', "Unable send email to $user->email: " . $exception->getMessage());
           Log::error($exception->getMessage());
           return redirect()->route("admin.schedules.show", $schedule);
         }
       }
+
+      $schedule->emailed++;
+
+      $schedule->save();
 
       // Send copy to sender???
 
