@@ -55,7 +55,7 @@
         <th style="border:1px solid black;text-align:center">Time</th>
       </tr>
       @foreach ($shift->employees as $employee)
-      <tr <?php if ($employee->id == $user->id) echo 'style="background-color:lightgray"'; ?>>
+      <tr <?php if ($employee->id == $user->id) echo 'bgcolor="#d3d3d3"'; ?>>
         <td style="border:1px solid black;text-align:center">{{ $employee->firstname }}</td>
         <td style="border:1px solid black;text-align:center">{{ $shift->positions[$loop->index]->name }}</td>
         <td style="border:1px solid black;text-align:center">{{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }}</td>
