@@ -38,7 +38,7 @@ class UpdatedSchedule extends Mailable
 
         $organization = \App\Setting::find(1)->organization;
 
-        $subject = "$user->firstname, work schedule $schedule->id has been updated - $organization";
+        $subject = "$user->firstname, work schedule #$schedule->id has been updated - $organization";
 
         return $this->subject($subject)
                     ->view('email.updated-schedule');

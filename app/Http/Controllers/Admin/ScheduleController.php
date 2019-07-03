@@ -117,12 +117,12 @@ class ScheduleController extends Controller
 
     public function mail(Schedule $schedule)
     {
-      $employees = [];
+      $employees = collect([]);
       foreach ($schedule->shifts as $shift)
         foreach($shift->employees as $employee)
-          array_push($employees, $employee);
+          $employees->push($employee);
       
-      $employees = array_unique($employees);
+      $employees = $employees->unique('id');
 
       foreach ($employees as $user)
       {
