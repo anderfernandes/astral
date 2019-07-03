@@ -1,69 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+  <title>Astral - Schedule #{{ $schedule->id }} - {{ auth()->user()->organization->name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 <body>
 
-  <style>
-    table { width: 100%;}
-    td, th { border: 1px solid black}
-    td { text-align: center }
-  </style>
-
-  <h4 class="ui header">
-      {{ now()->format('l, F j, Y') }}
-    </h4>
-    
-    <p>Dear {{ $user->firstname }},</p>
-    
-    @if (isset($schedule->memo))
-      <p>{{ $schedule->memo }}</p>
-    @else
-      <p>A new work schedule has been posted:</p>
-    @endif
-    
-    <p>Note: This schedule is not final, as it may change to accommodate new, updated or canceled events.</p>
+  <table style="width:100%">
+    <tr>
+      <td>{{ now()->format('l, F j, Y') }}</td>
+    </tr>
+    <tr>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Dear {{ $user->firstname }},</td>
+    </tr>
+    <tr>
+      <td></td>
+    </tr>
+    <tr>
+      <td>
+        @if (isset($schedule->memo))
+        {{ $schedule->memo }}
+        @else
+          A new work schedule has been posted:
+        @endif
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+    </tr>
+    <tr>
+      <td>
+          Note: This schedule is not final, as it may change to accommodate new, updated or canceled events.
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+    </tr>
+  </table>
 
     @foreach ($schedule->shifts as $shift)
-    <table>
+    <table style="width:100%">
       <tr>
-        <th colspan="3">{{ $shift->start->format('l, F j, Y') }}</th>
+        <th style="border:1px solid black;text-align:center">{{ $shift->start->format('l, F j, Y') }}</th>
       </tr>
+    </table>
+    <table style="width:100%">
       <tr>
-        <th>Employee</th>
-        <th>Position</th>
-        <th>Time</th>
+        <th style="border:1px solid black;text-align:center">Employee</th>
+        <th style="border:1px solid black;text-align:center">Position</th>
+        <th style="border:1px solid black;text-align:center">Time</th>
       </tr>
       @foreach ($shift->employees as $employee)
       <tr <?php if ($employee->id == $user->id) echo 'style="background-color:lightgray"'; ?>>
-        <td>{{ $employee->firstname }}</td>
-        <td>{{ $shift->positions[$loop->index]->name }}</td>
-        <td>{{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }}</td>
+        <td style="border:1px solid black;text-align:center">{{ $employee->firstname }}</td>
+        <td style="border:1px solid black;text-align:center">{{ $shift->positions[$loop->index]->name }}</td>
+        <td style="border:1px solid black;text-align:center">{{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }}</td>
       </tr>
       @endforeach
+      </table>
       @if ($shift->events->count() > 0)
-      <tr>
-        <th colspan="3">Events</th>
-      </tr>
-      @foreach ($shift->events as $event)
-      <tr>
-        <td colspan="3">
-          #{{ $event->id }} - {{ $event->show->name }}, {{ $event->show->type }}
-          {{ $event->start->format('g:i A') }}, {{ $event->type->name }}, 
-          {{ $event->tickets->count() }} {{ $event->tickets->count() == 1 ? "ticket" : "tickets" }} sold,
-          {{ $event->tickets->count() }} {{ $event->tickets->count() == 1 ? "sale" : "sales" }}
-        </td>
-      </tr>
-      @endforeach
+      <table style="width:100%">
+        <tr>
+          <th style="border:1px solid black;text-align:center">Events</th>
+        </tr>
+        @foreach ($shift->events as $event)
+        <tr>
+          <td style="border:1px solid black;text-align:center">
+            #{{ $event->id }} - {{ $event->show->name }}, {{ $event->show->type }},
+            {{ $event->start->format('g:i A') }}, {{ $event->type->name }}, 
+            {{ $event->tickets->count() }} {{ $event->tickets->count() == 1 ? "ticket" : "tickets" }} sold,
+            {{ $event->tickets->count() }} {{ $event->tickets->count() == 1 ? "sale" : "sales" }}
+          </td>
+        </tr>
+        @endforeach
+      </table>
       @endif
     </table>
     <br>
     @endforeach
     
-    <p>
-      {{ auth()->user()->fullname }}     <br />
-      {{ auth()->user()->role->name }}   <br />
-      {{ auth()->user()->organization->name }} <br />
-    </p>
-    <p></p>
+    <table style="width: 100%">
+      <tr>
+        <td>{{ auth()->user()->fullname }}</td>
+      </tr>
+      <tr>
+        <td>{{ auth()->user()->role->name }}</td>
+      </tr>
+      <tr>
+        <td>{{ auth()->user()->organization->name }} </td>
+      </tr>
+    </table>
 </body>
 </html>
