@@ -136,14 +136,13 @@
                   @if (isset($schedule->updated_at) && $schedule->updated_at != $schedule->created_at )
                   <i class="edit icon"></i> {{ $schedule->updated_at->format('l, F j, Y \a\t g:i A') }}
                   @endif
-                  | {{ $schedule->shifts->count() }} 
-                  {{ $schedule->shifts->count() == 1 ? "shift" : "shifts" }}
-                  | <i class="envelope icon"></i> {{ $schedule->emailed }}
+                  | <i class="clock icon"></i> {{ $schedule->shifts->count() }} |
+                  <i class="envelope icon"></i> {{ $schedule->emailed }}
                 </div>
                 <div class="description">
                   @foreach($schedule->shifts as $shift)
                   <a href="{{ route('admin.shifts.show', $shift) }}" class="ui black label">
-                    <i class="user circle icon"></i>Shift #{{ $shift->id }}
+                    <i class="clock icon"></i>Shift #{{ $shift->id }}
                     <div class="detail">
                       {{ $shift->start->format('l, F j, Y') }} 
                       ({{ $shift->start->format('g:i A') }} - {{ $shift->end->format('g:i A') }})

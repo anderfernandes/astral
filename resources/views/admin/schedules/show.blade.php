@@ -20,8 +20,7 @@
           @if (isset($schedule->updated_at) && $schedule->updated_at != $schedule->created_at )
           | <i class="edit icon"></i> {{ $schedule->updated_at->format('l, F j, Y \a\t g:i A') }}
           @endif
-          | {{ $schedule->shifts->count() }} 
-          {{ $schedule->shifts->count() == 1 ? "shift" : "shifts" }} 
+          | <i class="clock icon"></i> {{ $schedule->shifts->count() }}
           | <i class="envelope icon"></i> {{ $schedule->emailed }}
         </div>
       </div>
