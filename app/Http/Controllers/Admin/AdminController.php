@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\{ Event, EventType, Show, Announcement, Setting, Shift };
+use App\{ Event, EventType, Show, Announcement, Setting, Shift, Sale };
 
 class AdminController extends Controller
 {
@@ -19,8 +19,15 @@ class AdminController extends Controller
                      ->whereHas('employees', function($query) {
         $query->where('user_id', auth()->user()->id);
       })->get();
+
+      $sales = Sale::where([
+        ['status',     '=', 'tentative'],
+        ['creator_id', '=', 1],
+      ])->get();
+
       return view('admin.index')->withAnnouncements($announcements)
                                 ->withShifts($shifts)
+                                ->withSales($sales)
                                 ->withCover($cover);
     }
 

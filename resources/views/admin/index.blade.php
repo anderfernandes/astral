@@ -253,6 +253,95 @@ function getAttendanceByType($ticketTypeID) {
 
   <div class="eight wide computer sixteen wide mobile column">
 
+    <div class="ui raised segment">
+      <div class="ui dividing header">
+        <i class="dollar icon"></i>
+        <div class="content">
+          Pending Sales
+          <div class="sub header">Sent by customers through our website</div>
+        </div>
+      </div>
+      @foreach ($sales as $sale)
+      <div class="ui yellow inverted segment" onclick="location.href= '/admin/sales#/{{ $sale->id }}'" style="cursor: pointer">
+        <div class="ui items">
+          <div class="item">
+            <div class="content">
+              <!-- Header-->
+              <div class="sale box header" style="color: white !important">
+                Sale #{{ $sale->id }}
+                <div class="ui top right attached basic label" style="color: white; background-color: #fbbd08; border: white 1px solid">
+                  <i class="user circle icon"></i>
+                  {{ $sale->customer->fullname }}
+                  @if ($sale->customer_id != 1)
+                    <span>({{ $sale->customer->role->name }})</span>
+                  @endif
+                  @if ($sale->organization_id != 1)
+                  <div class="detail">
+                    <i class="university icon"></i>{{ $sale->organization->name }}
+                  </div>
+                  @endif
+                </div>
+              </div>
+              <!-- Meta -->
+              <div class="meta" style="color: white !important">
+                <i class="pencil icon"></i>      
+                {{ $sale->created_at->diffForHumans() }}
+                @if ($sale->updated_at != $sale->created_at)
+                  | <i class="edit icon"></i> 
+                  {{ $sale->updated_at->diffForHumans() }}
+                @endif
+                @if ($sale->memos->count() > 0)
+                | <i class="comment alternate icon"></i> {{ $sale->memos->count() }}
+                @endif
+              </div>
+        
+              @if ($sale->events->count() > 0)
+              <div class="ui two column grid">
+                @foreach ($sale->events as $event)
+                <div class="column">
+                  <div class="ui items">
+                    <div class="item">
+                      <div class="ui tiny image">
+                        <img src="{{ $event->show->cover }}" :alt="{{ $event->show->name }}">
+                      </div>
+                      <div class="content">
+                        <div class="meta">
+                          <div class="ui label" style="border: white 1px solid; background-color: transparent; color: white;">
+                            {{ $event->show->type }}
+                          </div>
+                          <div class="ui event-type label" style="color: white; background-color: {{ $event->type->color }}; border: white 1px solid">
+                            {{ $event->type->name }}
+                          </div>
+                        </div>
+                        <div class="header" style="color: white">{{ $event->show->name }}</div>
+                        <div class="meta" style="color: white">
+                            {{ $event->start->format('l, F j, Y \a\t g:i A') }}
+                            ({{ $event->start->diffForHumans() }})
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                @endforeach
+              </div>
+              @endif
+              <div class="meta">
+                @foreach ($sale->products as $product)
+                  <div class="ui label" style="border-color: white; background-color: transparent; color: white; border-width: 1px">
+                    <i class="box icon"></i>{{ $product->name }}<div class="detail">
+                      {{ $product->count() }}
+                    </div>
+                  </div>
+                @endforeach
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @endforeach
+    </div>
+
     @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Attendance --}}
     <div class="ui raised segment">
