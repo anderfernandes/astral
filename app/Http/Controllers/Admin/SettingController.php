@@ -10,7 +10,7 @@ use Session;
 use Illuminate\Support\Facades\{ Auth, Storage };
 
 use App\{ Organization, OrganizationType, Role, TicketType, PaymentMethod };
-use App\{ EventType, MemberType, Category, ProductType, Grade, Announcement, ShowType };
+use App\{ EventType, MemberType, Category, ProductType, Grade, Announcement, ShowType, Position };
 
 class SettingController extends Controller
 {
@@ -33,6 +33,7 @@ class SettingController extends Controller
         $grades = Grade::all();
         $showTypes = ShowType::where('id', '!=', 1)->get();
         $announcements = Announcement::all();
+        $positions = Position::all();
         $colors = [
           'red'    => '#cf3534',
           'orange' => '#f2711c',
@@ -62,6 +63,7 @@ class SettingController extends Controller
           ->withProductTypes($productTypes)
           ->withGrades($grades)
           ->withShowTypes($showTypes)
+          ->withPositions($positions)
           ->withAnnouncements($announcements);
     }
 

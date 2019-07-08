@@ -110,6 +110,7 @@ Route::group(
   Route::resource('schedules', 'ScheduleController');
   Route::get('schedules/{schedule}/mail/', 'ScheduleController@mail')->name('schedules.mail');
   Route::get('schedules/{schedule}/mail/preview', function(\App\Schedule $schedule) { return new \App\Mail\NewSchedule($schedule, auth()->user()); });
+  Route::resource('positions', 'PositionController');
 });
 // Cashier Routes
 Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier', 'middleware' => 'auth'],

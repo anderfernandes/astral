@@ -23,6 +23,7 @@
       <a class="item" data-tab="product-types"><i class="box icon"></i>Products</a>
       <a class="item" data-tab="grade"><i class="book icon"></i>Grades</a>
       <a class="item" data-tab="show-types"><i class="film icon"></i>Show Types</a>
+      <a class="item" data-tab="shifts"><i class="clock icon"></i>Shifts</a>
     </div>
   </div>
 
@@ -63,6 +64,9 @@
 
     {{-- Shows --}}
     @include('admin.settings._shows')
+
+    {{-- Shifts --}}
+    @include('admin.settings._shifts')
 
 </div>
 

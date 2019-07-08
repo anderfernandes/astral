@@ -252,7 +252,6 @@ Route::post('sales/{id}', function (Request $request, $id) {
   $user    = User::find($request->customer);
   $cashier = User::find($request->creator_id);
 
-  $sale->creator_id           = $cashier->id;
   $sale->organization_id      = $user->organization_id;
   $sale->customer_id          = $user->id;
   $sale->status               = $request->status;
