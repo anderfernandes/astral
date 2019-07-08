@@ -71,7 +71,7 @@ export default ({
     async fetchEvents() {
       // Next seven days
       let start = moment().subtract(30, 'minutes').format()
-      let end   = moment().endOf('day').format()
+      let end   = moment().add(7, 'days').endOf('day').format()
       const response = await axios.get(`/api/events/${start}/${end}`)
       // Update data only if there are updates
       if (this.event != response.data[0])
