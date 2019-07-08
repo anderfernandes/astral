@@ -125,7 +125,7 @@
       @if ($schedules->count() > 0)
 
       @foreach ($schedules as $schedule)
-        <div class="ui segment">
+        <div class="ui stacked segment">
           <div class="ui items">
             <div class="item">
               <div class="content">
