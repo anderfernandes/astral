@@ -22,7 +22,15 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
   </style>
 
   <div class="ui icon right floated buttons" style="margin-bottom:2rem">
-    <a href="{{ route('admin.sales.confirmation', $sale)}}?format=pdf" target="_blank" class="ui basic black button"><i class="file pdf outline icon"></i></a>
+    <a href="/admin/sales#/{{ $sale->id }}" class="ui basic black button">
+      <i class="left chevron icon"></i>
+    </a>
+    <a href="{{ route('admin.sales.mail', $sale) . '?document=confirmation' }}" class="ui black button">
+      <i class="mail icon"></i>
+    </a>
+    <a href="{{ route('admin.sales.confirmation', $sale)}}?format=pdf" target="_blank" class="ui basic black button">
+      <i class="file pdf outline icon"></i>
+    </a>
     <div onclick="window.print()" class="ui black button"><i class="print icon"></i></div>
     <div onclick="window.close()" class="ui red button"><i class="close icon"></i></div>
   </div>
@@ -210,9 +218,11 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
         {{ App\Setting::find(1)->phone }} |
         {{ App\Setting::find(1)->email }} |
         <a href="http://{{ App\Setting::find(1)->website }}" target="_blank">{{ App\Setting::find(1)->website }}</a> |
-        <a href="http://astral.anderfernandes.com">Astral</a>
+        <a href="https://astral.anderfernandes.com">Astral</a>
       </div>
     </div>
   </h4>
+
+  @include('admin.partial._message')
 
 @endsection

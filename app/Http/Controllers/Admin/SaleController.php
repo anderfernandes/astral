@@ -668,7 +668,7 @@ class SaleController extends Controller
       } catch (\Exception $exception) {
         $request->session()->flash('warning', "<strong>Failed to email confirmation letter. Please send it manually.</strong>");
         Log::info(Auth::user()->fullname . ' - Failed to email confirmation letter.');
-        return redirect()->route('admin.sales.show', $sale);
+        return redirect()->route('admin.sales.confirmation', $sale);
       }
 
       // Write memo
@@ -684,7 +684,7 @@ class SaleController extends Controller
       // Log email sent
       Log::info(Auth::user()->fullname . ' sent a Confirmation letter to ' . $customer .' using admin');
 
-      return redirect()->route('admin.sales.show', $sale);
+      return redirect()->route('admin.sales.confirmation', $sale);
     }
 
     /**

@@ -5,6 +5,7 @@ import Index  from './views/sales/Index.vue'
 import Create from './views/sales/Create.vue'
 import Show   from './views/sales/Show.vue'
 import Edit   from './views/sales/Edit.vue'
+import Confirmation from './views/sales/Confirmation.vue'
 
 //import ShiftsIndex  from './views/shifts/Index.vue'
 //import ShiftsCreate from './views/shifts/Create.vue'
@@ -36,6 +37,10 @@ export default new Router({
       name      : 'edit',
       component : Edit
     },
-    
+    {
+      path      : '/:id/confirmation',
+      name      : 'confirmation',
+      component : Confirmation,
+    }
   ]
 })

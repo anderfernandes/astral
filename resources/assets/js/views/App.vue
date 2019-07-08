@@ -233,6 +233,7 @@
   .ui.tentative.sale.segment:hover { 
     transition: all 0.5s;
     background-color: white   !important; 
+    color: #fbbd08 !important;
     border: #fbbd08 1px solid !important;
   }
 
@@ -258,6 +259,7 @@
 
   .ui.tentative.sale.segment:hover .ui.label:not(.event-type) {
     transition: all 0.5s;
+    color: #fbbd08 !important;
     border: #fbbd08 1px solid !important;
   }
 

@@ -97,6 +97,10 @@
         </sui-dropdown-menu>
       </sui-dropdown>
 
+      <a :href="`/admin/sales/${sale.id}/confirmation`" class="ui black button">
+        <i class="mail icon"></i> Email Confirmation
+      </a>
+
       <div class="ui right floated red button" @click="$store.commit('TOGGLE_MODAL', true)" 
                   v-if="sale.payments && sale.payments.length > 0 && !sale.refund">
         <i class="refresh icon"></i>

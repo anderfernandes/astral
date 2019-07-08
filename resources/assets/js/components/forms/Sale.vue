@@ -22,7 +22,11 @@
                     <div class="ui form">
                       <div class="four inline fields">
                         <div class="field">
-                          <sui-button basic color="black" icon="left chevron" 
+                          <sui-button basic color="black" icon="left chevron" v-if="$route.name == 'edit'" 
+                                      @click="$router.push({ name : 'show', params : { id: sale.id } })">
+                            Back
+                          </sui-button>
+                          <sui-button basic color="black" icon="left chevron" v-else
                                       @click="$router.push({ name: 'index' })">
                             Back
                           </sui-button>
