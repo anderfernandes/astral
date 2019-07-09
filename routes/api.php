@@ -624,6 +624,7 @@ Route::get('event/{event}', function(Event $event) {
     'allDay'     => $isAllDay,
     'public'     => (bool)$event->public,
     'shifts'     => $event->shifts->load(['employees', 'positions', 'creator']),
+    'allowedTickets' => $event->type->allowedTickets,
   ];
 });
 
