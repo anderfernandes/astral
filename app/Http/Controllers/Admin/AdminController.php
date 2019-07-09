@@ -23,7 +23,7 @@ class AdminController extends Controller
       $sales = Sale::where([
         ['status',     '=', 'tentative'],
         ['creator_id', '=', 1],
-      ])->get();
+      ])->orderBy('created_at', 'desc')->get();
 
       return view('admin.index')->withAnnouncements($announcements)
                                 ->withShifts($shifts)
