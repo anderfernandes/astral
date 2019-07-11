@@ -1216,6 +1216,7 @@ Route::get('events/by-date', function (Request $request) {
 
   $dates = App\Event::whereDate('start', '>=', $start->toDateString())
                     ->whereDate('end', '<=', $end->toDateString())
+                    ->orderBy('start', 'asc')
                     ->pluck('start')
                     ->map(function($date) {
                       return $date->toDateString();
