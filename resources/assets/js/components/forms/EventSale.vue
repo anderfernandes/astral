@@ -171,7 +171,17 @@
         this.isLoading = false
       },
       selected_tickets: {
-        handler : function() { 
+        handler : function(newVal, oldVal) { 
+          //console.log('newVal', val)
+          //console.log('oldVal', oldVal)
+          // If oldVal.id exists in newVal, assign the amount property of oldVal to newVal
+          oldVal.forEach((ticket, index) => {
+            if (newVal.find(element => element.id == ticket.id)) {
+              let i = newVal.findIndex(element => element.id == ticket.id)
+              Object.assign(newVal[i], { amount : ticket.amount })
+            }
+            
+          })
           this.selected_tickets
           this.$store.commit('CALCULATE_TOTALS')
         },
@@ -234,6 +244,7 @@
         try {
           const response = await axios.get(`/api/allowedTickets?event_type=${ this.event_type_id }`)
           this.ticketOptions = response.data.data.map(ticket => {
+            // We need to find if the current sale has this ticket and set the amount to that number if so
             Object.assign(ticket, { amount: 1, event: { id: 1 } })
             this.tickets_data.push(ticket)
             return {
