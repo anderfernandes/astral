@@ -46,7 +46,7 @@
           <div class="sub header" v-html="marked(event.show.description)" style="font-size:0.75em"></div>
         </div>
         <div class="ui divider" v-if="event.show.name != 'No Show'"></div>
-        <div v-for="ticket in event.allowedTickets" :key="ticket.id" class="ui large green tag label">
+        <div v-for="ticket in event.allowedTickets" :key="ticket.id" class="ui large green tag label" v-show="ticket.public == '1'">
           $ {{ parseFloat(ticket.price).toFixed(2) }} / {{ ticket.name }}
         </div>
       </div>
