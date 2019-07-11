@@ -1209,6 +1209,34 @@ Route::post('new-sale', function(Request $request) {
   return response()->json($request);
 });
 
+Route::get('events/by-date', function (Request $request) {
+  
+  $start = $request->start ? Carbon::parse($request->start)->startOfDay() : now()->startOfDay();
+  $end   = $request->end   ? Carbon::parse($request->end)->endOfDay() : now()->endOfDay();
+
+  $dates = App\Event::whereDate('start', '>=', $start->toDateString())
+                    ->whereDate('end', '<=', $end->toDateString())
+                    ->pluck('start')
+                    ->map(function($date) {
+                      return $date->toDateString();
+                    })
+                    ->unique()
+                    ->values()
+                    ->toArray();
+  
+  $events = [];
+
+  foreach ($dates as $date)
+  {
+    array_push($events, [
+      $date => App\Event::whereDate('start', $date)->orderBy('start', 'asc')->get()
+      ]);
+  }
+  
+  return response($events, 201);
+
+});
+
 Route::group(["prefix" =>"public"], function() {
   // This route is responsible for returning available events based on the number of seats available
   Route::get("findAvailableEvents", function(Request $request) {
