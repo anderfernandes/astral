@@ -926,7 +926,7 @@ Route::get('sale/{sale}', function(Sale $sale) {
           'id'          => $ticket->type->id,
           'name'        => $ticket->type->name,
           'event'       => [ 'id' => $event->id ],
-          'type'        => [ 'id' => $event->type->id ],
+          'type'        => [ 'id' => $ticket->type->id ], // THIS IS REPEATED, MY MISTAKE. FIX THIS IN BETA.
           'amount'      => $event->tickets->where('sale_id', $sale->id)->where('ticket_type_id', $ticket->ticket_type_id)->count(),
           'quantity'    => $event->tickets->where('sale_id', $sale->id)->where('ticket_type_id', $ticket->ticket_type_id)->count(),
           'description' => $ticket->type->description,

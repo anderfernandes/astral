@@ -178,7 +178,7 @@
           oldVal.forEach((ticket, index) => {
             if (newVal.find(element => element.id == ticket.id)) {
               let i = newVal.findIndex(element => element.id == ticket.id)
-              Object.assign(newVal[i], { amount : ticket.amount })
+              Object.assign(newVal[i], { amount : ticket.amount, type : ticket.type, event : ticket.event })
             }
             
           })
