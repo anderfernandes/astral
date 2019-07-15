@@ -330,6 +330,37 @@
         </div>
         <div onclick="getReportLink('attendance_ticket_type')" class="ui bottom attached black button">Get Ticket Type Attendance Report <i class="right chevron icon"></i></div>
       </div>
+      <!--- By Show Type Report Card --->
+      <div class="card">
+        <div class="content">
+          <div class="header">By Show Type</div>
+          <div class="description">
+            This reports shows revenue and attendance of events that had a particular show type in a given date/time range.
+          </div>
+          <br />
+          <form class="ui form" action="{{ route('admin.reports.show-type') }}" method="post" id="show-type">
+            {{ csrf_field() }}
+            <div class="field">
+              <label for="closeout_user">Select the show type:</label>
+              {!! Form::select('attendance_show_type', ["Planetarium" => "Planetarium", "Laser Light" => "Laser Light"], null, ['class' => 'ui fluid selection search scrolling dropdown', 'id' => 'attendance_ticket_type']) !!}
+            </div>
+            <div class="field">
+              <label for="closeout_start">Select the range:</label>
+                <div class="ui left icon input">
+                  {!! Form::text('attendance_show_type_start', null, ['placeholder' => 'Start Date and Time', 'id' => 'attendance_show_type_start']) !!}
+                <i class="calendar icon"></i>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui left icon input">
+                {!! Form::text('attendance_show_type_end', null, ['placeholder' => 'End Date and Time', 'id' =>'attendance_show_type_end']) !!}
+                <i class="calendar icon"></i>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div onclick="$('#show-type').submit()" class="ui bottom attached black button">Get Show Type Attendance Report <i class="right chevron icon"></i></div>
+      </div>
     </div>
   </div>
 
@@ -440,6 +471,9 @@
     $('#attendance_ticket_type_start').flatpickr({ maxDate: 'today', dateFormat: 'l, F j, Y' });
     $('#attendance_ticket_type_end').flatpickr({ maxDate: 'today', defaultDate: 'today', dateFormat: 'l, F j, Y' });
 
+    $('#attendance_show_type_start').flatpickr({ maxDate: 'today', dateFormat: 'l, F j, Y' });
+    $('#attendance_show_type_end').flatpickr({ maxDate: 'today', defaultDate: 'today', dateFormat: 'l, F j, Y' });
+
     $('#transaction-detail-start').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:0, defaultMinute:0});
     $('#transaction-detail-end').flatpickr({enableTime:true, dateFormat: 'l, F j, Y h:i K', defaultHour:23, defaultMinute:59});
 
@@ -454,7 +488,6 @@
 
     $('#product_type_start').flatpickr({enableTime:false, dateFormat: 'l, F j, Y', defaultHour:0, defaultMinute:0, maxDate: 'today'});
     $('#product_type_end').flatpickr({enableTime:false, defaultDate: 'today', dateFormat: 'l, F j, Y', defaultHour:23, defaultMinute:59, maxDate: 'today'});
-
 
     function getReportLink(type) {
       var data = document.querySelector(`#${type}`).value

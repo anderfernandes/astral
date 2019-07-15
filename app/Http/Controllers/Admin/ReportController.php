@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\{ Event, Sale, Ticket, Payment, PaymentMethod, User, Show, Product, ProductType };
 use App\{ TicketType, Member, Organization, EventType, OrganizationType };
 use Jenssegers\Date\Date;
+use Illuminate\Support\Carbon;
 
 use Illuminate\Http\Request;
 
@@ -629,5 +630,30 @@ class ReportController extends Controller
         }
 
       }
+    }
+
+    public function attendanceByShowType(Request $request)
+    {
+      
+      $start = Carbon::parse($request->attendance_show_type_start)->toDateTimeString();
+      $end   = Carbon::parse($request->attendance_show_type_end)->toDateTimeString();
+
+      // Find all the shows of a particular type and pluck their ids
+      $shows = Show::where('type', $request->attendance_show_type)->pluck('id')->unique()->values();
+      $events = Event::whereIn('show_id', $shows)
+                     ->where('start', '>=', $start)
+                     ->where('end', '<=', $end)
+                     ->get();
+
+      $sales = Sale::whereHas('events', function($query) use ($events) {
+        $query->whereIn('event_id', $events->pluck('id')->unique()->values());
+      })->get();
+
+      return view('admin.reports.attendance.show-type')->withEvents($events)
+                                                       ->withStart($start)
+                                                       ->withEnd($end)
+                                                       ->withShows($shows)
+                                                       ->withSales($sales)
+                                                       ->withShowType($request->attendance_show_type);
     }
 }
