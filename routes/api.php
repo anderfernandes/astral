@@ -512,7 +512,7 @@ Route::get('calendar-events', function() {
 
 // This API is consumed by the MODAL that shows event information in /admin/calendar
 Route::get('event/{event}', function(Event $event) {
-
+  // BLOCK PRIVATE EVENTS FROM SHOWING ITS DATA FOR UNAUTHORIZED USERS!!!
   // Get all Sales for this event
   $salesArray    = [];
   $ticketsArray  = [];
@@ -1232,12 +1232,13 @@ Route::get('events/by-date', function (Request $request) {
   $schedule = [];
 
   foreach ($dates as $date)
+  {
     $events = Event::whereDate('start', $date)
                    ->orderBy('start')
                    ->with(['show', 'type']);
                    
     // Public events or both
-    $events = $request->both 
+    $events = $request->has('both')
               ? $events->get() 
               : $events->where('public', true)->get();
     
@@ -1245,6 +1246,7 @@ Route::get('events/by-date', function (Request $request) {
       "date"   => $date,
       "events" => $events,
     ]);
+  }
 
   return response([
     "data" => $schedule,
