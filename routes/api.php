@@ -1232,9 +1232,18 @@ Route::get('events/by-date', function (Request $request) {
   $schedule = [];
 
   foreach ($dates as $date)
+    $events = Event::whereDate('start', $date)
+                   ->orderBy('start')
+                   ->with(['show', 'type']);
+                   
+    // Public events or both
+    $events = $request->both 
+              ? $events->get() 
+              : $events->where('public', true)->get();
+    
     array_push($schedule, [
       "date"   => $date,
-      "events" => Event::whereDate('start', $date)->orderBy('start')->with(['show', 'type'])->get(),
+      "events" => $events,
     ]);
 
   return response([
