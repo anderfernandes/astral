@@ -1211,30 +1211,35 @@ Route::post('new-sale', function(Request $request) {
 
 Route::get('events/by-date', function (Request $request) {
   
-  $start = $request->start ? Carbon::parse($request->start)->startOfDay() : now()->startOfDay();
-  $end   = $request->end   ? Carbon::parse($request->end)->endOfDay() : now()->endOfDay();
+  $start = $request->has('start') 
+                  ? Carbon::parse($request->start)->toDateTimeString()
+                  : now()->subHour()->toDateTimeString();
 
-  $dates = App\Event::whereDate('start', '>=', $start->toDateString())
-                    ->whereDate('end', '<=', $end->toDateString())
-                    ->orderBy('start', 'asc')
-                    ->pluck('start')
-                    ->map(function($date) {
-                      return $date->toDateString();
-                    })
-                    ->unique()
-                    ->values()
-                    ->toArray();
+  $end = $request->has('end') 
+            ? Carbon::parse($request->end)->toDateTimeString()
+            : now()->endOfDay()->toDateTimeString();
   
-  $events = [];
+  $dates = Event::where([
+                  ['start', '>=', $start], 
+                  ['end'  , '<=', $end]
+                ])
+                ->orderBy('start', 'asc')
+                ->pluck('start')
+                ->map(function($date) { return Carbon::parse($date)->toDateString(); })
+                ->unique()
+                ->values();
+  
+  $schedule = [];
 
   foreach ($dates as $date)
-  {
-    array_push($events, [
-      $date => App\Event::whereDate('start', $date)->orderBy('start', 'asc')->get()
-      ]);
-  }
-  
-  return response($events, 201);
+    array_push($schedule, [
+      "date"   => $date,
+      "events" => Event::whereDate('start', $date)->orderBy('start')->with(['show', 'type'])->get(),
+    ]);
+
+  return response([
+    "data" => $schedule,
+  ], 201);
 
 });
 
