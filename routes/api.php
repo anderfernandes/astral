@@ -658,7 +658,7 @@ Route::get('/calendar/events', function(Request $request) {
         $ticketsSold += 0;
       // $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
     }
-    $seats = $event->seats - $ticketsSold;
+    $seats = (int)$event->seats - App\Ticket::where('event_id', $event->id)->count();
     $isAllDay = (Date::parse($event->start)->isStartOfDay() && Date::parse($event->end)->isEndOfDay());
     $startTime = Date::parse($event->start)->format('i') == "00" ? Date::parse($event->start)->format('g') : Date::parse($event->start)->format('g:i');
     $startTime = Date::parse($event->start)->format('a') == 'am' ? $startTime . 'a' : $startTime . 'p';
@@ -729,7 +729,7 @@ Route::get('events', function(Request $request) {
     foreach ($event->sales as $sale) {
         $ticketsSold += $sale->status != 'canceled' ? $sale->tickets->count() : 0;
     }
-    $seats = $event->seats - App\Ticket::where("event_id", $event->id)->count();
+    $seats = (int)$event->seats - App\Ticket::where("event_id", $event->id)->count();
     $isAllDay = (($event->start->isStartOfDay()) && ($event->end->isEndOfDay()));
     $allowedTicketsArray = [];
     foreach ($event->type->allowedTickets->where('public', true) as $allowedTicket)
@@ -1041,8 +1041,15 @@ Route::get('payment-methods', function() {
   return $paymentMethods;
 });
 
-Route::get('event-types', function() {
-  $eventTypes = EventType::where('id', '!=', 1)->orderBy('name', 'asc')->with("allowedTickets")->get();
+Route::get('event-types', function(Request $request) {
+  $eventTypes = EventType::where('id', '!=', 1)
+                         ->orderBy('name', 'asc')
+                         ->with("allowedTickets");
+  
+  $eventTypes = $request->has('both')
+                ? $eventTypes->get()
+                : $eventTypes->where('public', true)->get();
+
   return $eventTypes;
 });
 
@@ -1228,6 +1235,8 @@ Route::get('events/by-date', function (Request $request) {
                 ->map(function($date) { return Carbon::parse($date)->toDateString(); })
                 ->unique()
                 ->values();
+
+  if ($request->event_type != 'All' || $request->event_type != 'all' || $request->has('event_type'))
   
   $schedule = [];
 

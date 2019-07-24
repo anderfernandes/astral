@@ -17,6 +17,9 @@
                        >
                 <div class="ui inverted small header">
                   {{ event_type.name }}
+                  <div class="ui small label" style="background-color: transparent; border: 1px solid white !important; color: white">
+                    {{ event_type.public ? "public" : "private" }}
+                  </div>
                   <div class="sub header">{{ event_type.description }}</div> <br>
                   <div class="sub header" v-if="event_type.allowed_tickets && event_type.allowed_tickets.length > 0">
                     <div class="ui tiny label" v-for="ticket in event_type.allowed_tickets" :key="ticket.id"

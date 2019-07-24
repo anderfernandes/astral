@@ -43,6 +43,7 @@ class EventTypeController extends Controller
           'name'        => 'required',
           'color'       => 'required',
           'description' => 'required',
+          'public'      => 'required',
         ]);
 
         $eventType = new eventType;
@@ -50,6 +51,7 @@ class EventTypeController extends Controller
         $eventType->name        = $request->name;
         $eventType->description = $request->description;
         $eventType->color       = $request->color;
+        $eventType->public      = (bool)$request->public;
 
         $eventType->creator_id  = Auth::user()->id;
 
@@ -94,6 +96,7 @@ class EventTypeController extends Controller
           'grey'   => '#767676',
           'black'  => '#1b1c1d',
         ];
+
         return view('admin.event-types.edit')->with('eventType', $eventType)
                                              ->with('colors', $colors);
     }
@@ -111,11 +114,13 @@ class EventTypeController extends Controller
           'name'        => 'required',
           'color'       => 'required',
           'description' => 'required',
+          'public'      => 'required',
         ]);
 
         $eventType->name        = $request->name;
         $eventType->description = $request->description;
         $eventType->color       = $request->color;
+        $eventType->public      = (bool)$request->public;
 
         $eventType->save();
 

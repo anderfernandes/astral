@@ -30,9 +30,13 @@
       {!! Form::text('description', null, ['placeholder' => 'Describe this organization type']) !!}
     </div>
     <div class="field">
-      <label for="">&nbsp;</label>
-      <div class="ui green right labeled submit icon button">Save <i class="save icon"></i></div>
+      {!! Form::label('public', 'Public') !!}
+      {!! Form::select('public', [ true => 'Yes', false => 'No' ], false, [ 'class' => 'ui dropdown' ]) !!}
     </div>
+  </div>
+  <div class="field">
+    <label for="">&nbsp;</label>
+    <div class="ui green right labeled submit icon button">Save <i class="save icon"></i></div>
   </div>
 {!! Form::close() !!}
 

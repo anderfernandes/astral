@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventType extends Model
 {
+  protected $casts = [
+    'public' => 'boolean',
+  ];
+
   public function allowedTickets()
   {
     return $this->belongsToMany('App\TicketType', 'allowed_ticket_events', 'event_type_id', 'ticket_type_id')

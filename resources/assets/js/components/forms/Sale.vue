@@ -303,7 +303,7 @@
                         <td><i class="cc visa icon"></i>
                           {{ payment.method }}
                         </td>
-                        <td>$ {{ payment.total }}</td>
+                        <td>$ {{ payment.paid | currency }}</td>
                         <td>
                             {{ format(new Date(payment.created_at), $dateFormat.long) }}
                             ({{ distanceInWords(new Date(), new Date(payment.created_at), { addSuffix: true }) }})

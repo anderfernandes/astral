@@ -15,6 +15,9 @@
             <h4 class="ui inverted header" style="margin-top: 0">
               <div class="content">
                 {{ $eventType->name }}
+                <div class="ui black label" style="background-color: {{ $eventType->color }} !important; border: 1px solid white !important">
+                  {{ $eventType->public ? "public" : "private" }}
+                </div>
                 <div class="sub header">{{ $eventType->description }}</div>
               </div>
             </h4>

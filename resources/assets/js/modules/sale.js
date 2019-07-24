@@ -146,8 +146,30 @@ export default {
       state.sale.events.splice(payload.index, 1, payload.event)
 
       // Update event in tickets if event changes and there are tickets for the event
+      if (state.sale.tickets[payload.index] && state.sale.tickets[payload.index].length > 0) {
+        // console.log(state.sale.tickets[payload.index])
+        // console.log(state.sale.selected_tickets[payload.index])
+        state.sale.selected_tickets[payload.index].forEach(ticket => Object.assign(ticket.event, { id: state.sale.events[payload.index] }))
+        // state.sale.tickets[payload.index].forEach(ticket => Object.assign(ticket.event, { id: state.sale.events[payload.index] }))
+      }
+    },
+
+    DELETE_EVENT(state, payload) {
+      // Removing event object
+      let events = state.sale.events
+      // THIS FIX THE PROBLEM OF DELETING EVENTS AND KEEPING DATA OF THE REST OF THE EVENTS AND/OR TICKETS
+      // SPLICE DOES NOT WORK WITH THE STATE OBJECT... HAVE TO COPY ITS VALUES, MANIPULATE AND THEN COPY BACK TO ORIGINAL...
+      events.splice(payload, 1)
+      Object.assign(state.sale, { events })
+      //state.sale.events.splice(payload.index, 1)
+      // Removing events for the ticket
       if (state.sale.tickets[payload.index] && state.sale.tickets[payload.index].length > 0)
-        state.sale.tickets[payload.index].forEach(ticket => Object.assign(ticket.event, { id: state.sale.events[payload.index] }))
+        state.sale.tickets.splice(payload.index, 1)
+        state.sale.selected_tickets.splice(payload.index, 1)
+      // Removing event amount
+      state.numberOfEvents--
+      // Assign the correct event_id to tickets
+      state.sale.selected_tickets[payload.index]
     },
 
     // SET_TICKETS

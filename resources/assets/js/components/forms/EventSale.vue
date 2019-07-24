@@ -5,6 +5,10 @@
       <i class="calendar check icon"></i> Event # {{ $vnode.key + 1 }} | 
       {{ event_type.name }}
     </div>
+
+    <div class="ui red right corner label" @click="deleteEvent()">
+      <i class="trash icon"></i>
+    </div>
     
     <div class="required field">
       <label for="date">Date</label>
@@ -189,10 +193,12 @@
       },
       tickets(newValue) { 
         this.selected_tickets = newValue
+        //this.selected_tickets 
       },
       event()   { 
         if (this.tickets.length > 0)
-          this.selected_tickets = this.tickets 
+          this.selected_tickets = this.tickets
+        
       }
     },
     
@@ -273,6 +279,12 @@
       // Remove ticket from state
       removeTicket(id) {
         this.$store.commit('REMOVE_TICKET', { index: this.$vnode.key, id })
+      },
+
+      deleteEvent() {
+        if (confirm(`Are you sure you want to remove the ${this.selected_event.type.name} Event #${this.selected_event.id} ${this.selected_event.show.name} (${this.selected_event.show.type}) from this sale?`))
+          this.$store.commit('DELETE_EVENT', this.$vnode.key)
+
       }
     },
 
