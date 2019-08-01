@@ -1046,9 +1046,9 @@ Route::get('event-types', function(Request $request) {
                          ->orderBy('name', 'asc')
                          ->with("allowedTickets");
   
-  $eventTypes = $request->has('both')
-                ? $eventTypes->get()
-                : $eventTypes->where('public', true)->get();
+  $eventTypes = $request->has('public')
+                ? $eventTypes->where('public', true)->get()
+                : $eventTypes->get();
 
   return $eventTypes;
 });
