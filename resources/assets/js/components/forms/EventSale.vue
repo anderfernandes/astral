@@ -116,7 +116,7 @@
                        style="width:4rem"
                        size="2"
                        min="1"
-                       :max="selected_event.seats"
+                       :max="selected_event.capacity"
                        v-model.number="ticket.amount"
                        @input="$store.commit('CALCULATE_TOTALS')" 
                        placeholder="Amount">
@@ -131,8 +131,8 @@
             </td>
             <td v-if="selected_event">
               1
-              <input type="range" v-model.number="ticket.amount" min="1" :max="selected_event.seats" style="width:75%">
-              {{ selected_event.seats }}
+              <input type="range" v-model.number="ticket.amount" min="1" :max="selected_event.capacity" style="width:75%">
+              {{ selected_event.capacity }}
             </td>
           </tr>
         </tbody>

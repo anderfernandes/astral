@@ -600,6 +600,7 @@ Route::get('event/{event}', function(Event $event) {
     'type'     => $event->type->name,
     'start'    => Date::parse($event->start)->toDateTimeString(),
     'end'      => Date::parse($event->end)->toDateTimeString(),
+    'capacity' => (int)$event->seats,
     'color'    => $event->type->color,
     'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
     //'url'      => '#' . $event->id,
@@ -745,6 +746,7 @@ Route::get('events', function(Request $request) {
       'type'     => $event->type,
       'start'    => $isAllDay ? $event->start->format('Y-m-d') : $event->start->toDateTimeString(),
       'end'      => $isAllDay ? '' : $event->end->toDateTimeString(),
+      'capacity' => (int)$event->seats,
       // Take out tickets from shows that have been canceled!!!
       'seats'    => $seats, // $event->seats - App\Ticket::where('event_id', $event->id)->count(),
       'title'    => $event->show_id !=1 ? "{$event->show->name}, $seats seats left"
@@ -943,6 +945,7 @@ Route::get('sale/{sale}', function(Sale $sale) {
       'start' => Date::parse($event->start)->toDateTimeString(),
       'end'   => Date::parse($event->end)->toDateTimeString(),
       'seats' => (int)$event->seats - $event->tickets->count(),
+      'capacity' => (int)$event->seats,
       'type'  => $event->type,
       'color' => $event->type->color,
       'allDay' => (Date::parse($event->start)->isStartOfDay() && Date::parse($event->end)->isEndOfDay()),
