@@ -749,8 +749,8 @@ Route::get('events', function(Request $request) {
       'capacity' => (int)$event->seats,
       // Take out tickets from shows that have been canceled!!!
       'seats'    => $seats, // $event->seats - App\Ticket::where('event_id', $event->id)->count(),
-      'title'    => $event->show_id !=1 ? "{$event->show->name}, $seats seats left"
-                                        : (isSet($event->memo) ? $event->memo : $event->type->name),
+      'title'    => $event->show_id != 1 ? "{$event->show->name}, $seats seats left"
+                                         : (isSet($event->memo) ? $event->memo : $event->type->name),
       //'url'      => '/admin/events/' . $event->id,
       'show'     => [
         'id'          => $event->show->id,
@@ -1269,14 +1269,14 @@ Route::get('events/by-date', function (Request $request) {
 Route::group(["prefix" =>"public"], function() {
   // This route is responsible for returning available events based on the number of seats available
   Route::get("findAvailableEvents", function(Request $request) {
-    $date            = Date::parse($request->date)->format("Y-m-d");
-    $seats_needed    = (int)$request->seats;
+    $date             = Date::parse($request->date)->format("Y-m-d");
+    $seats_needed     = (int)$request->seats;
     $available_events = Event::whereDate("start", $date)->get();
-    $events          = collect();
+    $events           = collect();
     foreach ($available_events as $available_event)
     {
       $seats_taken     = App\Ticket::where("event_id", $available_event->id)->count();
-      $seats_available =  $available_event->seats - $seats_taken;
+      $seats_available = $available_event->seats - $seats_taken;
       $start           = $available_event->start;
       $end             = $available_event->end;
 
@@ -1368,59 +1368,94 @@ Route::group(["prefix" =>"public"], function() {
       $user = User::where("email", $request->email)->first();
     }
 
-    // Create event
-    $firstEvent             = new Event;
-
-    $firstEvent->start      = Carbon::parse($request->firstShowTime);
-    $firstEvent->end        = $firstEvent->start->addHour();
-    $firstEvent->memo       = null;
-    $firstEvent->seats      = 180;
-    $firstEvent->creator_id = 1;
-    $firstEvent->type_id    = EventType::where("name", "School Groups")->first()->id;
-    $firstEvent->public     = false;
-    $firstEvent->show_id    = Show::find((int)$request->firstShow)->id;
-
-    $firstEvent->save();
-
     // Add first event to $events array
     $events_array = [];
-    array_push($events_array, $firstEvent->id);
 
-    $firstEvent->memo()->create([
-      "author_id" => 1,
-      "message"   => "Created orgininally for {$user->fullname}, {$organization->name} (website).",
-    ]);
-
-    $secondEvent = new Event; // avoid undefined error in json response
-
-    if ($request->secondShowTime)
+    // Create event
+    if (isset($request->firstShow))
     {
+      $firstEvent             = new Event;
 
-      $secondEvent->start      = Carbon::parse($request->secondShowTime);
-      $secondEvent->end        = $secondEvent->start->addHour();
-      $secondEvent->memo       = null;
-      $secondEvent->seats      = 180;
-      $secondEvent->creator_id = 1;
-      $secondEvent->type_id    = EventType::where("name", "School Groups")->first()->id;
-      $secondEvent->public     = false;
-      $secondEvent->show_id    = Show::find((int)$request->secondShow)->id; // change this to id
+      $firstEvent->start      = Carbon::parse($request->firstShowTime);
+      $firstEvent->end        = $firstEvent->start->addHour();
+      $firstEvent->memo       = null;
+      $firstEvent->seats      = 180;
+      $firstEvent->creator_id = 1;
+      $firstEvent->type_id    = EventType::where("name", "School Groups")->first()->id;
+      $firstEvent->public     = false;
+      $firstEvent->show_id    = Show::find((int)$request->firstShow)->id;
 
-      $secondEvent->save();
+      $firstEvent->save();
 
-      // Add first event to $events array
-      array_push($events_array, $secondEvent->id);
+      array_push($events_array, $firstEvent->id);
 
-      $secondEvent->memo()->create([
+      $firstEvent->memo()->create([
         "author_id" => 1,
         "message"   => "Created orgininally for {$user->fullname}, {$organization->name} (website).",
       ]);
-
     }
+    
+    if (isset($request->secondShow))
+    {
+      $secondEvent = new Event; // avoid undefined error in json response
+
+      if ($request->secondShowTime)
+      {
+
+        $secondEvent->start      = Carbon::parse($request->secondShowTime);
+        $secondEvent->end        = $secondEvent->start->addHour();
+        $secondEvent->memo       = null;
+        $secondEvent->seats      = 180;
+        $secondEvent->creator_id = 1;
+        $secondEvent->type_id    = EventType::where("name", "School Groups")->first()->id;
+        $secondEvent->public     = false;
+        $secondEvent->show_id    = Show::find((int)$request->secondShow)->id; // change this to id
+
+        $secondEvent->save();
+
+        // Add first event to $events array
+        array_push($events_array, $secondEvent->id);
+
+        $secondEvent->memo()->create([
+          "author_id" => 1,
+          "message"   => "Created orgininally for {$user->fullname}, {$organization->name} (website).",
+        ]);
+
+      }  
+    }
+
+    if (isset($request->events))
+    {
+      foreach ($request->events as $event)
+      {
+        $event = Event::create([
+          'start' => Carbon::parse($event['date']),
+          'end'   => Carbon::parse($event['date'])->addHour(),
+          'memo'  => null,
+          'seats' => 180,
+          'creator_id' => 1,
+          'type_id' => EventType::where("name", "School Groups")->first()->id,
+          'public' => false,
+          'show_id' => Show::find((int)$event['show_id'])->id,
+        ]);
+
+        array_push($events_array, $event->id);
+
+        $event->memo()->create([
+          'author_id' => 1,
+          'message'   => "Created orgininally for {$user->fullname}, {$organization->name} (website).",
+        ]);
+
+      }
+      
+    }
+
+    
     // Calculate price
 
     // if one show
     $teacher_ticket = TicketType::where("name", "Teacher")->first();
-    if (!$request->secondShowTime)
+    if (isset($request->firstShowTime) && !$request->secondShowTime && !isset($request->events))
     {
       $student_ticket = TicketType::where("name", "Student")->first();
       //$teacher_ticket = TicketType::where("name", "Teacher")->first();
@@ -1433,7 +1468,7 @@ Route::group(["prefix" =>"public"], function() {
       $parent_subtotal  = (double)$request->parents  * (double)$parent_ticket->price;
     }
     // if multishow
-    else
+    elseif (!isset($request->firstShowTime) && $request->secondShowTime && !isset($request->events))
     {
       $student_ticket = TicketType::where("name", "Multishow Student")->first();
       //$teacher_ticket = TicketType::where("name", "Teacher")->first();
@@ -1445,6 +1480,33 @@ Route::group(["prefix" =>"public"], function() {
 
       $parent_subtotal  = (double)$request->parents  * (double)$parent_ticket->price * 2;
     }
+    else
+    {
+      if (count($request->events) == 1)
+      {
+        $student_ticket = TicketType::where("name", "Student")->first();
+        //$teacher_ticket = TicketType::where("name", "Teacher")->first();
+        $parent_ticket  = TicketType::where("name", "Parent")->first();
+
+        $student_subtotal = (double)$request->students * (double)$student_ticket->price;
+
+        $teacher_subtotal = (double)$request->teacher  * (double)$teacher_ticket->price;
+
+        $parent_subtotal  = (double)$request->parents  * (double)$parent_ticket->price;
+      }
+      else
+      {
+        $student_ticket = TicketType::where("name", "Multishow Student")->first();
+        //$teacher_ticket = TicketType::where("name", "Teacher")->first();
+        $parent_ticket  = TicketType::where("name", "Multishow Parent")->first();
+
+        $student_subtotal = (double)$request->students * (double)$student_ticket->price * count($request->events);
+
+        $teacher_subtotal = (double)$request->teacher  * (double)$teacher_ticket->price * count($request->events);
+
+        $parent_subtotal  = (double)$request->parents  * (double)$parent_ticket->price * count($request->events);
+      }
+    } 
 
     // Need to figure out how to get custom ticket names for this
 
@@ -1497,45 +1559,47 @@ Route::group(["prefix" =>"public"], function() {
 
     // Student Tickets , First Event
 
-    for ($s = 0; $s < (int)$request->students; $s++)
+    if (isset($firstEvent))
     {
-      $tickets = array_prepend($tickets, [
-        'ticket_type_id'  => $student_ticket->id,
-        'event_id'        => $firstEvent->id    ,
-        'customer_id'     => $user->id          ,
-        'cashier_id'      => 1                  ,
-        'organization_id' => $organization->id  ,
-      ]);
-    }
-
-    // Teacher Tickets, First Event
-
-    for ($t = 0; $t < (int)$request->teachers; $t++)
-    {
-      $tickets = array_prepend($tickets, [
-        'ticket_type_id'  => $teacher_ticket->id,
-        'event_id'        => $firstEvent->id    ,
-        'customer_id'     => $user->id          ,
-        'cashier_id'      => 1                  ,
-        'organization_id' => $organization->id  ,
-      ]);
-    }
-
-    // Parent Tickets, First Event
-    if ((int)$request->parents > 0)
-    {
-      for ($p = 0; $p < (int)$request->parents; $p++)
+      for ($s = 0; $s < (int)$request->students; $s++)
       {
         $tickets = array_prepend($tickets, [
-          'ticket_type_id'  => $parent_ticket->id,
-          'event_id'        => $firstEvent->id   ,
-          'customer_id'     => $user->id         ,
-          'cashier_id'      => 1                 ,
-          'organization_id' => $organization->id ,
+          'ticket_type_id'  => $student_ticket->id,
+          'event_id'        => $firstEvent->id    ,
+          'customer_id'     => $user->id          ,
+          'cashier_id'      => 1                  ,
+          'organization_id' => $organization->id  ,
         ]);
       }
-    }
 
+      // Teacher Tickets, First Event
+
+      for ($t = 0; $t < (int)$request->teachers; $t++)
+      {
+        $tickets = array_prepend($tickets, [
+          'ticket_type_id'  => $teacher_ticket->id,
+          'event_id'        => $firstEvent->id    ,
+          'customer_id'     => $user->id          ,
+          'cashier_id'      => 1                  ,
+          'organization_id' => $organization->id  ,
+        ]);
+      }
+
+      // Parent Tickets, First Event
+      if ((int)$request->parents > 0)
+      {
+        for ($p = 0; $p < (int)$request->parents; $p++)
+        {
+          $tickets = array_prepend($tickets, [
+            'ticket_type_id'  => $parent_ticket->id,
+            'event_id'        => $firstEvent->id   ,
+            'customer_id'     => $user->id         ,
+            'cashier_id'      => 1                 ,
+            'organization_id' => $organization->id ,
+          ]);
+        }
+      }
+    }
     // ** Second Event ** //
 
     if ($request->secondShowTime != null)
@@ -1576,6 +1640,50 @@ Route::group(["prefix" =>"public"], function() {
             'cashier_id'      => 1                 ,
             'organization_id' => $organization->id ,
           ]);
+        }
+      }
+    }
+
+    if (isset($request->events))
+    {
+      foreach ($request->events as $key => $value)
+      {
+        // Student tickets
+        for ($s = 0; $s < (int)$request->students; $s++)
+        {
+          $tickets = array_prepend($tickets, [
+            'ticket_type_id'  => $student_ticket->id,
+            'event_id'        => $events_array[$key]  ,
+            'customer_id'     => $user->id          ,
+            'cashier_id'      => 1                  ,
+            'organization_id' => $organization->id  ,
+          ]);
+        }
+        // Teacher tickets
+        for ($t = 0; $t < (int)$request->teachers; $t++)
+        {
+          $tickets = array_prepend($tickets, [
+            'ticket_type_id'  => $teacher_ticket->id,
+            'event_id'        => $events_array[$key]  ,
+            'customer_id'     => $user->id          ,
+            'cashier_id'      => 1                  ,
+            'organization_id' => $organization->id  ,
+          ]);
+        }
+
+        // Parent tickets
+        if ((int)$request->parents > 0)
+        {
+          for ($p = 0; $p < (int)$request->parents; $p++)
+          {
+            $tickets = array_prepend($tickets, [
+              'ticket_type_id'  => $parent_ticket->id,
+              'event_id'        => $events_array[$key] ,
+              'customer_id'     => $user->id         ,
+              'cashier_id'      => 1                 ,
+              'organization_id' => $organization->id ,
+            ]);
+          }
         }
       }
     }
@@ -1635,5 +1743,12 @@ Route::group(["prefix" =>"public"], function() {
     return response([
       "data" => $organization_array
     ]);
+  });
+  // This route will return all post shows
+  Route::get("products", function() {
+    $products = Product::where('type_id', 1)->get();
+    return response([
+      "data" => $products,
+    ], 201);
   });
 });

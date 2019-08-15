@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+
+    protected $fillable = ['start', 'end', 'memo', 'seats', 'creator_id', 'type_id', 'public', 'show_id'];
+
     /**
      * These variables will be mutated to dates
      * @var Carbon\Carbon

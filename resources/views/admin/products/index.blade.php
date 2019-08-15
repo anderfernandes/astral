@@ -55,7 +55,7 @@
     <div class="ui items">
       <div class="item">
         <div class="image">
-          <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}">
+          <img src="{{ $product->cover }}">
           @if (str_contains(Auth::user()->role->permissions['products'], "U"))
           <a href="{{ route('admin.products.edit', $product) }}" class="ui yellow right corner label"><i class="edit icon"></i></a>
           @endif

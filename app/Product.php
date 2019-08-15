@@ -32,4 +32,19 @@ class Product extends Model
     {
       return $this->belongsToMany('App\Sale', 'sale_product', 'product_id', 'sale_id');
     }
+
+    /**
+     * Fixes the URL of the product cover
+     * 
+     * @param String $value
+     * @return String
+     */
+    public function getCoverAttribute($value)
+    {
+
+      $value = substr($value, 0, 4) == "/def"
+                                      ? asset("$value")
+                                      : asset("/storage/$value");
+      return $value;
+    }
 }

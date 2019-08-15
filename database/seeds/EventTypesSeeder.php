@@ -45,5 +45,13 @@ class EventTypesSeeder extends Seeder
         'public'      => false,
         'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
       ]);
+      DB::table('event_types')->insert([
+        'name'        => 'School Groups',
+        'description' => 'School Groups',
+        'creator_id'  => 1,
+        'color'       => '#6435c9',
+        'public'      => false,
+        'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
+      ]);
     }
 }
