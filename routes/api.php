@@ -718,7 +718,7 @@ Route::get('events', function(Request $request) {
 
   if ($request->has('start'))  array_push($q, ['start', '>=', $start->startOfDay()->toDateTimeString()]);
   // There's already a check in place to make the end date something if the request doesn't have an end date!
-  array_push($q, ['end', '<=', $end->endOfDay()->toDateTimeString()]);
+  //array_push($q, ['end', '<=', $end->endOfDay()->toDateTimeString()]);
   if ($request->has('type'))   array_push($q, ['type_id', $request->type]);
   if ($request->has('public')) array_push($q, ['public', $request->public]);
 

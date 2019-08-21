@@ -213,7 +213,7 @@
                 </div>
                 <div class="ui list">  
                   <div class="item" v-for="event in sale.events" :key="event.id">
-                    <h3 :class="sale.refund ? 'ui red header' : 'ui header' " v-if="event.show && event.type">
+                    <h3 :class="sale.refund ? 'ui red header' : 'ui header' " v-if="event.show && event.type && event.show.id != 1">
                       <img :src="event.show.cover" :alt="event.show.name" class="ui image">
                       <div class="content">
                         <div class="sub header">
