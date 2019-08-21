@@ -1255,7 +1255,7 @@ Route::get('events/by-date', function (Request $request) {
               : $events->where('public', true)->get();
     
     array_push($schedule, [
-      "date"   => $date,
+      "date"   => Carbon::parse($date)->toIso8601String(),
       "events" => $events,
     ]);
   }
