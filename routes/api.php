@@ -1226,7 +1226,7 @@ Route::get('events/by-date', function (Request $request) {
                   : now()->subHour()->toDateTimeString();
 
   $end = $request->has('end') 
-            ? Carbon::parse($request->end)->toDateTimeString()
+            ? Carbon::parse($request->end)->endOfDay()->toDateTimeString()
             : now()->endOfDay()->toDateTimeString();
   
   $dates = Event::where([
