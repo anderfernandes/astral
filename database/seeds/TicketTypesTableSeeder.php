@@ -48,6 +48,7 @@ class TicketTypesTableSeeder extends Seeder
     $member->description = "Member tickets for all event types";
     $member->creator_id  = 1;
     $member->in_cashier  = true;
+    $member->public      = true;
 
     $member->save();
 
@@ -63,6 +64,7 @@ class TicketTypesTableSeeder extends Seeder
     $matinee->description = "Matinee unique price ticket, adult or child";
     $matinee->creator_id  = 1;
     $matinee->in_cashier  = true;
+    $matinee->public      = true;
 
     $matinee->save();
 
@@ -78,6 +80,7 @@ class TicketTypesTableSeeder extends Seeder
     $adult->description = "Adult tickets for Weekend shows";
     $adult->creator_id  = 1;
     $adult->in_cashier  = true;
+    $adult->public      = true;
 
     $adult->save();
 
@@ -93,6 +96,7 @@ class TicketTypesTableSeeder extends Seeder
     $child->description = "Adult tickets for Weekend shows";
     $child->creator_id  = 1;
     $child->in_cashier  = true;
+    $child->public      = true;
 
     $child->save();
 
@@ -108,6 +112,7 @@ class TicketTypesTableSeeder extends Seeder
     $student->description = "Student tickets";
     $student->creator_id  = 1;
     $student->in_cashier  = true;
+    $student->public      = false;
 
     $student->save();
 
@@ -123,6 +128,7 @@ class TicketTypesTableSeeder extends Seeder
     $studentMultishow->description = "Student Multishow tickets";
     $studentMultishow->creator_id  = 1;
     $studentMultishow->in_cashier  = true;
+    $studentMultishow->public      = false;
 
     $studentMultishow->save();
 
@@ -138,6 +144,7 @@ class TicketTypesTableSeeder extends Seeder
     $teacher->description = "Teacher tickets";
     $teacher->creator_id  = 1;
     $teacher->in_cashier  = true;
+    $teacher->public      = false;
 
     $teacher->save();
 
@@ -153,6 +160,7 @@ class TicketTypesTableSeeder extends Seeder
     $parent->description = "Parent tickets";
     $parent->creator_id  = 1;
     $parent->in_cashier  = true;
+    $parent->public      = false;
 
     $parent->save();
 
@@ -168,6 +176,7 @@ class TicketTypesTableSeeder extends Seeder
     $parentMultishow->description = "Parent Multishow tickets";
     $parentMultishow->creator_id  = 1;
     $parentMultishow->in_cashier  = true;
+    $parentMultishow->public      = false;
 
     $parentMultishow->save();
 

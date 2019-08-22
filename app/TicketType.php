@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class TicketType extends Model
 {
+    protected $casts = [
+      'public' => 'boolean',
+    ];
+    
     // This relationship defines what event types certain tickets are allowed
     public function allowedEvents()
     {
