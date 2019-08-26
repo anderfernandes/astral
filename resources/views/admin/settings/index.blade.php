@@ -24,6 +24,7 @@
       <a class="item" data-tab="grade"><i class="book icon"></i>Grades</a>
       <a class="item" data-tab="show-types"><i class="film icon"></i>Show Types</a>
       <a class="item" data-tab="shifts"><i class="clock icon"></i>Shifts</a>
+      <a class="item" data-tab="server"><i class="server icon"></i>Server</a>
     </div>
   </div>
 
@@ -67,6 +68,9 @@
 
     {{-- Shifts --}}
     @include('admin.settings._shifts')
+
+    {{-- Server --}}
+    @include('admin.settings._server')
 
 </div>
 
