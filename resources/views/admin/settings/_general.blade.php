@@ -154,11 +154,36 @@
           ], null, ['class' => 'ui dropdown']) !!}
       </div>
     </div>
+    <div class="four fields">
+      <div class="field">
+        <label>Ticket Width</label>
+        <div class="ui right labeled input">
+          {!! Form::text('ticket_width', null, [
+            'placeholder'   => 'Ticket Width', 
+            'data-validate' => 'ticket_width', 
+            'type'          => 'number',
+            'min'           => '1.00']) !!}
+          <div class="ui basic label">inches</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Ticket Height</label>
+        <div class="ui right labeled input">
+          {!! Form::text('ticket_height', null, [
+            'placeholder'   => 'Ticket Height', 
+            'data-validate' => 'ticket_height', 
+            'type'          => 'number',
+            'min'           => '1.00']) !!}
+          <div class="ui basic label">inches</div>
+        </div>
+      </div>
+    </div>
     <div class="field">
       <div class="ui buttons">
         {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui green right labeled icon button']) !!}
       </div>
     </div>
+    
 
   {!! Form::close() !!}
 </div>

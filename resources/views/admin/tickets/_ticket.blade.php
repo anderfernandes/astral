@@ -1,4 +1,8 @@
-<div id="ticket" style="height:20vh !important">
+<?php
+  $ticket_width = \App\Setting::find(1)->ticket_width;
+  $ticket_height = \App\Setting::find(1)->ticket_height;
+?>
+<div id="ticket" style="width:{{ $ticket_width }}in !important; height:{{ $ticket_height }} in !important">
 
   <p>
     # {{ $ticket->id }} | Sale # {{ $ticket->sale->id }} |

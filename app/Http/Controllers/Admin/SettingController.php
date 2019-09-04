@@ -247,6 +247,8 @@ class SettingController extends Controller
       $setting->membership_card_barcode   = $request->membership_card_barcode;
       $setting->membership_number_length  = $request->membership_number_length;
       $setting->cashier_customer_dropdown = $request->cashier_customer_dropdown;
+      $setting->ticket_width              = $request->ticket_width;
+      $setting->ticket_height             = $request->ticket_height;
 
       if ($request->logo != null)
       {

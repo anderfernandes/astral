@@ -16,15 +16,17 @@ class SettingsTableSeeder extends Seeder
         'organization'              => 'Mayborn Science Theater',
         'seats'                     => 180,
         'tax'                       => 8.25,
-        'created_at'                => Date::now('America/Chicago')->toDateTimeString(),
+        'created_at'                => now()->toDateTimeString(),
         'website'                   => 'starsatnight.org',
         'address'                   => 'Academic DR, Killeen, TX, 76549',
         'phone'                     => '(254) 526-1768',
         'fax'                       => '(254) 526-1799',
         'membership_card_width'     => 3.37,
         'membership_card_height'    => 2.125,
-        'membership_number_length' => 3,
+        'membership_number_length'  => 3,
         'cashier_customer_dropdown' => 1,
+        'ticket_width'              => 5.63,
+        'ticket_height'             => 1.97,
       ]);
     }
 }
