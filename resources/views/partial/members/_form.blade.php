@@ -1,4 +1,4 @@
-<form action="{{ isSet($member) ? route('admin.members.update', $member) : route('admin.members.store') }}" id="members" class="ui form" method="POST">
+<form action="{{ isSet($member) ? route('cashier.members.update', $member) : route('cashier.members.store') }}" id="members" class="ui form" method="POST">
   <div class="ui container">
     @isset($member)
       {{ method_field('PUT') }}

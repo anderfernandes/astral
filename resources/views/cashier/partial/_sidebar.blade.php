@@ -36,12 +36,29 @@
       </a>
     </div>
   </div>
-  <a class="item" href="{{ route('cashier.members.index') }}"> <i class="large address card icon"></i> Members</a>
+
+  {{-- Users --}}
+  <div class="ui dropdown item" onclick="location.href='{{ route('cashier.users.index') }}'">
+    <i class="large users icon"></i> Users
+    <div class="menu">
+      <a class="item {{ Request::routeIs('cashier.users.index') ? 'active' : '' }}" href="{{ route('cashier.users.index') }}">
+        <i class="large users icon"></i> All Users
+      </a>
+      <a class="item {{ Request::routeIs('cashier.users.create') ? 'active' : '' }}" href="{{ route('cashier.users.create') }}">
+        <i class="large user plus icon"></i> Add User
+      </a>
+    </div>
+  </div>
+
+  <a class="item" href="{{ route('cashier.members.index') }}">
+    <i class="large address card icon"></i> Members
+  </a>
   @if (Auth::user()->role->name == 'Senior Staff' || Auth::user()->role->name == 'Planetarium Lead Assistant')
     <a class="inverted item" href="{{ route('admin.index') }}" target="_blank" style="color: rgba(255,255,255,0.9); background-color: rgba(0,0,0,.87)">
       <i class="large sun icon"></i> Admin
     </a>
   @endif
+  
   <a class="item" href="http://astral.anderfernandes.com/docs/{{ config('app.version') }}" target="_blank">
     <i class="large help circle icon"></i> Help
   </a>
