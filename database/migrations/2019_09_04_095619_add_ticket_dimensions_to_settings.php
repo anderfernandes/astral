@@ -14,8 +14,8 @@ class AddTicketDimensionsToSettings extends Migration
     public function up()
     {
         Schema::table('settings', function (Blueprint $table) {
-          $table->unsignedDecimal('ticket_width', 8)->default(1.97);
-          $table->unsignedDecimal('ticket_height', 8)->default(5.63);
+          $table->unsignedDecimal('ticket_width', 8)->default(5.63);
+          $table->unsignedDecimal('ticket_height', 8)->default(1.97);
         });
     }
 
