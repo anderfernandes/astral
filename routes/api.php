@@ -672,6 +672,7 @@ Route::get('/calendar/events', function(Request $request) {
       'end'      => $isAllDay ? '' : Date::parse($event->end)->toDateTimeString(),
       // Take out tickets from shows that have been canceled!!!
       'seats'    => $seats, // $event->seats - App\Ticket::where('event_id', $event->id)->count(),
+      'name'     => "{$event->show->name}",
       'title'    => $event->show_id !=1 ? "$startTime-$endTime | Event #$event->id ($seats seats left) \n {$event->show->name}"
                                         : (isSet($event->memo)
                                           ? ($isAllDay ? $event->memo : " $startTime-$endTime | Event #$event->id ($seats seats left) \n $event->memo")
