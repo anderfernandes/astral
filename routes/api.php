@@ -1747,7 +1747,11 @@ Route::group(["prefix" =>"public"], function() {
   });
   // This route will return all post shows
   Route::get("products", function() {
-    $products = Product::where('type_id', 1)->get();
+    $products = Product::where([
+        ['type_id', 1],
+        ['active', true],
+        ['public', true],
+      ])->get();
     return response([
       "data" => $products,
     ], 201);
