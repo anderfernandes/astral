@@ -5,6 +5,13 @@
   {{ csrf_field() }}
   <div class="three fields">
     <div class="field">
+      <label for="active">Public</label>
+      <select name="public" id="public" class="ui dropdown">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </div>
+    <div class="field">
       <label for="active">Active</label>
       <select name="active" id="active" class="ui dropdown">
         <option value="0">No</option>
@@ -101,6 +108,7 @@
 
   @endisset
 
+  $("#public").dropdown('set selected', {{ isset($product->public) ? $product->public : old('public') }})
   $("#active").dropdown('set selected', {{ isset($product->active) ? $product->active : old('active') }})
 
   $('#inventory').change(function() {

@@ -22,6 +22,7 @@ class ProductsTableSeeder extends Seeder
           'stock'       => 0,
           'active'      =>true,
           'created_at'  => Date::now()->toDateTimeString(),
+          'public'      => true,
         ]);
         DB::table('products')->insert([
           'name' => 'Uniview',
@@ -34,6 +35,7 @@ class ProductsTableSeeder extends Seeder
           'price'       => 0,
           'active'      => true,
           'created_at'  => Date::now()->toDateTimeString(),
+          'public'      => true,
         ]);
     }
 }

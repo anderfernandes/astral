@@ -80,6 +80,9 @@
             <div class="ui basic {{ $product->active ? "green" : "red" }} label">
               {{ $product->active ? "active" : "inactive" }}
             </div>
+            @if ($product->public)
+                <i class="globe icon" style="color: black !important"></i>
+            @endif
             <p><i class="pencil icon"></i>{{ $product->created_at->format('l, F j, Y \a\t g:i A') }}</p>
             <p><i class="edit icon"></i>{{ Date::parse($product->updated_at)->format('l, F j, Y \a\t g:i A') }}</p>
           </div>
