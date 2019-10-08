@@ -709,7 +709,9 @@ Route::get('staff', function() {
 
 // This URL is consumed in the new Sales interface
 Route::get('events', function(Request $request) {
-  $start = Date::parse($request->start)->startOfDay();
+  $start = $request->has('start') 
+          ? Date::parse($request->start)->startOfDay()
+          : now()->startOfDay();
 
   $end = $request->has('end')
           ? Date::parse($request->end)->endOfDay()
@@ -717,13 +719,12 @@ Route::get('events', function(Request $request) {
 
   $q = []; // REMOVE THIS COMPLETELY IN BETA
 
-  if ($request->has('start'))  array_push($q, ['start', '>=', $start->startOfDay()->toDateTimeString()]);
-  // There's already a check in place to make the end date something if the request doesn't have an end date!
-  //array_push($q, ['end', '<=', $end->endOfDay()->toDateTimeString()]);
+  if ($request->has('start'))  array_push($q, ['start', '>=', $start->toDateTimeString()]);
+  array_push($q, ['end', '<=', $end->toDateTimeString()]);
   if ($request->has('type'))   array_push($q, ['type_id', $request->type]);
   if ($request->has('public')) array_push($q, ['public', $request->public]);
 
-  $type = isSet($request->type) ? $request->type : null;
+  //$type = isSet($request->type) ? $request->type : null;
   $events = Event::where($q)->get();
   $eventsArray = [];
   foreach ($events as $event) {
