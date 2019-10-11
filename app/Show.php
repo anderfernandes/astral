@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Show extends Model
 {
@@ -11,7 +12,7 @@ class Show extends Model
    *
    *  @var array
    */
-  protected $dates = ['created_at', 'updated_at'];
+  protected $dates = ['created_at', 'updated_at', 'expiration'];
 
   /**
    * Returns an object with information on the user who created this Show.
@@ -37,9 +38,13 @@ class Show extends Model
   public function getCoverAttribute($value)
   {
 
-    $value = substr($value, 0, 4) == "http"
+    $value = (substr($value, 0, 4) == "http") || ($value == "/default.png")
                                     ? $value
                                     : asset("storage/$value");
     return $value;
+  }
+
+  public function getExpiredAttribute($value){
+    return Carbon::parse($value)->isFuture();
   }
 }

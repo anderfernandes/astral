@@ -41,8 +41,8 @@ class ShowController extends Controller
             $shows = $shows->where('type_id', $request->type_id);
           }
 
-          if (isSet($request->active)) {
-            $shows = $shows->where('active', '=', (bool)$request->active);
+          if ($request->has('active')) {
+            $shows = $shows->where('active', (bool)$request->active);
           }
 
           $showIds = $shows->pluck('id');
@@ -89,6 +89,8 @@ class ShowController extends Controller
           'type_id'     => 'required',
           'duration'    => 'required|integer',
           'cover'       => 'image',
+          'trailer_url' => 'url',
+          'expiration'  => 'date',
         ]);
 
         $show = new Show;
@@ -99,6 +101,8 @@ class ShowController extends Controller
         $show->type_id     = $request->type_id;
         $show->duration    = $request->duration;
         $show->active      = (bool)$request->active;
+        $show->trailer_url = $request->trailer_url ?? null;
+        $show->expiration  = $request->expiration ?? null;
 
         $show->cover = $request->cover == null ? '/default.png' : $request->cover->store('shows', 'public');
 
@@ -154,8 +158,10 @@ class ShowController extends Controller
       $this->validate($request, [
         'name'        => 'required',
         'description' => 'required',
-        'type_id'        => 'required',
+        'type_id'     => 'required',
         'duration'    => 'required|integer',
+        'trailer_url' => 'nullable|url',
+        'expiration'  => 'nullable|date',
       ]);
 
       $show->name        = $request->input('name');
@@ -164,6 +170,8 @@ class ShowController extends Controller
       $show->type_id     = $request->type_id;
       $show->duration    = $request->input('duration');
       $show->active      = (bool)$request->active;
+      $show->trailer_url = $request->trailer_url ?? null;
+      $show->expiration  = $request->expiration ?? null;
 
       $request->has('cover') ? $show->cover =  $request->cover->store('shows', 'public') : null;
 

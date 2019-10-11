@@ -41,6 +41,16 @@
     </div>
   </div>
 </div>
+<div class="two fields">
+  <div class="field">
+    {!! Form::label('trailer_url', 'Trailer URL (Youtube)') !!}
+    {!! Form::text('trailer_url', null, ['placeholder' => "Find this show's trailer on youtube and paste the URL to it here"]) !!}
+  </div>
+  <div class="field">
+    {!! Form::label('expiration', 'Expiration') !!}
+    {!! Form::text('expiration', null, ['placeholder' => "When will this show's contract will end? Leave blank if not sure or perpetuity", 'id' => 'expiration']) !!}
+  </div>
+</div>
 <div class="field">
   {!! Form::label('description', 'Description') !!}
   {!! Form::textarea('description', null, ['placeholder' => 'What is the show about?', 'id' => 'description', 'data-validate' => 'description']) !!}
@@ -108,5 +118,11 @@
   $('input:file', '.ui.action.input').on('change', function(e) {
     var name = e.target.files[0].name
     $('input:text', $(e.target).parent()).val(name)
+  })
+
+  $('#expiration').flatpickr({
+    enableTime: false,
+    altInput: true,
+    altFormat: 'l, F j, Y'
   })
 </script>

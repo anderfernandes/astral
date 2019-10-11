@@ -17,10 +17,10 @@
 
   @if(str_contains(Auth::user()->role->permissions['shows'], "R"))
   {{-- Shows --}}
-  <div class="ui dropdown item" onclick="location.href='{{ route('admin.shows.index') }}'">
+  <div class="ui dropdown item" onclick="location.href='{{ route('admin.shows.index') }}?active=1'">
     <i class="large film icon"></i> Shows
     <div class="menu">
-      <a class="item {{ Request::routeIs('admin.shows.index') ? 'active' : '' }}" href="{{ route('admin.shows.index') }}">
+      <a class="item {{ Request::routeIs('admin.shows.index') ? 'active' : '' }}" href="{{ route('admin.shows.index') }}?active=1">
         <i class="large film icon"></i> All Shows
       </a>
       <a class="item {{ Request::routeIs('admin.shows.create') ? 'active' : '' }}" href="{{ route('admin.shows.create') }}">
