@@ -1255,10 +1255,28 @@ Route::get('events/by-date', function (Request $request) {
     $events = $request->has('both')
               ? $events->get() 
               : $events->where('public', true)->get();
+
+    $events = $events->load(['type.allowedTickets' => function ($query) { $query->where('public', true); }]);
+
+    $events = $events->map(function ($event) {
+      return [
+        'id' => $event->id,
+        'start' => $event->start->toIso8601String(),
+        'end' => $event->end->toIso8601String(),
+        'seats' => (int)$event->seats,
+        'type' => [
+          'id' => $event->type->id,
+          'name' => $event->type->name,
+          'color' => $event->type->color,
+          'public' => (bool)$event->type->public,
+          'allowed_tickets' => $event->type->allowedTickets,
+        ]
+      ];
+    });
     
     array_push($schedule, [
       "date"   => Carbon::parse($date)->toIso8601String(),
-      "events" => $events->load(['type.allowedTickets' => function ($query) { $query->where('public', true); }]),
+      "events" => $events,
     ]);
   }
 
