@@ -45,6 +45,9 @@ class Show extends Model
   }
 
   public function getExpiredAttribute($value){
-    return Carbon::parse($value)->isFuture();
+    if ($value == null)
+      return true;
+    else 
+      return Carbon::parse($value)->isFuture();
   }
 }

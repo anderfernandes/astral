@@ -66,6 +66,11 @@
               inactive
             </div>
             @endif
+            @if (!$show->expired)
+            <div class="ui red label">
+              expired
+            </div>
+            @endif
           </div>
           <div class="ui header">
             <div class="sub header">

@@ -75,6 +75,11 @@
               inactive
             </div>
             @endif
+            @if (!$show->expired)
+            <div class="ui red label">
+              expired
+            </div>
+            @endif
           </div>
         </div>
         <div href="{{ route('admin.shows.show', $show) }}" class="image">
