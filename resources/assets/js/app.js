@@ -89,6 +89,19 @@ if (document.querySelector("#sales"))
     render: h => h(App)
   }).$mount('#sales')
 
+
+// Cashier App
+import Cashier from './cashier/Cashier.vue' // This is cashier's App.js
+import CashierRouter from './cashier/router'
+import CashierStore from './cashier/store'
+
+if (document.querySelector('#cashier'))
+  new Vue({
+    router: CashierRouter,
+    store,
+    render: h => h(Cashier)
+  }).$mount('#cashier')
+
   // Events Component
 import Events from './components/Events'
 

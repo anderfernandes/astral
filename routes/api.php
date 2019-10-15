@@ -1758,3 +1758,10 @@ Route::group(["prefix" =>"public"], function() {
     ], 201);
   });
 });
+
+Route::group(['prefix' => 'cashier'], function() {
+  Route::get('events', 'Api\Cashier\EventController@index');
+  Route::get('users', 'Api\Cashier\UserController@index');
+  Route::get('payment-methods', 'Api\Cashier\PaymentMethodController@index');
+  Route::get('products', 'Api\Cashier\ProductController@index');
+});

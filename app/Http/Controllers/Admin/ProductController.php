@@ -35,6 +35,10 @@ class ProductController extends Controller
 
           $products = $request->product_price ? $products->where('price', $request->product_price) : $products;
 
+          $products = $request->has('active') ? $products->where('active', $request->product_active) : $products;
+
+          $products = $request->has('public') ? $products->where('public', $request->product_public) : $products;
+
           $products = $products->orderBy('name', 'asc')->paginate(10);
 
         }
@@ -74,10 +78,13 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-          'name'      => 'required|unique:products,name',
-          'price'     => 'required|numeric',
-          'type_id'   => 'required|integer',
-          'inventory' => 'required',
+          'name'       => 'required|unique:products,name',
+          'price'      => 'required|numeric',
+          'type_id'    => 'required|integer',
+          'inventory'  => 'required',
+          'public'     => 'required|boolean',
+          'active'     => 'required|boolean',
+          'in_cashier' => 'required|boolean',
         ]);
 
         $product = new Product;
@@ -90,6 +97,7 @@ class ProductController extends Controller
         $product->inventory   = (boolean)$request->inventory;
         $product->active      = (boolean)$request->active;
         $product->public      = (boolean)$request->public;
+        $product->in_cashier  = (boolean)$request->in_cashier;
 
         $product->stock = (bool)$product->inventory ? (int)$request->stock : 0;
 
@@ -139,9 +147,12 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $this->validate($request, [
-          'name'    => 'required|min:2',
-          'price'   => 'required|numeric',
-          'type_id' => 'required|integer',
+          'name'       => 'required|min:2',
+          'price'      => 'required|numeric',
+          'type_id'    => 'required|integer',
+          'public'     => 'required|boolean',
+          'active'     => 'required|boolean',
+          'in_cashier' => 'required|boolean',
         ]);
 
         $product->name        = $request->name;
@@ -151,6 +162,7 @@ class ProductController extends Controller
         $product->inventory   = (boolean)$request->inventory;
         $product->active      = (boolean)$request->active;
         $product->public      = (boolean)$request->public;
+        $product->in_cashier  = (boolean)$request->in_cashier;
 
         $product->stock = (boolean)$product->inventory ? (int)$request->stock : 0;
 
