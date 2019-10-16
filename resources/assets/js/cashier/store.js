@@ -116,6 +116,15 @@ export default ({
   },
 
   getters: {
-    total: state => state.sale.products.reduce((total, product) => (total + (product.quantity * product.price)), 0)
+    total: state => {
+      let products_total = state.sale.products.reduce((total, product) => (total + (product.quantity * product.price)), 0)
+      let tickets_total = state.sale.tickets.length == 0 
+        ? 0 
+        : state.sale.tickets.reduce((accumulator, event) => {
+            let event_total = event.tickets.length == 0 ? 0 : event.tickets.reduce((ttl, tck) => (ttl + (tck.quantity * tck.price)), 0)
+            return accumulator + event_total
+          }, 0)
+      return products_total + tickets_total
+    }
   },
 })

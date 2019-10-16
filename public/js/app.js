@@ -15111,9 +15111,16 @@ module.exports = setMonth
 
   getters: {
     total: function total(state) {
-      return state.sale.products.reduce(function (total, product) {
+      var products_total = state.sale.products.reduce(function (total, product) {
         return total + product.quantity * product.price;
       }, 0);
+      var tickets_total = state.sale.tickets.length == 0 ? 0 : state.sale.tickets.reduce(function (accumulator, event) {
+        var event_total = event.tickets.length == 0 ? 0 : event.tickets.reduce(function (ttl, tck) {
+          return ttl + tck.quantity * tck.price;
+        }, 0);
+        return accumulator + event_total;
+      }, 0);
+      return products_total + tickets_total;
     }
   }
 });
@@ -77187,44 +77194,48 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "ui grid" }, [
     _c("div", { staticClass: "twelve wide computer sixteen mobile column" }, [
-      _c(
-        "div",
-        { staticClass: "ui divided horizontal list" },
-        _vm._l(_vm.products, function(product) {
-          return _c(
+      _vm.products.length > 0
+        ? _c(
             "div",
-            {
-              key: product.id,
-              staticClass: "item",
-              on: {
-                click: function($event) {
-                  return _vm.addProduct(product)
-                }
-              }
-            },
-            [
-              _c("img", {
-                staticClass: "ui avatar image",
-                attrs: { src: product.cover, alt: product.name }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "content" }, [
-                _c("div", { staticClass: "header" }, [
-                  _vm._v(_vm._s(product.name))
-                ]),
-                _vm._v(
-                  "\n          $ " +
-                    _vm._s(product.price.toFixed(2)) +
-                    "\n        "
-                )
-              ])
-            ]
+            { staticClass: "ui horizontal list" },
+            _vm._l(_vm.products, function(product) {
+              return _c(
+                "div",
+                {
+                  key: product.id,
+                  staticClass: "item",
+                  on: {
+                    click: function($event) {
+                      return _vm.addProduct(product)
+                    }
+                  }
+                },
+                [
+                  _c("img", {
+                    staticClass: "ui avatar image",
+                    attrs: { src: product.cover, alt: product.name }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "content" }, [
+                    _c("div", { staticClass: "header" }, [
+                      _vm._v(_vm._s(product.name))
+                    ]),
+                    _vm._v(
+                      "\n          $ " +
+                        _vm._s(product.price.toFixed(2)) +
+                        "\n        "
+                    )
+                  ])
+                ]
+              )
+            }),
+            0
           )
-        }),
-        0
-      ),
+        : _vm._e(),
       _vm._v(" "),
-      _c("div", { staticClass: "ui divider" }),
+      _vm.products.length > 0
+        ? _c("div", { staticClass: "ui divider" })
+        : _vm._e(),
       _vm._v(" "),
       _vm.events
         ? _c(
@@ -77319,156 +77330,173 @@ var render = function() {
         : _vm._e()
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "four wide computer sixteen mobile column" }, [
-      _c("div", { staticClass: "ui form" }, [
-        _c(
-          "div",
-          { staticClass: "field" },
-          [
-            _c("sui-dropdown", {
-              attrs: {
-                placeholder: "Customer",
-                search: "",
-                selection: "",
-                options: _vm.customers
-              },
-              model: {
-                value: _vm.customer_id,
-                callback: function($$v) {
-                  _vm.customer_id = $$v
+    _c(
+      "div",
+      { staticClass: "four wide computer sixteen mobile column" },
+      [
+        _c("div", { staticClass: "ui form" }, [
+          _c(
+            "div",
+            { staticClass: "field" },
+            [
+              _c("sui-dropdown", {
+                attrs: {
+                  placeholder: "Customer",
+                  search: "",
+                  selection: "",
+                  options: _vm.customers
                 },
-                expression: "customer_id"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "field" }, [
-          _c("div", { staticClass: "ui two column grid" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c("div", { staticClass: "column" }, [
-              _c("div", { staticClass: "ui huge right aligned header" }, [
-                _vm._v(
-                  "\n              " +
-                    _vm._s(_vm.total.toFixed(2)) +
-                    "\n            "
-                )
+                model: {
+                  value: _vm.customer_id,
+                  callback: function($$v) {
+                    _vm.customer_id = $$v
+                  },
+                  expression: "customer_id"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "ui two column grid" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "column" }, [
+                _c("div", { staticClass: "ui huge right aligned header" }, [
+                  _vm._v(
+                    "\n              " +
+                      _vm._s(_vm.total.toFixed(2)) +
+                      "\n            "
+                  )
+                ])
               ])
             ])
-          ])
+          ]),
+          _vm._v(" "),
+          _vm._m(1),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "field" },
+            [
+              _c("sui-dropdown", {
+                attrs: {
+                  placeholder: "Customer",
+                  search: "",
+                  selection: "",
+                  options: _vm.payment_methods
+                },
+                model: {
+                  value: _vm.payment_method_id,
+                  callback: function($$v) {
+                    _vm.payment_method_id = $$v
+                  },
+                  expression: "payment_method_id"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm._m(2),
+          _vm._v(" "),
+          _vm._m(3)
         ]),
         _vm._v(" "),
-        _vm._m(1),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "field" },
-          [
-            _c("sui-dropdown", {
-              attrs: {
-                placeholder: "Customer",
-                search: "",
-                selection: "",
-                options: _vm.payment_methods
-              },
-              model: {
-                value: _vm.payment_method_id,
-                callback: function($$v) {
-                  _vm.payment_method_id = $$v
-                },
-                expression: "payment_method_id"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _vm._m(2),
-        _vm._v(" "),
-        _vm._m(3)
-      ]),
-      _vm._v(" "),
-      _vm.sale.products.length > 0
-        ? _c(
-            "div",
-            { staticClass: "ui middle aligned list" },
-            [
-              _vm._m(4),
-              _vm._v(" "),
-              _vm._l(_vm.sale.products, function(product) {
-                return _c(
-                  "div",
-                  {
-                    key: product.id,
-                    staticClass: "item",
-                    on: {
-                      click: function($event) {
-                        return _vm.removeProduct(product)
+        _vm.sale.products.length > 0
+          ? _c(
+              "div",
+              { staticClass: "ui middle aligned list" },
+              [
+                _vm._m(4),
+                _vm._v(" "),
+                _vm._l(_vm.sale.products, function(product) {
+                  return _c(
+                    "div",
+                    {
+                      key: product.id,
+                      staticClass: "item",
+                      on: {
+                        click: function($event) {
+                          return _vm.removeProduct(product)
+                        }
                       }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "right floated content" }, [
-                      _vm._v(
-                        "\n          " +
-                          _vm._s(product.quantity) +
-                          " x $ " +
-                          _vm._s(product.price.toFixed(2)) +
-                          "\n        "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("img", {
-                      staticClass: "ui avatar image",
-                      attrs: { src: product.cover, alt: product.name }
-                    }),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "content" }, [
-                      _c("div", { staticClass: "header" }, [
-                        _vm._v(_vm._s(product.name))
+                    },
+                    [
+                      _c("img", {
+                        staticClass: "ui avatar image",
+                        attrs: { src: product.cover, alt: product.name }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "content" }, [
+                        _c("div", { staticClass: "header" }, [
+                          _vm._v(_vm._s(product.name))
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "right floated content" }, [
+                        _vm._v(
+                          "\n          " +
+                            _vm._s(product.quantity) +
+                            " x $ " +
+                            _vm._s(product.price.toFixed(2)) +
+                            "\n        "
+                        )
                       ])
-                    ])
-                  ]
-                )
-              })
-            ],
-            2
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.sale.tickets.length > 0
-        ? _c(
+                    ]
+                  )
+                })
+              ],
+              2
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.sale.tickets.length > 0
+          ? _c("div", { staticClass: "ui small horizontal divider header" }, [
+              _c("i", { staticClass: "small ticket icon" }),
+              _vm._v(" Tickets\n    ")
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm._l(_vm.sale.tickets, function(t) {
+          return _c(
             "div",
-            { staticClass: "ui middle aligned list" },
-            [
-              _vm._m(5),
-              _vm._v(" "),
-              _vm._l(_vm.sale.tickets, function(ticket) {
-                return _c("div", { key: ticket.id, staticClass: "item" }, [
-                  _c("div", { staticClass: "right floated content" }),
-                  _vm._v(" "),
-                  _c("img", {
-                    staticClass: "ui avatar image",
-                    attrs: {
-                      src: ticket.event.show.cover,
-                      alt: ticket.event.show.name
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "content" }, [
-                    _c("div", { staticClass: "header" }, [
-                      _vm._v(_vm._s(ticket.event.show.name))
-                    ])
+            {
+              key: t.id,
+              staticClass: "ui middle aligned list",
+              staticStyle: { margin: "0.5em 0" }
+            },
+            _vm._l(t.tickets, function(ticket) {
+              return _c("div", { key: ticket.id, staticClass: "item" }, [
+                _c("img", {
+                  staticClass: "ui avatar image",
+                  attrs: { src: t.event.show.cover, alt: t.event.show.name }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "content" }, [
+                  _c("div", { staticClass: "header" }, [
+                    _vm._v(_vm._s(ticket.name))
                   ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "right floated content" }, [
+                  _vm._v(
+                    "\n          " +
+                      _vm._s(ticket.quantity) +
+                      " x $ " +
+                      _vm._s(ticket.price.toFixed(2)) +
+                      "\n        "
+                  )
                 ])
-              })
-            ],
-            2
+              ])
+            }),
+            0
           )
-        : _vm._e()
-    ])
+        })
+      ],
+      2
+    )
   ])
 }
 var staticRenderFns = [
@@ -77544,15 +77572,6 @@ var staticRenderFns = [
     return _c("div", { staticClass: "ui small horizontal divider header" }, [
       _c("i", { staticClass: "small box icon" }),
       _vm._v(" Products\n      ")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "ui small horizontal divider header" }, [
-      _c("i", { staticClass: "small ticket icon" }),
-      _vm._v(" Tickets\n      ")
     ])
   }
 ]

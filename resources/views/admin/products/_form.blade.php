@@ -120,7 +120,7 @@
   $("#in_cashier").dropdown('set selected', {{ isset($product->in_cashier) ? $product->in_cashier : old('active') }})
 
   $('#inventory').change(function() {
-    this.value == 'true' ? $('#current-stock').removeClass('disabled') : $('#current-stock').addClass('disabled')
+    this.value == true ? $('#current-stock').removeClass('disabled') : $('#current-stock').addClass('disabled')
   })
 
 

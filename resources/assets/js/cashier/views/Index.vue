@@ -1,7 +1,7 @@
 <template>
   <div class="ui grid">
     <div class="twelve wide computer sixteen mobile column">
-      <div class="ui divided horizontal list">
+      <div class="ui horizontal list" v-if="products.length > 0">
         <div class="item" v-for="product in products" :key="product.id" @click="addProduct(product)">
           <img :src="product.cover" :alt="product.name" class="ui avatar image">
           <div class="content">
@@ -10,7 +10,7 @@
           </div>
         </div>
       </div>
-      <div class="ui divider"></div>
+      <div class="ui divider" v-if="products.length > 0"></div>
       <div class="ui divided items" v-if="events">
         <div class="item" v-for="event in events" :key="event.id">
           <div class="ui tiny image">
@@ -105,26 +105,26 @@
           <i class="small box icon"></i> Products
         </div>
         <div class="item" v-for="product in sale.products" :key="product.id" @click="removeProduct(product)">
-          <div class="right floated content">
-            {{ product.quantity }} x $ {{ product.price.toFixed(2) }}
-          </div>
           <img :src="product.cover" :alt="product.name" class="ui avatar image">
           <div class="content">
             <div class="header">{{ product.name }}</div>
           </div>
+          <div class="right floated content">
+            {{ product.quantity }} x $ {{ product.price.toFixed(2) }}
+          </div>
         </div>
       </div>
-      <div class="ui middle aligned list" v-if="sale.tickets.length > 0">
-        <div class="ui small horizontal divider header">
-          <i class="small ticket icon"></i> Tickets
-        </div>
-        <div class="item" v-for="ticket in sale.tickets" :key="ticket.id">
-          <div class="right floated content">
-
-          </div>
-          <img :src="ticket.event.show.cover" :alt="ticket.event.show.name" class="ui avatar image">
+      <div class="ui small horizontal divider header" v-if="sale.tickets.length > 0">
+        <i class="small ticket icon"></i> Tickets
+      </div>
+      <div class="ui middle aligned list" v-for="t in sale.tickets" :key="t.id" style="margin: 0.5em 0">
+        <div class="item" v-for="ticket in t.tickets" :key="ticket.id">
+          <img :src="t.event.show.cover" :alt="t.event.show.name" class="ui avatar image">
           <div class="content">
-            <div class="header">{{ ticket.event.show.name }}</div>
+            <div class="header">{{ ticket.name }}</div>
+          </div>
+          <div class="right floated content">
+            {{ ticket.quantity }} x $ {{ ticket.price.toFixed(2) }}
           </div>
         </div>
       </div>
