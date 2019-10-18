@@ -35,7 +35,7 @@ export default ({
       }
     },
 
-    REMOVE_PRODUCT(state, payload) {
+    REMOVE_PRODUCT(state, product) {
       let existingProduct = state.sale.products.find(p => p.id === product.id)
       let index = state.sale.products.findIndex(p => p.id === product.id)
       if (existingProduct && existingProduct.quantity > 1) {
@@ -52,6 +52,14 @@ export default ({
       }
     },
 
+    CLEAR_PRODUCT(state, product) {
+      let existingProduct = state.sale.products.find(p => p.id === product.id)
+      let index = state.sale.products.findIndex(p => p.id === product.id)
+      if (existingProduct) {
+        state.sale.products.splice(index, 1)
+      }
+    },
+
     // If it exists, splice. If it doesn't, push
     ADD_TICKET(state, payload) {
       let existingEventIndex = state.sale.tickets.findIndex(t => t.event.id === payload.event.id)
@@ -61,7 +69,7 @@ export default ({
         let existingTicketIndex = currentEvent.tickets.findIndex(t => t.id === payload.ticket.id)
         if (existingTicketIndex != -1) {
           // Find current amount of tickets
-          let existingTicket = currentEvent.tickets.find(t => t.id === payload.ticket.id)
+          let existingTicket = currentEvent.tickets[existingTicketIndex]
           // Update ticket objects
           Object.assign(currentEvent.tickets.splice(existingTicketIndex, 1, {
             id: payload.ticket.id, 
@@ -109,9 +117,49 @@ export default ({
       }
     },
 
-    REMOVE_TICKET(state, ticket) {
+    REMOVE_TICKET(state, payload) {
+      // Checking if the event of the ticket we want to remove exists
+      let existingEventIndex = state.sale.tickets.findIndex(t => t.event.id === payload.event.id)
+      if (existingEventIndex != -1) {
+        let currentEvent = state.sale.tickets[existingEventIndex]
+        // If ticket exists, we will subtract one. Otherwise, we will remove all of them
+        let existingTicketIndex = currentEvent.tickets.findIndex(t => t.id === payload.ticket.id)
+        if (existingTicketIndex != -1) {
+          let existingTicket = currentEvent.tickets[existingTicketIndex]
+          if (existingTicket.quantity > 1)
+            Object.assign(currentEvent.tickets.splice(existingTicketIndex, 1, {
+              id: payload.ticket.id, 
+              name: payload.ticket.name,
+              price: payload.ticket.price,
+              quantity: existingTicket.quantity - 1
+            }))
+          else {
+            currentEvent.tickets.splice(existingTicketIndex, 1)  
+            if (currentEvent.tickets.length < 1)
+              state.sale.tickets.splice(existingEventIndex, 1)
+          }
+        } else {
+          currentEvent.tickets.splice(existingTicketIndex, 1)
+          if (currentEvent.tickets.length < 1)
+            state.sale.tickets.splice(existingEventIndex, 1)
+        }
+      }
+    },
 
-    }
+    CLEAR_TICKET(state, payload) {
+      let existingEventIndex = state.sale.tickets.findIndex(t => t.event.id === payload.event.id)
+      if (existingEventIndex != -1) {
+        let currentEvent = state.sale.tickets[existingEventIndex]
+        let existingTicketIndex = currentEvent.tickets.findIndex(t => t.id === payload.ticket.id)
+        if (existingTicketIndex != -1) {
+          // Remove ticket from tickets array
+          currentEvent.tickets.splice(existingTicketIndex, 1)
+          // Remove event/ticket object from ticket payload array if there are no other tickets
+          if (currentEvent.tickets.length < 1)
+            state.sale.tickets.splice(existingEventIndex, 1)
+        }
+      }
+    },
 
   },
 

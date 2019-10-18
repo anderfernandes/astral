@@ -1,12 +1,14 @@
 <template>
   <div class="ui grid">
     <div class="twelve wide computer sixteen mobile column">
-      <div class="ui horizontal list" v-if="products.length > 0">
-        <div class="item" v-for="product in products" :key="product.id" @click="addProduct(product)">
-          <img :src="product.cover" :alt="product.name" class="ui avatar image">
+      <div class="ui four link cards">
+        <div class="card" v-for="product in products" :key="product.id" @click="addProduct(product)">
           <div class="content">
-            <div class="header">{{ product.name }}</div>
-            $ {{ product.price.toFixed(2) }}
+            <div class="ui right floated meta">
+              <div class="ui basic black label">$ {{ product.price.toFixed(2) }}</div>
+            </div>
+            <img :src="product.cover" :alt="product.name" class="ui avatar image">
+            <strong>{{ product.name }}</strong>
           </div>
         </div>
       </div>
@@ -30,12 +32,11 @@
               {{ event.seats }} {{ event.seats == 1 ?'seat' : 'seats' }}
             </div>
             <div class="description">
-              <div class="ui labeled button" 
-                v-for="ticket in event.type.allowed_tickets" :key="ticket.id"
-                @click="addTicket({event, ticket})"
+                <div class="ui basic black button"
+                  v-for="ticket in event.type.allowed_tickets" :key="ticket.id"
+                  @click="addTicket({event, ticket})"
                 >
-                <div class="ui basic black button">{{ ticket.name }}</div>
-                <div class="ui basic black label">$ {{ ticket.price.toFixed(2) }}</div>
+                  {{ ticket.name }} $ {{ ticket.price.toFixed(2) }}
               </div>
             </div>
           </div>
@@ -104,10 +105,14 @@
         <div class="ui small horizontal divider header">
           <i class="small box icon"></i> Products
         </div>
-        <div class="item" v-for="product in sale.products" :key="product.id" @click="removeProduct(product)">
+        <div class="item" v-for="product in sale.products" :key="product.id">
           <img :src="product.cover" :alt="product.name" class="ui avatar image">
           <div class="content">
-            <div class="header">{{ product.name }}</div>
+            <div class="header">
+              {{ product.name }}
+              <i class="yellow minus circle icon" @click="removeProduct(product)"></i>
+              <i class="red times circle outline icon" @click="clearProduct(product)"></i>
+            </div>
           </div>
           <div class="right floated content">
             {{ product.quantity }} x $ {{ product.price.toFixed(2) }}
@@ -121,7 +126,11 @@
         <div class="item" v-for="ticket in t.tickets" :key="ticket.id">
           <img :src="t.event.show.cover" :alt="t.event.show.name" class="ui avatar image">
           <div class="content">
-            <div class="header">{{ ticket.name }}</div>
+            <div class="header">
+              {{ ticket.name }}
+              <i class="yellow minus circle icon" @click="removeTicket({ t, ticket })"></i>
+              <i class="red times circle outline icon" @click="clearTicket({ t, ticket })"></i>
+            </div>
           </div>
           <div class="right floated content">
             {{ ticket.quantity }} x $ {{ ticket.price.toFixed(2) }}
@@ -154,14 +163,33 @@ export default {
     await this.fetchPaymentMethods()
   },
   methods: {
-    addTicket(data) {
-      this.$store.commit('Cashier/ADD_TICKET', data)
+    addTicket(payload) {
+      this.$store.commit('Cashier/ADD_TICKET', payload)
+    },
+    removeTicket(payload) {
+      // Vue did not like the word "event" as a variable/object name in an event handler...
+      const data = {
+        event: payload.t.event,
+        ticket: payload.ticket
+      }
+      this.$store.commit('Cashier/REMOVE_TICKET', data)
+    },
+    clearTicket(payload) {
+      // Vue did not like the word "event" as a variable/object name in an event handler...
+      const data = {
+        event: payload.t.event,
+        ticket: payload.ticket
+      }
+      this.$store.commit('Cashier/CLEAR_TICKET', data)
     },
     addProduct(product) {
       this.$store.commit('Cashier/ADD_PRODUCT', product)
     },
     removeProduct(product) {
       this.$store.commit('Cashier/REMOVE_PRODUCT', product)
+    },
+    clearProduct(product) {
+      this.$store.commit('Cashier/CLEAR_PRODUCT', product)
     },
     async fetchEvents() {
       try {
@@ -221,3 +249,10 @@ export default {
   },
 }
 </script>
+
+<style>
+  i.red.times.circle.outline.icon:hover, 
+  i.yellow.minus.circle.icon { 
+    cursor: pointer 
+  }
+</style>

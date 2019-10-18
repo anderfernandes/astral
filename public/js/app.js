@@ -15024,7 +15024,7 @@ module.exports = setMonth
         });
       }
     },
-    REMOVE_PRODUCT: function REMOVE_PRODUCT(state, payload) {
+    REMOVE_PRODUCT: function REMOVE_PRODUCT(state, product) {
       var existingProduct = state.sale.products.find(function (p) {
         return p.id === product.id;
       });
@@ -15044,6 +15044,17 @@ module.exports = setMonth
         state.sale.products.splice(index, 1);
       }
     },
+    CLEAR_PRODUCT: function CLEAR_PRODUCT(state, product) {
+      var existingProduct = state.sale.products.find(function (p) {
+        return p.id === product.id;
+      });
+      var index = state.sale.products.findIndex(function (p) {
+        return p.id === product.id;
+      });
+      if (existingProduct) {
+        state.sale.products.splice(index, 1);
+      }
+    },
 
 
     // If it exists, splice. If it doesn't, push
@@ -15059,9 +15070,7 @@ module.exports = setMonth
         });
         if (existingTicketIndex != -1) {
           // Find current amount of tickets
-          var existingTicket = currentEvent.tickets.find(function (t) {
-            return t.id === payload.ticket.id;
-          });
+          var existingTicket = currentEvent.tickets[existingTicketIndex];
           // Update ticket objects
           Object.assign(currentEvent.tickets.splice(existingTicketIndex, 1, {
             id: payload.ticket.id,
@@ -15106,7 +15115,51 @@ module.exports = setMonth
         });
       }
     },
-    REMOVE_TICKET: function REMOVE_TICKET(state, ticket) {}
+    REMOVE_TICKET: function REMOVE_TICKET(state, payload) {
+      // Checking if the event of the ticket we want to remove exists
+      var existingEventIndex = state.sale.tickets.findIndex(function (t) {
+        return t.event.id === payload.event.id;
+      });
+      if (existingEventIndex != -1) {
+        var currentEvent = state.sale.tickets[existingEventIndex];
+        // If ticket exists, we will subtract one. Otherwise, we will remove all of them
+        var existingTicketIndex = currentEvent.tickets.findIndex(function (t) {
+          return t.id === payload.ticket.id;
+        });
+        if (existingTicketIndex != -1) {
+          var existingTicket = currentEvent.tickets[existingTicketIndex];
+          if (existingTicket.quantity > 1) Object.assign(currentEvent.tickets.splice(existingTicketIndex, 1, {
+            id: payload.ticket.id,
+            name: payload.ticket.name,
+            price: payload.ticket.price,
+            quantity: existingTicket.quantity - 1
+          }));else {
+            currentEvent.tickets.splice(existingTicketIndex, 1);
+            if (currentEvent.tickets.length < 1) state.sale.tickets.splice(existingEventIndex, 1);
+          }
+        } else {
+          currentEvent.tickets.splice(existingTicketIndex, 1);
+          if (currentEvent.tickets.length < 1) state.sale.tickets.splice(existingEventIndex, 1);
+        }
+      }
+    },
+    CLEAR_TICKET: function CLEAR_TICKET(state, payload) {
+      var existingEventIndex = state.sale.tickets.findIndex(function (t) {
+        return t.event.id === payload.event.id;
+      });
+      if (existingEventIndex != -1) {
+        var currentEvent = state.sale.tickets[existingEventIndex];
+        var existingTicketIndex = currentEvent.tickets.findIndex(function (t) {
+          return t.id === payload.ticket.id;
+        });
+        if (existingTicketIndex != -1) {
+          // Remove ticket from tickets array
+          currentEvent.tickets.splice(existingTicketIndex, 1);
+          // Remove event/ticket object from ticket payload array if there are no other tickets
+          if (currentEvent.tickets.length < 1) state.sale.tickets.splice(existingEventIndex, 1);
+        }
+      }
+    }
   },
 
   getters: {
@@ -76742,6 +76795,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(857)
+}
 var normalizeComponent = __webpack_require__(5)
 /* script */
 var __vue_script__ = __webpack_require__(838)
@@ -76750,7 +76807,7 @@ var __vue_template__ = __webpack_require__(839)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -76798,6 +76855,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -76986,14 +77052,33 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   }(),
 
   methods: {
-    addTicket: function addTicket(data) {
-      this.$store.commit('Cashier/ADD_TICKET', data);
+    addTicket: function addTicket(payload) {
+      this.$store.commit('Cashier/ADD_TICKET', payload);
+    },
+    removeTicket: function removeTicket(payload) {
+      // Vue did not like the word "event" as a variable/object name in an event handler...
+      var data = {
+        event: payload.t.event,
+        ticket: payload.ticket
+      };
+      this.$store.commit('Cashier/REMOVE_TICKET', data);
+    },
+    clearTicket: function clearTicket(payload) {
+      // Vue did not like the word "event" as a variable/object name in an event handler...
+      var data = {
+        event: payload.t.event,
+        ticket: payload.ticket
+      };
+      this.$store.commit('Cashier/CLEAR_TICKET', data);
     },
     addProduct: function addProduct(product) {
       this.$store.commit('Cashier/ADD_PRODUCT', product);
     },
     removeProduct: function removeProduct(product) {
       this.$store.commit('Cashier/REMOVE_PRODUCT', product);
+    },
+    clearProduct: function clearProduct(product) {
+      this.$store.commit('Cashier/CLEAR_PRODUCT', product);
     },
     fetchEvents: function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2() {
@@ -77194,44 +77279,41 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "ui grid" }, [
     _c("div", { staticClass: "twelve wide computer sixteen mobile column" }, [
-      _vm.products.length > 0
-        ? _c(
+      _c(
+        "div",
+        { staticClass: "ui four link cards" },
+        _vm._l(_vm.products, function(product) {
+          return _c(
             "div",
-            { staticClass: "ui horizontal list" },
-            _vm._l(_vm.products, function(product) {
-              return _c(
-                "div",
-                {
-                  key: product.id,
-                  staticClass: "item",
-                  on: {
-                    click: function($event) {
-                      return _vm.addProduct(product)
-                    }
-                  }
-                },
-                [
-                  _c("img", {
-                    staticClass: "ui avatar image",
-                    attrs: { src: product.cover, alt: product.name }
-                  }),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "content" }, [
-                    _c("div", { staticClass: "header" }, [
-                      _vm._v(_vm._s(product.name))
-                    ]),
-                    _vm._v(
-                      "\n          $ " +
-                        _vm._s(product.price.toFixed(2)) +
-                        "\n        "
-                    )
+            {
+              key: product.id,
+              staticClass: "card",
+              on: {
+                click: function($event) {
+                  return _vm.addProduct(product)
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "content" }, [
+                _c("div", { staticClass: "ui right floated meta" }, [
+                  _c("div", { staticClass: "ui basic black label" }, [
+                    _vm._v("$ " + _vm._s(product.price.toFixed(2)))
                   ])
-                ]
-              )
-            }),
-            0
+                ]),
+                _vm._v(" "),
+                _c("img", {
+                  staticClass: "ui avatar image",
+                  attrs: { src: product.cover, alt: product.name }
+                }),
+                _vm._v(" "),
+                _c("strong", [_vm._v(_vm._s(product.name))])
+              ])
+            ]
           )
-        : _vm._e(),
+        }),
+        0
+      ),
       _vm._v(" "),
       _vm.products.length > 0
         ? _c("div", { staticClass: "ui divider" })
@@ -77299,7 +77381,7 @@ var render = function() {
                         "div",
                         {
                           key: ticket.id,
-                          staticClass: "ui labeled button",
+                          staticClass: "ui basic black button",
                           on: {
                             click: function($event) {
                               return _vm.addTicket({
@@ -77310,13 +77392,13 @@ var render = function() {
                           }
                         },
                         [
-                          _c("div", { staticClass: "ui basic black button" }, [
-                            _vm._v(_vm._s(ticket.name))
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "ui basic black label" }, [
-                            _vm._v("$ " + _vm._s(ticket.price.toFixed(2)))
-                          ])
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(ticket.name) +
+                              " $ " +
+                              _vm._s(ticket.price.toFixed(2)) +
+                              "\n            "
+                          )
                         ]
                       )
                     }),
@@ -77412,40 +77494,49 @@ var render = function() {
                 _vm._m(4),
                 _vm._v(" "),
                 _vm._l(_vm.sale.products, function(product) {
-                  return _c(
-                    "div",
-                    {
-                      key: product.id,
-                      staticClass: "item",
-                      on: {
-                        click: function($event) {
-                          return _vm.removeProduct(product)
-                        }
-                      }
-                    },
-                    [
-                      _c("img", {
-                        staticClass: "ui avatar image",
-                        attrs: { src: product.cover, alt: product.name }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "content" }, [
-                        _c("div", { staticClass: "header" }, [
-                          _vm._v(_vm._s(product.name))
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "right floated content" }, [
+                  return _c("div", { key: product.id, staticClass: "item" }, [
+                    _c("img", {
+                      staticClass: "ui avatar image",
+                      attrs: { src: product.cover, alt: product.name }
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "content" }, [
+                      _c("div", { staticClass: "header" }, [
                         _vm._v(
-                          "\n          " +
-                            _vm._s(product.quantity) +
-                            " x $ " +
-                            _vm._s(product.price.toFixed(2)) +
-                            "\n        "
-                        )
+                          "\n            " +
+                            _vm._s(product.name) +
+                            "\n            "
+                        ),
+                        _c("i", {
+                          staticClass: "yellow minus circle icon",
+                          on: {
+                            click: function($event) {
+                              return _vm.removeProduct(product)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "red times circle outline icon",
+                          on: {
+                            click: function($event) {
+                              return _vm.clearProduct(product)
+                            }
+                          }
+                        })
                       ])
-                    ]
-                  )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "right floated content" }, [
+                      _vm._v(
+                        "\n          " +
+                          _vm._s(product.quantity) +
+                          " x $ " +
+                          _vm._s(product.price.toFixed(2)) +
+                          "\n        "
+                      )
+                    ])
+                  ])
                 })
               ],
               2
@@ -77476,7 +77567,26 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "content" }, [
                   _c("div", { staticClass: "header" }, [
-                    _vm._v(_vm._s(ticket.name))
+                    _vm._v(
+                      "\n            " + _vm._s(ticket.name) + "\n            "
+                    ),
+                    _c("i", {
+                      staticClass: "yellow minus circle icon",
+                      on: {
+                        click: function($event) {
+                          return _vm.removeTicket({ t: t, ticket: ticket })
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("i", {
+                      staticClass: "red times circle outline icon",
+                      on: {
+                        click: function($event) {
+                          return _vm.clearTicket({ t: t, ticket: ticket })
+                        }
+                      }
+                    })
                   ])
                 ]),
                 _vm._v(" "),
@@ -78431,6 +78541,47 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 856 */,
+/* 857 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(858);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(13)("11e91b0f", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-355840c3\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Index.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-355840c3\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Index.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 858 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(11)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\ni.red.times.circle.outline.icon:hover, \ni.yellow.minus.circle.icon { \n  cursor: pointer\n}\n", ""]);
+
+// exports
+
 
 /***/ })
 /******/ ]);
