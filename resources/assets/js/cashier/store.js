@@ -1,13 +1,21 @@
+let getDefaultState = () => ({
+  sale: {
+    subtotal: 0,
+    tax: 0,
+    total: 0,
+    tendered: 0,
+    change: 0,
+    balance: 0,
+    products: [],
+    tickets: [],
+  }
+})
+
 export default ({
   
   namespaced: true,
   
-  state: {
-    sale: {
-      products: [],
-      tickets: [],
-    }
-  },
+  state: getDefaultState(),
 
   mutations: {
     
@@ -161,10 +169,11 @@ export default ({
       }
     },
 
-  },
+    SET_TENDERED(state, tendered) {
+      Object.assign(state.sale, { tendered })
+    },
 
-  getters: {
-    total: state => {
+    CALCULATE_TOTALS(state, tax_rate) {
       let products_total = state.sale.products.reduce((total, product) => (total + (product.quantity * product.price)), 0)
       let tickets_total = state.sale.tickets.length == 0 
         ? 0 
@@ -172,7 +181,45 @@ export default ({
             let event_total = event.tickets.length == 0 ? 0 : event.tickets.reduce((ttl, tck) => (ttl + (tck.quantity * tck.price)), 0)
             return accumulator + event_total
           }, 0)
-      return products_total + tickets_total
+      let subtotal = products_total + tickets_total
+      let tax = subtotal * tax_rate
+      tax = tax.toLocaleString('en-US', {
+        minimumFractionDigits : 2,
+        maximumFractionDigits : 2,
+        useGrouping           : false,
+      })
+      tax = parseFloat(tax)
+      let total = tax + subtotal
+      total = total.toLocaleString('en-US', {
+        minimumFractionDigits : 2,
+        maximumFractionDigits : 2,
+        useGrouping           : false,
+      })
+      total = parseFloat(total)
+      let change = state.sale.tendered - total
+      change = change <= 0 ? 0 : change
+
+      let balance = state.sale.tendered - total
+
+      Object.assign(state.sale, { 
+        subtotal,
+        tax,
+        total,
+        change,
+        balance,
+      })
+
+    },
+
+    RESET(state) {
+      const s = getDefaultState()
+      Object.keys(s).forEach(key => {
+        state[key] = s[key]
+      })
     }
+  },
+
+  getters: {
+    
   },
 })

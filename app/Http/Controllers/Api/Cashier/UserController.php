@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Cashier;
 
-use App\User;
+use App\{ User, Setting };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -15,11 +15,34 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+
+      $settings = Setting::find(1);
         
-        $users = User::orderBy('firstname', 'asc')->get();
+      $allCustomers = $settings->cashier_customer_dropdown
+        ? User::where('membership_id', '!=', 1)->orWhere('id', 1)->get()
+        : User::all();
+
+      if ($settings->cashier_customer_dropdown)
+        $customers = $allCustomers->map(function ($item) {
+          if ($item['id'] == 1)
+            $data = $item['fullname'];
+          else
+            $data = "{$item['membership_number']} {$item['fullname']}";
+          return [ 
+            'id' => $item['id'],
+            'fullname' => $data,
+          ];
+      });
+      else
+        $customers = $allCustomers->map(function ($item) { 
+          return [ 
+            'id' => $item['id'],
+            'fullname' => $item['fullname'],
+          ];
+        });
 
         return response()->json([
-          'data' => $users,
+          'data' => $customers->all(),
         ]);
     }
 

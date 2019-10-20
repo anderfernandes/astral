@@ -1,6 +1,6 @@
 <template>
   <div class="ui grid">
-    <div class="twelve wide computer sixteen mobile column">
+    <div class="twelve wide computer sixteen mobile column" v-if="!loading">
       <div class="ui four link cards">
         <div class="card" v-for="product in products" :key="product.id" @click="addProduct(product)">
           <div class="content">
@@ -43,43 +43,41 @@
         </div>
       </div>
     </div>
-    <div class="four wide computer sixteen mobile column">
+    <div class="four wide computer sixteen mobile column" v-if="!loading">
       <div class="ui form">
         <div class="field">
           <sui-dropdown placeholder="Customer" search selection :options="customers" v-model="customer_id" />
         </div>
         <div class="field">
-          <div class="ui two column grid">
-            <div class="column">
-              <div class="ui huge left aligned header">
-                $
-              </div>
-            </div>
-            <div class="column">
-              <div class="ui huge right aligned header">
-                {{ total.toFixed(2) }}
-              </div>
-            </div>
+          <div class="ui large labeled input error">
+            <div class="ui basic label">$</div>
+            <input type="text" placeholder="Tendered" focus v-model="tendered" style="text-align:right">
           </div>
         </div>
-        <div class="field">
-          <div class="ui three column grid">
-            <div class="column">
-              <div class="ui small header">
-                <div class="sub header">Change</div>
-                $ 0.00
-              </div>
-            </div>
+        <div class="field" v-if="settings.tax">
+          <div class="ui four column grid">
             <div class="column">
               <div class="ui small header">
                 <div class="sub header">Subtotal</div>
-                $ 0.00
+                $ {{ sale.subtotal.toFixed(2) }}
               </div>
             </div>
             <div class="column">
               <div class="ui small header">
-                <div class="sub header">Tax (8.25%)</div>
-                $ 0.00
+                <div class="sub header">Tax ({{ (settings.tax * 100).toFixed(2) }}%)</div>
+                $ {{ sale.tax.toFixed(2) }}
+              </div>
+            </div>
+            <div class="column">
+              <div class="ui small header">
+                <div class="sub header">Total</div>
+                $ {{ sale.total.toFixed(2) }}
+              </div>
+            </div>
+            <div class="column">
+              <div class="ui small header">
+                <div class="sub header">Change</div>
+                $ {{ sale.change.toFixed(2) }}
               </div>
             </div>
           </div>
@@ -95,9 +93,9 @@
             <div class="ui negative button">
               Cancel
             </div>
-            <div class="ui positive button">
-              Charge
-            </div>
+            <sui-button positive :disabled="!((sale.tickets.length > 0) && (sale.total >= 0) && (sale.balance >= 0))" @click.prevent="submit">
+              Charge $ {{ sale.total.toFixed(2) }}
+            </sui-button>
           </div>
         </div>
       </div>
@@ -138,6 +136,9 @@
         </div>
       </div>
     </div>
+    <div class="ui sixteen wide column" v-else>
+      <sui-loader active centered inline content="Loading..." />
+    </div>
   </div>
 </template>
 
@@ -147,6 +148,7 @@ import {format, isToday} from 'date-fns'
 
 export default {
   data: () => ({
+    loading: true,
     // Dropdown options
     events: [],
     customers: [],
@@ -156,12 +158,17 @@ export default {
     payment_method_id: 1,
     customer_id: 1,
   }),
+
   async created() {
+    this.loading = true
+    await this.$store.dispatch('fetchSettings')
     await this.fetchProducts()
     await this.fetchEvents()
     await this.fetchCustomers()
     await this.fetchPaymentMethods()
+    this.loading = false
   },
+
   methods: {
     addTicket(payload) {
       this.$store.commit('Cashier/ADD_TICKET', payload)
@@ -203,7 +210,7 @@ export default {
       try {
         const response = await axios.get('/api/cashier/users')
         const customers = response.data.data.map(customer => ({
-          text: `${customer.firstname} ${customer.lastname}`,
+          text: `${customer.fullname}`,
           value: customer.id
         }))
         Object.assign(this, { customers })
@@ -241,11 +248,27 @@ export default {
         alert(`Error in fetchProducts: ${error.message}`)
       }
     },
+    async submit() {
+      console.log(this.sale)
+      this.$router.push({ name: 'after-sale' })
+    },
     format, isToday
   },
+
   computed: {
     sale() { return this.$store.state.Cashier.sale },
-    total() { return this.$store.getters['Cashier/total'] },
+    settings() { return this.$store.state.Sale.settings },
+    tendered: {
+      set(value) { this.$store.commit('Cashier/SET_TENDERED', parseFloat(value)) },
+      get() { return this.$store.state.Cashier.sale.tendered },
+    }
+  },
+
+  watch: {
+    sale: {
+      handler() { this.$store.commit('Cashier/CALCULATE_TOTALS', this.settings.tax) },
+      deep: true,
+    }
   },
 }
 </script>
