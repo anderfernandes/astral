@@ -598,8 +598,8 @@ Route::get('event/{event}', function(Event $event) {
   return [
     'id'       => $event->id,
     'type'     => $event->type->name,
-    'start'    => Date::parse($event->start)->toDateTimeString(),
-    'end'      => Date::parse($event->end)->toDateTimeString(),
+    'start'    => Date::parse($event->start)->toIso8601String(),
+    'end'      => Date::parse($event->end)->toIso8601String(),
     'capacity' => (int)$event->seats,
     'color'    => $event->type->color,
     'seats'    => $event->seats - App\Ticket::where('event_id', $event->id)->count(),
