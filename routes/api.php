@@ -1264,6 +1264,7 @@ Route::get('events/by-date', function (Request $request) {
         'start' => $event->start->toIso8601String(),
         'end' => $event->end->toIso8601String(),
         'seats' => (int)$event->seats,
+        'show' => $event->show,
         'type' => [
           'id' => $event->type->id,
           'name' => $event->type->name,
