@@ -1,47 +1,56 @@
 <template>
   <div class="ui grid">
     <div class="twelve wide computer sixteen mobile column" v-if="!loading">
-      <div class="ui four link cards">
-        <div class="card" v-for="product in products" :key="product.id" @click="addProduct(product)">
-          <div class="content">
-            <div class="ui right floated meta">
-              <div class="ui basic black label">$ {{ product.price.toFixed(2) }}</div>
-            </div>
-            <img :src="product.cover" :alt="product.name" class="ui avatar image">
-            <strong>{{ product.name }}</strong>
-          </div>
-        </div>
-      </div>
-      <div class="ui divider" v-if="products.length > 0"></div>
-      <div class="ui divided items" v-if="events">
-        <div class="item" v-for="event in events" :key="event.id">
-          <div class="ui tiny image">
-            <img :src="event.show.cover" :alt="event.show.name">
-          </div>
-          <div class="content">
-            <div class="header">
-              {{ event.show.name }}
-            </div>
-            <div class="meta">
-              <div class="ui black label">{{ event.show.type }}</div>
-              <div class="ui inverted label" :style="{ backgroundColor: event.type.color }">{{ event.type.name }}</div>
-            </div>
-            <div class="meta">
-              {{ isToday(event.start) ? 'Today' : format('dddd') }}
-              @{{ format(event.start, 'h:mm A') }} |
-              {{ event.seats }} {{ event.seats == 1 ?'seat' : 'seats' }}
-            </div>
-            <div class="description">
-                <div class="ui basic black button"
-                  v-for="ticket in event.type.allowed_tickets" :key="ticket.id"
-                  @click="addTicket({event, ticket})"
-                >
-                  {{ ticket.name }} $ {{ ticket.price.toFixed(2) }}
+      <sui-tab active-index="0">
+        <sui-tab-pane icon="ticket" title="Tickets" :label="events.length.toString()" v-if="events.length > 0">
+          <div class="ui divided items" v-if="events">
+            <div class="item" v-for="event in events" :key="event.id">
+              <div class="ui tiny image">
+                <img :src="event.show.cover" :alt="event.show.name">
+              </div>
+              <div class="content">
+                <div class="header">
+                  {{ event.show.name }}
+                </div>
+                <div class="meta">
+                  <div class="ui black label">{{ event.show.type }}</div>
+                  <div class="ui inverted label" :style="{ backgroundColor: event.type.color }">{{ event.type.name }}</div>
+                </div>
+                <div class="meta">
+                  {{ isToday(event.start) ? 'Today' : format('dddd') }}
+                  @{{ format(event.start, 'h:mm A') }} |
+                  {{ event.seats }} {{ event.seats == 1 ?'seat' : 'seats' }}
+                </div>
+                <div class="description">
+                    <div class="ui basic black button"
+                      v-for="ticket in event.type.allowed_tickets" :key="ticket.id"
+                      @click="addTicket({event, ticket})"
+                    >
+                      {{ ticket.name }} $ {{ ticket.price.toFixed(2) }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </sui-tab-pane>
+        <sui-tab-pane icon="box" title="Products" :label="products.length.toString()" v-if="products.length > 0">
+          <div class="ui six link cards">
+            <div class="card" v-for="product in products" :key="product.id" @click="addProduct(product)">
+              <div class="image">
+                <img :src="product.cover" :alt="product.name">
+              </div>
+              <div class="content">
+                <div class="header">
+                  {{ product.name }}
+                </div>
+                <div class="meta">
+                  <div class="ui basic black label">$ {{ product.price.toFixed(2) }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sui-tab-pane>
+      </sui-tab>
     </div>
     <div class="four wide computer sixteen mobile column" v-if="!loading">
       <div class="ui form">
@@ -49,7 +58,7 @@
           <sui-dropdown placeholder="Customer" search selection :options="customers" v-model="customer_id" />
         </div>
         <div class="field">
-          <div class="ui large labeled input error">
+          <div class="ui labeled input error">
             <div class="ui basic label">$</div>
             <input type="text" placeholder="Tendered" focus v-model="tendered" style="text-align:right">
           </div>
@@ -86,14 +95,17 @@
           <sui-dropdown placeholder="Customer" search selection :options="payment_methods" v-model="payment_method_id" />
         </div>
         <div class="field">
-          <input type="text" placeholder="Card or Check reference">
+          <input type="text" placeholder="Card or Check reference" v-model="sale.reference">
+        </div>
+        <div class="field">
+          <input type="text" placeholder="Memo" v-model="sale.memo">
         </div>
         <div class="field">
           <div class="ui two buttons">
             <div class="ui negative button">
               Cancel
             </div>
-            <sui-button positive :disabled="!((sale.tickets.length > 0) && (sale.total >= 0) && (sale.balance >= 0))" @click.prevent="submit">
+            <sui-button positive :disabled="!((sale.tickets.length > 0 || sale.products.length > 0) && (sale.total >= 0) && (sale.balance >= 0))" @click.prevent="submit">
               Charge $ {{ sale.total.toFixed(2) }}
             </sui-button>
           </div>
@@ -145,6 +157,7 @@
 <script>
 
 import {format, isToday} from 'date-fns'
+import axios from 'axios'
 
 export default {
   data: () => ({
@@ -214,6 +227,7 @@ export default {
           value: customer.id
         }))
         Object.assign(this, { customers })
+        Object.assign(this.sale, { customer_id: customers[0].value })
       } catch (error) {
         alert(`Error in fetchEvents: ${ error.message }`)
       }
@@ -249,8 +263,10 @@ export default {
       }
     },
     async submit() {
-      console.log(this.sale)
-      this.$router.push({ name: 'after-sale' })
+      //console.log(this.sale)
+      //this.$router.push({ name: 'after-sale' })
+      const response = await axios.post('/api/cashier/sales', this.sale)
+      console.log(response.data)
     },
     format, isToday
   },
@@ -259,7 +275,9 @@ export default {
     sale() { return this.$store.state.Cashier.sale },
     settings() { return this.$store.state.Sale.settings },
     tendered: {
-      set(value) { this.$store.commit('Cashier/SET_TENDERED', parseFloat(value)) },
+      set(value) { 
+        this.$store.commit('Cashier/SET_TENDERED', value == '' ? 0 : parseFloat(value)) 
+      },
       get() { return this.$store.state.Cashier.sale.tendered },
     }
   },
@@ -268,7 +286,8 @@ export default {
     sale: {
       handler() { this.$store.commit('Cashier/CALCULATE_TOTALS', this.settings.tax) },
       deep: true,
-    }
+    },
+    customer_id() { Object.assign(this.sale, { customer_id: this.customer_id }) }
   },
 }
 </script>

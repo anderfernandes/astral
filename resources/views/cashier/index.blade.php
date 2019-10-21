@@ -10,4 +10,8 @@
 
   <div id="cashier"></div>
 
+  <script>
+    localStorage.setItem('u', {{ auth()->user()->id }})
+  </script>
+
 @endsection

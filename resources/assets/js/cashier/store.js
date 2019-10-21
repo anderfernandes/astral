@@ -1,5 +1,9 @@
 let getDefaultState = () => ({
   sale: {
+    reference: null,
+    memo: null,
+    cashier_id: parseInt(localStorage.getItem('u')),
+    customer_id: null,
     subtotal: 0,
     tax: 0,
     total: 0,
