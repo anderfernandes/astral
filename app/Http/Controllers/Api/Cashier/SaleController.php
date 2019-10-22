@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Cashier;
 
-use App\{ Sale, User };
+use App\{ Sale, User, Payment };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -53,33 +53,32 @@ class SaleController extends Controller
         $sale->source               = "cashier";
         $sale->sell_to_organization = false;
 
-        // $sale->save();
+        $sale->save();
 
         // Get an array of all events
-        $events_array = [];
+        $events = [];
 
         foreach($request->tickets as $ticket)
           array_push($events, $ticket['event']['id']);
 
-        // $sale->events()->attach($events_array);
+        $sale->events()->attach($events);
 
-        /*if ($request->has('memo'))
+        if ($request->memo != null)
           $sale->memo()->create([
             'author_id' => $cashier->id,
             'message'   => $request->memo,
           ]);
-        */
 
         $tickets = [];
 
-        for ($i = 0; $i < count($request->tickets) - 1; $i++)
+        for ($i = 0; $i < count($request->tickets); $i++)
         {
-          foreach ($request->tickets[$i]['tickets'] as $data)
+          foreach ($request->tickets[$i]['tickets'] as $ticket)
           {
-            for ($j = 0; $j < count($data['quantity']) - 1; $j++)
-              $tickets = array_prepend($tickets, [
-                'ticket_type_id'  => $data['id'],
-                'event_id'        => $events_array[$i],
+            for ($j = 0; $j < $ticket['quantity']; $j++)
+              array_push($tickets, [
+                'ticket_type_id'  => $ticket['id'],
+                'event_id'        => $events[$i],
                 'customer_id'     => $customer->id,
                 'cashier_id'      => $cashier->id,
                 'organization_id' => $customer->organization_id,
@@ -87,10 +86,33 @@ class SaleController extends Controller
           }
         }
 
+        $sale->tickets()->createMany($tickets);
+
+        $products = [];
+
+        foreach ($request->products as $product)
+          for ($k = 0; $k < $product['quantity']; $k++)
+            array_push($products, $product['id']);
+
+        $sale->products()->attach($products);
+
+        $sale->organization->events()->attach($events);
+
+        $payment = new Payment;
+
+        $payment->cashier_id        = $cashier->id;
+        $payment->payment_method_id = $request->payment_method_id;
+        $payment->tendered          = (double)$request->tendered;
+        $payment->total             = (double)$request->total;
+        $payment->change_due        = (double)$request->change;
+        $payment->reference         = $request->reference;
+        $payment->source            = "admin";
+
+        $sale->payments()->save($payment);
         
         return response()->json([
-          'events' => $events_array,
-          'tickets' => $tickets,
+          'data'    => $sale,
+          'message' => 'Sale created succesfully!',
         ]);
     }
 

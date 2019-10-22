@@ -1,10 +1,16 @@
 <template>
-  <div class="ui grid">
-    <div class="ui sixteen wide column">
-      <div class="ui header">
-        Sale completed succesfully!
+  <div class="ui centered one column grid">
+    <div class="column">
+      <div class="ui huge center aligned icon header">
+        <i class="thumbs up icon"></i>
+        <div class="content">
+          Sale completed succesfully!
+        </div>
+        <div class="content">
+          <br>
+          <div class="ui huge positive button" @click.prevent="handleCompletedSale">OK</div>
+        </div>
       </div>
-      <div class="ui button" @click.prevent="handleCompletedSale">Back</div>
     </div>
   </div>
 </template>

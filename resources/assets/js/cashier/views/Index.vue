@@ -19,7 +19,7 @@
                 <div class="meta">
                   {{ isToday(event.start) ? 'Today' : format('dddd') }}
                   @{{ format(event.start, 'h:mm A') }} |
-                  {{ event.seats }} {{ event.seats == 1 ?'seat' : 'seats' }}
+                  {{ event.seats }} {{ event.seats == 1 ?'seat' : 'seats' }} available
                 </div>
                 <div class="description">
                     <div class="ui basic black button"
@@ -92,7 +92,7 @@
           </div>
         </div>
         <div class="field">
-          <sui-dropdown placeholder="Customer" search selection :options="payment_methods" v-model="payment_method_id" />
+          <sui-dropdown placeholder="Customer" search selection :options="payment_methods" v-model="sale.payment_method_id" />
         </div>
         <div class="field">
           <input type="text" placeholder="Card or Check reference" v-model="sale.reference">
@@ -263,10 +263,10 @@ export default {
       }
     },
     async submit() {
-      //console.log(this.sale)
-      //this.$router.push({ name: 'after-sale' })
+      this.loading = true
       const response = await axios.post('/api/cashier/sales', this.sale)
-      console.log(response.data)
+      this.loading = false
+      this.$router.push({ name: 'after-sale' })
     },
     format, isToday
   },
@@ -284,10 +284,17 @@ export default {
 
   watch: {
     sale: {
-      handler() { this.$store.commit('Cashier/CALCULATE_TOTALS', this.settings.tax) },
+      handler() {
+        if (this.sale.payment_method_id != 1)
+          Object.assign(this.sale, { tendered: this.sale.total })
+        else
+          Object.assign(this.sale, { tendered: 0 })
+        this.$store.commit('Cashier/CALCULATE_TOTALS', this.settings.tax) 
+      },
       deep: true,
     },
-    customer_id() { Object.assign(this.sale, { customer_id: this.customer_id }) }
+    customer_id() { Object.assign(this.sale, { customer_id: this.customer_id }) },
+    
   },
 }
 </script>

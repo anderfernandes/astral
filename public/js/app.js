@@ -14987,6 +14987,7 @@ var getDefaultState = function getDefaultState() {
   return {
     sale: {
       reference: null,
+      payment_method_id: 1,
       memo: null,
       cashier_id: parseInt(localStorage.getItem('u')),
       customer_id: null,
@@ -77433,15 +77434,17 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                _context6.next = 2;
+                this.loading = true;
+                _context6.next = 3;
                 return __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/api/cashier/sales', this.sale);
 
-              case 2:
+              case 3:
                 response = _context6.sent;
 
-                console.log(response.data);
+                this.loading = false;
+                this.$router.push({ name: 'after-sale' });
 
-              case 4:
+              case 6:
               case 'end':
                 return _context6.stop();
             }
@@ -77480,6 +77483,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   watch: {
     sale: {
       handler: function handler() {
+        if (this.sale.payment_method_id != 1) Object.assign(this.sale, { tendered: this.sale.total });else Object.assign(this.sale, { tendered: 0 });
         this.$store.commit('Cashier/CALCULATE_TOTALS', this.settings.tax);
       },
 
@@ -77590,7 +77594,7 @@ var render = function() {
                                                 ? "seat"
                                                 : "seats"
                                             ) +
-                                            "\n              "
+                                            " available\n              "
                                         )
                                       ]),
                                       _vm._v(" "),
@@ -77847,11 +77851,11 @@ var render = function() {
                       options: _vm.payment_methods
                     },
                     model: {
-                      value: _vm.payment_method_id,
+                      value: _vm.sale.payment_method_id,
                       callback: function($$v) {
-                        _vm.payment_method_id = $$v
+                        _vm.$set(_vm.sale, "payment_method_id", $$v)
                       },
-                      expression: "payment_method_id"
+                      expression: "sale.payment_method_id"
                     }
                   })
                 ],
@@ -78181,6 +78185,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   methods: {
@@ -78199,25 +78209,33 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "ui grid" }, [
-    _c("div", { staticClass: "ui sixteen wide column" }, [
-      _c("div", { staticClass: "ui header" }, [
-        _vm._v("\n      Sale completed succesfully!\n    ")
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "ui button",
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.handleCompletedSale($event)
-            }
-          }
-        },
-        [_vm._v("Back")]
-      )
+  return _c("div", { staticClass: "ui centered one column grid" }, [
+    _c("div", { staticClass: "column" }, [
+      _c("div", { staticClass: "ui huge center aligned icon header" }, [
+        _c("i", { staticClass: "thumbs up icon" }),
+        _vm._v(" "),
+        _c("div", { staticClass: "content" }, [
+          _vm._v("\n        Sale completed succesfully!\n      ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "content" }, [
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "ui huge positive button",
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.handleCompletedSale($event)
+                }
+              }
+            },
+            [_vm._v("OK")]
+          )
+        ])
+      ])
     ])
   ])
 }
