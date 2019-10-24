@@ -8,7 +8,7 @@ let getDefaultState = () => ({
     subtotal: 0,
     tax: 0,
     total: 0,
-    tendered: 0,
+    tendered: '0.00',
     change: 0,
     balance: 0,
     products: [],
@@ -175,7 +175,7 @@ export default ({
     },
 
     SET_TENDERED(state, tendered) {
-      Object.assign(state.sale, { tendered })
+      Object.assign(state.sale, { tendered: tendered.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })
     },
 
     CALCULATE_TOTALS(state, tax_rate) {
@@ -201,10 +201,10 @@ export default ({
         useGrouping           : false,
       })
       total = parseFloat(total)
-      let change = state.sale.tendered - total
+      let change = parseFloat(state.sale.tendered) - total
       change = change <= 0 ? 0 : change
 
-      let balance = state.sale.tendered - total
+      let balance = parseFloat(state.sale.tendered) - total
 
       Object.assign(state.sale, { 
         subtotal,

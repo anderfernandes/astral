@@ -1,5 +1,5 @@
 <div class="ui borderless fixed top menu">
-  <a class="header toc item"><i class="sidebar large icon"></i></a>
+  <a class="header toc item" onclick="$('.ui.dropdown').dropdown()"><i class="sidebar large icon"></i></a>
   <div class="header item"><img src="/astral-logo-dark.png" style="padding-right:4px">Astral</div>
   <div class="active header item hide-on-mobile">
     <strong>

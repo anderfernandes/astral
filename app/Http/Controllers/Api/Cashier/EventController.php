@@ -19,6 +19,16 @@ class EventController extends Controller
                        ->with(['show', 'type.allowedTickets'])
                        ->get();
 
+        $events = $events->map(function ($event) {
+          return [
+            'id'=> $event->id,
+            'show' => $event->show,
+            'start' => $event->start->toIso8601String(),
+            'type' => $event->type,
+            'seats' => $event->seats - $event->tickets->count(),
+          ];
+        });
+
         return response()->json([
           'data' => $events
         ]);

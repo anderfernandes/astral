@@ -105,7 +105,7 @@
   })
 
   @isSet($product->inventory)
-    $('#inventory').dropdown('set selected', '{{ $product->inventory == 1 ? 'true' : 'false' }}')
+    $('#inventory').dropdown('set selected', '{{ $product->inventory }}')
 
     @if ($product->inventory)
       $('#current-stock').removeClass('disabled')

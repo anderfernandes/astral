@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Cashier;
 
-use App\{ Sale, User, Payment };
+use App\{ Sale, User, Payment, Product };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -90,9 +90,14 @@ class SaleController extends Controller
 
         $products = [];
 
-        foreach ($request->products as $product)
-          for ($k = 0; $k < $product['quantity']; $k++)
+        foreach ($request->products as $product) {
+          for ($k = 0; $k < $product['quantity']; $k++) {
             array_push($products, $product['id']);
+          }
+          $p = Product::find($product['id']);
+          $p->stock = (int)$p->stock - (int)$product['quantity'];
+          $p->save();
+        }
 
         $sale->products()->attach($products);
 

@@ -222,7 +222,7 @@ function getAttendanceByType($ticketTypeID) {
         @if ($products->count() > 0)
           @foreach ($products as $product)
           <div class="item">
-            <img src="{{ $product->cover == '/default.png' ? $product->cover : Storage::url($product->cover) }}" class="ui avatar image">
+            <img src="{{ $product->cover }}" class="ui avatar image">
             <div class="content">
               <a href="{{ route('admin.products.edit', $product) }}" target="_blank" class="header">
                 {{ $product->name }}

@@ -18,7 +18,7 @@
                 </div>
                 <div class="meta">
                   {{ isToday(event.start) ? 'Today' : format('dddd') }}
-                  @{{ format(event.start, 'h:mm A') }} |
+                  @ {{ format(event.start, 'h:mm A') }} |
                   {{ event.seats }} {{ event.seats == 1 ?'seat' : 'seats' }} available
                 </div>
                 <div class="description">
@@ -43,8 +43,9 @@
                 <div class="header">
                   {{ product.name }}
                 </div>
-                <div class="meta">
-                  <div class="ui basic black label">$ {{ product.price.toFixed(2) }}</div>
+                <div class="description">
+                  $ {{ product.price.toFixed(2) }} | 
+                  {{ product.stock }} left
                 </div>
               </div>
             </div>
@@ -58,9 +59,9 @@
           <sui-dropdown placeholder="Customer" search selection :options="customers" v-model="customer_id" />
         </div>
         <div class="field">
-          <div class="ui labeled input error">
+          <div class="ui labeled input">
             <div class="ui basic label">$</div>
-            <input type="text" placeholder="Tendered" focus v-model="tendered" style="text-align:right">
+            <input type="text" placeholder="Tendered" focus v-model="tendered" style="text-align:right" :readonly="sale.payment_method_id != 1">
           </div>
         </div>
         <div class="field" v-if="settings.tax">
@@ -105,7 +106,7 @@
             <div class="ui negative button">
               Cancel
             </div>
-            <sui-button positive :disabled="!((sale.tickets.length > 0 || sale.products.length > 0) && (sale.total >= 0) && (sale.balance >= 0))" @click.prevent="submit">
+            <sui-button positive :disabled="!validate" @click.prevent="submit">
               Charge $ {{ sale.total.toFixed(2) }}
             </sui-button>
           </div>
@@ -203,7 +204,13 @@ export default {
       this.$store.commit('Cashier/CLEAR_TICKET', data)
     },
     addProduct(product) {
-      this.$store.commit('Cashier/ADD_PRODUCT', product)
+      const p = this.sale.products.find(p => p.id == product.id)
+      const stock = p ? (product.stock - p.quantity) : product.stock
+
+      if (stock > 0)
+        this.$store.commit('Cashier/ADD_PRODUCT', product)
+      else 
+        alert(`${product.name} is out of stock!`)
     },
     removeProduct(product) {
       this.$store.commit('Cashier/REMOVE_PRODUCT', product)
@@ -276,25 +283,48 @@ export default {
     settings() { return this.$store.state.Sale.settings },
     tendered: {
       set(value) { 
-        this.$store.commit('Cashier/SET_TENDERED', value == '' ? 0 : parseFloat(value)) 
+        this.$store.commit('Cashier/SET_TENDERED', value == '' ? '0.00' : value) 
       },
       get() { return this.$store.state.Cashier.sale.tendered },
-    }
+    },
+    validate() {
+      let valid = false
+      const isPayingWithCard = !(this.sale.payment_method_id == 1)
+      const hasReference     = (this.sale.reference != null && this.sale.reference != '' && this.sale.reference.length > 1)
+      if (isPayingWithCard && hasReference)
+        valid = true
+
+      if (!isPayingWithCard)
+        valid = true
+      
+      return (
+        // Sale must have tickets or products and...
+        (this.sale.tickets.length > 0 || this.sale.products.length > 0) && 
+        // Sale must have a positive total and...
+        (this.sale.total >= 0) && 
+        // Sale balance must be positive and...
+        (this.sale.balance >= 0) &&
+        // If payment is not in cash, cashier must leave a reference with at least two characters
+        valid
+        )
+    },
   },
 
   watch: {
     sale: {
-      handler() {
-        if (this.sale.payment_method_id != 1)
-          Object.assign(this.sale, { tendered: this.sale.total })
-        else
-          Object.assign(this.sale, { tendered: 0 })
+      handler(newSale, oldSale) {
+        if (newSale.payment_method_id != 1)
+          Object.assign(this.sale, { tendered: this.sale.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })
+          
         this.$store.commit('Cashier/CALCULATE_TOTALS', this.settings.tax) 
       },
       deep: true,
     },
     customer_id() { Object.assign(this.sale, { customer_id: this.customer_id }) },
-    
+    'sale.payment_method_id': function(newValue, oldValue) {
+      if (newValue == 1 && oldValue != 1)
+        Object.assign(this.sale, { tendered: '0.00' })
+    }
   },
 }
 </script>
