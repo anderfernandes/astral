@@ -10,6 +10,11 @@ class Product extends Model
 
     protected $fillable = ['product_id'];
 
+    protected $casts = [
+      'stock' => 'integer',
+      'price' => 'double',
+    ];
+
     /**
      * Returns an object with this product's Creator data
      * @return App\User An instance of the User model.

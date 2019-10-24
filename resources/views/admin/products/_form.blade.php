@@ -18,6 +18,13 @@
         <option value="1">Yes</option>
       </select>
     </div>
+    <div class="field">
+      <label for="active">Show in Cashier?</label>
+      <select name="in_cashier" id="in_cashier" class="ui dropdown">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </div>
   </div>
   <div class="three fields">
     <div class="required field">
@@ -98,7 +105,7 @@
   })
 
   @isSet($product->inventory)
-    $('#inventory').dropdown('set selected', '{{ $product->inventory == 1 ? 'true' : 'false' }}')
+    $('#inventory').dropdown('set selected', '{{ $product->inventory }}')
 
     @if ($product->inventory)
       $('#current-stock').removeClass('disabled')
@@ -110,9 +117,10 @@
 
   $("#public").dropdown('set selected', {{ isset($product->public) ? $product->public : old('public') }})
   $("#active").dropdown('set selected', {{ isset($product->active) ? $product->active : old('active') }})
+  $("#in_cashier").dropdown('set selected', {{ isset($product->in_cashier) ? $product->in_cashier : old('active') }})
 
   $('#inventory').change(function() {
-    this.value == 'true' ? $('#current-stock').removeClass('disabled') : $('#current-stock').addClass('disabled')
+    this.value == true ? $('#current-stock').removeClass('disabled') : $('#current-stock').addClass('disabled')
   })
 
 

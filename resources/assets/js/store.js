@@ -11,7 +11,10 @@ import Index from './modules/index'
 import Sale from './modules/sale'
 
 // Shifts Module
-import  Shift from './modules/shift'
+import Shift from './modules/shift'
+
+// Cashier Module
+import Cashier from './cashier/store'
 
 Vue.use(Vuex)
 
@@ -21,5 +24,6 @@ export default new Vuex.Store({
     Index,
     Sale,
     Shift,
+    Cashier,
   }
 })
