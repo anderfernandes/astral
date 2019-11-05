@@ -1186,6 +1186,15 @@ Route::get('user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/user/{user}', function (User $user) {
+  return response()->json([
+    'id'        => $user->id,
+    'firstname' => $user->firstname,
+    'lastname'  => $user->lastname,
+    'fullname'  => $user->fullname,
+  ]);
+});
+
 Route::post('new-sale', function(Request $request) {
   // New Sale
   /*$sale = new Sale;

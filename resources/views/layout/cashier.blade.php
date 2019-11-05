@@ -86,25 +86,12 @@
   </script>-->
 
   <!--- Sidebar Menu -->
-  @include('cashier.partial._sidebar')
 
-  <!-- Page Contents -->
-  <div class="pusher">
-
-    <!-- Top Fixed Menu -->
-    @include('cashier.partial._menu')
-
-    <!-- Messages -->
-
-    <div class="ui basic segment" style="padding-top:3.5rem">
-
-      @include('cashier.partial._message')
+    <div class="ui basic segment">
 
       @yield('content')
 
     </div>
-
-  </div>
 
   @if (Request::routeIs('cashier.index'))
   {{-- Astral JS --}}
