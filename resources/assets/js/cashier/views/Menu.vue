@@ -8,46 +8,53 @@
     <div class="ui four column grid">
       <div class="row">
         <div class="column">
-          <div class="ui secondary vertical menu">
-            <div class="item">
-              <div class="header">Cashier</div>
-              <div class="menu">
-                <div class="item">Cashier</div>
-              </div>
-            </div>
+          <router-link class="ui black fluid basic massive button" to="/">
+            <i class="inbox icon"></i>
+            Cashier
+          </router-link>
+        </div>
+        <div class="column">
+          <sui-dropdown button class="black massive basic fluid">
+            <i class="file text icon"></i> Reports
+            <sui-dropdown-menu>
+              <sui-dropdown-item @click="handleLinkClick(`/cashier/reports/closeout`)">Closeout</sui-dropdown-item>
+              <sui-dropdown-item
+                @click="handleLinkClick(`/cashier/reports/transaction-detail`)"
+              >Transaction Detail</sui-dropdown-item>
+            </sui-dropdown-menu>
+          </sui-dropdown>
+        </div>
+        <div class="column">
+          <div class="ui black fluid basic massive button" @click="handleLinkClick(`/admin/sales`)">
+            <i class="dollar sign icon"></i>
+            Sales
           </div>
         </div>
         <div class="column">
-          <div class="ui secondary vertical menu">
-            <div class="item">
-              <div class="header">Reports</div>
-              <div class="menu">
-                <div class="item">Closeout Report</div>
-                <div class="item">Transaction Detail Report</div>
-              </div>
-            </div>
+          <div class="ui black fluid basic massive button" @click="handleLinkClick(`/admin/users`)">
+            <i class="users icon"></i>
+            Users
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column"></div>
+        <div class="column">
+          <div
+            class="ui black fluid basic massive button"
+            @click="handleLinkClick(`/admin/members`)"
+          >
+            <i class="address card icon"></i>
+            Members
           </div>
         </div>
         <div class="column">
-          <div class="ui secondary vertical menu">
-            <div class="item">
-              <div class="header">Sales</div>
-              <div class="menu">
-                <div class="item">All Sales</div>
-                <div class="item">Find</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui secondary vertical menu">
-            <div class="item">
-              <div class="header">Users</div>
-              <div class="menu">
-                <div class="item">All Users</div>
-                <div class="item">Add User</div>
-              </div>
-            </div>
+          <div
+            class="ui black fluid basic massive button"
+            @click="handleLinkClick(`https://astral.anderfernandes.com/docs`)"
+          >
+            <i class="help circle icon"></i>
+            Help
           </div>
         </div>
       </div>
@@ -56,5 +63,11 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    handleLinkClick(url) {
+      window.open(url, "_blank");
+    }
+  }
+};
 </script>

@@ -19,7 +19,6 @@
         "fullcalendar": "^3.10.0",
         "jquery-address": "^1.6.0",
         "laravel-mix": "^1.7.2",
-        "lodash": "^4.17.11",
         "marked": "^0.7.0",
         "semantic-ui": "^2.4.2",
         "semantic-ui-vue": "^0.8.1",
