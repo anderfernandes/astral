@@ -8,9 +8,7 @@
         <img src="/astral-logo-dark.png" style="padding-right:4px" />Astral
       </div>
       <div class="active header item hide-on-mobile">
-        <strong>
-          <i class="inbox icon"></i> Cashier
-        </strong>
+        <strong> <i class="inbox icon"></i> Cashier </strong>
       </div>
       <div class="right menu">
         <div class="active header item hide-on-mobile">
@@ -32,7 +30,7 @@
 </template>
 
 <script>
-import format from "date-fns/format";
+import format from 'date-fns/format'
 
 export default {
   data: () => ({
@@ -40,22 +38,22 @@ export default {
     user: null
   }),
   async mounted() {
-    await this.fetchUser();
+    await this.fetchUser()
   },
   methods: {
     async fetchUser() {
-      const response = await fetch(`/api/user/${localStorage.getItem("u")}`);
-      const user = await response.json();
-      Object.assign(this, { user });
+      const response = await fetch(`/api/user/${localStorage.getItem('u')}`)
+      const user = await response.json()
+      Object.assign(this, { user })
     },
     handleMenuButtonClick() {
-      Object.assign(this, { menu: !this.menu });
-      if (this.menu) this.$router.push("/menu");
-      else this.$router.push("/");
+      Object.assign(this, { menu: !this.menu })
+      if (this.menu) this.$router.push('/menu')
+      else this.$router.push('/')
     },
     format
   }
-};
+}
 </script>
 
 <style>

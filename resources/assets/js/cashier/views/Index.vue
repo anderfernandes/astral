@@ -20,20 +20,24 @@
                   <div
                     class="ui inverted label"
                     :style="{ backgroundColor: event.type.color }"
-                  >{{ event.type.name }}</div>
+                  >
+                    {{ event.type.name }}
+                  </div>
                 </div>
                 <div class="meta">
                   {{ isToday(event.start) ? 'Today' : format('dddd') }}
-                  @ {{ format(event.start, 'h:mm A') }} |
-                  {{ event.seats }} {{ event.seats == 1 ?'seat' : 'seats' }} available
+                  @ {{ format(event.start, 'h:mm A') }} | {{ event.seats }}
+                  {{ event.seats == 1 ? 'seat' : 'seats' }} available
                 </div>
                 <div class="description">
                   <div
                     class="ui basic black button"
                     v-for="ticket in event.type.allowed_tickets"
                     :key="ticket.id"
-                    @click="addTicket({event, ticket})"
-                  >{{ ticket.name }} $ {{ ticket.price.toFixed(2) }}</div>
+                    @click="addTicket({ event, ticket })"
+                  >
+                    {{ ticket.name }} $ {{ ticket.price.toFixed(2) }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -58,8 +62,7 @@
               <div class="content">
                 <div class="header">{{ product.name }}</div>
                 <div class="description">
-                  $ {{ product.price.toFixed(2) }} |
-                  {{ product.stock }} left
+                  $ {{ product.price.toFixed(2) }} | {{ product.stock }} left
                 </div>
               </div>
             </div>
@@ -101,7 +104,9 @@
             </div>
             <div class="column">
               <div class="ui small header">
-                <div class="sub header">Tax ({{ (settings.tax * 100).toFixed(2) }}%)</div>
+                <div class="sub header">
+                  Tax ({{ (settings.tax * 100).toFixed(2) }}%)
+                </div>
                 $ {{ sale.tax.toFixed(2) }}
               </div>
             </div>
@@ -129,7 +134,17 @@
           />
         </div>
         <div class="field">
-          <input type="text" placeholder="Card or Check reference" v-model="sale.reference" />
+          <sui-form>
+            <sui-form-field
+              :error="sale.payment_method_id != 1 && sale.reference.length < 2"
+            >
+              <input
+                type="text"
+                placeholder="Card or Check reference"
+                v-model="sale.reference"
+              />
+            </sui-form-field>
+          </sui-form>
         </div>
         <div class="field">
           <input type="text" placeholder="Memo" v-model="sale.memo" />
@@ -137,11 +152,9 @@
         <div class="field">
           <div class="ui two buttons">
             <div class="ui negative button">Cancel</div>
-            <sui-button
-              positive
-              :disabled="!validate"
-              @click.prevent="submit"
-            >Charge $ {{ sale.total.toFixed(2) }}</sui-button>
+            <sui-button positive :disabled="!validate" @click.prevent="submit"
+              >Charge $ {{ sale.total.toFixed(2) }}</sui-button
+            >
           </div>
         </div>
       </div>
@@ -150,20 +163,33 @@
           <i class="small box icon"></i> Products
         </div>
         <div class="item" v-for="product in sale.products" :key="product.id">
-          <img :src="product.cover" :alt="product.name" class="ui avatar image" />
+          <img
+            :src="product.cover"
+            :alt="product.name"
+            class="ui avatar image"
+          />
           <div class="content">
             <div class="header">
               {{ product.name }}
-              <i class="yellow minus circle icon" @click="removeProduct(product)"></i>
-              <i class="red times circle outline icon" @click="clearProduct(product)"></i>
+              <i
+                class="yellow minus circle icon"
+                @click="removeProduct(product)"
+              ></i>
+              <i
+                class="red times circle outline icon"
+                @click="clearProduct(product)"
+              ></i>
             </div>
           </div>
-          <div
-            class="right floated content"
-          >{{ product.quantity }} x $ {{ product.price.toFixed(2) }}</div>
+          <div class="right floated content">
+            {{ product.quantity }} x $ {{ product.price.toFixed(2) }}
+          </div>
         </div>
       </div>
-      <div class="ui small horizontal divider header" v-if="sale.tickets.length > 0">
+      <div
+        class="ui small horizontal divider header"
+        v-if="sale.tickets.length > 0"
+      >
         <i class="small ticket icon"></i> Tickets
       </div>
       <div
@@ -173,7 +199,11 @@
         style="margin: 0.5em 0"
       >
         <div class="item" v-for="ticket in t.tickets" :key="ticket.id">
-          <img :src="t.event.show.cover" :alt="t.event.show.name" class="ui avatar image" />
+          <img
+            :src="t.event.show.cover"
+            :alt="t.event.show.name"
+            class="ui avatar image"
+          />
           <div class="content">
             <div class="header">
               {{ ticket.name }}
@@ -181,10 +211,15 @@
                 class="yellow minus circle icon"
                 @click="removeTicket({ t, ticket })"
               ></i>
-              <i class="red times circle outline icon" @click="clearTicket({ t, ticket })"></i>
+              <i
+                class="red times circle outline icon"
+                @click="clearTicket({ t, ticket })"
+              ></i>
             </div>
           </div>
-          <div class="right floated content">{{ ticket.quantity }} x $ {{ ticket.price.toFixed(2) }}</div>
+          <div class="right floated content">
+            {{ ticket.quantity }} x $ {{ ticket.price.toFixed(2) }}
+          </div>
         </div>
       </div>
     </div>
@@ -195,8 +230,8 @@
 </template>
 
 <script>
-import { format, isToday } from "date-fns";
-import axios from "axios";
+import { format, isToday } from 'date-fns'
+import axios from 'axios'
 
 export default {
   data: () => ({
@@ -212,85 +247,85 @@ export default {
   }),
 
   async created() {
-    this.loading = true;
-    await this.$store.dispatch("fetchSettings");
-    await this.fetchProducts();
-    await this.fetchEvents();
-    await this.fetchCustomers();
-    await this.fetchPaymentMethods();
-    this.loading = false;
+    this.loading = true
+    await this.$store.dispatch('fetchSettings')
+    await this.fetchProducts()
+    await this.fetchEvents()
+    await this.fetchCustomers()
+    await this.fetchPaymentMethods()
+    this.loading = false
   },
 
   methods: {
     addTicket(payload) {
-      this.$store.commit("Cashier/ADD_TICKET", payload);
+      this.$store.commit('Cashier/ADD_TICKET', payload)
     },
     removeTicket(payload) {
       // Vue did not like the word "event" as a variable/object name in an event handler...
       const data = {
         event: payload.t.event,
         ticket: payload.ticket
-      };
-      this.$store.commit("Cashier/REMOVE_TICKET", data);
+      }
+      this.$store.commit('Cashier/REMOVE_TICKET', data)
     },
     clearTicket(payload) {
       // Vue did not like the word "event" as a variable/object name in an event handler...
       const data = {
         event: payload.t.event,
         ticket: payload.ticket
-      };
-      this.$store.commit("Cashier/CLEAR_TICKET", data);
+      }
+      this.$store.commit('Cashier/CLEAR_TICKET', data)
     },
     addProduct(product) {
-      const p = this.sale.products.find(p => p.id == product.id);
-      const stock = p ? product.stock - p.quantity : product.stock;
+      const p = this.sale.products.find(p => p.id == product.id)
+      const stock = p ? product.stock - p.quantity : product.stock
 
-      if (stock > 0) this.$store.commit("Cashier/ADD_PRODUCT", product);
-      else alert(`${product.name} is out of stock!`);
+      if (stock > 0) this.$store.commit('Cashier/ADD_PRODUCT', product)
+      else alert(`${product.name} is out of stock!`)
     },
     removeProduct(product) {
-      this.$store.commit("Cashier/REMOVE_PRODUCT", product);
+      this.$store.commit('Cashier/REMOVE_PRODUCT', product)
     },
     clearProduct(product) {
-      this.$store.commit("Cashier/CLEAR_PRODUCT", product);
+      this.$store.commit('Cashier/CLEAR_PRODUCT', product)
     },
     async fetchEvents() {
       try {
-        const response = await axios.get("/api/cashier/events");
-        Object.assign(this, { events: response.data.data });
+        const response = await axios.get('/api/cashier/events')
+        Object.assign(this, { events: response.data.data })
       } catch (error) {
-        alert(`Error in fetchEvents: ${error.message}`);
+        alert(`Error in fetchEvents: ${error.message}`)
       }
     },
     async fetchCustomers() {
       try {
-        const response = await axios.get("/api/cashier/users");
+        const response = await axios.get('/api/cashier/users')
         const customers = response.data.data.map(customer => ({
           text: `${customer.fullname}`,
           value: customer.id
-        }));
-        Object.assign(this, { customers });
-        Object.assign(this.sale, { customer_id: customers[0].value });
+        }))
+        Object.assign(this, { customers })
+        Object.assign(this.sale, { customer_id: customers[0].value })
       } catch (error) {
-        alert(`Error in fetchEvents: ${error.message}`);
+        alert(`Error in fetchEvents: ${error.message}`)
       }
     },
     async fetchPaymentMethods() {
       try {
-        const response = await axios.get("/api/cashier/payment-methods");
+        const response = await axios.get('/api/cashier/payment-methods')
         const payment_methods = response.data.data.map(payment_method => ({
           text: payment_method.name,
           value: payment_method.id,
           icon: payment_method.icon
-        }));
-        Object.assign(this, { payment_methods });
+        }))
+        Object.assign(this, { payment_methods })
       } catch (error) {
-        alert(`Error in fetchPaymentMethods: ${error.message}`);
+        alert(`Error in fetchPaymentMethods: ${error.message}`)
       }
     },
     async fetchProducts() {
       try {
-        const response = await axios.get("/api/cashier/products");
+        const response = await axios.get('/api/cashier/products')
         const products = response.data.data.map(product => ({
           text: product.name,
           value: product.id,
@@ -299,17 +334,17 @@ export default {
           id: product.id,
           name: product.name,
           price: product.price
-        }));
-        Object.assign(this, { products });
+        }))
+        Object.assign(this, { products })
       } catch (error) {
-        alert(`Error in fetchProducts: ${error.message}`);
+        alert(`Error in fetchProducts: ${error.message}`)
       }
     },
     async submit() {
-      this.loading = true;
-      const response = await axios.post("/api/cashier/sales", this.sale);
-      this.loading = false;
-      this.$router.push({ name: "after-sale" });
+      this.loading = true
+      const response = await axios.post('/api/cashier/sales', this.sale)
+      this.loading = false
+      this.$router.push({ name: 'after-sale' })
     },
     format,
     isToday
@@ -317,32 +352,29 @@ export default {
 
   computed: {
     sale() {
-      return this.$store.state.Cashier.sale;
+      return this.$store.state.Cashier.sale
     },
     settings() {
-      return this.$store.state.Sale.settings;
+      return this.$store.state.Sale.settings
     },
     tendered: {
       set(value) {
-        this.$store.commit(
-          "Cashier/SET_TENDERED",
-          value == "" ? "0.00" : value
-        );
+        this.$store.commit('Cashier/SET_TENDERED', value == '' ? '0.00' : value)
       },
       get() {
-        return this.$store.state.Cashier.sale.tendered;
+        return this.$store.state.Cashier.sale.tendered
       }
     },
     validate() {
-      let valid = false;
-      const isPayingWithCard = !(this.sale.payment_method_id == 1);
+      let valid = false
+      const isPayingWithCard = !(this.sale.payment_method_id == 1)
       const hasReference =
         this.sale.reference != null &&
-        this.sale.reference != "" &&
-        this.sale.reference.length > 1;
-      if (isPayingWithCard && hasReference) valid = true;
+        this.sale.reference != '' &&
+        this.sale.reference.length > 1
+      if (isPayingWithCard && hasReference) valid = true
 
-      if (!isPayingWithCard) valid = true;
+      if (!isPayingWithCard) valid = true
 
       return (
         // Sale must have tickets or products and...
@@ -353,7 +385,7 @@ export default {
         this.sale.balance >= 0 &&
         // If payment is not in cash, cashier must leave a reference with at least two characters
         valid
-      );
+      )
     }
   },
 
@@ -362,25 +394,25 @@ export default {
       handler(newSale, oldSale) {
         if (newSale.payment_method_id != 1)
           Object.assign(this.sale, {
-            tendered: this.sale.total.toLocaleString("en-US", {
+            tendered: this.sale.total.toLocaleString('en-US', {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2
             })
-          });
+          })
 
-        this.$store.commit("Cashier/CALCULATE_TOTALS", this.settings.tax);
+        this.$store.commit('Cashier/CALCULATE_TOTALS', this.settings.tax)
       },
       deep: true
     },
     customer_id() {
-      Object.assign(this.sale, { customer_id: this.customer_id });
+      Object.assign(this.sale, { customer_id: this.customer_id })
     },
-    "sale.payment_method_id": function(newValue, oldValue) {
+    'sale.payment_method_id': function(newValue, oldValue) {
       if (newValue == 1 && oldValue != 1)
-        Object.assign(this.sale, { tendered: "0.00" });
+        Object.assign(this.sale, { tendered: '0.00' })
     }
   }
-};
+}
 </script>
 
 <style>

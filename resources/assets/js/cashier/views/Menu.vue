@@ -2,7 +2,11 @@
   <div class="ui container" style="margin-top:3.5rem !important">
     <div class="ui grid">
       <div class="column" style="text-align:right">
-        <i class="close icon" @click="$router.push('/')" style="cursor: pointer"></i>
+        <i
+          class="close icon"
+          @click="$router.push('/')"
+          style="cursor: pointer"
+        ></i>
       </div>
     </div>
     <div class="ui four column grid">
@@ -17,21 +21,31 @@
           <sui-dropdown button class="black massive basic fluid">
             <i class="file text icon"></i> Reports
             <sui-dropdown-menu>
-              <sui-dropdown-item @click="handleLinkClick(`/cashier/reports/closeout`)">Closeout</sui-dropdown-item>
+              <sui-dropdown-item
+                @click="handleLinkClick(`/cashier/reports/closeout`)"
+                >Closeout</sui-dropdown-item
+              >
               <sui-dropdown-item
                 @click="handleLinkClick(`/cashier/reports/transaction-detail`)"
-              >Transaction Detail</sui-dropdown-item>
+                >Transaction Detail</sui-dropdown-item
+              >
             </sui-dropdown-menu>
           </sui-dropdown>
         </div>
         <div class="column">
-          <div class="ui black fluid basic massive button" @click="handleLinkClick(`/admin/sales`)">
+          <div
+            class="ui black fluid basic massive button"
+            @click="handleLinkClick(`/admin/sales`)"
+          >
             <i class="dollar sign icon"></i>
             Sales
           </div>
         </div>
         <div class="column">
-          <div class="ui black fluid basic massive button" @click="handleLinkClick(`/admin/users`)">
+          <div
+            class="ui black fluid basic massive button"
+            @click="handleLinkClick(`/admin/users`)"
+          >
             <i class="users icon"></i>
             Users
           </div>
@@ -66,8 +80,8 @@
 export default {
   methods: {
     handleLinkClick(url) {
-      window.open(url, "_blank");
+      window.open(url, '_blank')
     }
   }
-};
+}
 </script>

@@ -114,84 +114,59 @@
       </div>
     </div>
 
-    @if ($futureSales->count() > 0)
-      <div class="ui dividing header">
+    @if ($user->sales->count() > 0)
+    <div class="ui dividing header">Sales</div>
+    <div class="ui divided items">
+      @foreach ($user->sales->sortByDesc('created_at') as $sale)
+      <div class="item">
         <div class="content">
-          Future Visits
-          <div class="sub header">Total Events Attended: {{ $futureSales->count() }}</div>
+          <a href="/admin/sales#/{{ $sale->id }}" class="header">Sale #{{ $sale->id }}</a>
+          @if ($sale->events->count() > 0)
+          <div class="meta">Events</div>
+          <div class="extra">
+            @foreach ($sale->events as $event)
+              <div class="ui black label">{{ $event->show->name }}</div>
+            @endforeach
+          </div>
+          @endif
+          @if ($sale->products->count() > 0)
+          <div class="meta">Products</div>
+          <div class="extra">
+            @foreach ($sale->products->unique('id') as $product)
+              <div class="ui black label">
+                <i class="box icon"></i>
+                {{ $product->name }}
+              <div class="detail">{{ $sale->products->where('id', $product->id)->count() }}</div>
+              </div>
+            @endforeach
+          </div>
+          @endif
         </div>
       </div>
-      <div class="ui four column grid">
-        @foreach ($futureSales as $sale)
-            @foreach($sale->events as $event)
-              @if($event->show->id != 1)
-              <div class="column">
-                <div class="ui items">
-                  <div class="item">
-                    <div class="ui tiny image"><img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}"></div>
-                    <div class="content">
-                      <div class="meta">
-                        <div class="ui label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
-                      </div>
-                      <div class="header">{{ $event->show->name }}</div>
-                      <div class="meta">
-                        {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-                      </div>
-                      <a href="{{ route('admin.sales.show', $sale) }}" target="_blank" class="extra">Sale #{{ $sale->id }}</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              @endif
-            @endforeach
-        @endforeach
-      </div>
-    @endif
-
-    @if ($pastSales->count() > 0)
-      <div class="ui dividing header">
-        <div class="content">
-          Past Visits
-          <div class="sub header">Total Events Attended: {{ $pastSales->count() }}</div>
-        </div>
-      </div>
-      <div class="ui four column grid">
-        @foreach ($pastSales as $sale)
-            @foreach($sale->events as $event)
-              @if($event->show->id != 1)
-              <div class="column">
-                <div class="ui items">
-                  <div class="item">
-                    <div class="ui tiny image"><img src="{{ $event->show->cover }}" alt="{{ $event->show->name }}"></div>
-                    <div class="content">
-                      <div class="meta">
-                        <div class="ui label" style="background-color: {{ $event->type->color }}; color: rgba(255, 255, 255, 0.8)">{{ $event->type->name }}</div>
-                      </div>
-                      <div class="header">{{ $event->show->name }}</div>
-                      <div class="meta">
-                        {{ Date::parse($event->start)->format('l, F j, Y \a\t g:i A') }}
-                      </div>
-                      <a href="{{ route('admin.sales.show', $sale) }}" target="_blank" class="extra">Sale #{{ $sale->id }}</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              @endif
-            @endforeach
-        @endforeach
-      </div>
+      @endforeach
+    </div>
     @endif
 
   </div>
 
   @include('admin.partial.users._edit')
 
+  <?php
+    $csrf = csrf_field();
+    $action = route('admin.users.destroy', $user)
+  ?>
+
   @include('admin.partial._basic-modal', [
     'id'       => 'delete-user',
     'icon'     => 'trash',
     'title'    => "You are about to delete a user!",
     'subtitle' => "Are you sure you want to permanently delete the <strong>{$user->role->name}</strong> user <strong>{$user->firstname}</strong> ?",
-    'actions'  => "<a href='/admin/users/{$user->id}/delete' class='ui inverted red button'><i class='trash icon'></i>Yes, Delete {$user->fullname}</a>"
+    'actions'  => "
+    <form method='POST' action='{$action}'>
+      {$csrf}
+      <input type='hidden' name='_method' value='delete' />
+      <button type='submit' class='ui inverted red button'><i class='trash icon'></i>Yes, Delete {$user->fullname}</button>
+    </form>"
   ])
 
 @endsection
