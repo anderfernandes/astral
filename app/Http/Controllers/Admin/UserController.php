@@ -250,11 +250,17 @@ class UserController extends Controller
   {
     $temp = $user;
 
-    $user->delete();
-
-    Session::flash('success', "<strong>$temp->fullname</strong> was successfully deleted.");
-
-    return redirect()->route('admin.users.index');
+    try {
+      $user->delete();
+      Session::flash('success', "<strong>$temp->fullname</strong> was successfully deleted.");
+      return redirect()->route('admin.users.index');
+    } catch (\Illuminate\Database\QueryException $e) {
+      Session::flash(
+        'info',
+        "<strong>$user->fullname</strong> owns items in the database. Delete all sales, events and memberships, etc. that they own and try again."
+      );
+      return redirect()->route('admin.users.show', $user);
+    }
   }
 
   public function selfupdate(Request $request, User $user)
