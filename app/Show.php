@@ -39,15 +39,16 @@ class Show extends Model
   {
 
     $value = (substr($value, 0, 4) == "http") || ($value == "/default.png")
-                                    ? $value
-                                    : asset("storage/$value");
+      ? $value
+      : asset("storage/$value");
     return $value;
   }
 
-  public function getExpiredAttribute($value){
-    if ($value == null)
+  public function getExpiredAttribute($value)
+  {
+    if ($this->expiration == null)
       return true;
-    else 
-      return Carbon::parse($value)->isFuture();
+    else
+      return $this->expiration->isPast();
   }
 }
