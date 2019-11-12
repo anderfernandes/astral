@@ -621,6 +621,11 @@ Route::get('/calendar/events', function (Request $request) {
     ['start', '>=', $start],
     ['end', '<=', $end],
   ]);
+  
+  $events = $request->has('public') 
+    ? $events->where('public', $request->public)
+    : $events;
+
   $events = isset($request->type) ? $events->where('type_id', $request->type)->get() : $events->get();
   $eventsArray = [];
   foreach ($events as $event) {
