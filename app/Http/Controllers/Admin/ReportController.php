@@ -404,7 +404,7 @@ class ReportController extends Controller
         // Get all organization types
         $organization_types = OrganizationType::where('id', '!=', 1)->orderBy('name', 'asc')->get();
         // Loop through all organizations...
-        foreach ($organizations as $organization)
+        /*foreach ($organizations as $organization)
         {
           // Loop through organization sales
           foreach ($organization->sales->where('status', 'complete') as $sale)
@@ -419,6 +419,11 @@ class ReportController extends Controller
         $events = $events->pluck('id')
                          ->all();
         $events = Event::whereIn('id', $events)->get();
+        */
+        $events = Event::where([
+          ['start', '>=', $start],
+          ['end', '<=', $end],
+        ])->get();
         
         foreach ($events as $event)
         {
