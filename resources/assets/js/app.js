@@ -24,8 +24,10 @@ Vue.mixin({
 
   filters : {
     currency(value) {
-      if (value)
+      if (value && value > 0)
         return value.toLocaleString("en-US", store.getters.currencySettings)
+      else
+        return '0.00'
     }
   },
 

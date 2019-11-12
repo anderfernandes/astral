@@ -343,6 +343,7 @@ export default {
     async submit() {
       this.loading = true
       const response = await axios.post('/api/cashier/sales', this.sale)
+      this.$store.commit('Cashier/SET_LAST_SALE', response.data.data)
       this.loading = false
       this.$router.push({ name: 'after-sale' })
     },

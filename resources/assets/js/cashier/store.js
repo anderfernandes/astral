@@ -1,4 +1,5 @@
 let getDefaultState = () => ({
+  last_sale: null,
   sale: {
     reference: '',
     payment_method_id: 1,
@@ -206,15 +207,15 @@ export default {
         state.sale.tickets.length == 0
           ? 0
           : state.sale.tickets.reduce((accumulator, event) => {
-              let event_total =
-                event.tickets.length == 0
-                  ? 0
-                  : event.tickets.reduce(
-                      (ttl, tck) => ttl + tck.quantity * tck.price,
-                      0
-                    )
-              return accumulator + event_total
-            }, 0)
+            let event_total =
+              event.tickets.length == 0
+                ? 0
+                : event.tickets.reduce(
+                  (ttl, tck) => ttl + tck.quantity * tck.price,
+                  0
+                )
+            return accumulator + event_total
+          }, 0)
       let subtotal = products_total + tickets_total
       let tax = subtotal * tax_rate
       tax = tax.toLocaleString('en-US', {
@@ -249,6 +250,10 @@ export default {
       Object.keys(s).forEach(key => {
         state[key] = s[key]
       })
+    },
+
+    SET_LAST_SALE(state, payload) {
+      Object.assign(state, { last_sale: payload })
     }
   },
 
