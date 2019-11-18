@@ -6,7 +6,7 @@
     <i class="announcement icon"></i>
     Announcements
   </div>
-  <div class="content">
+  <div class="scrolling content">
     @foreach ($announcements as $announcement)
     <div class="ui dividing header" style="margin-bottom: 0 !important">
       <div class="content">

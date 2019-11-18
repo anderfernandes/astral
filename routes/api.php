@@ -621,8 +621,8 @@ Route::get('/calendar/events', function (Request $request) {
     ['start', '>=', $start],
     ['end', '<=', $end],
   ]);
-  
-  $events = $request->has('public') 
+
+  $events = $request->has('public')
     ? $events->where('public', $request->public)
     : $events;
 
@@ -934,6 +934,7 @@ Route::get('sale/{sale}', function (Sale $sale) {
       'date' => $event->start,
       'public' => $event->public,
       'seats' => $event->seats - $event->tickets->count(),
+      'title' => $event->title,
       'show' => [
         'id' => $event->show->id,
         'name'  => $event->show->name,

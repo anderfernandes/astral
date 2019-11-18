@@ -10,13 +10,18 @@
         >
           <div class="ui divided items" v-if="events">
             <div class="item" v-for="event in events" :key="event.id">
-              <div class="ui tiny image">
+              <div class="ui tiny image" v-if="event.show.id != 1">
                 <img :src="event.show.cover" :alt="event.show.name" />
               </div>
               <div class="content">
-                <div class="header">{{ event.show.name }}</div>
+                <div class="header" v-if="event.show.id == 1">
+                  {{ event.title }}
+                </div>
+                <div class="header" v-else>{{ event.show.name }}</div>
                 <div class="meta">
-                  <div class="ui black label">{{ event.show.type }}</div>
+                  <div class="ui black label" v-if="event.show.type_id != 1">
+                    {{ event.show.type }}
+                  </div>
                   <div
                     class="ui inverted label"
                     :style="{ backgroundColor: event.type.color }"
@@ -89,7 +94,7 @@
               placeholder="Tendered"
               focus
               v-model="tendered"
-              style="text-align:right"
+              style="text-align:right; padding-right: 1rem !important"
               :readonly="sale.payment_method_id != 1"
             />
           </div>
@@ -200,10 +205,12 @@
       >
         <div class="item" v-for="ticket in t.tickets" :key="ticket.id">
           <img
+            v-if="t.event.show.id != 1"
             :src="t.event.show.cover"
             :alt="t.event.show.name"
             class="ui avatar image"
           />
+          <img v-else src="/astral-logo-dark.png" class="ui avatar image" />
           <div class="content">
             <div class="header">
               {{ ticket.name }}
@@ -230,195 +237,198 @@
 </template>
 
 <script>
-import { format, isToday } from 'date-fns'
-import axios from 'axios'
+  import { format, isToday } from 'date-fns'
+  import axios from 'axios'
 
-export default {
-  data: () => ({
-    loading: true,
-    // Dropdown options
-    events: [],
-    customers: [],
-    products: [],
-    payment_methods: [],
-    // POST data
-    payment_method_id: 1,
-    customer_id: 1
-  }),
+  export default {
+    data: () => ({
+      loading: true,
+      // Dropdown options
+      events: [],
+      customers: [],
+      products: [],
+      payment_methods: [],
+      // POST data
+      payment_method_id: 1,
+      customer_id: 1
+    }),
 
-  async created() {
-    this.loading = true
-    await this.$store.dispatch('fetchSettings')
-    await this.fetchProducts()
-    await this.fetchEvents()
-    await this.fetchCustomers()
-    await this.fetchPaymentMethods()
-    this.loading = false
-  },
-
-  methods: {
-    addTicket(payload) {
-      this.$store.commit('Cashier/ADD_TICKET', payload)
-    },
-    removeTicket(payload) {
-      // Vue did not like the word "event" as a variable/object name in an event handler...
-      const data = {
-        event: payload.t.event,
-        ticket: payload.ticket
-      }
-      this.$store.commit('Cashier/REMOVE_TICKET', data)
-    },
-    clearTicket(payload) {
-      // Vue did not like the word "event" as a variable/object name in an event handler...
-      const data = {
-        event: payload.t.event,
-        ticket: payload.ticket
-      }
-      this.$store.commit('Cashier/CLEAR_TICKET', data)
-    },
-    addProduct(product) {
-      const p = this.sale.products.find(p => p.id == product.id)
-      const stock = p ? product.stock - p.quantity : product.stock
-
-      if (stock > 0) this.$store.commit('Cashier/ADD_PRODUCT', product)
-      else alert(`${product.name} is out of stock!`)
-    },
-    removeProduct(product) {
-      this.$store.commit('Cashier/REMOVE_PRODUCT', product)
-    },
-    clearProduct(product) {
-      this.$store.commit('Cashier/CLEAR_PRODUCT', product)
-    },
-    async fetchEvents() {
-      try {
-        const response = await axios.get('/api/cashier/events')
-        Object.assign(this, { events: response.data.data })
-      } catch (error) {
-        alert(`Error in fetchEvents: ${error.message}`)
-      }
-    },
-    async fetchCustomers() {
-      try {
-        const response = await axios.get('/api/cashier/users')
-        const customers = response.data.data.map(customer => ({
-          text: `${customer.fullname}`,
-          value: customer.id
-        }))
-        Object.assign(this, { customers })
-        Object.assign(this.sale, { customer_id: customers[0].value })
-      } catch (error) {
-        alert(`Error in fetchEvents: ${error.message}`)
-      }
-    },
-    async fetchPaymentMethods() {
-      try {
-        const response = await axios.get('/api/cashier/payment-methods')
-        const payment_methods = response.data.data.map(payment_method => ({
-          text: payment_method.name,
-          value: payment_method.id,
-          icon: payment_method.icon
-        }))
-        Object.assign(this, { payment_methods })
-      } catch (error) {
-        alert(`Error in fetchPaymentMethods: ${error.message}`)
-      }
-    },
-    async fetchProducts() {
-      try {
-        const response = await axios.get('/api/cashier/products')
-        const products = response.data.data.map(product => ({
-          text: product.name,
-          value: product.id,
-          cover: product.cover,
-          stock: product.stock,
-          id: product.id,
-          name: product.name,
-          price: product.price
-        }))
-        Object.assign(this, { products })
-      } catch (error) {
-        alert(`Error in fetchProducts: ${error.message}`)
-      }
-    },
-    async submit() {
+    async created() {
       this.loading = true
-      const response = await axios.post('/api/cashier/sales', this.sale)
-      this.$store.commit('Cashier/SET_LAST_SALE', response.data.data)
+      await this.$store.dispatch('fetchSettings')
+      await this.fetchProducts()
+      await this.fetchEvents()
+      await this.fetchCustomers()
+      await this.fetchPaymentMethods()
       this.loading = false
-      this.$router.push({ name: 'after-sale' })
     },
-    format,
-    isToday
-  },
 
-  computed: {
-    sale() {
-      return this.$store.state.Cashier.sale
-    },
-    settings() {
-      return this.$store.state.Sale.settings
-    },
-    tendered: {
-      set(value) {
-        this.$store.commit('Cashier/SET_TENDERED', value == '' ? '0.00' : value)
+    methods: {
+      addTicket(payload) {
+        this.$store.commit('Cashier/ADD_TICKET', payload)
       },
-      get() {
-        return this.$store.state.Cashier.sale.tendered
+      removeTicket(payload) {
+        // Vue did not like the word "event" as a variable/object name in an event handler...
+        const data = {
+          event: payload.t.event,
+          ticket: payload.ticket
+        }
+        this.$store.commit('Cashier/REMOVE_TICKET', data)
+      },
+      clearTicket(payload) {
+        // Vue did not like the word "event" as a variable/object name in an event handler...
+        const data = {
+          event: payload.t.event,
+          ticket: payload.ticket
+        }
+        this.$store.commit('Cashier/CLEAR_TICKET', data)
+      },
+      addProduct(product) {
+        const p = this.sale.products.find(p => p.id == product.id)
+        const stock = p ? product.stock - p.quantity : product.stock
+
+        if (stock > 0) this.$store.commit('Cashier/ADD_PRODUCT', product)
+        else alert(`${product.name} is out of stock!`)
+      },
+      removeProduct(product) {
+        this.$store.commit('Cashier/REMOVE_PRODUCT', product)
+      },
+      clearProduct(product) {
+        this.$store.commit('Cashier/CLEAR_PRODUCT', product)
+      },
+      async fetchEvents() {
+        try {
+          const response = await axios.get('/api/cashier/events')
+          Object.assign(this, { events: response.data.data })
+        } catch (error) {
+          alert(`Error in fetchEvents: ${error.message}`)
+        }
+      },
+      async fetchCustomers() {
+        try {
+          const response = await axios.get('/api/cashier/users')
+          const customers = response.data.data.map(customer => ({
+            text: `${customer.fullname}`,
+            value: customer.id
+          }))
+          Object.assign(this, { customers })
+          Object.assign(this.sale, { customer_id: customers[0].value })
+        } catch (error) {
+          alert(`Error in fetchEvents: ${error.message}`)
+        }
+      },
+      async fetchPaymentMethods() {
+        try {
+          const response = await axios.get('/api/cashier/payment-methods')
+          const payment_methods = response.data.data.map(payment_method => ({
+            text: payment_method.name,
+            value: payment_method.id,
+            icon: payment_method.icon
+          }))
+          Object.assign(this, { payment_methods })
+        } catch (error) {
+          alert(`Error in fetchPaymentMethods: ${error.message}`)
+        }
+      },
+      async fetchProducts() {
+        try {
+          const response = await axios.get('/api/cashier/products')
+          const products = response.data.data.map(product => ({
+            text: product.name,
+            value: product.id,
+            cover: product.cover,
+            stock: product.stock,
+            id: product.id,
+            name: product.name,
+            price: product.price
+          }))
+          Object.assign(this, { products })
+        } catch (error) {
+          alert(`Error in fetchProducts: ${error.message}`)
+        }
+      },
+      async submit() {
+        this.loading = true
+        const response = await axios.post('/api/cashier/sales', this.sale)
+        this.$store.commit('Cashier/SET_LAST_SALE', response.data.data)
+        this.loading = false
+        this.$router.push({ name: 'after-sale' })
+      },
+      format,
+      isToday
+    },
+
+    computed: {
+      sale() {
+        return this.$store.state.Cashier.sale
+      },
+      settings() {
+        return this.$store.state.Sale.settings
+      },
+      tendered: {
+        set(value) {
+          this.$store.commit(
+            'Cashier/SET_TENDERED',
+            value == '' ? '0.00' : value
+          )
+        },
+        get() {
+          return this.$store.state.Cashier.sale.tendered
+        }
+      },
+      validate() {
+        let valid = false
+        const isPayingWithCard = !(this.sale.payment_method_id == 1)
+        const hasReference =
+          this.sale.reference != null &&
+          this.sale.reference != '' &&
+          this.sale.reference.length > 1
+        if (isPayingWithCard && hasReference) valid = true
+
+        if (!isPayingWithCard) valid = true
+
+        return (
+          // Sale must have tickets or products and...
+          (this.sale.tickets.length > 0 || this.sale.products.length > 0) &&
+          // Sale must have a positive total and...
+          this.sale.total >= 0 &&
+          // Sale balance must be positive and...
+          this.sale.balance >= 0 &&
+          // If payment is not in cash, cashier must leave a reference with at least two characters
+          valid
+        )
       }
     },
-    validate() {
-      let valid = false
-      const isPayingWithCard = !(this.sale.payment_method_id == 1)
-      const hasReference =
-        this.sale.reference != null &&
-        this.sale.reference != '' &&
-        this.sale.reference.length > 1
-      if (isPayingWithCard && hasReference) valid = true
 
-      if (!isPayingWithCard) valid = true
-
-      return (
-        // Sale must have tickets or products and...
-        (this.sale.tickets.length > 0 || this.sale.products.length > 0) &&
-        // Sale must have a positive total and...
-        this.sale.total >= 0 &&
-        // Sale balance must be positive and...
-        this.sale.balance >= 0 &&
-        // If payment is not in cash, cashier must leave a reference with at least two characters
-        valid
-      )
-    }
-  },
-
-  watch: {
-    sale: {
-      handler(newSale, oldSale) {
-        if (newSale.payment_method_id != 1)
-          Object.assign(this.sale, {
-            tendered: this.sale.total.toLocaleString('en-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
+    watch: {
+      sale: {
+        handler(newSale, oldSale) {
+          if (newSale.payment_method_id != 1)
+            Object.assign(this.sale, {
+              tendered: this.sale.total.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              })
             })
-          })
 
-        this.$store.commit('Cashier/CALCULATE_TOTALS', this.settings.tax)
+          this.$store.commit('Cashier/CALCULATE_TOTALS', this.settings.tax)
+        },
+        deep: true
       },
-      deep: true
-    },
-    customer_id() {
-      Object.assign(this.sale, { customer_id: this.customer_id })
-    },
-    'sale.payment_method_id': function(newValue, oldValue) {
-      if (newValue == 1 && oldValue != 1)
-        Object.assign(this.sale, { tendered: '0.00' })
+      customer_id() {
+        Object.assign(this.sale, { customer_id: this.customer_id })
+      },
+      'sale.payment_method_id': function(newValue, oldValue) {
+        if (newValue == 1 && oldValue != 1)
+          Object.assign(this.sale, { tendered: '0.00' })
+      }
     }
   }
-}
 </script>
 
 <style>
-i.red.times.circle.outline.icon:hover,
-i.yellow.minus.circle.icon {
-  cursor: pointer;
-}
+  i.red.times.circle.outline.icon:hover,
+  i.yellow.minus.circle.icon {
+    cursor: pointer;
+  }
 </style>

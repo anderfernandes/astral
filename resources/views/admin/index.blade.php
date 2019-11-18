@@ -253,6 +253,7 @@ function getAttendanceByType($ticketTypeID) {
 
   <div class="eight wide computer sixteen wide mobile column">
 
+    @if ($sales->count() > 0)
     <div class="ui raised segment">
       <div class="ui dividing header">
         <i class="dollar icon"></i>
@@ -341,6 +342,7 @@ function getAttendanceByType($ticketTypeID) {
       </div>
       @endforeach
     </div>
+    @endif
 
     @if (str_contains(Auth::user()->role->permissions['dashboard'], "CRUD"))
     {{-- Attendance --}}
@@ -422,7 +424,11 @@ function getAttendanceByType($ticketTypeID) {
     </div>
     @endif
 
-    @if (str_contains(Auth::user()->role->permissions['dashboard'], "C"))
+    <?php 
+      $latest_posts = \App\Post::where('open', true)->latest()->take(5)->get();
+    ?>
+
+    @if (str_contains(Auth::user()->role->permissions['dashboard'], "C") && $latest_posts->count() > 0)
     {{-- Bulletin --}}
     <div class="ui raised segment">
       <div class="ui dividing header">
@@ -435,7 +441,7 @@ function getAttendanceByType($ticketTypeID) {
         </div>
       </div>
       <div class="ui relaxed divided list">
-        @foreach (\App\Post::where('open', true)->latest()->take(5)->get() as $post)
+        @foreach ($latest_posts as $post)
           <div class="item">
             <i class="big user circle icon"></i>
             <div class="content">

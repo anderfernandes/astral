@@ -30,40 +30,40 @@
 </template>
 
 <script>
-import format from 'date-fns/format'
+  import format from 'date-fns/format'
 
-export default {
-  data: () => ({
-    menu: false,
-    user: null
-  }),
-  async mounted() {
-    await this.fetchUser()
-  },
-  methods: {
-    async fetchUser() {
-      const response = await fetch(`/api/user/${localStorage.getItem('u')}`)
-      const user = await response.json()
-      Object.assign(this, { user })
+  export default {
+    data: () => ({
+      menu: false,
+      user: null
+    }),
+    async mounted() {
+      await this.fetchUser()
     },
-    handleMenuButtonClick() {
-      Object.assign(this, { menu: !this.menu })
-      if (this.menu) this.$router.push('/menu')
-      else this.$router.push('/')
-    },
-    format
+    methods: {
+      async fetchUser() {
+        const response = await fetch(`/api/user/${localStorage.getItem('u')}`)
+        const user = await response.json()
+        Object.assign(this, { user })
+      },
+      handleMenuButtonClick() {
+        Object.assign(this, { menu: !this.menu })
+        if (this.menu) this.$router.push('/menu')
+        else this.$router.push('/')
+      },
+      format
+    }
   }
-}
 </script>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s !important;
+  }
 
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
 </style>

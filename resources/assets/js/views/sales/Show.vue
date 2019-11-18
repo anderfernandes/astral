@@ -213,8 +213,9 @@
                 </div>
                 <div class="ui list">  
                   <div class="item" v-for="event in sale.events" :key="event.id">
-                    <h3 :class="sale.refund ? 'ui red header' : 'ui header' " v-if="event.show && event.type && event.show.id != 1">
-                      <img :src="event.show.cover" :alt="event.show.name" class="ui image">
+                    <h3 :class="sale.refund ? 'ui red header' : 'ui header' " v-if="event.show && event.type">
+                      <img src="/astral-logo-dark.png" class="ui image" v-if="event.show.id == 1">
+                      <img :src="event.show.cover" :alt="event.show.name" class="ui image" v-else>
                       <div class="content">
                         <div class="sub header">
                           {{ format(new Date(event.start), $dateFormat.long) }}
@@ -222,7 +223,15 @@
                             {{ event.type.name }}
                           </div>
                         </div>
-                        {{ event.show.name }}
+                        <span v-if="event.show.id == 1">{{ event.title }}</span>
+                        <span v-else>{{ event.show.name }}</span>
+                        <div
+                          v-if="event.show_id != 1"
+                          class="ui label"
+                          style="border: white 1px solid; background-color: transparent; color: white;"
+                        >
+                          {{ event.show.type }}
+                        </div>
                         <div class="sub header" v-if="event.tickets && event.tickets.length > 0">
                           <div class="ui black label" style="margin-left:0" v-for="ticket in event.tickets" :key="ticket.id">
                             <i class="ticket icon"></i>
