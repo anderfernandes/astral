@@ -75,7 +75,7 @@
               inactive
             </div>
             @endif
-            @if (!$show->expired)
+            @if ($show->expired)
             <div class="ui red label">
               expired
             </div>

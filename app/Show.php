@@ -47,7 +47,7 @@ class Show extends Model
   public function getExpiredAttribute($value)
   {
     if ($this->expiration == null)
-      return true;
+      return false;
     else
       return $this->expiration->isPast();
   }
