@@ -103,6 +103,12 @@
   </div>
 </div>
 @endif
+<div class="field">
+  <div class="ui checkbox">
+    {!! Form::checkbox('newsletter', true) !!}
+    <label for="newsletter">Receive {{ \App\Setting::find(1)->organization }} newsletters</label>
+  </div>
+</div>
 <div class="required field">
   @if (Request::routeIs('admin.users.create') or Request::routeIs('admin.users.edit'))
     <a href="{{ route('admin.users.index') }}" class="ui basic black button">

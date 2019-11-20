@@ -71,6 +71,9 @@
       <a class="item" href="{{ route('admin.reports.index') }}#product">
         <i class="large box icon"></i> Product
       </a>
+      <a class="item" href="{{ route('admin.reports.index') }}#users">
+          <i class="large newspaper outline icon"></i> Users
+        </a>
       <a class="item" href="{{ route('admin.reports.index') }}#system">
         <i class="large setting icon"></i> System
       </a>

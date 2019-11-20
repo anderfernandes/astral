@@ -9,6 +9,10 @@ class User extends Authenticatable
 {
   use Notifiable;
 
+  protected $casts = [
+    'newsletter' => 'boolean'
+  ];
+
   /**
    * The attributes that are mass assignable.
    *

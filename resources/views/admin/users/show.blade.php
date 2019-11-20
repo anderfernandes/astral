@@ -29,7 +29,8 @@
       <i class="user circle icon"></i>
       <div class="content">
         {{ $user->fullname }}
-        @if ($user->staff) <i style="display:inline-block" class="star icon"></i>@endif
+        @if ($user->staff) <i style="display:inline-block" class="star icon"></i> @endif
+        @if ($user->newsletter) <i class="newspaper outline icon"></i> @endif
         <div class="ui black label" style="margin-left:0">{{ $user->role->name }}</div>
         @if ($user->organization_id != 1)
         <a href="{{ route('admin.organizations.show', $user->organization) }}" target="_blank" class="ui black label" style="margin-left:0">

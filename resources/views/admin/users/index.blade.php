@@ -85,7 +85,15 @@
     <div class="card">
       <div class="content">
         <i class="user circle huge right floated icon"></i>
-        <div class="header">{{ $u->fullname }} @if ($u->staff) <i class="star icon"></i>@endif </div>
+        <div class="header">
+          {{ $u->fullname }} 
+          @if ($u->staff) 
+            <i class="star icon"></i>
+          @endif 
+          @if ($u->newsletter)
+            <i class="newspaper outline icon"></i>
+          @endif
+        </div>
         <div class="meta">
           <div class="ui black label">{{ $u->role->name }}</div>
         </div>

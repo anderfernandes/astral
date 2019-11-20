@@ -14,6 +14,7 @@
     <div class="item" data-tab="royalties"><i class="money icon"></i> Royalties</div>
     <div class="item" data-tab="membership"><i class="address card icon"></i> Membership</div>
     <div class="item" data-tab="product"><i class="box icon"></i> Product</div>
+    <div class="item" data-tab="users"><i class="users icon"></i> Users</div>
     <div class="item" data-tab="system"><i class="setting icon"></i> System</div>
   </div>
 
@@ -443,6 +444,32 @@
     </div>
   </div>
 
+  <div class="ui bottom attached tab segment" data-tab="users">
+    <h3 class="ui dividing header">
+      <i class="users icon"></i>
+      <div class="content">
+        Users
+        <div class="sub header">These reports contain information on users</div>
+      </div>
+    </h3>
+    <div class="ui four doubling cards">
+      {{-- Product Reports --}}
+      <div class="card">
+        <div class="content">
+          <div class="header">Newsletter Report</div>
+          <div class="description">This report shows users who have agree to receive newsletters</div><br />
+          <div class="ui two buttons">
+            <a href="{{ route('admin.reports.users', 'newsletter') }}" target="_blank" class="ui black button">
+              Get Report <i class="right chevron icon"></i>
+            </a>
+            <a class="ui basic black button" href="{{ route('admin.reports.users', 'newsletter') }}?csv">
+              Get CSV <i class="download icon"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
 

@@ -99,6 +99,7 @@ class UserController extends Controller
       'zip'                   => 'required|numeric',
       'phone'                 => 'required',
       'active'                => 'required|boolean',
+      'newsletter'            => 'boolean',
     ]);
 
     $user = new User;
@@ -119,6 +120,7 @@ class UserController extends Controller
     $user->phone           = $request->phone;
     $user->active          = $request->active;
     $user->staff           = Role::find($request->role_id)->staff;
+    $user->newsletter      = $request->has('newsletter');
 
     $user->creator_id      = Auth::user()->id;
 
@@ -201,6 +203,7 @@ class UserController extends Controller
       'zip'                   => 'required|numeric',
       'phone'                 => 'required',
       'active'                => 'required|boolean',
+      'newsletter'            => 'boolean',
     ]);
 
     $user->firstname       = $request->firstname;
@@ -218,6 +221,7 @@ class UserController extends Controller
     $user->phone           = $request->phone;
     $user->active          = $request->active;
     $user->staff           = Role::find($request->role_id)->staff;
+    $user->newsletter      = $request->has('newsletter');
 
     if ($request->password == null) {
 
