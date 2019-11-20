@@ -390,12 +390,14 @@ function getAttendanceByType($ticketTypeID) {
               <div class="header">
                 <a target="_blank" href="{{ route('admin.users.show', $lastSale->creator) }}" class="user">
                   {{ $lastSale->creator->firstname }}</a>
-                  sold <a target="_blank" href="{{ route('admin.sales.show', $lastSale) }}"> {{ $lastSale->tickets->count() }}
+                  sold <a target="_blank" href="/admin/sales/#{{ $lastSale->id }}"> {{ $lastSale->tickets->count() }}
                   @if ($lastSale->tickets->count() == 1)
-                    ticket</a> to <a target="_blank" href="{{ route('admin.shows.show', $lastSale->events[0]->show) }}">{{ $lastSale->tickets[0]->event->show->name }}</a> <div class="ui black circular label">{{ $lastSale->tickets[0]->event->type->name }}</div>
+                    ticket
                   @else
-                    tickets</a> to <a target="_blank" href="{{ route('admin.shows.show', $lastSale->events[0]->show) }}">{{ $lastSale->tickets[0]->event->show->name }}</a> <div class="ui black circular label">{{ $lastSale->tickets[0]->event->type->name }}</div>
+                    tickets
                   @endif
+                  </a>
+                  to <a target="_blank" href="{{ route('admin.shows.show', $lastSale->events[0]->show) }}">{{ $lastSale->tickets[0]->event->show->name }}</a> <div class="ui black circular label">{{ $lastSale->tickets[0]->event->type->name }}</div>
               </div>
               <div class="description">
                 {{ Date::parse($lastSale->created_at)->ago() }}
