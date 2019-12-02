@@ -623,7 +623,7 @@ Route::get('/calendar/events', function (Request $request) {
   ]);
 
   $events = $request->has('public')
-    ? $events->where('public', $request->public)
+    ? $events->where('public', (bool) $request->public)
     : $events;
 
   $events = isset($request->type) ? $events->where('type_id', $request->type)->get() : $events->get();
@@ -1677,18 +1677,24 @@ Route::group(["prefix" => "public"], function () {
 
   // This route will return shows in the database
   Route::get("shows", function (Request $request) {
-    $shows = Show::where("active", true);
+    $shows = Show::where("active", true)->get();
+    $shows = $shows->filter(function ($show) {
+      return !$show->expired;
+    });
+    $shows = Show::whereIn('id', $shows->pluck('id'));
 
     if ($request->type) {
       $show_type = \App\ShowType::where("name", $request->type)->first();
       $shows = $shows->where("type_id", $show_type->id);
     }
 
-    $shows = $shows->get();
+    $shows = $request->has('paginate')
+      ? $shows->paginate((int) $request->paginate)
+      : $shows->paginate(10);
 
     $shows_array = [];
 
-    foreach ($shows as $show) {
+    /*foreach ($shows as $show) {
       array_push($shows_array, [
         "id"          => $show->id,
         "name"        => $show->name,
@@ -1697,11 +1703,9 @@ Route::group(["prefix" => "public"], function () {
         "cover"       => $show->cover,
         "duration"    => (int) $show->duration,
       ]);
-    }
+    }*/
 
-    return response([
-      "data" => $shows_array
-    ]);
+    return response($shows);
   });
   // This route will return shows in the database
   Route::get("organizations", function (Request $request) {

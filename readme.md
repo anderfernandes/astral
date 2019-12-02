@@ -1,6 +1,6 @@
 # Astral
 
-## Open Source CRM for Planetariums
+## Open Source CRM and POS for Planetariums, Museums and Science Centers
 
 ### About
 
@@ -8,7 +8,7 @@ Astral will be a system that will allow non-profit organizations (such as Planet
 
 ### Thanks
 
-I would like to thank Prof. Chad Burrows for his help with this project, as well as Fed Chavez, Clifford Bailey, David Cantwell, Killian Brooks and Donald Hubbs for their ideas, my mother for hanging out with me when I first started working on this project, my friends Dani, Che and Mauri and their families for pretty much adopting me and Sol for showing me so much.
+I would like to thank Prof. Chad Burrows for his help with this project, as well as Fed Chavez, Clifford Bailey, David Cantwell, Killian Brooks and Donald Hubbs for their ideas, my mother for hanging out with me when I first started working on this project, my friends Dani, Che and Mauri and their families for pretty much adopting me.
 
 ### Contributing
 

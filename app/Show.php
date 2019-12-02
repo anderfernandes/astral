@@ -38,6 +38,17 @@ class Show extends Model
   public function getCoverAttribute($value)
   {
 
+    // Covers that come from links
+    if (substr($value, 0, 4) == "http")
+      return $value;
+    // Default covers
+    else if ($value === '/default.png')
+      return asset($value);
+    // Uploaded covers
+    else
+      return storage_path($value);
+
+
     $value = (substr($value, 0, 4) == "http") || ($value == "/default.png")
       ? $value
       : asset("storage/$value");
