@@ -46,15 +46,15 @@ class Show extends Model
       return asset($value);
     // Uploaded covers
     else
-      return storage_path($value);
-
-
-    $value = (substr($value, 0, 4) == "http") || ($value == "/default.png")
-      ? $value
-      : asset("storage/$value");
-    return $value;
+      return asset("storage/$value");
   }
 
+  /**
+   * Returns whether a show is expired or not
+   *
+   * @param string $value
+   * @return boolean
+   */
   public function getExpiredAttribute($value)
   {
     if ($this->expiration == null)
