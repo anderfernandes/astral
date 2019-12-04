@@ -1,5 +1,9 @@
 <div class="ui tab segment active" data-tab="general">
   {!! Form::model($setting, ['route' => ['admin.settings.update', $setting], 'class' => 'ui form', 'id' => 'general', 'method' => 'PUT', 'enctype' => 'multipart/form-data']) !!}
+    <div class="ui horizontal divider header">
+      <i class="setting icon"></i>
+      General Settings
+    </div>
     <div class="field">
       <div class="ui buttons">
         {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui green right labeled icon button']) !!}
@@ -89,6 +93,40 @@
         </div>
       </div>
     </div>
+    <div class="ui horizontal divider header">
+      <i class="mail icon"></i>
+      Self Confirmation Settings
+    </div>
+    <div class="field">
+      <div class="ui self confirmation checkbox">
+        {!! Form::checkbox('self_confirmation', 'self_confirmation', null) !!}
+        {!! Form::label('self_confirmation', 'Enable self confirmation via email') !!}
+      </div>
+    </div>
+    <div class="three fields">
+      
+      <div class="field">
+        {!! Form::label('self_confirmation_days', 'Send self confirmation email this amount of days prior to field trip') !!}
+        <div class="ui right labeled input">
+          {!! Form::number('self_confirmation_days', null, [
+            'placeholder'   => 'Send self confirmation email this amount of days prior to field trip',  
+            'min'           => 1,
+            'step'          => 1,
+            'id' => 'self-confirmation-days']) 
+          !!}
+          <div class="ui basic label">days</div>
+        </div>
+        
+      </div>
+      <div class="field">
+          {!! Form::label('self_confirmation_time', 'Self confirmation time') !!}
+          {!! Form::text('self_confirmation_time', null, ['placeholder' => 'Time of the day in which self confirmation emails will be sent', 'id' => 'self-confirmation-time']) !!}
+        </div>
+    </div>
+    <div class="ui horizontal divider header">
+      <i class="file icon"></i>
+      Receipt Settings
+    </div>
     <div class="field">
       {!! Form::label('membership_text', 'Membership Receipt Text') !!}
       {!! Form::textarea('membership_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
@@ -101,9 +139,13 @@
       {!! Form::label('invoice_text', 'Invoice Text') !!}
       {!! Form::textarea('invoice_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
     </div>
+    <div class="ui horizontal divider header">
+      <i class="address card icon"></i>
+      Membership Card Settings
+    </div>
     <div class="four fields">
       <div class="field">
-        <label>Mebership Card Width</label>
+        <label>Membership Card Width</label>
         <div class="ui right labeled input">
           {!! Form::text('membership_card_width', null, [
             'placeholder'   => 'Membership Card Width', 
@@ -144,6 +186,10 @@
           1 => 'Yes'
           ], null, ['class' => 'ui dropdown']) !!}
       </div>
+    </div>
+    <div class="ui horizontal divider header">
+      <i class="inbox icon"></i>
+      Cashier Settings
     </div>
     <div class="four fields">
       <div class="field">
@@ -208,4 +254,11 @@ $('[name="cover"]').on('change', function(e) {
   var name = e.target.files[0].name
   $('input:text#cover-upload', $(e.target).parent()).val(name)
 })
+
+$('#self-confirmation-time').flatpickr({
+  enableTime: true,
+  noCalendar: true,
+  dateFormat: 'h:i K'
+})
+
 </script>

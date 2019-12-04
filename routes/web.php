@@ -175,3 +175,5 @@ Route::get('/events', function () {
 Route::get('/sales', function () {
   return view('sales');
 })->name('sales')->middleware('auth'); // PROTECT THIS ROUTE IN A FUTURE RELEASE!
+
+Route::get('/confirm/{sale}', 'SaleController@show');
