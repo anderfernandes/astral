@@ -5,6 +5,8 @@
 
 @section('content')
 
+<div class="ui container">
+
   {!! Form::open(['route' => 'admin.shows.index', 'class' => 'ui form', 'method' => 'get', 'id' => 'search']) !!}
   <div class="five fields">
     <div class="field">
@@ -14,7 +16,7 @@
           <div class="default text">All Shows</div>
         <div class="menu">
           <div class="item" data-value="">All Shows</div>
-          @foreach (App\Show::where('id', '!=', 1)->get() as $show)
+          @foreach (App\Show::where('id', '!=', 1)->orderBy('name', 'asc')->get() as $show)
             <div class="item" data-value="{{ $show->id }}">
               {{ $show->name }}
             </div>
@@ -100,6 +102,8 @@
     </div>
   </div>
 @endif
+
+</div>
 
 <br /><br />
 
