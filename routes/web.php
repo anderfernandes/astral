@@ -97,6 +97,8 @@ Route::group(
     Route::get('members/{member}/receipt', 'MemberController@receipt')->name('members.receipt');
     // Membersihp Secondary
     Route::put('members/{member}/addSecondary', 'MemberController@addSecondary')->name('members.addSecondary');
+    // New Member Wizard
+    Route::get('members/create/wizard', 'MemberController@wizard')->name('members.wizard');
     // Mail Preview
     Route::get('mail/confirmation/{sale}', function (App\Sale $sale) {
       return new App\Mail\ConfirmationLetter($sale);

@@ -343,4 +343,9 @@ class MemberController extends Controller
 
     return redirect()->route('admin.members.show', $member);
   }
+
+  public function wizard()
+  {
+    return view('admin.members.wizard');
+  }
 }

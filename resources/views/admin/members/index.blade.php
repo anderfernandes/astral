@@ -59,6 +59,14 @@
       Add Member
     </a>
 
+    <a class="ui secondary button" href="{{ route('admin.members.wizard') }}">
+      <i class="ui icons">
+        <i class="address card alternate icon"></i>
+        <i class="inverted corner add icon"></i>
+      </i>
+      New Member Wizard
+    </a>
+
     <br /><br />
 
     @if (!isSet($members) || count($members) > 0)

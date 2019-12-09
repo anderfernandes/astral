@@ -1278,6 +1278,8 @@ Route::get('events/by-date', function (Request $request) {
   ], 201);
 });
 
+Route::post('members/check-primary', 'Api\MemberController@checkPrimary');
+
 Route::group(["prefix" => "public"], function () {
   // This route is responsible for returning available events based on the number of seats available
   Route::get("findAvailableEvents", function (Request $request) {
