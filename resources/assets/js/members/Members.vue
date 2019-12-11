@@ -32,7 +32,9 @@
         </sui-step-content>
       </sui-step>
     </sui-step-group>
-    <router-view />
+    <div class="ui text container">
+      <router-view />
+    </div>
   </div>
 </template>
 

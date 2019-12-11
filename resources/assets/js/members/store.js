@@ -1,8 +1,15 @@
 let getDefaultMembersState = () => ({
   primary: {
-    firstname: null,
-    lastname: null,
-    email: null
+    firstname: '',
+    lastname: '',
+    email: '',
+    address: '',
+    city: '',
+    country: 'United States',
+    state: 'Texas',
+    zip: '',
+    phone: '',
+    newsletter: true
   },
   free_secondaries: [],
   nonfree_secondaries: [],
@@ -13,7 +20,8 @@ let getDefaultMembersState = () => ({
   change_due: null,
   payment_method_id: null,
   reference: null,
-  memo: null
+  memo: null,
+  check_primary: null
 })
 
 export default {
@@ -30,19 +38,40 @@ export default {
     },
     SET_EMAIL(state, payload) {
       Object.assign(state.primary, { email: payload })
+    },
+    SET_ADDRESS(state, payload) {
+      Object.assign(state.primary, { address: payload })
+    },
+    SET_CITY(state, payload) {
+      Object.assign(state.primary, { city: payload })
+    },
+    SET_STATE(state, payload) {
+      Object.assign(state.primary, { state: payload })
+    },
+    SET_ZIP(state, payload) {
+      Object.assign(state.primary, { zip: payload })
+    },
+    SET_PHONE(state, payload) {
+      Object.assign(state.primary, { phone: payload })
+    },
+    SET_NEWSLETTER(state, payload) {
+      Object.assign(state.primary, { newsletter: payload })
+    },
+    SET_CHECK_PRIMARY(state, payload) {
+      Object.assign(state, { check_primary: payload })
     }
   },
 
   actions: {
-    async checkPrimary({ state }) {
+    async checkPrimary({ state, commit }) {
       try {
-        const response = fetch('/api/members/check-primary', {
+        const response = await fetch('/api/members/check-primary', {
           method: 'post',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(primary)
+          body: JSON.stringify(state.primary)
         })
-        const exists = await response.json()
-        console.log(exists)
+        const data = await response.json()
+        commit('SET_CHECK_PRIMARY', data)
       } catch (error) {
         alert(`Error in checkPriamry: ${error.message}`)
       }

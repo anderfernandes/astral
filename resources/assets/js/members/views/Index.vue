@@ -6,10 +6,10 @@
     <h1 class="ui center aligned header">
       Welcome to the New Membership Wizard!
     </h1>
-    <h4 class="ui center aligned header">
+    <p>
       I will ask you questions to help you quickly create memberships for new or
       existing users.
-    </h4>
+    </p>
     <div
       class="ui green right labeled icon button"
       @click="$router.push('/primary')"

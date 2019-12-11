@@ -1737,6 +1737,11 @@ Route::group(["prefix" => "public"], function () {
   });
 });
 
+Route::get("states", function () {
+  $states = array_keys(App\Helpers\States::get());
+  return response()->json($states, 201);
+});
+
 Route::group(['prefix' => 'cashier'], function () {
   Route::get('events', 'Api\Cashier\EventController@index');
   Route::get('users', 'Api\Cashier\UserController@index');

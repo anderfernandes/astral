@@ -88,16 +88,29 @@ class MemberController extends Controller
   {
     $user = User::where('email', $request->email)->first();
 
-    $message = isset($user)
-      ? "Yay! $user->fullname exists in our database!"
-      : "Sorry! {$request->firstname} {$request->lastname} is not in our database";
+    $message = '';
+    $membership = null;
 
-    $type = isset($user) ? 'success' : 'error';
+    $type = isset($user) ? 'success' : 'warning';
+
+    // If user exists in database...
+    if (isset($user)) {
+      // Checking if they are a member
+      if ($user->membership_id != 1) {
+        $message = "$user->fullname is already a member.";
+        $membership = $user->member;
+        $type = 'member';
+      } else
+        $message = "$user->fullname exists in our database.";
+    } else { // If user doesn't exists...
+      $message = "$request->firstname $request->lastname is not in our database.";
+    }
 
 
     return response()->json([
-      'message' => $message,
-      'type' => $type,
+      'message'    => $message,
+      'type'       => $type,
+      'membership' => $membership,
     ], 201);
   }
 }

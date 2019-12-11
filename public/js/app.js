@@ -5326,6 +5326,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
@@ -5339,6 +5341,78 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5382,6 +5456,92 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      loading: true,
+      checking_primary: false,
+      states: []
+    };
+  },
+  mounted: function mounted() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function mounted$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            this.loading = true;
+            _context.next = 3;
+            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchStates());
+
+          case 3:
+            _context.next = 5;
+            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.dispatch('fetchSettings'));
+
+          case 5:
+            this.loading = false;
+
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, null, this);
+  },
+  methods: {
+    checkPrimary: function checkPrimary() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function checkPrimary$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              this.checking_primary = true;
+              _context2.next = 3;
+              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.dispatch('Members/checkPrimary'));
+
+            case 3:
+              this.checking_primary = false;
+
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    },
+    fetchStates: function fetchStates() {
+      var response, states;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchStates$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              _context3.next = 3;
+              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(fetch('/api/states'));
+
+            case 3:
+              response = _context3.sent;
+              _context3.next = 6;
+              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.json());
+
+            case 6:
+              states = _context3.sent;
+              Object.assign(this, {
+                states: states
+              });
+              _context3.next = 13;
+              break;
+
+            case 10:
+              _context3.prev = 10;
+              _context3.t0 = _context3["catch"](0);
+              alert("Error in fetchStates: ".concat(_context3.t0.message));
+
+            case 13:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, null, this, [[0, 10]]);
+    }
+  },
   computed: {
     firstname: {
       get: function get() {
@@ -5389,6 +5549,119 @@ __webpack_require__.r(__webpack_exports__);
       },
       set: function set(value) {
         this.$store.commit('Members/SET_FIRSTNAME', value);
+      }
+    },
+    lastname: {
+      get: function get() {
+        return this.$store.state.Members.primary.lastname;
+      },
+      set: function set(value) {
+        this.$store.commit('Members/SET_LASTNAME', value);
+      }
+    },
+    email: {
+      get: function get() {
+        return this.$store.state.Members.primary.email;
+      },
+      set: function set(value) {
+        this.$store.commit('Members/SET_EMAIL', value);
+      }
+    },
+    address: {
+      get: function get() {
+        return this.$store.state.Members.primary.address;
+      },
+      set: function set(value) {
+        this.$store.commit('Members/SET_ADDRESS', value);
+      }
+    },
+    city: {
+      get: function get() {
+        return this.$store.state.Members.primary.city;
+      },
+      set: function set(value) {
+        this.$store.commit('Members/SET_CITY', value);
+      }
+    },
+    state: {
+      get: function get() {
+        return this.$store.state.Members.primary.state;
+      },
+      set: function set(value) {
+        this.$store.commit('Members/SET_STATE', value);
+      }
+    },
+    zip: {
+      get: function get() {
+        return this.$store.state.Members.primary.zip;
+      },
+      set: function set(value) {
+        this.$store.commit('Members/SET_ZIP', value);
+      }
+    },
+    phone: {
+      get: function get() {
+        return this.$store.state.Members.primary.phone;
+      },
+      set: function set(value) {
+        this.$store.commit('Members/SET_PHONE', value);
+      }
+    },
+    newsletter: {
+      get: function get() {
+        return this.$store.state.Members.primary.newsletter;
+      },
+      set: function set(value) {
+        this.$store.commit('Members/SET_NEWSLETTER', value);
+      }
+    },
+    check_primary: function check_primary() {
+      return this.$store.state.Members.check_primary;
+    },
+    message_icon: function message_icon() {
+      switch (this.check_primary.type) {
+        case 'success':
+          return 'thumbs up';
+
+        case 'member':
+          return 'address card';
+
+        case 'warning':
+          return 'warning circle';
+
+        default:
+          return null;
+      }
+    },
+    message_color: function message_color() {
+      switch (this.check_primary.type) {
+        case 'success':
+          return 'green';
+
+        case 'member':
+          return 'blue';
+
+        case 'warning':
+          return 'yellow';
+
+        default:
+          return null;
+      }
+    },
+    message_content: function message_content() {
+      if (this.check_primary.type == 'member') return "Membership #".concat(this.check_primary.membership.number, "\n        ").concat(this.check_primary.membership.expired ? 'is valid' : 'has expired', ".\n        <a href=\"/admin/members/").concat(this.check_primary.membership.id, "\">Click here</a> to view membership details.");else if (this.check_primary.type == 'warning') return "Please fill out the form below with ".concat(this.firstname, " ").concat(this.lastname, "'s data.");
+    },
+    settings: function settings() {
+      return this.$store.getters.settings;
+    },
+    allow_next: function allow_next() {
+      if (!this.check_primary) return false;else {
+        // If user is in database and is not a member
+        if (this.check_primary.type == 'success') return true; // If user is in database and is a member
+        else if (this.check_primary.type == 'member') return false; // If user is not in datababse
+          else if (this.check_primary.type == 'warning') {
+              if (this.firstname.length > 2 && this.lastname.length > 2 && this.email.length > 2 && this.email.includes('@') && this.state && this.zip.length == 5 && this.phone.length == 14) return true;else return false;
+            } else return false;
       }
     }
   }
@@ -62918,7 +63191,7 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("router-view")
+      _c("div", { staticClass: "ui text container" }, [_c("router-view")], 1)
     ],
     1
   )
@@ -62958,7 +63231,7 @@ var render = function() {
         _vm._v("\n    Welcome to the New Membership Wizard!\n  ")
       ]),
       _vm._v(" "),
-      _c("h4", { staticClass: "ui center aligned header" }, [
+      _c("p", [
         _vm._v(
           "\n    I will ask you questions to help you quickly create memberships for new or\n    existing users.\n  "
         )
@@ -63026,14 +63299,14 @@ var render = function() {
         _vm._v("\n    Primary\n  ")
       ]),
       _vm._v(" "),
-      _c("h4", { staticClass: "ui center aligned header" }, [
+      _c("p", [
         _vm._v(
-          "\n    Please enter their First Name, Last Name and email to see if they already\n    are in our database.\n  "
+          "\n    Please enter the customer's First Name, Last Name and Email to see if they\n    already are in our database. If they are, a membership will be created. If\n    they aren't, a user account will be created, followed by a membership.\n  "
         )
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "ui form" }, [
-        _c("div", { staticClass: "three fields" }, [
+        _c("div", { staticClass: "two fields" }, [
           _c("div", { staticClass: "field" }, [
             _c("input", {
               directives: [
@@ -63057,15 +63330,306 @@ var render = function() {
             })
           ]),
           _vm._v(" "),
-          _vm._m(1),
-          _vm._v(" "),
-          _vm._m(2)
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.lastname,
+                  expression: "lastname"
+                }
+              ],
+              attrs: { type: "text", placeholder: "Last Name" },
+              domProps: { value: _vm.lastname },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.lastname = $event.target.value
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "field" }, [
+          _c("div", { staticClass: "ui action input" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.email,
+                  expression: "email"
+                }
+              ],
+              attrs: { type: "text", placeholder: "Email" },
+              domProps: { value: _vm.email },
+              on: {
+                blur: _vm.checkPrimary,
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.email = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "ui button", on: { click: _vm.checkPrimary } },
+              [_vm._v("Check")]
+            )
+          ])
         ])
       ]),
+      _vm._v(" "),
+      _vm.check_primary
+        ? _c(
+            "sui-message",
+            {
+              attrs: {
+                icon: _vm.message_icon,
+                color: _vm.message_color,
+                header: _vm.check_primary.message
+              }
+            },
+            [_c("p", { domProps: { innerHTML: _vm._s(_vm.message_content) } })]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "sui-loader",
+        { attrs: { active: _vm.checking_primary, inline: "" } },
+        [
+          _vm._v(
+            "Looking for " +
+              _vm._s(_vm.firstname) +
+              " " +
+              _vm._s(_vm.lastname) +
+              "..."
+          )
+        ]
+      ),
       _vm._v(" "),
       _c(
         "div",
         {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.check_primary && _vm.check_primary.type == "warning",
+              expression: "check_primary && check_primary.type == 'warning'"
+            }
+          ],
+          staticClass: "ui form"
+        },
+        [
+          _c("div", { staticClass: "two fields" }, [
+            _c("div", { staticClass: "field" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.address,
+                    expression: "address"
+                  }
+                ],
+                attrs: { type: "text", placeholder: "Address" },
+                domProps: { value: _vm.address },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.address = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "field" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.city,
+                    expression: "city"
+                  }
+                ],
+                attrs: { type: "text", placeholder: "City" },
+                domProps: { value: _vm.city },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.city = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "two fields" }, [
+            _c("div", { staticClass: "field" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.state,
+                      expression: "state"
+                    }
+                  ],
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.state = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                _vm._l(_vm.states, function(state, i) {
+                  return _c("option", { key: i, domProps: { value: state } }, [
+                    _vm._v("\n            " + _vm._s(state) + "\n          ")
+                  ])
+                }),
+                0
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "field" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.zip,
+                    expression: "zip"
+                  }
+                ],
+                attrs: { type: "text", placeholder: "ZIP" },
+                domProps: { value: _vm.zip },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.zip = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "field" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.phone,
+                  expression: "phone"
+                }
+              ],
+              attrs: { type: "text", placeholder: "Phone" },
+              domProps: { value: _vm.phone },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.phone = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "ui checkbox" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.newsletter,
+                    expression: "newsletter"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.newsletter)
+                    ? _vm._i(_vm.newsletter, null) > -1
+                    : _vm.newsletter
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.newsletter,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 && (_vm.newsletter = $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          (_vm.newsletter = $$a
+                            .slice(0, $$i)
+                            .concat($$a.slice($$i + 1)))
+                      }
+                    } else {
+                      _vm.newsletter = $$c
+                    }
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", [
+                _vm._v(
+                  "Receive " +
+                    _vm._s(_vm.settings.organization) +
+                    " newsletters"
+                )
+              ])
+            ])
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("br"),
+      _c("br"),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.allow_next,
+              expression: "allow_next"
+            }
+          ],
           staticClass: "ui centered yellow labeled icon button",
           on: {
             click: function($event) {
@@ -63082,6 +63646,14 @@ var render = function() {
       _c(
         "div",
         {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.allow_next,
+              expression: "allow_next"
+            }
+          ],
           staticClass: "ui positive right labeled icon button",
           on: {
             click: function($event) {
@@ -63094,7 +63666,8 @@ var render = function() {
           _vm._v("\n    Next\n  ")
         ]
       )
-    ]
+    ],
+    1
   )
 }
 var staticRenderFns = [
@@ -63103,7 +63676,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("h1", { staticClass: "ui massive center aligned header" }, [
-      _c("i", { staticClass: "address card icon" })
+      _c("i", { staticClass: "address card outline icon" })
     ])
   },
   function() {
@@ -63111,15 +63684,14 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "field" }, [
-      _c("input", { attrs: { type: "text", placeholder: "Last Name" } })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "field" }, [
-      _c("input", { attrs: { type: "text", name: "", placeholder: "Email" } })
+      _c("input", {
+        attrs: {
+          type: "text",
+          value: "United States",
+          disabled: "",
+          placeholder: "Address"
+        }
+      })
     ])
   }
 ]
@@ -83162,9 +83734,16 @@ __webpack_require__.r(__webpack_exports__);
 var getDefaultMembersState = function getDefaultMembersState() {
   return {
     primary: {
-      firstname: null,
-      lastname: null,
-      email: null
+      firstname: '',
+      lastname: '',
+      email: '',
+      address: '',
+      city: '',
+      country: 'United States',
+      state: 'Texas',
+      zip: '',
+      phone: '',
+      newsletter: true
     },
     free_secondaries: [],
     nonfree_secondaries: [],
@@ -83175,7 +83754,8 @@ var getDefaultMembersState = function getDefaultMembersState() {
     change_due: null,
     payment_method_id: null,
     reference: null,
-    memo: null
+    memo: null,
+    check_primary: null
   };
 };
 
@@ -83197,44 +83777,83 @@ var getDefaultMembersState = function getDefaultMembersState() {
       Object.assign(state.primary, {
         email: payload
       });
+    },
+    SET_ADDRESS: function SET_ADDRESS(state, payload) {
+      Object.assign(state.primary, {
+        address: payload
+      });
+    },
+    SET_CITY: function SET_CITY(state, payload) {
+      Object.assign(state.primary, {
+        city: payload
+      });
+    },
+    SET_STATE: function SET_STATE(state, payload) {
+      Object.assign(state.primary, {
+        state: payload
+      });
+    },
+    SET_ZIP: function SET_ZIP(state, payload) {
+      Object.assign(state.primary, {
+        zip: payload
+      });
+    },
+    SET_PHONE: function SET_PHONE(state, payload) {
+      Object.assign(state.primary, {
+        phone: payload
+      });
+    },
+    SET_NEWSLETTER: function SET_NEWSLETTER(state, payload) {
+      Object.assign(state.primary, {
+        newsletter: payload
+      });
+    },
+    SET_CHECK_PRIMARY: function SET_CHECK_PRIMARY(state, payload) {
+      Object.assign(state, {
+        check_primary: payload
+      });
     }
   },
   actions: {
     checkPrimary: function checkPrimary(_ref) {
-      var state, response, exists;
+      var state, commit, response, data;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function checkPrimary$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              state = _ref.state;
+              state = _ref.state, commit = _ref.commit;
               _context.prev = 1;
-              response = fetch('/api/members/check-primary', {
+              _context.next = 4;
+              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(fetch('/api/members/check-primary', {
                 method: 'post',
                 headers: {
                   'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(primary)
-              });
-              _context.next = 5;
+                body: JSON.stringify(state.primary)
+              }));
+
+            case 4:
+              response = _context.sent;
+              _context.next = 7;
               return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.json());
 
-            case 5:
-              exists = _context.sent;
-              console.log(exists);
-              _context.next = 12;
+            case 7:
+              data = _context.sent;
+              commit('SET_CHECK_PRIMARY', data);
+              _context.next = 14;
               break;
 
-            case 9:
-              _context.prev = 9;
+            case 11:
+              _context.prev = 11;
               _context.t0 = _context["catch"](1);
               alert("Error in checkPriamry: ".concat(_context.t0.message));
 
-            case 12:
+            case 14:
             case "end":
               return _context.stop();
           }
         }
-      }, null, null, [[1, 9]]);
+      }, null, null, [[1, 11]]);
     }
   }
 });
@@ -83845,7 +84464,7 @@ var getDefaultState = function getDefaultState() {
     // Sale data
     sale: {
       creator_id: 3,
-      status: "open",
+      status: 'open',
       sell_to: null,
       customer: null,
       dates: [],
@@ -83861,7 +84480,7 @@ var getDefaultState = function getDefaultState() {
       change_due: 0,
       reference: null,
       payments: [],
-      memo: "",
+      memo: '',
       // New memo
       memos: [],
       subtotal: 0,
@@ -83872,21 +84491,21 @@ var getDefaultState = function getDefaultState() {
     },
     // Options for dropdowns throughout form
     sell_to: [{
-      key: "customer",
-      text: "Customer",
+      key: 'customer',
+      text: 'Customer',
       value: 0
     }, {
-      key: "organization",
-      text: "Organization",
+      key: 'organization',
+      text: 'Organization',
       value: 1
     }],
     taxable: [{
-      key: "No",
-      text: "No",
+      key: 'No',
+      text: 'No',
       value: 0
     }, {
-      key: "Yes",
-      text: "Yes",
+      key: 'Yes',
+      text: 'Yes',
       value: 1
     }],
     numberOfEvents: 1,
@@ -84121,8 +84740,8 @@ var getDefaultState = function getDefaultState() {
                   icon: 'box'
                 };
               });
-              commit("SET_PRODUCTS", products);
-              commit("SET_PRODUCT_OPTIONS", product_options);
+              commit('SET_PRODUCTS', products);
+              commit('SET_PRODUCT_OPTIONS', product_options);
               _context2.next = 14;
               break;
 
@@ -84161,7 +84780,7 @@ var getDefaultState = function getDefaultState() {
                 };
               });
               _context3.next = 8;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(commit("SET_PAYMENT_METHODS", payment_methods));
+              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(commit('SET_PAYMENT_METHODS', payment_methods));
 
             case 8:
               _context3.next = 13;
@@ -84196,7 +84815,8 @@ var getDefaultState = function getDefaultState() {
               tax = parseFloat(response.data.tax) / 100;
               _context4.next = 8;
               return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(commit('SET_SETTINGS', {
-                tax: tax
+                tax: tax,
+                organization: response.data.organization
               }));
 
             case 8:
