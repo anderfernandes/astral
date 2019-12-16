@@ -1280,6 +1280,11 @@ Route::get('events/by-date', function (Request $request) {
 
 Route::post('members/check-primary', 'Api\MemberController@checkPrimary');
 
+Route::get('membership-types', function () {
+  $membership_types = App\MemberType::where('id', '!=', 1)->get();
+  return response()->json($membership_types, 201);
+});
+
 Route::group(["prefix" => "public"], function () {
   // This route is responsible for returning available events based on the number of seats available
   Route::get("findAvailableEvents", function (Request $request) {

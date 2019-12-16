@@ -13,8 +13,8 @@ let getDefaultMembersState = () => ({
   },
   free_secondaries: [],
   nonfree_secondaries: [],
-  type_id: null,
-  start: new Date(),
+  membership_type: { id: null },
+  start: null,
   end: null,
   tendered: null,
   change_due: null,
@@ -59,6 +59,18 @@ export default {
     },
     SET_CHECK_PRIMARY(state, payload) {
       Object.assign(state, { check_primary: payload })
+    },
+    SET_MEMBERSHIP_TYPE(state, payload) {
+      Object.assign(state, { membership_type: payload })
+    },
+    SET_START(state, payload) {
+      Object.assign(state, { start: payload })
+    },
+    SET_END(state, payload) {
+      Object.assign(state, { end: payload })
+    },
+    SET_FREE_SECONDARIES(state, payload) {
+      Object.assign(state, { free_secondaries: payload })
     }
   },
 

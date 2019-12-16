@@ -15,21 +15,26 @@
     <div class="ui form">
       <div class="two fields">
         <div class="field">
-          <input type="text" v-model="firstname" placeholder="First Name" />
+          <input
+            type="text"
+            v-model.lazy="firstname"
+            placeholder="First Name"
+          />
         </div>
         <div class="field">
-          <input type="text" v-model="lastname" placeholder="Last Name" />
+          <input type="text" v-model.lazy="lastname" placeholder="Last Name" />
         </div>
       </div>
       <div class="field">
         <div class="ui action input">
           <input
             type="text"
-            v-model="email"
+            v-model.lazy="email"
             placeholder="Email"
             @blur="checkPrimary"
+            @keyup.enter="checkPrimary"
           />
-          <div class="ui button" @click="checkPrimary">Check</div>
+          <div class="ui black button" @click="checkPrimary">Check</div>
         </div>
       </div>
     </div>
@@ -80,7 +85,12 @@
         />
       </div>
       <div class="field">
-        <input type="text" v-model="phone" placeholder="Phone" />
+        <input
+          type="text"
+          v-mask="['(###) ###-####']"
+          v-model="phone"
+          placeholder="Phone"
+        />
       </div>
       <div class="field">
         <div class="ui checkbox">
@@ -89,7 +99,7 @@
         </div>
       </div>
     </div>
-    <br /><br />
+    <br />
     <div
       v-show="allow_next"
       class="ui centered yellow labeled icon button"
@@ -100,8 +110,8 @@
     </div>
     <div
       v-show="allow_next"
-      class="ui positive right labeled icon button"
-      @click="$router.push('/primary')"
+      class="ui green right labeled icon button"
+      @click="$router.push('/details')"
     >
       <i class="right chevron icon"></i>
       Next
@@ -110,12 +120,14 @@
 </template>
 
 <script>
+  import { mask } from 'vue-the-mask'
   export default {
     data: () => ({
       loading: true,
       checking_primary: false,
       states: []
     }),
+    directives: { mask },
     async mounted() {
       this.loading = true
       await this.fetchStates()
@@ -241,12 +253,18 @@
       message_content() {
         if (this.check_primary.type == 'member')
           return `Membership #${this.check_primary.membership.number}
-          ${this.check_primary.membership.expired ? 'is valid' : 'has expired'}.
+          ${
+            this.check_primary.membership.expired
+              ? 'has expired'
+              : 'has not expired'
+          }.
           <a href="/admin/members/${
             this.check_primary.membership.id
           }">Click here</a> to view membership details.`
         else if (this.check_primary.type == 'warning')
           return `Please fill out the form below with ${this.firstname} ${this.lastname}'s data.`
+        else
+          return `All you have to do now is add secondaries if customer wants them.`
       },
       settings() {
         return this.$store.getters.settings

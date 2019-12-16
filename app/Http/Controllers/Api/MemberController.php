@@ -84,6 +84,7 @@ class MemberController extends Controller
     //
   }
 
+  // This should be called "check member" in the future
   public function checkPrimary(Request $request)
   {
     $user = User::where('email', $request->email)->first();
@@ -101,7 +102,7 @@ class MemberController extends Controller
         $membership = $user->member;
         $type = 'member';
       } else
-        $message = "$user->fullname exists in our database.";
+        $message = "$user->fullname already exists in our database.";
     } else { // If user doesn't exists...
       $message = "$request->firstname $request->lastname is not in our database.";
     }
