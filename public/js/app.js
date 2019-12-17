@@ -5854,10 +5854,10 @@ __webpack_require__.r(__webpack_exports__);
           return 'thumbs up';
 
         case 'member':
-          return 'address card';
+          return 'exclamation circle';
 
         case 'warning':
-          return 'warning circle';
+          return 'info circle';
 
         default:
           return null;
@@ -5869,7 +5869,7 @@ __webpack_require__.r(__webpack_exports__);
           return 'green';
 
         case 'member':
-          return 'blue';
+          return 'red';
 
         case 'warning':
           return 'yellow';
@@ -5913,301 +5913,351 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
 /* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_1__);
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-var secondary_data_fields = {
-  firstname: '',
-  lastname: '',
-  email: '',
-  address: '',
-  city: '',
-  country: 'United States',
-  state: 'Texas',
-  zip: '',
-  phone: '',
-  newsletter: true,
-  use_primary_data: true
-};
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      free_secondaries_amount: 0,
-      nonfree_secondaries_amount: 0,
       free_secondaries: [],
       nonfree_secondaries: [],
+      need_nonfree: false,
       states: []
     };
   },
@@ -6250,7 +6300,11 @@ var secondary_data_fields = {
       });
     },
     subtract: function subtract() {
-      if (this.free_secondaries.length > 0) this.free_secondaries.pop();
+      if (this.free_secondaries.length > 0) {
+        this.free_secondaries.pop();
+        this.nonfree_secondaries = [];
+        this.need_nonfree = false;
+      }
     },
     addNonfree: function addNonfree() {
       this.nonfree_secondaries.push({
@@ -6328,14 +6382,22 @@ var secondary_data_fields = {
 
             case 6:
               data = _context3.sent;
-              if (type == 'free') this.$set.apply(this, [this.free_secondaries, i].concat(_toConsumableArray(data)));else this.$set.apply(this, [this.nonfree_secondaries, i].concat(_toConsumableArray(data)));
+
+              if (type == 'free') {
+                this.$set(this.free_secondaries[i], 'exists', data.exists);
+                this.$set(this.free_secondaries[i], 'is_member', data.type == 'member' ? true : false);
+              } else {
+                this.$set(this.nonfree_secondaries[i], 'exists', data.exists);
+                this.$set(this.nonfree_secondaries[i], 'is_member', data.type == 'member' ? true : false);
+              }
+
               _context3.next = 13;
               break;
 
             case 10:
               _context3.prev = 10;
               _context3.t0 = _context3["catch"](0);
-              alert("Error in checkPriamry: ".concat(_context3.t0.message));
+              alert("Error in checkPrimary: ".concat(_context3.t0.message));
 
             case 13:
             case "end":
@@ -64713,6 +64775,82 @@ var render = function() {
             _vm._v("\n      Secondary #" + _vm._s(i + 1) + "\n    ")
           ]),
           _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: free_secondary.exists,
+                  expression: "free_secondary.exists"
+                }
+              ],
+              staticClass: "ui yellow icon message"
+            },
+            [
+              _c("i", { staticClass: "info circle icon" }),
+              _vm._v(" "),
+              _c("div", { staticClass: "content" }, [
+                _c("div", { staticClass: "header" }, [
+                  _vm._v(
+                    "\n          " +
+                      _vm._s(free_secondary.firstname) +
+                      " " +
+                      _vm._s(free_secondary.lastname) +
+                      " already\n          exists.\n        "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    "\n          Use this opportunity to double check/update this user's information.\n        "
+                  )
+                ])
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: free_secondary.is_member,
+                  expression: "free_secondary.is_member"
+                }
+              ],
+              staticClass: "ui red icon message"
+            },
+            [
+              _c("i", { staticClass: "info circle icon" }),
+              _vm._v(" "),
+              _c("div", { staticClass: "content" }, [
+                _c("div", { staticClass: "header" }, [
+                  _vm._v(
+                    "\n          " +
+                      _vm._s(free_secondary.firstname) +
+                      " " +
+                      _vm._s(free_secondary.lastname) +
+                      " can't\n          be added as secondary!\n        "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    "\n          " +
+                      _vm._s(free_secondary.firstname) +
+                      " " +
+                      _vm._s(free_secondary.lastname) +
+                      " is\n          already a member and cannot be added as a secondary.\n        "
+                  )
+                ])
+              ])
+            ]
+          ),
+          _vm._v(" "),
           _c("div", { staticClass: "two fields" }, [
             _c("div", { staticClass: "field" }, [
               _c("input", {
@@ -65102,7 +65240,7 @@ var render = function() {
       }),
       _vm._v(" "),
       _c(
-        "p",
+        "div",
         {
           directives: [
             {
@@ -65113,6 +65251,88 @@ var render = function() {
                 parseInt(_vm.membership_type.max_secondaries),
               expression:
                 "\n      free_secondaries.length >= parseInt(membership_type.max_secondaries)\n    "
+            }
+          ],
+          staticClass: "ui form"
+        },
+        [
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "ui checkbox" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.need_nonfree,
+                    expression: "need_nonfree"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.need_nonfree)
+                    ? _vm._i(_vm.need_nonfree, null) > -1
+                    : _vm.need_nonfree
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.need_nonfree,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 && (_vm.need_nonfree = $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          (_vm.need_nonfree = $$a
+                            .slice(0, $$i)
+                            .concat($$a.slice($$i + 1)))
+                      }
+                    } else {
+                      _vm.need_nonfree = $$c
+                    }
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", [
+                _vm._v(
+                  _vm._s(_vm.primary.firstname) +
+                    " " +
+                    _vm._s(_vm.primary.lastname) +
+                    " needs additional non\n          free secondaries"
+                )
+              ])
+            ])
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value:
+              _vm.free_secondaries.length >=
+              parseInt(_vm.membership_type.max_secondaries),
+            expression:
+              "\n      free_secondaries.length >= parseInt(membership_type.max_secondaries)\n    "
+          }
+        ],
+        staticClass: "ui divider"
+      }),
+      _vm._v(" "),
+      _c(
+        "p",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.need_nonfree,
+              expression: "need_nonfree"
             }
           ]
         },
@@ -65132,11 +65352,8 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
-              value:
-                _vm.free_secondaries.length >=
-                parseInt(_vm.membership_type.max_secondaries),
-              expression:
-                "\n      free_secondaries.length >= parseInt(membership_type.max_secondaries)\n    "
+              value: _vm.need_nonfree,
+              expression: "need_nonfree"
             }
           ]
         },
@@ -65150,11 +65367,8 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
-              value:
-                _vm.free_secondaries.length >=
-                parseInt(_vm.membership_type.max_secondaries),
-              expression:
-                "\n      free_secondaries.length >= parseInt(membership_type.max_secondaries)\n    "
+              value: _vm.need_nonfree,
+              expression: "need_nonfree"
             }
           ],
           staticClass: "ui basic icon buttons"
@@ -65186,6 +65400,84 @@ var render = function() {
             _c("i", { staticClass: "address card outline icon" }),
             _vm._v("\n      Non free Secondary #" + _vm._s(j + 1) + "\n    ")
           ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value:
+                    nonfree_secondary.exists && !nonfree_secondary.is_member,
+                  expression:
+                    "nonfree_secondary.exists && !nonfree_secondary.is_member"
+                }
+              ],
+              staticClass: "ui yellow icon message"
+            },
+            [
+              _c("i", { staticClass: "info circle icon" }),
+              _vm._v(" "),
+              _c("div", { staticClass: "content" }, [
+                _c("div", { staticClass: "header" }, [
+                  _vm._v(
+                    "\n          " +
+                      _vm._s(nonfree_secondary.firstname) +
+                      "\n          " +
+                      _vm._s(nonfree_secondary.lastname) +
+                      " already exists.\n        "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    "\n          Use this opportunity to double check/update this user's information.\n        "
+                  )
+                ])
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: nonfree_secondary.is_member,
+                  expression: "nonfree_secondary.is_member"
+                }
+              ],
+              staticClass: "ui red icon message"
+            },
+            [
+              _c("i", { staticClass: "info circle icon" }),
+              _vm._v(" "),
+              _c("div", { staticClass: "content" }, [
+                _c("div", { staticClass: "header" }, [
+                  _vm._v(
+                    "\n          " +
+                      _vm._s(nonfree_secondary.firstname) +
+                      "\n          " +
+                      _vm._s(nonfree_secondary.lastname) +
+                      " can't be added as secondary!\n        "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    "\n          " +
+                      _vm._s(nonfree_secondary.firstname) +
+                      "\n          " +
+                      _vm._s(nonfree_secondary.lastname) +
+                      " is already a member and cannot be\n          added as a secondary.\n        "
+                  )
+                ])
+              ])
+            ]
+          ),
           _vm._v(" "),
           _c("div", { staticClass: "two fields" }, [
             _c("div", { staticClass: "field" }, [
@@ -65264,6 +65556,9 @@ var render = function() {
               },
               domProps: { value: nonfree_secondary.email },
               on: {
+                blur: function($event) {
+                  return _vm.checkMember(nonfree_secondary, j, "nonfree")
+                },
                 change: function($event) {
                   return _vm.$set(
                     nonfree_secondary,

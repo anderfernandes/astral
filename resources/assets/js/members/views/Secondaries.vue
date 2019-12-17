@@ -32,6 +32,34 @@
         <i class="address card outline icon"></i>
         Secondary #{{ i + 1 }}
       </div>
+
+      <div class="ui yellow icon message" v-show="free_secondary.exists">
+        <i class="info circle icon"></i>
+        <div class="content">
+          <div class="header">
+            {{ free_secondary.firstname }} {{ free_secondary.lastname }} already
+            exists.
+          </div>
+          <p>
+            Use this opportunity to double check/update this user's information.
+          </p>
+        </div>
+      </div>
+
+      <div class="ui red icon message" v-show="free_secondary.is_member">
+        <i class="info circle icon"></i>
+        <div class="content">
+          <div class="header">
+            {{ free_secondary.firstname }} {{ free_secondary.lastname }} can't
+            be added as secondary!
+          </div>
+          <p>
+            {{ free_secondary.firstname }} {{ free_secondary.lastname }} is
+            already a member and cannot be added as a secondary.
+          </p>
+        </div>
+      </div>
+
       <div class="two fields">
         <div class="field">
           <input
@@ -127,28 +155,40 @@
       class="ui divider"
     ></div>
 
-    <p
+    <div
+      class="ui form"
       v-show="
         free_secondaries.length >= parseInt(membership_type.max_secondaries)
       "
     >
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" v-model="need_nonfree" />
+          <label
+            >{{ primary.firstname }} {{ primary.lastname }} needs additional non
+            free secondaries</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="ui divider"
+      v-show="
+        free_secondaries.length >= parseInt(membership_type.max_secondaries)
+      "
+    ></div>
+
+    <p v-show="need_nonfree">
       How many non-free secondaries? (<strong
         >$ {{ membership_type.secondary_price }} each</strong
       >)
     </p>
-    <h1
-      v-show="
-        free_secondaries.length >= parseInt(membership_type.max_secondaries)
-      "
-    >
+
+    <h1 v-show="need_nonfree">
       {{ nonfree_secondaries.length }}
     </h1>
-    <div
-      class="ui basic icon buttons"
-      v-show="
-        free_secondaries.length >= parseInt(membership_type.max_secondaries)
-      "
-    >
+    <div class="ui basic icon buttons" v-show="need_nonfree">
       <div @click="addNonfree" class="ui green button">
         <i class="plus icon"></i>
       </div>
@@ -168,6 +208,38 @@
         <i class="address card outline icon"></i>
         Non free Secondary #{{ j + 1 }}
       </div>
+
+      <div
+        class="ui yellow icon message"
+        v-show="nonfree_secondary.exists && !nonfree_secondary.is_member"
+      >
+        <i class="info circle icon"></i>
+        <div class="content">
+          <div class="header">
+            {{ nonfree_secondary.firstname }}
+            {{ nonfree_secondary.lastname }} already exists.
+          </div>
+          <p>
+            Use this opportunity to double check/update this user's information.
+          </p>
+        </div>
+      </div>
+
+      <div class="ui red icon message" v-show="nonfree_secondary.is_member">
+        <i class="info circle icon"></i>
+        <div class="content">
+          <div class="header">
+            {{ nonfree_secondary.firstname }}
+            {{ nonfree_secondary.lastname }} can't be added as secondary!
+          </div>
+          <p>
+            {{ nonfree_secondary.firstname }}
+            {{ nonfree_secondary.lastname }} is already a member and cannot be
+            added as a secondary.
+          </p>
+        </div>
+      </div>
+
       <div class="two fields">
         <div class="field">
           <input
@@ -188,6 +260,7 @@
         <input
           v-model.lazy="nonfree_secondary.email"
           type="text"
+          @blur="checkMember(nonfree_secondary, j, 'nonfree')"
           :placeholder="`Enter the email of non free secondary ${j + 1}`"
         />
       </div>
@@ -266,26 +339,11 @@
 <script>
   import { mask } from 'vue-the-mask'
 
-  const secondary_data_fields = {
-    firstname: '',
-    lastname: '',
-    email: '',
-    address: '',
-    city: '',
-    country: 'United States',
-    state: 'Texas',
-    zip: '',
-    phone: '',
-    newsletter: true,
-    use_primary_data: true
-  }
-
   export default {
     data: () => ({
-      free_secondaries_amount: 0,
-      nonfree_secondaries_amount: 0,
       free_secondaries: [],
       nonfree_secondaries: [],
+      need_nonfree: false,
       states: []
     }),
     directives: { mask },
@@ -314,7 +372,11 @@
           })
       },
       subtract() {
-        if (this.free_secondaries.length > 0) this.free_secondaries.pop()
+        if (this.free_secondaries.length > 0) {
+          this.free_secondaries.pop()
+          this.nonfree_secondaries = []
+          this.need_nonfree = false
+        }
       },
       addNonfree() {
         this.nonfree_secondaries.push({
@@ -352,10 +414,23 @@
           })
           const data = await response.json()
 
-          if (type == 'free') this.$set(this.free_secondaries, i, ...data)
-          else this.$set(this.nonfree_secondaries, i, ...data)
+          if (type == 'free') {
+            this.$set(this.free_secondaries[i], 'exists', data.exists)
+            this.$set(
+              this.free_secondaries[i],
+              'is_member',
+              data.type == 'member' ? true : false
+            )
+          } else {
+            this.$set(this.nonfree_secondaries[i], 'exists', data.exists)
+            this.$set(
+              this.nonfree_secondaries[i],
+              'is_member',
+              data.type == 'member' ? true : false
+            )
+          }
         } catch (error) {
-          alert(`Error in checkPriamry: ${error.message}`)
+          alert(`Error in checkPrimary: ${error.message}`)
         }
       }
     },

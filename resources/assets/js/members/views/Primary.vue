@@ -231,9 +231,9 @@
           case 'success':
             return 'thumbs up'
           case 'member':
-            return 'address card'
+            return 'exclamation circle'
           case 'warning':
-            return 'warning circle'
+            return 'info circle'
           default:
             return null
         }
@@ -243,7 +243,7 @@
           case 'success':
             return 'green'
           case 'member':
-            return 'blue'
+            return 'red'
           case 'warning':
             return 'yellow'
           default:
