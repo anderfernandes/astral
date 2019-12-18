@@ -113,6 +113,7 @@ class MemberController extends Controller
       'type'       => $type,
       'membership' => $membership,
       'exists'     => isset($user),
+      'user'       => $user,
     ], 201);
   }
 }

@@ -13,11 +13,11 @@
       >)
     </p>
     <h1>{{ free_secondaries.length }}</h1>
-    <div class="ui basic icon buttons">
-      <div @click="add" class="ui green button">
+    <div class="ui icon buttons">
+      <div @click="add" class="ui basic green button">
         <i class="plus icon"></i>
       </div>
-      <div @click="subtract" class="ui yellow button">
+      <div @click="subtract" class="ui basic yellow button">
         <i class="minus icon"></i>
       </div>
     </div>
@@ -33,7 +33,10 @@
         Secondary #{{ i + 1 }}
       </div>
 
-      <div class="ui yellow icon message" v-show="free_secondary.exists">
+      <div
+        class="ui yellow icon message"
+        v-show="free_secondary.exists && !free_secondary.is_member"
+      >
         <i class="info circle icon"></i>
         <div class="content">
           <div class="header">
@@ -61,38 +64,40 @@
       </div>
 
       <div class="two fields">
-        <div class="field">
-          <input
-            type="text"
+        <sui-form-field :error="free_secondary.is_member">
+          <sui-input
             v-model.lazy="free_secondary.firstname"
+            :error="free_secondary.is_member"
             :placeholder="`Enter the first name of secondary ${i + 1}`"
           />
-        </div>
-        <div class="field">
-          <input
-            type="text"
+        </sui-form-field>
+        <sui-form-field :error="free_secondary.is_member">
+          <sui-input
             v-model.lazy="free_secondary.lastname"
-            :placeholder="`Enter the last name of secondary ${i + 1}`"
+            :error="free_secondary.is_member"
+            :placeholder="`Enter the first name of secondary ${i + 1}`"
           />
-        </div>
+        </sui-form-field>
       </div>
-      <div class="field">
-        <input
+      <sui-form-field :error="free_secondary.is_member">
+        <sui-input
           v-model.lazy="free_secondary.email"
-          type="text"
           @blur="checkMember(free_secondary, i, 'free')"
+          :error="free_secondary.is_member"
           :placeholder="`Enter the email of secondary ${i + 1}`"
         />
-      </div>
+      </sui-form-field>
       <div class="field">
-        <div class="ui checkbox">
-          <input type="checkbox" v-model="free_secondary.use_primary_data" />
-          <label
-            >Use {{ primary.firstname }} {{ primary.lastname }}'s address for
-            this secondary</label
-          >
-        </div>
+        <sui-checkbox
+          :label="
+            `Use ${primary.firstname} ${primary.lastname}'s address for
+            this secondary`
+          "
+          v-model="free_secondary.use_primary_data"
+          :disabled="free_secondary.is_member"
+        />
       </div>
+
       <div v-show="!free_secondary.use_primary_data">
         <div class="two fields">
           <div class="field">
@@ -188,11 +193,11 @@
     <h1 v-show="need_nonfree">
       {{ nonfree_secondaries.length }}
     </h1>
-    <div class="ui basic icon buttons" v-show="need_nonfree">
-      <div @click="addNonfree" class="ui green button">
+    <div class="ui icon buttons" v-show="need_nonfree">
+      <div @click="addNonfree" class="ui basic green button">
         <i class="plus icon"></i>
       </div>
-      <div @click="subtractNonfree" class="ui yellow button">
+      <div @click="subtractNonfree" class="ui basic yellow button">
         <i class="minus icon"></i>
       </div>
     </div>
@@ -241,38 +246,40 @@
       </div>
 
       <div class="two fields">
-        <div class="field">
-          <input
-            type="text"
+        <sui-form-field :error="nonfree_secondary.is_member">
+          <sui-input
             v-model.lazy="nonfree_secondary.firstname"
-            :placeholder="`Enter the first name of non free secondary ${j + 1}`"
+            :error="nonfree_secondary.is_member"
+            :placeholder="`Enter the first name of secondary ${j + 1}`"
           />
-        </div>
-        <div class="field">
-          <input
-            type="text"
+        </sui-form-field>
+        <sui-form-field :error="nonfree_secondary.is_member">
+          <sui-input
             v-model.lazy="nonfree_secondary.lastname"
-            :placeholder="`Enter the last name of non free secondary ${j + 1}`"
+            :error="nonfree_secondary.is_member"
+            :placeholder="`Enter the first name of secondary ${j + 1}`"
           />
-        </div>
+        </sui-form-field>
       </div>
-      <div class="field">
-        <input
+      <sui-form-field :error="nonfree_secondary.is_member">
+        <sui-input
           v-model.lazy="nonfree_secondary.email"
-          type="text"
           @blur="checkMember(nonfree_secondary, j, 'nonfree')"
-          :placeholder="`Enter the email of non free secondary ${j + 1}`"
+          :error="nonfree_secondary.is_member"
+          :placeholder="`Enter the email of secondary ${j + 1}`"
+        />
+      </sui-form-field>
+      <div class="field">
+        <sui-checkbox
+          :label="
+            `Use ${primary.firstname} ${primary.lastname}'s address for
+            this secondary`
+          "
+          v-model="nonfree_secondary.use_primary_data"
+          :disabled="nonfree_secondary.is_member"
         />
       </div>
-      <div class="field">
-        <div class="ui checkbox">
-          <input type="checkbox" v-model="nonfree_secondary.use_primary_data" />
-          <label
-            >Use {{ primary.firstname }} {{ primary.lastname }}'s address for
-            this secondary</label
-          >
-        </div>
-      </div>
+
       <div v-show="!nonfree_secondary.use_primary_data">
         <div class="two fields">
           <div class="field">
@@ -406,6 +413,7 @@
         }
       },
       async checkMember(user, i, type) {
+        //i = type == 'free' ? i : i - 1000
         try {
           const response = await fetch('/api/members/check-primary', {
             method: 'post',
@@ -414,24 +422,39 @@
           })
           const data = await response.json()
 
-          if (type == 'free') {
-            this.$set(this.free_secondaries[i], 'exists', data.exists)
-            this.$set(
-              this.free_secondaries[i],
-              'is_member',
-              data.type == 'member' ? true : false
-            )
-          } else {
-            this.$set(this.nonfree_secondaries[i], 'exists', data.exists)
-            this.$set(
-              this.nonfree_secondaries[i],
-              'is_member',
-              data.type == 'member' ? true : false
-            )
+          const secondary =
+            type == 'free'
+              ? this.free_secondaries[i]
+              : this.nonfree_secondaries[i]
+
+          this.$set(secondary, 'exists', data.exists)
+          this.$set(
+            secondary,
+            'is_member',
+            data.type == 'member' ? true : false
+          )
+          if (data.exists && data.type != 'member') {
+            this.$set(secondary, 'use_primary_data', false)
+            Object.assign(secondary, {
+              firstname: data.user.firstname,
+              lastname: data.user.lastname,
+              email: data.user.email,
+              address: data.user.address,
+              city: data.user.city,
+              state: data.user.state,
+              zip: data.user.zip,
+              country: data.user.country,
+              phone: data.user.phone
+            })
           }
         } catch (error) {
           alert(`Error in checkPrimary: ${error.message}`)
         }
+      }
+    },
+    watch: {
+      need_nonfree(new_value) {
+        if (new_value == false) this.nonfree_secondaries = []
       }
     },
     computed: {
@@ -443,6 +466,31 @@
       },
       settings() {
         return this.$store.getters.settings
+      },
+      valid() {
+        let free_valid = false,
+          nonfree_valid = true
+        // Check if array of free_secondaries exists
+        if (this.free_secondaries.length > 0) {
+          // Loop through array off free_secondaries
+          free_valid = this.free_secondaries.every(free_secondary =>
+            Object.entries(free_secondary).every(
+              ([key, value]) => !(value === '')
+            )
+          )
+        }
+
+        // Check if array of nonfree_secondaries exists
+        if (this.nonfree_secondaries.length > 0) {
+          // Loop through array of nonfree_secondaries
+          nonfree_valid = this.nonfree_secondaries.every(nonfree_secondary =>
+            Object.entries(nonfree_secondary).every(
+              ([key, value]) => !(value === '')
+            )
+          )
+        }
+
+        return free_valid && nonfree_valid
       }
     }
   }

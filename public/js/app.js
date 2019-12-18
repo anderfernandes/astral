@@ -5913,6 +5913,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
 /* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_1__);
 
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -6360,7 +6376,7 @@ __webpack_require__.r(__webpack_exports__);
       }, null, this, [[0, 10]]);
     },
     checkMember: function checkMember(user, i, type) {
-      var response, data;
+      var response, data, secondary;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function checkMember$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -6382,29 +6398,44 @@ __webpack_require__.r(__webpack_exports__);
 
             case 6:
               data = _context3.sent;
+              secondary = type == 'free' ? this.free_secondaries[i] : this.nonfree_secondaries[i];
+              this.$set(secondary, 'exists', data.exists);
+              this.$set(secondary, 'is_member', data.type == 'member' ? true : false);
 
-              if (type == 'free') {
-                this.$set(this.free_secondaries[i], 'exists', data.exists);
-                this.$set(this.free_secondaries[i], 'is_member', data.type == 'member' ? true : false);
-              } else {
-                this.$set(this.nonfree_secondaries[i], 'exists', data.exists);
-                this.$set(this.nonfree_secondaries[i], 'is_member', data.type == 'member' ? true : false);
+              if (data.exists && data.type != 'member') {
+                this.$set(secondary, 'use_primary_data', false);
+                Object.assign(secondary, {
+                  firstname: data.user.firstname,
+                  lastname: data.user.lastname,
+                  email: data.user.email,
+                  address: data.user.address,
+                  city: data.user.city,
+                  state: data.user.state,
+                  zip: data.user.zip,
+                  country: data.user.country,
+                  phone: data.user.phone
+                });
               }
 
-              _context3.next = 13;
+              _context3.next = 16;
               break;
 
-            case 10:
-              _context3.prev = 10;
+            case 13:
+              _context3.prev = 13;
               _context3.t0 = _context3["catch"](0);
               alert("Error in checkPrimary: ".concat(_context3.t0.message));
 
-            case 13:
+            case 16:
             case "end":
               return _context3.stop();
           }
         }
-      }, null, this, [[0, 10]]);
+      }, null, this, [[0, 13]]);
+    }
+  },
+  watch: {
+    need_nonfree: function need_nonfree(new_value) {
+      if (new_value == false) this.nonfree_secondaries = [];
     }
   },
   computed: {
@@ -6416,6 +6447,39 @@ __webpack_require__.r(__webpack_exports__);
     },
     settings: function settings() {
       return this.$store.getters.settings;
+    },
+    valid: function valid() {
+      var free_valid = false,
+          nonfree_valid = true; // Check if array of free_secondaries exists
+
+      if (this.free_secondaries.length > 0) {
+        // Loop through array off free_secondaries
+        free_valid = this.free_secondaries.every(function (free_secondary) {
+          return Object.entries(free_secondary).every(function (_ref) {
+            var _ref2 = _slicedToArray(_ref, 2),
+                key = _ref2[0],
+                value = _ref2[1];
+
+            return !(value === '');
+          });
+        });
+      } // Check if array of nonfree_secondaries exists
+
+
+      if (this.nonfree_secondaries.length > 0) {
+        // Loop through array of nonfree_secondaries
+        nonfree_valid = this.nonfree_secondaries.every(function (nonfree_secondary) {
+          return Object.entries(nonfree_secondary).every(function (_ref3) {
+            var _ref4 = _slicedToArray(_ref3, 2),
+                key = _ref4[0],
+                value = _ref4[1];
+
+            return !(value === '');
+          });
+        });
+      }
+
+      return free_valid && nonfree_valid;
     }
   }
 });
@@ -64753,14 +64817,19 @@ var render = function() {
       _vm._v(" "),
       _c("h1", [_vm._v(_vm._s(_vm.free_secondaries.length))]),
       _vm._v(" "),
-      _c("div", { staticClass: "ui basic icon buttons" }, [
-        _c("div", { staticClass: "ui green button", on: { click: _vm.add } }, [
-          _c("i", { staticClass: "plus icon" })
-        ]),
+      _c("div", { staticClass: "ui icon buttons" }, [
+        _c(
+          "div",
+          { staticClass: "ui basic green button", on: { click: _vm.add } },
+          [_c("i", { staticClass: "plus icon" })]
+        ),
         _vm._v(" "),
         _c(
           "div",
-          { staticClass: "ui yellow button", on: { click: _vm.subtract } },
+          {
+            staticClass: "ui basic yellow button",
+            on: { click: _vm.subtract }
+          },
           [_c("i", { staticClass: "minus icon" })]
         )
       ]),
@@ -64769,459 +64838,428 @@ var render = function() {
       _c("br"),
       _vm._v(" "),
       _vm._l(_vm.free_secondaries, function(free_secondary, i) {
-        return _c("div", { key: i, staticClass: "ui form" }, [
-          _c("div", { staticClass: "ui horizontal divider header" }, [
-            _c("i", { staticClass: "address card outline icon" }),
-            _vm._v("\n      Secondary #" + _vm._s(i + 1) + "\n    ")
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: free_secondary.exists,
-                  expression: "free_secondary.exists"
-                }
-              ],
-              staticClass: "ui yellow icon message"
-            },
-            [
-              _c("i", { staticClass: "info circle icon" }),
-              _vm._v(" "),
-              _c("div", { staticClass: "content" }, [
-                _c("div", { staticClass: "header" }, [
-                  _vm._v(
-                    "\n          " +
-                      _vm._s(free_secondary.firstname) +
-                      " " +
-                      _vm._s(free_secondary.lastname) +
-                      " already\n          exists.\n        "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v(
-                    "\n          Use this opportunity to double check/update this user's information.\n        "
-                  )
-                ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: free_secondary.is_member,
-                  expression: "free_secondary.is_member"
-                }
-              ],
-              staticClass: "ui red icon message"
-            },
-            [
-              _c("i", { staticClass: "info circle icon" }),
-              _vm._v(" "),
-              _c("div", { staticClass: "content" }, [
-                _c("div", { staticClass: "header" }, [
-                  _vm._v(
-                    "\n          " +
-                      _vm._s(free_secondary.firstname) +
-                      " " +
-                      _vm._s(free_secondary.lastname) +
-                      " can't\n          be added as secondary!\n        "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v(
-                    "\n          " +
-                      _vm._s(free_secondary.firstname) +
-                      " " +
-                      _vm._s(free_secondary.lastname) +
-                      " is\n          already a member and cannot be added as a secondary.\n        "
-                  )
-                ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "two fields" }, [
-            _c("div", { staticClass: "field" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model.lazy",
-                    value: free_secondary.firstname,
-                    expression: "free_secondary.firstname",
-                    modifiers: { lazy: true }
-                  }
-                ],
-                attrs: {
-                  type: "text",
-                  placeholder: "Enter the first name of secondary " + (i + 1)
-                },
-                domProps: { value: free_secondary.firstname },
-                on: {
-                  change: function($event) {
-                    return _vm.$set(
-                      free_secondary,
-                      "firstname",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
+        return _c(
+          "div",
+          { key: i, staticClass: "ui form" },
+          [
+            _c("div", { staticClass: "ui horizontal divider header" }, [
+              _c("i", { staticClass: "address card outline icon" }),
+              _vm._v("\n      Secondary #" + _vm._s(i + 1) + "\n    ")
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "field" }, [
-              _c("input", {
+            _c(
+              "div",
+              {
                 directives: [
                   {
-                    name: "model",
-                    rawName: "v-model.lazy",
-                    value: free_secondary.lastname,
-                    expression: "free_secondary.lastname",
-                    modifiers: { lazy: true }
+                    name: "show",
+                    rawName: "v-show",
+                    value: free_secondary.exists && !free_secondary.is_member,
+                    expression:
+                      "free_secondary.exists && !free_secondary.is_member"
                   }
                 ],
-                attrs: {
-                  type: "text",
-                  placeholder: "Enter the last name of secondary " + (i + 1)
-                },
-                domProps: { value: free_secondary.lastname },
-                on: {
-                  change: function($event) {
-                    return _vm.$set(
-                      free_secondary,
-                      "lastname",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "field" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model.lazy",
-                  value: free_secondary.email,
-                  expression: "free_secondary.email",
-                  modifiers: { lazy: true }
-                }
-              ],
-              attrs: {
-                type: "text",
-                placeholder: "Enter the email of secondary " + (i + 1)
+                staticClass: "ui yellow icon message"
               },
-              domProps: { value: free_secondary.email },
-              on: {
-                blur: function($event) {
-                  return _vm.checkMember(free_secondary, i, "free")
-                },
-                change: function($event) {
-                  return _vm.$set(free_secondary, "email", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "field" }, [
-            _c("div", { staticClass: "ui checkbox" }, [
-              _c("input", {
+              [
+                _c("i", { staticClass: "info circle icon" }),
+                _vm._v(" "),
+                _c("div", { staticClass: "content" }, [
+                  _c("div", { staticClass: "header" }, [
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(free_secondary.firstname) +
+                        " " +
+                        _vm._s(free_secondary.lastname) +
+                        " already\n          exists.\n        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n          Use this opportunity to double check/update this user's information.\n        "
+                    )
+                  ])
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
                 directives: [
                   {
-                    name: "model",
-                    rawName: "v-model",
+                    name: "show",
+                    rawName: "v-show",
+                    value: free_secondary.is_member,
+                    expression: "free_secondary.is_member"
+                  }
+                ],
+                staticClass: "ui red icon message"
+              },
+              [
+                _c("i", { staticClass: "info circle icon" }),
+                _vm._v(" "),
+                _c("div", { staticClass: "content" }, [
+                  _c("div", { staticClass: "header" }, [
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(free_secondary.firstname) +
+                        " " +
+                        _vm._s(free_secondary.lastname) +
+                        " can't\n          be added as secondary!\n        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(free_secondary.firstname) +
+                        " " +
+                        _vm._s(free_secondary.lastname) +
+                        " is\n          already a member and cannot be added as a secondary.\n        "
+                    )
+                  ])
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "two fields" },
+              [
+                _c(
+                  "sui-form-field",
+                  { attrs: { error: free_secondary.is_member } },
+                  [
+                    _c("sui-input", {
+                      attrs: {
+                        error: free_secondary.is_member,
+                        placeholder:
+                          "Enter the first name of secondary " + (i + 1)
+                      },
+                      model: {
+                        value: free_secondary.firstname,
+                        callback: function($$v) {
+                          _vm.$set(free_secondary, "firstname", $$v)
+                        },
+                        expression: "free_secondary.firstname"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "sui-form-field",
+                  { attrs: { error: free_secondary.is_member } },
+                  [
+                    _c("sui-input", {
+                      attrs: {
+                        error: free_secondary.is_member,
+                        placeholder:
+                          "Enter the first name of secondary " + (i + 1)
+                      },
+                      model: {
+                        value: free_secondary.lastname,
+                        callback: function($$v) {
+                          _vm.$set(free_secondary, "lastname", $$v)
+                        },
+                        expression: "free_secondary.lastname"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "sui-form-field",
+              { attrs: { error: free_secondary.is_member } },
+              [
+                _c("sui-input", {
+                  attrs: {
+                    error: free_secondary.is_member,
+                    placeholder: "Enter the email of secondary " + (i + 1)
+                  },
+                  on: {
+                    blur: function($event) {
+                      return _vm.checkMember(free_secondary, i, "free")
+                    }
+                  },
+                  model: {
+                    value: free_secondary.email,
+                    callback: function($$v) {
+                      _vm.$set(free_secondary, "email", $$v)
+                    },
+                    expression: "free_secondary.email"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("sui-checkbox", {
+                  attrs: {
+                    label:
+                      "Use " +
+                      _vm.primary.firstname +
+                      " " +
+                      _vm.primary.lastname +
+                      "'s address for\n          this secondary",
+                    disabled: free_secondary.is_member
+                  },
+                  model: {
                     value: free_secondary.use_primary_data,
+                    callback: function($$v) {
+                      _vm.$set(free_secondary, "use_primary_data", $$v)
+                    },
                     expression: "free_secondary.use_primary_data"
                   }
-                ],
-                attrs: { type: "checkbox" },
-                domProps: {
-                  checked: Array.isArray(free_secondary.use_primary_data)
-                    ? _vm._i(free_secondary.use_primary_data, null) > -1
-                    : free_secondary.use_primary_data
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = free_secondary.use_primary_data,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = null,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 &&
-                          _vm.$set(
-                            free_secondary,
-                            "use_primary_data",
-                            $$a.concat([$$v])
-                          )
-                      } else {
-                        $$i > -1 &&
-                          _vm.$set(
-                            free_secondary,
-                            "use_primary_data",
-                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                          )
-                      }
-                    } else {
-                      _vm.$set(free_secondary, "use_primary_data", $$c)
-                    }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !free_secondary.use_primary_data,
+                    expression: "!free_secondary.use_primary_data"
                   }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", [
-                _vm._v(
-                  "Use " +
-                    _vm._s(_vm.primary.firstname) +
-                    " " +
-                    _vm._s(_vm.primary.lastname) +
-                    "'s address for\n          this secondary"
-                )
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !free_secondary.use_primary_data,
-                  expression: "!free_secondary.use_primary_data"
-                }
-              ]
-            },
-            [
-              _c("div", { staticClass: "two fields" }, [
-                _c("div", { staticClass: "field" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: free_secondary.address,
-                        expression: "free_secondary.address"
-                      }
-                    ],
-                    attrs: { type: "text", placeholder: "Address" },
-                    domProps: { value: free_secondary.address },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(free_secondary, "address", $event.target.value)
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "field" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: free_secondary.city,
-                        expression: "free_secondary.city"
-                      }
-                    ],
-                    attrs: { type: "text", placeholder: "City" },
-                    domProps: { value: free_secondary.city },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(free_secondary, "city", $event.target.value)
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "two fields" }, [
-                _c("div", { staticClass: "field" }, [
-                  _c(
-                    "select",
-                    {
+                ]
+              },
+              [
+                _c("div", { staticClass: "two fields" }, [
+                  _c("div", { staticClass: "field" }, [
+                    _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: free_secondary.state,
-                          expression: "free_secondary.state"
+                          value: free_secondary.address,
+                          expression: "free_secondary.address"
                         }
                       ],
+                      attrs: { type: "text", placeholder: "Address" },
+                      domProps: { value: free_secondary.address },
                       on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
                           _vm.$set(
                             free_secondary,
-                            "state",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
+                            "address",
+                            $event.target.value
                           )
                         }
                       }
-                    },
-                    _vm._l(_vm.states, function(state, si) {
-                      return _c(
-                        "option",
-                        { key: si, domProps: { value: state } },
-                        [
-                          _vm._v(
-                            "\n              " +
-                              _vm._s(state) +
-                              "\n            "
-                          )
-                        ]
-                      )
-                    }),
-                    0
-                  )
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "field" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: free_secondary.city,
+                          expression: "free_secondary.city"
+                        }
+                      ],
+                      attrs: { type: "text", placeholder: "City" },
+                      domProps: { value: free_secondary.city },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(free_secondary, "city", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
                 ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "two fields" }, [
+                  _c("div", { staticClass: "field" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: free_secondary.state,
+                            expression: "free_secondary.state"
+                          }
+                        ],
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              free_secondary,
+                              "state",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      _vm._l(_vm.states, function(state, si) {
+                        return _c(
+                          "option",
+                          { key: si, domProps: { value: state } },
+                          [
+                            _vm._v(
+                              "\n              " +
+                                _vm._s(state) +
+                                "\n            "
+                            )
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "field" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: free_secondary.zip,
+                          expression: "free_secondary.zip"
+                        }
+                      ],
+                      attrs: { type: "text", placeholder: "ZIP" },
+                      domProps: { value: free_secondary.zip },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(free_secondary, "zip", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._m(1, true),
                 _vm._v(" "),
                 _c("div", { staticClass: "field" }, [
                   _c("input", {
                     directives: [
                       {
+                        name: "mask",
+                        rawName: "v-mask",
+                        value: ["(###) ###-####"],
+                        expression: "['(###) ###-####']"
+                      },
+                      {
                         name: "model",
                         rawName: "v-model",
-                        value: free_secondary.zip,
-                        expression: "free_secondary.zip"
+                        value: free_secondary.phone,
+                        expression: "free_secondary.phone"
                       }
                     ],
-                    attrs: { type: "text", placeholder: "ZIP" },
-                    domProps: { value: free_secondary.zip },
+                    attrs: { type: "text", placeholder: "Phone" },
+                    domProps: { value: free_secondary.phone },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(free_secondary, "zip", $event.target.value)
+                        _vm.$set(free_secondary, "phone", $event.target.value)
                       }
                     }
                   })
-                ])
-              ]),
-              _vm._v(" "),
-              _vm._m(1, true),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "mask",
-                      rawName: "v-mask",
-                      value: ["(###) ###-####"],
-                      expression: "['(###) ###-####']"
-                    },
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: free_secondary.phone,
-                      expression: "free_secondary.phone"
-                    }
-                  ],
-                  attrs: { type: "text", placeholder: "Phone" },
-                  domProps: { value: free_secondary.phone },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(free_secondary, "phone", $event.target.value)
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "ui checkbox" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: free_secondary.newsletter,
-                        expression: "free_secondary.newsletter"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(free_secondary.newsletter)
-                        ? _vm._i(free_secondary.newsletter, null) > -1
-                        : free_secondary.newsletter
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = free_secondary.newsletter,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(
-                                free_secondary,
-                                "newsletter",
-                                $$a.concat([$$v])
-                              )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "field" }, [
+                  _c("div", { staticClass: "ui checkbox" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: free_secondary.newsletter,
+                          expression: "free_secondary.newsletter"
+                        }
+                      ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(free_secondary.newsletter)
+                          ? _vm._i(free_secondary.newsletter, null) > -1
+                          : free_secondary.newsletter
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = free_secondary.newsletter,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(
+                                  free_secondary,
+                                  "newsletter",
+                                  $$a.concat([$$v])
+                                )
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  free_secondary,
+                                  "newsletter",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
                           } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                free_secondary,
-                                "newsletter",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
+                            _vm.$set(free_secondary, "newsletter", $$c)
                           }
-                        } else {
-                          _vm.$set(free_secondary, "newsletter", $$c)
                         }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("label", [
-                    _vm._v(
-                      "Receive " +
-                        _vm._s(_vm.settings.organization) +
-                        " newsletters"
-                    )
+                    }),
+                    _vm._v(" "),
+                    _c("label", [
+                      _vm._v(
+                        "Receive " +
+                          _vm._s(_vm.settings.organization) +
+                          " newsletters"
+                      )
+                    ])
                   ])
                 ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c("br")
-        ])
+              ]
+            ),
+            _vm._v(" "),
+            _c("br")
+          ],
+          1
+        )
       }),
       _vm._v(" "),
       _c("div", {
@@ -65371,19 +65409,22 @@ var render = function() {
               expression: "need_nonfree"
             }
           ],
-          staticClass: "ui basic icon buttons"
+          staticClass: "ui icon buttons"
         },
         [
           _c(
             "div",
-            { staticClass: "ui green button", on: { click: _vm.addNonfree } },
+            {
+              staticClass: "ui basic green button",
+              on: { click: _vm.addNonfree }
+            },
             [_c("i", { staticClass: "plus icon" })]
           ),
           _vm._v(" "),
           _c(
             "div",
             {
-              staticClass: "ui yellow button",
+              staticClass: "ui basic yellow button",
               on: { click: _vm.subtractNonfree }
             },
             [_c("i", { staticClass: "minus icon" })]
@@ -65395,266 +65436,363 @@ var render = function() {
       _c("br"),
       _vm._v(" "),
       _vm._l(_vm.nonfree_secondaries, function(nonfree_secondary, j) {
-        return _c("div", { key: j + 1000, staticClass: "ui form" }, [
-          _c("div", { staticClass: "ui horizontal divider header" }, [
-            _c("i", { staticClass: "address card outline icon" }),
-            _vm._v("\n      Non free Secondary #" + _vm._s(j + 1) + "\n    ")
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value:
-                    nonfree_secondary.exists && !nonfree_secondary.is_member,
-                  expression:
-                    "nonfree_secondary.exists && !nonfree_secondary.is_member"
-                }
-              ],
-              staticClass: "ui yellow icon message"
-            },
-            [
-              _c("i", { staticClass: "info circle icon" }),
-              _vm._v(" "),
-              _c("div", { staticClass: "content" }, [
-                _c("div", { staticClass: "header" }, [
-                  _vm._v(
-                    "\n          " +
-                      _vm._s(nonfree_secondary.firstname) +
-                      "\n          " +
-                      _vm._s(nonfree_secondary.lastname) +
-                      " already exists.\n        "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v(
-                    "\n          Use this opportunity to double check/update this user's information.\n        "
-                  )
-                ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: nonfree_secondary.is_member,
-                  expression: "nonfree_secondary.is_member"
-                }
-              ],
-              staticClass: "ui red icon message"
-            },
-            [
-              _c("i", { staticClass: "info circle icon" }),
-              _vm._v(" "),
-              _c("div", { staticClass: "content" }, [
-                _c("div", { staticClass: "header" }, [
-                  _vm._v(
-                    "\n          " +
-                      _vm._s(nonfree_secondary.firstname) +
-                      "\n          " +
-                      _vm._s(nonfree_secondary.lastname) +
-                      " can't be added as secondary!\n        "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v(
-                    "\n          " +
-                      _vm._s(nonfree_secondary.firstname) +
-                      "\n          " +
-                      _vm._s(nonfree_secondary.lastname) +
-                      " is already a member and cannot be\n          added as a secondary.\n        "
-                  )
-                ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "two fields" }, [
-            _c("div", { staticClass: "field" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model.lazy",
-                    value: nonfree_secondary.firstname,
-                    expression: "nonfree_secondary.firstname",
-                    modifiers: { lazy: true }
-                  }
-                ],
-                attrs: {
-                  type: "text",
-                  placeholder:
-                    "Enter the first name of non free secondary " + (j + 1)
-                },
-                domProps: { value: nonfree_secondary.firstname },
-                on: {
-                  change: function($event) {
-                    return _vm.$set(
-                      nonfree_secondary,
-                      "firstname",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
+        return _c(
+          "div",
+          { key: j + 1000, staticClass: "ui form" },
+          [
+            _c("div", { staticClass: "ui horizontal divider header" }, [
+              _c("i", { staticClass: "address card outline icon" }),
+              _vm._v("\n      Non free Secondary #" + _vm._s(j + 1) + "\n    ")
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "field" }, [
-              _c("input", {
+            _c(
+              "div",
+              {
                 directives: [
                   {
-                    name: "model",
-                    rawName: "v-model.lazy",
-                    value: nonfree_secondary.lastname,
-                    expression: "nonfree_secondary.lastname",
-                    modifiers: { lazy: true }
+                    name: "show",
+                    rawName: "v-show",
+                    value:
+                      nonfree_secondary.exists && !nonfree_secondary.is_member,
+                    expression:
+                      "nonfree_secondary.exists && !nonfree_secondary.is_member"
                   }
                 ],
-                attrs: {
-                  type: "text",
-                  placeholder:
-                    "Enter the last name of non free secondary " + (j + 1)
-                },
-                domProps: { value: nonfree_secondary.lastname },
-                on: {
-                  change: function($event) {
-                    return _vm.$set(
-                      nonfree_secondary,
-                      "lastname",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "field" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model.lazy",
-                  value: nonfree_secondary.email,
-                  expression: "nonfree_secondary.email",
-                  modifiers: { lazy: true }
-                }
-              ],
-              attrs: {
-                type: "text",
-                placeholder: "Enter the email of non free secondary " + (j + 1)
+                staticClass: "ui yellow icon message"
               },
-              domProps: { value: nonfree_secondary.email },
-              on: {
-                blur: function($event) {
-                  return _vm.checkMember(nonfree_secondary, j, "nonfree")
-                },
-                change: function($event) {
-                  return _vm.$set(
-                    nonfree_secondary,
-                    "email",
-                    $event.target.value
-                  )
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "field" }, [
-            _c("div", { staticClass: "ui checkbox" }, [
-              _c("input", {
+              [
+                _c("i", { staticClass: "info circle icon" }),
+                _vm._v(" "),
+                _c("div", { staticClass: "content" }, [
+                  _c("div", { staticClass: "header" }, [
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(nonfree_secondary.firstname) +
+                        "\n          " +
+                        _vm._s(nonfree_secondary.lastname) +
+                        " already exists.\n        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n          Use this opportunity to double check/update this user's information.\n        "
+                    )
+                  ])
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
                 directives: [
                   {
-                    name: "model",
-                    rawName: "v-model",
+                    name: "show",
+                    rawName: "v-show",
+                    value: nonfree_secondary.is_member,
+                    expression: "nonfree_secondary.is_member"
+                  }
+                ],
+                staticClass: "ui red icon message"
+              },
+              [
+                _c("i", { staticClass: "info circle icon" }),
+                _vm._v(" "),
+                _c("div", { staticClass: "content" }, [
+                  _c("div", { staticClass: "header" }, [
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(nonfree_secondary.firstname) +
+                        "\n          " +
+                        _vm._s(nonfree_secondary.lastname) +
+                        " can't be added as secondary!\n        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(nonfree_secondary.firstname) +
+                        "\n          " +
+                        _vm._s(nonfree_secondary.lastname) +
+                        " is already a member and cannot be\n          added as a secondary.\n        "
+                    )
+                  ])
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "two fields" },
+              [
+                _c(
+                  "sui-form-field",
+                  { attrs: { error: nonfree_secondary.is_member } },
+                  [
+                    _c("sui-input", {
+                      attrs: {
+                        error: nonfree_secondary.is_member,
+                        placeholder:
+                          "Enter the first name of secondary " + (j + 1)
+                      },
+                      model: {
+                        value: nonfree_secondary.firstname,
+                        callback: function($$v) {
+                          _vm.$set(nonfree_secondary, "firstname", $$v)
+                        },
+                        expression: "nonfree_secondary.firstname"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "sui-form-field",
+                  { attrs: { error: nonfree_secondary.is_member } },
+                  [
+                    _c("sui-input", {
+                      attrs: {
+                        error: nonfree_secondary.is_member,
+                        placeholder:
+                          "Enter the first name of secondary " + (j + 1)
+                      },
+                      model: {
+                        value: nonfree_secondary.lastname,
+                        callback: function($$v) {
+                          _vm.$set(nonfree_secondary, "lastname", $$v)
+                        },
+                        expression: "nonfree_secondary.lastname"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "sui-form-field",
+              { attrs: { error: nonfree_secondary.is_member } },
+              [
+                _c("sui-input", {
+                  attrs: {
+                    error: nonfree_secondary.is_member,
+                    placeholder: "Enter the email of secondary " + (j + 1)
+                  },
+                  on: {
+                    blur: function($event) {
+                      return _vm.checkMember(nonfree_secondary, j, "nonfree")
+                    }
+                  },
+                  model: {
+                    value: nonfree_secondary.email,
+                    callback: function($$v) {
+                      _vm.$set(nonfree_secondary, "email", $$v)
+                    },
+                    expression: "nonfree_secondary.email"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("sui-checkbox", {
+                  attrs: {
+                    label:
+                      "Use " +
+                      _vm.primary.firstname +
+                      " " +
+                      _vm.primary.lastname +
+                      "'s address for\n          this secondary",
+                    disabled: nonfree_secondary.is_member
+                  },
+                  model: {
                     value: nonfree_secondary.use_primary_data,
+                    callback: function($$v) {
+                      _vm.$set(nonfree_secondary, "use_primary_data", $$v)
+                    },
                     expression: "nonfree_secondary.use_primary_data"
                   }
-                ],
-                attrs: { type: "checkbox" },
-                domProps: {
-                  checked: Array.isArray(nonfree_secondary.use_primary_data)
-                    ? _vm._i(nonfree_secondary.use_primary_data, null) > -1
-                    : nonfree_secondary.use_primary_data
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = nonfree_secondary.use_primary_data,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = null,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 &&
-                          _vm.$set(
-                            nonfree_secondary,
-                            "use_primary_data",
-                            $$a.concat([$$v])
-                          )
-                      } else {
-                        $$i > -1 &&
-                          _vm.$set(
-                            nonfree_secondary,
-                            "use_primary_data",
-                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                          )
-                      }
-                    } else {
-                      _vm.$set(nonfree_secondary, "use_primary_data", $$c)
-                    }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !nonfree_secondary.use_primary_data,
+                    expression: "!nonfree_secondary.use_primary_data"
                   }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", [
-                _vm._v(
-                  "Use " +
-                    _vm._s(_vm.primary.firstname) +
-                    " " +
-                    _vm._s(_vm.primary.lastname) +
-                    "'s address for\n          this secondary"
-                )
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !nonfree_secondary.use_primary_data,
-                  expression: "!nonfree_secondary.use_primary_data"
-                }
-              ]
-            },
-            [
-              _c("div", { staticClass: "two fields" }, [
+                ]
+              },
+              [
+                _c("div", { staticClass: "two fields" }, [
+                  _c("div", { staticClass: "field" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: nonfree_secondary.address,
+                          expression: "nonfree_secondary.address"
+                        }
+                      ],
+                      attrs: { type: "text", placeholder: "Address" },
+                      domProps: { value: nonfree_secondary.address },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            nonfree_secondary,
+                            "address",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "field" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: nonfree_secondary.city,
+                          expression: "nonfree_secondary.city"
+                        }
+                      ],
+                      attrs: { type: "text", placeholder: "City" },
+                      domProps: { value: nonfree_secondary.city },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            nonfree_secondary,
+                            "city",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "two fields" }, [
+                  _c("div", { staticClass: "field" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: nonfree_secondary.state,
+                            expression: "nonfree_secondary.state"
+                          }
+                        ],
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              nonfree_secondary,
+                              "state",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      _vm._l(_vm.states, function(state, si) {
+                        return _c(
+                          "option",
+                          { key: si, domProps: { value: state } },
+                          [
+                            _vm._v(
+                              "\n              " +
+                                _vm._s(state) +
+                                "\n            "
+                            )
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "field" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: nonfree_secondary.zip,
+                          expression: "nonfree_secondary.zip"
+                        }
+                      ],
+                      attrs: { type: "text", placeholder: "ZIP" },
+                      domProps: { value: nonfree_secondary.zip },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            nonfree_secondary,
+                            "zip",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._m(2, true),
+                _vm._v(" "),
                 _c("div", { staticClass: "field" }, [
                   _c("input", {
                     directives: [
                       {
+                        name: "mask",
+                        rawName: "v-mask",
+                        value: ["(###) ###-####"],
+                        expression: "['(###) ###-####']"
+                      },
+                      {
                         name: "model",
                         rawName: "v-model",
-                        value: nonfree_secondary.address,
-                        expression: "nonfree_secondary.address"
+                        value: nonfree_secondary.phone,
+                        expression: "nonfree_secondary.phone"
                       }
                     ],
-                    attrs: { type: "text", placeholder: "Address" },
-                    domProps: { value: nonfree_secondary.address },
+                    attrs: { type: "text", placeholder: "Phone" },
+                    domProps: { value: nonfree_secondary.phone },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
@@ -65662,7 +65800,7 @@ var render = function() {
                         }
                         _vm.$set(
                           nonfree_secondary,
-                          "address",
+                          "phone",
                           $event.target.value
                         )
                       }
@@ -65671,195 +65809,68 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "field" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: nonfree_secondary.city,
-                        expression: "nonfree_secondary.city"
-                      }
-                    ],
-                    attrs: { type: "text", placeholder: "City" },
-                    domProps: { value: nonfree_secondary.city },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(nonfree_secondary, "city", $event.target.value)
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "two fields" }, [
-                _c("div", { staticClass: "field" }, [
-                  _c(
-                    "select",
-                    {
+                  _c("div", { staticClass: "ui checkbox" }, [
+                    _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: nonfree_secondary.state,
-                          expression: "nonfree_secondary.state"
+                          value: nonfree_secondary.newsletter,
+                          expression: "nonfree_secondary.newsletter"
                         }
                       ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(nonfree_secondary.newsletter)
+                          ? _vm._i(nonfree_secondary.newsletter, null) > -1
+                          : nonfree_secondary.newsletter
+                      },
                       on: {
                         change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            nonfree_secondary,
-                            "state",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
-                      }
-                    },
-                    _vm._l(_vm.states, function(state, si) {
-                      return _c(
-                        "option",
-                        { key: si, domProps: { value: state } },
-                        [
-                          _vm._v(
-                            "\n              " +
-                              _vm._s(state) +
-                              "\n            "
-                          )
-                        ]
-                      )
-                    }),
-                    0
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "field" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: nonfree_secondary.zip,
-                        expression: "nonfree_secondary.zip"
-                      }
-                    ],
-                    attrs: { type: "text", placeholder: "ZIP" },
-                    domProps: { value: nonfree_secondary.zip },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(nonfree_secondary, "zip", $event.target.value)
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _vm._m(2, true),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "mask",
-                      rawName: "v-mask",
-                      value: ["(###) ###-####"],
-                      expression: "['(###) ###-####']"
-                    },
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: nonfree_secondary.phone,
-                      expression: "nonfree_secondary.phone"
-                    }
-                  ],
-                  attrs: { type: "text", placeholder: "Phone" },
-                  domProps: { value: nonfree_secondary.phone },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(nonfree_secondary, "phone", $event.target.value)
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "ui checkbox" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: nonfree_secondary.newsletter,
-                        expression: "nonfree_secondary.newsletter"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(nonfree_secondary.newsletter)
-                        ? _vm._i(nonfree_secondary.newsletter, null) > -1
-                        : nonfree_secondary.newsletter
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = nonfree_secondary.newsletter,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(
-                                nonfree_secondary,
-                                "newsletter",
-                                $$a.concat([$$v])
-                              )
+                          var $$a = nonfree_secondary.newsletter,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(
+                                  nonfree_secondary,
+                                  "newsletter",
+                                  $$a.concat([$$v])
+                                )
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  nonfree_secondary,
+                                  "newsletter",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
                           } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                nonfree_secondary,
-                                "newsletter",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
+                            _vm.$set(nonfree_secondary, "newsletter", $$c)
                           }
-                        } else {
-                          _vm.$set(nonfree_secondary, "newsletter", $$c)
                         }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("label", [
-                    _vm._v(
-                      "Receive " +
-                        _vm._s(_vm.settings.organization) +
-                        " newsletters"
-                    )
+                    }),
+                    _vm._v(" "),
+                    _c("label", [
+                      _vm._v(
+                        "Receive " +
+                          _vm._s(_vm.settings.organization) +
+                          " newsletters"
+                      )
+                    ])
                   ])
                 ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c("br")
-        ])
+              ]
+            ),
+            _vm._v(" "),
+            _c("br")
+          ],
+          1
+        )
       }),
       _vm._v(" "),
       _c("br"),
