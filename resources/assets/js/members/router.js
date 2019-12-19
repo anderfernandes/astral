@@ -5,6 +5,7 @@ import Index from './views/Index.vue'
 import Primary from './views/Primary.vue'
 import Details from './views/Details.vue'
 import Secondaries from './views/Secondaries.vue'
+import Payment from './views/Payment.vue'
 
 Vue.use(Router)
 
@@ -28,6 +29,12 @@ export default new Router({
       name: 'secondaries',
       component: Secondaries,
       meta: { step: 3 }
+    },
+    {
+      path: '/payment',
+      name: 'payment',
+      component: Payment,
+      meta: { step: 4 }
     }
   ]
 })

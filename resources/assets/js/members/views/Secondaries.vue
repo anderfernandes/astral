@@ -338,13 +338,31 @@
       </div>
       <br />
     </div>
-
-    <br /><br />
+    <br />
+    <div
+      v-show="are_primaries_valid && are_secondaries_valid"
+      class="ui centered yellow labeled icon button"
+      @click="$router.push('/details')"
+    >
+      <i class="left chevron icon"></i>
+      Back
+    </div>
+    <div
+      v-show="are_primaries_valid && are_secondaries_valid"
+      class="ui green right labeled icon button"
+      @click="$router.push('/payment')"
+    >
+      <i class="right chevron icon"></i>
+      Next
+    </div>
   </div>
 </template>
 
 <script>
   import { mask } from 'vue-the-mask'
+
+  const validate = secondary =>
+    Object.entries(secondary).every(([key, value]) => !(value === ''))
 
   export default {
     data: () => ({
@@ -467,30 +485,15 @@
       settings() {
         return this.$store.getters.settings
       },
-      valid() {
-        let free_valid = false,
-          nonfree_valid = true
-        // Check if array of free_secondaries exists
-        if (this.free_secondaries.length > 0) {
-          // Loop through array off free_secondaries
-          free_valid = this.free_secondaries.every(free_secondary =>
-            Object.entries(free_secondary).every(
-              ([key, value]) => !(value === '')
-            )
-          )
-        }
-
-        // Check if array of nonfree_secondaries exists
-        if (this.nonfree_secondaries.length > 0) {
-          // Loop through array of nonfree_secondaries
-          nonfree_valid = this.nonfree_secondaries.every(nonfree_secondary =>
-            Object.entries(nonfree_secondary).every(
-              ([key, value]) => !(value === '')
-            )
-          )
-        }
-
-        return free_valid && nonfree_valid
+      are_primaries_valid() {
+        return this.free_secondaries.length > 0
+          ? this.free_secondaries.every(validate)
+          : false
+      },
+      are_secondaries_valid() {
+        return this.nonfree_secondaries.length > 0
+          ? this.nonfree_secondaries.every(validate)
+          : true
       }
     }
   }
