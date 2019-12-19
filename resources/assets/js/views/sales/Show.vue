@@ -9,8 +9,8 @@
       
       <modal id="refund">
         <div class="ui icon header" style="padding-bottom: 0" v-if="sale.payments && sale.payments.length > 0">
-          <i class="refresh icon"></i> Refund Sale
-          <div class="sub header" style="color:white">You are about to refund this sale</div>
+          <i class="refresh icon"></i> Full Refund
+          <div class="sub header" style="color:white">You are about to do a full refund on this sale</div>
         </div>
         <div class="content" style="padding-top: 0">
           <div class="ui inverted form">
@@ -23,11 +23,11 @@
         </div>
         <div class="actions">
           <div class="ui red cancel inverted button" @click="$store.commit('TOGGLE_MODAL', false)">
-            <i class="remove icon"></i> Cancel Refund
+            <i class="remove icon"></i> Cancel
           </div>
           <sui-button color="yellow" inverted icon="refresh" :disabled="refund_memo == null || refund_memo.length < 10"
                       @click.prevent="submitRefund">
-            Confirm Refund of $ {{ sale.total | currency }}
+            Confirm Full Refund of $ {{ sale.total | currency }}
           </sui-button>
         </div>
       </modal>
@@ -104,7 +104,7 @@
       <div class="ui right floated red button" @click="$store.commit('TOGGLE_MODAL', true)" 
                   v-if="sale.payments && sale.payments.length > 0 && !sale.refund">
         <i class="refresh icon"></i>
-        Refund
+        Full Refund
       </div>
 
       <h4 class="ui center aligned horizontal divider header">

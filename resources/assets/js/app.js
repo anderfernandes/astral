@@ -22,9 +22,8 @@ Vue.config.productionTip = false
 Vue.mixin({
   filters: {
     currency(value) {
-      if (value && value > 0)
+      if (value)
         return value.toLocaleString('en-US', store.getters.currencySettings)
-      else return '0.00'
     }
   },
 

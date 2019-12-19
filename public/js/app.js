@@ -66597,14 +66597,14 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "refresh icon" }),
-                    _vm._v(" Refund Sale\n        "),
+                    _vm._v(" Full Refund\n        "),
                     _c(
                       "div",
                       {
                         staticClass: "sub header",
                         staticStyle: { color: "white" }
                       },
-                      [_vm._v("You are about to refund this sale")]
+                      [_vm._v("You are about to do a full refund on this sale")]
                     )
                   ]
                 )
@@ -66663,7 +66663,7 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "remove icon" }),
-                    _vm._v(" Cancel Refund\n        ")
+                    _vm._v(" Cancel\n        ")
                   ]
                 ),
                 _vm._v(" "),
@@ -66686,7 +66686,7 @@ var render = function() {
                   },
                   [
                     _vm._v(
-                      "\n          Confirm Refund of $ " +
+                      "\n          Confirm Full Refund of $ " +
                         _vm._s(_vm._f("currency")(_vm.sale.total)) +
                         "\n        "
                     )
@@ -67013,7 +67013,7 @@ var render = function() {
                 },
                 [
                   _c("i", { staticClass: "refresh icon" }),
-                  _vm._v("\n      Refund\n    ")
+                  _vm._v("\n      Full Refund\n    ")
                 ]
               )
             : _vm._e(),
@@ -84423,7 +84423,7 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.config.productionTip = false;
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.mixin({
   filters: {
     currency: function currency(value) {
-      if (value && value > 0) return value.toLocaleString('en-US', _store__WEBPACK_IMPORTED_MODULE_5__["default"].getters.currencySettings);else return '0.00';
+      if (value) return value.toLocaleString('en-US', _store__WEBPACK_IMPORTED_MODULE_5__["default"].getters.currencySettings);
     }
   },
   methods: {
