@@ -12,10 +12,10 @@
     <a href="{{ route('admin.shows.index') }}?active=1" class="ui basic black button">
       <i class="left chevron icon"></i> Back
     </a>
-    <a href="javascript:$('#edit-show').modal('show')" class="ui yellow button">
+    <div onclick="$('#edit-show').modal('show')" class="ui yellow button">
       <i class="edit icon"></i>
       Edit Show
-    </a>
+    </div>
     <a href="{{ route('admin.shows.create') }}" class="ui black button">
       <i class="ui icons">
         <i class="film icon"></i>

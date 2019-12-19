@@ -13,9 +13,9 @@
     <a href="{{ route('admin.users.index') }}" class="ui basic black button">
       <i class="left chevron icon"></i> Back
     </a>
-    <a href="javascript:$('#edit-user').modal('show')" class="ui yellow button">
+    <div onclick="$('#edit-user').modal('show')" class="ui yellow button">
       <i class="edit icon"></i> Edit User
-    </a>
+    </div>
     <a href="{{ route('admin.users.create') }}" class="ui secondary button">
       <i class="add user icon"></i> Add Another User
     </a>
