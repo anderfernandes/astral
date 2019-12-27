@@ -154,35 +154,20 @@
     </div>
 
     <div
+      class="ui segment"
       v-show="
-        free_secondaries.length >= parseInt(membership_type.max_secondaries)
-      "
-      class="ui divider"
-    ></div>
-
-    <div
-      class="ui form"
-      v-show="
-        free_secondaries.length >= parseInt(membership_type.max_secondaries)
+        free_secondaries.length >= parseInt(membership_type.max_secondaries) &&
+          are_primaries_valid
       "
     >
-      <div class="field">
-        <div class="ui checkbox">
-          <input type="checkbox" v-model="need_nonfree" />
-          <label
-            >{{ primary.firstname }} {{ primary.lastname }} needs additional non
-            free secondaries</label
-          >
-        </div>
+      <div class="ui checkbox">
+        <input type="checkbox" v-model="need_nonfree" />
+        <label
+          >{{ primary.firstname }} {{ primary.lastname }} needs additional non
+          free secondaries</label
+        >
       </div>
     </div>
-
-    <div
-      class="ui divider"
-      v-show="
-        free_secondaries.length >= parseInt(membership_type.max_secondaries)
-      "
-    ></div>
 
     <p v-show="need_nonfree">
       How many non-free secondaries? (<strong
@@ -336,9 +321,8 @@
           </div>
         </div>
       </div>
-      <br />
     </div>
-    <br />
+    <div class="ui divider"></div>
     <div
       v-show="are_primaries_valid && are_secondaries_valid"
       class="ui centered yellow labeled icon button"
@@ -373,6 +357,9 @@
     }),
     directives: { mask },
     async mounted() {
+      Object.assign(this, {
+        free_secondaries: this.$store.state.Members.free_secondaries
+      })
       await this.fetchStates()
       await this.$store.dispatch('fetchSettings')
     },
@@ -473,6 +460,18 @@
     watch: {
       need_nonfree(new_value) {
         if (new_value == false) this.nonfree_secondaries = []
+      },
+      free_secondaries(new_value) {
+        this.$store.commit(
+          'Members/SET_FREE_SECONDARIES',
+          this.free_secondaries
+        )
+      },
+      nonfree_secondaries(new_value) {
+        this.$store.commit(
+          'Members/SET_NONFREE_SECONDARIES',
+          this.nonfree_secondaries
+        )
       }
     },
     computed: {
@@ -488,7 +487,7 @@
       are_primaries_valid() {
         return this.free_secondaries.length > 0
           ? this.free_secondaries.every(validate)
-          : false
+          : true
       },
       are_secondaries_valid() {
         return this.nonfree_secondaries.length > 0

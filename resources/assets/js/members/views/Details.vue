@@ -113,6 +113,12 @@
         this.$store.commit('Members/SET_MEMBERSHIP_TYPE', type)
       }
     },
+    watch: {
+      membership_type(new_value) {
+        this.$store.commit('Members/SET_FREE_SECONDARIES', [])
+        this.$store.commit('Members/SET_NONFREE_SECONDARIES', [])
+      }
+    },
     computed: {
       membership_type() {
         return this.$store.state.Members.membership_type

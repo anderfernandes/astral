@@ -10,6 +10,20 @@
 
   <div class="ui container">
 
+    @if($member->end->isPast())
+    <div class="ui red icon message">
+      <i class="exclamation circle icon"></i>
+      <div class="content">
+        <div class="header">
+          {{ $member->primary->fullname }}'s membership expired {{ $member->end->diffInDays(now()) }}
+          {{ $member->end->diffInDays(now()) == 1 ? 'day' : 'days' }} ago!
+        </div>
+        Ask {{ $member->firstname }} to renew their membership so that they can keep
+        enjoying membership benefits and supporting {{ App\Setting::find(1)->organization }}!
+      </div>
+    </div>
+    @endif
+
     <a href="{{ route('admin.members.index') }}" class="ui basic black button">
       <i class="left chevron icon"></i> Back
     </a>
@@ -103,9 +117,12 @@
           {{ $member->primary->state }}
           <div class="sub header">State</div>
         </div>
-        <div class="ui header">
+        <div class="ui {{ $member->end->isPast() ? 'red' : '' }} header">
           {{ $member->end->format('l, F j, Y') }}
-          <div class="sub header">Expiration Date ({{ $member->end->diffInDays(now()) }} days left)</div>
+          <div class="sub header">
+            Expiration Date 
+            ({{ $member->end->diffInDays(now()) }} days {{ $member->end->isPast() ? 'ago' : 'left' }})
+          </div>
         </div>
       </div>
       <div class="column">

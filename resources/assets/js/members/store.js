@@ -16,11 +16,18 @@ let getDefaultMembersState = () => ({
   membership_type: { id: null },
   start: null,
   end: null,
-  tendered: null,
-  change_due: null,
+
+  subtotal: 0,
+  tax: 0,
+  paid: 0,
+  balance: 0,
+  total: 0,
+  tendered: 0,
+  change_due: 0,
   payment_method_id: null,
   reference: null,
   memo: null,
+
   check_primary: null
 })
 
@@ -71,6 +78,39 @@ export default {
     },
     SET_FREE_SECONDARIES(state, payload) {
       Object.assign(state, { free_secondaries: payload })
+    },
+    SET_NONFREE_SECONDARIES(state, payload) {
+      Object.assign(state, { nonfree_secondaries: payload })
+    },
+    SET_TENDERED(state, payload) {
+      Object.assign(state, { tendered: payload })
+    },
+    SET_REFERENCE(state, payload) {
+      Object.assign(state, { reference: payload })
+    },
+    SET_MEMO(state, payload) {
+      Object.assign(state, { memo: payload })
+    },
+    CALCULATE_TOTALS(state, tax_rate) {
+      const primary_total = parseFloat(state.membership_type.price)
+      const secondary_total =
+        parseFloat(state.membership_type.secondary_price) *
+        state.nonfree_secondaries.length
+      const subtotal = primary_total + secondary_total
+      const tax = subtotal * tax_rate
+      const total = subtotal + tax
+      const paid = state.tendered
+      const balance = total - paid
+      Object.assign(state, {
+        subtotal: subtotal,
+        tax,
+        total,
+        paid,
+        balance
+      })
+    },
+    SET_PAYMENT_METHOD_ID(state, payload) {
+      Object.assign(state, { payment_method_id: payload })
     }
   },
 
@@ -87,6 +127,9 @@ export default {
       } catch (error) {
         alert(`Error in checkPriamry: ${error.message}`)
       }
+    },
+    calculateTotals({ commit, rootState }) {
+      commit('CALCULATE_TOTALS', rootState.Sale.settings.tax)
     }
   }
 }

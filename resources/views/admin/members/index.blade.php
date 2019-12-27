@@ -72,7 +72,7 @@
     @if (!isSet($members) || count($members) > 0)
       <div class="ui one doubling link cards">
         @foreach($members as $member)
-          <div class="card" onclick="window.location='{{ route('admin.members.show', $member) }}'">
+          <div class="{{ $member->end->isPast() ? 'red' : '' }} card" onclick="window.location='{{ route('admin.members.show', $member) }}'">
             <div class="content">
               <img src="{{ \App\Setting::find(1)->logo == '/logo.png' ? \App\Setting::find(1)->logo : Storage::url(\App\Setting::find(1)->logo) }}" alt="" class="left floated mini ui image">
               <div class="right floated meta"># {{ $member->number }}</div>
@@ -81,10 +81,18 @@
                 <div class="ui black label">
                   {{ $member->type->name }}
                 </div>
+                @if ($member->end->isPast())
+                <div class="ui red label">
+                  <i class="exclamation circle icon"></i>
+                  expired
+                </div>
+                @endif
               </div>
               <div class="meta">
                 <i class="calendar alternate outline icon"></i>
-                Expires {{ Date::parse($member->end)->format('l, F j, Y') }}
+                {{ $member->end->isPast() ? 'Expired' : 'Expires' }}
+                on {{ Date::parse($member->end)->format('l, F j, Y') }}
+                ({{ $member->end->diffInDays(now()) }} days {{ $member->end->isPast() ? 'ago' : 'left' }})
               </div>
               <div class="meta">
                 @if ($member->secondaries->count() > 0)
