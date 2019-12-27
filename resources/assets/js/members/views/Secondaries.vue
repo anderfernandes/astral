@@ -30,7 +30,7 @@
     >
       <div class="ui horizontal divider header">
         <i class="address card outline icon"></i>
-        Secondary #{{ i + 1 }}
+        Free Secondary #{{ i + 1 }}
       </div>
 
       <div
@@ -345,8 +345,16 @@
 <script>
   import { mask } from 'vue-the-mask'
 
-  const validate = secondary =>
-    Object.entries(secondary).every(([key, value]) => !(value === ''))
+  const validate = secondary => {
+    if (secondary.use_primary_data)
+      return (
+        secondary.firstname.length > 3 &&
+        secondary.lastname.length > 3 &&
+        secondary.email.includes('@')
+      )
+    else
+      return Object.entries(secondary).every(([key, value]) => !(value === ''))
+  }
 
   export default {
     data: () => ({

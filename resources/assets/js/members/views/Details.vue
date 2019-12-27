@@ -1,5 +1,9 @@
 <template>
-  <div class="ui basic segment" style="text-align:center !important">
+  <div
+    class="ui basic segment"
+    style="text-align:center !important"
+    v-if="!loading"
+  >
     <h1 class="ui massive center aligned header">
       <i class="address card outline icon"></i>
     </h1>
@@ -47,18 +51,20 @@
 
     <br />
 
-    <div class="ui form" v-if="membership_type.id != null">
+    <div class="ui form" v-show="membership_type.id && !loading">
       <div class="ui two fields">
         <div class="field">
-          <div class="ui labeled input">
+          <div class="ui labeled icon input">
             <div class="ui basic label">Start Date</div>
             <flatpickr v-model.lazy="start" :config="flatpickr_config" />
+            <i class="calendar alternate icon"></i>
           </div>
         </div>
         <div class="field">
-          <div class="ui labeled input">
+          <div class="ui labeled icon input">
             <div class="ui basic label">End Date</div>
             <flatpickr v-model.lazy="end" :config="flatpickr_config" />
+            <i class="calendar alternate icon"></i>
           </div>
         </div>
       </div>
@@ -89,15 +95,18 @@
 
   export default {
     data: () => ({
+      loading: true,
       types: [],
       flatpickr_config: {
         dateFormat: 'l, F j, Y',
-        minDate: new Date()
+        minDate: 'today'
       }
     }),
     components: { flatpickr },
-    async mounted() {
+    async created() {
+      this.loading = true
       await this.fetchMembershipTypes()
+      this.loading = false
     },
     methods: {
       async fetchMembershipTypes() {

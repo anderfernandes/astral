@@ -6,6 +6,8 @@ import Primary from './views/Primary.vue'
 import Details from './views/Details.vue'
 import Secondaries from './views/Secondaries.vue'
 import Payment from './views/Payment.vue'
+import Confirm from './views/Confirm.vue'
+import ThankYou from './views/ThankYou.vue'
 
 Vue.use(Router)
 
@@ -35,6 +37,18 @@ export default new Router({
       name: 'payment',
       component: Payment,
       meta: { step: 4 }
+    },
+    {
+      path: '/confirm',
+      name: 'confirm',
+      component: Confirm,
+      meta: { step: 5 }
+    },
+    {
+      path: '/thank-you',
+      name: 'thank-you',
+      component: ThankYou,
+      meta: { step: 6 }
     }
   ]
 })

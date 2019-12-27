@@ -33,8 +33,8 @@
         <div class="value">$ {{ total | currency }}</div>
       </div>
       <div class="statistic">
-        <div class="label">Paid</div>
-        <div class="value">$ {{ paid | currency }}</div>
+        <div class="label">Tendered</div>
+        <div class="value">$ {{ tendered | currency }}</div>
       </div>
       <div class="statistic">
         <div class="label">Balance</div>
@@ -64,7 +64,7 @@
         </sui-form-field>
         <sui-form-field v-if="payment_methods">
           <label>Payment Method</label>
-          <select v-model="payment_method_id">
+          <select v-model="payment_method_id" @change="handleCashSelection">
             <option
               v-for="payment_method in payment_methods"
               :value="payment_method.value"
@@ -87,6 +87,25 @@
         ></textarea>
       </div>
     </div>
+
+    <br />
+
+    <div
+      v-show="valid"
+      class="ui centered yellow labeled icon button"
+      @click="$router.push('/secondaries')"
+    >
+      <i class="left chevron icon"></i>
+      Back
+    </div>
+    <div
+      v-show="valid"
+      class="ui green right labeled icon button"
+      @click="$router.push('/confirm')"
+    >
+      <i class="right chevron icon"></i>
+      Next
+    </div>
   </div>
 </template>
 
@@ -101,6 +120,12 @@
       await this.$store.dispatch('fetchSettings')
       this.$store.dispatch('Members/calculateTotals')
       this.loading = false
+    },
+    methods: {
+      handleCashSelection() {
+        if (this.payment_method_id === 1) this.tendered = this.total
+        else this.tendered = 0.0
+      }
     },
     computed: {
       payment_methods() {
@@ -131,9 +156,6 @@
       },
       tax() {
         return this.$store.state.Members.tax
-      },
-      paid() {
-        return this.$store.state.Members.paid
       },
       balance() {
         return this.$store.state.Members.balance
@@ -170,6 +192,9 @@
         get() {
           return this.$store.state.Members.memo
         }
+      },
+      valid() {
+        return this.tendered > 0 && this.tendered >= this.balance
       }
     }
   }
