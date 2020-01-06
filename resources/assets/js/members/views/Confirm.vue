@@ -109,7 +109,7 @@
     </div>
     <div
       class="ui blue right labeled icon button"
-      @click="$router.push('/thank-you')"
+      @click="submit"
     >
       <i class="thumbs up icon"></i>
       Confirm
@@ -119,6 +119,16 @@
 
 <script>
   export default {
+    methods: {
+      async submit() {
+        try {
+          await this.$store.dispatch('Members/submit')
+          this.$router.push('/thank-you')
+        } catch (error) {
+          alert(`Error: ${error.message}`)
+        }
+      }
+    },
     computed: {
       primary() {
         return this.$store.state.Members.primary

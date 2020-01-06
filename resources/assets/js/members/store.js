@@ -11,6 +11,7 @@ let getDefaultMembersState = () => ({
     phone: '',
     newsletter: true
   },
+
   free_secondaries: [],
   nonfree_secondaries: [],
   membership_type: { id: null },
@@ -25,7 +26,7 @@ let getDefaultMembersState = () => ({
   tendered: 0,
   change_due: 0,
   payment_method_id: null,
-  reference: null,
+  reference: '',
   memo: null,
 
   check_primary: null
@@ -100,13 +101,15 @@ export default {
       const tax = subtotal * tax_rate
       const total = subtotal + tax
       const paid = state.tendered
-      const balance = total - paid
+      const balance = (paid - total) < 0 ? (paid - total) : 0
+      const change_due = (state.tendered - total) >= 0 ? (state.tendered - total) : 0
       Object.assign(state, {
         subtotal: subtotal,
         tax,
         total,
         paid,
-        balance
+        balance,
+        change_due
       })
     },
     SET_PAYMENT_METHOD_ID(state, payload) {
@@ -115,6 +118,7 @@ export default {
   },
 
   actions: {
+    
     async checkPrimary({ state, commit }) {
       try {
         const response = await fetch('/api/members/check-primary', {
@@ -128,8 +132,13 @@ export default {
         alert(`Error in checkPriamry: ${error.message}`)
       }
     },
+    
     calculateTotals({ commit, rootState }) {
       commit('CALCULATE_TOTALS', rootState.Sale.settings.tax)
+    },
+
+    async submit({ state }) {
+      console.log(state)
     }
   }
 }

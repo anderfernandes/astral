@@ -36,10 +36,14 @@
         <div class="label">Tendered</div>
         <div class="value">$ {{ tendered | currency }}</div>
       </div>
-      <div class="statistic">
-        <div class="label">Balance</div>
-        <div class="value">${{ balance | currency }}</div>
-      </div>
+      <sui-statistic ingroup :color="balance >= 0 ? 'green' : 'red'">
+        <sui-statistic-label>
+          Balance
+        </sui-statistic-label>
+        <sui-statistic-value>
+          ${{ balance | currency }}
+        </sui-statistic-value>
+      </sui-statistic>
     </div>
 
     <div class="ui divider"></div>
@@ -52,7 +56,7 @@
           <label>Tendered</label>
           <div class="ui labeled input">
             <div class="ui basic label">$</div>
-            <input v-model="tendered" type="text" />
+            <input v-model="tendered" type="text" @input="calculateTotals" />
           </div>
         </sui-form-field>
         <sui-form-field>
@@ -118,14 +122,14 @@
       this.loading = true
       await this.$store.dispatch('fetchPaymentMethods')
       await this.$store.dispatch('fetchSettings')
-      this.$store.dispatch('Members/calculateTotals')
+      this.calculateTotals()
       this.loading = false
     },
     methods: {
       handleCashSelection() {
-        if (this.payment_method_id === 1) this.tendered = this.total
-        else this.tendered = 0.0
-      }
+        if (this.payment_method_id !== 1) this.tendered = this.total
+      },
+      calculateTotals() { this.$store.dispatch('Members/calculateTotals') }
     },
     computed: {
       payment_methods() {
@@ -179,7 +183,7 @@
       },
       reference: {
         set(value) {
-          this.$store.commit('Members/SET_REFERENCE')
+          this.$store.commit('Members/SET_REFERENCE', value)
         },
         get() {
           return this.$store.state.Members.reference
@@ -194,7 +198,8 @@
         }
       },
       valid() {
-        return this.tendered > 0 && this.tendered >= this.balance
+        const hasReference = this.payment_method_id === 1 ? true : this.reference.length >= 4
+        return (this.tendered > 0) && (this.tendered >= this.balance) && (this.payment_method_id != null) && hasReference
       }
     }
   }

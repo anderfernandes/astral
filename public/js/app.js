@@ -2512,6 +2512,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var date_fns_format__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns/format */ "./node_modules/date-fns/format/index.js");
 /* harmony import */ var date_fns_format__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(date_fns_format__WEBPACK_IMPORTED_MODULE_1__);
 
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -2551,49 +2556,69 @@ __webpack_require__.r(__webpack_exports__);
       user: null
     };
   },
-  mounted: function mounted() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function mounted$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchUser());
-
-          case 2:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, null, this);
-  },
-  methods: {
-    fetchUser: function fetchUser() {
-      var response, user;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchUser$(_context2) {
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context.prev = _context.next) {
             case 0:
-              _context2.next = 2;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(fetch("/api/user/".concat(localStorage.getItem('u'))));
+              _context.next = 2;
+              return this.fetchUser();
 
             case 2:
-              response = _context2.sent;
-              _context2.next = 5;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.json());
-
-            case 5:
-              user = _context2.sent;
-              Object.assign(this, {
-                user: user
-              });
-
-            case 7:
             case "end":
-              return _context2.stop();
+              return _context.stop();
           }
         }
-      }, null, this);
-    },
+      }, _callee, this);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }(),
+  methods: {
+    fetchUser: function () {
+      var _fetchUser = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var response, user;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return fetch("/api/user/".concat(localStorage.getItem('u')));
+
+              case 2:
+                response = _context2.sent;
+                _context2.next = 5;
+                return response.json();
+
+              case 5:
+                user = _context2.sent;
+                Object.assign(this, {
+                  user: user
+                });
+
+              case 7:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function fetchUser() {
+        return _fetchUser.apply(this, arguments);
+      }
+
+      return fetchUser;
+    }(),
     handleMenuButtonClick: function handleMenuButtonClick() {
       Object.assign(this, {
         menu: !this.menu
@@ -2673,6 +2698,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(date_fns__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 //
 //
@@ -2928,41 +2958,51 @@ __webpack_require__.r(__webpack_exports__);
       customer_id: 1
     };
   },
-  created: function created() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function created$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            this.loading = true;
-            _context.next = 3;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.dispatch('fetchSettings'));
+  created: function () {
+    var _created = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              this.loading = true;
+              _context.next = 3;
+              return this.$store.dispatch('fetchSettings');
 
-          case 3:
-            _context.next = 5;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchProducts());
+            case 3:
+              _context.next = 5;
+              return this.fetchProducts();
 
-          case 5:
-            _context.next = 7;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchEvents());
+            case 5:
+              _context.next = 7;
+              return this.fetchEvents();
 
-          case 7:
-            _context.next = 9;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchCustomers());
+            case 7:
+              _context.next = 9;
+              return this.fetchCustomers();
 
-          case 9:
-            _context.next = 11;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchPaymentMethods());
+            case 9:
+              _context.next = 11;
+              return this.fetchPaymentMethods();
 
-          case 11:
-            this.loading = false;
+            case 11:
+              this.loading = false;
 
-          case 12:
-          case "end":
-            return _context.stop();
+            case 12:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, null, this);
-  },
+      }, _callee, this);
+    }));
+
+    function created() {
+      return _created.apply(this, arguments);
+    }
+
+    return created;
+  }(),
   methods: {
     addTicket: function addTicket(payload) {
       this.$store.commit('Cashier/ADD_TICKET', payload);
@@ -2996,178 +3036,228 @@ __webpack_require__.r(__webpack_exports__);
     clearProduct: function clearProduct(product) {
       this.$store.commit('Cashier/CLEAR_PRODUCT', product);
     },
-    fetchEvents: function fetchEvents() {
-      var response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchEvents$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/cashier/events'));
+    fetchEvents: function () {
+      var _fetchEvents = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/cashier/events');
 
-            case 3:
-              response = _context2.sent;
-              Object.assign(this, {
-                events: response.data.data
-              });
-              _context2.next = 10;
-              break;
+              case 3:
+                response = _context2.sent;
+                Object.assign(this, {
+                  events: response.data.data
+                });
+                _context2.next = 10;
+                break;
 
-            case 7:
-              _context2.prev = 7;
-              _context2.t0 = _context2["catch"](0);
-              alert("Error in fetchEvents: ".concat(_context2.t0.message));
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                alert("Error in fetchEvents: ".concat(_context2.t0.message));
 
-            case 10:
-            case "end":
-              return _context2.stop();
+              case 10:
+              case "end":
+                return _context2.stop();
+            }
           }
-        }
-      }, null, this, [[0, 7]]);
-    },
-    fetchCustomers: function fetchCustomers() {
-      var response, customers;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchCustomers$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              _context3.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/cashier/users'));
+        }, _callee2, this, [[0, 7]]);
+      }));
 
-            case 3:
-              response = _context3.sent;
-              customers = response.data.data.map(function (customer) {
-                return {
-                  text: "".concat(customer.fullname),
-                  value: customer.id
-                };
-              });
-              Object.assign(this, {
-                customers: customers
-              });
-              Object.assign(this.sale, {
-                customer_id: customers[0].value
-              });
-              _context3.next = 12;
-              break;
+      function fetchEvents() {
+        return _fetchEvents.apply(this, arguments);
+      }
 
-            case 9:
-              _context3.prev = 9;
-              _context3.t0 = _context3["catch"](0);
-              alert("Error in fetchEvents: ".concat(_context3.t0.message));
+      return fetchEvents;
+    }(),
+    fetchCustomers: function () {
+      var _fetchCustomers = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var response, customers;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/cashier/users');
 
-            case 12:
-            case "end":
-              return _context3.stop();
+              case 3:
+                response = _context3.sent;
+                customers = response.data.data.map(function (customer) {
+                  return {
+                    text: "".concat(customer.fullname),
+                    value: customer.id
+                  };
+                });
+                Object.assign(this, {
+                  customers: customers
+                });
+                Object.assign(this.sale, {
+                  customer_id: customers[0].value
+                });
+                _context3.next = 12;
+                break;
+
+              case 9:
+                _context3.prev = 9;
+                _context3.t0 = _context3["catch"](0);
+                alert("Error in fetchEvents: ".concat(_context3.t0.message));
+
+              case 12:
+              case "end":
+                return _context3.stop();
+            }
           }
-        }
-      }, null, this, [[0, 9]]);
-    },
-    fetchPaymentMethods: function fetchPaymentMethods() {
-      var response, payment_methods;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchPaymentMethods$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.prev = 0;
-              _context4.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/cashier/payment-methods'));
+        }, _callee3, this, [[0, 9]]);
+      }));
 
-            case 3:
-              response = _context4.sent;
-              payment_methods = response.data.data.map(function (payment_method) {
-                return {
-                  text: payment_method.name,
-                  value: payment_method.id,
-                  icon: payment_method.icon
-                };
-              });
-              Object.assign(this, {
-                payment_methods: payment_methods
-              });
-              _context4.next = 11;
-              break;
+      function fetchCustomers() {
+        return _fetchCustomers.apply(this, arguments);
+      }
 
-            case 8:
-              _context4.prev = 8;
-              _context4.t0 = _context4["catch"](0);
-              alert("Error in fetchPaymentMethods: ".concat(_context4.t0.message));
+      return fetchCustomers;
+    }(),
+    fetchPaymentMethods: function () {
+      var _fetchPaymentMethods = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        var response, payment_methods;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                _context4.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/cashier/payment-methods');
 
-            case 11:
-            case "end":
-              return _context4.stop();
+              case 3:
+                response = _context4.sent;
+                payment_methods = response.data.data.map(function (payment_method) {
+                  return {
+                    text: payment_method.name,
+                    value: payment_method.id,
+                    icon: payment_method.icon
+                  };
+                });
+                Object.assign(this, {
+                  payment_methods: payment_methods
+                });
+                _context4.next = 11;
+                break;
+
+              case 8:
+                _context4.prev = 8;
+                _context4.t0 = _context4["catch"](0);
+                alert("Error in fetchPaymentMethods: ".concat(_context4.t0.message));
+
+              case 11:
+              case "end":
+                return _context4.stop();
+            }
           }
-        }
-      }, null, this, [[0, 8]]);
-    },
-    fetchProducts: function fetchProducts() {
-      var response, products;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchProducts$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              _context5.prev = 0;
-              _context5.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/cashier/products'));
+        }, _callee4, this, [[0, 8]]);
+      }));
 
-            case 3:
-              response = _context5.sent;
-              products = response.data.data.map(function (product) {
-                return {
-                  text: product.name,
-                  value: product.id,
-                  cover: product.cover,
-                  stock: product.stock,
-                  id: product.id,
-                  name: product.name,
-                  price: product.price
-                };
-              });
-              Object.assign(this, {
-                products: products
-              });
-              _context5.next = 11;
-              break;
+      function fetchPaymentMethods() {
+        return _fetchPaymentMethods.apply(this, arguments);
+      }
 
-            case 8:
-              _context5.prev = 8;
-              _context5.t0 = _context5["catch"](0);
-              alert("Error in fetchProducts: ".concat(_context5.t0.message));
+      return fetchPaymentMethods;
+    }(),
+    fetchProducts: function () {
+      var _fetchProducts = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        var response, products;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+                _context5.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/cashier/products');
 
-            case 11:
-            case "end":
-              return _context5.stop();
+              case 3:
+                response = _context5.sent;
+                products = response.data.data.map(function (product) {
+                  return {
+                    text: product.name,
+                    value: product.id,
+                    cover: product.cover,
+                    stock: product.stock,
+                    id: product.id,
+                    name: product.name,
+                    price: product.price
+                  };
+                });
+                Object.assign(this, {
+                  products: products
+                });
+                _context5.next = 11;
+                break;
+
+              case 8:
+                _context5.prev = 8;
+                _context5.t0 = _context5["catch"](0);
+                alert("Error in fetchProducts: ".concat(_context5.t0.message));
+
+              case 11:
+              case "end":
+                return _context5.stop();
+            }
           }
-        }
-      }, null, this, [[0, 8]]);
-    },
-    submit: function submit() {
-      var response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function submit$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              this.loading = true;
-              _context6.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/cashier/sales', this.sale));
+        }, _callee5, this, [[0, 8]]);
+      }));
 
-            case 3:
-              response = _context6.sent;
-              this.$store.commit('Cashier/SET_LAST_SALE', response.data.data);
-              this.loading = false;
-              this.$router.push({
-                name: 'after-sale'
-              });
+      function fetchProducts() {
+        return _fetchProducts.apply(this, arguments);
+      }
 
-            case 7:
-            case "end":
-              return _context6.stop();
+      return fetchProducts;
+    }(),
+    submit: function () {
+      var _submit = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                this.loading = true;
+                _context6.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/cashier/sales', this.sale);
+
+              case 3:
+                response = _context6.sent;
+                this.$store.commit('Cashier/SET_LAST_SALE', response.data.data);
+                this.loading = false;
+                this.$router.push({
+                  name: 'after-sale'
+                });
+
+              case 7:
+              case "end":
+                return _context6.stop();
+            }
           }
-        }
-      }, null, this);
-    },
+        }, _callee6, this);
+      }));
+
+      function submit() {
+        return _submit.apply(this, arguments);
+      }
+
+      return submit;
+    }(),
     format: date_fns__WEBPACK_IMPORTED_MODULE_1__["format"],
     isToday: date_fns__WEBPACK_IMPORTED_MODULE_1__["isToday"]
   },
@@ -3459,9 +3549,13 @@ __webpack_require__.r(__webpack_exports__);
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 //
 //
@@ -3615,50 +3709,70 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       products: []
     };
   },
-  created: function created() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function created$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchProducts());
-
-          case 2:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, null, this);
-  },
-  methods: {
-    fetchProducts: function fetchProducts() {
-      var response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchProducts$(_context2) {
+  created: function () {
+    var _created = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context.prev = _context.next) {
             case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/sale/".concat(this.sale.id)));
+              _context.next = 2;
+              return this.fetchProducts();
 
-            case 3:
-              response = _context2.sent;
-              this.products = response.data.products;
-              _context2.next = 10;
-              break;
-
-            case 7:
-              _context2.prev = 7;
-              _context2.t0 = _context2["catch"](0);
-              alert("Unable to fetch products: ".concat(_context2.t0.message));
-
-            case 10:
+            case 2:
             case "end":
-              return _context2.stop();
+              return _context.stop();
           }
         }
-      }, null, this, [[0, 7]]);
+      }, _callee, this);
+    }));
+
+    function created() {
+      return _created.apply(this, arguments);
     }
+
+    return created;
+  }(),
+  methods: {
+    fetchProducts: function () {
+      var _fetchProducts = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/sale/".concat(this.sale.id));
+
+              case 3:
+                response = _context2.sent;
+                this.products = response.data.products;
+                _context2.next = 10;
+                break;
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                alert("Unable to fetch products: ".concat(_context2.t0.message));
+
+              case 10:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 7]]);
+      }));
+
+      function fetchProducts() {
+        return _fetchProducts.apply(this, arguments);
+      }
+
+      return fetchProducts;
+    }()
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(['currencySettings']), {
     paid: function paid() {
@@ -3692,6 +3806,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 //
 //
@@ -3762,32 +3881,42 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchEvents();
   },
   methods: {
-    fetchEvents: function fetchEvents() {
-      var start, end, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchEvents$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              // Next seven days
-              start = moment().subtract(30, 'minutes').format();
-              end = moment().add(7, 'days').endOf('day').format();
-              _context.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/events/".concat(start, "/").concat(end)));
+    fetchEvents: function () {
+      var _fetchEvents = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var start, end, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                // Next seven days
+                start = moment().subtract(30, 'minutes').format();
+                end = moment().add(7, 'days').endOf('day').format();
+                _context.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/events/".concat(start, "/").concat(end));
 
-            case 4:
-              response = _context.sent;
-              // Update data only if there are updates
-              if (this.event != response.data[0]) this.event = response.data[0]; // Let the component know that data has been loaded
+              case 4:
+                response = _context.sent;
+                // Update data only if there are updates
+                if (this.event != response.data[0]) this.event = response.data[0]; // Let the component know that data has been loaded
 
-              this.isLoaded = true;
+                this.isLoaded = true;
 
-            case 7:
-            case "end":
-              return _context.stop();
+              case 7:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
-      }, null, this);
-    }
+        }, _callee, this);
+      }));
+
+      function fetchEvents() {
+        return _fetchEvents.apply(this, arguments);
+      }
+
+      return fetchEvents;
+    }()
   }
 });
 
@@ -3806,6 +3935,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 //
 //
@@ -3860,32 +3994,42 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchEvents();
   },
   methods: {
-    fetchEvents: function fetchEvents() {
-      var start, end, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchEvents$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              // Last seven days
-              start = moment().subtract(30, 'minutes').format();
-              end = moment().add(7, 'days').endOf('day').format();
-              _context.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/events/".concat(start, "/").concat(end)));
+    fetchEvents: function () {
+      var _fetchEvents = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var start, end, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                // Last seven days
+                start = moment().subtract(30, 'minutes').format();
+                end = moment().add(7, 'days').endOf('day').format();
+                _context.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/events/".concat(start, "/").concat(end));
 
-            case 4:
-              response = _context.sent;
-              // Update data only if there are updates
-              if (this.events != response.data) this.events = response.data.slice(1, 5); // Let the component know that data has been loaded
+              case 4:
+                response = _context.sent;
+                // Update data only if there are updates
+                if (this.events != response.data) this.events = response.data.slice(1, 5); // Let the component know that data has been loaded
 
-              this.isLoaded = true;
+                this.isLoaded = true;
 
-            case 7:
-            case "end":
-              return _context.stop();
+              case 7:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
-      }, null, this);
-    }
+        }, _callee, this);
+      }));
+
+      function fetchEvents() {
+        return _fetchEvents.apply(this, arguments);
+      }
+
+      return fetchEvents;
+    }()
   }
 });
 
@@ -3910,6 +4054,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_flatpickr_component__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue_flatpickr_component__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var flatpickr_dist_flatpickr_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! flatpickr/dist/flatpickr.css */ "./node_modules/flatpickr/dist/flatpickr.css");
 /* harmony import */ var flatpickr_dist_flatpickr_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(flatpickr_dist_flatpickr_css__WEBPACK_IMPORTED_MODULE_4__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 //
 //
@@ -4079,25 +4228,35 @@ __webpack_require__.r(__webpack_exports__);
     flatpickr: vue_flatpickr_component__WEBPACK_IMPORTED_MODULE_3___default.a
   },
   watch: {
-    date: function date() {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function date$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              this.isLoading = true;
-              _context.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchEventOptions());
+    date: function () {
+      var _date = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                this.isLoading = true;
+                _context.next = 3;
+                return this.fetchEventOptions();
 
-            case 3:
-              this.isLoading = false;
+              case 3:
+                this.isLoading = false;
 
-            case 4:
-            case "end":
-              return _context.stop();
+              case 4:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
-      }, null, this);
-    },
+        }, _callee, this);
+      }));
+
+      function date() {
+        return _date.apply(this, arguments);
+      }
+
+      return date;
+    }(),
     selected_tickets: {
       handler: function handler(newVal, oldVal) {
         //console.log('newVal', val)
@@ -4133,171 +4292,211 @@ __webpack_require__.r(__webpack_exports__);
     format: date_fns__WEBPACK_IMPORTED_MODULE_1__["format"],
     distanceInWordsToNow: date_fns__WEBPACK_IMPORTED_MODULE_1__["distanceInWordsToNow"],
     // Fetch Events
-    fetchEventOptions: function fetchEventOptions() {
-      var _this = this;
+    fetchEventOptions: function () {
+      var _fetchEventOptions = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var _this = this;
 
-      var date, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchEventOptions$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              date = Object(date_fns__WEBPACK_IMPORTED_MODULE_1__["format"])(new Date(this.date), "YYYY-MM-DD");
-              _context2.prev = 1;
-              _context2.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/events?start=".concat(date, "&type=").concat(this.event_type_id)));
+        var date, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                date = Object(date_fns__WEBPACK_IMPORTED_MODULE_1__["format"])(new Date(this.date), "YYYY-MM-DD");
+                _context2.prev = 1;
+                _context2.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/events?start=".concat(date, "&type=").concat(this.event_type_id));
 
-            case 4:
-              response = _context2.sent;
-              // Array with all event objects to show in box below event selection dropdown
-              this.eventOptions = response.data.map(function (event) {
-                _this.events_data.push(event);
+              case 4:
+                response = _context2.sent;
+                // Array with all event objects to show in box below event selection dropdown
+                this.eventOptions = response.data.map(function (event) {
+                  _this.events_data.push(event);
 
-                var time = Object(date_fns__WEBPACK_IMPORTED_MODULE_1__["format"])(new Date(event.start), "h:mm aa");
-                return {
-                  key: event.id,
-                  text: "#".concat(event.id, " - ").concat(event.show.id == 1 ? event.memo : event.show.name, " at ").concat(time, " (").concat(event.type.name, ", ").concat(event.seats, " ").concat(event.seats == 1 ? "seat" : "seats", " left)"),
-                  value: event.id
-                };
-              }); // await this.$store.dispatch("setEventOptions", { index: this.$vnode.key - 1, eventOptions: eventOptions})
+                  var time = Object(date_fns__WEBPACK_IMPORTED_MODULE_1__["format"])(new Date(event.start), "h:mm aa");
+                  return {
+                    key: event.id,
+                    text: "#".concat(event.id, " - ").concat(event.show.id == 1 ? event.memo : event.show.name, " at ").concat(time, " (").concat(event.type.name, ", ").concat(event.seats, " ").concat(event.seats == 1 ? "seat" : "seats", " left)"),
+                    value: event.id
+                  };
+                }); // await this.$store.dispatch("setEventOptions", { index: this.$vnode.key - 1, eventOptions: eventOptions})
 
-              _context2.next = 11;
-              break;
+                _context2.next = 11;
+                break;
 
-            case 8:
-              _context2.prev = 8;
-              _context2.t0 = _context2["catch"](1);
-              alert("fetchEventOptions in EventForm failed: ".concat(_context2.t0.message));
+              case 8:
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](1);
+                alert("fetchEventOptions in EventForm failed: ".concat(_context2.t0.message));
 
-            case 11:
-            case "end":
-              return _context2.stop();
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
           }
-        }
-      }, null, this, [[1, 8]]);
-    },
+        }, _callee2, this, [[1, 8]]);
+      }));
+
+      function fetchEventOptions() {
+        return _fetchEventOptions.apply(this, arguments);
+      }
+
+      return fetchEventOptions;
+    }(),
     // Fetch Sale Tickets
-    fetchSaleTickets: function fetchSaleTickets() {
-      var response, tickets;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchSaleTickets$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              _context3.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/sale/".concat(this.$route.params.id)));
+    fetchSaleTickets: function () {
+      var _fetchSaleTickets = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var response, tickets;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/sale/".concat(this.$route.params.id));
 
-            case 3:
-              response = _context3.sent;
-              tickets = response.data.events[this.$vnode.key - 1].tickets.map(function (ticket) {
-                return ticket.id;
-              }); //await this.$store.dispatch("setSelectedTickets", tickets)
+              case 3:
+                response = _context3.sent;
+                tickets = response.data.events[this.$vnode.key - 1].tickets.map(function (ticket) {
+                  return ticket.id;
+                }); //await this.$store.dispatch("setSelectedTickets", tickets)
 
-              this.tickets = tickets; // Send already existing ticket amounts to store
+                this.tickets = tickets; // Send already existing ticket amounts to store
 
-              tickets = response.data.events[this.$vnode.key - 1].tickets;
-              _context3.next = 9;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.dispatch("setAvailableTickets", tickets));
+                tickets = response.data.events[this.$vnode.key - 1].tickets;
+                _context3.next = 9;
+                return this.$store.dispatch("setAvailableTickets", tickets);
 
-            case 9:
-              _context3.next = 11;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.dispatch("updateSelectedTickets", {
-                index: this.$vnode.key - 1,
-                tickets: tickets
-              }));
-
-            case 11:
-              _context3.next = 16;
-              break;
-
-            case 13:
-              _context3.prev = 13;
-              _context3.t0 = _context3["catch"](0);
-              alert("fetchSaleTickets in EventForm failed: ".concat(_context3.t0.message));
-
-            case 16:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, null, this, [[0, 13]]);
-    },
-    // Fetch Tickets Types
-    fetchTicketsTypes: function fetchTicketsTypes() {
-      var _this2 = this;
-
-      var response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchTicketsTypes$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.prev = 0;
-              _context4.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/allowedTickets?event_type=".concat(this.event_type_id)));
-
-            case 3:
-              response = _context4.sent;
-              this.ticketOptions = response.data.data.map(function (ticket) {
-                // We need to find if the current sale has this ticket and set the amount to that number if so
-                Object.assign(ticket, {
-                  amount: 1,
-                  event: {
-                    id: 1
-                  }
+              case 9:
+                _context3.next = 11;
+                return this.$store.dispatch("updateSelectedTickets", {
+                  index: this.$vnode.key - 1,
+                  tickets: tickets
                 });
 
-                _this2.tickets_data.push(ticket);
+              case 11:
+                _context3.next = 16;
+                break;
 
-                return {
-                  key: ticket.id,
-                  text: ticket.name,
-                  icon: 'ticket',
-                  value: ticket.id
-                };
-              });
-              _context4.next = 10;
-              break;
+              case 13:
+                _context3.prev = 13;
+                _context3.t0 = _context3["catch"](0);
+                alert("fetchSaleTickets in EventForm failed: ".concat(_context3.t0.message));
 
-            case 7:
-              _context4.prev = 7;
-              _context4.t0 = _context4["catch"](0);
-              alert("fetchTicketTypes in EventForm failed: ".concat(_context4.t0.message));
-
-            case 10:
-            case "end":
-              return _context4.stop();
+              case 16:
+              case "end":
+                return _context3.stop();
+            }
           }
-        }
-      }, null, this, [[0, 7]]);
-    },
+        }, _callee3, this, [[0, 13]]);
+      }));
+
+      function fetchSaleTickets() {
+        return _fetchSaleTickets.apply(this, arguments);
+      }
+
+      return fetchSaleTickets;
+    }(),
+    // Fetch Tickets Types
+    fetchTicketsTypes: function () {
+      var _fetchTicketsTypes = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        var _this2 = this;
+
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                _context4.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/allowedTickets?event_type=".concat(this.event_type_id));
+
+              case 3:
+                response = _context4.sent;
+                this.ticketOptions = response.data.data.map(function (ticket) {
+                  // We need to find if the current sale has this ticket and set the amount to that number if so
+                  Object.assign(ticket, {
+                    amount: 1,
+                    event: {
+                      id: 1
+                    }
+                  });
+
+                  _this2.tickets_data.push(ticket);
+
+                  return {
+                    key: ticket.id,
+                    text: ticket.name,
+                    icon: 'ticket',
+                    value: ticket.id
+                  };
+                });
+                _context4.next = 10;
+                break;
+
+              case 7:
+                _context4.prev = 7;
+                _context4.t0 = _context4["catch"](0);
+                alert("fetchTicketTypes in EventForm failed: ".concat(_context4.t0.message));
+
+              case 10:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this, [[0, 7]]);
+      }));
+
+      function fetchTicketsTypes() {
+        return _fetchTicketsTypes.apply(this, arguments);
+      }
+
+      return fetchTicketsTypes;
+    }(),
     // Fetch Event Types
-    fetchEventType: function fetchEventType() {
-      var response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchEventType$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              _context5.prev = 0;
-              _context5.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/event-types/".concat(this.event_type_id)));
+    fetchEventType: function () {
+      var _fetchEventType = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+                _context5.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/event-types/".concat(this.event_type_id));
 
-            case 3:
-              response = _context5.sent;
-              this.event_type = response.data.data;
-              _context5.next = 10;
-              break;
+              case 3:
+                response = _context5.sent;
+                this.event_type = response.data.data;
+                _context5.next = 10;
+                break;
 
-            case 7:
-              _context5.prev = 7;
-              _context5.t0 = _context5["catch"](0);
-              alert("Unable to fetch event types: ".concat(_context5.t0.message));
+              case 7:
+                _context5.prev = 7;
+                _context5.t0 = _context5["catch"](0);
+                alert("Unable to fetch event types: ".concat(_context5.t0.message));
 
-            case 10:
-            case "end":
-              return _context5.stop();
+              case 10:
+              case "end":
+                return _context5.stop();
+            }
           }
-        }
-      }, null, this, [[0, 7]]);
-    },
+        }, _callee5, this, [[0, 7]]);
+      }));
+
+      function fetchEventType() {
+        return _fetchEventType.apply(this, arguments);
+      }
+
+      return fetchEventType;
+    }(),
     // Remove ticket from state
     removeTicket: function removeTicket(id) {
       this.$store.commit('REMOVE_TICKET', {
@@ -4309,38 +4508,48 @@ __webpack_require__.r(__webpack_exports__);
       if (confirm("Are you sure you want to remove the ".concat(this.selected_event.type.name, " Event #").concat(this.selected_event.id, " ").concat(this.selected_event.show.name, " (").concat(this.selected_event.show.type, ") from this sale?"))) this.$store.commit('DELETE_EVENT', this.$vnode.key);
     }
   },
-  created: function created() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function created$(_context6) {
-      while (1) {
-        switch (_context6.prev = _context6.next) {
-          case 0:
-            this.isLoading = true;
-            _context6.next = 3;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$route.query.type);
+  created: function () {
+    var _created = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              this.isLoading = true;
+              _context6.next = 3;
+              return this.$route.query.type;
 
-          case 3:
-            this.event_type_id = _context6.sent;
-            _context6.next = 6;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchTicketsTypes());
+            case 3:
+              this.event_type_id = _context6.sent;
+              _context6.next = 6;
+              return this.fetchTicketsTypes();
 
-          case 6:
-            _context6.next = 8;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchEventOptions());
+            case 6:
+              _context6.next = 8;
+              return this.fetchEventOptions();
 
-          case 8:
-            _context6.next = 10;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchEventType());
+            case 8:
+              _context6.next = 10;
+              return this.fetchEventType();
 
-          case 10:
-            this.isLoading = false;
+            case 10:
+              this.isLoading = false;
 
-          case 11:
-          case "end":
-            return _context6.stop();
+            case 11:
+            case "end":
+              return _context6.stop();
+          }
         }
-      }
-    }, null, this);
-  },
+      }, _callee6, this);
+    }));
+
+    function created() {
+      return _created.apply(this, arguments);
+    }
+
+    return created;
+  }(),
   computed: {
     selected_event: function selected_event() {
       var _this3 = this;
@@ -4438,9 +4647,13 @@ __webpack_require__.r(__webpack_exports__);
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 //
 //
@@ -4952,73 +5165,83 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.setTendered();
     }
   },
-  created: function created() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function created$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(true);
+  created: function () {
+    var _created = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return true;
 
-          case 2:
-            this.isLoading = _context.sent;
-            _context.next = 5;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchSettings());
+            case 2:
+              this.isLoading = _context.sent;
+              _context.next = 5;
+              return this.fetchSettings();
 
-          case 5:
-            _context.next = 7;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchCustomers());
+            case 5:
+              _context.next = 7;
+              return this.fetchCustomers();
 
-          case 7:
-            _context.next = 9;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchOrganizations());
+            case 7:
+              _context.next = 9;
+              return this.fetchOrganizations();
 
-          case 9:
-            _context.next = 11;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchGrades());
+            case 9:
+              _context.next = 11;
+              return this.fetchGrades();
 
-          case 11:
-            _context.next = 13;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchProducts());
+            case 11:
+              _context.next = 13;
+              return this.fetchProducts();
 
-          case 13:
-            _context.next = 15;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchPaymentMethods());
+            case 13:
+              _context.next = 15;
+              return this.fetchPaymentMethods();
 
-          case 15:
-            if (!(this.$route.name == "create")) {
-              _context.next = 19;
-              break;
-            }
+            case 15:
+              if (!(this.$route.name == "create")) {
+                _context.next = 19;
+                break;
+              }
 
-            document.title = "Astral -  Create New Sale";
-            _context.next = 23;
-            break;
-
-          case 19:
-            if (!(this.$route.name == "edit")) {
+              document.title = "Astral -  Create New Sale";
               _context.next = 23;
               break;
-            }
 
-            document.title = "Astral -  Edit Sale #".concat(this.$route.params.id);
-            _context.next = 23;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchSale());
+            case 19:
+              if (!(this.$route.name == "edit")) {
+                _context.next = 23;
+                break;
+              }
 
-          case 23:
-            _context.next = 25;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(false);
+              document.title = "Astral -  Edit Sale #".concat(this.$route.params.id);
+              _context.next = 23;
+              return this.fetchSale();
 
-          case 25:
-            this.isLoading = _context.sent;
+            case 23:
+              _context.next = 25;
+              return false;
 
-          case 26:
-          case "end":
-            return _context.stop();
+            case 25:
+              this.isLoading = _context.sent;
+
+            case 26:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, null, this);
-  },
+      }, _callee, this);
+    }));
+
+    function created() {
+      return _created.apply(this, arguments);
+    }
+
+    return created;
+  }(),
   methods: _objectSpread({
     getPaymentMethod: function getPaymentMethod(id) {
       var name = this.payment_methods.find(function (payment_method) {
@@ -5030,196 +5253,216 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     setTendered: function setTendered() {
       this.sale.tendered = this.sale.payment_method == 1 ? 0 : this.total;
     },
-    fetchSale: function fetchSale() {
-      var response, sale;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchSale$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/sale/".concat(this.$route.params.id)));
+    fetchSale: function () {
+      var _fetchSale = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var response, sale;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/sale/".concat(this.$route.params.id));
 
-            case 3:
-              response = _context2.sent;
-              _context2.next = 6;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.data);
+              case 3:
+                response = _context2.sent;
+                _context2.next = 6;
+                return response.data;
 
-            case 6:
-              sale = _context2.sent;
-              // Set sell to
-              sale.sell_to = sale.sell_to_organization ? 1 : 0; // Set grades
+              case 6:
+                sale = _context2.sent;
+                // Set sell to
+                sale.sell_to = sale.sell_to_organization ? 1 : 0; // Set grades
 
-              sale.grades = sale.grades.map(function (grade) {
-                return grade.id;
-              }); // only id of grades
-              // Set customer
+                sale.grades = sale.grades.map(function (grade) {
+                  return grade.id;
+                }); // only id of grades
+                // Set customer
 
-              sale.customer = sale.customer.id; // Subtotal
+                sale.customer = sale.customer.id; // Subtotal
 
-              sale.subtotal = parseFloat(sale.subtotal); // Tax
+                sale.subtotal = parseFloat(sale.subtotal); // Tax
 
-              sale.tax = parseFloat(sale.tax); // Total
+                sale.tax = parseFloat(sale.tax); // Total
 
-              sale.total = parseFloat(sale.total); // Paid
+                sale.total = parseFloat(sale.total); // Paid
 
-              sale.paid = parseFloat(sale.paid); // Balance
+                sale.paid = parseFloat(sale.paid); // Balance
 
-              sale.balance = parseFloat(sale.balance); // Setting taxable
+                sale.balance = parseFloat(sale.balance); // Setting taxable
 
-              sale.taxable = parseInt(sale.taxable);
-              _context2.next = 18;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.commit('SET_NUMBER_OF_EVENTS', sale.events.length || 0));
+                sale.taxable = parseInt(sale.taxable);
+                _context2.next = 18;
+                return this.$store.commit('SET_NUMBER_OF_EVENTS', sale.events.length || 0);
 
-            case 18:
-              _context2.next = 20;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(sale.events.map(function (event) {
-                return date_fns_format__WEBPACK_IMPORTED_MODULE_3___default()(new Date(event.start), "dddd, MMMM D, YYYY");
-              }));
-
-            case 20:
-              sale.dates = _context2.sent;
-              this.$route.query.type = sale.events.length > 0 ? sale.events[0].type.id : 1;
-              _context2.next = 24;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(sale.events.map(function (event) {
-                return event.tickets.map(function (ticket) {
-                  return ticket.id;
+              case 18:
+                _context2.next = 20;
+                return sale.events.map(function (event) {
+                  return date_fns_format__WEBPACK_IMPORTED_MODULE_3___default()(new Date(event.start), "dddd, MMMM D, YYYY");
                 });
-              }));
 
-            case 24:
-              sale.tickets = _context2.sent;
-              sale.selected_tickets = sale.events.map(function (event) {
-                return event.tickets.map(function (ticket) {
-                  return {
-                    active: ticket.active,
-                    amount: ticket.amount,
-                    description: ticket.description,
-                    event: ticket.event,
-                    id: ticket.id,
-                    in_cashier: ticket.in_cashier,
-                    name: ticket.name,
-                    price: ticket.price,
-                    "public": ticket["public"],
-                    type: ticket.type
-                  };
+              case 20:
+                sale.dates = _context2.sent;
+                this.$route.query.type = sale.events.length > 0 ? sale.events[0].type.id : 1;
+                _context2.next = 24;
+                return sale.events.map(function (event) {
+                  return event.tickets.map(function (ticket) {
+                    return ticket.id;
+                  });
                 });
-              });
-              sale.events = sale.events.map(function (event) {
-                return event.id;
-              });
-              sale.products = sale.products.map(function (product) {
-                return product.id;
-              });
-              sale.payment_method = null;
-              Object.assign(this.sale, sale);
-              _context2.next = 35;
-              break;
 
-            case 32:
-              _context2.prev = 32;
-              _context2.t0 = _context2["catch"](0);
-              alert("Error in fetchSale: ".concat(_context2.t0.message));
-
-            case 35:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, null, this, [[0, 32]]);
-    }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])(['fetchCustomers', 'fetchOrganizations', 'fetchGrades', 'fetchProducts', 'fetchPaymentMethods', 'fetchSettings']), {
-    submit: function submit(event) {
-      var data, response, _sale, sale;
-
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function submit$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              event.preventDefault();
-              data = {
-                balance: parseFloat(this.sale.balance),
-                change_due: parseFloat(this.change_due),
-                creator_id: this.$store.getters.user,
-                customer: this.sale.customer,
-                dates: this.sale.dates,
-                events: this.sale.events,
-                grades: this.sale.grades,
-                memo: this.sale.memo,
-                memos: this.sale.memos,
-                paid: this.sale.paid,
-                payment_method: this.sale.payment_method,
-                payments: this.sale.payments,
-                products: this.sale.selected_products,
-                reference: this.sale.reference,
-                sell_to: this.sale.sell_to,
-                status: this.sale.status,
-                subtotal: parseFloat(this.subtotal),
-                tax: parseFloat(this.tax),
-                taxable: this.sale.taxable,
-                tendered: parseFloat(this.sale.tendered),
-                tickets: this.sale.selected_tickets,
-                total: parseFloat(this.total)
-              };
-              _context3.prev = 2;
-              response = {};
-
-              if (!(this.$route.name == "create")) {
-                _context3.next = 11;
+              case 24:
+                sale.tickets = _context2.sent;
+                sale.selected_tickets = sale.events.map(function (event) {
+                  return event.tickets.map(function (ticket) {
+                    return {
+                      active: ticket.active,
+                      amount: ticket.amount,
+                      description: ticket.description,
+                      event: ticket.event,
+                      id: ticket.id,
+                      in_cashier: ticket.in_cashier,
+                      name: ticket.name,
+                      price: ticket.price,
+                      "public": ticket["public"],
+                      type: ticket.type
+                    };
+                  });
+                });
+                sale.events = sale.events.map(function (event) {
+                  return event.id;
+                });
+                sale.products = sale.products.map(function (product) {
+                  return product.id;
+                });
+                sale.payment_method = null;
+                Object.assign(this.sale, sale);
+                _context2.next = 35;
                 break;
-              }
 
-              _context3.next = 7;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/sales", data));
+              case 32:
+                _context2.prev = 32;
+                _context2.t0 = _context2["catch"](0);
+                alert("Error in fetchSale: ".concat(_context2.t0.message));
 
-            case 7:
-              response = _context3.sent;
-              _sale = response.data.data;
-              _context3.next = 15;
-              break;
+              case 35:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 32]]);
+      }));
 
-            case 11:
-              if (!(this.$route.name == "edit")) {
+      function fetchSale() {
+        return _fetchSale.apply(this, arguments);
+      }
+
+      return fetchSale;
+    }()
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])(['fetchCustomers', 'fetchOrganizations', 'fetchGrades', 'fetchProducts', 'fetchPaymentMethods', 'fetchSettings']), {
+    submit: function () {
+      var _submit = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(event) {
+        var data, response, _sale, sale;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                event.preventDefault();
+                data = {
+                  balance: parseFloat(this.sale.balance),
+                  change_due: parseFloat(this.change_due),
+                  creator_id: this.$store.getters.user,
+                  customer: this.sale.customer,
+                  dates: this.sale.dates,
+                  events: this.sale.events,
+                  grades: this.sale.grades,
+                  memo: this.sale.memo,
+                  memos: this.sale.memos,
+                  paid: this.sale.paid,
+                  payment_method: this.sale.payment_method,
+                  payments: this.sale.payments,
+                  products: this.sale.selected_products,
+                  reference: this.sale.reference,
+                  sell_to: this.sale.sell_to,
+                  status: this.sale.status,
+                  subtotal: parseFloat(this.subtotal),
+                  tax: parseFloat(this.tax),
+                  taxable: this.sale.taxable,
+                  tendered: parseFloat(this.sale.tendered),
+                  tickets: this.sale.selected_tickets,
+                  total: parseFloat(this.total)
+                };
+                _context3.prev = 2;
+                response = {};
+
+                if (!(this.$route.name == "create")) {
+                  _context3.next = 11;
+                  break;
+                }
+
+                _context3.next = 7;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/sales", data);
+
+              case 7:
+                response = _context3.sent;
+                _sale = response.data.data;
                 _context3.next = 15;
                 break;
-              }
 
-              _context3.next = 14;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/sales/".concat(this.$route.params.id), data));
-
-            case 14:
-              response = _context3.sent;
-
-            case 15:
-              sale = response.data.data;
-              this.$store.commit("SET_ALERT", {
-                type: "success",
-                title: "Success!",
-                icon: "thumbs up",
-                message: response.data.message
-              });
-              this.$store.commit("TOGGLE_SHOW_ALERT", true);
-              this.$router.push({
-                name: "show",
-                params: {
-                  id: sale.id
+              case 11:
+                if (!(this.$route.name == "edit")) {
+                  _context3.next = 15;
+                  break;
                 }
-              });
-              _context3.next = 24;
-              break;
 
-            case 21:
-              _context3.prev = 21;
-              _context3.t0 = _context3["catch"](2);
-              alert("Error trying to save sale: ".concat(_context3.t0.message));
+                _context3.next = 14;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/sales/".concat(this.$route.params.id), data);
 
-            case 24:
-            case "end":
-              return _context3.stop();
+              case 14:
+                response = _context3.sent;
+
+              case 15:
+                sale = response.data.data;
+                this.$store.commit("SET_ALERT", {
+                  type: "success",
+                  title: "Success!",
+                  icon: "thumbs up",
+                  message: response.data.message
+                });
+                this.$store.commit("TOGGLE_SHOW_ALERT", true);
+                this.$router.push({
+                  name: "show",
+                  params: {
+                    id: sale.id
+                  }
+                });
+                _context3.next = 24;
+                break;
+
+              case 21:
+                _context3.prev = 21;
+                _context3.t0 = _context3["catch"](2);
+                alert("Error trying to save sale: ".concat(_context3.t0.message));
+
+              case 24:
+              case "end":
+                return _context3.stop();
+            }
           }
-        }
-      }, null, this, [[2, 21]]);
-    }
+        }, _callee3, this, [[2, 21]]);
+      }));
+
+      function submit(_x) {
+        return _submit.apply(this, arguments);
+      }
+
+      return submit;
+    }()
   }),
   computed: _objectSpread({
     hasReference: function hasReference() {
@@ -5351,6 +5594,14 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -5471,6 +5722,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  methods: {
+    submit: function () {
+      var _submit = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return this.$store.dispatch('Members/submit');
+
+              case 3:
+                this.$router.push('/thank-you');
+                _context.next = 9;
+                break;
+
+              case 6:
+                _context.prev = 6;
+                _context.t0 = _context["catch"](0);
+                alert("Error: ".concat(_context.t0.message));
+
+              case 9:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 6]]);
+      }));
+
+      function submit() {
+        return _submit.apply(this, arguments);
+      }
+
+      return submit;
+    }()
+  },
   computed: {
     primary: function primary() {
       return this.$store.state.Members.primary;
@@ -5530,6 +5819,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var flatpickr_dist_flatpickr_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(flatpickr_dist_flatpickr_css__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var date_fns_add_days__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! date-fns/add_days */ "./node_modules/date-fns/add_days/index.js");
 /* harmony import */ var date_fns_add_days__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(date_fns_add_days__WEBPACK_IMPORTED_MODULE_3__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 //
 //
@@ -5638,61 +5932,81 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     flatpickr: vue_flatpickr_component__WEBPACK_IMPORTED_MODULE_1___default.a
   },
-  created: function created() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function created$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            this.loading = true;
-            _context.next = 3;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchMembershipTypes());
-
-          case 3:
-            this.loading = false;
-
-          case 4:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, null, this);
-  },
-  methods: {
-    fetchMembershipTypes: function fetchMembershipTypes() {
-      var response, types;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchMembershipTypes$(_context2) {
+  created: function () {
+    var _created = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context.prev = _context.next) {
             case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(fetch('/api/membership-types'));
+              this.loading = true;
+              _context.next = 3;
+              return this.fetchMembershipTypes();
 
             case 3:
-              response = _context2.sent;
-              _context2.next = 6;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.json());
+              this.loading = false;
 
-            case 6:
-              types = _context2.sent;
-              Object.assign(this, {
-                types: types
-              });
-              _context2.next = 13;
-              break;
-
-            case 10:
-              _context2.prev = 10;
-              _context2.t0 = _context2["catch"](0);
-              alert("Error in fetchMembershipTypes: ".concat(_context2.t0.message));
-
-            case 13:
+            case 4:
             case "end":
-              return _context2.stop();
+              return _context.stop();
           }
         }
-      }, null, this, [[0, 10]]);
-    },
+      }, _callee, this);
+    }));
+
+    function created() {
+      return _created.apply(this, arguments);
+    }
+
+    return created;
+  }(),
+  methods: {
+    fetchMembershipTypes: function () {
+      var _fetchMembershipTypes = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var response, types;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return fetch('/api/membership-types');
+
+              case 3:
+                response = _context2.sent;
+                _context2.next = 6;
+                return response.json();
+
+              case 6:
+                types = _context2.sent;
+                Object.assign(this, {
+                  types: types
+                });
+                _context2.next = 13;
+                break;
+
+              case 10:
+                _context2.prev = 10;
+                _context2.t0 = _context2["catch"](0);
+                alert("Error in fetchMembershipTypes: ".concat(_context2.t0.message));
+
+              case 13:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 10]]);
+      }));
+
+      function fetchMembershipTypes() {
+        return _fetchMembershipTypes.apply(this, arguments);
+      }
+
+      return fetchMembershipTypes;
+    }(),
     setMembershipType: function setMembershipType(type) {
       this.$store.commit('Members/SET_MEMBERSHIP_TYPE', type);
     }
@@ -5744,6 +6058,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
 //
 //
 //
@@ -5861,33 +6184,46 @@ __webpack_require__.r(__webpack_exports__);
       loading: true
     };
   },
-  created: function created() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function created$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            this.loading = true;
-            _context.next = 3;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.dispatch('fetchPaymentMethods'));
+  created: function () {
+    var _created = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              this.loading = true;
+              _context.next = 3;
+              return this.$store.dispatch('fetchPaymentMethods');
 
-          case 3:
-            _context.next = 5;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.dispatch('fetchSettings'));
+            case 3:
+              _context.next = 5;
+              return this.$store.dispatch('fetchSettings');
 
-          case 5:
-            this.$store.dispatch('Members/calculateTotals');
-            this.loading = false;
+            case 5:
+              this.calculateTotals();
+              this.loading = false;
 
-          case 7:
-          case "end":
-            return _context.stop();
+            case 7:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, null, this);
-  },
+      }, _callee, this);
+    }));
+
+    function created() {
+      return _created.apply(this, arguments);
+    }
+
+    return created;
+  }(),
   methods: {
     handleCashSelection: function handleCashSelection() {
-      if (this.payment_method_id === 1) this.tendered = this.total;else this.tendered = 0.0;
+      if (this.payment_method_id !== 1) this.tendered = this.total;
+    },
+    calculateTotals: function calculateTotals() {
+      this.$store.dispatch('Members/calculateTotals');
     }
   },
   computed: {
@@ -5939,7 +6275,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     reference: {
       set: function set(value) {
-        this.$store.commit('Members/SET_REFERENCE');
+        this.$store.commit('Members/SET_REFERENCE', value);
       },
       get: function get() {
         return this.$store.state.Members.reference;
@@ -5954,7 +6290,8 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     valid: function valid() {
-      return this.tendered > 0 && this.tendered >= this.balance;
+      var hasReference = this.payment_method_id === 1 ? true : this.reference.length >= 4;
+      return this.tendered > 0 && this.tendered >= this.balance && this.payment_method_id != null && hasReference;
     }
   }
 });
@@ -5974,6 +6311,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
 /* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 //
 //
@@ -6108,84 +6450,114 @@ __webpack_require__.r(__webpack_exports__);
   directives: {
     mask: vue_the_mask__WEBPACK_IMPORTED_MODULE_1__["mask"]
   },
-  mounted: function mounted() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function mounted$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            this.loading = true;
-            _context.next = 3;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchStates());
-
-          case 3:
-            _context.next = 5;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.dispatch('fetchSettings'));
-
-          case 5:
-            this.loading = false;
-
-          case 6:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, null, this);
-  },
-  methods: {
-    checkPrimary: function checkPrimary() {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function checkPrimary$(_context2) {
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context.prev = _context.next) {
             case 0:
-              this.checking_primary = true;
-              _context2.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.dispatch('Members/checkPrimary'));
+              this.loading = true;
+              _context.next = 3;
+              return this.fetchStates();
 
             case 3:
-              this.checking_primary = false;
+              _context.next = 5;
+              return this.$store.dispatch('fetchSettings');
 
-            case 4:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, null, this);
-    },
-    fetchStates: function fetchStates() {
-      var response, states;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchStates$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              _context3.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(fetch('/api/states'));
-
-            case 3:
-              response = _context3.sent;
-              _context3.next = 6;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.json());
+            case 5:
+              this.loading = false;
 
             case 6:
-              states = _context3.sent;
-              Object.assign(this, {
-                states: states
-              });
-              _context3.next = 13;
-              break;
-
-            case 10:
-              _context3.prev = 10;
-              _context3.t0 = _context3["catch"](0);
-              alert("Error in fetchStates: ".concat(_context3.t0.message));
-
-            case 13:
             case "end":
-              return _context3.stop();
+              return _context.stop();
           }
         }
-      }, null, this, [[0, 10]]);
+      }, _callee, this);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
     }
+
+    return mounted;
+  }(),
+  methods: {
+    checkPrimary: function () {
+      var _checkPrimary = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                this.checking_primary = true;
+                _context2.next = 3;
+                return this.$store.dispatch('Members/checkPrimary');
+
+              case 3:
+                this.checking_primary = false;
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function checkPrimary() {
+        return _checkPrimary.apply(this, arguments);
+      }
+
+      return checkPrimary;
+    }(),
+    fetchStates: function () {
+      var _fetchStates = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var response, states;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return fetch('/api/states');
+
+              case 3:
+                response = _context3.sent;
+                _context3.next = 6;
+                return response.json();
+
+              case 6:
+                states = _context3.sent;
+                Object.assign(this, {
+                  states: states
+                });
+                _context3.next = 13;
+                break;
+
+              case 10:
+                _context3.prev = 10;
+                _context3.t0 = _context3["catch"](0);
+                alert("Error in fetchStates: ".concat(_context3.t0.message));
+
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 10]]);
+      }));
+
+      function fetchStates() {
+        return _fetchStates.apply(this, arguments);
+      }
+
+      return fetchStates;
+    }()
   },
   computed: {
     firstname: {
@@ -6328,6 +6700,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
 /* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_1__);
 
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -6705,28 +7081,38 @@ var validate = function validate(secondary) {
   directives: {
     mask: vue_the_mask__WEBPACK_IMPORTED_MODULE_1__["mask"]
   },
-  mounted: function mounted() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function mounted$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            Object.assign(this, {
-              free_secondaries: this.$store.state.Members.free_secondaries
-            });
-            _context.next = 3;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchStates());
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              Object.assign(this, {
+                free_secondaries: this.$store.state.Members.free_secondaries
+              });
+              _context.next = 3;
+              return this.fetchStates();
 
-          case 3:
-            _context.next = 5;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.dispatch('fetchSettings'));
+            case 3:
+              _context.next = 5;
+              return this.$store.dispatch('fetchSettings');
 
-          case 5:
-          case "end":
-            return _context.stop();
+            case 5:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, null, this);
-  },
+      }, _callee, this);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }(),
   methods: {
     add: function add() {
       if (this.free_secondaries.length < parseInt(this.membership_type.max_secondaries)) this.free_secondaries.push({
@@ -6768,98 +7154,118 @@ var validate = function validate(secondary) {
     subtractNonfree: function subtractNonfree() {
       if (this.nonfree_secondaries.length > 0) this.nonfree_secondaries.pop();
     },
-    fetchStates: function fetchStates() {
-      var response, states;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchStates$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(fetch('/api/states'));
+    fetchStates: function () {
+      var _fetchStates = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var response, states;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return fetch('/api/states');
 
-            case 3:
-              response = _context2.sent;
-              _context2.next = 6;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.json());
+              case 3:
+                response = _context2.sent;
+                _context2.next = 6;
+                return response.json();
 
-            case 6:
-              states = _context2.sent;
-              Object.assign(this, {
-                states: states
-              });
-              _context2.next = 13;
-              break;
-
-            case 10:
-              _context2.prev = 10;
-              _context2.t0 = _context2["catch"](0);
-              alert("Error in fetchStates: ".concat(_context2.t0.message));
-
-            case 13:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, null, this, [[0, 10]]);
-    },
-    checkMember: function checkMember(user, i, type) {
-      var response, data, secondary;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function checkMember$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              _context3.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(fetch('/api/members/check-primary', {
-                method: 'post',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(user)
-              }));
-
-            case 3:
-              response = _context3.sent;
-              _context3.next = 6;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.json());
-
-            case 6:
-              data = _context3.sent;
-              secondary = type == 'free' ? this.free_secondaries[i] : this.nonfree_secondaries[i];
-              this.$set(secondary, 'exists', data.exists);
-              this.$set(secondary, 'is_member', data.type == 'member' ? true : false);
-
-              if (data.exists && data.type != 'member') {
-                this.$set(secondary, 'use_primary_data', false);
-                Object.assign(secondary, {
-                  firstname: data.user.firstname,
-                  lastname: data.user.lastname,
-                  email: data.user.email,
-                  address: data.user.address,
-                  city: data.user.city,
-                  state: data.user.state,
-                  zip: data.user.zip,
-                  country: data.user.country,
-                  phone: data.user.phone
+              case 6:
+                states = _context2.sent;
+                Object.assign(this, {
+                  states: states
                 });
-              }
+                _context2.next = 13;
+                break;
 
-              _context3.next = 16;
-              break;
+              case 10:
+                _context2.prev = 10;
+                _context2.t0 = _context2["catch"](0);
+                alert("Error in fetchStates: ".concat(_context2.t0.message));
 
-            case 13:
-              _context3.prev = 13;
-              _context3.t0 = _context3["catch"](0);
-              alert("Error in checkPrimary: ".concat(_context3.t0.message));
-
-            case 16:
-            case "end":
-              return _context3.stop();
+              case 13:
+              case "end":
+                return _context2.stop();
+            }
           }
-        }
-      }, null, this, [[0, 13]]);
-    }
+        }, _callee2, this, [[0, 10]]);
+      }));
+
+      function fetchStates() {
+        return _fetchStates.apply(this, arguments);
+      }
+
+      return fetchStates;
+    }(),
+    checkMember: function () {
+      var _checkMember = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(user, i, type) {
+        var response, data, secondary;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return fetch('/api/members/check-primary', {
+                  method: 'post',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(user)
+                });
+
+              case 3:
+                response = _context3.sent;
+                _context3.next = 6;
+                return response.json();
+
+              case 6:
+                data = _context3.sent;
+                secondary = type == 'free' ? this.free_secondaries[i] : this.nonfree_secondaries[i];
+                this.$set(secondary, 'exists', data.exists);
+                this.$set(secondary, 'is_member', data.type == 'member' ? true : false);
+
+                if (data.exists && data.type != 'member') {
+                  this.$set(secondary, 'use_primary_data', false);
+                  Object.assign(secondary, {
+                    firstname: data.user.firstname,
+                    lastname: data.user.lastname,
+                    email: data.user.email,
+                    address: data.user.address,
+                    city: data.user.city,
+                    state: data.user.state,
+                    zip: data.user.zip,
+                    country: data.user.country,
+                    phone: data.user.phone
+                  });
+                }
+
+                _context3.next = 16;
+                break;
+
+              case 13:
+                _context3.prev = 13;
+                _context3.t0 = _context3["catch"](0);
+                alert("Error in checkPrimary: ".concat(_context3.t0.message));
+
+              case 16:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 13]]);
+      }));
+
+      function checkMember(_x, _x2, _x3) {
+        return _checkMember.apply(this, arguments);
+      }
+
+      return checkMember;
+    }()
   },
   watch: {
     need_nonfree: function need_nonfree(new_value) {
@@ -6985,6 +7391,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_forms_Sale_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/forms/Sale.vue */ "./resources/assets/js/components/forms/Sale.vue");
 
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -6994,21 +7405,31 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     SaleForm: _components_forms_Sale_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  beforeDestroy: function beforeDestroy() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function beforeDestroy$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.commit("RESET_CREATE"));
+  beforeDestroy: function () {
+    var _beforeDestroy = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return this.$store.commit("RESET_CREATE");
 
-          case 2:
-          case "end":
-            return _context.stop();
+            case 2:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, null, this);
-  }
+      }, _callee, this);
+    }));
+
+    function beforeDestroy() {
+      return _beforeDestroy.apply(this, arguments);
+    }
+
+    return beforeDestroy;
+  }()
 });
 
 /***/ }),
@@ -7026,6 +7447,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_forms_Sale__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/forms/Sale */ "./resources/assets/js/components/forms/Sale.vue");
 
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -7035,21 +7461,31 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     SaleForm: _components_forms_Sale__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  beforeDestroy: function beforeDestroy() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function beforeDestroy$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.commit("RESET_CREATE"));
+  beforeDestroy: function () {
+    var _beforeDestroy = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return this.$store.commit("RESET_CREATE");
 
-          case 2:
-          case "end":
-            return _context.stop();
+            case 2:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, null, this);
-  }
+      }, _callee, this);
+    }));
+
+    function beforeDestroy() {
+      return _beforeDestroy.apply(this, arguments);
+    }
+
+    return beforeDestroy;
+  }()
 });
 
 /***/ }),
@@ -7071,9 +7507,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Modal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Modal */ "./resources/assets/js/components/Modal.vue");
 
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -7255,54 +7695,64 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     }
   }),
-  created: function created() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function created$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            document.title = "Astral - Sales";
-            _context.next = 3;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(true);
+  created: function () {
+    var _created = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              document.title = "Astral - Sales";
+              _context.next = 3;
+              return true;
 
-          case 3:
-            this.isLoading = _context.sent;
-            _context.next = 6;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.$store.commit("SET_PAGE", 1));
+            case 3:
+              this.isLoading = _context.sent;
+              _context.next = 6;
+              return this.$store.commit("SET_PAGE", 1);
 
-          case 6:
-            _context.next = 8;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchEventTypes());
+            case 6:
+              _context.next = 8;
+              return this.fetchEventTypes();
 
-          case 8:
-            _context.next = 10;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchCustomers());
+            case 8:
+              _context.next = 10;
+              return this.fetchCustomers();
 
-          case 10:
-            _context.next = 12;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchOrganizations());
+            case 10:
+              _context.next = 12;
+              return this.fetchOrganizations();
 
-          case 12:
-            _context.next = 14;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchCashiers());
+            case 12:
+              _context.next = 14;
+              return this.fetchCashiers();
 
-          case 14:
-            _context.next = 16;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchSales());
+            case 14:
+              _context.next = 16;
+              return this.fetchSales();
 
-          case 16:
-            _context.next = 18;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(false);
+            case 16:
+              _context.next = 18;
+              return false;
 
-          case 18:
-            this.isLoading = _context.sent;
+            case 18:
+              this.isLoading = _context.sent;
 
-          case 19:
-          case "end":
-            return _context.stop();
+            case 19:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, null, this);
-  }
+      }, _callee, this);
+    }));
+
+    function created() {
+      return _created.apply(this, arguments);
+    }
+
+    return created;
+  }()
 });
 
 /***/ }),
@@ -7326,9 +7776,13 @@ __webpack_require__.r(__webpack_exports__);
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 //
 //
@@ -7794,34 +8248,44 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   components: {
     Modal: _components_Modal_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
-  created: function created() {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function created$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(true);
+  created: function () {
+    var _created = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return true;
 
-          case 2:
-            this.isLoading = _context.sent;
-            _context.next = 5;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchSale());
+            case 2:
+              this.isLoading = _context.sent;
+              _context.next = 5;
+              return this.fetchSale();
 
-          case 5:
-            document.title = "Astral - Sale #".concat(this.sale.id);
-            _context.next = 8;
-            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(false);
+            case 5:
+              document.title = "Astral - Sale #".concat(this.sale.id);
+              _context.next = 8;
+              return false;
 
-          case 8:
-            this.isLoading = _context.sent;
+            case 8:
+              this.isLoading = _context.sent;
 
-          case 9:
-          case "end":
-            return _context.stop();
+            case 9:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, null, this);
-  },
+      }, _callee, this);
+    }));
+
+    function created() {
+      return _created.apply(this, arguments);
+    }
+
+    return created;
+  }(),
   computed: _objectSpread({
     saleDataTopClass: function saleDataTopClass() {
       if (this.sale.customer && this.sale.customer.id == 1) return 'ui one doubling stackable cards';else if (!this.sale.events || this.sale.events.length == 0 || this.sale.organization.id == 1) return 'ui two doubling stackable cards';else return 'ui three doubling stackable cards';
@@ -7861,126 +8325,156 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     open: function open(URL, target) {
       window.open(URL, target);
     },
-    fetchSale: function fetchSale() {
-      var response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchSale$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/sale/".concat(this.$route.params.id)));
+    fetchSale: function () {
+      var _fetchSale = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/sale/".concat(this.$route.params.id));
 
-            case 3:
-              response = _context2.sent;
-              _context2.next = 6;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.data);
+              case 3:
+                response = _context2.sent;
+                _context2.next = 6;
+                return response.data;
 
-            case 6:
-              this.sale = _context2.sent;
-              _context2.next = 12;
-              break;
+              case 6:
+                this.sale = _context2.sent;
+                _context2.next = 12;
+                break;
 
-            case 9:
-              _context2.prev = 9;
-              _context2.t0 = _context2["catch"](0);
-              alert("Error in fetchSale: ".concat(_context2.t0.message));
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](0);
+                alert("Error in fetchSale: ".concat(_context2.t0.message));
 
-            case 12:
-            case "end":
-              return _context2.stop();
+              case 12:
+              case "end":
+                return _context2.stop();
+            }
           }
-        }
-      }, null, this, [[0, 9]]);
-    },
-    submitMemo: function submitMemo() {
-      var data, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function submitMemo$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              data = {
-                sale_id: this.sale.id,
-                memo: this.memo,
-                creator_id: this.$store.getters.user
-              };
-              _context3.prev = 1;
-              _context3.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/memos", data));
+        }, _callee2, this, [[0, 9]]);
+      }));
 
-            case 4:
-              response = _context3.sent;
-              this.memo = null;
-              _context3.next = 8;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchSale());
+      function fetchSale() {
+        return _fetchSale.apply(this, arguments);
+      }
 
-            case 8:
-              this.$store.commit("SET_ALERT", {
-                type: "success",
-                title: "Success!",
-                icon: "thumbs up",
-                message: response.data.message
-              });
-              this.$store.commit("TOGGLE_SHOW_ALERT", true);
-              _context3.next = 15;
-              break;
+      return fetchSale;
+    }(),
+    submitMemo: function () {
+      var _submitMemo = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                data = {
+                  sale_id: this.sale.id,
+                  memo: this.memo,
+                  creator_id: this.$store.getters.user
+                };
+                _context3.prev = 1;
+                _context3.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/memos", data);
 
-            case 12:
-              _context3.prev = 12;
-              _context3.t0 = _context3["catch"](1);
-              alert("Error saving memo: ".concat(_context3.t0.message));
+              case 4:
+                response = _context3.sent;
+                this.memo = null;
+                _context3.next = 8;
+                return this.fetchSale();
 
-            case 15:
-            case "end":
-              return _context3.stop();
+              case 8:
+                this.$store.commit("SET_ALERT", {
+                  type: "success",
+                  title: "Success!",
+                  icon: "thumbs up",
+                  message: response.data.message
+                });
+                this.$store.commit("TOGGLE_SHOW_ALERT", true);
+                _context3.next = 15;
+                break;
+
+              case 12:
+                _context3.prev = 12;
+                _context3.t0 = _context3["catch"](1);
+                alert("Error saving memo: ".concat(_context3.t0.message));
+
+              case 15:
+              case "end":
+                return _context3.stop();
+            }
           }
-        }
-      }, null, this, [[1, 12]]);
-    },
-    submitRefund: function submitRefund(event) {
-      var data, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function submitRefund$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              event.preventDefault();
-              this.$store.commit('TOGGLE_MODAL', false);
-              _context4.prev = 2;
-              data = {
-                creator_id: this.$store.getters.user,
-                memo: this.refund_memo
-              };
-              _context4.next = 6;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/sales/".concat(this.$route.params.id, "/refund"), data));
+        }, _callee3, this, [[1, 12]]);
+      }));
 
-            case 6:
-              response = _context4.sent;
-              _context4.next = 9;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(this.fetchSale());
+      function submitMemo() {
+        return _submitMemo.apply(this, arguments);
+      }
 
-            case 9:
-              this.$store.commit("SET_ALERT", {
-                type: "success",
-                title: "Success!",
-                icon: "thumbs up",
-                message: response.data.message
-              });
-              this.$store.commit("TOGGLE_SHOW_ALERT", true);
-              _context4.next = 16;
-              break;
+      return submitMemo;
+    }(),
+    submitRefund: function () {
+      var _submitRefund = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(event) {
+        var data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                event.preventDefault();
+                this.$store.commit('TOGGLE_MODAL', false);
+                _context4.prev = 2;
+                data = {
+                  creator_id: this.$store.getters.user,
+                  memo: this.refund_memo
+                };
+                _context4.next = 6;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/sales/".concat(this.$route.params.id, "/refund"), data);
 
-            case 13:
-              _context4.prev = 13;
-              _context4.t0 = _context4["catch"](2);
-              alert("Error submitting sale: ".concat(_context4.t0.message));
+              case 6:
+                response = _context4.sent;
+                _context4.next = 9;
+                return this.fetchSale();
 
-            case 16:
-            case "end":
-              return _context4.stop();
+              case 9:
+                this.$store.commit("SET_ALERT", {
+                  type: "success",
+                  title: "Success!",
+                  icon: "thumbs up",
+                  message: response.data.message
+                });
+                this.$store.commit("TOGGLE_SHOW_ALERT", true);
+                _context4.next = 16;
+                break;
+
+              case 13:
+                _context4.prev = 13;
+                _context4.t0 = _context4["catch"](2);
+                alert("Error submitting sale: ".concat(_context4.t0.message));
+
+              case 16:
+              case "end":
+                return _context4.stop();
+            }
           }
-        }
-      }, null, this, [[2, 13]]);
-    }
+        }, _callee4, this, [[2, 13]]);
+      }));
+
+      function submitRefund(_x) {
+        return _submitRefund.apply(this, arguments);
+      }
+
+      return submitRefund;
+    }()
   }
 });
 
@@ -8569,7 +9063,7 @@ module.exports = function (it) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var core = module.exports = { version: '2.6.10' };
+var core = module.exports = { version: '2.6.11' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
@@ -64757,11 +65251,7 @@ var render = function() {
         "div",
         {
           staticClass: "ui blue right labeled icon button",
-          on: {
-            click: function($event) {
-              return _vm.$router.push("/thank-you")
-            }
-          }
+          on: { click: _vm.submit }
         },
         [
           _c("i", { staticClass: "thumbs up icon" }),
@@ -65157,49 +65647,70 @@ var render = function() {
           _vm._v(" "),
           _c("br"),
           _vm._v(" "),
-          _c("div", { staticClass: "ui five tiny statistics" }, [
-            _c("div", { staticClass: "statistic" }, [
-              _c("div", { staticClass: "label" }, [_vm._v("Subtotal")]),
-              _vm._v(" "),
-              _c("div", { staticClass: "value" }, [
-                _vm._v("$ " + _vm._s(_vm._f("currency")(_vm.subtotal)))
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "statistic" }, [
-              _c("div", { staticClass: "label" }, [
-                _vm._v("Tax (" + _vm._s(_vm.tax_rate * 100) + "%)")
+          _c(
+            "div",
+            { staticClass: "ui five tiny statistics" },
+            [
+              _c("div", { staticClass: "statistic" }, [
+                _c("div", { staticClass: "label" }, [_vm._v("Subtotal")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "value" }, [
+                  _vm._v("$ " + _vm._s(_vm._f("currency")(_vm.subtotal)))
+                ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "value" }, [
-                _vm._v("$ " + _vm._s(_vm._f("currency")(_vm.tax)))
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "statistic" }, [
-              _c("div", { staticClass: "label" }, [_vm._v("Total")]),
+              _c("div", { staticClass: "statistic" }, [
+                _c("div", { staticClass: "label" }, [
+                  _vm._v("Tax (" + _vm._s(_vm.tax_rate * 100) + "%)")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "value" }, [
+                  _vm._v("$ " + _vm._s(_vm._f("currency")(_vm.tax)))
+                ])
+              ]),
               _vm._v(" "),
-              _c("div", { staticClass: "value" }, [
-                _vm._v("$ " + _vm._s(_vm._f("currency")(_vm.total)))
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "statistic" }, [
-              _c("div", { staticClass: "label" }, [_vm._v("Tendered")]),
+              _c("div", { staticClass: "statistic" }, [
+                _c("div", { staticClass: "label" }, [_vm._v("Total")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "value" }, [
+                  _vm._v("$ " + _vm._s(_vm._f("currency")(_vm.total)))
+                ])
+              ]),
               _vm._v(" "),
-              _c("div", { staticClass: "value" }, [
-                _vm._v("$ " + _vm._s(_vm._f("currency")(_vm.tendered)))
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "statistic" }, [
-              _c("div", { staticClass: "label" }, [_vm._v("Balance")]),
+              _c("div", { staticClass: "statistic" }, [
+                _c("div", { staticClass: "label" }, [_vm._v("Tendered")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "value" }, [
+                  _vm._v("$ " + _vm._s(_vm._f("currency")(_vm.tendered)))
+                ])
+              ]),
               _vm._v(" "),
-              _c("div", { staticClass: "value" }, [
-                _vm._v("$" + _vm._s(_vm._f("currency")(_vm.balance)))
-              ])
-            ])
-          ]),
+              _c(
+                "sui-statistic",
+                {
+                  attrs: {
+                    ingroup: "",
+                    color: _vm.balance >= 0 ? "green" : "red"
+                  }
+                },
+                [
+                  _c("sui-statistic-label", [
+                    _vm._v("\n        Balance\n      ")
+                  ]),
+                  _vm._v(" "),
+                  _c("sui-statistic-value", [
+                    _vm._v(
+                      "\n        $" +
+                        _vm._s(_vm._f("currency")(_vm.balance)) +
+                        "\n      "
+                    )
+                  ])
+                ],
+                1
+              )
+            ],
+            1
+          ),
           _vm._v(" "),
           _c("div", { staticClass: "ui divider" }),
           _vm._v(" "),
@@ -65228,12 +65739,15 @@ var render = function() {
                       attrs: { type: "text" },
                       domProps: { value: _vm.tendered },
                       on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.tendered = $event.target.value
-                        }
+                        input: [
+                          function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.tendered = $event.target.value
+                          },
+                          _vm.calculateTotals
+                        ]
                       }
                     })
                   ])
@@ -67037,9 +67551,27 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("h1", [_vm._v("Thank You")])
+  return _vm._m(0)
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "ui basic segment",
+        staticStyle: { "text-align": "center !important" }
+      },
+      [
+        _c("h1", [_vm._v("Thank You!")]),
+        _vm._v(" "),
+        _c("h2", [_vm._v("Membership Confirmed!")])
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -72335,7 +72867,7 @@ if (inBrowser && window.Vue) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
- * Vue.js v2.6.10
+ * Vue.js v2.6.11
  * (c) 2014-2019 Evan You
  * Released under the MIT License.
  */
@@ -74301,7 +74833,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   isUsingMicroTask = true;
 } else if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
   // Fallback to setImmediate.
-  // Techinically it leverages the (macro) task queue,
+  // Technically it leverages the (macro) task queue,
   // but it is still a better choice than setTimeout.
   timerFunc = function () {
     setImmediate(flushCallbacks);
@@ -74390,7 +74922,7 @@ var initProxy;
     warn(
       "Property \"" + key + "\" must be accessed with \"$data." + key + "\" because " +
       'properties starting with "$" or "_" are not proxied in the Vue instance to ' +
-      'prevent conflicts with Vue internals' +
+      'prevent conflicts with Vue internals. ' +
       'See: https://vuejs.org/v2/api/#data',
       target
     );
@@ -75250,7 +75782,7 @@ function bindDynamicKeys (baseObj, values) {
     if (typeof key === 'string' && key) {
       baseObj[values[i]] = values[i + 1];
     } else if (key !== '' && key !== null) {
-      // null is a speical value for explicitly removing a binding
+      // null is a special value for explicitly removing a binding
       warn(
         ("Invalid value for dynamic directive argument (expected string or null): " + key),
         this
@@ -75745,6 +76277,12 @@ function _createElement (
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag);
     if (config.isReservedTag(tag)) {
       // platform built-in elements
+      if (isDef(data) && isDef(data.nativeOn)) {
+        warn(
+          ("The .native modifier for v-on is only valid on components but it was used on <" + tag + ">."),
+          context
+        );
+      }
       vnode = new VNode(
         config.parsePlatformTagName(tag), data, children,
         undefined, undefined, context
@@ -75870,7 +76408,7 @@ function renderMixin (Vue) {
     // render self
     var vnode;
     try {
-      // There's no need to maintain a stack becaues all render fns are called
+      // There's no need to maintain a stack because all render fns are called
       // separately from one another. Nested component's render fns are called
       // when parent component is patched.
       currentRenderingInstance = vm;
@@ -77769,7 +78307,7 @@ Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
 
-Vue.version = '2.6.10';
+Vue.version = '2.6.11';
 
 /*  */
 
@@ -78442,7 +78980,7 @@ function createPatchFunction (backend) {
     }
   }
 
-  function removeVnodes (parentElm, vnodes, startIdx, endIdx) {
+  function removeVnodes (vnodes, startIdx, endIdx) {
     for (; startIdx <= endIdx; ++startIdx) {
       var ch = vnodes[startIdx];
       if (isDef(ch)) {
@@ -78553,7 +79091,7 @@ function createPatchFunction (backend) {
       refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm;
       addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue);
     } else if (newStartIdx > newEndIdx) {
-      removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx);
+      removeVnodes(oldCh, oldStartIdx, oldEndIdx);
     }
   }
 
@@ -78645,7 +79183,7 @@ function createPatchFunction (backend) {
         if (isDef(oldVnode.text)) { nodeOps.setTextContent(elm, ''); }
         addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue);
       } else if (isDef(oldCh)) {
-        removeVnodes(elm, oldCh, 0, oldCh.length - 1);
+        removeVnodes(oldCh, 0, oldCh.length - 1);
       } else if (isDef(oldVnode.text)) {
         nodeOps.setTextContent(elm, '');
       }
@@ -78874,7 +79412,7 @@ function createPatchFunction (backend) {
 
         // destroy old node
         if (isDef(parentElm)) {
-          removeVnodes(parentElm, [oldVnode], 0, 0);
+          removeVnodes([oldVnode], 0, 0);
         } else if (isDef(oldVnode.tag)) {
           invokeDestroyHook(oldVnode);
         }
@@ -81580,7 +82118,7 @@ var startTagOpen = new RegExp(("^<" + qnameCapture));
 var startTagClose = /^\s*(\/?)>/;
 var endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>"));
 var doctype = /^<!DOCTYPE [^>]+>/i;
-// #7298: escape - to avoid being pased as HTML comment when inlined in page
+// #7298: escape - to avoid being passed as HTML comment when inlined in page
 var comment = /^<!\--/;
 var conditionalComment = /^<!\[/;
 
@@ -81865,7 +82403,7 @@ function parseHTML (html, options) {
 /*  */
 
 var onRE = /^@|^v-on:/;
-var dirRE = /^v-|^@|^:/;
+var dirRE = /^v-|^@|^:|^#/;
 var forAliasRE = /([\s\S]*?)\s+(?:in|of)\s+([\s\S]*)/;
 var forIteratorRE = /,([^,\}\]]*)(?:,([^,\}\]]*))?$/;
 var stripParensRE = /^\(|\)$/g;
@@ -82489,7 +83027,7 @@ function processSlotContent (el) {
           if (el.parent && !maybeComponent(el.parent)) {
             warn$2(
               "<template v-slot> can only appear at the root level inside " +
-              "the receiving the component",
+              "the receiving component",
               el
             );
           }
@@ -83052,7 +83590,7 @@ function isDirectChildOfTemplateFor (node) {
 
 /*  */
 
-var fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function\s*(?:[\w$]+)?\s*\(/;
+var fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function(?:\s+[\w$]+)?\s*\(/;
 var fnInvokeRE = /\([^)]*?\);*$/;
 var simplePathRE = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*?']|\["[^"]*?"]|\[\d+]|\[[A-Za-z_$][\w$]*])*$/;
 
@@ -83821,6 +84359,8 @@ function checkNode (node, warn) {
           var range = node.rawAttrsMap[name];
           if (name === 'v-for') {
             checkFor(node, ("v-for=\"" + value + "\""), warn, range);
+          } else if (name === 'v-slot' || name[0] === '#') {
+            checkFunctionParameterExpression(value, (name + "=\"" + value + "\""), warn, range);
           } else if (onRE.test(name)) {
             checkEvent(value, (name + "=\"" + value + "\""), warn, range);
           } else {
@@ -83840,9 +84380,9 @@ function checkNode (node, warn) {
 }
 
 function checkEvent (exp, text, warn, range) {
-  var stipped = exp.replace(stripStringRE, '');
-  var keywordMatch = stipped.match(unaryOperatorsRE);
-  if (keywordMatch && stipped.charAt(keywordMatch.index - 1) !== '$') {
+  var stripped = exp.replace(stripStringRE, '');
+  var keywordMatch = stripped.match(unaryOperatorsRE);
+  if (keywordMatch && stripped.charAt(keywordMatch.index - 1) !== '$') {
     warn(
       "avoid using JavaScript unary operator as property name: " +
       "\"" + (keywordMatch[0]) + "\" in expression " + (text.trim()),
@@ -83894,6 +84434,19 @@ function checkExpression (exp, text, warn, range) {
         range
       );
     }
+  }
+}
+
+function checkFunctionParameterExpression (exp, text, warn, range) {
+  try {
+    new Function(exp, '');
+  } catch (e) {
+    warn(
+      "invalid function parameter expression: " + (e.message) + " in\n\n" +
+      "    " + exp + "\n\n" +
+      "  Raw expression: " + (text.trim()) + "\n",
+      range
+    );
   }
 }
 
@@ -87133,6 +87686,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 var getDefaultMembersState = function getDefaultMembersState() {
   return {
     primary: {
@@ -87162,7 +87719,7 @@ var getDefaultMembersState = function getDefaultMembersState() {
     tendered: 0,
     change_due: 0,
     payment_method_id: null,
-    reference: null,
+    reference: '',
     memo: null,
     check_primary: null
   };
@@ -87269,13 +87826,15 @@ var getDefaultMembersState = function getDefaultMembersState() {
       var tax = subtotal * tax_rate;
       var total = subtotal + tax;
       var paid = state.tendered;
-      var balance = total - paid;
+      var balance = paid - total < 0 ? paid - total : 0;
+      var change_due = state.tendered - total >= 0 ? state.tendered - total : 0;
       Object.assign(state, {
         subtotal: subtotal,
         tax: tax,
         total: total,
         paid: paid,
-        balance: balance
+        balance: balance,
+        change_due: change_due
       });
     },
     SET_PAYMENT_METHOD_ID: function SET_PAYMENT_METHOD_ID(state, payload) {
@@ -87285,51 +87844,87 @@ var getDefaultMembersState = function getDefaultMembersState() {
     }
   },
   actions: {
-    checkPrimary: function checkPrimary(_ref) {
-      var state, commit, response, data;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function checkPrimary$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              state = _ref.state, commit = _ref.commit;
-              _context.prev = 1;
-              _context.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(fetch('/api/members/check-primary', {
-                method: 'post',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(state.primary)
-              }));
+    checkPrimary: function () {
+      var _checkPrimary = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref) {
+        var state, commit, response, data;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                state = _ref.state, commit = _ref.commit;
+                _context.prev = 1;
+                _context.next = 4;
+                return fetch('/api/members/check-primary', {
+                  method: 'post',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(state.primary)
+                });
 
-            case 4:
-              response = _context.sent;
-              _context.next = 7;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.json());
+              case 4:
+                response = _context.sent;
+                _context.next = 7;
+                return response.json();
 
-            case 7:
-              data = _context.sent;
-              commit('SET_CHECK_PRIMARY', data);
-              _context.next = 14;
-              break;
+              case 7:
+                data = _context.sent;
+                commit('SET_CHECK_PRIMARY', data);
+                _context.next = 14;
+                break;
 
-            case 11:
-              _context.prev = 11;
-              _context.t0 = _context["catch"](1);
-              alert("Error in checkPriamry: ".concat(_context.t0.message));
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](1);
+                alert("Error in checkPriamry: ".concat(_context.t0.message));
 
-            case 14:
-            case "end":
-              return _context.stop();
+              case 14:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
-      }, null, null, [[1, 11]]);
-    },
+        }, _callee, null, [[1, 11]]);
+      }));
+
+      function checkPrimary(_x) {
+        return _checkPrimary.apply(this, arguments);
+      }
+
+      return checkPrimary;
+    }(),
     calculateTotals: function calculateTotals(_ref2) {
       var commit = _ref2.commit,
           rootState = _ref2.rootState;
       commit('CALCULATE_TOTALS', rootState.Sale.settings.tax);
-    }
+    },
+    submit: function () {
+      var _submit = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(_ref3) {
+        var state;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                state = _ref3.state;
+                console.log(state);
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      function submit(_x2) {
+        return _submit.apply(this, arguments);
+      }
+
+      return submit;
+    }()
   }
 });
 
@@ -87875,6 +88470,10 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 var saleStatuses = [{
   key: "open",
@@ -87985,219 +88584,269 @@ var saleStatuses = [{
   // Actions
   actions: {
     // Fetches sales, pagination aware
-    fetchSales: function fetchSales(_ref) {
-      var state, commit, url, params, _i, _Object$entries, _Object$entries$_i, key, value, response, sales;
+    fetchSales: function () {
+      var _fetchSales = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref) {
+        var state, commit, url, params, _i, _Object$entries, _Object$entries$_i, key, value, response, sales;
 
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchSales$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              state = _ref.state, commit = _ref.commit;
-              _context.prev = 1;
-              url = new URL("/api/sales?sort=desc&orderBy=id", window.location.origin);
-              params = new URLSearchParams(url.search);
-              params.set("page", state.page++);
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                state = _ref.state, commit = _ref.commit;
+                _context.prev = 1;
+                url = new URL("/api/sales?sort=desc&orderBy=id", window.location.origin);
+                params = new URLSearchParams(url.search);
+                params.set("page", state.page++);
 
-              for (_i = 0, _Object$entries = Object.entries(state.query); _i < _Object$entries.length; _i++) {
-                _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2), key = _Object$entries$_i[0], value = _Object$entries$_i[1];
-                if (value) params.set("".concat(key), value);
-              }
+                for (_i = 0, _Object$entries = Object.entries(state.query); _i < _Object$entries.length; _i++) {
+                  _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2), key = _Object$entries$_i[0], value = _Object$entries$_i[1];
+                  if (value) params.set("".concat(key), value);
+                }
 
-              url.search = params.toString();
-              _context.next = 9;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url.toString()));
+                url.search = params.toString();
+                _context.next = 9;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url.toString());
 
-            case 9:
-              response = _context.sent;
-              sales = [];
-              if (state.page < 3) sales = response.data.data;else sales = [].concat(_toConsumableArray(state.sales), _toConsumableArray(response.data.data));
-              commit("SET_SALES", sales);
-              _context.next = 18;
-              break;
+              case 9:
+                response = _context.sent;
+                sales = [];
+                if (state.page < 3) sales = response.data.data;else sales = [].concat(_toConsumableArray(state.sales), _toConsumableArray(response.data.data));
+                commit("SET_SALES", sales);
+                _context.next = 18;
+                break;
 
-            case 15:
-              _context.prev = 15;
-              _context.t0 = _context["catch"](1);
-              alert("Error in fetchSales: ".concat(_context.t0.message));
+              case 15:
+                _context.prev = 15;
+                _context.t0 = _context["catch"](1);
+                alert("Error in fetchSales: ".concat(_context.t0.message));
 
-            case 18:
-            case "end":
-              return _context.stop();
+              case 18:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
-      }, null, null, [[1, 15]]);
-    },
+        }, _callee, null, [[1, 15]]);
+      }));
+
+      function fetchSales(_x) {
+        return _fetchSales.apply(this, arguments);
+      }
+
+      return fetchSales;
+    }(),
     // Fetch customers
-    fetchCustomers: function fetchCustomers(_ref2) {
-      var commit, response, withOrganization, withoutOrganization;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchCustomers$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              commit = _ref2.commit;
-              _context2.prev = 1;
-              _context2.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/customers"));
+    fetchCustomers: function () {
+      var _fetchCustomers = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(_ref2) {
+        var commit, response, withOrganization, withoutOrganization;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                commit = _ref2.commit;
+                _context2.prev = 1;
+                _context2.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/customers");
 
-            case 4:
-              response = _context2.sent;
-              withOrganization = response.data.map(function (customer) {
-                return {
-                  key: customer.id,
-                  value: customer.id,
-                  text: "".concat(customer.name, " (").concat(customer.role, " ").concat(customer.organization.id == 1 ? '' : 'at ' + customer.organization.name, ")")
-                };
-              });
-              withoutOrganization = response.data.map(function (customer) {
-                return {
-                  key: customer.id,
-                  value: customer.id,
-                  text: customer.name
-                };
-              });
-              withoutOrganization.unshift({
-                key: 0,
-                value: null,
-                text: "All Customers"
-              });
-              commit("SET_CUSTOMERS", {
-                withOrganization: withOrganization,
-                withoutOrganization: withoutOrganization
-              });
-              _context2.next = 14;
-              break;
+              case 4:
+                response = _context2.sent;
+                withOrganization = response.data.map(function (customer) {
+                  return {
+                    key: customer.id,
+                    value: customer.id,
+                    text: "".concat(customer.name, " (").concat(customer.role, " ").concat(customer.organization.id == 1 ? '' : 'at ' + customer.organization.name, ")")
+                  };
+                });
+                withoutOrganization = response.data.map(function (customer) {
+                  return {
+                    key: customer.id,
+                    value: customer.id,
+                    text: customer.name
+                  };
+                });
+                withoutOrganization.unshift({
+                  key: 0,
+                  value: null,
+                  text: "All Customers"
+                });
+                commit("SET_CUSTOMERS", {
+                  withOrganization: withOrganization,
+                  withoutOrganization: withoutOrganization
+                });
+                _context2.next = 14;
+                break;
 
-            case 11:
-              _context2.prev = 11;
-              _context2.t0 = _context2["catch"](1);
-              alert("Error in fetchCustomers: ".concat(_context2.t0.message));
+              case 11:
+                _context2.prev = 11;
+                _context2.t0 = _context2["catch"](1);
+                alert("Error in fetchCustomers: ".concat(_context2.t0.message));
 
-            case 14:
-            case "end":
-              return _context2.stop();
+              case 14:
+              case "end":
+                return _context2.stop();
+            }
           }
-        }
-      }, null, null, [[1, 11]]);
-    },
+        }, _callee2, null, [[1, 11]]);
+      }));
+
+      function fetchCustomers(_x2) {
+        return _fetchCustomers.apply(this, arguments);
+      }
+
+      return fetchCustomers;
+    }(),
     // Fetch organizations
-    fetchOrganizations: function fetchOrganizations(_ref3) {
-      var commit, response, organizations;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchOrganizations$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              commit = _ref3.commit;
-              _context3.prev = 1;
-              _context3.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/organizations"));
+    fetchOrganizations: function () {
+      var _fetchOrganizations = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(_ref3) {
+        var commit, response, organizations;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                commit = _ref3.commit;
+                _context3.prev = 1;
+                _context3.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/organizations");
 
-            case 4:
-              response = _context3.sent;
-              organizations = response.data.map(function (organization) {
-                return {
-                  key: organization.id,
-                  value: organization.id,
-                  text: organization.name
-                };
-              });
-              organizations.unshift({
-                key: 0,
-                value: null,
-                text: "All Organizations"
-              });
-              commit('SET_ORGANIZATIONS', organizations);
-              _context3.next = 13;
-              break;
+              case 4:
+                response = _context3.sent;
+                organizations = response.data.map(function (organization) {
+                  return {
+                    key: organization.id,
+                    value: organization.id,
+                    text: organization.name
+                  };
+                });
+                organizations.unshift({
+                  key: 0,
+                  value: null,
+                  text: "All Organizations"
+                });
+                commit('SET_ORGANIZATIONS', organizations);
+                _context3.next = 13;
+                break;
 
-            case 10:
-              _context3.prev = 10;
-              _context3.t0 = _context3["catch"](1);
-              alert("Error in fetchOrganizations: ".concat(_context3.t0.message));
+              case 10:
+                _context3.prev = 10;
+                _context3.t0 = _context3["catch"](1);
+                alert("Error in fetchOrganizations: ".concat(_context3.t0.message));
 
-            case 13:
-            case "end":
-              return _context3.stop();
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
           }
-        }
-      }, null, null, [[1, 10]]);
-    },
+        }, _callee3, null, [[1, 10]]);
+      }));
+
+      function fetchOrganizations(_x3) {
+        return _fetchOrganizations.apply(this, arguments);
+      }
+
+      return fetchOrganizations;
+    }(),
     // Fetch cashiers
-    fetchCashiers: function fetchCashiers(_ref4) {
-      var commit, response, cashiers;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchCashiers$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              commit = _ref4.commit;
-              _context4.prev = 1;
-              _context4.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/staff"));
+    fetchCashiers: function () {
+      var _fetchCashiers = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(_ref4) {
+        var commit, response, cashiers;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                commit = _ref4.commit;
+                _context4.prev = 1;
+                _context4.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/staff");
 
-            case 4:
-              response = _context4.sent;
-              _context4.next = 7;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(response.data.map(function (cashier) {
-                return {
-                  icon: "user circle",
-                  key: cashier.id,
-                  value: cashier.id,
-                  text: cashier.firstname
-                };
-              }));
+              case 4:
+                response = _context4.sent;
+                _context4.next = 7;
+                return response.data.map(function (cashier) {
+                  return {
+                    icon: "user circle",
+                    key: cashier.id,
+                    value: cashier.id,
+                    text: cashier.firstname
+                  };
+                });
 
-            case 7:
-              cashiers = _context4.sent;
-              cashiers.unshift({
-                key: 0,
-                value: null,
-                text: "All Cashiers"
-              });
-              commit('SET_CASHIERS', cashiers);
-              _context4.next = 15;
-              break;
+              case 7:
+                cashiers = _context4.sent;
+                cashiers.unshift({
+                  key: 0,
+                  value: null,
+                  text: "All Cashiers"
+                });
+                commit('SET_CASHIERS', cashiers);
+                _context4.next = 15;
+                break;
 
-            case 12:
-              _context4.prev = 12;
-              _context4.t0 = _context4["catch"](1);
-              alert("Error in fetchCashiers: ".concat(_context4.t0.message));
+              case 12:
+                _context4.prev = 12;
+                _context4.t0 = _context4["catch"](1);
+                alert("Error in fetchCashiers: ".concat(_context4.t0.message));
 
-            case 15:
-            case "end":
-              return _context4.stop();
+              case 15:
+              case "end":
+                return _context4.stop();
+            }
           }
-        }
-      }, null, null, [[1, 12]]);
-    },
+        }, _callee4, null, [[1, 12]]);
+      }));
+
+      function fetchCashiers(_x4) {
+        return _fetchCashiers.apply(this, arguments);
+      }
+
+      return fetchCashiers;
+    }(),
     // Fetch event types
-    fetchEventTypes: function fetchEventTypes(_ref5) {
-      var commit, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchEventTypes$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              commit = _ref5.commit;
-              _context5.prev = 1;
-              _context5.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/event-types"));
+    fetchEventTypes: function () {
+      var _fetchEventTypes = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(_ref5) {
+        var commit, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                commit = _ref5.commit;
+                _context5.prev = 1;
+                _context5.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/event-types");
 
-            case 4:
-              response = _context5.sent;
-              commit("SET_EVENT_TYPES", response.data);
-              _context5.next = 11;
-              break;
+              case 4:
+                response = _context5.sent;
+                commit("SET_EVENT_TYPES", response.data);
+                _context5.next = 11;
+                break;
 
-            case 8:
-              _context5.prev = 8;
-              _context5.t0 = _context5["catch"](1);
-              alert("Error in actions.fetchEventTypes: ".concat(_context5.t0.message));
+              case 8:
+                _context5.prev = 8;
+                _context5.t0 = _context5["catch"](1);
+                alert("Error in actions.fetchEventTypes: ".concat(_context5.t0.message));
 
-            case 11:
-            case "end":
-              return _context5.stop();
+              case 11:
+              case "end":
+                return _context5.stop();
+            }
           }
-        }
-      }, null, null, [[1, 8]]);
-    },
+        }, _callee5, null, [[1, 8]]);
+      }));
+
+      function fetchEventTypes(_x5) {
+        return _fetchEventTypes.apply(this, arguments);
+      }
+
+      return fetchEventTypes;
+    }(),
     // Set isLoading
     setIsLoading: function setIsLoading(context, payload) {
       context.commit("SET_IS_LOADING", payload);
@@ -88260,6 +88909,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
 
@@ -88481,164 +89135,204 @@ var getDefaultState = function getDefaultState() {
   },
   actions: {
     // Fetch grades
-    fetchGrades: function fetchGrades(_ref) {
-      var commit, response, grades;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchGrades$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              commit = _ref.commit;
-              _context.prev = 1;
-              _context.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/grades"));
+    fetchGrades: function () {
+      var _fetchGrades = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref) {
+        var commit, response, grades;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                commit = _ref.commit;
+                _context.prev = 1;
+                _context.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/grades");
 
-            case 4:
-              response = _context.sent;
-              grades = response.data.data.map(function (grade) {
-                return {
-                  key: grade.id,
-                  text: grade.name,
-                  value: grade.id
-                };
-              });
-              commit('SET_GRADES', grades);
-              _context.next = 12;
-              break;
-
-            case 9:
-              _context.prev = 9;
-              _context.t0 = _context["catch"](1);
-              alert("Error in actions.fetchGrades: ".concat(_context.t0.message));
-
-            case 12:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, null, null, [[1, 9]]);
-    },
-    // Fetch products
-    fetchProducts: function fetchProducts(_ref2) {
-      var commit, product_options, response, products;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchProducts$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              commit = _ref2.commit;
-              _context2.prev = 1;
-              product_options = [];
-              _context2.next = 5;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/products"));
-
-            case 5:
-              response = _context2.sent;
-              products = response.data.data.map(function (product) {
-                Object.assign(product, {
-                  amount: 1
+              case 4:
+                response = _context.sent;
+                grades = response.data.data.map(function (grade) {
+                  return {
+                    key: grade.id,
+                    text: grade.name,
+                    value: grade.id
+                  };
                 });
-                product_options.push(product);
-                return {
-                  key: product.id,
-                  text: product.name,
-                  value: product.id,
-                  icon: 'box'
-                };
-              });
-              commit('SET_PRODUCTS', products);
-              commit('SET_PRODUCT_OPTIONS', product_options);
-              _context2.next = 14;
-              break;
+                commit('SET_GRADES', grades);
+                _context.next = 12;
+                break;
 
-            case 11:
-              _context2.prev = 11;
-              _context2.t0 = _context2["catch"](1);
-              alert("Error in actions.fetchProducts: ".concat(_context2.t0.message));
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](1);
+                alert("Error in actions.fetchGrades: ".concat(_context.t0.message));
 
-            case 14:
-            case "end":
-              return _context2.stop();
+              case 12:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
-      }, null, null, [[1, 11]]);
-    },
+        }, _callee, null, [[1, 9]]);
+      }));
+
+      function fetchGrades(_x) {
+        return _fetchGrades.apply(this, arguments);
+      }
+
+      return fetchGrades;
+    }(),
+    // Fetch products
+    fetchProducts: function () {
+      var _fetchProducts = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(_ref2) {
+        var commit, product_options, response, products;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                commit = _ref2.commit;
+                _context2.prev = 1;
+                product_options = [];
+                _context2.next = 5;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/products");
+
+              case 5:
+                response = _context2.sent;
+                products = response.data.data.map(function (product) {
+                  Object.assign(product, {
+                    amount: 1
+                  });
+                  product_options.push(product);
+                  return {
+                    key: product.id,
+                    text: product.name,
+                    value: product.id,
+                    icon: 'box'
+                  };
+                });
+                commit('SET_PRODUCTS', products);
+                commit('SET_PRODUCT_OPTIONS', product_options);
+                _context2.next = 14;
+                break;
+
+              case 11:
+                _context2.prev = 11;
+                _context2.t0 = _context2["catch"](1);
+                alert("Error in actions.fetchProducts: ".concat(_context2.t0.message));
+
+              case 14:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[1, 11]]);
+      }));
+
+      function fetchProducts(_x2) {
+        return _fetchProducts.apply(this, arguments);
+      }
+
+      return fetchProducts;
+    }(),
     // Fetch payment methods
-    fetchPaymentMethods: function fetchPaymentMethods(_ref3) {
-      var commit, response, payment_methods;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchPaymentMethods$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              commit = _ref3.commit;
-              _context3.prev = 1;
-              _context3.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/payment-methods"));
+    fetchPaymentMethods: function () {
+      var _fetchPaymentMethods = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(_ref3) {
+        var commit, response, payment_methods;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                commit = _ref3.commit;
+                _context3.prev = 1;
+                _context3.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/payment-methods");
 
-            case 4:
-              response = _context3.sent;
-              payment_methods = response.data.data.map(function (payment_method) {
-                return {
-                  key: payment_method.id,
-                  text: payment_method.name,
-                  value: payment_method.id,
-                  icon: payment_method.icon
-                };
-              });
-              _context3.next = 8;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(commit('SET_PAYMENT_METHODS', payment_methods));
+              case 4:
+                response = _context3.sent;
+                payment_methods = response.data.data.map(function (payment_method) {
+                  return {
+                    key: payment_method.id,
+                    text: payment_method.name,
+                    value: payment_method.id,
+                    icon: payment_method.icon
+                  };
+                });
+                _context3.next = 8;
+                return commit('SET_PAYMENT_METHODS', payment_methods);
 
-            case 8:
-              _context3.next = 13;
-              break;
+              case 8:
+                _context3.next = 13;
+                break;
 
-            case 10:
-              _context3.prev = 10;
-              _context3.t0 = _context3["catch"](1);
-              alert("Error in actions.fetchSettings: ".concat(_context3.t0.message));
+              case 10:
+                _context3.prev = 10;
+                _context3.t0 = _context3["catch"](1);
+                alert("Error in actions.fetchSettings: ".concat(_context3.t0.message));
 
-            case 13:
-            case "end":
-              return _context3.stop();
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
           }
-        }
-      }, null, null, [[1, 10]]);
-    },
+        }, _callee3, null, [[1, 10]]);
+      }));
+
+      function fetchPaymentMethods(_x3) {
+        return _fetchPaymentMethods.apply(this, arguments);
+      }
+
+      return fetchPaymentMethods;
+    }(),
     // Fetch settings
-    fetchSettings: function fetchSettings(_ref4) {
-      var commit, response, tax;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchSettings$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              commit = _ref4.commit;
-              _context4.prev = 1;
-              _context4.next = 4;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/settings"));
+    fetchSettings: function () {
+      var _fetchSettings = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(_ref4) {
+        var commit, response, tax;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                commit = _ref4.commit;
+                _context4.prev = 1;
+                _context4.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/settings");
 
-            case 4:
-              response = _context4.sent;
-              tax = parseFloat(response.data.tax) / 100;
-              _context4.next = 8;
-              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(commit('SET_SETTINGS', {
-                tax: tax,
-                organization: response.data.organization
-              }));
+              case 4:
+                response = _context4.sent;
+                tax = parseFloat(response.data.tax) / 100;
+                _context4.next = 8;
+                return commit('SET_SETTINGS', {
+                  tax: tax,
+                  organization: response.data.organization
+                });
 
-            case 8:
-              _context4.next = 13;
-              break;
+              case 8:
+                _context4.next = 13;
+                break;
 
-            case 10:
-              _context4.prev = 10;
-              _context4.t0 = _context4["catch"](1);
-              alert("Error in actions.fetchSettings: ".concat(_context4.t0.message));
+              case 10:
+                _context4.prev = 10;
+                _context4.t0 = _context4["catch"](1);
+                alert("Error in actions.fetchSettings: ".concat(_context4.t0.message));
 
-            case 13:
-            case "end":
-              return _context4.stop();
+              case 13:
+              case "end":
+                return _context4.stop();
+            }
           }
-        }
-      }, null, null, [[1, 10]]);
-    }
+        }, _callee4, null, [[1, 10]]);
+      }));
+
+      function fetchSettings(_x4) {
+        return _fetchSettings.apply(this, arguments);
+      }
+
+      return fetchSettings;
+    }()
   },
   getters: {
     sale: function sale(state) {
@@ -89358,8 +90052,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/anderson/astral/resources/assets/js/app.js */"./resources/assets/js/app.js");
-module.exports = __webpack_require__(/*! /home/anderson/astral/resources/assets/sass/app.scss */"./resources/assets/sass/app.scss");
+__webpack_require__(/*! /var/www/astral/resources/assets/js/app.js */"./resources/assets/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/astral/resources/assets/sass/app.scss */"./resources/assets/sass/app.scss");
 
 
 /***/ })
