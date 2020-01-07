@@ -1279,6 +1279,7 @@ Route::get('events/by-date', function (Request $request) {
 });
 
 Route::post('members/check-primary', 'Api\MemberController@checkPrimary');
+Route::post('members/store', 'Api\MemberController@store');
 
 Route::get('membership-types', function () {
   $membership_types = App\MemberType::where('id', '!=', 1)->get();

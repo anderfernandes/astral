@@ -29,7 +29,11 @@ let getDefaultMembersState = () => ({
   reference: '',
   memo: null,
 
-  check_primary: null
+  check_primary: null,
+
+  creator_id: parseInt(localStorage.getItem('u')),
+
+  membership: {},
 })
 
 export default {
@@ -114,6 +118,9 @@ export default {
     },
     SET_PAYMENT_METHOD_ID(state, payload) {
       Object.assign(state, { payment_method_id: payload })
+    },
+    SET_MEMBERSHIP(state, payload) {
+      Object.assign(state, { membership: payload })
     }
   },
 
@@ -137,8 +144,18 @@ export default {
       commit('CALCULATE_TOTALS', rootState.Sale.settings.tax)
     },
 
-    async submit({ state }) {
-      console.log(state)
+    async submit({ state, commit }) {
+      try {
+        const response = await fetch('/api/members/store', {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(state),
+        })
+        const data = await response.json()
+        commit('SET_MEMBERSHIP', data.membership)
+      } catch (error) {
+        alert(`Error in submit: ${error.message}`)
+      }
     }
   }
 }

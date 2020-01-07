@@ -10,6 +10,10 @@
 
   <div id="new-member-wizard"></div>
 
+  <script>
+    localStorage.setItem("u", {{ auth()->user()->id }})
+  </script>
+
   <script src="{{ mix('js/app.js') }}"></script>
 
 @endsection

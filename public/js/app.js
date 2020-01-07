@@ -6283,7 +6283,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     memo: {
       set: function set(value) {
-        this.$store.commit('Members/SET_MEMO');
+        this.$store.commit('Members/SET_MEMO', value);
       },
       get: function get() {
         return this.$store.state.Members.memo;
@@ -67565,6 +67565,10 @@ var staticRenderFns = [
         staticStyle: { "text-align": "center !important" }
       },
       [
+        _c("h1", { staticClass: "ui massive center aligned header" }, [
+          _c("i", { staticClass: "address card outline icon" })
+        ]),
+        _vm._v(" "),
         _c("h1", [_vm._v("Thank You!")]),
         _vm._v(" "),
         _c("h2", [_vm._v("Membership Confirmed!")])
@@ -87721,7 +87725,9 @@ var getDefaultMembersState = function getDefaultMembersState() {
     payment_method_id: null,
     reference: '',
     memo: null,
-    check_primary: null
+    check_primary: null,
+    creator_id: parseInt(localStorage.getItem('u')),
+    membership: {}
   };
 };
 
@@ -87841,6 +87847,11 @@ var getDefaultMembersState = function getDefaultMembersState() {
       Object.assign(state, {
         payment_method_id: payload
       });
+    },
+    SET_MEMBERSHIP: function SET_MEMBERSHIP(state, payload) {
+      Object.assign(state, {
+        membership: payload
+      });
     }
   },
   actions: {
@@ -87903,20 +87914,45 @@ var getDefaultMembersState = function getDefaultMembersState() {
       var _submit = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(_ref3) {
-        var state;
+        var state, commit, response, data;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                state = _ref3.state;
-                console.log(state);
+                state = _ref3.state, commit = _ref3.commit;
+                _context2.prev = 1;
+                _context2.next = 4;
+                return fetch('/api/members/store', {
+                  method: 'post',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                  },
+                  body: JSON.stringify(state)
+                });
 
-              case 2:
+              case 4:
+                response = _context2.sent;
+                _context2.next = 7;
+                return response.json();
+
+              case 7:
+                data = _context2.sent;
+                commit('SET_MEMBERSHIP', data.membership);
+                _context2.next = 14;
+                break;
+
+              case 11:
+                _context2.prev = 11;
+                _context2.t0 = _context2["catch"](1);
+                alert("Error in submit: ".concat(_context2.t0.message));
+
+              case 14:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2);
+        }, _callee2, null, [[1, 11]]);
       }));
 
       function submit(_x2) {

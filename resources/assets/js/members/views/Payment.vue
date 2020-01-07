@@ -191,7 +191,7 @@
       },
       memo: {
         set(value) {
-          this.$store.commit('Members/SET_MEMO')
+          this.$store.commit('Members/SET_MEMO', value)
         },
         get() {
           return this.$store.state.Members.memo
