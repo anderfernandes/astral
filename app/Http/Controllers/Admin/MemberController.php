@@ -320,7 +320,12 @@ class MemberController extends Controller
 
   public function receipt(Member $member, Request $request)
   {
-    $sales = Sale::where('customer_id', $member->primary->id)->where('subtotal', $member->type->price)->get();
+    $sales = Sale::where('customer_id', $member->primary->id)
+                 ->where('subtotal', $member->type->price)
+                 // NEED TO FIGURE OUT A WAY TO GET MEMBERSHIP PAYMENTS FOR THIS MEMBER/USER
+                 // HAVING THEM AS PRODUCTS IS PROBABLY THE WAY TO GO
+                 ->orWhere('subtotal', '>=', $member->type->price)
+                 ->get();
     // Ensure we get the last membership payment
     $sale = $sales->last();
 

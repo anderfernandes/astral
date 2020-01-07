@@ -28,7 +28,7 @@
   </div>
 
   <h4 class="ui header">
-    {{ Date::now()->format('l, F j, Y') }}
+    {{ now()->format('l, F j, Y') }}
   </h4>
 
   <div class="ui clearing basic segment" style="padding:0 0 0 0">

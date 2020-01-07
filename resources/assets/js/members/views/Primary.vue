@@ -136,9 +136,14 @@
     },
     methods: {
       async checkPrimary() {
-        this.checking_primary = true
-        await this.$store.dispatch('Members/checkPrimary')
-        this.checking_primary = false
+        if (this.email.includes('@') && this.email.length > 3) {
+          this.checking_primary = true
+          await this.$store.dispatch('Members/checkPrimary')
+          this.checking_primary = false
+        } else {
+          alert('Make sure the email field contains valid data.')
+        }
+        
       },
       async fetchStates() {
         try {
