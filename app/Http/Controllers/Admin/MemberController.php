@@ -27,13 +27,31 @@ class MemberController extends Controller
    */
   public function index(Request $request)
   {
+    // Cleaning up memberships that don't have users attach to them
+    // PREVENT THE NEED FOR THIS IN BETA!!!
+    foreach (Member::all() as $member)
+    {
+      // If membership doesn't have a primary but has at least one secondary...
+      if (!isset($member->primary) && isset($member->secondaries->first()->id))
+      {
+        //... set membership primary to the first secondary.
+        // This means that primary user account has been deleted...
+        $member->primary_id = $member->secondaries->first()->id;
+        $member->save();
+      }
+      // If membership has no primaries or secondaries, delete it
+      else if (!isset($member->primary) && !isset($member->secondaries->first()->id))
+        $member->delete();
+    }
+
     // member role_id is 5
     $members = Member::where('id', '!=', 1);
 
     $member_query = [];
 
+    // The incoming id field now should be of all users whose membership_id == 5
     if ($request->has('id') && isset($request->id))
-      array_push($member_query, ['id', $request->id]);
+      array_push($member_query, ['id', User::find($request->id)->membership_id]);
     if ($request->has('membership_number') && isset($request->membership_number))
       array_push($member_query, ['id', $request->membership_number]);
     if ($request->has('type') && isset($request->type))
@@ -175,6 +193,18 @@ class MemberController extends Controller
     $users = $users->mapWithKeys(function ($item) {
       return [$item['id'] => $item['firstname'] . ' ' . $item['lastname']];
     });
+
+    // If membership doesn't have a primary but has at least one secondary...
+    if (!isset($member->primary) && isset($member->secondaries->first()->id))
+    {
+      //... set membership primary to the first secondary.
+      // This means that primary user account has been deleted...
+      $member->primary_id = $member->secondaries->first()->id;
+      $member->save();
+    }
+    // If membership has no primaries or secondaries, delete it
+    else if (!isset($member->primary) && !isset($member->secondaries->first()->id))
+      $member->delete();
 
     return view('admin.members.show')->withMember($member)->withUsers($users);
   }

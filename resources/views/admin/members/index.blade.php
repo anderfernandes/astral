@@ -19,9 +19,10 @@
             <div class="default text">All Members</div>
           <div class="menu">
             <div class="item" data-value="">All Members</div>
-            @foreach (App\Member::where('id', '!=', 1)->get() as $member)
-              <div class="item" data-value="{{ $member->id }}">
-                {{ $member->primary->fullname }}
+            @foreach (App\User::where('role_id', 5)->get() as $user)
+              <div class="item" data-value="{{ $user->id }}">
+                {{ $user->fullname }}
+                <i class="address card {{ $user->member->primary_id == $user->id ? '' : 'outline' }} icon"></i>
               </div>
             @endforeach
           </div>

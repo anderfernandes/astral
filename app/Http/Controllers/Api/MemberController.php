@@ -163,7 +163,7 @@ class MemberController extends Controller
         $free_secondary->password   = bcrypt((str_random(16)));
         $free_secondary->type       = 'individual';
         $free_secondary->active     = true;
-        $free_secondary->role_id    = 7;
+        $free_secondary->role_id    = 5;
         $free_secondary->creator_id = $request->creator_id;
         $free_secondary->membership_id = $member->id;
         
@@ -213,7 +213,7 @@ class MemberController extends Controller
         $nonfree_secondary->password   = bcrypt((str_random(16)));
         $nonfree_secondary->type       = 'individual';
         $nonfree_secondary->active     = true;
-        $nonfree_secondary->role_id    = 7;
+        $nonfree_secondary->role_id    = 5;
         $nonfree_secondary->creator_id = $request->creator_id;
         $nonfree_secondary->membership_id = $member->id;
         

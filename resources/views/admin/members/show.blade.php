@@ -156,7 +156,7 @@
               <tr>
                 <td>
                   <a class="ui small header" href="{{ route('admin.users.show', $secondary) }}">
-                    <i class="address card icon"></i>
+                    <i class="address card outline icon"></i>
                     <div class="content">
                       {{ $secondary->fullname }}
                       <div class="sub header">
