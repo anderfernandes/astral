@@ -15,17 +15,20 @@
       Primary
     </div>
 
-    <div class="ui header">
-      <div class="content">{{ primary.firstname }} {{ primary.lastname }}</div>
-      <div class="sub header">
-        <div class="ui black label">{{ membership_type.name }}</div>
+    <div class="ui items" style="text-align:left">
+      <div class="item">
+        <div class="content">
+          <div class="header">
+            {{ primary.firstname }} {{ primary.lastname }}
+            <div class="ui black label">{{ membership_type.name }}</div>
+          </div>
+          <div class="description">
+            <p>{{ primary.email }}</p>
+            <p v-show="primary.address">{{ primary.address }}, {{ primary.state }} {{ primary.zip }}</p>
+            <p v-show="primary.phone">{{ primary.phone }}</p>
+          </div>
+        </div>
       </div>
-      <div class="sub header">{{ primary.email }}</div>
-      <div class="sub header">{{ primary.address }}</div>
-      <div class="sub header" v-show="primary.address">
-        {{ primary.address }}, {{ primary.state }} {{ primary.zip }}
-      </div>
-      <div v-show="primary.phone" class="sub header">{{ primary.phone }}</div>
     </div>
 
     <div
@@ -38,6 +41,7 @@
 
     <div class="ui two cards">
       <div
+        style="text-align:left"
         class="card"
         v-for="(free_secondary, i) in free_secondaries"
         :key="i"
