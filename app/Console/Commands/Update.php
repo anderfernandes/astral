@@ -41,17 +41,22 @@ class Update extends Command
     public function handle()
     {
         // Pull the latest updates from git
+        $this->info('Updating files...');
         $git = new Process(['git', 'pull']);
         $git->run();
-
         echo $git->getOutput();
+        $this->info('Files updated succesfully!');
 
         // Install composer dependencies
+        $this->info('Updating dependencies...');
         $composer = new Process(['composer', 'install']);
         $composer->run();
         echo $composer->getOutput();
+        $this->info('Dependencies updated succesfully!');
         // Migrate database so that the tables and columns sync with updates
+        $this->info('Updating database...');
         $this->call('migrate');
-        $this->info('It works!');
+        $this->info('Database updated succesfully!');
+        $this->info('Astral has been updated succesfully!');
     }
 }
