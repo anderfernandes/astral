@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Sale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SaleController extends Controller
 {
@@ -44,10 +46,12 @@ class SaleController extends Controller
    * @param  \App\Sale  $sale
    * @return \Illuminate\Http\Response
    */
-  public function show(Sale $sale)
+  public function show(Request $request, Sale $sale)
   {
     $setting = \App\Setting::find(1);
-    return view('sale')->withSale($sale)->withSetting($setting);
+    if (Hash::check($sale->customer->email, $request->query('source')))
+      return view('sale')->withSale($sale)->withSetting($setting);
+    else return abort(404);
   }
 
   /**
@@ -70,7 +74,22 @@ class SaleController extends Controller
    */
   public function update(Request $request, Sale $sale)
   {
-    //
+    // Confirm Sale
+    $sale->status = 'confirmed';
+    // Leave automatic memo indicating self confirmation
+    $sale->memo()->create([
+      'author_id' => $sale->customer->id,
+      'message'   => 'I have confirmed this sale myself on ' . now()->format('l, F j, Y \a\t g:m A') . '.',
+      'sale_id'   => $sale->id,
+    ]);
+    $sale->save();
+    // Send confirmation letter to sale creator and customer
+
+    // Return thank you view
+    $setting = \App\Setting::find(1);
+    if (Hash::check($sale->customer->email, $request->query('source')))
+      return view('sale-thank-you')->withSale($sale)->withSetting($setting);
+    else abort(404);
   }
 
   /**

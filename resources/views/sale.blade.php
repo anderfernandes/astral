@@ -1,13 +1,12 @@
 @extends('layout.astral')
 
-@section('title', 'Welcome!')
+@section('title', "Field Trip Confirmation - {$sale->customer->fullname} - {$sale->organization->name} (Sale #$sale->id)")
 
 @section('content')
 
 <div class="ui container">
 
-
-
+  @if ($sale->status != 'confirmed')
   <div class="ui info icon message">
     <i class="info circle icon"></i>
     <div class="content">
@@ -15,18 +14,30 @@
       <p>We are excited to have you at the {{ $setting->organization }}. Please confirm your field trip!</p>
     </div>
   </div>
+  @endif
 
   <img src="{{ $setting->logo }}" alt="{{ $setting->organization }}" class="ui centered tiny image">
   
+  @if ($sale->status == 'confirmed')
+
+  <div class="ui icon green message">
+    <i class="thumbs up icon"></i>
+    <div class="content">
+      <div class="header">
+        Your field trip has already been confirmed, {{ $sale->customer->firstname }}!
+      </div>
+      <p>We hope you and group have a great field trip!</p>
+    </div>
+  </div>
+  <a class="ui massive fluid blue button" href="http://{{ $setting->website }}">
+    Back to {{ $setting->organization }}'s website
+  </a>
+
+  @else
   <div class="ui center aligned header">
     <div class="content">
       {{ $setting->organization }}
-      <div class="sub header">
-        <i class="map marker alternate icon"></i> {{ $setting->address }} | 
-        <i class="phone icon"></i> {{ $setting->phone }} |
-        <i class="at icon"></i> {{ $setting->email }} |
-        <i class="globe icon"></i> {{$setting->website }}
-      </div>
+      <div class="sub header">Sale #{{ $sale->id }}</div>
     </div>
     
   </div>
@@ -174,12 +185,41 @@
       </div>
   </div>
 
-  <br><br>
+  <div class="ui divider"></div>
 
-  <div class="ui massive green fluid button">
+  {!! \Illuminate\Mail\Markdown::parse(App\Setting::find(1)->confirmation_text) !!}
+
+  <?php
+
+    //$events = $sale->events->count();
+    $numberOfEvents = $sale->events->where('id', '!=', 1)->count();
+
+  ?>
+
+  <ul>
+    <li>
+      We reserved {{ $numberOfEvents == 1 ? $sale->tickets->count() : $sale->tickets->count() / $numberOfEvents }} seats per show for you. If more than {{ $numberOfEvents == 1 ? $sale->tickets->count() : $sale->tickets->count() / $numberOfEvents }} people show up,
+      we admit them space available (up to our capacity of {{ App\Setting::find(1)->seats }}) for the same price you paid. You may
+      choose, include them in your payment or they may buy their own tickets at show time.
+    </li>
+  </ul>
+
+  <p>
+    Please visit our <a href="http://{{ App\Setting::find(1)->website }}" target="_blank">website</a> for directions, parking and other valuable info. We sincerely hope you enjoy your visit. Do not hesitate
+    to call or email us with any questions regarding your visit. Thank you a have a great day.
+  </p>
+
+  <p>Sincerely,</p>
+
+  <p>Visitor Services <br /> {{ App\Setting::find(1)->organization }}</p>
+
+  <a class="ui massive green fluid button" href="{{ route('sale.confirm', $sale) }}?source={{ request()->query('source') }}">
     <i class="thumbs up icon"></i>
     Confirm
-  </div>
+  </a>
+
+  @endif
+
   <h4 class="ui center aligned header">
     <div class="content">
       {{ $setting->organization }} <br /> {{ $setting->address }}
