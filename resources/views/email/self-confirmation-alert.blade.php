@@ -1,5 +1,7 @@
 @component('mail::message')
-<img src="{{ asset(\App\Setting::find(1)->logo) }}" style="margin-left:50%; height:48px; margin-bottom:12px" />
+<p style="text-align:center">
+  <img src="{{ asset(\App\Setting::find(1)->logo) }}" width="36" height="48" align="center" style="margin-bottom:12px" />
+</p>
 <h1 style="text-align:center">Confirm Your Reservation</h1>
 <h2 style="text-align:center">{{ \App\Setting::find(1)->organization }}</h2>
 

@@ -70,13 +70,29 @@ class SendSelfConfirmationEmails extends Command
 
           $sales = \App\Sale::whereIn('id', $sales)->get();
 
+          $sent = 0;
+
           foreach ($sales as $sale)
           {
-            Mail::to($sale->customer->email)
+            // Will they be emailed everyday?
+            if ($sale->status == 'open')
+            {
+              Mail::to($sale->customer->email)
                 ->cc($sale->creator->email)
                 ->send(new SelfConfirmation($sale));
+
+              $sale->memo()->create([
+                'author_id' => 1,
+                'message'   => 'Self confirmation email sent on ' . now()->format('l, F j, Y \a\t g:i A') . '.',
+              ]);
+
+              $sent++;
+            }
           }
-          
+
+          $word = $sent == 1 ? 'email' : 'emails';
+
+          $this->info("Sent $sent $word successfully!");
         }
     }
 }
