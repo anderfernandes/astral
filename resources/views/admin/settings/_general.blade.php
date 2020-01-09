@@ -119,7 +119,7 @@
         
       </div>
       <div class="field">
-          {!! Form::label('self_confirmation_time', 'Self confirmation time') !!}
+          {!! Form::label('self_confirmation_time', 'Time of the day self confirmation email will be sent') !!}
           {!! Form::text('self_confirmation_time', null, ['placeholder' => 'Time of the day in which self confirmation emails will be sent', 'id' => 'self-confirmation-time']) !!}
         </div>
     </div>

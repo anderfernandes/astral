@@ -328,10 +328,10 @@ function getAttendanceByType($ticketTypeID) {
               </div>
               @endif
               <div class="meta">
-                @foreach ($sale->products as $product)
+                @foreach ($sale->products->unique() as $product)
                   <div class="ui label" style="border-color: white; background-color: transparent; color: white; border-width: 1px">
                     <i class="box icon"></i>{{ $product->name }}<div class="detail">
-                      {{ $product->count() }}
+                      {{ $sale->products->where('id', $product->id)->count() }}
                     </div>
                   </div>
                 @endforeach

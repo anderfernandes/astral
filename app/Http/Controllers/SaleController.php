@@ -79,7 +79,7 @@ class SaleController extends Controller
     // Leave automatic memo indicating self confirmation
     $sale->memo()->create([
       'author_id' => $sale->customer->id,
-      'message'   => 'I have confirmed this sale myself on ' . now()->format('l, F j, Y \a\t g:m A') . '.',
+      'message'   => 'I have confirmed this sale myself on ' . now()->format('l, F j, Y \a\t g:i A') . '.',
       'sale_id'   => $sale->id,
     ]);
     $sale->save();
