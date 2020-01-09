@@ -180,3 +180,7 @@ Route::get('/sales', function () {
 
 Route::get('/sales/{sale}', 'SaleController@show')->name('sale');
 Route::get('/sales/{sale}/confirm', 'SaleController@update')->name('sale.confirm');
+
+/*Route::get('/mailable/{sale}', function(\App\Sale $sale) {
+  return new App\Mail\SelfConfirmation($sale);
+});*/

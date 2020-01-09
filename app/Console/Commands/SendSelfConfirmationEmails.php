@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Mail\SelfConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class SendSelfConfirmationEmails extends Command
 {
@@ -43,11 +45,15 @@ class SendSelfConfirmationEmails extends Command
 
         if ($self_confirmation)
         {
+          $sales = [];
+
+          $this->info("Self confirmation is enabled");
           $self_confirmation_days = $setting->self_confirmation_days;
-          $self_confirmation_time = $setting->self_confirmation_time;
 
           $start = now()->startOfDay();
-          $end = now()->endOfDay();
+          $end = now()->addDays($self_confirmation_days)->endOfDay();
+
+          $this->info("From {$start->toDateTimeString()} to {$end->toDateTimeString()}");
 
           $events = \App\Event::where([
             ['start', '>=', $start->toDateTimeString()], 
@@ -56,10 +62,21 @@ class SendSelfConfirmationEmails extends Command
 
           foreach ($events as $event)
           {
-            echo "$start->toDateTimeString()\n";
-            echo "$end->toDateTimeString()\n";
-            echo "$event->id\n";
+            foreach ($event->sales as $sale)
+              array_push($sales, $sale->id);
           }
+
+          $sales = array_unique($sales);
+
+          $sales = \App\Sale::whereIn('id', $sales)->get();
+
+          foreach ($sales as $sale)
+          {
+            Mail::to($sale->customer->email)
+                ->cc($sale->creator->email)
+                ->send(new SelfConfirmation($sale));
+          }
+          
         }
     }
 }

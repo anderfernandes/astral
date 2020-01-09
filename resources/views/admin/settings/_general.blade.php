@@ -99,7 +99,7 @@
     </div>
     <div class="field">
       <div class="ui self confirmation checkbox">
-        {!! Form::checkbox('self_confirmation', 'self_confirmation', null) !!}
+        {!! Form::checkbox('self_confirmation', true) !!}
         {!! Form::label('self_confirmation', 'Enable self confirmation via email') !!}
       </div>
     </div>
