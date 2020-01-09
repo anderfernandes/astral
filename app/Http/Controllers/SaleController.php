@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Sale;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ConfirmationLetter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -84,7 +86,8 @@ class SaleController extends Controller
     ]);
     $sale->save();
     // Send confirmation letter to sale creator and customer
-
+    Mail::to($sale->customer->email)->cc($sale->creator->email)
+                                    ->send(new ConfirmationLetter($sale));
     // Return thank you view
     $setting = \App\Setting::find(1);
     if (Hash::check($sale->customer->email, $request->query('source')))
