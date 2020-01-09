@@ -24,8 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $time = \App\Setting::find(1)->self_confirmation_time;
+        $time = \Illuminate\Support\Carbon::parse($time)->format('H:i');
+        $schedule->command('astral:send-self-confirmation-emails')
+                 ->dailyAt($time);
     }
 
     /**
