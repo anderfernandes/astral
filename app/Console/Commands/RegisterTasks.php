@@ -49,9 +49,9 @@ class RegisterTasks extends Command
           // Add new entry
           shell_exec('SCHTASKS /CREATE /SC MINUTE /MO 1 /TN "Astral" /TR ' . $command);
         } else if ($OS == 'Linux') {
-          shell_exec("* * * * * $command >> /dev/null 2>&1");
+          shell_exec('crontab -l | sed "\$a ' . "* * * * * $command >> /dev/null 2>&1" . '" | crontab -');
         }
 
-        $this->info($OS);
+        $this->info("Succesfully created task scheduling!");
     }
 }
