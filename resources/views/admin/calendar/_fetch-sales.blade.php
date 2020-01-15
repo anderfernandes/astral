@@ -20,7 +20,9 @@ function fetchSales(calEvent, jsEvent, view) {
             <div class="content">
               <div class="author">
                 ${memo.author.id == 1 ? "System" : memo.author.name}
-                <div class="ui tiny black label">${memo.author.id == 1 ? "System" : memo.author.role}</div>
+                <div class="ui tiny black label" style="display: ${memo.author.id == 1 ? 'none' : 'inline-block'}">
+                  ${memo.author.id == 1 ? "System" : memo.author.role}
+                </div>
                 <div class="metadata">
                   <span class="date">${moment(memo.created_at).calendar()}</span>
                 </div>

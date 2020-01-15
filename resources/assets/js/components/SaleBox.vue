@@ -48,7 +48,7 @@
         </div>
         <div class="ui top right attached basic label">
           <i class="user circle icon"></i>
-          {{ sale.customer.firstname }} {{ sale.customer.lastname }}
+          {{ sale.customer.id == 1 ? 'System' : `${sale.customer.firstname} ${sale.customer.lastname}` }}
           <span v-if="sale.customer.role.id != 1"
             >({{ sale.customer.role.name }})</span
           >
@@ -60,7 +60,7 @@
       <!-- Meta -->
       <div class="meta">
         <i class="user circle icon"></i>
-        {{ sale.creator.firstname }} |
+        {{ sale.creator.id == 1 ? 'System' : `${sale.creator.firstname}` }} |
         <i class="pencil icon"></i>
         {{ format(new Date(sale.created_at), $dateFormat.long) }}
         ({{

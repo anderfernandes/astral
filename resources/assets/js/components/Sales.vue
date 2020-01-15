@@ -27,7 +27,9 @@
                 on {{ moment(sale.created_at).format("dddd, MMMM D, YYYY") }}
               </div>
               <div class="description">
-                <div class="ui label" v-for="ticket in sale.tickets">{{ ticket.type }} ({{ ticket.quantity }})</div>
+                <div class="ui label" v-for="ticket in sale.tickets" :key="ticket.id">
+                  {{ ticket.type }} ({{ ticket.quantity }})
+                </div>
               </div>
             </div>
             <div class="extra content">

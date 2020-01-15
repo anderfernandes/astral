@@ -135,7 +135,7 @@
                 </div>
                 <div class="meta" v-if="sale.creator">
                   <i class="user circle icon"></i>
-                  {{ sale.creator.id == 1 ? "system" : sale.creator.name }}
+                  {{ sale.creator.id == 1 ? "System" : sale.creator.name }}
                 </div>
                 <div class="meta">
                   <i class="inbox icon"></i> {{ sale.source }}
@@ -397,8 +397,8 @@
                   <div class="avatar"><i class="user circle big icon"></i></div>
                   <div class="content" v-if="memo.author">
                     <div class="author">
-                      {{ memo.author.name }}
-                      <div class="ui tiny black label">{{ memo.author.role }}</div>
+                      {{ memo.author.id == 1 ? 'System' : memo.author.name }}
+                      <div class="ui tiny black label" v-show="memo.author.id != 1">{{ memo.author.role }}</div>
                       <div class="metadata">
                         <span class="date">
                           {{ format(new Date(memo.created_at), $dateFormat.long) }}
