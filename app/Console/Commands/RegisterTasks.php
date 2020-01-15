@@ -41,15 +41,13 @@ class RegisterTasks extends Command
 
         $path = base_path();
 
-        $command = "php $path/artisan schedule:run";
-
         if ($OS == 'Windows') {
           // Delete previous entries
           shell_exec('SCHTASKS /DELETE /TN "Astral" /f');
           // Add new entry
-          shell_exec('SCHTASKS /CREATE /SC MINUTE /MO 1 /TN "Astral" /TR ' . $command);
+          shell_exec('SCHTASKS /CREATE /SC MINUTE /MO 1 /TN "Astral" /TR ' . "php $path\artisan schedule:run");
         } else if ($OS == 'Linux') {
-          shell_exec('(crontab -l ; echo "* * * * * ' . $command . ' >> /dev/null 2>&1") | sort - | uniq - | crontab -');
+          shell_exec('(crontab -l ; echo "* * * * * ' . "php $path/artisan schedule:run" . ' >> /dev/null 2>&1") | sort - | uniq - | crontab -');
         }
 
         $this->info("Succesfully created task scheduling!");
