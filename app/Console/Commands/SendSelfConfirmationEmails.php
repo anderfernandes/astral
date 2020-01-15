@@ -72,13 +72,17 @@ class SendSelfConfirmationEmails extends Command
 
           $sent = 0;
 
+
           foreach ($sales as $sale)
           {
             // Will they be emailed everyday?
             if ($sale->status == 'open')
             {
+
+              $cc = $sale->creator_id == 1 ? $setting->email : $sale->creator->email;
+              
               Mail::to($sale->customer->email)
-                ->cc($sale->creator->email)
+                ->cc($cc)
                 ->send(new SelfConfirmation($sale));
 
               $sale->memo()->create([
@@ -93,6 +97,8 @@ class SendSelfConfirmationEmails extends Command
           $word = $sent == 1 ? 'email' : 'emails';
 
           $this->info("Sent $sent $word successfully!");
+        } else {
+          $this->info('Self confirmations are set as disabled!');
         }
     }
 }

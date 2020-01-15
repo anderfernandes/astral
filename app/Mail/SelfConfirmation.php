@@ -31,9 +31,9 @@ class SelfConfirmation extends Mailable
      */
     public function build()
     {
-        $organization = \App\Setting::find(1)->organization;
+        $setting = \App\Setting::find(1);
 
-        return $this->from($organization)
+        return $this->from($setting->email, $setting->organization)
                     ->subject("Please confirm your field trip")
                     ->markdown('email.self-confirmation-alert');
     }
