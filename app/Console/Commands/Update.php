@@ -57,6 +57,9 @@ class Update extends Command
         $this->info('Updating database...');
         $this->call('migrate');
         $this->info('Database updated succesfully!');
+        $this->info('Clearing cache...');
+        Artisan::call('cache:clear');
+        $this->info('Cache cleared succesfully!');
         $this->info('Astral has been updated succesfully!');
     }
 }
