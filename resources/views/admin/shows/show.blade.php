@@ -98,7 +98,9 @@
         <?php 
           parse_str(parse_url($show->trailer_url, PHP_URL_QUERY), $video_url)
         ?>
+        @if (isset($video_url['v']))
         <div class="ui 16:9 embed" data-source="youtube" data-id="{{ $video_url['v'] }}" data-placeholder="{{ $show->cover }}"></div>
+        @endif
       @endif
     </div>
   </div>

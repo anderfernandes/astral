@@ -89,6 +89,11 @@ class ShowController extends Controller
       'expiration'  => 'nullable|date',
     ]);
 
+    if (!strpos($request->trailer_url, 'youtube.com')) {
+      session()->flash('warning', "Please enter a Youtube video URL.");
+      return redirect()->back()->withInput();
+    }
+
     $show = new Show;
 
     $show->name        = $request->name;
@@ -160,6 +165,11 @@ class ShowController extends Controller
       'trailer_url' => 'nullable|url',
       'expiration'  => 'nullable|date',
     ]);
+
+    if (!strpos($request->trailer_url, 'youtube.com')) {
+      session()->flash('warning', "Please enter a Youtube video URL.");
+      return redirect()->back()->withInput();
+    }
 
     $show->name        = $request->input('name');
     $show->description = $request->input('description');
