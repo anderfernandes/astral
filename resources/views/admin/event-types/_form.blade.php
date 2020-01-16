@@ -31,7 +31,7 @@
     </div>
     <div class="field">
       {!! Form::label('public', 'Public') !!}
-      {!! Form::select('public', [ true => 'Yes', false => 'No' ], false, [ 'class' => 'ui dropdown' ]) !!}
+      {!! Form::select('public', [ true => 'Yes', false => 'No' ], null, [ 'class' => 'ui dropdown' ]) !!}
     </div>
   </div>
   <div class="field">
