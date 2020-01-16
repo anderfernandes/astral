@@ -35,7 +35,7 @@
           <img src="{{ (substr($show->cover, 0, 4) == ('http') || $show->cover == '/default.png') ? $show->cover : Storage::url($show->cover) }}">
           <br>
           @if ($show->trailer_url)
-          <div class="ui fluid black button" onclick="$('.ui.trailer.fullscreen.modal').modal('toggle')">
+          <div class="ui fluid black button" onclick="$('.ui.trailer.modal').modal('toggle')">
             <i class="film icon"></i>
             View Trailer
           </div>
@@ -86,7 +86,7 @@
     </div>
   </div>
 
-  <div class="ui basic trailer fullscreen modal">
+  <div class="ui basic trailer modal">
     <div class="actions">
       <div class="ui ok inverted button">
         <i class="close icon"></i>
