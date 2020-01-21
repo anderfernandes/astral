@@ -89,7 +89,7 @@ class ShowController extends Controller
       'expiration'  => 'nullable|date',
     ]);
 
-    if (!strpos($request->trailer_url, 'youtube.com')) {
+    if ((strlen($request->trailer_url) > 0) && !strpos($request->trailer_url, 'youtube.com')) {
       session()->flash('warning', "Please enter a Youtube video URL.");
       return redirect()->back()->withInput();
     }
@@ -166,7 +166,7 @@ class ShowController extends Controller
       'expiration'  => 'nullable|date',
     ]);
 
-    if (!strpos($request->trailer_url, 'youtube.com')) {
+    if ((strlen($request->trailer_url) > 0) && !strpos($request->trailer_url, 'youtube.com')) {
       session()->flash('warning', "Please enter a Youtube video URL.");
       return redirect()->back()->withInput();
     }
