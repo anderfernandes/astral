@@ -204,16 +204,23 @@
     </li>
   </ul>
 
-  <p>
-    Please visit our <a href="http://{{ App\Setting::find(1)->website }}" target="_blank">website</a> for directions, parking and other valuable info. We sincerely hope you enjoy your visit. Do not hesitate
-    to call or email us with any questions regarding your visit. Thank you a have a great day.
-  </p>
+  <ul>
+    <li>
+      Please visit our <a href="http://{{ App\Setting::find(1)->website }}" target="_blank">website</a> for directions, parking and other valuable info. We sincerely hope you enjoy your visit. Do not hesitate
+      to call or email us with any questions regarding your visit. Thank you a have a great day.
+    </li>
+  </ul>
 
-  <p>Sincerely,</p>
+  <hr />
 
-  <p>Visitor Services <br /> {{ App\Setting::find(1)->organization }}</p>
+  <div class="ui checkbox">
+    <input type="checkbox" tabindex="0" class="hidden">
+    <label>I agree with the terms above. I am ready to confirm my reservation.</label>
+  </div>
 
-  <a class="ui massive green fluid button" href="{{ route('sale.confirm', $sale) }}?source={{ request()->query('source') }}">
+  <br><br>
+
+  <a class="ui massive green fluid button disabled" href="{{ route('sale.confirm', $sale) }}?source={{ request()->query('source') }}">
     <i class="thumbs up icon"></i>
     Confirm
   </a>
@@ -235,5 +242,15 @@
     </div>
   </h4>
 </div>
+
+<script>
+
+  let confirm_button = document.querySelector('.ui.massive.green.fluid.button')
+  $('.ui.checkbox').checkbox({
+    onChecked: function() { $(confirm_button).removeClass('disabled') },
+    onUnchecked: function() { $(confirm_button).addClass('disabled') },
+    })
+
+</script>
 
 @endsection

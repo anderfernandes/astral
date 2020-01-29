@@ -76,6 +76,9 @@ class SaleController extends Controller
    */
   public function update(Request $request, Sale $sale)
   {
+    if (!$request->has('source') || !Hash::check($sale->customer->email, $request->query('source'))) {
+      abort(404);
+    }
     // Confirm Sale
     $sale->status = 'confirmed';
     // Leave automatic memo indicating self confirmation
@@ -90,9 +93,9 @@ class SaleController extends Controller
                                     ->send(new ConfirmationLetter($sale));
     // Return thank you view
     $setting = \App\Setting::find(1);
-    if (Hash::check($sale->customer->email, $request->query('source')))
-      return view('sale-thank-you')->withSale($sale)->withSetting($setting);
-    else abort(404);
+
+    return view('sale-thank-you')->withSale($sale)->withSetting($setting);
+    
   }
 
   /**
