@@ -348,8 +348,8 @@
   const validate = secondary => {
     if (secondary.use_primary_data)
       return (
-        secondary.firstname.length > 3 &&
-        secondary.lastname.length > 3 &&
+        secondary.firstname.length > 2 &&
+        secondary.lastname.length > 2 &&
         secondary.email.includes('@')
       )
     else
