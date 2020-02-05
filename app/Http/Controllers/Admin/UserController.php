@@ -25,7 +25,8 @@ class UserController extends Controller
 
     $users = User::where([
       ['type', 'individual'],
-      ['role_id', '!=', 5]
+      ['role_id', '!=', 5],
+      ['id', '!=', 1]
     ]);
 
     $user_query = [];
