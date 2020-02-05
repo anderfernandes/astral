@@ -88,7 +88,7 @@
             <div class="item">
               <div class="ui tiny image">
                 <img src="/astral-logo-dark.png" v-if="event.show_id == 1" />
-                <img :src="event.show.cover" :alt="event.show.name" v-else />
+                <img :src="event.show.cover" :alt=" event.show.id == 1 ? event.memo : event.show.name" v-else />
               </div>
               <div class="content">
                 <div class="meta">
@@ -110,7 +110,7 @@
                     {{ event.type.name }}
                   </div>
                 </div>
-                <div class="header">{{ event.show.name }}</div>
+                <div class="header">{{ event.show.id == 1 ? event.memo : event.show.name }}</div>
                 <div class="meta">
                   {{ format(new Date(event.start), $dateFormat.long) }}
                   ({{

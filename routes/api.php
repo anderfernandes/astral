@@ -753,6 +753,7 @@ Route::get('events', function (Request $request) {
       'public'          => $event->public,
       'allDay'          => $isAllDay,
       'memo'            => $event->memo,
+      'memos'           => $event->memos,
     ]);
   }
   $eventsCollect = collect($eventsArray);

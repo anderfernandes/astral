@@ -57,6 +57,8 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
         {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}
       @else
         {{ $sale->customer->fullname }}<br />
+        {{ $sale->organization->name }}<br />
+        {{ $sale->organization->name }}<br />
         {{ $sale->customer->address }} <br />
         {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
       @endif
@@ -88,7 +90,7 @@ $title = $sale->organization->name != $sale->customer->fullname ? $sale->organiz
                 <td>
                   <h4 class="ui header">
                     <div class="content">
-                      {{ $event->show->name }}
+                      {{ $event->show_id == 1 ? $event->memo : $event->show->name }}
                     </div>
                   </h4>
                 </td>

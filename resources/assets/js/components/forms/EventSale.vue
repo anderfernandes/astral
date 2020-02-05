@@ -31,11 +31,12 @@
         <div class="ui items">
           <div class="item">
             <div class="image">
-              <img :src="selected_event.show.cover" :alt="selected_event.show.name">
+              <img :src="selected_event.show.id == 1 ? '/astral-logo-light.png' : selected_event.show.cover"
+                :alt="selected_event.show.id == 1 ? selected_event.memo : selected_event.show.name">
             </div>
             <div class="content">
               <div class="header" style="color:white">
-                {{ selected_event.show.name }}
+                {{ selected_event.show.id == 1 ? selected_event.memo : selected_event.show.name }}
               </div>
               <div class="meta">
                 <p style="color:white">
@@ -47,13 +48,13 @@
               </div>
               <div class="meta">
                 <div class="ui inverted header">
-                  <div class="ui basic label" style="margin-left:0">
+                  <div class="ui basic label" style="margin-left:0" v-show="selected_event.show.id != 1">
                     {{ selected_event.show.type }}
                   </div>
                   <div class="ui basic label">
                     {{ selected_event.type.name }}
                   </div>
-                  <div class="ui basic label">
+                  <div class="ui basic label" v-if="selected_event.show.id != 1">
                     {{ selected_event.show.duration }} minutes
                   </div>
                   <div class="ui basic label">
@@ -63,7 +64,9 @@
               </div>
               <div class="description">
                 <div class="ui divider"></div>
-                <p style="color:white">{{ selected_event.show.description }}</p>
+                <p style="color:white">
+                  {{ selected_event.show.id == 1 && selected_event.memos.length > 0 ? selected_event.memos[0].message : selected_event.show.description }}
+                </p>
               </div>
             </div>
           </div>

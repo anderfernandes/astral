@@ -125,7 +125,7 @@ export default {
         let withOrganization = response.data.map(customer => ({
           key   : customer.id,
           value : customer.id,
-          text  : `${customer.name} (${customer.role} ${ customer.organization.id == 1 ? '' : 'at ' + customer.organization.name })`,
+          text  : `${customer.name} (${customer.role}${ customer.organization.id == 1 ? '' : ' at ' + customer.organization.name })`,
         }))
         
         let withoutOrganization = response.data.map(customer => ({
