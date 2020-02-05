@@ -226,7 +226,7 @@
             <transition mode="out-in" name="fade">
 
               <!--- Payments --->
-              <div class="ui segment" v-if="sale.balance >= 0">
+              <div class="ui segment">
                 <div class="ui horizontal divider header">
                   <i class="money icon"></i> Payments
                 </div>
