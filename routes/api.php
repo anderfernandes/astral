@@ -1742,6 +1742,44 @@ Route::group(["prefix" => "public"], function () {
       "data" => $products,
     ], 201);
   });
+
+  // This route signs up users for newsletters and create and user account for them if one doesn't exist
+  Route::post("newsletter", function(Request $request) {
+    $user = User::where('email', $request->email)->first();
+    $visitor_role = App\Role::where('name', 'Visitor')->first();
+    $setting = App\Setting::find(1);
+
+    if (!$user)
+    {
+      $user = new User();
+      $user->firstname = ucwords($request->firstname);
+      $user->lastname = ucwords($request->lastname);
+      $user->email = strtolower($request->email);
+      $user->password = Hash::make(str_random(10));
+      $user->type = 'individual';
+      $user->role_id = $visitor_role->id;
+      $user->organization_id = 1;
+      $user->membership_id = 1;
+      $user->address = "Address";
+      $user->city = "City";
+      $user->state = "State";
+      $user->country = "United States";
+      $user->phone = $setting->phone;
+      $user->active = true;
+      $user->staff = false;
+      $user->creator_id = 1;
+      $user->save();
+    }
+
+    $user->newsletter = true;
+
+    $user->save();
+
+    // Send email
+    Mail::to($user->email)->send(new \App\Mail\NewsletterWelcome($user));
+
+    return response()->json(["message" => "Newsletter signup succesfull, $user->firstname!"], 201);
+  });
 });
 
 Route::get("states", function () {
