@@ -80,23 +80,31 @@ class SendSelfConfirmationEmails extends Command
             {
 
               $cc = $sale->creator_id == 1 ? $setting->email : $sale->creator->email;
-              
-              Mail::to($sale->customer->email)
+
+              try {
+                Mail::to($sale->customer->email)
                 ->cc($cc)
                 ->send(new SelfConfirmation($sale));
 
-              $sale->memo()->create([
-                'author_id' => 1,
-                'message'   => 'Self confirmation email sent on ' . now()->format('l, F j, Y \a\t g:i A') . '.',
-              ]);
+                $sale->memo()->create([
+                  'author_id' => 1,
+                  'message'   => 'Self confirmation email sent on ' . now()->format('l, F j, Y \a\t g:i A') . '.',
+                ]);
+  
+                $sent++;
 
-              $sent++;
+              } catch (\Exception $e) {
+                $sale->memo()->create([
+                  'author_id' => 1,
+                  'message'   => 'Unable to send confirmation email. Make sure the address',
+                ]);
+              }
             }
           }
 
           $word = $sent == 1 ? 'email' : 'emails';
 
-          $this->info("Sent $sent $word successfully!");
+          $this->info("Sent $sent/$sales->count() $word successfully!");
         } else {
           $this->info('Self confirmations are set as disabled!');
         }

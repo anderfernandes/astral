@@ -1788,15 +1788,25 @@ Route::group(["prefix" => "public"], function () {
 
       $user->newsletter = true;
 
-      $user->save();
+      
 
       // Send email
-      Mail::to($user->email)->send(new \App\Mail\NewsletterWelcome($user));
+      try {
+        
+        Mail::to($user->email)->send(new \App\Mail\NewsletterWelcome($user));
+        
+        $user->save();
 
-      return response()->json([
-        "message" => "Newsletter signup succesfull, $user->firstname!",
-        "email" => $user->email,
-      ], 201);
+        return response()->json([
+          "message" => "Newsletter signup succesfull, $user->firstname!",
+          "email" => $user->email,
+        ], 201);
+
+      } catch (\Exception $e) {
+        return response()->json([
+          "message" => "Please enter a valid email and try again"
+        ], $e->getCode());
+      }
     }
   });
 });
