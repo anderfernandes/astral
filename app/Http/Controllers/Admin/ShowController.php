@@ -79,20 +79,30 @@ class ShowController extends Controller
    */
   public function store(Request $request)
   {
-    $this->validate($request, [
-      'name'        => 'required|unique:shows',
-      'description' => 'required',
-      'type_id'     => 'required',
-      'duration'    => 'required|integer',
-      'cover'       => 'image',
-      'trailer_url' => 'nullable|url',
-      'expiration'  => 'nullable|date',
-    ]);
+    $max_upload_filesize = str_replace("M", "", ini_get("upload_max_filesize"));
+
+    if ($request->has('cover') && $request->file('cover')->getClientSize() == 0)
+    {
+      session()->flash('warning', "The uploaded show cover cannot be bigger than $max_upload_filesize MB.");
+      return redirect()->back()->withInput();
+    }
 
     if ((strlen($request->trailer_url) > 0) && !strpos($request->trailer_url, 'youtube.com')) {
       session()->flash('warning', "Please enter a Youtube video URL.");
       return redirect()->back()->withInput();
     }
+
+    $max_upload_filesize = (int)$max_upload_filesize * 1024;
+
+    $this->validate($request, [
+      'name'        => 'required|unique:shows',
+      'description' => 'required',
+      'type_id'     => 'required',
+      'duration'    => 'required|integer',
+      'cover'       => "image|max:$max_upload_filesize",
+      'trailer_url' => 'nullable|url',
+      'expiration'  => 'nullable|date',
+    ]);
 
     $show = new Show;
 
@@ -157,19 +167,30 @@ class ShowController extends Controller
   public function update(Request $request, Show $show)
   {
 
+    $max_upload_filesize = str_replace("M", "", ini_get("upload_max_filesize"));
+
+    if ($request->has('cover') && $request->file('cover')->getClientSize() == 0)
+    {
+      session()->flash('warning', "The uploaded show cover cannot be bigger than $max_upload_filesize MB.");
+      return redirect()->back()->withInput();
+    }
+
+    if ((strlen($request->trailer_url) > 0) && !strpos($request->trailer_url, 'youtube.com')) {
+      session()->flash('warning', "Please enter a Youtube video URL.");
+      return redirect()->back()->withInput();
+    }
+
+    $max_upload_filesize = (int)$max_upload_filesize * 1024;
+
     $this->validate($request, [
       'name'        => 'required',
       'description' => 'required',
       'type_id'     => 'required',
       'duration'    => 'required|integer',
       'trailer_url' => 'nullable|url',
+      'cover'       => "nullable|image|max:$max_upload_filesize",
       'expiration'  => 'nullable|date',
     ]);
-
-    if ((strlen($request->trailer_url) > 0) && !strpos($request->trailer_url, 'youtube.com')) {
-      session()->flash('warning', "Please enter a Youtube video URL.");
-      return redirect()->back()->withInput();
-    }
 
     $show->name        = $request->input('name');
     $show->description = $request->input('description');
@@ -202,6 +223,8 @@ class ShowController extends Controller
   {
     // Log created event
     Log::info(Auth::user()->fullname . ' deleted Show ' . $show->name . ' using admin');
+
+    // Delete upload file in the future
 
     $temp = $show;
 

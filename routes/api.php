@@ -5,7 +5,7 @@ use Illuminate\Mail\Markdown;
 
 use App\{Event, Setting, User, Payment, PaymentMethod, Sale, Organization, EventType};
 use App\{MemberType, Show, TicketType};
-use Illuminate\Support\Facades\{Auth, Storage};
+use Illuminate\Support\Facades\{Auth, Storage, Route, Validator, Hash, Mail};
 use Illuminate\Support\Carbon;
 use App\Product;
 
@@ -1745,40 +1745,59 @@ Route::group(["prefix" => "public"], function () {
 
   // This route signs up users for newsletters and create and user account for them if one doesn't exist
   Route::post("newsletter", function(Request $request) {
-    $user = User::where('email', $request->email)->first();
-    $visitor_role = App\Role::where('name', 'Visitor')->first();
-    $setting = App\Setting::find(1);
 
-    if (!$user)
+    $validator = Validator::make($request->all(), [
+      'firstname' => ['required', 'string', 'min:2', 'max:32'],
+      'lastname'  => ['required', 'string', 'min:2', 'max:32'],
+      'email'     => ['required', 'email', 'min:2', 'max:32'],
+    ]);
+
+    if ($validator->fails())
+      return response()->json([
+        'type' => 'error',
+        'message' => 'Please fix the errors below.',
+        'errors' => $validator->errors()
+      ], 422);
+    else
     {
-      $user = new User();
-      $user->firstname = ucwords($request->firstname);
-      $user->lastname = ucwords($request->lastname);
-      $user->email = strtolower($request->email);
-      $user->password = Hash::make(str_random(10));
-      $user->type = 'individual';
-      $user->role_id = $visitor_role->id;
-      $user->organization_id = 1;
-      $user->membership_id = 1;
-      $user->address = "Address";
-      $user->city = "City";
-      $user->state = "State";
-      $user->country = "United States";
-      $user->phone = $setting->phone;
-      $user->active = true;
-      $user->staff = false;
-      $user->creator_id = 1;
+      $user = User::where('email', $request->email)->first();
+      $visitor_role = App\Role::where('name', 'Visitor')->first();
+      $setting = App\Setting::find(1);
+
+      if (!$user)
+      {
+        $user = new User();
+        $user->firstname = ucwords($request->firstname);
+        $user->lastname = ucwords($request->lastname);
+        $user->email = strtolower($request->email);
+        $user->password = Hash::make(str_random(10));
+        $user->type = 'individual';
+        $user->role_id = $visitor_role->id;
+        $user->organization_id = 1;
+        $user->membership_id = 1;
+        $user->address = "Address";
+        $user->city = "City";
+        $user->state = "State";
+        $user->country = "United States";
+        $user->phone = $setting->phone;
+        $user->active = true;
+        $user->staff = false;
+        $user->creator_id = 1;
+        $user->save();
+      }
+
+      $user->newsletter = true;
+
       $user->save();
+
+      // Send email
+      Mail::to($user->email)->send(new \App\Mail\NewsletterWelcome($user));
+
+      return response()->json([
+        "message" => "Newsletter signup succesfull, $user->firstname!",
+        "email" => $user->email,
+      ], 201);
     }
-
-    $user->newsletter = true;
-
-    $user->save();
-
-    // Send email
-    Mail::to($user->email)->send(new \App\Mail\NewsletterWelcome($user));
-
-    return response()->json(["message" => "Newsletter signup succesfull, $user->firstname!"], 201);
   });
 });
 
