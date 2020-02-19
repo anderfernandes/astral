@@ -6,14 +6,19 @@
     <h1 class="ui center aligned header">
       Secondaries
     </h1>
-    <p>
+    <p v-if="membership_type.max_secondaries > 0">
       How many free secondaries? (Maximum for
       <strong>{{ membership_type.name }}</strong> is
       <strong>{{ membership_type.max_secondaries }}</strong
       >)
     </p>
-    <h1>{{ free_secondaries.length }}</h1>
-    <div class="ui icon buttons">
+    <p v-else>
+      <strong>{{ membership_type.name }}</strong> does not allow any free secondaries.
+    </p>
+    <h1 v-show="membership_type.max_secondaries > 0">
+      {{ free_secondaries.length }}
+    </h1>
+    <div class="ui icon buttons" v-show="membership_type.max_secondaries > 0">
       <div @click="add" class="ui basic green button">
         <i class="plus icon"></i>
       </div>

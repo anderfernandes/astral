@@ -28,7 +28,7 @@ class MemberTypesTableSeeder extends Seeder
         'description'     => 'Individual Membership',
         'price'           => 50,
         'duration'        => 365,
-        'max_secondaries' => 1,
+        'max_secondaries' => 0,
         'secondary_price' => 25,
         'creator_id'      => 1,
         'created_at'      => Date::now('America/Chicago')->toDateTimeString(),

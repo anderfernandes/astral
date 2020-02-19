@@ -38,11 +38,11 @@
         <div class="extra content">
           <div class="ui basic black label">
             <i class="address card icon"></i>
-            {{ type.max_secondaries }}
-            free
-            {{
-              parseInt(type.max_secondaries) == 1 ? 'secondary' : 'secondaries'
-            }}
+              {{ type.max_secondaries == 0 ? 'no' : type.max_secondaries }}
+              free
+              {{
+                parseInt(type.max_secondaries) == 1 ? 'secondary' : 'secondaries'
+              }}
             ($ {{ type.secondary_price }} / extra)
           </div>
         </div>
