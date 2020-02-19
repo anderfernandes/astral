@@ -23,13 +23,13 @@
 
   <div class="ui clearing basic segment" style="padding:0 0 0 0">
     <h4 class="ui left floated header">
-      {{ $member->users[0]->fullname }}<br />
-      {{ $member->users[0]->address }} </br>
-      {{ $member->users[0]->city }}, {{ $member->users[0]->state }} {{ $member->users[0]->zip }}
+      {{ $member->primary->fullname }}<br />
+      {{ $member->primary->address }} </br>
+      {{ $member->primary->city }}, {{ $member->primary->state }} {{ $member->primary->zip }}
     </h4>
   </div>
 
-  <p>Dear {{ $member->users[0]->fullname }},</p>
+  <p>Dear {{ $member->primary->fullname }},</p>
 
   <p>
     Thank you very much for purchasing a membership at the {{ App\Setting::find(1)->organization }}.
@@ -48,7 +48,6 @@
       </tr>
     </thead>
     <tbody>
-      @foreach($member->users as $key => $user)
       <tr>
         <td>
           <h4 class="ui header">
@@ -58,12 +57,9 @@
         <td>
           <h4 class="ui header">
             <div class="content">
-              {{ $user->fullname }}
+              {{ $member->primary->fullname }}
               <div class="sub header">
                 {{ $member->type->name }}
-                @if ($key != 0)
-                  (Secondary)
-                @endif
               </div>
             </div>
           </h4>
@@ -71,13 +67,29 @@
         <td>{{ Date::parse($member->start)->format('l, F j, Y') }}</td>
         <td>{{ Date::parse($member->end)->format('l, F j, Y') }}</td>
         <td class="right aligned">$</td>
-        <td class="right aligned">
-          @if ($key != 0)
-            0.00
-          @else
-            {{ number_format($member->type->price, 2) }}
-          @endif
+        <td class="right aligned">{{ number_format($member->type->price, 2) }}</td>
+      </tr>
+      @foreach($member->secondaries as $secondary)
+      <tr>
+        <td>
+          <h4 class="ui header">
+            {{ $member->number }}
+          </h4>
         </td>
+        <td>
+          <h4 class="ui header">
+            <div class="content">
+              {{ $secondary->fullname }}
+              <div class="sub header">
+                {{ $member->type->name }} (Secondary)
+              </div>
+            </div>
+          </h4>
+        </td>
+        <td>{{ Date::parse($member->start)->format('l, F j, Y') }}</td>
+        <td>{{ Date::parse($member->end)->format('l, F j, Y') }}</td>
+        <td class="right aligned">$</td>
+        <td class="right aligned">{{ number_format($member->type->secondary_price, 2) }}</td>
       </tr>
       @endforeach
       <tr>
@@ -93,21 +105,21 @@
       <tr>
         <td colspan="4" class="right aligned" style="border-top: 0"><strong>Total</strong></td>
         <td class="right aligned">$</td>
-        <td class="right aligned">{{ number_format($sale->payments[0]->total, 2) }}</td>
+        <td class="right aligned">{{ number_format($sale->payments->first()->total, 2) }}</td>
       </tr>
       <tr>
         <td colspan="4" class="right aligned" style="border-top: 0"><strong>Amount Paid</strong></td>
         <td class="right aligned">$</td>
-        <td class="right aligned" style="color:#cf3534"><strong>{{ number_format($sale->payments[0]->tendered * - 1, 2) }}</strong></td>
+        <td class="right aligned" style="color:#cf3534"><strong>{{ number_format($sale->payments->first()->tendered * - 1, 2) }}</strong></td>
       </tr>
       <tr>
         <td colspan="4" class="right aligned" style="border-top: 0"><strong>Change</strong></td>
         <td class="right aligned">$</td>
         <td class="right aligned">
           <?php
-            $total = number_format($sale->payments[0]->total, 2);
-            $paid = number_format($sale->payments[0]->tendered, 2);
-            $change = number_format($sale->payments[0]->change_due, 2);
+            $total = number_format($sale->payments->first()->total, 2);
+            $paid = number_format($sale->payments->first()->tendered, 2);
+            $change = number_format($sale->payments->first()->change_due, 2);
 
             $balance = $total - ($paid - $change);
 

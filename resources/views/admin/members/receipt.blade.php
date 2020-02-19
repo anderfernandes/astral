@@ -81,7 +81,7 @@
         <td>{{ Date::parse($member->start)->format('l, F j, Y') }}</td>
         <td>{{ Date::parse($member->end)->format('l, F j, Y') }}</td>
         <td class="right aligned">$</td>
-        <td class="right aligned">0.00</td>
+        <td class="right aligned">{{ number_format($member->type->price, 2) }}</td>
       </tr>
       @foreach($member->secondaries as $secondary)
       <tr>
@@ -103,7 +103,7 @@
         <td>{{ Date::parse($member->start)->format('l, F j, Y') }}</td>
         <td>{{ Date::parse($member->end)->format('l, F j, Y') }}</td>
         <td class="right aligned">$</td>
-        <td class="right aligned">0.00</td>
+        <td class="right aligned">{{ number_format($member->type->secondary_price, 2) }}</td>
       </tr>
       @endforeach
       <tr>
@@ -119,21 +119,21 @@
       <tr>
         <td colspan="4" class="right aligned" style="border-top: 0"><strong>Total</strong></td>
         <td class="right aligned">$</td>
-        <td class="right aligned">{{ number_format($sale->payments[0]->total, 2) }}</td>
+        <td class="right aligned">{{ number_format($sale->payments->first()->total, 2) }}</td>
       </tr>
       <tr>
         <td colspan="4" class="right aligned" style="border-top: 0"><strong>Amount Paid</strong></td>
         <td class="right aligned">$</td>
-        <td class="right aligned" style="color:#cf3534"><strong>{{ number_format($sale->payments[0]->tendered * - 1, 2) }}</strong></td>
+        <td class="right aligned" style="color:#cf3534"><strong>{{ number_format($sale->payments->first()->tendered * - 1, 2) }}</strong></td>
       </tr>
       <tr>
         <td colspan="4" class="right aligned" style="border-top: 0"><strong>Change</strong></td>
         <td class="right aligned">$</td>
         <td class="right aligned">
           <?php
-            $total = number_format($sale->payments[0]->total, 2);
-            $paid = number_format($sale->payments[0]->tendered, 2);
-            $change = number_format($sale->payments[0]->change_due, 2);
+            $total = number_format($sale->payments->first()->total, 2);
+            $paid = number_format($sale->payments->first()->tendered, 2);
+            $change = number_format($sale->payments->first()->change_due, 2);
 
             $balance = $total - ($paid - $change);
 

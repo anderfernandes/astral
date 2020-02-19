@@ -350,11 +350,18 @@ class MemberController extends Controller
 
   public function receipt(Member $member, Request $request)
   {
+    $primary_price = (float)$member->type->price;
+    $secondary_price = 0;
+
+    if ($member->secondaries->count() > (int)$member->type->max_secondaries)
+      $secondary_price = $member->secondaries->count() * (int)$member->type->secondary_price;
+
+    $membership_total = $primary_price + $secondary_price;
+
     $sales = Sale::where('customer_id', $member->primary->id)
-                 ->where('subtotal', $member->type->price)
                  // NEED TO FIGURE OUT A WAY TO GET MEMBERSHIP PAYMENTS FOR THIS MEMBER/USER
                  // HAVING THEM AS PRODUCTS IS PROBABLY THE WAY TO GO
-                 ->orWhere('subtotal', '>=', $member->type->price)
+                 ->where('subtotal', $membership_total)
                  ->get();
     // Ensure we get the last membership payment
     $sale = $sales->last();
