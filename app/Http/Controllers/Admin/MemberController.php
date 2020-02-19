@@ -13,6 +13,7 @@ use App\Payment;
 use App\Sale;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 use Jenssegers\Date\Date;
 use Session;
@@ -44,8 +45,17 @@ class MemberController extends Controller
         $member->delete();
     }
 
+    $expired = $request->has('expired') ? $request->expired == 'true' : false;
+  
     // member role_id is 5
     $members = Member::where('id', '!=', 1);
+
+    $members = $members->when(true, function ($query) use ($expired) {
+      if($expired)
+        return $query->where('end', '<', now()->startOfDay()->toDateTimeString());
+      else
+        return $query->where('end', '>=', now()->startOfDay()->toDateTimeString());
+    });
 
     $member_query = [];
 
@@ -58,8 +68,10 @@ class MemberController extends Controller
       array_push($member_query, ['member_type_id', $request->type]);
 
     $members = count($member_query) > 0
-      ? $members->where($member_query)->paginate(2)
-      : $members->paginate(10);
+      ? $members->where($member_query)
+      : $members;
+
+    $members = $members->paginate(10);
 
     // if app.force_https is true, make pagination links have https in them
 

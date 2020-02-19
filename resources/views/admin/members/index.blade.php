@@ -47,6 +47,13 @@
         </div>
       </div>
       <div class="field">
+        <select name="expired" id="expired" class="ui dropdown">
+          <option value="">Expired</option>
+          <option value="false" @if (request()->query('expired') == 'false') selected @endif>No</option>
+          <option value="true" @if (request()->query('expired') == 'true') selected @endif>Yes</option>
+        </select>
+      </div>
+      <div class="field">
         {!! Form::button('<i class="search icon"></i> Search', ['type' => 'submit', 'class' => 'ui secondary button']) !!}
       </div>
     </div>
@@ -73,7 +80,7 @@
     @if (!isSet($members) || count($members) > 0)
       <div class="ui one doubling link cards">
         @foreach($members as $member)
-          <div class="{{ $member->end->isPast() ? 'red' : '' }} card" onclick="window.location='{{ route('admin.members.show', $member) }}'">
+          <div class="{{ $member->expired ? 'red' : '' }} card" onclick="window.location='{{ route('admin.members.show', $member) }}'">
             <div class="content">
               <img src="{{ \App\Setting::find(1)->logo == '/logo.png' ? \App\Setting::find(1)->logo : Storage::url(\App\Setting::find(1)->logo) }}" alt="" class="left floated mini ui image">
               <div class="right floated meta"># {{ $member->number }}</div>
