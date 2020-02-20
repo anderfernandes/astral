@@ -35,6 +35,8 @@ class UserController extends Controller
       array_push($user_query, ['id', $request->id]);
     if ($request->has('role_id') && isset($request->role_id))
       array_push($user_query, ['role_id', $request->role_id]);
+    if ($request->has('staff') && isset($request->staff))
+      array_push($user_query, ['staff', $request->staff == 'true']);
 
     $roles = Role::where('type', '=', 'individuals')->orderBy('name', 'asc')->pluck('name', 'id');
     $organizations = Organization::orderBy('name', 'asc')->pluck('name', 'id');
