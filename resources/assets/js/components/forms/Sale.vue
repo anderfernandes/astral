@@ -594,11 +594,26 @@
 
           sale.events = sale.events.map(event => event.id)
 
+
+          const selected_products = sale.products.map(product => ({
+            id: product.id,
+            type: product.type,
+            name: product.name,
+            price: parseFloat(product.price),
+            cover: product.cover,
+            amount: product.quantity,
+            description: product.description
+          }))
+
           sale.products = sale.products.map(product => product.id)
 
           sale.payment_method = null
 
           Object.assign(this.sale, sale)
+
+          selected_products.forEach(selected_product => {
+            this.$store.commit('UPDATE_PRODUCT_OPTIONS', selected_product)
+          })
 
         } catch (error) {
           alert(`Error in fetchSale: ${error.message}`)

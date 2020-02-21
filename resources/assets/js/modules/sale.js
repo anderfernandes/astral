@@ -87,6 +87,13 @@ export default {
       Object.assign(state, { product_options: payload })
     },
 
+    UPDATE_PRODUCT_OPTIONS(state, payload) {
+      state.product_options.forEach((product_option, i) => {
+        if (payload.id == product_option.id)
+          Object.assign(state.product_options[i], { amount: payload.amount })
+      })
+    },
+
     REMOVE_PRODUCT(state, payload) {
       // Find product
       let i = state.sale.products.findIndex(product => product == payload.id)
