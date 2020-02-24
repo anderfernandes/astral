@@ -49,6 +49,7 @@
         <div class="content">
           <div class="header">
             {{ free_secondary.firstname }} {{ free_secondary.lastname }}
+            <div class="ui black label">{{ free_secondary.email }}</div>
           </div>
           <div class="description" v-if="free_secondary.address">
             {{ free_secondary.address }}
@@ -84,6 +85,7 @@
         <div class="content">
           <div class="header">
             {{ nonfree_secondary.firstname }} {{ nonfree_secondary.lastname }}
+            <div class="ui black label">{{ nonfree_secondary.email }}</div>
           </div>
           <div class="description" v-if="nonfree_secondary.address">
             {{ nonfree_secondary.address }}
