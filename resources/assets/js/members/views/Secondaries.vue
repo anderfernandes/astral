@@ -80,7 +80,7 @@
           <sui-input
             v-model.lazy="free_secondary.lastname"
             :error="free_secondary.is_member"
-            :placeholder="`Enter the first name of secondary ${i + 1}`"
+            :placeholder="`Enter the last name of secondary ${i + 1}`"
           />
         </sui-form-field>
       </div>
@@ -247,7 +247,7 @@
           <sui-input
             v-model.lazy="nonfree_secondary.lastname"
             :error="nonfree_secondary.is_member"
-            :placeholder="`Enter the first name of secondary ${j + 1}`"
+            :placeholder="`Enter the last name of secondary ${j + 1}`"
           />
         </sui-form-field>
       </div>
