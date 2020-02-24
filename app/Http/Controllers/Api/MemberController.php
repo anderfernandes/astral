@@ -37,6 +37,9 @@ class MemberController extends Controller
    */
   public function store(Request $request)
   {
+
+    $visitor_role = \App\Role::where('name', 'visitor')->first() ?? 1;
+
     // Create users
 
     $primary = User::where('email', $request->primary['email'])->first();
@@ -61,6 +64,7 @@ class MemberController extends Controller
       $primary->role_id         = 7;
       $primary->creator_id      = $request->creator_id;
       $primary->organization_id = 1;
+      $primary->membership_id   = 1;
       
       $primary->save();
 
