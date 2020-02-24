@@ -45,22 +45,23 @@ class MemberController extends Controller
     {
       $primary = new User;
       
-      $primary->firstname  = $request->input('primary.firstname');
-      $primary->lastname   = $request->input('primary.lastname');
-      $primary->address    = $request->input('primary.address');
-      $primary->city       = $request->input('primary.city');
-      $primary->state      = $request->input('primary.state');
-      $primary->country    = $request->input('primary.country');
-      $primary->zip        = $request->input('primary.zip');
-      $primary->phone      = $request->input('primary.phone');
-      $primary->email      = strtolower($request->input('primary.email'));
-      $primary->newsletter = $request->input('primary.newsletter');
-      $primary->password   = bcrypt((str_random(16)));
-      $primary->type       = 'individual';
-      $primary->active     = true;
-      $primary->role_id    = 7;
-      $primary->creator_id = $request->creator_id;
-       
+      $primary->firstname       = $request->input('primary.firstname');
+      $primary->lastname        = $request->input('primary.lastname');
+      $primary->address         = $request->input('primary.address');
+      $primary->city            = $request->input('primary.city');
+      $primary->state           = $request->input('primary.state');
+      $primary->country         = $request->input('primary.country');
+      $primary->zip             = $request->input('primary.zip');
+      $primary->phone           = $request->input('primary.phone');
+      $primary->email           = strtolower($request->input('primary.email'));
+      $primary->newsletter      = $request->input('primary.newsletter');
+      $primary->password        = bcrypt((str_random(16)));
+      $primary->type            = 'individual';
+      $primary->active          = true;
+      $primary->role_id         = 7;
+      $primary->creator_id      = $request->creator_id;
+      $primary->organization_id = 1;
+      
       $primary->save();
 
       $primary = User::find($primary->id);
@@ -160,12 +161,13 @@ class MemberController extends Controller
         
         $free_secondary->email      = strtolower($secondary['email']);
         
-        $free_secondary->password   = bcrypt((str_random(16)));
-        $free_secondary->type       = 'individual';
-        $free_secondary->active     = true;
-        $free_secondary->role_id    = 5;
-        $free_secondary->creator_id = $request->creator_id;
-        $free_secondary->membership_id = $member->id;
+        $free_secondary->password        = bcrypt((str_random(16)));
+        $free_secondary->type            = 'individual';
+        $free_secondary->active          = true;
+        $free_secondary->role_id         = 5;
+        $free_secondary->creator_id      = $request->creator_id;
+        $free_secondary->organization_id = 1;
+        $free_secondary->membership_id   = $member->id;
         
         $free_secondary->save();
 
@@ -210,12 +212,13 @@ class MemberController extends Controller
         
         $nonfree_secondary->email      = strtolower($secondary['email']);
         
-        $nonfree_secondary->password   = bcrypt((str_random(16)));
-        $nonfree_secondary->type       = 'individual';
-        $nonfree_secondary->active     = true;
-        $nonfree_secondary->role_id    = 5;
-        $nonfree_secondary->creator_id = $request->creator_id;
-        $nonfree_secondary->membership_id = $member->id;
+        $nonfree_secondary->password        = bcrypt((str_random(16)));
+        $nonfree_secondary->type            = 'individual';
+        $nonfree_secondary->active          = true;
+        $nonfree_secondary->role_id         = 5;
+        $nonfree_secondary->creator_id      = $request->creator_id;
+        $nonfree_secondary->organization_id = 1;
+        $nonfree_secondary->membership_id   = $member->id;
         
         $nonfree_secondary->save();
 
