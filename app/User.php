@@ -61,6 +61,11 @@ class User extends Authenticatable
     return $this->belongsTo('App\Member', 'membership_id');
   }
 
+  public function membership()
+  {
+    return $this->belongsTo('App\Member', 'membership_id');
+  }
+
   /**
    * Returns an object with this user's Creator data
    * @return App\User An instance of the User model.
@@ -102,5 +107,10 @@ class User extends Authenticatable
   public function sales()
   {
     return $this->hasMany('App\Sale', 'customer_id');
+  }
+
+  public function getIsMemberAttribute()
+  {
+    return !($this->membership_id == 1);
   }
 }

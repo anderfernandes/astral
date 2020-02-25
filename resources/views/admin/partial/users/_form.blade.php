@@ -72,7 +72,14 @@
   <div class="required field">
     {!! Form::label('role_id', 'Role') !!}
     @if (isSet($user))
+      @if ($user->is_member && !($user->membership->expired))
+      <?php
+        $member_role = \App\Role::where('name', 'Member')->first();
+      ?>
+      {!! Form::select('role_id', [$member_role->id => $member_role->name], $user->role_id, ['class' => 'ui search selection dropdown', 'disabled' => true]) !!}
+      @else
       {!! Form::select('role_id', $roles, $user->role_id, ['class' => 'ui search selection dropdown']) !!}
+      @endif
     @else
       {!! Form::select('role_id', $roles, 7, ['class' => 'ui search selection dropdown']) !!}
     @endif
