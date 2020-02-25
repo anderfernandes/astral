@@ -541,7 +541,7 @@
 
       // Set tendered to sale total automatically if sale isn't cash, set it to 0 if it is cash
       setTendered() {
-        this.sale.tendered = this.sale.payment_method == 1 ? 0 : this.total
+        this.sale.tendered = this.sale.payment_method == 1 ? 0 : this.sale.balance
       },
 
       async fetchSale() {
