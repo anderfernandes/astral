@@ -7,9 +7,9 @@
 
   Dear {{ $sale->customer->firstname }},
 
-  According to our records, you have an **unconfirmed** field trip 
+  According to our records, you have an **unconfirmed {{ $sale->events->first()->type->name }} reservation**
   @if($sale->organization->id !== 1) with **{{ $sale->organization->name }}** @endif in our system 
-  scheduled for the following {{ $sale->events->count() == 1 ? 'date' : 'dates' }}
+  you scheduled with us for the following {{ $sale->events->count() == 1 ? 'date' : 'dates' }}
   and {{ $sale->events->count() == 1 ? 'time' : 'times' }}:
 
   <ul>

@@ -93,18 +93,27 @@ class SendSelfConfirmationEmails extends Command
   
                 $sent++;
 
+                $this->info("Email sent succesfully to {$sale->customer->email}");
+
               } catch (\Exception $e) {
+                $this->error($e->getMessage());
                 $sale->memo()->create([
                   'author_id' => 1,
-                  'message'   => 'Unable to send confirmation email. Make sure the address',
+                  'message'   => 'Unable to send confirmation email. Make sure the email is correct and exists.',
                 ]);
               }
             }
           }
 
           $word = $sent == 1 ? 'email' : 'emails';
-
-          $this->info("Sent $sent/$sales->count() $word successfully!");
+          
+          if ($sales->count() > 0)
+          {
+            $count = $sales->count();
+            $this->info("Sent $sent/$count $word successfully!");
+          }
+          else
+          $this->info("No events happening in the next $setting->self_confirmation_days days, no emails to send.");
         } else {
           $this->info('Self confirmations are set as disabled!');
         }
