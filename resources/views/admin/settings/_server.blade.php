@@ -18,7 +18,7 @@
     Database
     <div class="detail">
       <?php
-        $database = Config::get('database.default');
+        $database = config()->get('database.default');
         switch ($database) {
           case 'sqlsrv': echo 'Microsoft SQL Server'; break;
           case 'sqlite': echo 'SQLite'; break;
@@ -41,5 +41,19 @@
   @foreach (get_loaded_extensions() as $extension)
     <div class="ui basic black label">{{ $extension }}</div>
   @endforeach
+
+  <div class="ui dividing header">
+    PHP Settings
+  </div>
+
+  <div class="ui basic black label">
+    maximum_memory
+    <div class="detail">{{ ini_get('memory_limit') }}</div>
+  </div>
+
+  <div class="ui basic black label">
+    max_execution_time
+    <div class="detail">{{ ini_get('max_execution_time') }} seconds</div>
+  </div>
 
 </div>
