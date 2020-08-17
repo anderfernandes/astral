@@ -186,7 +186,7 @@
   @endif
 
   {{-- Help --}}
-  <a class="item" href="http://astral.anderfernandes.com/docs/{{ config('app.version') }}" target="_blank">
+  <a class="item" href="https://astral.anderfernandes.com/docs/{{ config('app.version') }}" target="_blank">
     <i class="large help circle icon"></i> Help
   </a>
 
