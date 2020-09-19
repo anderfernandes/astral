@@ -7,6 +7,7 @@
     <thead>
       <tr>
         <th>Title</th>
+        <th>Type</th>
         <th>Start</th>
         <th>End</th>
         <th>Status</th>
@@ -21,7 +22,13 @@
             <h4 class="ui header">
               <i class="announcement icon"></i>
               {{ $announcement->title }}
+              ({{ $announcement->public ? "Public" : "Private" }})
             </h4>
+          </td>
+          <td>
+            <div class="ui {{ $announcement->type }} label">
+              {{ $announcement->type }}
+            </div>
           </td>
           <td>
             {{ $announcement->start->format('l, F j, Y \a\t g:i A') }}

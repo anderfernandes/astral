@@ -47,8 +47,18 @@ use App\Product;
 });*/
 
 Route::get('shows', function (Request $request) {
+  
   $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->get();
-  return $shows;
+
+  $announcements = App\Announcement::where([
+    ['public', '1'],
+    ['end', '>=', now()->toDateTimeString()]
+  ])->get()->toArray();
+  
+  return response([
+    'data' => $shows,
+    'announcements' => $announcements,
+  ]);
 });
 
 Route::get('shows/{id}', function ($id) {
@@ -756,10 +766,21 @@ Route::get('events', function (Request $request) {
       'memos'           => $event->memos,
     ]);
   }
+  
+  $announcements = App\Announcement::where([
+    ['public', '1'],
+    ['end', '>=', now()->toDateTimeString()]
+  ])->get()->toArray();
+  
   $eventsCollect = collect($eventsArray);
+
   $eventsCollect = $eventsCollect->sortBy('start');
   $eventsCollect = $eventsCollect->values()->all();
-  return response($eventsCollect);
+  
+  return response([
+    'data' => $eventsCollect,
+    'announcements' => $announcements
+    ]);
 });
 
 // This is the URL for the /events slide show
@@ -1233,7 +1254,6 @@ Route::get('events/by-date', function (Request $request) {
     ->values();
 
   if ($request->event_type != 'All' || $request->event_type != 'all' || $request->has('event_type'))
-
     $schedule = [];
 
   foreach ($dates as $date) {
@@ -1274,8 +1294,14 @@ Route::get('events/by-date', function (Request $request) {
     ]);
   }
 
+  $announcements = App\Announcement::where([
+    ['public', '1'],
+    ['end', '>=', now()->toDateTimeString()]
+  ])->get()->toArray();
+
   return response([
     "data" => $schedule,
+    "announcements" => $announcements,
   ], 201);
 });
 

@@ -13,10 +13,13 @@ class AdminController extends Controller
 {
     public function index()
     {
-      $announcements = Announcement::where('end', '>=', now()->toDateTimeString())->get();
+      $announcements = Announcement::where([
+        [ 'end', '>=', now()->toDateTimeString() ],
+        [ 'public', false ]
+      ])->get();
       $cover = Setting::find(1)->cover;
       $shifts = Shift::where('start', '>=', now()->startOfDay()->toDateTimeString())
-                     ->whereHas('employees', function($query) {
+                      ->whereHas('employees', function($query) {
         $query->where('user_id', auth()->user()->id);
       })->get();
 

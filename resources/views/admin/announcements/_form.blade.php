@@ -23,9 +23,29 @@
       </div>
     </div>
   </div>
-  <div class="required field">
-    <label for="title">Title</label>
-    <input type="text" name="title" placeholder="Title of the Announcement" value="{{ isSet($announcement) ? $announcement->title : old('title') }}">
+  <div class="three fields">
+    <div class="required field">
+      <label for="title">Title</label>
+      <input type="text" name="title" placeholder="Title of the Announcement" value="{{ isSet($announcement) ? $announcement->title : old('title') }}">
+    </div>
+    <div class="required field">
+      <label for="title">Type</label>
+      <select name="type" class="ui announcement type dropdown"
+        value="{{ isSet($announcement) ? $announcement->public : old('type') }}">
+        <option value="blue">blue</option>
+        <option value="yellow">yellow</option>
+        <option value="green">green</option>
+        <option value="red">red</option>
+      </select>
+    </div>
+    <div class="required field">
+      <label for="title">Public</label>
+      <select name="public" class="ui announcement public dropdown"
+        value="{{ isSet($announcement) ? $announcement->public : old('public') }}">
+        <option value="1">Yes</option>
+        <option value="0" selected>No</option>
+      </select>
+    </div>
   </div>
   <div class="required field">
     <label for="content">Content</label>
@@ -78,5 +98,10 @@
   document.querySelector('[name="start"]').onchange = function() {
     document.querySelector('[name="end"]').value = moment(this.value).add(1, 'day').endOf('day').format('dddd, MMMM D, YYYY h:mm:ss A')
   }
+
+  @isSet($announcement)
+    $('.ui.announcement.type.dropdown').dropdown('set selected', "{{ $announcement->type }}")
+    $('.ui.announcement.public.dropdown').dropdown('set selected', "{{ $announcement->public }}")
+  @endisset
 
 </script>

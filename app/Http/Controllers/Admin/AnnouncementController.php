@@ -54,6 +54,8 @@ class AnnouncementController extends Controller
         $announcement->title      = $request->title;
         $announcement->content    = $request->content;
         $announcement->creator_id = Auth::user()->id;
+        $announcement->public     = boolval($request->public);
+        $announcement->type       = $request->type;
 
         $announcement->save();
 
@@ -104,6 +106,8 @@ class AnnouncementController extends Controller
         $announcement->end        = new Date($request->end);
         $announcement->title      = $request->title;
         $announcement->content    = $request->content;
+        $announcement->public     = boolval($request->public);
+        $announcement->type       = $request->type;
 
         $announcement->save();
 
