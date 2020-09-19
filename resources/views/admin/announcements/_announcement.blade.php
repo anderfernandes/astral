@@ -1,7 +1,6 @@
 @if ($announcements->count() > 0)
 {{-- Modal --}}
 <div class="ui modal" id="announcement">
-  <i class="close icon"></i>
   <div class="ui header">
     <i class="announcement icon"></i>
     Announcements
@@ -28,12 +27,30 @@
     @endforeach
   </div>
   <div class="actions">
-    <div class="ui green ok button">
+    <button class="ui green ok button" disabled="true">
       <i class="checkmark icon"></i>
-      Got it!
-    </div>
+      <span id="clock"></span> Got it!
+    </button>
   </div>
 </div>
 
-<script>$('#announcement').modal('show')</script>
+<script>
+  
+  $('#announcement').modal('show').modal({ closable: false })
+
+  const timeout = parseInt({{ $announcement->timeout }})
+
+  let countdown = timeout / 1000
+
+  document.querySelector('#clock').innerHTML = `(${ countdown })`
+
+  setInterval(() => {
+    if (countdown > 0)
+      countdown--
+    document.querySelector('#clock').innerHTML = `(${ countdown })`
+  }, 1000)
+
+  setTimeout(() => document.querySelector('.ui.green.ok.button').disabled = false, timeout)
+
+</script>
 @endif

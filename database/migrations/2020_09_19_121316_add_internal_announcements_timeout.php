@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPublicFieldsToAnnouncementsTable extends Migration
+class AddInternalAnnouncementsTimeout extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddPublicFieldsToAnnouncementsTable extends Migration
     public function up()
     {
         Schema::table('announcements', function (Blueprint $table) {
-            $table->boolean('public')->default(false);
-            $table->string('type')->default('info');
+            $table->integer('timeout')->default(5000);
         });
     }
 
@@ -27,8 +26,7 @@ class AddPublicFieldsToAnnouncementsTable extends Migration
     public function down()
     {
         Schema::table('announcements', function (Blueprint $table) {
-            $table->dropColumn('public');
-            $table->dropColumn('type');
+            $table->dropColumn('timeout');
         });
     }
 }
