@@ -12,8 +12,10 @@
 */
 
 Route::get('/', function () {
-  return view('auth.login');
+  return view('home');
 })->middleware('guest');
+
+Route::get('event/{event}', 'HomeController@event')->middleware('guest')->name('event');
 
 // Admin Routes
 Route::group(
