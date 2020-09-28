@@ -767,20 +767,17 @@ Route::get('events', function (Request $request) {
     ]);
   }
   
-  $announcements = App\Announcement::where([
+  /*$announcements = App\Announcement::where([
     ['public', '1'],
     ['end', '>=', now()->toDateTimeString()]
-  ])->get()->toArray();
+  ])->get()->toArray();*/
   
   $eventsCollect = collect($eventsArray);
 
   $eventsCollect = $eventsCollect->sortBy('start');
   $eventsCollect = $eventsCollect->values()->all();
   
-  return response([
-    'data' => $eventsCollect,
-    'announcements' => $announcements
-    ]);
+  return response($eventsCollect, 201);
 });
 
 // This is the URL for the /events slide show
