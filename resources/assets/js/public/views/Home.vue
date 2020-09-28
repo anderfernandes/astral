@@ -1,0 +1,73 @@
+<template>
+  <div id="home">
+    <div id="event" v-for="(day, i) in events" :key="i">
+      <h1 class="ui dividing header">
+        {{ format(new Date(day.date), "dddd, MMMM d") }}
+        ({{ distanceInWordsToNow(new Date(day.date), { addSuffix: true }) }})
+      </h1>
+      <div class="ui four link cards">
+        <div class="card" v-for="event in day.events" :key="event.id" @click="$router.push({ name: 'event', params: { id: event.id }})">
+          <div class="image">
+            <img :src="event.show.cover" :alt="event.name">
+          </div>
+          <div class="content">
+            <div class="meta" style="margin-bottom:1rem">
+              <div class="ui basic black label">
+                <i class="calendar alternate outline icon"></i>
+                {{ format(event.start, 'h:mm A') }}
+              </div>
+            </div>
+            <div class="header">{{ event.show.name }}</div>
+            <div class="description">
+              <div class="ui black label">{{ event.type.name }}</div>
+              <div class="ui black label">{{ event.show.type }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+import { createNamespacedHelpers } from 'vuex'
+
+const { mapState, mapActions } = createNamespacedHelpers('Public')
+
+import { format, distanceInWordsToNow } from 'date-fns'
+
+export default {
+
+  data: () => ({
+    loading: true,
+  }),
+
+  computed: mapState({
+    
+    events: state =>state.events,
+
+  }),
+
+  methods: {
+
+    ...mapActions(['fetchEvents']),
+
+    format,
+
+    distanceInWordsToNow,
+
+  },
+
+  async mounted() {
+
+    this.loading = true
+    
+    await this.fetchEvents()
+    
+    this.loading = false
+
+  }
+
+}
+</script>

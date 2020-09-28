@@ -150,7 +150,6 @@ if (document.querySelector('#events')) {
 // New Member Wizard
 import Members from './members/Members.vue'
 import MembersRouter from './members/router'
-import MembersStore from './members/store'
 
 if (document.querySelector('#new-member-wizard'))
   new Vue({
@@ -158,3 +157,13 @@ if (document.querySelector('#new-member-wizard'))
     store,
     render: h => h(Members)
   }).$mount('#new-member-wizard')
+
+import PublicRouter from './public/router'
+import Public from './public/Public.vue'
+
+if (document.querySelector('#public'))
+  new Vue({
+    router: PublicRouter,
+    store,
+    render: h => h(Public)
+  }).$mount('#public')

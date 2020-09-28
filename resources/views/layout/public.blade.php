@@ -58,65 +58,10 @@
 </style>
 
 <body>
-  <div class="ui inverted dimmer">
-    <div class="ui large text loader">Loading</div>
-  </div>
-  <!-- Load Facebook SDK for JavaScript -->
-  <!--<div id="fb-root"></div>
-  <script>
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-  </script>-->
+  
+  @yield('content')
 
-  <!--- Sidebar Menu -->
-  <!--- @ include('partial._sidebar') --->
-
-
-
-  <!-- Page Contents -->
-  <div class="pusher">
-
-    <!-- Top Fixed Menu -->
-    <div class="ui borderless fixed top menu">
-      <div class="header item">
-        <?php
-          $logo = App\Setting::find(1)->logo;
-          $organization = App\Setting::find(1)->organization;
-        ?>
-        <img src="{{ $logo }}" style="padding-right:1rem"> {{ $organization }}
-      </div>
-      <div class="right item">
-        <div class="item">
-          <i class="cart icon"></i>
-          <div class="ui black circular label">0</div>
-        </div>
-      </div>
-    </div>
-
-    <br><br><br><br>
-
-    <!-- Messages -->
-
-
-    <div class="ui basic segment">
-
-      @yield('content')
-
-    </div>
-
-  </div>
-
-  <script type="text/javascript">
-    $('[type="submit"]').click(function() {
-      $('.ui.dimmer').addClass('active')
-      this.form.submit()
-    })
-  </script>
+  <script src="{{ mix('js/app.js') }}"></script>
 
 </body>
 </html>

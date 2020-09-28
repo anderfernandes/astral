@@ -19,6 +19,9 @@ import Cashier from './cashier/store'
 // Members Module
 import Members from './members/store'
 
+// Public Module
+import Public from './public/store'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -28,6 +31,7 @@ export default new Vuex.Store({
     Sale,
     Shift,
     Cashier,
-    Members
+    Members,
+    Public,
   }
 })

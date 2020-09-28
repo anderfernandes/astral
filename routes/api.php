@@ -1835,6 +1835,8 @@ Route::group(["prefix" => "public"], function () {
       }
     }
   });
+
+
 });
 
 Route::get("states", function () {
@@ -1848,4 +1850,10 @@ Route::group(['prefix' => 'cashier'], function () {
   Route::get('payment-methods', 'Api\Cashier\PaymentMethodController@index');
   Route::get('products', 'Api\Cashier\ProductController@index');
   Route::post('sales', 'Api\Cashier\SaleController@store');
+});
+
+Route::group(['prefix' => 'public'], function() {
+  Route::get('home', 'Api\Publc\HomeController@index');
+  Route::get('events', 'Api\Publc\EventController@index');
+  Route::get('events/{event}', 'Api\Publc\EventController@show');
 });

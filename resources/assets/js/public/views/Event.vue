@@ -1,0 +1,176 @@
+<template>
+  <div id="event" v-if="!loading">
+    
+    <router-link to="/" class="ui basic black circular icon button">
+      <i class="chevron left icon"></i>
+    </router-link>
+
+    <h1 class="ui dividing header">
+      <div class="content">
+        {{ event.show.name }}
+        <div class="ui black label">
+          {{ event.type.name }}
+        </div>
+        <div class="ui black label">
+          {{ event.show.type }}
+        </div>
+        <div class="sub header">
+          <i class="calendar alternate icon"></i>
+          {{ event.start }}
+        </div>
+      </div>
+    </h1>
+
+    <div class="ui grid">
+
+      <div class="four wide column">
+        <img :src="event.show.cover" :alt="event.show.name" class="ui fluid image">
+      </div>
+
+      <div class="twelve wide column">
+        <h1 class="ui header">
+          <div class="sub header">
+            {{ event.show.description }}
+          </div>
+        </h1>
+      </div>
+
+    </div>
+
+    <div class="ui four link cards">
+
+      <div class="card" v-for="ticket in tickets" :key="ticket.id">
+        <div class="content">
+          <div class="header">
+            {{ ticket.name }}
+            <div class="right floated meta">
+                <div class="ui green tag label">$ {{ ticket.price }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="ui three column grid">
+            <div class="column">
+              <div class="ui basic green circular icon button" @click="add(ticket)">
+                <i class="plus icon"></i>
+              </div>
+            </div>
+            <div class="column">
+              <h1 class="ui center aligned header">{{ ticket.amount }}</h1>
+            </div>
+            <div class="column">
+              <div class="ui basic yellow circular icon button" @click="subtract(ticket)">
+                <i class="minus icon"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</template>
+
+<script>
+
+  import { format, distanceInWordsToNow } from 'date-fns'
+
+  export default {
+    
+    props: ['id'],
+
+    data: () => ({
+
+      loading: true,
+    
+      event: {},
+
+      tickets: {},
+
+    }),
+
+    computed: {
+
+      sale() { 
+        //console.log(this.$store)
+        return this.$store.state.Public.sale 
+      },
+
+    },
+
+    methods: {
+
+      async fetchEvent() {
+
+        try {
+          
+          const response = await fetch(`/api/public/events/${this.id}`)
+          
+          const ev = await response.json()
+          
+          this.event = ev.data
+          
+          this.tickets = ev.data.type.allowed_tickets
+            .filter(ticket => ticket.public)
+            .map(ticket => Object.assign(ticket, { amount: 0 }))
+
+        } catch (e) {
+          
+          alert(`Error in fetchEvent: ${e}`)
+
+        }
+
+      },
+
+      add(ticket) {
+
+        let t = this.tickets.find(t => t.id == ticket.id)
+        
+        const ticket_index = this.tickets.findIndex(t => t.id == t.id)
+
+        Object.assign(t, {
+          id: ticket.id,
+          amount: ticket.amount + 1,
+          price: ticket.price,
+        })
+
+        this.$store.commit('Public/ADD_TICKET', {
+          event_id: this.event.id,
+          ticket: t
+        })
+
+      },
+
+      subtract(id) {
+
+        let ticket = this.tickets.find(t => t.id == id)
+
+        if (ticket.amount > 0) {
+          
+          const ticket_index = this.tickets.findIndex(t => t.id == id)
+          
+          Object.assign(ticket, { amount: ticket.amount - 1 })
+
+          //this.tickets.splice(ticket_index, 1, ticket)
+        }
+
+      },
+      
+      format,
+
+      distanceInWordsToNow,
+
+    },
+
+    async mounted() {
+
+      this.loading = true
+
+      await this.fetchEvent()
+
+      this.loading = false
+
+    }
+  }
+</script>
