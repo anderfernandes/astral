@@ -8,6 +8,7 @@ let getDefaultState = () => ({
   events: [],
   sale: [], // object of events and array of tickets for the event, ticket_id, price and count
   customer_id: 1,
+  count: 0
 })
 
 export default {
@@ -25,15 +26,16 @@ export default {
     SET_EVENTS(state, payload) {
       Object.assign(state, { events: payload })
     },
-
-    ADD_TICKET(state, { event_id, ticket }) {
-      const ev = state.sale.find(e => e.id == event_id)
-      const ev_index = state.sale.findIndex(e => e.id == event_id)
-      if (state.sale[ev_index])
-        state.sale[ev_index].tickets.push(ticket)
-      else
-        state.sale.push({ event_id, tickets: [ ticket ]})
-    }
+    
+    SET_TICKETS(state, payload) {
+      if (state.sale.includes(payload)) {
+        const index = state.sale.findIndex(event => event == payload)
+        state.sale.splice(index, 1, payload)
+      } else
+      state.sale.push(payload)
+      
+      payload.tickets.forEach(ticket => { if (ticket.amount > 0) state.count++ })
+    },
 
   },
 
@@ -58,6 +60,23 @@ export default {
       } catch (e) {
         alert(`Error in fetchEvents: ${e}`)
       }
+    }
+
+  },
+
+  getters: {
+
+    count: state => {
+      let count = 0;
+      state.sale.forEach(e => {
+        // Counting tickets
+        let temp = 0
+        e.tickets.forEach(t => {
+          temp += t.amount
+        })
+        count += temp
+      })
+      return count
     }
 
   }

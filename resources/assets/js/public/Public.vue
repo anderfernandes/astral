@@ -8,7 +8,7 @@
         </div>
         <div class="right menu">
           <div class="item">
-            <i class="cart icon"></i> 0
+            <i class="cart icon"></i> {{ count }}
           </div>
           <div class="item">
             <div class="ui right floated item">
@@ -28,7 +28,7 @@
 
 import { createNamespacedHelpers } from 'vuex'
 
-const { mapState, mapActions } = createNamespacedHelpers('Public')
+const { mapState, mapActions, mapGetters } = createNamespacedHelpers('Public')
 
 import { format, distanceInWordsToNow } from 'date-fns'
 
@@ -40,7 +40,17 @@ export default {
 
   computed: {
 
-    ...mapState({ settings: state => state.settings })
+    ...mapState({ 
+      
+      settings: state => state.settings
+
+    }),
+
+    ...mapGetters({
+      
+      count: 'count'
+      
+    })
 
   },
 
@@ -60,6 +70,7 @@ export default {
     this.fetchSettings()
     
     this.loading = false
-  }
+  },
+
 }
 </script>

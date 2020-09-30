@@ -51,15 +51,17 @@
         <div class="extra content">
           <div class="ui three column grid">
             <div class="column">
-              <div class="ui basic green circular icon button" @click="add(ticket)">
+              <div class="ui basic green circular icon button" @click="ticket.amount++">
                 <i class="plus icon"></i>
               </div>
             </div>
             <div class="column">
-              <h1 class="ui center aligned header">{{ ticket.amount }}</h1>
+              <h1 class="ui center aligned header">
+                {{ ticket.amount }}
+              </h1>
             </div>
             <div class="column">
-              <div class="ui basic yellow circular icon button" @click="subtract(ticket)">
+              <div class="ui basic yellow circular icon button" @click="ticket.amount--">
                 <i class="minus icon"></i>
               </div>
             </div>
@@ -86,16 +88,30 @@
     
       event: {},
 
-      tickets: {},
+      //tickets: {},
 
     }),
 
     computed: {
 
-      sale() { 
-        //console.log(this.$store)
-        return this.$store.state.Public.sale 
+      tickets: {
+
+        get() { 
+          
+          return this.sale.find(item => item.event_id == this.id).tickets 
+
+        },
+
+        // a setter here is misteriously not necessary...
+        set(value) { console.log(value) }
+
       },
+
+      sale() {
+
+        return this.$store.state.Public.sale
+
+      }
 
     },
 
@@ -129,15 +145,15 @@
         
         const ticket_index = this.tickets.findIndex(t => t.id == t.id)
 
-        Object.assign(t, {
+        ticket = {
           id: ticket.id,
           amount: ticket.amount + 1,
           price: ticket.price,
-        })
+        }
 
         this.$store.commit('Public/ADD_TICKET', {
           event_id: this.event.id,
-          ticket: t
+          ticket
         })
 
       },
@@ -168,6 +184,19 @@
       this.loading = true
 
       await this.fetchEvent()
+
+      if (!this.sale.find(event => event.event_id == this.id)) {
+        this.$store.commit('Public/SET_TICKETS', {
+          event_id: this.id,
+          tickets: this.event.type.allowed_tickets.filter(t => t.public).map(t => ({
+            id: t.id,
+            amount: 0,
+            price: t.price,
+            name: t.name
+          }))
+        })
+      }
+        
 
       this.loading = false
 

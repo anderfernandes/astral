@@ -7266,7 +7266,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _createNamespacedHelp = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["createNamespacedHelpers"])('Public'),
     mapState = _createNamespacedHelp.mapState,
-    mapActions = _createNamespacedHelp.mapActions;
+    mapActions = _createNamespacedHelp.mapActions,
+    mapGetters = _createNamespacedHelp.mapGetters;
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -7275,10 +7276,12 @@ var _createNamespacedHelp = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["createName
       loading: true
     };
   },
-  computed: _objectSpread({}, mapState({
+  computed: _objectSpread(_objectSpread({}, mapState({
     settings: function settings(state) {
       return state.settings;
     }
+  })), mapGetters({
+    count: 'count'
   })),
   methods: _objectSpread(_objectSpread({}, mapActions(['fetchSettings'])), {}, {
     format: date_fns__WEBPACK_IMPORTED_MODULE_1__["format"],
@@ -7386,25 +7389,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['id'],
   data: function data() {
     return {
       loading: true,
-      event: {},
-      tickets: {}
+      event: {} //tickets: {},
+
     };
   },
   computed: {
+    tickets: {
+      get: function get() {
+        var _this = this;
+
+        return this.sale.find(function (item) {
+          return item.event_id == _this.id;
+        }).tickets;
+      },
+      // a setter here is misteriously not necessary...
+      set: function set(value) {
+        console.log(value);
+      }
+    },
     sale: function sale() {
-      //console.log(this.$store)
       return this.$store.state.Public.sale;
     }
   },
   methods: {
     fetchEvent: function fetchEvent() {
-      var _this = this;
+      var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         var response, ev;
@@ -7414,7 +7431,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context.prev = 0;
                 _context.next = 3;
-                return fetch("/api/public/events/".concat(_this.id));
+                return fetch("/api/public/events/".concat(_this2.id));
 
               case 3:
                 response = _context.sent;
@@ -7423,8 +7440,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 6:
                 ev = _context.sent;
-                _this.event = ev.data;
-                _this.tickets = ev.data.type.allowed_tickets.filter(function (ticket) {
+                _this2.event = ev.data;
+                _this2.tickets = ev.data.type.allowed_tickets.filter(function (ticket) {
                   return ticket["public"];
                 }).map(function (ticket) {
                   return Object.assign(ticket, {
@@ -7454,14 +7471,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var ticket_index = this.tickets.findIndex(function (t) {
         return t.id == t.id;
       });
-      Object.assign(t, {
+      ticket = {
         id: ticket.id,
         amount: ticket.amount + 1,
         price: ticket.price
-      });
+      };
       this.$store.commit('Public/ADD_TICKET', {
         event_id: this.event.id,
-        ticket: t
+        ticket: ticket
       });
     },
     subtract: function subtract(id) {
@@ -7482,21 +7499,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     distanceInWordsToNow: date_fns__WEBPACK_IMPORTED_MODULE_1__["distanceInWordsToNow"]
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this3 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _this2.loading = true;
+              _this3.loading = true;
               _context2.next = 3;
-              return _this2.fetchEvent();
+              return _this3.fetchEvent();
 
             case 3:
-              _this2.loading = false;
+              if (!_this3.sale.find(function (event) {
+                return event.event_id == _this3.id;
+              })) {
+                _this3.$store.commit('Public/SET_TICKETS', {
+                  event_id: _this3.id,
+                  tickets: _this3.event.type.allowed_tickets.filter(function (t) {
+                    return t["public"];
+                  }).map(function (t) {
+                    return {
+                      id: t.id,
+                      amount: 0,
+                      price: t.price,
+                      name: t.name
+                    };
+                  })
+                });
+              }
 
-            case 4:
+              _this3.loading = false;
+
+            case 5:
             case "end":
               return _context2.stop();
           }
@@ -71933,7 +71968,14 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _c("div", { staticClass: "right menu" }, [
+              _c("div", { staticClass: "item" }, [
+                _c("i", { staticClass: "cart icon" }),
+                _vm._v(" " + _vm._s(_vm.count) + "\n        ")
+              ]),
+              _vm._v(" "),
+              _vm._m(0)
+            ])
           ])
         ]),
         _vm._v(" "),
@@ -71954,16 +71996,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "right menu" }, [
-      _c("div", { staticClass: "item" }, [
-        _c("i", { staticClass: "cart icon" }),
-        _vm._v(" 0\n        ")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "item" }, [
-        _c("div", { staticClass: "ui right floated item" }, [
-          _c("div", { staticClass: "ui primary button" }, [_vm._v("Login")])
-        ])
+    return _c("div", { staticClass: "item" }, [
+      _c("div", { staticClass: "ui right floated item" }, [
+        _c("div", { staticClass: "ui primary button" }, [_vm._v("Login")])
       ])
     ])
   }
@@ -72069,7 +72104,7 @@ var render = function() {
                           staticClass: "ui basic green circular icon button",
                           on: {
                             click: function($event) {
-                              return _vm.add(ticket)
+                              ticket.amount++
                             }
                           }
                         },
@@ -72079,7 +72114,11 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "column" }, [
                       _c("h1", { staticClass: "ui center aligned header" }, [
-                        _vm._v(_vm._s(ticket.amount))
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(ticket.amount) +
+                            "\n            "
+                        )
                       ])
                     ]),
                     _vm._v(" "),
@@ -72090,7 +72129,7 @@ var render = function() {
                           staticClass: "ui basic yellow circular icon button",
                           on: {
                             click: function($event) {
-                              return _vm.subtract(ticket)
+                              ticket.amount--
                             }
                           }
                         },
@@ -94585,7 +94624,8 @@ var getDefaultState = function getDefaultState() {
     events: [],
     sale: [],
     // object of events and array of tickets for the event, ticket_id, price and count
-    customer_id: 1
+    customer_id: 1,
+    count: 0
   };
 };
 
@@ -94603,30 +94643,28 @@ var getDefaultState = function getDefaultState() {
         events: payload
       });
     },
-    ADD_TICKET: function ADD_TICKET(state, _ref) {
-      var event_id = _ref.event_id,
-          ticket = _ref.ticket;
-      var ev = state.sale.find(function (e) {
-        return e.id == event_id;
-      });
-      var ev_index = state.sale.findIndex(function (e) {
-        return e.id == event_id;
-      });
-      if (state.sale[ev_index]) state.sale[ev_index].tickets.push(ticket);else state.sale.push({
-        event_id: event_id,
-        tickets: [ticket]
+    SET_TICKETS: function SET_TICKETS(state, payload) {
+      if (state.sale.includes(payload)) {
+        var index = state.sale.findIndex(function (event) {
+          return event == payload;
+        });
+        state.sale.splice(index, 1, payload);
+      } else state.sale.push(payload);
+
+      payload.tickets.forEach(function (ticket) {
+        if (ticket.amount > 0) state.count++;
       });
     }
   },
   actions: {
-    fetchSettings: function fetchSettings(_ref2) {
+    fetchSettings: function fetchSettings(_ref) {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         var commit, response, settings;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                commit = _ref2.commit;
+                commit = _ref.commit;
                 _context.prev = 1;
                 _context.next = 4;
                 return fetch('/api/public/home');
@@ -94655,14 +94693,14 @@ var getDefaultState = function getDefaultState() {
         }, _callee, null, [[1, 11]]);
       }))();
     },
-    fetchEvents: function fetchEvents(_ref3) {
+    fetchEvents: function fetchEvents(_ref2) {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var commit, response, events;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                commit = _ref3.commit;
+                commit = _ref2.commit;
                 _context2.prev = 1;
                 _context2.next = 4;
                 return fetch('/api/public/events');
@@ -94690,6 +94728,20 @@ var getDefaultState = function getDefaultState() {
           }
         }, _callee2, null, [[1, 11]]);
       }))();
+    }
+  },
+  getters: {
+    count: function count(state) {
+      var count = 0;
+      state.sale.forEach(function (e) {
+        // Counting tickets
+        var temp = 0;
+        e.tickets.forEach(function (t) {
+          temp += t.amount;
+        });
+        count += temp;
+      });
+      return count;
     }
   }
 });
