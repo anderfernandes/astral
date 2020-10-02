@@ -25,7 +25,8 @@
         <th>Payment Date and Time</td>
         <th>Sale #</th>
         <th>Customer</th>
-        <th>Payment Method</th>
+        <th>Tickets</th>
+        <th>Show(s)</th>
         <th>Reference</th>
         <th>Tendered</th>
         <th>Change</th>
@@ -33,6 +34,7 @@
       </tr>
     </thead>
     <tbody>
+      <?php $ticket_count = 0 ?>
       @foreach ($payments->where('cashier_id', $user->id) as $payment)
         @if ($payment->total < 0)
         <tr class="negative">
@@ -47,8 +49,21 @@
               ({{ $payment->sale->organization->name }})
             @endif
           </td>
-          <td>{{ $payment->method->name }}</td>
-          <td>{{ $payment->reference }}</td>
+          <td>
+            @if ($payment->total >= 0)
+              {{ $payment->sale->tickets->count() }}
+            @endif
+            <?php
+              if ($payment->total >= 0)
+                $ticket_count += $payment->sale->tickets->count(); 
+            ?>
+          </td>
+          <td>
+            @foreach ($payment->sale->events as $event)
+              {{ $event->show->name }}@if (!$loop->last),@endif
+            @endforeach
+          </td>
+          <td>{{ $payment->method->name }} {{ $payment->reference }}</td>
           <td>$ {{ number_format($payment->tendered, 2) }}</td>
           <td>$ {{ number_format($payment->change_due, 2) }}</td>
           <td>$ {{ number_format($payment->tendered - $payment->change_due, 2) }}</td>
@@ -57,7 +72,10 @@
     </tbody>
     <tfoot>
       <tr>
-        <th colspan="8" class="right aligned">
+        <th colspan="4" class="right aligned">
+          <strong>Total Tickets: {{ $ticket_count }}</strong>
+        </th>
+        <th colspan="5" class="right aligned">
           <strong>
             Totals for {{ $paymentUser[$loop->index]->firstname }}:
             $ {{ number_format($payments->where('cashier_id', $user->id)->sum('tendered') - $payments->where('cashier_id', $user->id)->sum('change_due'),2) }}
@@ -72,7 +90,7 @@
   <table class="ui single line table">
     <tfoot>
       <tr>
-        <th colspan="8" class="right aligned">
+        <th colspan="9" class="right aligned">
           <strong>
             Totals for
             @foreach ($paymentUser as $user)
