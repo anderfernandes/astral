@@ -37,7 +37,7 @@
 
     </div>
 
-    <div class="ui four link cards">
+    <div class="ui four link cards" v-if="tickets.length > 0">
 
       <div class="card" v-for="ticket in tickets" :key="ticket.id">
         <div class="content">
@@ -88,8 +88,6 @@
     
       event: {},
 
-      //tickets: {},
-
     }),
 
     computed: {
@@ -97,13 +95,16 @@
       tickets: {
 
         get() { 
+
+          const sale = this.$store.state.Public.sale.find(item => item.event.id == this.id)
+            
+          return sale.tickets
           
-          return this.sale.find(item => item.event_id == this.id).tickets 
 
         },
 
         // a setter here is misteriously not necessary...
-        set(value) { console.log(value) }
+        set(value) { /*console.log(value)*/ }
 
       },
 
@@ -139,37 +140,31 @@
 
       },
 
-      add(ticket) {
+      saveTickets() {
 
-        let t = this.tickets.find(t => t.id == ticket.id)
-        
-        const ticket_index = this.tickets.findIndex(t => t.id == t.id)
+        const item = this.sale.find(i => i.event.id == this.id)
 
-        ticket = {
-          id: ticket.id,
-          amount: ticket.amount + 1,
-          price: ticket.price,
-        }
-
-        this.$store.commit('Public/ADD_TICKET', {
-          event_id: this.event.id,
-          ticket
+        this.$store.commit('Public/SET_TICKETS', {
+          event: {
+            id: this.id,
+            type: this.event.type,
+            show: {
+              id: this.event.show.id,
+              name: this.event.show.name,
+              cover: this.event.show.cover,
+              type: this.event.show.type,
+              duration: this.event.show.duration
+            },
+            start: this.event.start,
+          },
+          tickets: this.tickets.map(t => ({
+            id: t.id,
+            name: t.name,
+            amount: t.amount,
+            price: t.price,
+            name: t.name
+          }))
         })
-
-      },
-
-      subtract(id) {
-
-        let ticket = this.tickets.find(t => t.id == id)
-
-        if (ticket.amount > 0) {
-          
-          const ticket_index = this.tickets.findIndex(t => t.id == id)
-          
-          Object.assign(ticket, { amount: ticket.amount - 1 })
-
-          //this.tickets.splice(ticket_index, 1, ticket)
-        }
 
       },
       
@@ -185,11 +180,23 @@
 
       await this.fetchEvent()
 
-      if (!this.sale.find(event => event.event_id == this.id)) {
+      if (!this.sale.find(item => item.event.id == this.id)) {
         this.$store.commit('Public/SET_TICKETS', {
-          event_id: this.id,
+          event: {
+            id: this.id,
+            type: this.event.type,
+            show: {
+              id: this.event.show.id,
+              name: this.event.show.name,
+              cover: this.event.show.cover,
+              type: this.event.show.type,
+              duration: this.event.show.duration
+            },
+            start: this.event.start,
+          },
           tickets: this.event.type.allowed_tickets.filter(t => t.public).map(t => ({
             id: t.id,
+            name: t.name,
             amount: 0,
             price: t.price,
             name: t.name
@@ -197,9 +204,10 @@
         })
       }
         
-
       this.loading = false
 
-    }
+    },
+
+    //beforeDestroy() { this.saveTickets() }
   }
 </script>

@@ -28,8 +28,9 @@ export default {
     },
     
     SET_TICKETS(state, payload) {
-      if (state.sale.includes(payload)) {
-        const index = state.sale.findIndex(event => event == payload)
+      const event_exists = state.sale.some(item => item.event.id == payload.event.id)
+      if (event_exists) {
+        const index = state.sale.findIndex(event => event.id == payload.id)
         state.sale.splice(index, 1, payload)
       } else
       state.sale.push(payload)

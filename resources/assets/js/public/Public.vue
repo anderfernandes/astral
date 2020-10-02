@@ -2,17 +2,17 @@
   <div id="cashier" v-if="!loading">
     <div class="ui borderless menu">
       <div class="ui container">
-        <div class="header item">
+        <router-link to="/" class="header item">
           <img class="logo" style="margin-right:1.5em" src="/logo.png" alt="Mayborn Science Theater">
           {{ settings.organization }}
-        </div>
+        </router-link>
         <div class="right menu">
-          <div class="item">
+          <router-link to="/cart" class="item">
             <i class="cart icon"></i> {{ count }}
-          </div>
+          </router-link>
           <div class="item">
             <div class="ui right floated item">
-              <div class="ui primary button">Login</div>
+              <a href="/login" class="ui primary button">Login</a>
             </div>
           </div>
         </div>
