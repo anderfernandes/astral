@@ -3,8 +3,7 @@
     <div class="ui borderless menu">
       <div class="ui container">
         <router-link to="/" class="header item">
-          <img class="logo" style="margin-right:1.5em" src="/logo.png" alt="Mayborn Science Theater">
-          {{ settings.organization }}
+          <img class="logo" style="margin-right:1.5em" :src="settings.logo" :alt="settings.organization">
         </router-link>
         <div class="right menu">
           <router-link to="/cart" class="item">

@@ -3,6 +3,8 @@ import Vuex from "vuex"
 
 Vue.use(Vuex)
 
+const currencySettings = { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+
 let getDefaultState = () => ({
   settings: {},
   events: [],
@@ -78,6 +80,37 @@ export default {
         count += temp
       })
       return count
+    },
+
+    subtotal: state => {
+      
+      let subtotal = 0
+      
+      state.sale.forEach(item => subtotal += item.tickets.reduce((acummulator, ticket) => acummulator + (ticket.amount * ticket.price), 0))
+      
+      return subtotal.toLocaleString('en-US', currencySettings)
+    },
+
+    tax: (state, getters) => {
+
+      const tax_rate = parseFloat(state.settings.tax) / 100
+      
+      const tax = tax_rate * parseFloat(getters.subtotal)
+
+      return tax.toLocaleString('en-US', currencySettings)
+
+    },
+
+    total: (state, getters) => {
+
+      const subtotal = parseFloat(getters.subtotal)
+
+      const tax = parseFloat(getters.tax)
+
+      const total = subtotal + tax
+
+      return total.toLocaleString('en-US', currencySettings)
+
     }
 
   }

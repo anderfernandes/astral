@@ -7261,7 +7261,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 
 var _createNamespacedHelp = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["createNamespacedHelpers"])('Public'),
@@ -7307,6 +7306,42 @@ var _createNamespacedHelp = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["createName
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/index.js");
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(date_fns__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -7347,12 +7382,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
+
+var _createNamespacedHelp = Object(vuex__WEBPACK_IMPORTED_MODULE_1__["createNamespacedHelpers"])('Public'),
+    mapState = _createNamespacedHelp.mapState,
+    mapActions = _createNamespacedHelp.mapActions,
+    mapGetters = _createNamespacedHelp.mapGetters;
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  computed: {
-    cart: function cart() {
-      return this.$store.state.Public.sale;
+  computed: _objectSpread(_objectSpread({}, mapState({
+    cart: function cart(state) {
+      return state.sale;
+    },
+    tax_rate: function tax_rate(state) {
+      return state.settings.tax;
     }
-  },
+  })), mapGetters({
+    subtotal: 'subtotal',
+    tax: 'tax',
+    total: 'total'
+  })),
   methods: {
     format: date_fns__WEBPACK_IMPORTED_MODULE_0__["format"],
     distanceInWordsToNow: date_fns__WEBPACK_IMPORTED_MODULE_0__["distanceInWordsToNow"]
@@ -72046,13 +72095,11 @@ var render = function() {
                   _c("img", {
                     staticClass: "logo",
                     staticStyle: { "margin-right": "1.5em" },
-                    attrs: { src: "/logo.png", alt: "Mayborn Science Theater" }
-                  }),
-                  _vm._v(
-                    "\n        " +
-                      _vm._s(_vm.settings.organization) +
-                      "\n      "
-                  )
+                    attrs: {
+                      src: _vm.settings.logo,
+                      alt: _vm.settings.organization
+                    }
+                  })
                 ]
               ),
               _vm._v(" "),
@@ -72130,104 +72177,171 @@ var render = function() {
   return _c("div", { attrs: { id: "cart" } }, [
     _c("h1", { staticClass: "ui dividing header" }, [_vm._v("Cart")]),
     _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "ui divided items" },
-      _vm._l(_vm.cart, function(item) {
-        return _c("div", { key: item.event.id, staticClass: "item" }, [
-          _c("div", { staticClass: "image" }, [
-            _c("img", {
-              attrs: { src: item.event.show.cover, alt: item.event.show.name }
-            })
+    _c("div", { staticClass: "ui grid" }, [
+      _c("div", { staticClass: "twelve wide column" }, [
+        _c(
+          "div",
+          { staticClass: "ui divided items" },
+          _vm._l(_vm.cart, function(item) {
+            return _c("div", { key: item.event.id, staticClass: "item" }, [
+              _c("div", { staticClass: "ui tiny image" }, [
+                _c("img", {
+                  attrs: {
+                    src: item.event.show.cover,
+                    alt: item.event.show.name
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "content" }, [
+                _c("div", { staticClass: "header" }, [
+                  _vm._v(
+                    "\n              " +
+                      _vm._s(item.event.show.name) +
+                      "\n              "
+                  ),
+                  _c("div", { staticClass: "ui black label" }, [
+                    _vm._v(_vm._s(item.event.show.type))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "meta" }, [
+                  _c("i", { staticClass: "calendar alternate icon" }),
+                  _vm._v(
+                    "\n              " +
+                      _vm._s(
+                        _vm.format(item.event.start, "dddd, MMMM d [@] h:mm A")
+                      ) +
+                      "\n              (" +
+                      _vm._s(
+                        _vm.distanceInWordsToNow(item.event.start, {
+                          addSuffix: true
+                        })
+                      ) +
+                      ")\n            "
+                  )
+                ]),
+                _vm._v(" "),
+                item.tickets.length > 0
+                  ? _c(
+                      "div",
+                      { staticClass: "description" },
+                      _vm._l(item.tickets, function(ticket) {
+                        return ticket.amount > 0
+                          ? _c(
+                              "div",
+                              {
+                                key: ticket.id,
+                                staticClass: "ui black basic label"
+                              },
+                              [
+                                _vm._v(
+                                  "\n                " +
+                                    _vm._s(ticket.name) +
+                                    " $ " +
+                                    _vm._s(ticket.price) +
+                                    "\n                "
+                                ),
+                                _c("div", { staticClass: "detail" }, [
+                                  _vm._v(
+                                    "\n                  " +
+                                      _vm._s(ticket.amount) +
+                                      "\n                "
+                                  )
+                                ])
+                              ]
+                            )
+                          : _vm._e()
+                      }),
+                      0
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "extra" },
+                  [
+                    _c(
+                      "router-link",
+                      {
+                        staticClass: "ui right floated primary button",
+                        attrs: {
+                          to: { name: "event", params: { id: item.event.id } }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "edit outline icon" }),
+                        _vm._v(
+                          "\n                Change Tickets\n              "
+                        )
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ])
+            ])
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "four wide column" }, [
+        _c("div", { staticClass: "ui divided list" }, [
+          _c("div", { staticClass: "item" }, [
+            _c("h4", { staticClass: "ui right floated content" }, [
+              _vm._v("+ $ " + _vm._s(_vm.subtotal))
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "content" }, [
-            _c("div", { staticClass: "header" }, [
-              _vm._v(
-                "\n          " + _vm._s(item.event.show.name) + "\n          "
-              ),
-              _c("div", { staticClass: "ui black label" }, [
-                _vm._v(_vm._s(item.event.show.type))
+          _c("div", { staticClass: "item" }, [
+            _c("h4", { staticClass: "ui right floated content" }, [
+              _vm._v("+ $ " + _vm._s(_vm.tax))
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "content" }, [
+              _c("h4", { staticClass: "header" }, [
+                _vm._v("Tax (" + _vm._s(_vm.tax_rate) + "%)")
               ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "item" }, [
+            _c("h1", { staticClass: "ui right floated content" }, [
+              _vm._v("$ " + _vm._s(_vm.total))
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "meta" }, [
-              _c("i", { staticClass: "calendar alternate icon" }),
-              _vm._v(
-                "\n          " +
-                  _vm._s(
-                    _vm.format(item.event.start, "dddd, MMMM d [@] h:mm A")
-                  ) +
-                  "\n          (" +
-                  _vm._s(
-                    _vm.distanceInWordsToNow(item.event.start, {
-                      addSuffix: true
-                    })
-                  ) +
-                  ")\n        "
-              )
-            ]),
-            _vm._v(" "),
-            item.tickets.length > 0
-              ? _c(
-                  "div",
-                  { staticClass: "description" },
-                  _vm._l(item.tickets, function(ticket) {
-                    return ticket.amount > 0
-                      ? _c(
-                          "div",
-                          {
-                            key: ticket.id,
-                            staticClass: "ui black basic label"
-                          },
-                          [
-                            _vm._v(
-                              "\n            " +
-                                _vm._s(ticket.name) +
-                                "\n            "
-                            ),
-                            _c("div", { staticClass: "detail" }, [
-                              _vm._v(
-                                "\n              " +
-                                  _vm._s(ticket.amount) +
-                                  " x\n              $ " +
-                                  _vm._s(ticket.price) +
-                                  "\n            "
-                              )
-                            ])
-                          ]
-                        )
-                      : _vm._e()
-                  }),
-                  0
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "extra" },
-              [
-                _c(
-                  "router-link",
-                  {
-                    staticClass: "ui right floated primary button",
-                    attrs: {
-                      to: { name: "event", params: { id: item.event.id } }
-                    }
-                  },
-                  [_vm._v("\n            Change Tickets\n          ")]
-                )
-              ],
-              1
-            )
+            _vm._m(1)
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "ui fluid yellow button" }, [
+          _vm._v("\n        Checkout\n      ")
         ])
-      }),
-      0
-    )
+      ])
+    ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h4", { staticClass: "content" }, [
+      _c("div", { staticClass: "header" }, [_vm._v("Subtotal")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "content" }, [
+      _c("h1", { staticClass: "header" }, [_vm._v("Total")])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -94854,6 +94968,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_2__["default"]);
+var currencySettings = {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+};
 
 var getDefaultState = function getDefaultState() {
   return {
@@ -94983,6 +95101,26 @@ var getDefaultState = function getDefaultState() {
         count += temp;
       });
       return count;
+    },
+    subtotal: function subtotal(state) {
+      var subtotal = 0;
+      state.sale.forEach(function (item) {
+        return subtotal += item.tickets.reduce(function (acummulator, ticket) {
+          return acummulator + ticket.amount * ticket.price;
+        }, 0);
+      });
+      return subtotal.toLocaleString('en-US', currencySettings);
+    },
+    tax: function tax(state, getters) {
+      var tax_rate = parseFloat(state.settings.tax) / 100;
+      var tax = tax_rate * parseFloat(getters.subtotal);
+      return tax.toLocaleString('en-US', currencySettings);
+    },
+    total: function total(state, getters) {
+      var subtotal = parseFloat(getters.subtotal);
+      var tax = parseFloat(getters.tax);
+      var total = subtotal + tax;
+      return total.toLocaleString('en-US', currencySettings);
     }
   }
 });
