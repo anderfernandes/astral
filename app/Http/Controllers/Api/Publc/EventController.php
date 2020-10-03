@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Publc;
 use App\{ Event, Announcement };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Carbon;
 
 class EventController extends Controller
 {
@@ -43,9 +44,13 @@ class EventController extends Controller
   public function show(Event $event)
   {
     $announcements = Announcement::where('public', true)->get();
+
+    $event = $event->load(['show', 'type.allowedTickets'])->toArray();
+
+    $event['start'] = Carbon::parse($event['start'])->toIsoString();
     
     return response([
-      'data' => $event->load(['show', 'type.allowedTickets']),
+      'data' => $event,
       'announcements' => $announcements
     ], 201);
   }

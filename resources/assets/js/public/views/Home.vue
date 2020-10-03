@@ -3,7 +3,7 @@
     <div id="event" v-for="(day, i) in events" :key="i">
       <h1 class="ui dividing header">
         {{ format(new Date(day.date), "dddd, MMMM d") }}
-        ({{ distanceInWordsToNow(new Date(day.date), { addSuffix: true }) }})
+        {{ isToday(day.date) ? "(Today)" : distanceInWordsToNow(new Date(day.date), { addSuffix: true }) }}
       </h1>
       <div class="ui four link cards">
         <router-link class="card" v-for="event in day.events" :key="event.id" :to="({ name: 'event', params: { id: event.id }})">
@@ -35,7 +35,7 @@ import { createNamespacedHelpers } from 'vuex'
 
 const { mapState, mapActions } = createNamespacedHelpers('Public')
 
-import { format, distanceInWordsToNow } from 'date-fns'
+import { format, distanceInWordsToNow, isToday } from 'date-fns'
 
 export default {
 
@@ -56,6 +56,8 @@ export default {
     format,
 
     distanceInWordsToNow,
+
+    isToday,
 
   },
 

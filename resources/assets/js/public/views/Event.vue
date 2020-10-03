@@ -1,8 +1,8 @@
 <template>
   <div id="event" v-if="!loading">
     
-    <router-link to="/" class="ui basic black circular icon button">
-      <i class="chevron left icon"></i>
+    <router-link to="/" class="ui basic black button">
+      <i class="chevron left icon"></i> Back
     </router-link>
 
     <h1 class="ui dividing header">
@@ -16,7 +16,8 @@
         </div>
         <div class="sub header">
           <i class="calendar alternate icon"></i>
-          {{ event.start }}
+          {{ format(event.start, "dddd, MMMM d [@] h:mm A") }}
+          ({{ distanceInWordsToNow(event.start, { addSuffix: true }) }})
         </div>
       </div>
     </h1>

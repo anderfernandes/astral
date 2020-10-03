@@ -12,13 +12,15 @@
             <div class="ui black label">{{ item.event.show.type }}</div>
           </div>
           <div class="meta">
-            {{ item.event.start }}
+            <i class="calendar alternate icon"></i>
+            {{ format(item.event.start, "dddd, MMMM d [@] h:mm A") }}
+            ({{ distanceInWordsToNow(item.event.start, { addSuffix: true }) }})
           </div>
           <div class="description" v-if="item.tickets.length > 0">
             <div class="ui black basic label" v-for="ticket in item.tickets" :key="ticket.id" v-if="ticket.amount > 0">
               {{ ticket.name }}
               <div class="detail">
-                {{ ticket.amount }} X
+                {{ ticket.amount }} x
                 $ {{ ticket.price }}
               </div>
             </div>
@@ -36,11 +38,22 @@
 </template>
 
 <script>
+
+import { format, distanceInWordsToNow } from 'date-fns'
+
 export default {
   
   computed: {
 
-    cart() { return this.$store.state.Public.sale }
+    cart() { return this.$store.state.Public.sale },
+
+  },
+
+  methods: {
+
+    format,
+
+    distanceInWordsToNow,
 
   }
 

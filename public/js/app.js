@@ -7305,6 +7305,8 @@ var _createNamespacedHelp = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["createName
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/index.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(date_fns__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -7342,11 +7344,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: {
     cart: function cart() {
       return this.$store.state.Public.sale;
     }
+  },
+  methods: {
+    format: date_fns__WEBPACK_IMPORTED_MODULE_0__["format"],
+    distanceInWordsToNow: date_fns__WEBPACK_IMPORTED_MODULE_0__["distanceInWordsToNow"]
   }
 });
 
@@ -7373,6 +7382,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
 //
 //
 //
@@ -7688,7 +7698,8 @@ var _createNamespacedHelp = Object(vuex__WEBPACK_IMPORTED_MODULE_1__["createName
   }),
   methods: _objectSpread(_objectSpread({}, mapActions(['fetchEvents'])), {}, {
     format: date_fns__WEBPACK_IMPORTED_MODULE_2__["format"],
-    distanceInWordsToNow: date_fns__WEBPACK_IMPORTED_MODULE_2__["distanceInWordsToNow"]
+    distanceInWordsToNow: date_fns__WEBPACK_IMPORTED_MODULE_2__["distanceInWordsToNow"],
+    isToday: date_fns__WEBPACK_IMPORTED_MODULE_2__["isToday"]
   }),
   mounted: function mounted() {
     var _this = this;
@@ -72141,7 +72152,20 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "meta" }, [
-              _vm._v("\n          " + _vm._s(item.event.start) + "\n        ")
+              _c("i", { staticClass: "calendar alternate icon" }),
+              _vm._v(
+                "\n          " +
+                  _vm._s(
+                    _vm.format(item.event.start, "dddd, MMMM d [@] h:mm A")
+                  ) +
+                  "\n          (" +
+                  _vm._s(
+                    _vm.distanceInWordsToNow(item.event.start, {
+                      addSuffix: true
+                    })
+                  ) +
+                  ")\n        "
+              )
             ]),
             _vm._v(" "),
             item.tickets.length > 0
@@ -72166,7 +72190,7 @@ var render = function() {
                               _vm._v(
                                 "\n              " +
                                   _vm._s(ticket.amount) +
-                                  " X\n              $ " +
+                                  " x\n              $ " +
                                   _vm._s(ticket.price) +
                                   "\n            "
                               )
@@ -72232,11 +72256,8 @@ var render = function() {
         [
           _c(
             "router-link",
-            {
-              staticClass: "ui basic black circular icon button",
-              attrs: { to: "/" }
-            },
-            [_c("i", { staticClass: "chevron left icon" })]
+            { staticClass: "ui basic black button", attrs: { to: "/" } },
+            [_c("i", { staticClass: "chevron left icon" }), _vm._v(" Back\n  ")]
           ),
           _vm._v(" "),
           _c("h1", { staticClass: "ui dividing header" }, [
@@ -72252,7 +72273,19 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "sub header" }, [
                 _c("i", { staticClass: "calendar alternate icon" }),
-                _vm._v("\n        " + _vm._s(_vm.event.start) + "\n      ")
+                _vm._v(
+                  "\n        " +
+                    _vm._s(
+                      _vm.format(_vm.event.start, "dddd, MMMM d [@] h:mm A")
+                    ) +
+                    "\n        (" +
+                    _vm._s(
+                      _vm.distanceInWordsToNow(_vm.event.start, {
+                        addSuffix: true
+                      })
+                    ) +
+                    ")\n      "
+                )
               ])
             ])
           ]),
@@ -72387,13 +72420,15 @@ var render = function() {
           _vm._v(
             "\n      " +
               _vm._s(_vm.format(new Date(day.date), "dddd, MMMM d")) +
-              "\n      (" +
+              "\n      " +
               _vm._s(
-                _vm.distanceInWordsToNow(new Date(day.date), {
-                  addSuffix: true
-                })
+                _vm.isToday(day.date)
+                  ? "(Today)"
+                  : _vm.distanceInWordsToNow(new Date(day.date), {
+                      addSuffix: true
+                    })
               ) +
-              ")\n    "
+              "\n    "
           )
         ]),
         _vm._v(" "),
