@@ -9,6 +9,7 @@ class TicketType extends Model
     protected $casts = [
       'public' => 'boolean',
       'price'  => 'double',
+      'in_cashier' => 'boolean',
     ];
     
     // This relationship defines what event types certain tickets are allowed

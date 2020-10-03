@@ -4,7 +4,7 @@
       <sui-tab active-index="0">
         <sui-tab-pane
           icon="ticket"
-          title="Tickets"
+          title="Events"
           :label="events.length.toString()"
           v-if="events.length > 0"
         >
@@ -40,6 +40,7 @@
                     v-for="ticket in event.type.allowed_tickets"
                     :key="ticket.id"
                     @click="addTicket({ event, ticket })"
+                    
                   >
                     {{ ticket.name }} $ {{ ticket.price.toFixed(2) }}
                   </div>
@@ -299,7 +300,14 @@
       async fetchEvents() {
         try {
           const response = await axios.get('/api/cashier/events')
-          Object.assign(this, { events: response.data.data })
+          const events = response.data.data.map(e => ({
+            ...e,
+            type: {
+              ...e.type,
+              allowed_tickets: e.type.allowed_tickets.filter(ticket => ticket.in_cashier)
+            }
+          }))
+          Object.assign(this, { events })
         } catch (error) {
           alert(`Error in fetchEvents: ${error.message}`)
         }
