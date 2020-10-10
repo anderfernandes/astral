@@ -3,7 +3,7 @@
     <div id="event" v-for="(day, i) in events" :key="i">
       <h1 class="ui dividing header">
         {{ format(new Date(day.date), "dddd, MMMM d") }}
-        {{ isToday(day.date) ? "(Today)" : distanceInWordsToNow(new Date(day.date), { addSuffix: true }) }}
+        ({{ isToday(day.date) ? "Today" : distanceInWordsToNow(new Date(day.date), { addSuffix: true }) }})
       </h1>
       <div class="ui four link cards">
         <router-link class="card" v-for="event in day.events" :key="event.id" :to="({ name: 'event', params: { id: event.id }})">

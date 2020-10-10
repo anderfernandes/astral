@@ -4,6 +4,7 @@ import Router from "vue-router"
 import Home from "./views/Home.vue"
 import Event from "./views/Event.vue"
 import Cart from "./views/Cart.vue"
+import Checkout from "./views/Checkout.vue"
 
 Vue.use(Router)
 
@@ -25,5 +26,10 @@ export default new Router({
       name: "cart", 
       component: Cart 
     },
+    {
+      path: "/checkout",
+      name: "checkout",
+      component: Checkout,
+    }
   ]
 })

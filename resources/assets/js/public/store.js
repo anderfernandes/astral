@@ -111,7 +111,9 @@ export default {
 
       return total.toLocaleString('en-US', currencySettings)
 
-    }
+    },
+
+    gateway_key: state => state.settings.gateway_public_key,
 
   }
 

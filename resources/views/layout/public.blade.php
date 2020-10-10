@@ -37,6 +37,8 @@
   <link rel="stylesheet" href="/semantic/semantic.min.css">
   <script src="/semantic/semantic.min.js"></script>
 
+  <script src="https://js.stripe.com/v3"></script>
+
 </head>
 <script>
   $(document)

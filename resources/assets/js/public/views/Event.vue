@@ -163,7 +163,8 @@
             name: t.name,
             amount: t.amount,
             price: t.price,
-            name: t.name
+            name: t.name,
+            event_id: this.id,
           }))
         })
 
@@ -200,7 +201,8 @@
             name: t.name,
             amount: 0,
             price: t.price,
-            name: t.name
+            name: t.name,
+            event_id: this.id,
           }))
         })
       }

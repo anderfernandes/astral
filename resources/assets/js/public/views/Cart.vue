@@ -1,7 +1,9 @@
 <template>
   <div id="cart">
-    <h1 class="ui dividing header">Cart</h1>
-    <div class="ui grid">
+    <h2 class="ui dividing header">
+      <i class="cart icon"></i> Cart
+    </h2>
+    <div class="ui stackable grid container" v-show="cart.length > 0">
       <div class="twelve wide column">
         <div class="ui divided items">
           <div class="item" v-for="item in cart" :key="item.event.id">
@@ -19,10 +21,10 @@
                 ({{ distanceInWordsToNow(item.event.start, { addSuffix: true }) }})
               </div>
               <div class="description" v-if="item.tickets.length > 0">
-                <div class="ui black basic label" v-for="ticket in item.tickets" :key="ticket.id" v-if="ticket.amount > 0">
+                <div class="ui black basic label" v-for="ticket in item.tickets" :key="ticket.id" v-show="ticket.amount > 0">
                   {{ ticket.name }} $ {{ ticket.price }}
                   <div class="detail">
-                    {{ ticket.amount }}
+                    x {{ ticket.amount }}
                   </div>
                 </div>
               </div>
@@ -58,9 +60,16 @@
             </div>
           </div>
         </div>
-        <div class="ui fluid yellow button">
+        <router-link to="/checkout" class="ui fluid yellow button">
           Checkout
-        </div>
+        </router-link>
+      </div>
+    </div>
+    <div class="ui blue icon message" v-show="cart.length <= 0">
+      <i class="info circle icon"></i>
+      <div class="content">
+        <div class="header">Your cart is empty!</div>
+        <p>Add tickets to your cart and they will appear here.</p>
       </div>
     </div>
   </div>
@@ -74,7 +83,17 @@ import { createNamespacedHelpers } from 'vuex'
 
 const { mapState, mapActions, mapGetters } = createNamespacedHelpers('Public')
 
+import { loadStripe } from '@stripe/stripe-js'
+
+import axios from 'axios'
+
 export default {
+
+  mounted() {
+
+    //this.stripePromise = loadStripe(this.gateway_key)
+
+  },
   
   computed: {
 
@@ -92,9 +111,11 @@ export default {
 
       tax: 'tax',
 
-      total: 'total'
+      total: 'total',
 
-    })
+      gateway_key: 'gateway_key'
+
+    }),
 
   },
 
@@ -103,6 +124,27 @@ export default {
     format,
 
     distanceInWordsToNow,
+
+    stripePromise() { loadStripe(this.gateway_key) },
+
+    async checkout(event) {
+
+      /*const stripe = await this.stripePromise
+
+      const response = await axios.post('/api/public/sales', { sale: this.cart })
+
+      const result = await stripe.redirectToCheckout({
+        
+        sessionId: response.data.id
+
+      })
+
+      if (result.error)
+        alert(result.error.message) */
+
+      
+
+    }
 
   }
 
