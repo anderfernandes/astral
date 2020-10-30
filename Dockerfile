@@ -5,7 +5,7 @@ RUN pacman -Sy --noconfirm
 #RUN pacman -Syu --noconfirm
 
 # PHP/nginx dependencies
-RUN pacman -S node git nginx-mainline php-fpm composer php-sqlite php-gd imagemagick php-imagick php-imap --noconfirm
+RUN pacman -S nodejs-lts-fermium git nginx-mainline php-fpm composer php-sqlite php-gd imagemagick php-imagick php-imap --noconfirm
 
 # Enabling PHP extensions
 RUN echo "extension=pdo_sqlite" >> /etc/php/php.ini
