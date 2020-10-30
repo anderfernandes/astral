@@ -14,7 +14,7 @@ RUN echo "extension=pdo_sqlite" >> /etc/php/php.ini
 RUN echo "extension=sqlite3" >> /etc/php/php.ini
 
 # Creating Astral's directory
-RUN mkdir /usr/share/nginx/astral
+RUN mkdir /usr/share/astral
 
 # Setting Astral's workdir
 WORKDIR /usr/share/nginx/astral
