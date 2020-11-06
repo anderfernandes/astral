@@ -16,7 +16,8 @@
         "laravel/passport": "^4.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.5",
-        "picqer/php-barcode-generator": "^0.4.0"
+        "picqer/php-barcode-generator": "^0.4.0",
+        "stripe/stripe-php": "^7.61"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

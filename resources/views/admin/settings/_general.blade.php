@@ -139,10 +139,12 @@
       {!! Form::label('invoice_text', 'Invoice Text') !!}
       {!! Form::textarea('invoice_text', null, ['placeholder' => 'Membership information that will be displayed in the membership receipt']) !!}
     </div>
+    
     <div class="ui horizontal divider header">
       <i class="address card icon"></i>
       Membership Card Settings
     </div>
+    
     <div class="four fields">
       <div class="field">
         <label>Membership Card Width</label>
@@ -197,9 +199,11 @@
         {!! Form::select('cashier_customer_dropdown', [ 
           0 => 'Show All Customers', 
           1 => 'Show Members Only'
-          ], null, ['class' => 'ui dropdown']) !!}
+          ], null, ['class' => 'ui dropdown']) 
+        !!}
       </div>
     </div>
+
     <div class="four fields">
       <div class="field">
         <label>Ticket Width</label>
@@ -224,6 +228,51 @@
         </div>
       </div>
     </div>
+
+    <div class="ui horizontal divider header">
+      @if ($setting->gateway != " " && $setting->gateway)
+      <i class="cc stripe icon"></i>
+      @endif
+      Online Payment Settings
+    </div>
+
+    <div class="two fields">
+      <div class="field">
+        <label>Online Payment Gateway</label>
+        {!! Form::select('gateway', [ 
+          ' '      => 'None', 
+          'stripe' => 'Stripe'
+          ], null, ['class' => 'ui dropdown', 'placeholder' => 'Select an option']) 
+        !!}
+      </div>
+    </div>
+    @if ($setting->gateway != " " && $setting->gateway)
+    <div class="two fields">
+      <div class="field">
+      <?php
+        $gateway = ucfirst($setting->gateway);
+      ?>
+        <label>Gateway Public Key</label>
+        {!! 
+          Form::text('gateway_public_key', null, [
+            'placeholder'   => "{$gateway} Public Key", 
+            'data-validate' => 'gateway_public_key', 
+            'type'          => 'text'
+          ]) 
+        !!}
+      </div>
+      <div class="field">
+        <label>Gateway Private Key</label>
+        {!! 
+          Form::text('gateway_private_key', null, [
+            'placeholder'   => "{$gateway} Private Key", 
+            'data-validate' => 'gateway_private_key', 
+            'type'          => 'text'
+          ]) 
+        !!}
+      </div>
+    </div>
+    @endif
     <div class="field">
       <div class="ui buttons">
         {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui green right labeled icon button']) !!}
