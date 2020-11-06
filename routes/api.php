@@ -1853,9 +1853,9 @@ Route::group(['prefix' => 'cashier'], function () {
 });
 
 Route::group(['prefix' => 'public'], function() {
-  Route::get('home', 'Api\Publc\HomeController@index');
-  Route::get('events', 'Api\Publc\EventController@index');
-  Route::get('events/{event}', 'Api\Publc\EventController@show');
-  Route::post('sales', 'Api\Publc\SaleController@store');
-  Route::post('stripe', 'Api\Publc\SaleController@stripe');
+  Route::get('home', 'Api\HomeController@index');
+  Route::get('events', 'Api\EventController@index');
+  Route::get('events/{event}', 'Api\EventController@show');
+  Route::post('sales', 'Api\SaleController@store');
+  Route::post('stripe', 'Api\SaleController@stripe');
 });

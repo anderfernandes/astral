@@ -1,93 +1,156 @@
 <template>
   <div id="checkout">
     <h2 class="ui dividing header">Checkout</h2>
-    <table class="ui very basic single line celled table">
-      <thead>
-        <tr>
-          <th>Show</th>
-          <th>Date</th>
-          <th>Tickets</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in sale" :key="item.event.id">
-          <td>
-            <h4 class="ui image header">
-              <img :src="item.event.show.cover" :alt="item.event.show.name" class="ui mini rounded image" />
-              <div class="content">
-                {{ item.event.show.name }}
-                <div class="sub header">
-                  <div class="ui black label" style="margin-left: 0">
-                    {{ item.event.show.type }}
+    
+    <div id="checkout-ui" v-if="sale.length > 0">
+      <table class="ui very basic single line celled table">
+        <thead>
+          <tr>
+            <th>Show</th>
+            <th>Date</th>
+            <th>Tickets</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in sale" :key="item.event.id">
+            <td>
+              <h4 class="ui image header">
+                <img :src="item.event.show.cover" :alt="item.event.show.name" class="ui mini rounded image" />
+                <div class="content">
+                  {{ item.event.show.name }}
+                  <div class="sub header">
+                    <div class="ui black label" style="margin-left: 0">
+                      {{ item.event.show.type }}
+                    </div>
                   </div>
                 </div>
+              </h4>
+            </td>
+            <td>
+              {{ format(item.event.start, "dddd, MMMM d [@] h:mm A") }}
+              ({{ distanceInWordsToNow(item.event.start, { addSuffix: true }) }})
+            </td>
+            <td>
+              <div class="ui basic black label" v-for="ticket in item.tickets" v-show="ticket.amount > 0" :key="ticket.id">
+                {{ ticket.name }} $ {{ ticket.price }}
+                <div class="detail"> x {{ ticket.amount }}</div>
               </div>
-            </h4>
-          </td>
-          <td>
-            {{ format(item.event.start, "dddd, MMMM d [@] h:mm A") }}
-            ({{ distanceInWordsToNow(item.event.start, { addSuffix: true }) }})
-          </td>
-          <td>
-            <div class="ui basic black label" v-for="ticket in item.tickets" v-show="ticket.amount > 0" :key="ticket.id">
-              {{ ticket.name }} $ {{ ticket.price }}
-              <div class="detail"> x {{ ticket.amount }}</div>
-            </div>
-          </td>
-          <td class="right aligned">
-            $ {{ ticketsSubtotal(item.tickets) }}
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th colspan="4" class="right aligned">
-            <strong>Tax: $ {{ subtotal }}</strong>
-          </th>
-        </tr>
-        <tr>
-          <th colspan="4" class="right aligned">
-            <strong>Subtotal: $ {{ tax }}</strong>
-          </th>
-        </tr>
-        <tr>
-          <th colspan="4" class="right aligned">
-            <strong>Total: $ {{ total }}</strong>
-          </th>
-        </tr>
-      </tfoot>
-    </table>
-    <form class="ui form">
-      <div class="two fields">
-        <div class="field">
-          <label for="firstname">First Name</label>
-          <input name="firstname" placeholder="First Name" type="text">
+            </td>
+            <td class="right aligned">
+              $ {{ ticketsSubtotal(item.tickets) }}
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="3" class="right aligned">
+              <strong>Subtotal:</strong>
+            </th>
+            <th class="right aligned">
+              <strong>$ {{ subtotal }}</strong>
+            </th>
+          </tr>
+          <tr>
+            <th colspan="3" class="right aligned">
+              <strong>Tax:</strong>
+            </th>
+            <th class="right aligned">
+              <strong>$ {{ tax }}</strong>
+            </th>
+          </tr>
+          <tr>
+            <th colspan="3" class="right aligned">
+              <strong>Total:</strong>
+            </th>
+            <th class="right aligned">
+              <strong>$ {{ total }}</strong>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+      <form class="ui form">
+        <div class="four fields">
+          <div class="field">
+            <label for="firstname">First Name</label>
+            <input v-model="customer.firstname" placeholder="First Name" type="text">
+          </div>
+          <div class="field">
+            <label for="lastname">Last Name</label>
+            <input v-model="customer.lastname" placeholder="Last Name" type="text">
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input v-model="customer.email" type="email" placeholder="your@email">
+          </div>
+          <div class="field">
+            <label for="email">Phone</label>
+            <input
+              type="text"
+              v-mask="['(###) ###-####']"
+              v-model="customer.phone"
+              placeholder="Phone"
+            />
+          </div>
         </div>
-        <div class="field">
-          <label for="lastname">Last Name</label>
-          <input name="lastname" placeholder="Last Name" type="text">
+        <div class="three fields">
+          <div class="field">
+            <label for="address">Address</label>
+            <input v-model="customer.address" min="2" max="127" placeholder="Address" type="text">
+          </div>
+          <div class="field">
+            <label for="city">City</label>
+            <input v-model="customer.city" min="2" max="32" placeholder="City" type="text">
+          </div>
+          <div class="field">
+            <label for="state">State</label>
+            <sui-dropdown
+              large
+              placeholder="State"
+              search
+              selection
+              disabled
+              :options="state_options"
+              v-model="customer.state"
+            />
+          </div>
+          <div class="field">
+            <label for="zip">ZIP</label>
+            <input v-model="customer.zip" min="5" max="5" placeholder="ZIP" type="text">
+          </div>
         </div>
-        <div class="field">
-          <label for="email">Email</label>
-          <input type="email" placeholder="your@email" name="email">
+        <div class="ui checkbox field">
+            <input type="checkbox" class="ui checkbox" v-model="customer.newsletter">
+            <label for="newsletter">Receive {{ settings.organization }} newsletter</label>
         </div>
+      </form>
+
+      <br />
+      
+      <img class="ui small image" src="https://bookmesolid.com/wp-content/uploads/2018/12/powered-by-stripe.png" alt="Stripe">
+      <!-- Display a payment form -->
+      <form id="payment-form">
+        <p id="card-error" ref="carderror" role="alert"></p>
+        <div id="card-element"><!--Stripe.js injects the Card Element--></div>
+        <button id="submit" ref="button" @click.prevent="submit">
+          <div class="spinner hidden" id="spinner"></div>
+          <span id="button-text">Pay $ {{ total }}</span>
+        </button>
+        <p class="result-message hidden">
+          Payment succeeded, see the result in your
+          <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
+        </p>
+      </form>
+    </div>
+
+    <div class="ui blue icon message" v-else>
+      <i class="info circle icon"></i>
+      <div class="content">
+        <div class="header">There are no items in your cart</div>
+        <p>Come back when you add tickets to your cart.</p>
       </div>
-    </form>
-    <img class="ui small image" src="https://bookmesolid.com/wp-content/uploads/2018/12/powered-by-stripe.png" alt="Stripe">
-    <!-- Display a payment form -->
-    <form id="payment-form">
-      <p id="card-error" ref="carderror" role="alert"></p>
-      <div id="card-element"><!--Stripe.js injects the Card Element--></div>
-      <button id="submit" ref="button" @click.prevent="submit">
-        <div class="spinner hidden" id="spinner"></div>
-        <span id="button-text">Pay $ {{ total }}</span>
-      </button>
-      <p class="result-message hidden">
-        Payment succeeded, see the result in your
-        <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
-      </p>
-    </form>
+    </div>
+
   </div>
 </template>
 
@@ -95,6 +158,8 @@
 
 //import { loadStripe } from '@stripe/stripe-js'
 //import { Elements } from '@stripe/stripe-js/'
+
+import { mask } from 'vue-the-mask'
 
 import { format, distanceInWordsToNow } from 'date-fns'
 
@@ -106,6 +171,8 @@ const currencySettings = { minimumFractionDigits: 2, maximumFractionDigits: 2 }
 
 export default {
 
+  directives: { mask },
+
   data: () => ({
 
     stripe: null,
@@ -114,15 +181,50 @@ export default {
 
     clientSecret: null,
 
+    customer: {
+
+      firstname: "",
+
+      lastname: "",
+
+      email: "",
+
+      address: "",
+
+      city: "",
+      
+      state: "Texas",
+
+      zip: "",
+
+      newsletter: true,
+
+      phone: ""
+
+    },
+
+    state_options: [
+      { key: "TX", text: "Texas", value: "Texas" }
+    ]
+
   }),
   
+
   async mounted() {
 
-    await this.getPaymentIntent()
+    if (this.sale.length > 0) {
 
-    this.stripe = Stripe(this.gateway_key)
+      await this.getPaymentIntent()
 
-    this.createStripeElements()
+      this.stripe = Stripe(this.gateway_key)
+
+      this.createStripeElements()
+
+      await this.fetchStates()
+
+    }
+
+    
 
     //this.cardElement.on("change", this.handleErrors(event))
 
@@ -130,7 +232,7 @@ export default {
 
   computed: {
 
-    ...mapState([ 'sale' ]),
+    ...mapState([ 'sale', 'settings' ]),
 
     ...mapGetters({ 
       
@@ -200,15 +302,29 @@ export default {
 
       const data = await result.paymentIntent.id
 
-      const response = await fetch('/api/public/store', {
+      const response = await fetch('/api/public/sales', {
         method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sale: this.sale, payment_intent: data })
+        headers: { "Content-Type": "application/json", "accept": "application/json" },
+        body: JSON.stringify({ 
+          sale: this.sale,
+          customer: this.customer, 
+          payment_intent: data 
+        })
       })
 
-      // Route to thank you
+      // Route to thank you, clear cart
 
     },
+
+    async fetchStates() {
+      try {
+        const response = await fetch('/api/states')
+        const states = await response.json()
+        Object.assign(this, { states })
+      } catch (error) {
+        alert(`Error in fetchStates: ${error.message}`)
+      }
+    }
 
   }
 
@@ -216,27 +332,6 @@ export default {
 </script>
 
 <style>
-
-form {
-  /*width: 30vw;*/
-  /*min-width: 500px;
-  align-self: center;
-  box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
-    0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
-  border-radius: 7px;
-  padding: 40px;*/
-}
-
-input {
-  border-radius: 6px;
-  margin-bottom: 6px;
-  padding: 12px;
-  border: 1px solid rgba(50, 50, 93, 0.1);
-  height: 44px;
-  font-size: 16px;
-  width: 100%;
-  background: white;
-}
 
 .result-message {
   line-height: 22px;

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\Publc;
+namespace App\Http\Controllers\Api;
 
-use App\{ Sale, Setting };
+use App\{ Sale, Setting, User, Payment };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class SaleController extends Controller
 {
@@ -36,14 +37,41 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        // Calculate totals onthe server 
+        // Calculate totals on the server 
         // ...
 
         // Define cashier
         $cashier = User::find(1);
 
         // Find user in database based on email
-        $customer = User::find(1);
+        $customer = User::where("email", $request->customer["email"])->first();
+
+        if ($customer == null) {
+          $customer = new User();
+          
+          $customer->firstname       = $request->customer["firstname"];
+          $customer->lastname        = $request->customer["lastname"];
+          $customer->email           = $request->customer["email"];
+          $customer->role_id         = 7;
+          $customer->type            = "individual";
+          $customer->organization_id = 1;
+          $customer->password        = Hash::make(str_random(9));
+          $customer->membership_id   = 1;
+          $customer->address         = $request->customer["address"];
+          $customer->city            = $request->customer["city"];
+          $customer->state           = $request->customer["state"];
+          $customer->zip             = $request->customer["zip"];
+          $customer->country         = "United States";
+          $customer->phone           = $request->customer["phone"];
+          $customer->active          = true;
+          $customer->staff           = false;
+          $customer->newsletter      = $request->has("customer.newsletter");
+
+          // In the future, mark account created by the user themselves when that's the case
+          $customer->creator_id      = 1; 
+
+          $customer->save();
+        }
 
         $sale = new Sale;
 
@@ -85,7 +113,7 @@ class SaleController extends Controller
           }
 
           // Updating array with events  
-          array_push($event, $item['event']['id']);
+          array_push($events, $item['event']['id']);
         }
 
         // Attacthing events to sale
@@ -116,7 +144,7 @@ class SaleController extends Controller
         $sale->payments()->save($payment);
 
         return response()->json([
-          'data' => $sale,
+          'data'    => $sale,
           'message' => 'Payment completed successfully!',
         ], 201);
     }
