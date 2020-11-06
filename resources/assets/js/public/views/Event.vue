@@ -5,7 +5,7 @@
       <i class="chevron left icon"></i> Back
     </router-link>
 
-    <h1 class="ui dividing header">
+    <h3 class="ui dividing header">
       <div class="content">
         {{ event.show.name }}
         <div class="ui black label">
@@ -20,7 +20,7 @@
           ({{ distanceInWordsToNow(event.start, { addSuffix: true }) }})
         </div>
       </div>
-    </h1>
+    </h3>
 
     <div class="ui grid">
 
@@ -38,7 +38,7 @@
 
     </div>
 
-    <div class="ui four link cards" v-if="tickets.length > 0">
+    <div class="ui four doubling link cards" v-if="tickets.length > 0">
 
       <div class="card" v-for="ticket in tickets" :key="ticket.id">
         <div class="content">

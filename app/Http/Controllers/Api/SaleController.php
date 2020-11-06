@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\{ Sale, Setting, User, Payment };
+use App\{ Sale, Setting, User, Payment, PaymentMethod };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -81,9 +81,6 @@ class SaleController extends Controller
         $sale->customer_id = $customer->id;
         $sale->status = "complete";
         $sale->taxable = true;
-        $sale->subtotal = (double)$request->subtotal;
-        $sale->tax = (double)$request->tax;
-        $sale->total = (double)$request->total;
         $sale->refund = false;
         $sale->source = "public";
         $sale->sell_to_organization = false;
@@ -94,6 +91,8 @@ class SaleController extends Controller
         $events = [];
 
         $tickets = [];
+
+        $subtotal = 0;
         
         foreach ($request->sale as $item)
         {
@@ -110,6 +109,7 @@ class SaleController extends Controller
                 'organization_id' => $customer->organization_id,
               ]);
             }
+            $subtotal += $ticket["price"] * $ticket["amount"];
           }
 
           // Updating array with events  
@@ -131,12 +131,18 @@ class SaleController extends Controller
 
         // Payment
 
+        $sale->subtotal = $subtotal;
+        $sale->tax = (double)(Setting::find(1)->tax / 100) * $sale->subtotal;
+        $sale->total = $sale->subtotal + $sale->tax;
+
+        $sale->save();
+
         $payment = new Payment;
 
         $payment->cashier_id = $cashier->id;
-        $payment->payment_method_id = 1; // create one for stripe???
+        $payment->payment_method_id = PaymentMethod::where('name', 'like', 'stripe')->first()->id;
         $payment->tendered = $sale->total;
-        $payment->total = $payment->total;
+        $payment->total = $sale->total;
         $payment->change_due = $payment->tendered - $payment->total;
         $payment->reference = $request->payment_intent;
         $payment->source = "public";

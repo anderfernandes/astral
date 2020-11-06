@@ -1,8 +1,10 @@
 <template>
   <div id="checkout">
+    
     <h2 class="ui dividing header">Checkout</h2>
     
     <div id="checkout-ui" v-if="sale.length > 0">
+      
       <table class="ui very basic single line celled table">
         <thead>
           <tr>
@@ -69,6 +71,7 @@
           </tr>
         </tfoot>
       </table>
+      
       <form class="ui form">
         <div class="four fields">
           <div class="field">
@@ -128,22 +131,30 @@
       <br />
       
       <img class="ui small image" src="https://bookmesolid.com/wp-content/uploads/2018/12/powered-by-stripe.png" alt="Stripe">
+      
       <!-- Display a payment form -->
       <form id="payment-form">
+        
         <p id="card-error" ref="carderror" role="alert"></p>
+        
         <div id="card-element"><!--Stripe.js injects the Card Element--></div>
-        <button id="submit" ref="button" @click.prevent="submit">
+        
+        <button id="submit" ref="button" @click.prevent="submit" v-show="valid">
           <div class="spinner hidden" id="spinner"></div>
           <span id="button-text">Pay $ {{ total }}</span>
         </button>
+        
+        <br /><br />
+        
         <p class="result-message hidden">
           Payment succeeded, see the result in your
           <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
         </p>
+        
       </form>
     </div>
 
-    <div class="ui blue icon message" v-else>
+    <div class="ui blue icon message" v-else-if="sale.length <= 0">
       <i class="info circle icon"></i>
       <div class="content">
         <div class="header">There are no items in your cart</div>
@@ -175,6 +186,10 @@ export default {
 
   data: () => ({
 
+    loading: true,
+
+    hasError: false,
+
     stripe: null,
 
     cardElement: null,
@@ -199,12 +214,14 @@ export default {
 
       newsletter: true,
 
-      phone: ""
+      phone: "",
 
     },
 
     state_options: [
+      
       { key: "TX", text: "Texas", value: "Texas" }
+
     ]
 
   }),
@@ -216,15 +233,23 @@ export default {
 
       await this.getPaymentIntent()
 
-      this.stripe = Stripe(this.gateway_key)
+      try {
+        
+        this.stripe = Stripe(this.gateway_key)
 
-      this.createStripeElements()
+        this.createStripeElements()
+
+      } catch (error) {
+        
+        this.hasError = true
+
+      }
 
       await this.fetchStates()
 
     }
 
-    
+    this.loading = false
 
     //this.cardElement.on("change", this.handleErrors(event))
 
@@ -242,9 +267,27 @@ export default {
 
       total: 'total',
 
-      gateway_key: 'gateway_key'
+      gateway_key: 'gateway_key',
     
     }),
+
+    valid() {
+
+      if (
+        this.customer.firstname.length >= 3 && 
+        this.customer.lastname.length >= 3 && 
+        this.customer.email.includes("@") && 
+        this.customer.email.length >= 3 && 
+        this.customer.address.length >= 3 &&
+        this.customer.city.length >= 3 &&
+        this.customer.state.length >= 3 &&
+        this.customer.zip.length == 5 &&
+        this.customer.phone.length == 14)
+        return true
+      else
+        return false
+
+    }
 
   },
 
@@ -256,15 +299,23 @@ export default {
 
     async getPaymentIntent() {
 
-      const response = await fetch('/api/public/stripe', {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ total : this.total })
+      try {
+
+        const response = await fetch('/api/public/stripe', {
+          method: 'POST',
+          headers: { "Content-Type": "application/json", "accept": "application/json" },
+          body: JSON.stringify({ total : this.total })
       })
 
       const data = await response.json()
 
       this.clientSecret = data.client_secret
+
+      } catch (e) {
+        
+        this.hasError = true
+
+      }
 
     },
 
@@ -313,16 +364,31 @@ export default {
       })
 
       // Route to thank you, clear cart
+      alert("Sale confirmed!")
 
     },
 
     async fetchStates() {
       try {
+        
         const response = await fetch('/api/states')
+        
         const states = await response.json()
-        Object.assign(this, { states })
+
+        this.state_options = states.map((state, i) => ({
+          
+          key: i,
+
+          text: state,
+
+          value: state,
+
+        }))
+
       } catch (error) {
+        
         alert(`Error in fetchStates: ${error.message}`)
+
       }
     }
 

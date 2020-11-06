@@ -70,5 +70,15 @@ class PaymentMethodsTableSeeder extends Seeder
           'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
         ]);
+
+        // 6
+        DB::table('payment_methods')->insert([
+          'name'        => 'Stripe',
+          'description' => 'Stripe payments',
+          'icon'        => 'cc stripe',
+          'type'        => 'card',
+          'creator_id'  => 1,
+          'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
+        ]);
     }
 }

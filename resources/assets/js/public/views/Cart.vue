@@ -3,7 +3,7 @@
     <h2 class="ui dividing header">
       <i class="cart icon"></i> Cart
     </h2>
-    <div class="ui stackable grid container" v-show="cart.length > 0">
+    <div class="ui stackable grid" v-show="cart.length > 0">
       <div class="twelve wide column">
         <div class="ui divided items">
           <div class="item" v-for="item in cart" :key="item.event.id">
@@ -13,6 +13,7 @@
             <div class="content">
               <div class="header">
                 {{ item.event.show.name }}
+                <div class="ui black label">{{ item.event.type.name }}</div>
                 <div class="ui black label">{{ item.event.show.type }}</div>
               </div>
               <div class="meta">
