@@ -150,7 +150,7 @@ class SaleController extends Controller
         $sale->payments()->save($payment);
 
         return response()->json([
-          'data'    => $sale,
+          'data'    => $sale->load('customer'),
           'message' => 'Payment completed successfully!',
         ], 201);
     }
@@ -212,17 +212,28 @@ class SaleController extends Controller
     {
         // Remember to calculate totals on the server
 
-        $key = Setting::find(1)->gateway_private_key;
+        try
+        {
+          $key = Setting::find(1)->gateway_private_key;
 
-        \Stripe\Stripe::setApiKey($key);
+          \Stripe\Stripe::setApiKey($key);
 
-        $paymentIntent = \Stripe\PaymentIntent::create([
-          'amount' => (double)$request->total * 100,
-          'currency' => 'usd'
-        ]);
+          $paymentIntent = \Stripe\PaymentIntent::create([
+            'amount' => (double)$request->total * 100,
+            'currency' => 'usd'
+          ]);
 
-        return response([
-          'client_secret' => $paymentIntent->client_secret
-        ], 201);
+          return response([
+            'client_secret' => $paymentIntent->client_secret
+          ], 201);
+        }
+        catch (Exception $e)
+        {
+          return response([
+            "message" => $e->getMessage()
+          ], 422);
+        }
+
+        
     }
 }

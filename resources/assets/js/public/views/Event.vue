@@ -5,7 +5,7 @@
       <i class="chevron left icon"></i> Back
     </router-link>
 
-    <h3 class="ui dividing header">
+    <h2 class="ui dividing header">
       <div class="content">
         {{ event.show.name }}
         <div class="ui black label">
@@ -20,7 +20,7 @@
           ({{ distanceInWordsToNow(event.start, { addSuffix: true }) }})
         </div>
       </div>
-    </h3>
+    </h2>
 
     <div class="ui grid">
 
@@ -129,9 +129,9 @@
           
           this.event = ev.data
           
-          this.tickets = ev.data.type.allowed_tickets
-            .filter(ticket => ticket.public)
-            .map(ticket => Object.assign(ticket, { amount: 0 }))
+          /*this.tickets = ev.data.type.allowed_tickets
+            .filter(ticket => ticket.price > 0)
+            .map(ticket => Object.assign(ticket, { amount: 0 }))*/
 
         } catch (e) {
           
@@ -196,7 +196,7 @@
             },
             start: this.event.start,
           },
-          tickets: this.event.type.allowed_tickets.filter(t => t.public).map(t => ({
+          tickets: this.event.type.allowed_tickets.filter(t => t.public && (t.price > 0)).map(t => ({
             id: t.id,
             name: t.name,
             amount: 0,

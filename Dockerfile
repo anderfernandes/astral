@@ -1,4 +1,4 @@
-FROM archlinux/base
+FROM archlinux/base:latest
 
 # OS dependencies
 RUN pacman -Sy --noconfirm

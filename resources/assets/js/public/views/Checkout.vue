@@ -1,9 +1,17 @@
 <template>
-  <div id="checkout">
+  <div id="checkout" v-show="!loading">
     
     <h2 class="ui dividing header">Checkout</h2>
+
+    <div class="ui blue icon message" v-show="hasError">
+      <i class="info circle icon"></i>
+      <div class="content">
+        <div class="header">Unable to checkout</div>
+        <p>{{ settings.organization }} is unable to check out at this moment. Please try again later.</p>
+      </div>
+    </div>
     
-    <div id="checkout-ui" v-if="sale.length > 0">
+    <div id="checkout-ui" v-show="(sale.length > 0) && !hasError">
       
       <table class="ui very basic single line celled table">
         <thead>
@@ -139,7 +147,7 @@
         
         <div id="card-element"><!--Stripe.js injects the Card Element--></div>
         
-        <button id="submit" ref="button" @click.prevent="submit" v-show="valid">
+        <button id="submit" ref="button" @click.prevent="submit" :disabled="!valid">
           <div class="spinner hidden" id="spinner"></div>
           <span id="button-text">Pay $ {{ total }}</span>
         </button>
@@ -154,7 +162,7 @@
       </form>
     </div>
 
-    <div class="ui blue icon message" v-else-if="sale.length <= 0">
+    <div class="ui blue icon message" v-show="sale.length <= 0">
       <i class="info circle icon"></i>
       <div class="content">
         <div class="header">There are no items in your cart</div>
@@ -231,27 +239,27 @@ export default {
 
     if (this.sale.length > 0) {
 
-      await this.getPaymentIntent()
-
       try {
+
+        await this.getPaymentIntent()
         
         this.stripe = Stripe(this.gateway_key)
 
         this.createStripeElements()
 
-      } catch (error) {
+        await this.fetchStates()
+
+      } catch (e) {
         
         this.hasError = true
 
-      }
+        alert(e.message)
 
-      await this.fetchStates()
+      }
 
     }
 
     this.loading = false
-
-    //this.cardElement.on("change", this.handleErrors(event))
 
   },
 
@@ -299,9 +307,7 @@ export default {
 
     async getPaymentIntent() {
 
-      try {
-
-        const response = await fetch('/api/public/stripe', {
+      const response = await fetch('/api/public/stripe', {
           method: 'POST',
           headers: { "Content-Type": "application/json", "accept": "application/json" },
           body: JSON.stringify({ total : this.total })
@@ -310,12 +316,6 @@ export default {
       const data = await response.json()
 
       this.clientSecret = data.client_secret
-
-      } catch (e) {
-        
-        this.hasError = true
-
-      }
 
     },
 
@@ -363,12 +363,18 @@ export default {
         })
       })
 
+      const res = await response.json()
+
       // Route to thank you, clear cart
-      alert("Sale confirmed!")
+      
+      this.$store.commit("Public/CLEAR_CART")
+
+      this.$router.push({ name: 'confirmation', params: { sale: res.data } })
 
     },
 
     async fetchStates() {
+      
       try {
         
         const response = await fetch('/api/states')

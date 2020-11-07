@@ -40,6 +40,12 @@ export default {
       payload.tickets.forEach(ticket => { if (ticket.amount > 0) state.count++ })
     },
 
+    CLEAR_CART(state) {
+      
+      Object.assign(state, { sale: [] })
+      
+    }
+
   },
 
   actions: {
