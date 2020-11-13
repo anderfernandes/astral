@@ -1272,7 +1272,10 @@ Route::get('events/by-date', function (Request $request) {
         'id' => $event->id,
         'start' => $event->start->toIso8601String(),
         'end' => $event->end->toIso8601String(),
-        'seats' => (int) $event->seats,
+        'seats' => [
+          'total' => $event->seats,
+          'available' => $event->seats_available,
+        ],
         'show' => $event->show,
         'memo' => $event->memo,
         'type' => [

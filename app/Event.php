@@ -8,7 +8,10 @@ class Event extends Model
 {
 
   protected $fillable = ['start', 'end', 'memo', 'seats', 'creator_id', 'type_id', 'public', 'show_id'];
+  
   protected $appends  = ['title'];
+
+  protected $casts = ['seats' => 'integer'];
 
   /**
    * These variables will be mutated to dates
@@ -59,5 +62,12 @@ class Event extends Model
   public function getTitleAttribute()
   {
     return $this->attributes['memo'];
+  }
+
+  public function getSeatsAvailableAttribute()
+  {
+
+    return $this->seats - $this->tickets->count();
+
   }
 }
