@@ -37,9 +37,6 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        // Calculate totals on the server 
-        // ...
-
         // Define cashier
         $cashier = User::find(1);
 
@@ -131,9 +128,9 @@ class SaleController extends Controller
 
         // Payment
 
-        $sale->subtotal = $subtotal;
-        $sale->tax = (double)(Setting::find(1)->tax / 100) * $sale->subtotal;
-        $sale->total = $sale->subtotal + $sale->tax;
+        $sale->subtotal = round($subtotal, 2);
+        $sale->tax = round((Setting::find(1)->tax / 100) * $sale->subtotal, 2);
+        $sale->total = round($sale->subtotal + $sale->tax, 2);
 
         $sale->save();
 
@@ -143,8 +140,8 @@ class SaleController extends Controller
         $payment->payment_method_id = PaymentMethod::where('name', 'like', 'stripe')->first()->id;
         $payment->tendered = $sale->total;
         $payment->total = $sale->total;
-        $payment->change_due = $payment->tendered - $payment->total;
-        $payment->reference = $request->payment_intent;
+        $payment->change_due = round($payment->tendered - $payment->total, 2);
+        $payment->reference = round($request->payment_intent, 2);
         $payment->source = "public";
 
         $sale->payments()->save($payment);

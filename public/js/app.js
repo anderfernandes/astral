@@ -7408,6 +7408,38 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var _createNamespacedHelp = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["createNamespacedHelpers"])('Public'),
@@ -7811,6 +7843,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 //import { loadStripe } from '@stripe/stripe-js'
 //import { Elements } from '@stripe/stripe-js/'
 
@@ -7852,7 +7892,8 @@ var currencySettings = {
         key: "TX",
         text: "Texas",
         value: "Texas"
-      }]
+      }],
+      submitted: false
     };
   },
   mounted: function mounted() {
@@ -7864,7 +7905,7 @@ var currencySettings = {
           switch (_context.prev = _context.next) {
             case 0:
               if (!(_this.sale.length > 0)) {
-                _context.next = 14;
+                _context.next = 13;
                 break;
               }
 
@@ -7881,19 +7922,18 @@ var currencySettings = {
               return _this.fetchStates();
 
             case 8:
-              _context.next = 14;
+              _context.next = 13;
               break;
 
             case 10:
               _context.prev = 10;
               _context.t0 = _context["catch"](1);
               _this.hasError = true;
-              alert(_context.t0.message);
 
-            case 14:
+            case 13:
               _this.loading = false;
 
-            case 15:
+            case 14:
             case "end":
               return _context.stop();
           }
@@ -7981,21 +8021,22 @@ var currencySettings = {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
+                _this4.submitted = true;
+                _context3.next = 3;
                 return _this4.stripe.confirmCardPayment(_this4.clientSecret, {
                   payment_method: {
                     card: _this4.cardElement
                   }
                 });
 
-              case 2:
+              case 3:
                 result = _context3.sent;
-                _context3.next = 5;
+                _context3.next = 6;
                 return result.paymentIntent.id;
 
-              case 5:
+              case 6:
                 data = _context3.sent;
-                _context3.next = 8;
+                _context3.next = 9;
                 return fetch('/api/public/sales', {
                   method: 'POST',
                   headers: {
@@ -8009,12 +8050,12 @@ var currencySettings = {
                   })
                 });
 
-              case 8:
+              case 9:
                 response = _context3.sent;
-                _context3.next = 11;
+                _context3.next = 12;
                 return response.json();
 
-              case 11:
+              case 12:
                 res = _context3.sent;
 
                 // Route to thank you, clear cart
@@ -8027,7 +8068,9 @@ var currencySettings = {
                   }
                 });
 
-              case 14:
+                _this4.submitted = false;
+
+              case 16:
               case "end":
                 return _context3.stop();
             }
@@ -8099,6 +8142,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
 //
 //
 //
@@ -72897,10 +72941,12 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    !_vm.loading
-      ? _c("div", { attrs: { id: "public" } }, [
-          _c("div", { staticClass: "ui borderless menu" }, [
+  return !_vm.loading
+    ? _c(
+        "div",
+        { staticStyle: { "min-height": "100%" }, attrs: { id: "public" } },
+        [
+          _c("div", { staticClass: "ui borderless fixed menu" }, [
             _c(
               "div",
               { staticClass: "ui container" },
@@ -72920,23 +72966,37 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "right menu" },
-                  [
-                    _c(
-                      "router-link",
-                      { staticClass: "item", attrs: { to: "/cart" } },
-                      [
-                        _c("i", { staticClass: "cart icon" }),
-                        _vm._v(" " + _vm._s(_vm.count) + "\n          ")
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _vm._m(0)
-                  ],
-                  1
-                )
+                _c("router-link", { staticClass: "item", attrs: { to: "/" } }, [
+                  _c("i", { staticClass: "home icon" }),
+                  _vm._v(" Home\n      ")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "right menu" }, [
+                  _c(
+                    "div",
+                    { staticClass: "item" },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "ui blue button",
+                          attrs: { to: "/cart" }
+                        },
+                        [
+                          _c("i", { staticClass: "cart icon" }),
+                          _vm._v(
+                            " Cart (" + _vm._s(_vm.count) + ")\n          "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  false
+                    ? undefined
+                    : _vm._e()
+                ])
               ],
               1
             )
@@ -72946,30 +73006,158 @@ var render = function() {
             "div",
             {
               staticClass: "ui container",
-              staticStyle: { "min-height": "100%" }
+              staticStyle: {
+                "min-height": "70vh",
+                "padding-top": "6em",
+                "padding-bottom": "3rem"
+              }
             },
             [_c("router-view")],
             1
           ),
           _vm._v(" "),
-          _c("br"),
-          _c("br")
-        ])
-      : _c("div", { staticClass: "ui active inline loader" })
-  ])
+          _c(
+            "div",
+            {
+              staticClass: "ui vertical footer blue inverted segment",
+              staticStyle: {
+                "min-height": "27vh",
+                "padding-top": "2em",
+                "padding-bottom": "2em"
+              }
+            },
+            [
+              _c("div", { staticClass: "ui center aligned container" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "ui stackable divided inverted two column grid"
+                  },
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "four wide column" },
+                      [
+                        _c("h4", { staticClass: "ui inverted header" }, [
+                          _vm._v("Shortcuts")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "router-link",
+                          {
+                            staticStyle: { color: "white" },
+                            attrs: { to: "/" }
+                          },
+                          [
+                            _c("i", { staticClass: "home icon" }),
+                            _vm._v("Home")
+                          ]
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "twelve wide column" }, [
+                      _c("h4", { staticClass: "ui inverted header" }, [
+                        _vm._v(
+                          "© 2017-" +
+                            _vm._s(new Date().getFullYear()) +
+                            " " +
+                            _vm._s(_vm.settings.organization) +
+                            ". All rights reserved."
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [
+                        _vm._v(
+                          _vm._s(_vm.settings.address) +
+                            " | " +
+                            _vm._s(_vm.settings.phone)
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [
+                        _c("i", { staticClass: "phone icon" }),
+                        _vm._v(
+                          " " + _vm._s(_vm.settings.phone) + " | \n            "
+                        ),
+                        _c("i", { staticClass: "envelope outline icon" }),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticStyle: { color: "white" },
+                            attrs: { href: "mailto:" + _vm.settings.email }
+                          },
+                          [_vm._v(_vm._s(_vm.settings.email))]
+                        ),
+                        _vm._v(" | \n            "),
+                        _c("i", { staticClass: "globe icon" }),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticStyle: { color: "white" },
+                            attrs: {
+                              target: "_blank",
+                              href: "http://" + _vm.settings.website
+                            }
+                          },
+                          [_vm._v(_vm._s(_vm.settings.website))]
+                        )
+                      ])
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(1)
+              ])
+            ]
+          )
+        ]
+      )
+    : _c("div", { staticClass: "ui active inline loader" })
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item" }, [
-      _c("div", { staticClass: "ui right floated item" }, [
-        _c(
-          "a",
-          { staticClass: "ui primary button", attrs: { href: "/login" } },
-          [_vm._v("Login")]
-        )
+    return _c("div", { staticClass: "ui right floated item" }, [
+      _c("a", { staticClass: "ui primary button", attrs: { href: "/login" } }, [
+        _vm._v("Login")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "ui stackable inverted grid" }, [
+      _c("div", { staticClass: "column" }, [
+        _c("div", { staticClass: "ui divider" }),
+        _vm._v(" "),
+        _c("div", [
+          _vm._v("\n            Brought to you with "),
+          _c("i", { staticClass: "heart icon" }),
+          _vm._v(" and little help from \n            "),
+          _c(
+            "a",
+            {
+              staticClass: "ui basic tiny image label",
+              attrs: {
+                href: "https://astral.anderfernandes.com",
+                target: "_blank"
+              }
+            },
+            [
+              _c("img", {
+                attrs: { src: "/astral-logo-dark.png", alt: "Astral" }
+              }),
+              _vm._v("\n              Astral\n            ")
+            ]
+          )
+        ])
       ])
     ])
   }
@@ -73270,6 +73458,14 @@ var render = function() {
       attrs: { id: "checkout" }
     },
     [
+      _vm.submitted
+        ? _c("div", { staticClass: "ui active dimmer" }, [
+            _c("div", { staticClass: "ui text loader" }, [
+              _vm._v("\n      Working on it, please wait...\n    ")
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
       _c("h2", { staticClass: "ui dividing header" }, [_vm._v("Checkout")]),
       _vm._v(" "),
       _c(
@@ -73808,7 +74004,10 @@ var render = function() {
           staticClass: "ui blue icon message"
         },
         [_c("i", { staticClass: "info circle icon" }), _vm._v(" "), _vm._m(5)]
-      )
+      ),
+      _vm._v(" "),
+      _c("br"),
+      _c("br")
     ]
   )
 }
@@ -73909,9 +74108,17 @@ var render = function() {
         _c("p", [
           _vm._v("\n        We have sent the tickets "),
           _c("em", [_vm._v("and")]),
-          _vm._v(" the receipt "),
-          _c("strong", [_vm._v(_vm._s(_vm.sale.customer.firstname))]),
-          _vm._v(".\n        We are looking forward to have you at the "),
+          _vm._v(" the receipt to "),
+          _c("strong", [_vm._v(_vm._s(_vm.sale.customer.email))]),
+          _vm._v(", "),
+          _c("strong", [_vm._v(" " + _vm._s(_vm.sale.customer.firstname))]),
+          _vm._v(
+            ".\n        Show us any of those we will let you in. Make sure you "
+          ),
+          _c("strong", [_vm._v("check your email's spam folder")]),
+          _vm._v(
+            " in case our email ended up there.\n        We are looking forward to have you at the "
+          ),
           _c("strong", [_vm._v(_vm._s(_vm.settings.organization))]),
           _vm._v("!\n      ")
         ])

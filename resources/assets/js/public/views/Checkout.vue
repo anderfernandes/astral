@@ -1,6 +1,12 @@
 <template>
   <div id="checkout" v-show="!loading">
     
+    <div class="ui active dimmer" v-if="submitted">
+      <div class="ui text loader">
+        Working on it, please wait...
+      </div>
+    </div>
+
     <h2 class="ui dividing header">Checkout</h2>
 
     <div class="ui blue icon message" v-show="hasError">
@@ -170,6 +176,8 @@
       </div>
     </div>
 
+    <br><br>
+
   </div>
 </template>
 
@@ -230,7 +238,9 @@ export default {
       
       { key: "TX", text: "Texas", value: "Texas" }
 
-    ]
+    ],
+
+    submitted: false,
 
   }),
   
@@ -252,8 +262,6 @@ export default {
       } catch (e) {
         
         this.hasError = true
-
-        alert(e.message)
 
       }
 
@@ -349,6 +357,8 @@ export default {
 
     async submit() {
 
+      this.submitted = true
+
       const result = await this.stripe.confirmCardPayment(this.clientSecret, { payment_method: { card: this.cardElement } })
 
       const data = await result.paymentIntent.id
@@ -370,6 +380,8 @@ export default {
       this.$store.commit("Public/CLEAR_CART")
 
       this.$router.push({ name: 'confirmation', params: { sale: res.data } })
+
+      this.submitted = false
 
     },
 

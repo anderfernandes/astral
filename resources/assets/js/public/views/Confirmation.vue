@@ -5,7 +5,8 @@
     <div class="content">
       <div class="header">Success!</div>
       <p>
-        We have sent the tickets <em>and</em> the receipt <strong>{{ sale.customer.firstname }}</strong>.
+        We have sent the tickets <em>and</em> the receipt to <strong>{{ sale.customer.email }}</strong>, <strong> {{ sale.customer.firstname }}</strong>.
+        Show us any of those we will let you in. Make sure you <strong>check your email's spam folder</strong> in case our email ended up there.
         We are looking forward to have you at the <strong>{{ settings.organization }}</strong>!
       </p>
     </div>
