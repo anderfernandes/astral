@@ -23,7 +23,9 @@
       </div>
     </div>
     <div class="ui container" style="min-height:70vh; padding-top:6em; padding-bottom:3rem">
-      <router-view />
+      <transition name="fade" mode="out-in">
+        <router-view></router-view>
+      </transition>
     </div>
     <div class="ui vertical footer blue inverted segment" style="min-height:27vh; padding-top:2em; padding-bottom:2em">
       <div class="ui center aligned container">
@@ -109,3 +111,26 @@ export default {
 
 }
 </script>
+
+<style>
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .75s ease;
+  }
+  .fade-enter, .fade-leave-active {
+    opacity: 0;
+  }
+  .child-view {
+    position: absolute;
+    transition: all .75s cubic-bezier(.55,0,.1,1);
+  }
+  .slide-left-enter, .slide-right-leave-active {
+    opacity: 0;
+    -webkit-transform: translate(30px, 0);
+    transform: translate(30px, 0);
+  }
+  .slide-left-leave-active, .slide-right-enter {
+    opacity: 0;
+    -webkit-transform: translate(-30px, 0);
+    transform: translate(-30px, 0);
+  }
+</style>
