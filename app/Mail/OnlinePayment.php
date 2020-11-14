@@ -38,7 +38,7 @@ class OnlinePayment extends Mailable
         $sale = $this->sale;
 
         return $this->from($settings->email, $settings->organization)
-                    ->subject("Your {$settings->organization}, {$customer}! (Sale #{$sale->id})")
+                    ->subject("Your {$settings->organization} tickets, {$customer}! (Sale #{$sale->id})")
                     ->markdown("email.online-payment");
     }
 }

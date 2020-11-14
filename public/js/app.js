@@ -73058,7 +73058,7 @@ var render = function() {
             {
               staticClass: "ui container",
               staticStyle: {
-                "min-height": "70vh",
+                "min-height": "100vh",
                 "padding-top": "6em",
                 "padding-bottom": "3rem"
               }
@@ -73078,11 +73078,7 @@ var render = function() {
             "div",
             {
               staticClass: "ui vertical footer blue inverted segment",
-              staticStyle: {
-                "min-height": "27vh",
-                "padding-top": "2em",
-                "padding-bottom": "2em"
-              }
+              staticStyle: { "padding-top": "2em", "padding-bottom": "2em" }
             },
             [
               _c("div", { staticClass: "ui center aligned container" }, [

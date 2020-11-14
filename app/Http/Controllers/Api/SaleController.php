@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\{ Sale, Setting, User, Payment, PaymentMethod };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\{ Hash, Mail };
+use App\Mail\OnlinePayment;
 
 class SaleController extends Controller
 {
@@ -145,6 +146,8 @@ class SaleController extends Controller
         $payment->source = "public";
 
         $sale->payments()->save($payment);
+
+        Mail::to($sale->customer)->send(new OnlinePayment($sale));
 
         return response()->json([
           'data'    => $sale->load('customer'),

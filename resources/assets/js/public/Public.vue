@@ -22,12 +22,12 @@
         </div>
       </div>
     </div>
-    <div class="ui container" style="min-height:70vh; padding-top:6em; padding-bottom:3rem">
+    <div class="ui container" style="min-height:100vh; padding-top:6em; padding-bottom:3rem">
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
     </div>
-    <div class="ui vertical footer blue inverted segment" style="min-height:27vh; padding-top:2em; padding-bottom:2em">
+    <div class="ui vertical footer blue inverted segment" style="padding-top:2em; padding-bottom:2em">
       <div class="ui center aligned container">
         <div class="ui stackable divided inverted two column grid">
           <div class="four wide column">

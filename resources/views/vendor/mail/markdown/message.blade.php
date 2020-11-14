@@ -20,7 +20,7 @@
             <br>
             {{ \App\Setting::find(1)->phone }} |
             [{{ \App\Setting::find(1)->website }}](http://{{ \App\Setting::find(1)->website }}) |
-            Powered by [Astral](https://astral.anderfernandes.com)
+            Brought to you with &hearts; and little help from [Astral](https://astral.anderfernandes.com)
         @endcomponent
     @endslot
 @endcomponent
