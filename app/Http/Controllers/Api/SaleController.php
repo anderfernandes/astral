@@ -147,8 +147,14 @@ class SaleController extends Controller
 
         $sale->payments()->save($payment);
 
-        Mail::to($sale->customer)->send(new OnlinePayment($sale));
+        try
+        {
+          Mail::to($sale->customer)->send(new OnlinePayment($sale));
+        }
+        catch (Exception $e)
+        {
 
+        }
         return response()->json([
           'data'    => $sale->load('customer'),
           'message' => 'Payment completed successfully!',
@@ -235,5 +241,10 @@ class SaleController extends Controller
         }
 
         
+    }
+
+    public function braintree(Request $request)
+    {
+
     }
 }

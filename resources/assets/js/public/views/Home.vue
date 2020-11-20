@@ -16,8 +16,13 @@
           <div class="content">
             <div class="meta" style="margin-bottom:1rem">
               <div class="ui basic black label">
-                <i class="calendar alternate outline icon"></i>
+                <i class="clock icon"></i>
                 {{ format(event.start, 'h:mm A') }}
+              </div>
+              <div class="ui basic black label">
+                <i class="user outline icon"></i>
+                {{ event.seats_available }} 
+                {{ event.seats_available == 1 ? "seat" : "seats" }} available
               </div>
             </div>
             <div class="header">{{ event.show.name }}</div>

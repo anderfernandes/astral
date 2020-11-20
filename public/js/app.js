@@ -8273,6 +8273,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['id'],
@@ -8299,6 +8330,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     sale: function sale() {
       return this.$store.state.Public.sale;
+    },
+    seats_ratio: function seats_ratio() {
+      return this.event.seats_available / this.event.seats;
+    },
+    event_tickets: function event_tickets() {
+      return this.tickets.reduce(function (total, ticket) {
+        return total + ticket.amount;
+      }, 0);
     }
   },
   methods: {
@@ -8462,6 +8501,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
 //
 //
 //
@@ -74208,6 +74252,59 @@ var render = function() {
         { attrs: { id: "event" } },
         [
           _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.event.seats_available <= 0,
+                  expression: "event.seats_available <= 0"
+                }
+              ],
+              staticClass: "ui icon error message"
+            },
+            [
+              _c("i", { staticClass: "exclamation circle icon" }),
+              _vm._v(" "),
+              _vm._m(0)
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.seats_ratio < 0.25 && _vm.seats_ratio > 0,
+                  expression: "seats_ratio < 0.25 && seats_ratio > 0 "
+                }
+              ],
+              staticClass: "ui icon warning message"
+            },
+            [
+              _c("i", { staticClass: "info circle icon" }),
+              _vm._v(" "),
+              _c("div", { staticClass: "content" }, [
+                _c("div", { staticClass: "header" }, [
+                  _vm._v("Few seats left!")
+                ]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    "We only have " +
+                      _vm._s(_vm.event.seats_available) +
+                      " " +
+                      _vm._s(_vm.event.seats_available == 1 ? "seat" : "seats")
+                  )
+                ])
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
             "router-link",
             { staticClass: "ui basic black button", attrs: { to: "/" } },
             [_c("i", { staticClass: "chevron left icon" }), _vm._v(" Back\n  ")]
@@ -74222,28 +74319,53 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "ui black label" }, [
                 _vm._v("\n        " + _vm._s(_vm.event.show.type) + "\n      ")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "sub header" }, [
-                _c("i", { staticClass: "calendar alternate icon" }),
-                _vm._v(
-                  "\n        " +
-                    _vm._s(
-                      _vm.format(_vm.event.start, "dddd, MMMM d [@] h:mm A")
-                    ) +
-                    "\n        (" +
-                    _vm._s(
-                      _vm.distanceInWordsToNow(_vm.event.start, {
-                        addSuffix: true
-                      })
-                    ) +
-                    ")\n      "
-                )
               ])
-            ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "sub header",
+                staticStyle: {
+                  "margin-top": "0.5rem",
+                  "margin-left": "-0.5rem"
+                }
+              },
+              [
+                _c("div", { staticClass: "ui basic black label" }, [
+                  _c("i", { staticClass: "calendar alternate icon" }),
+                  _vm._v(
+                    "\n        " +
+                      _vm._s(
+                        _vm.format(_vm.event.start, "dddd, MMMM d [@] h:mm A")
+                      ) +
+                      "\n        (" +
+                      _vm._s(
+                        _vm.distanceInWordsToNow(_vm.event.start, {
+                          addSuffix: true
+                        })
+                      ) +
+                      ")\n      "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "ui basic black label" }, [
+                  _c("i", { staticClass: "user outline icon" }),
+                  _vm._v(
+                    "\n        " +
+                      _vm._s(_vm.event.seats_available) +
+                      " \n        " +
+                      _vm._s(
+                        _vm.event.seats_available == 1 ? "seat" : "seats"
+                      ) +
+                      " available\n      "
+                  )
+                ])
+              ]
+            )
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "ui grid" }, [
+          _c("div", { staticClass: "ui stackable grid" }, [
             _c("div", { staticClass: "four wide column" }, [
               _c("img", {
                 staticClass: "ui fluid image",
@@ -74264,7 +74386,7 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _vm.tickets.length > 0
+          _vm.tickets.length > 0 && _vm.event.seats_available > 0
             ? _c(
                 "div",
                 { staticClass: "ui four doubling link cards" },
@@ -74287,10 +74409,15 @@ var render = function() {
                       _c("div", { staticClass: "ui three column grid" }, [
                         _c("div", { staticClass: "column" }, [
                           _c(
-                            "div",
+                            "button",
                             {
                               staticClass:
-                                "ui basic green circular icon button",
+                                "circular ui basic green icon button",
+                              staticStyle: { width: "36px" },
+                              attrs: {
+                                disabled:
+                                  _vm.event_tickets >= _vm.event.seats_available
+                              },
                               on: {
                                 click: function($event) {
                                   ticket.amount++
@@ -74317,10 +74444,12 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "column" }, [
                           _c(
-                            "div",
+                            "button",
                             {
                               staticClass:
                                 "ui basic yellow circular icon button",
+                              staticStyle: { width: "36px" },
+                              attrs: { disabled: ticket.amount <= 0 },
                               on: {
                                 click: function($event) {
                                   ticket.amount--
@@ -74336,13 +74465,56 @@ var render = function() {
                 }),
                 0
               )
-            : _vm._e()
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.event_tickets >= _vm.event.seats_available,
+                  expression: "event_tickets >= event.seats_available"
+                }
+              ],
+              staticClass: "ui info icon message"
+            },
+            [
+              _c("i", { staticClass: "info circle icon" }),
+              _vm._v(" "),
+              _vm._m(1)
+            ]
+          )
         ],
         1
       )
     : _vm._e()
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "content" }, [
+      _c("div", { staticClass: "header" }, [_vm._v("Sold out")]),
+      _vm._v(" "),
+      _c("p", [_vm._v("We are sold out for this show.")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "content" }, [
+      _c("div", { staticClass: "header" }, [
+        _vm._v("You have reached the number of tickets available!")
+      ]),
+      _vm._v(" "),
+      _c("p", [_vm._v("You can't add more tickets to this event.")])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -74416,13 +74588,24 @@ var render = function() {
                     },
                     [
                       _c("div", { staticClass: "ui basic black label" }, [
-                        _c("i", {
-                          staticClass: "calendar alternate outline icon"
-                        }),
+                        _c("i", { staticClass: "clock icon" }),
                         _vm._v(
                           "\n              " +
                             _vm._s(_vm.format(event.start, "h:mm A")) +
                             "\n            "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "ui basic black label" }, [
+                        _c("i", { staticClass: "user outline icon" }),
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(event.seats_available) +
+                            " \n              " +
+                            _vm._s(
+                              event.seats_available == 1 ? "seat" : "seats"
+                            ) +
+                            " available\n            "
                         )
                       ])
                     ]
