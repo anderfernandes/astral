@@ -139,8 +139,8 @@
       <br />
 
       <!--- Stripe or Braintree --->
-      <stripe ref="stripe" :valid="valid" :customer="customer"></stripe>
-
+      <stripe ref="stripe" :valid="valid" :customer="customer" v-if="settings.gateway == 'stripe'" />
+      <braintree ref="braintree" :valid="valid" :customer="customer" v-if="settings.gateway == 'braintree'" />
     
     </div>
 
@@ -167,6 +167,8 @@ import { createNamespacedHelpers } from 'vuex'
 
 import Stripe from './Stripe.vue'
 
+import Braintree from './Braintree.vue'
+
 const { mapState, mapActions, mapGetters } = createNamespacedHelpers('Public')
 
 const currencySettings = { minimumFractionDigits: 2, maximumFractionDigits: 2 }
@@ -175,7 +177,7 @@ export default {
 
   directives: { mask },
 
-  components: { Stripe },
+  components: { Stripe, Braintree },
 
   data: () => ({
 
@@ -221,12 +223,6 @@ export default {
     if (this.sale.length > 0) {
 
       try {
-
-        //await this.getPaymentIntent()
-        
-        //this.stripe = Stripe(this.gateway_key)
-
-        //this.createStripeElements()
 
         await this.fetchStates()
 

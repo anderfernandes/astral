@@ -217,7 +217,6 @@ class SaleController extends Controller
     public function stripe(Request $request)
     {
         // Remember to calculate totals on the server
-
         try
         {
           $key = Setting::find(1)->gateway_private_key;
@@ -239,12 +238,38 @@ class SaleController extends Controller
             "message" => $e->getMessage()
           ], 422);
         }
-
         
     }
 
     public function braintree(Request $request)
     {
+      $config = Setting::find(1);
 
+      try
+      {
+
+        $gateway = new Braintree\Gateway([
+          'environment' => 'sandbox',
+          'merchantId' => $config->gateway_merchant_id,
+          'publicKey' => $config->gateway_public_key,
+          'privateKey' => $config->gateway_private_key,
+        ]);
+
+        // generate() takes a customerId as an argument, this can improve UX
+        $clientToken = $gateway->clientToken()->generate();
+
+        return response([
+          'client_token' => $clientToken
+        ]);
+
+      }
+      catch (Exception $e)
+      {
+        
+        return response([
+          "message" => $e->getMessage()
+        ]);
+        
+      }
     }
 }

@@ -230,29 +230,43 @@
     </div>
 
     <div class="ui horizontal divider header">
-      @if ($setting->gateway != " " && $setting->gateway)
+      @if ($setting->gateway == "stripe" && $setting->gateway)
       <i class="cc stripe icon"></i>
+      @elseif ($setting->gateway == "braintree")
+      <i class="cc braintree icon"></i>
       @endif
       Online Payment Settings
     </div>
-
-    <div class="two fields">
+    
+    <div class="{{ $setting->gateway == 'braintree' ? 'four' : 'three' }} fields">
       <div class="field">
         <label>Online Payment Gateway</label>
         {!! Form::select('gateway', [ 
+          ''       => 'None',
           ' '      => 'None', 
-          'stripe' => 'Stripe'
+          'stripe' => 'Stripe',
+          'braintree' => 'Braintree / Paypal',
           ], null, ['class' => 'ui dropdown', 'placeholder' => 'Select an option']) 
         !!}
       </div>
-    </div>
-    @if ($setting->gateway != " " && $setting->gateway)
-    <div class="two fields">
+      @if ($setting->gateway == 'braintree')
       <div class="field">
-      <?php
-        $gateway = ucfirst($setting->gateway);
-      ?>
-        <label>Gateway Public Key</label>
+        <label>Merchant ID</label>
+        {!! 
+          Form::text('gateway_merchant_id', null, [
+            'placeholder'   => "Merchant ID", 
+            'data-validate' => 'gateway_merchant_id', 
+            'type'          => 'text'
+          ])
+        !!}
+      </div>
+      @endif
+      @if (($setting->gateway != ' ') && $setting->gateway)
+      <div class="field">
+        <?php
+          $gateway = ucfirst($setting->gateway);
+        ?>
+        <label>{{ $gateway }} Public Key</label>
         {!! 
           Form::text('gateway_public_key', null, [
             'placeholder'   => "{$gateway} Public Key", 
@@ -262,7 +276,7 @@
         !!}
       </div>
       <div class="field">
-        <label>Gateway Private Key</label>
+        <label>{{ $gateway }} Private Key</label>
         {!! 
           Form::text('gateway_private_key', null, [
             'placeholder'   => "{$gateway} Private Key", 
@@ -271,14 +285,14 @@
           ]) 
         !!}
       </div>
+      @endif
     </div>
-    @endif
+    
     <div class="field">
       <div class="ui buttons">
         {!! Form::button('<i class="save icon"></i> Save', ['type' => 'submit', 'class' => 'ui green right labeled icon button']) !!}
       </div>
     </div>
-    
 
   {!! Form::close() !!}
 </div>

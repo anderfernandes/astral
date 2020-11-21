@@ -246,8 +246,15 @@ class SettingController extends Controller
     $setting->self_confirmation_days    = (int) $request->self_confirmation_days;
     $setting->self_confirmation_time    = $request->self_confirmation_time;
     $setting->gateway                   = $request->gateway;
+    
+    $setting->gateway_merchant_id       = $request->has('gateway_merchant_id')
+      ? $request->gateway_merchant_id
+      : '';
+
     $setting->gateway_public_key        = $request->gateway_public_key;
     $setting->gateway_private_key       = $request->gateway_private_key;
+
+    // Validate gateways
 
     if ($request->logo != null) {
       Storage::disk('public')->delete($setting->logo);

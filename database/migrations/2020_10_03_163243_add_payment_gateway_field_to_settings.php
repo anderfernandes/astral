@@ -15,6 +15,7 @@ class AddPaymentGatewayFieldToSettings extends Migration
     {
         Schema::table('settings', function (Blueprint $table) {
             $table->string('gateway', 16)->nullable();
+            $table->string('gateway_merchant_id')->nullable();
             $table->string('gateway_public_key', 32)->nullable();
             $table->string('gateway_private_key', 32)->nullable();
         });
@@ -29,7 +30,8 @@ class AddPaymentGatewayFieldToSettings extends Migration
     {
         Schema::table('settings', function (Blueprint $table) {
             $table->dropColumn([
-              'gateway', 
+              'gateway',
+              'gateway_merchant_id',
               'gateway_public_key', 
               'gateway_private_key'
             ]);
