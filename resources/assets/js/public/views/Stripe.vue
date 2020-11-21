@@ -100,6 +100,9 @@ export default {
 
           this.clientSecret = data.client_secret
 
+          this.hasError = false
+          this.errorMessage = null
+
         } catch (e) {
           this.hasError = true
           this.errorMessage = `Error getting payment intent: ${e.message}`
@@ -186,7 +189,7 @@ export default {
 }
 
 #card-element {
-  border-radius: 4px 4px 0 0 ;
+  border-radius: 4px 4px 0 0;
   padding: 12px;
   border: 1px solid rgba(50, 50, 93, 0.1);
   height: 44px;

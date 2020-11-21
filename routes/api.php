@@ -1858,4 +1858,5 @@ Route::group(['prefix' => 'public'], function() {
   Route::get('events/{event}', 'Api\EventController@show');
   Route::post('sales', 'Api\SaleController@store');
   Route::post('stripe', 'Api\SaleController@stripe');
+  Route::post('braintree', 'Api\SaleController@braintree');
 });

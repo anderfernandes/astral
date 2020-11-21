@@ -37,7 +37,14 @@
   <link rel="stylesheet" href="/semantic/semantic.min.css">
   <script src="/semantic/semantic.min.js"></script>
 
-  <script src="https://js.stripe.com/v3"></script>
+  @if (\App\Setting::find(1)->gateway == "stripe")
+    <script src="https://js.stripe.com/v3"></script>
+  @endif
+
+  @if (\App\Setting::find(1)->gateway == "braintree")
+    <script src="https://js.braintreegateway.com/web/3.69.0/js/client.min.js"></script>
+    <script src="https://js.braintreegateway.com/web/3.69.0/js/hosted-fields.min.js"></script>
+  @endif
 
 </head>
 <script>

@@ -248,7 +248,7 @@ class SaleController extends Controller
       try
       {
 
-        $gateway = new Braintree\Gateway([
+        $gateway = new \Braintree\Gateway([
           'environment' => 'sandbox',
           'merchantId' => $config->gateway_merchant_id,
           'publicKey' => $config->gateway_public_key,
