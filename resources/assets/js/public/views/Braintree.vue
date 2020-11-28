@@ -63,7 +63,7 @@ export default {
         braintree.setup(data.client_token, 'dropin', {
           container: 'dropin-container',
           form: 'checkout-form',
-          onReady: () => { alert('Done loading braintree') },
+          //onReady: () => { alert('Done loading braintree') },
           onPaymentMethodReceived: obj => {
             
             this.submitted = true
