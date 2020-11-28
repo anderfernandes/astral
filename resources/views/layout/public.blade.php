@@ -42,8 +42,7 @@
   @endif
 
   @if (\App\Setting::find(1)->gateway == "braintree")
-    <script src="https://js.braintreegateway.com/web/3.69.0/js/client.min.js"></script>
-    <script src="https://js.braintreegateway.com/web/3.69.0/js/hosted-fields.min.js"></script>
+    <script src="https://js.braintreegateway.com/js/braintree-2.32.1.min.js"></script>
   @endif
 
 </head>

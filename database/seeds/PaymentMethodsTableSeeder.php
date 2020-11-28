@@ -80,5 +80,15 @@ class PaymentMethodsTableSeeder extends Seeder
           'creator_id'  => 1,
           'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
         ]);
+
+        // 7
+        DB::table('payment_methods')->insert([
+          'name'        => 'Braintree',
+          'description' => 'Braintree/Paypal payments',
+          'icon'        => 'cc paypal',
+          'type'        => 'card',
+          'creator_id'  => 1,
+          'created_at'  => Date::now('America/Chicago')->toDateTimeString(),
+        ]);
     }
 }

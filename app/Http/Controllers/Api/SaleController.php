@@ -38,6 +38,28 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
+        $config = Setting::find(1);
+
+        // Process braintree payment on server
+        if (Setting::find(1)->gateway == "braintree")
+        {
+          $config = Setting::find(1);
+          
+          $gateway = new \Braintree\Gateway([
+            'environment' => 'sandbox',
+            'merchantId' => $config->gateway_merchant_id,
+            'publicKey' => $config->gateway_public_key,
+            'privateKey' => $config->gateway_private_key,
+          ]);
+
+          $result = $gateway->transaction()->sale([
+            'amount' => $request->total,
+            'paymentMethodNonce' => $request->braintree['nonce'],
+            'options' => [ 'submitForSettlement' => true ]
+          ]);
+
+        }
+
         // Define cashier
         $cashier = User::find(1);
 
@@ -138,7 +160,7 @@ class SaleController extends Controller
         $payment = new Payment;
 
         $payment->cashier_id = $cashier->id;
-        $payment->payment_method_id = PaymentMethod::where('name', 'like', 'stripe')->first()->id;
+        $payment->payment_method_id = PaymentMethod::where('name', 'like', $config->gateway)->first()->id;
         $payment->tendered = $sale->total;
         $payment->total = $sale->total;
         $payment->change_due = round($payment->tendered - $payment->total, 2);
@@ -150,15 +172,29 @@ class SaleController extends Controller
         try
         {
           Mail::to($sale->customer)->send(new OnlinePayment($sale));
+          return response()->json([
+            'data'    => $sale->load('customer'),
+            'type'    => 'success',
+            'message' => 'Payment completed successfully!',
+          ], 201);
+        }
+        catch (\Swift_TransportException $e)
+        {
+          return response()->json([
+            'data'    => $sale->load('customer'),
+            'type'    => 'warning',
+            'message' => "Payment received successfully, {$customer->firstname}! However, we had trouble sending you a confirmation email.",
+          ], 201);
         }
         catch (Exception $e)
         {
-
+          return response()->json([
+            'data'    => $sale->load('customer'),
+            'type'    => 'error',
+            'message' => "Error processing payment. Please let us know you saw this error message and/or try again in a few  minutes.",
+          ], 422);
         }
-        return response()->json([
-          'data'    => $sale->load('customer'),
-          'message' => 'Payment completed successfully!',
-        ], 201);
+        
     }
 
     /**
