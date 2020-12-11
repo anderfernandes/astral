@@ -7,7 +7,10 @@
       <i class="info circle icon"></i>
       <div class="content">
         <div class="header">Unable to checkout</div>
-        <p>{{ settings.organization }} is unable to check out at this moment. Please try again later.</p>
+        <p>
+          {{ settings.organization }} has not finished setting up online sales. 
+          Please let them know you saw this message so that they can fix it.
+        </p>
       </div>
     </div>
     
@@ -233,6 +236,9 @@ export default {
       }
 
     }
+
+    if (!this.gateway_key)
+      this.hasError = true
 
     this.loading = false
 

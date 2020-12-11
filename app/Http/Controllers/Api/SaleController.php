@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\{ Sale, Setting, User, Payment, PaymentMethod };
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\{ Hash, Mail };
+use Illuminate\Support\Facades\{ Hash, Mail, Log };
 use App\Mail\OnlinePayment;
 
 class SaleController extends Controller
@@ -191,6 +191,9 @@ class SaleController extends Controller
         }
         catch (\Swift_TransportException $e)
         {
+          
+          Log::error($e->getMessage());
+
           return response()->json([
             'data'    => $sale->load('customer'),
             'type'    => 'warning',
@@ -199,6 +202,9 @@ class SaleController extends Controller
         }
         catch (Exception $e)
         {
+          
+          Log::error($e->getMessage());
+
           return response()->json([
             'data'    => $sale->load('customer'),
             'type'    => 'error',
