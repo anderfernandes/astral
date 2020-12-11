@@ -43,11 +43,12 @@
     <h4 class="ui left floated header">
       Sold to:<br />
       @if (!($sale->organization->name == $sale->customer->firstname))
-      {{ $sale->customer->fullname }}<br />
+      {{ $sale->customer->fullname }}
       @endif
       @if ($sale->organization->id != 1)
         {{ $sale->organization->name }}
       @endif
+      <br />
       {{ $sale->customer->address }} <br />
       {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
     </h4>

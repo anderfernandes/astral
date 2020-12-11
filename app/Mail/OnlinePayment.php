@@ -32,7 +32,7 @@ class OnlinePayment extends Mailable
         $this->tickets = PDF::loadView('admin.tickets.tickets', [
             'sale' => $sale, 
             'organization' => $organization
-        ])->stream("Tickets #$sale->id");
+        ])->stream("Tickets #$sale->id.pdf");
     }
 
     /**
@@ -51,7 +51,7 @@ class OnlinePayment extends Mailable
         return $this->from($settings->email, $settings->organization)
                     ->subject("Your {$settings->organization} tickets, {$customer}! (Sale #{$sale->id})")
                     ->markdown("email.online-payment")
-                    ->attachData($this->invoice, "Invoice #$sale->id", ["mime" => "application/pdf"])
-                    ->attachData($this->tickets, "Tickets #$sale->id", ["mime" => "application/pdf"]);
+                    ->attachData($this->invoice, "Invoice #$sale->id.pdf", ["mime" => "application/pdf"])
+                    ->attachData($this->tickets, "Tickets #$sale->id.pdf", ["mime" => "application/pdf"]);
     }
 }

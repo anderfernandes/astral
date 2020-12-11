@@ -20,6 +20,13 @@
     <div onclick="window.close()" class="ui red button"><i class="close icon"></i></div>
   </div>
 
+  <?php 
+
+    $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+    echo '<p style="text-align:center"><img src="data:image/png;base64,' . base64_encode($generator->getBarcode($sale->id, $generator::TYPE_UPC_A)) . '" /></p>';
+
+  ?>
+
   @foreach ($sale->tickets as $ticket)
 
     @include('admin.tickets._ticket')

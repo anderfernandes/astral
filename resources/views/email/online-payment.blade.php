@@ -9,6 +9,13 @@
 
   Thank you for buying tickets to the {{ \App\Setting::find(1)->organization }}! Here you go:
 
+<?php 
+
+  $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+  echo '<p style="text-align:center"><img class="ui small image" src="data:image/png;base64,' . base64_encode($generator->getBarcode($sale->id, $generator::TYPE_UPC_A)) . '" /></p>';
+
+?>
+
 @foreach ($sale->events as $event)
   @component('mail::panel')
   <strong>{{ $event->show->name }} ({{ $event->type->name }}, {{ $event->show->type }})</strong><br>
