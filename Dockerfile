@@ -25,6 +25,9 @@ COPY . .
 # Create database
 RUN sqlite3 database/database.sqlite .databases .quit
 
+# Enable GD extension
+RUN echo "extension=gd" >> /etc/php/php.ini
+
 # Astral Environment Variables
 RUN touch .env
 RUN echo "APP_NAME=Astral" >> .env

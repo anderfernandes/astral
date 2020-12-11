@@ -44,19 +44,27 @@ class SaleController extends Controller
         if (Setting::find(1)->gateway == "braintree")
         {
           $config = Setting::find(1);
-          
-          $gateway = new \Braintree\Gateway([
-            'environment' => 'sandbox',
-            'merchantId' => $config->gateway_merchant_id,
-            'publicKey' => $config->gateway_public_key,
-            'privateKey' => $config->gateway_private_key,
-          ]);
 
-          $result = $gateway->transaction()->sale([
-            'amount' => $request->total,
-            'paymentMethodNonce' => $request->braintree['nonce'],
-            'options' => [ 'submitForSettlement' => true ]
-          ]);
+          try {
+
+            $gateway = new \Braintree\Gateway([
+              'environment' => 'sandbox',
+              'merchantId' => $config->gateway_merchant_id,
+              'publicKey' => $config->gateway_public_key,
+              'privateKey' => $config->gateway_private_key,
+            ]);
+
+            $result = $gateway->transaction()->sale([
+              'amount' => $request->total,
+              'paymentMethodNonce' => $request->braintree['nonce'],
+              'options' => [ 'submitForSettlement' => true ]
+            ]);
+
+          } catch (Exception $e) {
+            return response([
+              "message" => $e->getMessage()
+            ], 422);
+          }
 
         }
 
@@ -171,12 +179,15 @@ class SaleController extends Controller
 
         try
         {
+          
           Mail::to($sale->customer)->send(new OnlinePayment($sale));
+
           return response()->json([
             'data'    => $sale->load('customer'),
             'type'    => 'success',
             'message' => 'Payment completed successfully!',
           ], 201);
+          
         }
         catch (\Swift_TransportException $e)
         {

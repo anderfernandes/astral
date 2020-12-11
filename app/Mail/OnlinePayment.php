@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Sale;
+use PDF;
 
 class OnlinePayment extends Mailable
 {
@@ -21,7 +22,17 @@ class OnlinePayment extends Mailable
      */
     public function __construct(Sale $sale)
     {
+        $organization = \App\Setting::find(1);
+
         $this->sale = $sale;
+
+        $this->invoice = PDF::loadView('pdf.invoice', ['sale' => $sale])
+            ->stream("Invoice #$sale->id.pdf");
+        
+        $this->tickets = PDF::loadView('admin.tickets.tickets', [
+            'sale' => $sale, 
+            'organization' => $organization
+        ])->stream("Tickets #$sale->id");
     }
 
     /**
@@ -39,6 +50,8 @@ class OnlinePayment extends Mailable
 
         return $this->from($settings->email, $settings->organization)
                     ->subject("Your {$settings->organization} tickets, {$customer}! (Sale #{$sale->id})")
-                    ->markdown("email.online-payment");
+                    ->markdown("email.online-payment")
+                    ->attachData($this->invoice, "Invoice #$sale->id", ["mime" => "application/pdf"])
+                    ->attachData($this->tickets, "Tickets #$sale->id", ["mime" => "application/pdf"]);
     }
 }
