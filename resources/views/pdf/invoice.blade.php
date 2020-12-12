@@ -30,7 +30,7 @@
         @if (!($sale->organization->name == $sale->customer->firstname))
         {{ $sale->customer->fullname }}<br />
         @endif
-        {{ $sale->organization->address }} </br>
+        {{ $sale->organization->address }} <br />
         {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}<br>
       @else
         {{ $sale->customer->fullname }}<br />
@@ -43,7 +43,7 @@
     <h4 class="ui left floated header">
       Sold to:<br />
       @if (!($sale->organization->name == $sale->customer->firstname))
-      {{ $sale->customer->fullname }}
+      {{ $sale->customer->fullname }}<br />
       @endif
       @if ($sale->organization->id != 1)
         {{ $sale->organization->name }}
@@ -108,26 +108,26 @@
         </tr>
       @endforeach
       <tr>
-        <td colspan="4" style="border-top: 0"></td>
+        <td colspan="4"></td>
         <td style="text-align:right"><strong>Subtotal</strong></td>
         <td style="text-align:right">$</td>
         <td style="text-align:right">{{ number_format($sale->subtotal, 2) }}</td>
       </tr>
       <tr>
-        <td colspan="4" style="border-top: 0"></td>
+        <td colspan="4"></td>
         <td style="text-align:right"><strong>Tax</strong></td>
         <td style="text-align:right">$</td>
         <td style="text-align:right">{{ number_format($sale->tax, 2) }}</td>
       </tr>
       <tr>
-        <td colspan="4" style="border-top: 0"></td>
+        <td colspan="4"></td>
         <td style="text-align:right"><strong>Total</strong></td>
         <td style="text-align:right">$</td>
         <td style="text-align:right">{{ number_format($sale->total, 2) }}</td>
       </tr>
       @if ($sale->payments->count() < 2)
       <tr>
-        <td colspan="4" style="border-top: 0"></td>
+        <td colspan="4"></td>
         <td style="text-align:right"><strong>Amount Paid</strong></td>
         <td style="text-align:right">$</td>
         <td style="text-align:right">{{ number_format($sale->payments->sum('tendered'), 2) }}
@@ -135,7 +135,7 @@
       @else
       @foreach ($sale->payments as $payment)
       <tr>
-        <td colspan="4" style="border-top: 0"></td>
+        <td colspan="4"></td>
         <td style="text-align:right"><strong>Payment ({{ Date::parse($payment->created_at)->format('m/d/Y') }}) {{ $payment->method->name }}</strong></td>
         <td style="text-align:right">$</td>
         <td style="text-align:right">{{ number_format($payment->tendered, 2) }}</td>
@@ -144,20 +144,20 @@
       @endif
       @if ($sale->refund)
       <tr>
-        <td colspan="4" style="border-top: 0"></td>
+        <td colspan="4"></td>
         <td style="text-align:right"><strong>Refund</strong></td>
         <td style="text-align:right">$</td>
         <td style="text-align:right" style="color:#cf3534"><strong>({{ number_format($sale->total, 2) }})</strong></td>
       </tr>
       @endif
       <tr>
-        <td colspan="4" style="border-top: 0"></td>
+        <td colspan="4"></td>
         <td style="text-align:right"><strong>Change</strong></td>
         <td style="text-align:right">$</td>
         <td style="text-align:right">{{ number_format($sale->payments->sum('change_due'), 2) }}</td>
       </tr>
       <tr>
-        <td colspan="4" style="border-top: 0"></td>
+        <td colspan="4"></td>
         <td style="text-align:right"><strong>Balance</strong></td>
         <td style="text-align:right"><strong>$</strong></td>
         <td style="text-align:right"><strong>{{ number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}</strong></td>
