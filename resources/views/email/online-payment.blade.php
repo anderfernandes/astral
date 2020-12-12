@@ -9,15 +9,15 @@
 
   Thank you for buying tickets to the {{ \App\Setting::find(1)->organization }}! Here you go:
 
-  <center>
+  <p style="text-align:center">
   <?php 
 
-    $generator = new Picqer\Barcode\BarcodeGeneratorHTML();
+    $generator = new Picqer\Barcode\BarcodeGeneratorSVG();
     echo $generator->getBarcode($sale->id, $generator::TYPE_UPC_A);
 
   ?>
   </center>
-  <br>
+  </p>
 
 @foreach ($sale->events as $event)
   @component('mail::panel')

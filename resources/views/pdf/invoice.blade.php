@@ -81,11 +81,11 @@
                     </div>
                   </h4>
                 </td>
-                <td>{{ $ticket->type->name }}</td>
-                <td>$ {{ number_format($ticket->type->price, 2) }}</td>
-                <td>{{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}</td>
-                <td align="right">$</td>
-                <td align="right">{{ number_format($ticket->type->price * $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count(), 2) }}</td>
+                <td style="text-align:center">{{ $ticket->type->name }}</td>
+                <td style="text-align:center">$ {{ number_format($ticket->type->price, 2) }}</td>
+                <td style="text-align:center">{{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}</td>
+                <td style="text-align:right">$</td>
+                <td style="text-align:right">{{ number_format($ticket->type->price * $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count(), 2) }}</td>
               </tr>
           @endforeach
         @endif
@@ -103,69 +103,69 @@
           <td>{{ $product->type->name }}</td>
           <td>${{ number_format($product->price, 2, '.', ',') }}</td>
           <td>{{ $sale->products->where('id', $product->id)->count() }}</td>
-          <td align="right">$</td>
-          <td align="right">{{ number_format($product->price * $sale->products->where('id', $product->id)->count(), 2, '.' , ',') }}</td>
+          <td style="text-align:right">$</td>
+          <td style="text-align:right">{{ number_format($product->price * $sale->products->where('id', $product->id)->count(), 2, '.' , ',') }}</td>
         </tr>
       @endforeach
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td align="right"><strong>Subtotal</strong></td>
-        <td align="right">$</td>
-        <td align="right">{{ number_format($sale->subtotal, 2) }}</td>
+        <td style="text-align:right"><strong>Subtotal</strong></td>
+        <td style="text-align:right">$</td>
+        <td style="text-align:right">{{ number_format($sale->subtotal, 2) }}</td>
       </tr>
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td align="right"><strong>Tax</strong></td>
-        <td align="right">$</td>
-        <td align="right">{{ number_format($sale->tax, 2) }}</td>
+        <td style="text-align:right"><strong>Tax</strong></td>
+        <td style="text-align:right">$</td>
+        <td style="text-align:right">{{ number_format($sale->tax, 2) }}</td>
       </tr>
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td align="right"><strong>Total</strong></td>
-        <td align="right">$</td>
-        <td align="right">{{ number_format($sale->total, 2) }}</td>
+        <td style="text-align:right"><strong>Total</strong></td>
+        <td style="text-align:right">$</td>
+        <td style="text-align:right">{{ number_format($sale->total, 2) }}</td>
       </tr>
       @if ($sale->payments->count() < 2)
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td align="right"><strong>Amount Paid</strong></td>
-        <td align="right">$</td>
-        <td align="right">{{ number_format($sale->payments->sum('tendered'), 2) }}
+        <td style="text-align:right"><strong>Amount Paid</strong></td>
+        <td style="text-align:right">$</td>
+        <td style="text-align:right">{{ number_format($sale->payments->sum('tendered'), 2) }}
       </td>
       @else
       @foreach ($sale->payments as $payment)
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td align="right"><strong>Payment ({{ Date::parse($payment->created_at)->format('m/d/Y') }}) {{ $payment->method->name }}</strong></td>
-        <td align="right">$</td>
-        <td align="right">{{ number_format($payment->tendered, 2) }}</td>
+        <td style="text-align:right"><strong>Payment ({{ Date::parse($payment->created_at)->format('m/d/Y') }}) {{ $payment->method->name }}</strong></td>
+        <td style="text-align:right">$</td>
+        <td style="text-align:right">{{ number_format($payment->tendered, 2) }}</td>
       </tr>
       @endforeach
       @endif
       @if ($sale->refund)
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td align="right"><strong>Refund</strong></td>
-        <td align="right">$</td>
-        <td align="right" style="color:#cf3534"><strong>({{ number_format($sale->total, 2) }})</strong></td>
+        <td style="text-align:right"><strong>Refund</strong></td>
+        <td style="text-align:right">$</td>
+        <td style="text-align:right" style="color:#cf3534"><strong>({{ number_format($sale->total, 2) }})</strong></td>
       </tr>
       @endif
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td align="right"><strong>Change</strong></td>
-        <td align="right">$</td>
-        <td align="right">{{ number_format($sale->payments->sum('change_due'), 2) }}</td>
+        <td style="text-align:right"><strong>Change</strong></td>
+        <td style="text-align:right">$</td>
+        <td style="text-align:right">{{ number_format($sale->payments->sum('change_due'), 2) }}</td>
       </tr>
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td align="right"><strong>Balance</strong></td>
-        <td align="right"><strong>$</strong></td>
-        <td align="right"><strong>{{ number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}</strong></td>
+        <td style="text-align:right"><strong>Balance</strong></td>
+        <td style="text-align:right"><strong>$</strong></td>
+        <td style="text-align:right"><strong>{{ number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}</strong></td>
       </tr>
       <tr class="active">
-        <td colspan="5" align="right"><strong>Please pay this amount:</strong></td>
-        <td align="right"><strong>$</strong></td>
-        <td align="right">
+        <td colspan="5" style="text-align:right"><strong>Please pay this amount:</strong></td>
+        <td style="text-align:right"><strong>$</strong></td>
+        <td style="text-align:right">
           <strong>
               {{ number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}
           </strong>
