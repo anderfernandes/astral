@@ -185,5 +185,5 @@ Route::get('/sales/{sale}/confirm', 'SaleController@update')->name('sale.confirm
 
 // Email view testing routes
 Route::get('/mailable/online-payments/{sale}', function(\App\Sale $sale) {
-  return new \App\Mail\OnlinePayment($sale);
+  return view('pdf.invoice')->withSale($sale);
 });

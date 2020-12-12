@@ -31,7 +31,7 @@
         {{ $sale->customer->fullname }}<br />
         @endif
         {{ $sale->organization->address }} </br>
-        {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}
+        {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}<br>
       @else
         {{ $sale->customer->fullname }}<br />
         {{ $sale->organization->name }}<br />
@@ -56,18 +56,15 @@
   </div>
 
   <table class="ui very basic compact unstackable table">
-    <thead>
-      <tr>
-        <th>Date and Time</th>
-        <th>Event</th>
-        <th>Ticket Type</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th></th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
+    <tr>
+      <th>Date and Time</th>
+      <th>Event</th>
+      <th>Ticket Type</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th></th>
+      <th>Total</th>
+    </tr>
       @foreach($sale->events as $event)
         @if ($event->id != 1)
           @foreach($sale->tickets->unique('ticket_type_id') as $ticket)
@@ -87,8 +84,8 @@
                 <td>{{ $ticket->type->name }}</td>
                 <td>$ {{ number_format($ticket->type->price, 2) }}</td>
                 <td>{{ $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count() }}</td>
-                <td class="right aligned">$</td>
-                <td class="right aligned">{{ number_format($ticket->type->price * $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count(), 2) }}</td>
+                <td align="right">$</td>
+                <td align="right">{{ number_format($ticket->type->price * $sale->tickets->where('event_id', $event->id)->where('ticket_type_id', $ticket->type->id)->count(), 2) }}</td>
               </tr>
           @endforeach
         @endif
@@ -106,75 +103,74 @@
           <td>{{ $product->type->name }}</td>
           <td>${{ number_format($product->price, 2, '.', ',') }}</td>
           <td>{{ $sale->products->where('id', $product->id)->count() }}</td>
-          <td class="right aligned">$</td>
-          <td class="right aligned">{{ number_format($product->price * $sale->products->where('id', $product->id)->count(), 2, '.' , ',') }}</td>
+          <td align="right">$</td>
+          <td align="right">{{ number_format($product->price * $sale->products->where('id', $product->id)->count(), 2, '.' , ',') }}</td>
         </tr>
       @endforeach
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td class="right aligned"><strong>Subtotal</strong></td>
-        <td class="right aligned">$</td>
-        <td class="right aligned">{{ number_format($sale->subtotal, 2) }}</td>
+        <td align="right"><strong>Subtotal</strong></td>
+        <td align="right">$</td>
+        <td align="right">{{ number_format($sale->subtotal, 2) }}</td>
       </tr>
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td class="right aligned"><strong>Tax</strong></td>
-        <td class="right aligned">$</td>
-        <td class="right aligned">{{ number_format($sale->tax, 2) }}</td>
+        <td align="right"><strong>Tax</strong></td>
+        <td align="right">$</td>
+        <td align="right">{{ number_format($sale->tax, 2) }}</td>
       </tr>
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td class="right aligned"><strong>Total</strong></td>
-        <td class="right aligned">$</td>
-        <td class="right aligned">{{ number_format($sale->total, 2) }}</td>
+        <td align="right"><strong>Total</strong></td>
+        <td align="right">$</td>
+        <td align="right">{{ number_format($sale->total, 2) }}</td>
       </tr>
       @if ($sale->payments->count() < 2)
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td class="right aligned"><strong>Amount Paid</strong></td>
-        <td class="right aligned">$</td>
-        <td class="right aligned">{{ number_format($sale->payments->sum('tendered'), 2) }}
+        <td align="right"><strong>Amount Paid</strong></td>
+        <td align="right">$</td>
+        <td align="right">{{ number_format($sale->payments->sum('tendered'), 2) }}
       </td>
       @else
       @foreach ($sale->payments as $payment)
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td class="right aligned"><strong>Payment ({{ Date::parse($payment->created_at)->format('m/d/Y') }}) {{ $payment->method->name }}</strong></td>
-        <td class="right aligned">$</td>
-        <td class="right aligned">{{ number_format($payment->tendered, 2) }}</td>
+        <td align="right"><strong>Payment ({{ Date::parse($payment->created_at)->format('m/d/Y') }}) {{ $payment->method->name }}</strong></td>
+        <td align="right">$</td>
+        <td align="right">{{ number_format($payment->tendered, 2) }}</td>
       </tr>
       @endforeach
       @endif
       @if ($sale->refund)
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td class="right aligned"><strong>Refund</strong></td>
-        <td class="right aligned">$</td>
-        <td class="right aligned" style="color:#cf3534"><strong>({{ number_format($sale->total, 2) }})</strong></td>
+        <td align="right"><strong>Refund</strong></td>
+        <td align="right">$</td>
+        <td align="right" style="color:#cf3534"><strong>({{ number_format($sale->total, 2) }})</strong></td>
       </tr>
       @endif
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td class="right aligned"><strong>Change</strong></td>
-        <td class="right aligned">$</td>
-        <td class="right aligned">{{ number_format($sale->payments->sum('change_due'), 2) }}</td>
+        <td align="right"><strong>Change</strong></td>
+        <td align="right">$</td>
+        <td align="right">{{ number_format($sale->payments->sum('change_due'), 2) }}</td>
       </tr>
       <tr>
         <td colspan="4" style="border-top: 0"></td>
-        <td class="right aligned"><strong>Balance</strong></td>
-        <td class="right aligned"><strong>$</strong></td>
-        <td class="right aligned"><strong>{{ number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}</strong></td>
+        <td align="right"><strong>Balance</strong></td>
+        <td align="right"><strong>$</strong></td>
+        <td align="right"><strong>{{ number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}</strong></td>
       </tr>
       <tr class="active">
-        <td colspan="5" class="right aligned"><strong>Please pay this amount:</strong></td>
-        <td class="right aligned"><strong>$</strong></td>
-        <td class="right aligned">
+        <td colspan="5" align="right"><strong>Please pay this amount:</strong></td>
+        <td align="right"><strong>$</strong></td>
+        <td align="right">
           <strong>
               {{ number_format($sale->total - ($sale->payments->sum('tendered') - $sale->payments->sum('change_due')), 2) }}
           </strong>
         </td>
       </tr>
-    </tbody>
   </table>
 
   {!! \Illuminate\Mail\Markdown::parse(App\Setting::find(1)->invoice_text) !!}
