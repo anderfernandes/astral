@@ -17,6 +17,7 @@
     "cross-env": "^5.2.1",
     "flatpickr": "^4.6.3",
     "fullcalendar": "^3.10.1",
+    "jquery": "^3.5.1",
     "jquery-address": "^1.6.0",
     "laravel-mix": "^5.0.0",
     "marked": "^0.7.0",

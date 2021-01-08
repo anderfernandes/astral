@@ -89,7 +89,13 @@
         <td>{{ Date::parse($member->start)->format('l, F j, Y') }}</td>
         <td>{{ Date::parse($member->end)->format('l, F j, Y') }}</td>
         <td class="right aligned">$</td>
-        <td class="right aligned">{{ number_format($member->type->secondary_price, 2) }}</td>
+        <td class="right aligned">
+          @if ($loop->iteration <= $member->type->max_secondaries)
+            {{ number_format(0, 2) }}
+          @else
+            {{ number_format($member->type->secondary_price, 2) }}
+          @endif
+        </td>
       </tr>
       @endforeach
       <tr>

@@ -184,7 +184,7 @@ class UserController extends Controller
       'firstname'             => 'required',
       'lastname'              => 'required',
       'email'                 => 'required|email|unique:users,email,' . $user->id,
-      'role_id'               => 'required',
+      'role_id'               => $request->has('role_id') ? "required|integer" : "integer",
       'password'              => 'nullable|same:password_confirmation',
       'password_confirmation' => 'nullable',
       'address'               => 'required',
@@ -200,7 +200,14 @@ class UserController extends Controller
     $user->firstname       = $request->firstname;
     $user->lastname        = $request->lastname;
     $user->email           = strtolower($request->email);
-    $user->role_id         = $request->role_id;
+    
+    if ($request->has('role_id'))
+    {
+      $user->role_id         = $request->role_id;
+      $user->staff           = Role::find($request->role_id)->staff;
+    }
+      
+
     $user->type            = 'individual';
     $user->organization_id = $request->organization_id;
     $user->membership_id   = 1;
@@ -211,7 +218,6 @@ class UserController extends Controller
     $user->zip             = $request->zip;
     $user->phone           = $request->phone;
     $user->active          = $request->active;
-    $user->staff           = Role::find($request->role_id)->staff;
     $user->newsletter      = $request->has('newsletter');
 
     if ($request->password == null) {
