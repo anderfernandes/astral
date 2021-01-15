@@ -29,7 +29,13 @@
             <div class="sub header">
               <i class="user circle icon"></i>{{ $sticky->author->firstname }}
               <div class="ui black label">{{ $sticky->author->role->name }}</div> |
-              <i class="calendar alternate outline icon"></i>{{ Date::parse($sticky->created_at)->diffForHumans() }} |
+              <i class="calendar alternate outline icon"></i> 
+              @if ($sticky->created_at == $sticky->updated_at)
+                {{ $sticky->created_at->diffForHumans() }}
+              @else
+                Last updated {{ $sticky->updated_at->diffForHumans() }}
+              @endif
+              |
               <i class="comments icon"></i> {{ $sticky->replies->count() }} &nbsp; &nbsp; &nbsp;
               <div class="ui black tag label"><i class="tag icon"></i>{{ $sticky->category->name }}</div>
             </div>
@@ -51,7 +57,13 @@
             <div class="content"><a href="{{ route('admin.posts.show', $post) }}">{{ $post->title }}</a></div>
             <div class="sub header">
               <i class="user circle icon"></i>{{ $post->author->firstname }}<div class="ui label">{{ $post->author->role->name }}</div> |
-              <i class="calendar alternate outline icon"></i>{{ Date::parse($post->created_at)->diffForHumans() }} |
+              <i class="calendar alternate outline icon"></i> 
+              @if ($post->created_at == $post->updated_at)
+                {{ $post->created_at->diffForHumans() }}
+              @else
+                Last updated {{ $post->updated_at->diffForHumans() }}
+              @endif
+              |
               <i class="comments icon"></i> {{ $post->replies->count() }} &nbsp; &nbsp; &nbsp;
               <div class="ui black tag label"><i class="tag icon"></i>{{ $post->category->name }}</div>
             </div>

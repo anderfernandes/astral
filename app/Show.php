@@ -62,4 +62,35 @@ class Show extends Model
     else
       return $this->expiration->isPast();
   }
+
+  /**
+   * Returns the service that provides the trailer based on the trailer URL
+   *
+   * @param [type] $value
+   * @return void
+   */
+  public function getTrailerProviderAttribute($value)
+  {
+    if (str_contains($this->trailer_url, "youtube"))
+      return "YouTube";
+    else if (str_contains($this->trailer_url, "vimeo"))
+      return "Vimeo";
+    else if ($this->trailer_url == "" || $this->trailer->url == "")
+      return null;
+  }
+
+  public function getTrailerIdAttribute($value)
+  {
+    parse_str(parse_url($this->trailer_url, PHP_URL_QUERY), $url);
+    if (str_contains($this->trailer_url, "youtube"))
+      return $url["v"];
+    else if (str_contains($this->trailer_url, "vimeo"))
+    {
+      $id = explode("/", $this->trailer_url);
+      return end($id);
+    }
+      
+    else if ($this->trailer_url == "" || $this->trailer->url == "")
+      return null;
+  }
 }

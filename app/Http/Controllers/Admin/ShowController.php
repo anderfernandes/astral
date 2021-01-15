@@ -87,8 +87,13 @@ class ShowController extends Controller
       return redirect()->back()->withInput();
     }
 
-    if ((strlen($request->trailer_url) > 0) && !strpos($request->trailer_url, 'youtube.com')) {
-      session()->flash('warning', "Please enter a Youtube video URL.");
+    if (
+      (strlen($request->trailer_url) > 0) && 
+      (!strpos($request->trailer_url, 'youtube.com') ||
+      !strpos($request->trailer_url, 'vimeo.com'))
+    )
+    {
+      session()->flash('warning', "Please enter a YouTube or Vimeo video URL.");
       return redirect()->back()->withInput();
     }
 
@@ -175,8 +180,13 @@ class ShowController extends Controller
       return redirect()->back()->withInput();
     }
 
-    if ((strlen($request->trailer_url) > 0) && !strpos($request->trailer_url, 'youtube.com')) {
-      session()->flash('warning', "Please enter a Youtube video URL.");
+    if (
+      (strlen($request->trailer_url) > 0) && 
+      (!strpos($request->trailer_url, 'youtube.com') &&
+      !strpos($request->trailer_url, 'vimeo.com'))
+    )
+    {
+      session()->flash('warning', "Please enter a YouTube or Vimeo video URL.");
       return redirect()->back()->withInput();
     }
 

@@ -455,7 +455,14 @@ function getAttendanceByType($ticketTypeID) {
                   <div class="ui red label"><i class="info circle icon"></i> important</div>
                 @endif
               </div>
-              <div class="description"><i class="calendar outline alternate icon"></i>{{ $post->created_at->diffForHumans() }} | <i class="comments icon"></i>{{ $post->replies->count() }}</div>
+              <div class="description"><i class="calendar outline alternate icon"></i>
+                @if ($post->created_at == $post->updated_at)
+                  {{ $post->created_at->diffForHumans() }}
+                @else
+                  Last updated {{ $post->updated_at->diffForHumans() }}
+                @endif
+                | <i class="comments icon"></i>{{ $post->replies->count() }}
+              </div>
             </div>
           </div>
         @endforeach

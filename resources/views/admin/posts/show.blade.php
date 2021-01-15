@@ -18,8 +18,13 @@
       <div class="sub header">
         <i class="user circle icon"></i>{{ $post->author->firstname }}
         <div class="ui black label">{{ $post->author->role->name }}</div> |
-        <i class="calendar alternate outline icon"></i>{{ $post->created_at->diffForHumans() }} |
-        &nbsp; &nbsp; &nbsp;
+          <i class="calendar alternate outline icon"></i>
+          @if ($post->created_at == $post->updated_at)
+            {{ $post->created_at->diffForHumans() }}
+          @else
+            Last updated {{ $post->updated_at->diffForHumans() }}
+          @endif
+          | &nbsp; &nbsp; &nbsp;
         <div class="ui black tag label"><i class="tag icon"></i>{{ $post->category->name }}</div>
         @if (!$post->open)
           <div class="ui red label"><i class="cancel icon"></i> Closed</div>
