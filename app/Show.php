@@ -14,6 +14,8 @@ class Show extends Model
    */
   protected $dates = ['created_at', 'updated_at', 'expiration'];
 
+  protected $appends = ['trailer_provider', 'trailer_id'];
+
   /**
    * Returns an object with information on the user who created this Show.
    * @return App\User Returns an object with information on the user who created this Show.
@@ -72,9 +74,9 @@ class Show extends Model
   public function getTrailerProviderAttribute($value)
   {
     if (str_contains($this->trailer_url, "youtube"))
-      return "YouTube";
+      return "youtube";
     else if (str_contains($this->trailer_url, "vimeo"))
-      return "Vimeo";
+      return "vimeo";
     else if ($this->trailer_url == "" || $this->trailer->url == "")
       return null;
   }

@@ -94,7 +94,7 @@
       </div>
     </div>
     <div class="content">
-      <div class="ui 16:9 embed" data-source="{{ strtolower($show->trailer_provider) }}" data-id="{{ $show->trailer_id }}" data-placeholder="{{ $show->cover }}"></div>
+      <div class="ui 16:9 embed" data-source="{{ $show->trailer_provider }}" data-id="{{ $show->trailer_id }}" data-placeholder="{{ $show->cover }}"></div>
     </div>
   </div>
 
