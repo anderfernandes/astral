@@ -83,9 +83,15 @@ class Show extends Model
 
   public function getTrailerIdAttribute($value)
   {
+
+    if ($this->trailer_url == null || $this->trailer_url == "")
+      return "";
+
     parse_str(parse_url($this->trailer_url, PHP_URL_QUERY), $url);
+
     if (str_contains($this->trailer_url, "youtube"))
       return $url["v"];
+      
     else if (str_contains($this->trailer_url, "vimeo"))
     {
       $id = explode("/", $this->trailer_url);
