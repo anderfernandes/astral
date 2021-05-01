@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\ShowTypeController;
 use Illuminate\Http\Request;
@@ -22,3 +23,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('/show-types', ShowTypeController::class);
 Route::resource('/shows', ShowController::class);
+Route::resource('/settings', SettingController::class);
