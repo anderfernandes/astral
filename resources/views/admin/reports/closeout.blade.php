@@ -11,7 +11,12 @@
   <div class="ui small header">
     Closeout Report
     <div class="sub header">Run: {{ Date::now()->format('l, F j, Y \a\t g:i:s A') }}</div>
-    <div class="sub header">Payment Date: {{ Date::parse($date)->format('l, F j, Y') }}</div>
+    <div class="sub header">
+      Payment Date: {{ Date::parse($start)->format('l, F j, Y') }}
+      @if (Date::parse($end)->toDateString() != Date::parse($start)->toDateString())
+        to {{ Date::parse($end)->format('l, F j, Y') }}
+      @endif
+    </div>
     @if ($paymentUser->count() == 1)
       <div class="sub header">Payment User: {{ $paymentUser[0]->fullname }}</div>
     @else
@@ -163,7 +168,7 @@
       @if ($paymentUser->count() > 1)
         <tr>
           <td colspan="3">
-            {{ Date::parse($date)->format('m/d/Y') }}
+            {{ Date::parse($start)->format('m/d/Y') }}
             {{ $user->firstname }}'s Transactions: <span style="float:right">
               {{
                 ($cashPayments->where('cashier_id', $user->id)->count()) +
@@ -177,7 +182,7 @@
           </tr>
           <tr>
             <td colspan="3">
-              {{ Date::parse($date)->format('m/d/Y') }}
+              {{ Date::parse($start)->format('m/d/Y') }}
               {{ $user->firstname }}'s' Totals: <span style="float:right">
                 $ {{ number_format($cashPaymentsTotal + $cashRefundsTotal + $cardPaymentsTotal + $cardRefundsTotal + $checkPaymentsTotal + $checkRefundsTotal, 2) }}
               </td>
@@ -190,7 +195,7 @@
           <tr>
             <td colspan="2">
               <strong>
-                {{ Date::parse($date)->format('m/d/Y') }}
+                {{ Date::parse($start)->format('m/d/Y') }}
                 Transactions:
               </strong>
             </td>
@@ -204,7 +209,7 @@
           <tr>
             <td colspan="2">
               <strong>
-                {{ Date::parse($date)->format('m/d/Y') }}
+                {{ Date::parse($start)->format('m/d/Y') }}
                 Totals:
               </strong>
             </td>

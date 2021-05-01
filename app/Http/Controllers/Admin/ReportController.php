@@ -176,7 +176,8 @@ class ReportController extends Controller
       ->with('otherRefunds', $otherRefunds)
       ->with('paymentUser', $user)
       ->with('totals', $totals)
-      ->withDate($start);
+      ->withStart($start)
+      ->withEnd($end);
   }
 
   public function transactionDetail(Request $request)
@@ -206,7 +207,8 @@ class ReportController extends Controller
     return view('admin.reports.transaction-detail')->withPayments($payments)
       ->withTotals($totals)
       ->withPaymentUser($user)
-      ->withDate($start);
+      ->withStart($start)
+      ->withEnd($end);
   }
 
   public function reports(Request $request)
