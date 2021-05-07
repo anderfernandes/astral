@@ -36,8 +36,11 @@ docker build -t anderfernandes/astral:1.0.0-beta.0 .
 Run container:
 
 ```
-docker run -p 8000:8000 anderfernandes/astral
+docker compose up
 ```
+
+This image should be used only for development. It runs on a single container
+with Arch Linux, nginx, SQLite 3 and PHP 8.
 
 <hr />
 
