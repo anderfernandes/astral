@@ -10,6 +10,18 @@
 
   <div class="ui container">
 
+    @if ($user->is_member)
+    <div class="ui yellow icon message">
+      <i class="exclamation circle icon"></i>
+      <div class="content">
+        <div class="header">
+          {{ $user->firstname }} is a member!
+        </div>
+        <p>Click <a href="{{ route('admin.members.show', $user->membership_id) }}">here</a> to see their membership information.</p>
+      </div>
+    </div>
+    @endif
+
     <a href="{{ route('admin.users.index') }}" class="ui basic black button">
       <i class="left chevron icon"></i> Back
     </a>

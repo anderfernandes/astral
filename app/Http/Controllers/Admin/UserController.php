@@ -203,14 +203,15 @@ class UserController extends Controller
     
     if ($request->has('role_id'))
     {
-      $user->role_id         = $request->role_id;
+      
+      $user->role_id         = $user->is_member ? 5 : $request->role_id;
       $user->staff           = Role::find($request->role_id)->staff;
     }
       
 
     $user->type            = 'individual';
     $user->organization_id = $request->organization_id;
-    $user->membership_id   = 1;
+    //$user->membership_id   = 1;
     $user->address         = $request->address;
     $user->city            = $request->city;
     $user->country         = $request->country;
@@ -229,8 +230,10 @@ class UserController extends Controller
         '' . $user->firstname . ' ' . $user->lastname .
           '\'s account information has been updated successfully!'
       );
-
-      return redirect()->route('admin.users.show', $user);
+      if ($user->is_member)
+        return redirect()->route('admin.members.show', $user->membership_id);
+      else
+        return redirect()->route('admin.users.show', $user);
     } else {
       $user->password = bcrypt($request->password);
       $user->save();
