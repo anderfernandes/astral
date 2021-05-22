@@ -48,7 +48,7 @@ class Show extends Model
       return asset($value);
     // Uploaded covers
     else
-      return asset("storage/$value");
+      return asset("storage/{$value}", str_contains(env('APP_URL'), 'https'));
   }
 
   /**
