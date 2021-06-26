@@ -24,20 +24,36 @@ class UserController extends Controller
 
       if ($settings->cashier_customer_dropdown)
         $customers = $allCustomers->map(function ($item) {
+          $extra = "";
+          if ($item->membership_id != 1) {
+            $membership = $item->membership;
+            $extra = $membership->primary_id == $item->id ? "(P)" : "(S)";
+            $end = $membership->end->diffForHumans();
+            $word = $membership->expired ? "expired" : "expires";
+            $extra = "{$extra} ({$word} {$end})";
+          }
           if ($item['id'] == 1)
             $data = $item['fullname'];
           else
             $data = "{$item['membership_number']} {$item['fullname']}";
           return [ 
             'id' => $item['id'],
-            'fullname' => $data,
+            'fullname' => "{$data} {$extra}",
           ];
       });
       else
-        $customers = $allCustomers->map(function ($item) { 
+        $customers = $allCustomers->map(function ($item) {
+          $extra = "";
+          if ($item->membership_id != 1) {
+            $membership = $item->membership;
+            $extra = $membership->primary_id == $item->id ? "({$item->membership_number}) (P)" : "({$item->membership_number}) (S)";
+            $end = $membership->end->diffForHumans();
+            $word = $membership->expired ? "expired" : "expires";
+            $extra = " {$extra} ({$word} {$end})";
+          }
           return [ 
             'id' => $item['id'],
-            'fullname' => $item['fullname'],
+            'fullname' => $item['fullname'] . $extra,
           ];
         });
 
