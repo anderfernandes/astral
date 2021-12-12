@@ -59,14 +59,6 @@
     </div>
     {!! Form::close() !!}
 
-    <a class="ui secondary button" href="{{ route('admin.members.create') }}">
-      <i class="ui icons">
-        <i class="address card icon"></i>
-        <i class="inverted corner add icon"></i>
-      </i>
-      Add Member
-    </a>
-
     <a class="ui secondary button" href="{{ route('admin.members.wizard') }}">
       <i class="ui icons">
         <i class="address card alternate icon"></i>

@@ -1,0 +1,10 @@
+version: "3.9"
+
+# Backend
+services:
+  backend:
+    image: anderfernandes/astral:1.0.0-alpha.5
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/usr/share/nginx/html

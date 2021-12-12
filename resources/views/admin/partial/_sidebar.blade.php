@@ -89,8 +89,8 @@
       <a class="item {{ Request::routeIs('admin.members.index') ? 'active' : '' }}" href="{{ route('admin.members.index') }}">
         <i class="large address card icon"></i> All Members
       </a>
-      <a class="item {{ Request::routeIs('admin.members.create') ? 'active' : '' }}" href="{{ route('admin.members.create') }}">
-        <i class="large plus icon"></i> Add Member
+      <a class="item {{ Request::routeIs('admin.members.create') ? 'active' : '' }}" href="{{ route('admin.members.create') }}/wizard">
+        <i class="large magic icon"></i> New Membership Wizard
       </a>
     </div>
   </div>
