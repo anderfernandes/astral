@@ -73,7 +73,9 @@ $title = 'Test';
         {{ $sale->organization->city }}, {{ $sale->organization->state }} {{ $sale->organization->zip }}
       @else
         {{ $sale->customer->fullname }}<br />
-        {{ $sale->organization->name }}<br />
+        @if ($sale->organization_id != 1)
+          {{ $sale->organization->name }}<br />
+        @endif
         {{ $sale->customer->address }} <br />
         {{ $sale->customer->city }}, {{ $sale->customer->state }} {{ $sale->customer->zip }}
       @endif
