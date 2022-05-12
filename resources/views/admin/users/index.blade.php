@@ -92,6 +92,9 @@
             @if ($u->staff) 
               <i class="star icon"></i>
             @endif 
+            @if (!$u->staff) 
+              <i class="user times icon" title="{{ $u->fullname }}'s account is currently deactivated."></i>
+            @endif 
             @if ($u->newsletter)
               <i class="newspaper outline icon"></i>
             @endif

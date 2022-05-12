@@ -200,14 +200,13 @@ class UserController extends Controller
     $user->firstname       = $request->firstname;
     $user->lastname        = $request->lastname;
     $user->email           = strtolower($request->email);
-    
-    if ($request->has('role_id'))
-    {
-      
+
+    if ($request->has('role_id')) {
+
       $user->role_id         = $user->is_member ? 5 : $request->role_id;
       $user->staff           = Role::find($request->role_id)->staff;
     }
-      
+
 
     $user->type            = 'individual';
     $user->organization_id = $request->organization_id;
@@ -254,17 +253,25 @@ class UserController extends Controller
   {
     $temp = $user;
 
-    try {
-      $user->delete();
-      Session::flash('success', "<strong>$temp->fullname</strong> was successfully deleted.");
-      return redirect()->route('admin.users.index');
-    } catch (\Illuminate\Database\QueryException $e) {
-      Session::flash(
-        'info',
-        "<strong>$user->fullname</strong> owns items in the database. Delete all sales, events and memberships, etc. that they own and try again."
-      );
-      return redirect()->route('admin.users.show', $user);
-    }
+    $user->active = false;
+
+    $user->save();
+
+    Session::flash('success', "<strong>$temp->fullname</strong>'s account was deactivated.");
+
+    return redirect()->route('admin.users.index');
+
+    // try {
+    //   $user->delete();
+    //   Session::flash('success', "<strong>$temp->fullname</strong> was successfully deleted.");
+    //   return redirect()->route('admin.users.index');
+    // } catch (\Illuminate\Database\QueryException $e) {
+    //   Session::flash(
+    //     'info',
+    //     "<strong>$user->fullname</strong> owns items in the database. Delete all sales, events and memberships, etc. that they own and try again."
+    //   );
+    //   return redirect()->route('admin.users.show', $user);
+    // }
   }
 
   public function selfupdate(Request $request, User $user)

@@ -31,9 +31,9 @@
     <a href="{{ route('admin.users.create') }}" class="ui secondary button">
       <i class="add user icon"></i> Add Another User
     </a>
-    @if(str_contains(Auth::user()->role->permissions['users'], "D"))
-      <div class="ui red button" onclick="$('#delete-user').modal('toggle')">
-        <i class="trash icon"></i> Delete User
+    @if(str_contains(Auth::user()->role->permissions['users'], "D") && $user->active)
+      <div class="ui orange button" onclick="$('#delete-user').modal('toggle')">
+        <i class="user times icon"></i> Deactivate User
       </div>
     @endif
 
@@ -171,14 +171,14 @@
 
   @include('admin.partial._basic-modal', [
     'id'       => 'delete-user',
-    'icon'     => 'trash',
-    'title'    => "You are about to delete a user!",
-    'subtitle' => "Are you sure you want to permanently delete the <strong>{$user->role->name}</strong> user <strong>{$user->firstname}</strong> ?",
+    'icon'     => 'user times',
+    'title'    => "You are about to deactivate this account!",
+    'subtitle' => "Are you sure you want to deactivate the <strong>{$user->role->name}</strong> user <strong>{$user->firstname}</strong>? <br />This can be undone by finding it using the search, editing and marking it as active again?",
     'actions'  => "
     <form method='POST' action='{$action}'>
       {$csrf}
       <input type='hidden' name='_method' value='delete' />
-      <button type='submit' class='ui inverted red button'><i class='trash icon'></i>Yes, Delete {$user->fullname}</button>
+      <button type='submit' class='ui inverted orange button'><i class='user times icon'></i>Yes, Deactivate {$user->fullname}'s account</button>
     </form>"
   ])
 
