@@ -14,31 +14,9 @@ Build image:
 docker build -t anderfernandes/astral:1.0.0-beta.5 .
 ```
 
-Run container:
-
-```
-docker compose up
-```
+Once you're done, run the container with `docker-compose`.
 
 This image should be used only for development. It runs on a single containerwith Ubuntu Server 20.04 LTS (focal), nginx, SQLite 3 and PHP 7.4.
-
-After building the container, you need to attach to it and run a few more commands:
-
-```bash
-composer install
-```
-
-```bash
-php artisan storage:link
-```
-
-```bash
-php artisan migrate:fresh --seed
-```
-
-```bash
-php artisan key:generate
-```
 
 ### Known issues
 
