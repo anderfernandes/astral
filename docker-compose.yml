@@ -7,4 +7,12 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./:/usr/share/nginx/html
+      - ./app:/usr/share/nginx/html/app
+      - ./bootstrap:/usr/share/nginx/html/bootstrap
+      - ./config:/usr/share/nginx/html/config
+      - ./public:/usr/share/nginx/html/public
+      - ./resources:/usr/share/nginx/html/resources
+      - ./routes:/usr/share/nginx/html/routes
+      - ./semantic:/usr/share/nginx/html/semantic
+      - ./storage:/usr/share/nginx/html/storage
+      - ./tests:/usr/share/nginx/html/tests
