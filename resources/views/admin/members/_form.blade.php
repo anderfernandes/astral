@@ -140,7 +140,7 @@
   </div>
   <div class="ui grid">
     <div class="ui sixteen wide column" style="padding: 0 0 0 0 !important">
-      <div class="ui bottom fixed sticky" style="width:100%">
+      <div class="ui bottom fixed sticky" style="width:100%; left:0">
         <div class="ui inverted segment" style="border-radius: 0 !important">
           <div class="ui container">
             <div class="five fields">

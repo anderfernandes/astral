@@ -30,11 +30,9 @@ class MemberController extends Controller
   {
     // Cleaning up memberships that don't have users attach to them
     // PREVENT THE NEED FOR THIS IN BETA!!!
-    foreach (Member::all() as $member)
-    {
+    foreach (Member::all() as $member) {
       // If membership doesn't have a primary but has at least one secondary...
-      if (!isset($member->primary) && isset($member->secondaries->first()->id))
-      {
+      if (!isset($member->primary) && isset($member->secondaries->first()->id)) {
         //... set membership primary to the first secondary.
         // This means that primary user account has been deleted...
         $member->primary_id = $member->secondaries->first()->id;
@@ -46,12 +44,12 @@ class MemberController extends Controller
     }
 
     $expired = $request->has('expired') ? $request->expired == 'true' : false;
-  
+
     // member role_id is 5
     $members = Member::where('id', '!=', 1);
 
     $members = $members->when(true, function ($query) use ($expired) {
-      if($expired)
+      if ($expired)
         return $query->where('end', '<', now()->startOfDay()->toDateTimeString());
       else
         return $query->where('end', '>=', now()->startOfDay()->toDateTimeString());
@@ -203,12 +201,14 @@ class MemberController extends Controller
   {
     $users = User::all()->where('type', 'individual')->where('role_id', '!=', 5);
     $users = $users->mapWithKeys(function ($item) {
-      return [$item['id'] => $item['firstname'] . ' ' . $item['lastname']];
+      return [$item['id'] => $item['firstname'] . ' ' . $item['lastname'] . ' (' . $item->role->name . ')'];
+    });
+    $methods = \App\PaymentMethod::all()->mapWithKeys(function ($item) {
+      return [$item['id'] => $item['name']];
     });
 
     // If membership doesn't have a primary but has at least one secondary...
-    if (!isset($member->primary) && isset($member->secondaries->first()->id))
-    {
+    if (!isset($member->primary) && isset($member->secondaries->first()->id)) {
       //... set membership primary to the first secondary.
       // This means that primary user account has been deleted...
       $member->primary_id = $member->secondaries->first()->id;
@@ -218,7 +218,7 @@ class MemberController extends Controller
     else if (!isset($member->primary) && !isset($member->secondaries->first()->id))
       $member->delete();
 
-    return view('admin.members.show')->withMember($member)->withUsers($users);
+    return view('admin.members.show')->withMember($member)->withUsers($users)->withMethods($methods);
   }
 
   /**
@@ -371,10 +371,10 @@ class MemberController extends Controller
     $membership_total = $primary_price + $secondary_price;
 
     $sales = Sale::where('customer_id', $member->primary->id)
-                 // NEED TO FIGURE OUT A WAY TO GET MEMBERSHIP PAYMENTS FOR THIS MEMBER/USER
-                 // HAVING THEM AS PRODUCTS IS PROBABLY THE WAY TO GO
-                 ->where('subtotal', $membership_total)
-                 ->get();
+      // NEED TO FIGURE OUT A WAY TO GET MEMBERSHIP PAYMENTS FOR THIS MEMBER/USER
+      // HAVING THEM AS PRODUCTS IS PROBABLY THE WAY TO GO
+      ->where('subtotal', $membership_total)
+      ->get();
     // Ensure we get the last membership payment
     $sale = $sales->last();
 
@@ -386,8 +386,63 @@ class MemberController extends Controller
     }
   }
 
-  public function addSecondary(Request $request, Member $member)
+  public function addSecondary(Member $member, Request $request)
   {
+    if ($request->has('nonfree')) {
+      // Find all users selected
+      $users = User::whereIn('id', explode(',', $request->input('secondaries')))->get();
+      // Create sale
+      $sale =  new Sale();
+      $sale->creator_id = auth()->user()->id;
+      $sale->organization_id = $member->primary->organization_id;
+      $sale->customer_id = $member->primary_id;
+      $sale->status = "complete";
+      $sale->taxable = true;
+
+      // Calculations
+      $subtotal = $users->count() * $member->type->secondary_price;
+      $tax = number_format($subtotal * (\App\Setting::find(1)->tax / 100), 2, '.', '');
+
+      $sale->subtotal = $subtotal;
+      $sale->tax = (float)$tax;
+      $sale->total = $subtotal + (float)$tax;
+      $sale->refund = false;
+      $sale->source = "admin";
+      $sale->sell_to_organization = false;
+      // Save sale
+      $sale->save();
+      // Add memo to sale
+      $sale->memo()->create([
+        'author_id' => auth()->user()->id,
+        'message' => 'I have added ' . $users->count() . ' secondary(ies) to membership #' . $member->id . '.',
+      ]);
+      // Create payment
+      $payment_method = \App\PaymentMethod::findOrFail($request->input('payment_method_id'));
+
+      $sale->payments()->create([
+        'cashier_id' => auth()->user()->id,
+        'payment_method_id' => $payment_method->id,
+        'tendered' => $request->input('tendered'),
+        'total' => $sale->total,
+        'change_due' => $sale->total - (float)$request->input('tendered'),
+        'reference' => $request->input('reference'),
+        'source' => 'admin'
+      ]);
+      // Make them members
+      foreach ($users as $user) {
+        $user->membership_id = $member->id;
+        $user->role_id = \App\Role::where('name', 'Member')->get()->first()->id;
+        $user->save();
+      }
+      // Redirect them to sale page
+      if ($users->count() == 1)
+        Session::flash('success', $users->count() . ' secondary has been added to <strong>Member # ' . $member->id . ' (' . $member->primary->fullname . ' / ' . $member->type->name . ')</strong> successfully!');
+      else
+        Session::flash('success', $users->count() . ' secondaries have been added to <strong>Member # ' . $member->id . ' (' . $member->primary->fullname . ' / ' . $member->type->name . ')</strong> successfully!');
+
+      return redirect()->route('admin.sales.show', $sale);
+    }
+
     $user = User::find($request->user_id);
     $user->role_id = 5;
     $user->membership_id = $member->id;
