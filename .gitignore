@@ -14,3 +14,4 @@ yarn-error.log
 package-lock.json
 composer.lock
 /.vscode
+.DS_Store
