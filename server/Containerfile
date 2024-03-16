@@ -2,7 +2,7 @@ FROM archlinux
 
 RUN pacman -Sy
 
-RUN pacman -S php composer sqlite3 php-sqlite php-gd chromium --noconfirm
+RUN pacman -S php composer sqlite3 php-sqlite php-gd --noconfirm
 
 RUN echo 'extension=gd' >> /etc/php/php.ini
 RUN echo 'extension=pdo_sqlite' >> /etc/php/php.ini
