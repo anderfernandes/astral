@@ -1,0 +1,7 @@
+services:
+    server:
+        image: astral:beta
+        ports:
+            - 8000:8000
+        volumes:
+            - .:/var/www/html

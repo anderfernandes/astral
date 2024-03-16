@@ -1,0 +1,33 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "dev": "turbo run dev"
+  },
+  "keywords": [
+    "tickets",
+    "reservations",
+    "pos",
+    "memberships",
+    "museum",
+    "planetarium"
+  ],
+  "author": "Anderson Fernandes",
+  "license": "MIT",
+  "dependencies": {
+    "date-fns": "^3.3.1",
+    "lodash": "^4.17.21",
+    "turbo": "^1.12.3"
+  },
+  "devDependencies": {
+    "svelte": "^5.0.0-next.63"
+  }
+}

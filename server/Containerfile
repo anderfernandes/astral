@@ -1,0 +1,31 @@
+FROM archlinux
+
+RUN pacman -Sy
+
+RUN pacman -S php composer sqlite3 php-sqlite php-gd chromium --noconfirm
+
+RUN echo 'extension=gd' >> /etc/php/php.ini
+RUN echo 'extension=pdo_sqlite' >> /etc/php/php.ini
+RUN echo 'extension=sqlite3' >> /etc/php/php.ini
+
+RUN mkdir -p /var/www/html
+
+WORKDIR /var/www/html
+
+COPY . .
+
+RUN sqlite3 database/database.sqlite .databases .quit
+
+#RUN composer install
+
+#RUN php artisan migrate:fresh --seed
+
+RUN php artisan storage:link
+
+RUN php artisan key:generate
+
+RUN php artisan config:cache
+
+EXPOSE 8000
+
+CMD php artisan serve --host 0.0.0.0 --env development
