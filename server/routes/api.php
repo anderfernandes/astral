@@ -19,6 +19,7 @@ Route::get('/verify/{id}/{hash}', [AuthController::class, 'verify']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.update');
 Route::apiResource('/events', \App\Http\Controllers\EventController::class);
 Route::apiResource('/sales', \App\Http\Controllers\SaleController::class);
+Route::apiResource('/products', \App\Http\Controllers\ProductController::class);
 Route::get('/mail/{item}/{id}/{doc}', [\App\Http\Controllers\MailController::class, 'index']);
 
 Route::middleware(Authenticate::using('sanctum'))->group(function () {
@@ -31,7 +32,7 @@ Route::middleware(Authenticate::using('sanctum'))->group(function () {
     Route::apiResource('/product-types', \App\Http\Controllers\ProductTypeController::class);
     Route::apiResource('/payment-methods', \App\Http\Controllers\PaymentMethodController::class);
     Route::apiResource('/shows', \App\Http\Controllers\ShowController::class);
-    Route::apiResource('/products', \App\Http\Controllers\ProductController::class);
+    //Route::apiResource('/products', \App\Http\Controllers\ProductController::class);
     //Route::apiResource('/sales', \App\Http\Controllers\SaleController::class);
     Route::apiResource('/sales/memos', \App\Http\Controllers\SaleMemoController::class);
     Route::apiResource('/reports', \App\Http\Controllers\ReportController::class)->only(['show']);

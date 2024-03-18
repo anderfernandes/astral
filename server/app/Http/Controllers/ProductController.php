@@ -32,6 +32,10 @@ class ProductController extends Controller
             $products = $products->where('in_cashier', true);
         }
 
+        if ($request->has('public')) {
+            $products = $products->where('is_public', true);
+        }
+
         return response(['data' => $products->get()], 200);
     }
 

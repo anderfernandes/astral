@@ -26,4 +26,13 @@ export class Cart {
 			this.tickets.reduce((sum, t) => sum + t.quantity, 0)
 		);
 	}
+
+	addProduct(product: IProduct) {
+		const i = this.products.findIndex((p) => p.id === product.id);
+		if (i === -1) {
+			this.products.push({ ...product, quantity: 1 });
+		} else {
+			this.products[i].quantity++;
+		}
+	}
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Cart } from '$lib';
+	import { Cart } from '$lib';
 	import { format, formatDistanceToNow } from 'date-fns';
 	import { getContext } from 'svelte';
 	import { AButton, AChip, AIcon } from 'ui';
@@ -30,7 +30,7 @@
 	></div>
 	<br />
 	<AChip text={event.show.type?.name!} />
-	<h1 class="py-3">{event.show.name}</h1>
+	<h1 class="py-3 text-center">{event.show.name}</h1>
 	<span class="text-sm">
 		{format(start, 'EEE MMM d yyyy @ h:mm a')}
 		({formatDistanceToNow(start, { addSuffix: true })})
@@ -39,21 +39,31 @@
 		{event.type.name} &middot;
 		{event.seats.available} seats left
 	</span>
-	<div class="flex gap-3 py-3">
+	<div class="grid gap-3 py-3 md:w-1/2">
 		{#each event.type.allowed_tickets.filter((t) => t.price > 0) as ticket_type}
-			<AButton
-				basic
-				text={`${ticket_type.name} $${ticket_type.price.toFixed(2)}`}
-				onclick={() => {
-					ShoppingCart.addTicket({
-						type: ticket_type,
-						event
-					});
-				}}
-			/>
+			<div
+				class="flex items-center gap-3 rounded-xl border border-zinc-200 p-2 dark:border-zinc-900"
+			>
+				<div class="grow">
+					<div class="grid gap-2 text-sm">
+						<span class="font-medium">{ticket_type.name} ${ticket_type.price.toFixed(2)}</span>
+						<span>{ticket_type.description}</span>
+					</div>
+				</div>
+				<AButton
+					basic
+					text="Add to cart"
+					onclick={() => {
+						ShoppingCart.addTicket({
+							type: ticket_type,
+							event
+						});
+					}}
+				/>
+			</div>
 		{/each}
 	</div>
-	<span class="text-sm">
+	<span class="text-sm md:w-1/2">
 		{event.show.description}
 	</span>
 </section>

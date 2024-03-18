@@ -6,12 +6,12 @@ export const load = async ({ fetch }) => {
 		fetch(`/events?start=${start}&end=2024-12-31`)
 			.then((res) => res.json())
 			.then((res) => res.data as IEvent[]),
-		fetch('/products')
+		fetch('/products?public')
 			.then((res) => res.json())
 			.then((res) => res.data as IProduct[])
 	]);
 
-	console.log(events);
+	console.log(products);
 
 	return { events, products };
 };

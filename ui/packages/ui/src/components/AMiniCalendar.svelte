@@ -21,12 +21,12 @@
 		onchange?(value: Date): void;
 	}
 
-	let { value, onchange, name } = $props<IMiniCalendarProps>();
+	let { value, onchange, name }: IMiniCalendarProps = $props();
 
 	/**
 	 * State responsible for rendering calendar.
 	 */
-	let selected = $state(startOfDay(new Date()));
+	let selected = $state(value ? new Date(value) : startOfDay(new Date()));
 
 	const days = $derived(
 		eachDayOfInterval({

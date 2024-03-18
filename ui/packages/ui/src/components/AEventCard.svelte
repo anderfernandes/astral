@@ -3,6 +3,8 @@
 		data: {
 			id?: number;
 			start: string;
+			type: { name: string };
+			seats: { available: number };
 			show: {
 				name: string;
 				cover: string;
@@ -12,7 +14,8 @@
 			};
 		};
 	}
-	let { data } = $props<IAEventCardProps>();
+
+	let { data }: IAEventCardProps = $props();
 </script>
 
 <a
@@ -27,11 +30,11 @@
 		src={data.show.cover}
 		alt="Black Holes: The Other Side of Infinity"
 	/>
-	<span class="z-10 w-[calc(100%)] truncate text-zinc-400"
-		>{new Date(data.start).toDateString()} &middot; Weekend</span
-	>
+	<span class="z-10 w-[calc(100%)] truncate text-zinc-400">
+		{new Date(data.start).toDateString()} &middot; {data.type.name}
+	</span>
 	<span class="z-10 w-[calc(100%)] truncate text-lg font-bold text-white">{data.show.name}</span>
-	<span class="zinc-500 z-10 w-[calc(100%)] truncate text-white"
-		>{data.show.type?.name} &middot; 180 seats</span
-	>
+	<span class="zinc-500 z-10 w-[calc(100%)] truncate text-white">
+		{data.show.type?.name} &middot; {data.seats.available} seats
+	</span>
 </a>

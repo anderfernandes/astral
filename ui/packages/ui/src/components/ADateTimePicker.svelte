@@ -23,7 +23,7 @@
 		name,
 		placeholder,
 		stringFormat = 'EEE MMM d yyyy @ h:mm a'
-	} = $props<IDatePickerProps & ICommonInputProps>();
+	}: IDatePickerProps & ICommonInputProps = $props();
 
 	/**
 	 * `Date` version of `value`.

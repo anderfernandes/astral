@@ -2,6 +2,12 @@
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import AInputLabel from './AInputLabel.svelte';
 
+	interface IAInputProps
+		extends Pick<
+			HTMLInputAttributes,
+			'required' | 'placeholder' | 'value' | 'name' | 'type' | 'readonly' | 'disabled' | 'onclick'
+		> {}
+
 	let {
 		label,
 		required,
@@ -14,13 +20,7 @@
 		readonly,
 		disabled,
 		onclick
-	} = $props<
-		Pick<
-			HTMLInputAttributes,
-			'required' | 'placeholder' | 'value' | 'name' | 'type' | 'readonly' | 'disabled' | 'onclick'
-		> &
-			ICommonInputProps
-	>();
+	}: IAInputProps & ICommonInputProps = $props();
 
 	$effect(() => {
 		if (errors?.length > 0)

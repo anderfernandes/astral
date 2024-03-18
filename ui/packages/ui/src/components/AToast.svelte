@@ -1,5 +1,10 @@
 <script lang="ts">
-	let { title = 'Alert', message } = $props<{ title?: string; message: string }>();
+	interface IAAlertProps {
+		title?: string;
+		message: string;
+	}
+
+	let { title = 'Alert', message }: IAAlertProps = $props();
 
 	import AButton from './AButton.svelte';
 </script>

@@ -51,12 +51,13 @@
 			<div class="flex items-center gap-3 text-sm">
 				<AIcon data={message_text_outline} size={2.5} />
 				<div class="grid">
-					<span class="font-medium"
-						>{memo.author.firstname} &middot; {memo.author.role.name} &middot; {formatDistanceToNow(
-							new Date(memo.created_at),
-							{ addSuffix: true }
-						)}</span
-					>
+					<div class="flex gap-1">
+						<span class="font-medium">{memo.author.firstname} &middot;</span>
+						<span>{memo.author.role.name}</span>
+						<span class="text-zinc-500 dark:text-zinc-400">
+							({formatDistanceToNow(new Date(memo.created_at), { addSuffix: true })})
+						</span>
+					</div>
 					<span>{memo.message}</span>
 				</div>
 			</div>
