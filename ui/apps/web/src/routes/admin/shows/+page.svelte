@@ -13,15 +13,17 @@
 <section class="grid gap-3">
 	{#each shows as show}
 		<a href={`/admin/shows/${show.id}`} class="flex gap-3">
-			<img class="w-32 rounded-xl" src={show.cover} alt={show.name} />
+			<img class="h-44 w-32 rounded-xl" src={show.cover} alt={show.name} />
 			<div class="flex flex-col">
 				<span class="font-medium">{show.name}</span>
 				<span class="text-sm text-zinc-500 dark:text-zinc-400"
 					>{show.type?.name} &middot; {show.duration} min &middot; {show.is_active
 						? 'active'
-						: 'inactive'} &middot;
-					{show.is_expired ? 'expired' : 'not expired'}</span
-				>
+						: 'inactive'}
+					{#if show.is_expired}
+						&middot; expired
+					{/if}
+				</span>
 			</div>
 		</a>
 	{/each}

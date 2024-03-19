@@ -11,7 +11,5 @@ export const load = async ({ fetch }) => {
 			.then((res) => res.data as IProduct[])
 	]);
 
-	console.log(products);
-
 	return { events, products };
 };

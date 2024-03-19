@@ -138,7 +138,7 @@ class EventController extends Controller implements HasMiddleware
             return response(['errors' => $validator->errors()], 422);
         }
 
-        $event->update($request->input());
+        $event->update([...$request->input(), 'seats' => $request->input('seats')]);
 
         $memo = $event['memo'];
         $hasTitle = $request->has('is_all_day') && $request->has('title');

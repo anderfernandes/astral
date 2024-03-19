@@ -23,7 +23,7 @@
 		<AIcon data={cart} size={1.25} />
 	</a>
 </nav>
-<section class="flex flex-col items-center p-4">
+<section class="flex flex-col items-center p-6">
 	<div
 		class="h-96 w-60 rounded-xl bg-black bg-cover bg-center"
 		style={`background-image:url(${event.show.cover})`}
@@ -39,20 +39,26 @@
 		{event.type.name} &middot;
 		{event.seats.available} seats left
 	</span>
-	<div class="grid gap-3 py-3 md:w-1/2">
+	<div class="grid gap-3 py-3 text-sm md:w-1/3">
 		{#each event.type.allowed_tickets.filter((t) => t.price > 0) as ticket_type}
+			{@const count = ShoppingCart.tickets.find(
+				(t) => t.type.id === ticket_type.id && t.event.id === event.id
+			)?.quantity}
 			<div
-				class="flex items-center gap-3 rounded-xl border border-zinc-200 p-2 dark:border-zinc-900"
+				class="flex items-center gap-3 rounded-xl border border-zinc-200 p-4 dark:border-zinc-900"
 			>
 				<div class="grow">
 					<div class="grid gap-2 text-sm">
-						<span class="font-medium">{ticket_type.name} ${ticket_type.price.toFixed(2)}</span>
-						<span>{ticket_type.description}</span>
+						<span class="font-medium"
+							>{ticket_type.name} ${ticket_type.price.toFixed(2)}
+							{#if count}x {count}{/if}
+						</span>
+						<span class="text-zinc-500 dark:text-zinc-400">{ticket_type.description}</span>
 					</div>
 				</div>
 				<AButton
 					basic
-					text="Add to cart"
+					text="Add to Cart"
 					onclick={() => {
 						ShoppingCart.addTicket({
 							type: ticket_type,
@@ -62,8 +68,8 @@
 				/>
 			</div>
 		{/each}
+		<span>
+			{event.show.description}
+		</span>
 	</div>
-	<span class="text-sm md:w-1/2">
-		{event.show.description}
-	</span>
 </section>

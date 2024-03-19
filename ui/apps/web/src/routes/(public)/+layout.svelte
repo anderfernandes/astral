@@ -3,7 +3,7 @@
 	import { Cart } from '$lib';
 	import { getContext, setContext } from 'svelte';
 	import { AButton, AIcon } from 'ui';
-	import { cart } from 'ui/icons';
+	import { account_circle, account_circle_outline, cart } from 'ui/icons';
 
 	let { data, children } = $props();
 
@@ -38,6 +38,8 @@
 			</a>
 			{#if data.account === undefined}
 				<AButton text="Login" href="/login" />
+			{:else}
+				<AIcon data={account_circle} size={1.25} href="/account" />
 			{/if}
 		</div>
 	</div>

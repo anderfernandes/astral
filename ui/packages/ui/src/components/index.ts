@@ -1,3 +1,4 @@
+export { default as AAlert } from './AAlert.svelte';
 export { default as AButton } from './AButton.svelte';
 export { default as ACalendar } from './ACalendar.svelte';
 export { default as ACheckbox } from './ACheckbox.svelte';

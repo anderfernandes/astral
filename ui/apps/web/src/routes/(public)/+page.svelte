@@ -26,11 +26,13 @@
 {/snippet}
 
 <main class="flex flex-col items-center gap-6 p-6 pt-24">
-	<section class="grid gap-3 text-center lg:max-w-screen-lg lg:gap-6">
-		<h1 class=" text-3xl font-extrabold lg:text-6xl">
-			Here education and entertainment are always together.po
+	<section class="grid gap-3 text-center lg:max-w-screen-lg">
+		<h1 class="text-3xl font-extrabold lg:text-6xl">
+			Here education and entertainment are always together.
 		</h1>
-		<h5 class="text-lg font-semibold lg:text-2xl">For you and your family.</h5>
+		<h5 class="text-lg text-zinc-500 lg:text-xl">
+			For you, your family, loved ones and community.
+		</h5>
 	</section>
 	<section class="flex flex-col gap-3">
 		<h5 class="px-6 text-left font-medium">Upcoming Events ({events.length})</h5>

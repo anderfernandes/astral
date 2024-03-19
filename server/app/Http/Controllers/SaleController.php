@@ -232,7 +232,7 @@ class SaleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Sale $sale, Request $request)
+    public function destroy(Sale $sale, Request $request): Response
     {
         if ($sale->payments()->get() == null || $sale->payments()->count() <= 0) {
             return response(["message" => "This sale doesn't have any payments."], 422);

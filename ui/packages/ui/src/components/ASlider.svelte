@@ -62,4 +62,10 @@
 		cursor: pointer;
 		z-index: 0;
 	}
+
+	@media (prefers-color-scheme: dark) {
+		input[type='range']::-webkit-slider-thumb {
+			background-color: #fff !important;
+		}
+	}
 </style>

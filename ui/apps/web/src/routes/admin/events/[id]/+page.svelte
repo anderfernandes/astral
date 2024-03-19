@@ -1,18 +1,19 @@
 <script lang="ts">
 	import { format, formatDistanceToNow } from 'date-fns';
 	import { AButton, AIcon } from 'ui';
-	import { badge_account_horizontal_outline, message_text_outline } from 'ui/icons';
+	import { message_text_outline } from 'ui/icons';
 
 	let { data } = $props();
 	let { event, organization } = data;
 	let { show, type, memos } = event;
+	let start = new Date(event.start);
 </script>
 
 <svelte:head>
 	<title>Event #${event.id} - {organization.name}</title>
 </svelte:head>
 
-<section class="grid">
+<section class="grid p-6">
 	<div class="flex items-center">
 		<h1 class="grow">Event #{event.id}</h1>
 		<AButton text="Edit" href={`/admin/events/${event.id}/edit`} />
@@ -20,18 +21,22 @@
 
 	<div class="text-sm">
 		<span class="text-zinc-500 dark:text-zinc-400">
-			{format(new Date(event.start), 'EEE, MMM d yyyy h:mm a')}
+			{format(start, 'EEE, MMM d yyyy h:mm a')} ({formatDistanceToNow(start, { addSuffix: true })})
 		</span>
-		<span>&middot;</span>
-		<span>{type.name}</span>
 	</div>
+	<div class="text-sm">
+		<span>{type.name}</span>
+		<span>&middot;</span>
+		<span>{event.seats.available} seats available</span>
+	</div>
+	<div></div>
 	<div class="flex items-center gap-3 text-sm">
 		<hr />
 		<span class="shrink font-semibold">Shows</span>
 		<hr />
 	</div>
 	<div class="flex gap-3 rounded-xl border border-zinc-300 p-3 text-sm dark:border-zinc-800">
-		<img src={event.show.cover} class="w-28 rounded-xl" alt={event.show.name} />
+		<img src={event.show.cover} class="h-40 w-28 rounded-xl" alt={event.show.name} />
 		<div class="flex flex-col">
 			<span class="font-medium">{show.name}</span>
 			<div>
