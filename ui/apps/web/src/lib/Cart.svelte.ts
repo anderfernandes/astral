@@ -1,12 +1,14 @@
 export class Cart {
 	products = $state<IProductWithQuantity[]>([]);
 	tickets = $state<ITicketWithQuantity[]>([]);
+	tax = 0;
 
-	constructor() {
+	constructor(tax: number) {
 		// TODO: Take `ISale` in the constructor.
 		// TODO: Map sale tickets and products into their Cart type counterpart
 		this.products = [];
 		this.tickets = [];
+		this.tax = tax;
 	}
 
 	addTicket(ticket: Required<Pick<ITicket, 'type' | 'event'>>) {
@@ -34,9 +36,23 @@ export class Cart {
 
 	get count() {
 		return (
-			this.products.reduce((sum, p) => sum + p.quantity, 0) +
-			this.tickets.reduce((sum, t) => sum + t.quantity, 0)
+			this.products.reduce((a, p) => a + p.quantity, 0) +
+			this.tickets.reduce((a, t) => a + t.quantity, 0)
 		);
+	}
+
+	get totals() {
+		const products_totals = this.products.reduce((a, p) => a + p.price * p.quantity, 0);
+		const tickets_totals = this.tickets.reduce((a, t) => a + t.type.price * t.quantity, 0);
+		const subtotal = products_totals + tickets_totals;
+		const tax = subtotal * (this.tax / 100);
+		const total = subtotal + tax;
+
+		return {
+			subtotal: subtotal.toFixed(2),
+			tax: tax.toFixed(2),
+			total: total.toFixed(2)
+		};
 	}
 
 	addProduct(product: IProduct) {

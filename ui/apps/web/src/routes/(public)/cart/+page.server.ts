@@ -15,5 +15,7 @@ export const actions = {
 		const data = await request.formData();
 
 		console.log(data);
+
+		redirect(302, '/checkout');
 	}
 };

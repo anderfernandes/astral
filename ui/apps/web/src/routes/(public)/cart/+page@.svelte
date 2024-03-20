@@ -5,6 +5,8 @@
 	import { Cart } from '$lib';
 	import { format, formatDistanceToNow } from 'date-fns';
 
+	let { data } = $props();
+
 	const ShoppingCart = getContext<Cart>('ShoppingCart');
 </script>
 
@@ -28,11 +30,13 @@
 				/>
 			{/if}
 		</div>
+
 		{#if ShoppingCart.count <= 0}
 			<div class="flex w-full justify-center">
 				<AAlert message="Your cart is empty." />
 			</div>
 		{/if}
+
 		{#each ShoppingCart.tickets as ticket, i}
 			{@const start = new Date(ticket.event.start)}
 			<div class="flex w-full items-center gap-3 text-sm">
@@ -68,6 +72,7 @@
 			<input type="hidden" name={`tickets[${i}][type_id]`} value={ticket.type.id} />
 			<input type="hidden" name={`tickets[${i}][quantity]`} value={ticket.quantity} />
 		{/each}
+
 		{#each ShoppingCart.products as product, j}
 			<div class="flex items-center gap-3 text-sm">
 				<div
@@ -93,7 +98,25 @@
 			<input type="hidden" name={`products[${j}][id]`} value={product.id} />
 			<input type="hidden" name={`products[${j}][quantity]`} value={product.quantity} />
 		{/each}
+
 		{#if ShoppingCart.count > 0}
+			<div>
+				<div class="flex gap-2">
+					<span class="grow">Subtotal</span>
+					<span>$</span>
+					<span class="w-16 text-right">{ShoppingCart.totals.subtotal}</span>
+				</div>
+				<div class="flex gap-2">
+					<span class="grow">Tax</span>
+					<span>$</span>
+					<span class="w-16 text-right">{ShoppingCart.totals.tax}</span>
+				</div>
+				<div class="flex gap-2">
+					<span class="grow">Total</span>
+					<span>$</span>
+					<span class="w-16 text-right">{ShoppingCart.totals.total}</span>
+				</div>
+			</div>
 			<div class="flex justify-end">
 				<AButton text="Checkout" type="submit" />
 			</div>

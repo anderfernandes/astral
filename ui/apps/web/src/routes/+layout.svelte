@@ -4,13 +4,13 @@
 	import { AToast } from 'ui';
 	import { setContext } from 'svelte';
 
-	let { children } = $props();
+	let { children, data } = $props();
 
 	const toastsContext: IToastContext = createToasts();
 
 	setContext('toasts', toastsContext);
 
-	const ShoppingCart = new Cart();
+	const ShoppingCart = new Cart(data.organization.tax);
 
 	setContext('ShoppingCart', ShoppingCart);
 </script>
