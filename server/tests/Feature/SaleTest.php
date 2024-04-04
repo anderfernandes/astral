@@ -86,4 +86,35 @@ class SaleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_sales_with_stripe_payment(): void
+    {
+        $start = Carbon::create(fake()->dateTime);
+
+        $id = $this->post('/api/events', [
+            [
+                'is_public' => fake()->boolean,
+                'start' => $start,
+                'end' => $start->addHour(),
+                'memo' => fake()->text,
+                'show_id' => 2,
+                'type_id' => 2,
+                'seats' => fake()->numberBetween(10, 100)
+            ]
+        ])['data'];
+
+        $response = $this->post('/api/stripe/session/create', [
+            'tickets' => [
+                ['type_id' => 3, 'event_id' => $id, 'quantity' => 2],
+                ['type_id' => 2, 'event_id' => $id, 'quantity' => 2]
+            ],
+            'method_id' => 1,
+            'tendered' => 6,
+            'customer_id' => $this->user->id,
+        ]);
+
+        dd($response->json());
+
+        $response->assertStatus(200);
+    }
 }

@@ -4,17 +4,23 @@
 	import { AAlert, AButton, AIcon } from 'ui';
 	import { Cart } from '$lib';
 	import { format, formatDistanceToNow } from 'date-fns';
+	import { enhance } from '$app/forms';
 
 	let { data } = $props();
+	let { organization } = data;
 
 	const ShoppingCart = getContext<Cart>('ShoppingCart');
 </script>
+
+<svelte:head>
+	<title>Cart - {organization.name} &middot; Astral</title>
+</svelte:head>
 
 <nav class="flex h-16 items-center px-6">
 	<AIcon data={close} size={1.25} href="/" />
 </nav>
 <section class="flex flex-col gap-3 px-6 md:items-center">
-	<form method="POST" class="flex flex-col gap-3 lg:w-1/2">
+	<form method="POST" class="flex flex-col gap-3 lg:w-1/2" use:enhance>
 		<div class="flex gap-2">
 			<h1 class="grow">Shopping Cart ({ShoppingCart.count})</h1>
 			{#if ShoppingCart.count > 0}

@@ -11,6 +11,28 @@ export class Cart {
 		this.tax = tax;
 	}
 
+	get count() {
+		return (
+			this.products.reduce((a, p) => a + p.quantity, 0) +
+			this.tickets.reduce((a, t) => a + t.quantity, 0)
+		);
+	}
+
+	get totals() {
+		const products_totals = this.products.reduce((a, p) => a + p.price * p.quantity, 0);
+		const tickets_totals = this.tickets.reduce((a, t) => a + t.type.price * t.quantity, 0);
+		const subtotal = products_totals + tickets_totals;
+		const tax_rate = this.tax / 100;
+		const tax = subtotal * tax_rate;
+		const total = subtotal + tax;
+
+		return {
+			subtotal: subtotal.toFixed(2),
+			tax: tax.toFixed(2),
+			total: total.toFixed(2)
+		};
+	}
+
 	addTicket(ticket: Required<Pick<ITicket, 'type' | 'event'>>) {
 		const i = this.tickets.findIndex(
 			(t) => t.type.id === ticket.type.id && t.event.id === ticket.event.id
@@ -23,7 +45,6 @@ export class Cart {
 			this.tickets.push({ ...ticket, quantity: 1 });
 		} else {
 			const event_seats_in_sale = this.tickets.filter((t) => t.event.id === ticket.event.id).length;
-			console.log(event_seats_in_sale, this.tickets[i].event.seats.available);
 			if (event_seats_in_sale >= this.tickets[i].event.seats.available) {
 				alert(
 					'You have the last available ticket for this event on your cart. Go check out before someone else gets it!'
@@ -32,27 +53,6 @@ export class Cart {
 			}
 			this.tickets[i].quantity++;
 		}
-	}
-
-	get count() {
-		return (
-			this.products.reduce((a, p) => a + p.quantity, 0) +
-			this.tickets.reduce((a, t) => a + t.quantity, 0)
-		);
-	}
-
-	get totals() {
-		const products_totals = this.products.reduce((a, p) => a + p.price * p.quantity, 0);
-		const tickets_totals = this.tickets.reduce((a, t) => a + t.type.price * t.quantity, 0);
-		const subtotal = products_totals + tickets_totals;
-		const tax = subtotal * (this.tax / 100);
-		const total = subtotal + tax;
-
-		return {
-			subtotal: subtotal.toFixed(2),
-			tax: tax.toFixed(2),
-			total: total.toFixed(2)
-		};
 	}
 
 	addProduct(product: IProduct) {
@@ -72,6 +72,7 @@ export class Cart {
 			}
 			this.products[i].quantity++;
 		}
+		this.save();
 	}
 
 	clear() {
@@ -87,5 +88,14 @@ export class Cart {
 
 	clearProduct(product: IProduct) {
 		this.products = this.products.filter((p) => p.id !== product.id);
+	}
+
+	save() {
+		localStorage.setItem('products', JSON.stringify(this.products));
+	}
+
+	restore() {
+		const products = JSON.parse(localStorage.getItem('products') as string);
+		this.products = products;
 	}
 }

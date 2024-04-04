@@ -41,6 +41,6 @@ export const actions = {
 			httpOnly: true
 		});
 
-		redirect(300, path);
+		redirect(300, url.searchParams.has('redirect') ? '/cart' : path);
 	}
 };

@@ -11,5 +11,12 @@ export const load = async ({ cookies, fetch }) => {
 
 	if (req.status !== 200) redirect(302, '/login');
 
-	return {};
+	const data = new FormData();
+	data.set('products[0][id]', '3');
+	data.set('products[0][quantity]', '3');
+
+	const request = await fetch('/stripe/session/create', { method: 'POST', body: data });
+	const { client_secret }: { client_secret: string } = await request.json();
+
+	return { client_secret };
 };

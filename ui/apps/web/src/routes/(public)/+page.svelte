@@ -30,9 +30,7 @@
 		<h1 class="text-3xl font-extrabold lg:text-6xl">
 			Here education and entertainment are always together.
 		</h1>
-		<h5 class="text-lg text-zinc-500 lg:text-xl">
-			For you, your family, loved ones and community.
-		</h5>
+		<h5 class="text-lg text-zinc-500 lg:text-xl">For you, your loved ones and the community.</h5>
 	</section>
 	<section class="flex flex-col gap-3">
 		<h5 class="px-6 text-left font-medium">Upcoming Events ({events.length})</h5>

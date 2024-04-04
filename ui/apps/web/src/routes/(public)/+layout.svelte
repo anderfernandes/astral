@@ -3,13 +3,19 @@
 	import { Cart } from '$lib';
 	import { getContext, setContext } from 'svelte';
 	import { AButton, AIcon } from 'ui';
-	import { account_circle, account_circle_outline, cart } from 'ui/icons';
+	import { account_circle, cart } from 'ui/icons';
 
 	let { data, children } = $props();
 
 	const { organization } = data;
 
 	const ShoppingCart = getContext<Cart>('ShoppingCart');
+
+	$effect(() => {
+		if (localStorage.length > 0) {
+			ShoppingCart.restore();
+		}
+	});
 </script>
 
 <nav
