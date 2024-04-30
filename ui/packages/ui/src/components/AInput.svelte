@@ -14,7 +14,7 @@
 		hint,
 		errors = [],
 		placeholder,
-		value,
+		value = $bindable(),
 		name,
 		type,
 		readonly,
@@ -39,7 +39,7 @@
 			{placeholder}
 			aria-describedby={name}
 			aria-invalid={errors?.length! > 0}
-			bind:value
+			{value}
 			{name}
 			type="number"
 			{required}

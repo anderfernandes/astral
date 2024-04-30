@@ -19,7 +19,7 @@
 		disabled,
 		options = [],
 		name,
-		value,
+		value = $bindable(),
 		onchange
 	}: IASelectProps & ICommonInputProps = $props();
 </script>
@@ -31,7 +31,7 @@
 		{placeholder}
 		{name}
 		{onchange}
-		bind:value
+		{value}
 		class="flex h-10 w-full rounded-md border border-zinc-300 bg-transparent text-sm placeholder:text-zinc-500 focus:border-black focus:ring-black focus:ring-offset-black disabled:cursor-not-allowed disabled:bg-zinc-100 dark:border-zinc-800 dark:placeholder:text-zinc-400 dark:focus:border-zinc-600 dark:disabled:bg-zinc-800"
 	>
 		<option value="">{placeholder || 'Select one'}</option>
