@@ -18,10 +18,10 @@
 
 <nav class="flex h-16 items-center px-6">
 	<AIcon data={close} size={1.25} href="/" />
-	<a href="/cart" class="flex grow items-center justify-end gap-2">
+	<!-- <a href="/cart" class="flex grow items-center justify-end gap-2">
 		{ShoppingCart.count}
 		<AIcon data={cart} size={1.25} />
-	</a>
+	</a> -->
 </nav>
 <section class="flex flex-col items-center gap-3 p-4">
 	<article class="flex w-full flex-col gap-3 md:w-1/3">
@@ -39,7 +39,7 @@
 					${product.price.toFixed(2)}
 					{#if count}x {count}{/if}
 				</span>
-				<div>
+				<!-- <div>
 					<AButton
 						text="Add to Cart"
 						basic
@@ -48,7 +48,7 @@
 							ShoppingCart.addProduct(product);
 						}}
 					/>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<span class="w-full text-left text-sm">{product.description}</span>

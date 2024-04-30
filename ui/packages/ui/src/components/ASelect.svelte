@@ -19,7 +19,7 @@
 		disabled,
 		options = [],
 		name,
-		value = $bindable(),
+		value = $bindable(""),
 		onchange
 	}: IASelectProps & ICommonInputProps = $props();
 </script>

@@ -18,10 +18,10 @@
 
 <nav class="flex h-16 items-center px-6">
 	<AIcon data={close} size={1.25} href="/" />
-	<a href="/cart" class="flex grow items-center justify-end gap-2">
+	<!-- <a href="/cart" class="flex grow items-center justify-end gap-2">
 		{ShoppingCart.count}
 		<AIcon data={cart} size={1.25} />
-	</a>
+	</a> -->
 </nav>
 <section class="flex flex-col items-center p-6">
 	<div
@@ -56,7 +56,7 @@
 						<span class="text-zinc-500 dark:text-zinc-400">{ticket_type.description}</span>
 					</div>
 				</div>
-				<AButton
+				<!-- <AButton
 					basic
 					text="Add to Cart"
 					onclick={() => {
@@ -65,7 +65,7 @@
 							event
 						});
 					}}
-				/>
+				/> -->
 			</div>
 		{/each}
 		<span>

@@ -15,7 +15,7 @@
 	}
 
 	let {
-		value,
+		value = $bindable(),
 		onchange,
 		label,
 		required,

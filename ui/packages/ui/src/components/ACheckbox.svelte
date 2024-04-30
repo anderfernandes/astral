@@ -6,14 +6,14 @@
 		hint?: string;
 	}
 
-	let { label, hint, checked, name, disabled } = $props<IACheckboxProps>();
+	let { label, hint, checked = $bindable(), name, disabled } : IACheckboxProps = $props();
 </script>
 
 <div class="flex items-center gap-3 text-sm">
 	<input
 		class="border-input rounded text-black focus:ring-black dark:bg-black focus:dark:ring-white"
 		type="checkbox"
-		bind:checked
+		{checked}
 		{name}
 		{disabled}
 		id={name}

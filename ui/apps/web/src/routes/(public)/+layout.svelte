@@ -38,10 +38,10 @@
 			>
 		</div>
 		<div class="flex items-center gap-2">
-			<a href="/cart" class="flex grow items-center justify-end gap-2">
+			<!-- <a href="/cart" class="flex grow items-center justify-end gap-2">
 				{ShoppingCart.count}
 				<AIcon data={cart} size={1.25} />
-			</a>
+			</a> -->
 			{#if data.account === undefined}
 				<AButton text="Login" href="/login" />
 			{:else}
