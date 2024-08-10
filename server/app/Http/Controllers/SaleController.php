@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SaleCollection;
+use App\Http\Resources\SaleResource;
 use App\Models\Event;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\TicketType;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,7 +32,7 @@ class SaleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): Response
+    public function index(Request $request): AnonymousResourceCollection
     {
         $relations = [
             "payments.method", "customer", "events.type", "creator", "products.type", "tickets.type"
@@ -37,7 +40,7 @@ class SaleController extends Controller
 
         $sales = (new Sale)->with($relations)->orderByDesc('id')->get();
 
-        return response(['data' => $sales]);
+        return SaleResource::collection($sales);
     }
 
     /**
@@ -109,12 +112,10 @@ class SaleController extends Controller
         // TODO: ENUMS?
         $source = 'online';
 
-        if (str_contains($request->getRequestUri(), '/cashier')) {
-            $source = 'cashier';
-        }
-
-        if (str_contains($request->getRequestUri(), '/admin')) {
-            $source = 'admin';
+        if ($request->has('source')) {
+            if (in_array($request->get('source'), ['admin', 'cashier'])) {
+                $source = $request->get('source');
+            }
         }
 
         // Create sale
@@ -208,7 +209,7 @@ class SaleController extends Controller
             'tickets.type', 'events.show.type', 'events.type', 'payments.method', 'payments.customer',
             'payments.cashier',
             'products.type',
-            'customer', 'creator',
+            'customer', 'creator', 'organization',
             'memos.author.role'
         ]));
     }

@@ -67,6 +67,19 @@ class SettingController extends Controller
             ], 422);
         }
 
+        DB::table('settings')->where('id', 1)->update([
+            'organization' => $request->input('organization'),
+            'address' => $request->input('address'),
+            'phone' => $request->input('phone'),
+            'fax' => $request->input('fax'),
+            'email' => $request->input('email'),
+            'website' => $request->input('website'),
+            'seats' => $request->input('seats'),
+            //'logo' => $settings->logo,
+            //'cover' => $settings->cover,
+            'tax' => $request->input('tax'),
+        ]);
+
         return response()->noContent(200);
     }
 }

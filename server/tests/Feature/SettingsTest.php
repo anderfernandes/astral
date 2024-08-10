@@ -17,7 +17,7 @@ class SettingsTest extends TestCase
 
         Sanctum::actingAs($this->user);
     }
-    
+
     /**
      * Tests if settings are being returned with unauthenticated values.
      */
@@ -47,7 +47,8 @@ class SettingsTest extends TestCase
             'address' => fake()->address,
             'is_astc_member' => fake()->boolean,
             'phone' => fake()->phoneNumber,
-            'email' => fake()->email
+            'email' => fake()->email,
+            'tax' => fake()->randomFloat(2, 0.25, 10)
         ]);
 
         $response->assertStatus(200);

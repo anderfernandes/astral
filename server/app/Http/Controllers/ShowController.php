@@ -63,7 +63,7 @@ class ShowController extends Controller
 
         $show = (new Show)->create([
             'name' => $request->input('name'),
-            'type' => $type->get('name'),
+            'type' => $type->name,
             'type_id' => $request->input('type_id'),
             'duration' => $request->input('duration'),
             'description' => $request->input('description'),

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEventRequest;
-use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\Request;
@@ -55,9 +53,26 @@ class EventController extends Controller implements HasMiddleware
         $events = (new Event())
             ->where('start', '>=', $start->addHours(6))
             ->where('start', '<=', $end->addHours(6))
-            ->orderBy('start')
+            ->orderByDesc('start')
             ->with(['show.type', 'type'])
             ->get();
+
+        if ($request->has('calendar')) {
+            $dates = $events->map(function ($event) {
+                return $event->start->startOfDay();
+            })->unique()->sort()->values();
+
+            $data = $dates->map(function ($date) use ($events) {
+               return [
+                   'date' => $date->format('Y-m-d'),
+                   'events' => $events->filter(function ($event) use ($date) {
+                        return $event->start->startOfDay() == $date;
+                    })->sortBy('start')->values()
+               ];
+            });
+
+            return response(['data' => $data]);
+        }
 
         return response(['data' => $events, 'start' => $start, 'end' => $end], 200);
     }

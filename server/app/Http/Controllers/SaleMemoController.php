@@ -10,7 +10,7 @@ class SaleMemoController extends Controller
 {
     public array $rules = [
         'message' => ['min:3', 'max:255', 'required'],
-        'sale_id' => ['integer', 'required']
+        //'sale_id' => ['integer', 'required']
     ];
 
     /**
@@ -23,8 +23,9 @@ class SaleMemoController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * TODO: UPDATE SALE WHEN ADDING NEW MEMO?
      */
-    public function store(Request $request)
+    public function store(Request $request, int $id): \Illuminate\Http\Response
     {
         $validator = Validator::make($request->input(), $this->rules);
 
@@ -37,7 +38,7 @@ class SaleMemoController extends Controller
         $sale_memo = (new SaleMemo())->create([
             'message' => $request->input('message'),
             'author_id' => $request->user()->id,
-            'sale_id' => $request->input('sale_id')
+            'sale_id' => $id
         ]);
 
         return response(['data' => $sale_memo->id], 201);

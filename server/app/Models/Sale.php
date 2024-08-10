@@ -88,6 +88,16 @@ class Sale extends Model
     }
 
     /**
+     * Returns the organization to which this `Sale` was made for.
+     */
+    public function organization(): BelongsTo | null
+    {
+        return $this->organization_id == 1
+            ? null
+            : $this->belongsTo(Organization::class);
+    }
+
+    /**
      * Returns the events attached to this sale.
      */
     public function events(): BelongsToMany

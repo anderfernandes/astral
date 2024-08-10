@@ -80,9 +80,9 @@ class TicketTypeController extends Controller
             'name' => $request->input('name'),
             'price' => $request->input('price'),
             'is_active' => $request->has('is_active'),
-            'is_public' => $request->input('is_public'),
+            'is_public' => $request->has('is_public'),
             'description' => $request->input('description'),
-            'in_cashier' => $request->input('in_cashier')
+            'in_cashier' => $request->has('in_cashier')
         ]);
 
         return response(['data' => $ticketType->id], 200);

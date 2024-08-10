@@ -26,6 +26,10 @@ class Show extends Model
         ];
     }
 
+    //protected $hidden = [ 'type' ];
+
+    protected $with = ['type'];
+
     /**
      * The accessors to append to the model's array form.
      */
