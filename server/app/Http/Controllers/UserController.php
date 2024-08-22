@@ -28,6 +28,11 @@ class UserController extends Controller
      */
     public function index(Request $request): Response
     {
+        if ($request->query('type') == 'individual') {
+            $individuals = (new User())->where('type', 'individual')->with(['role'])->get();
+            return response([ 'data' => $individuals ]);
+        }
+
         $walk_up = (new User())->find(1);
 
         $users = (new User())->where([['type', 'individual'], ['staff', $request->has('staff')]]);
@@ -39,7 +44,7 @@ class UserController extends Controller
 
         //TODO: SIMPLE PAGINATE
 
-        $users = $users->with(['role'])->orderBy('firstname', 'asc')->get();
+        $users = $users->with(['role'])->orderBy('firstname')->get();
 
         if (!$request->has('staff')) {
             $users = [$walk_up, ...$users];
@@ -125,7 +130,7 @@ class UserController extends Controller
             'zip' => $request->input('zip'),
             'newsletter' => $request->has('newsletter'),
             'password' => Hash::make($request->input("password")),
-            'role_id' => $role
+            'role_id' => $request->input('role_id')
         ]);
 
         $user->sendEmailVerificationNotification();

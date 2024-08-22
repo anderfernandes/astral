@@ -34,6 +34,8 @@ Route::middleware(Authenticate::using('sanctum'))->group(function () {
     Route::apiResource('/shows', \App\Http\Controllers\ShowController::class);
     Route::apiResource('/products', \App\Http\Controllers\ProductController::class)->only(['store', 'update']);
     Route::apiResource('/sales', \App\Http\Controllers\SaleController::class);
+    Route::apiResource('/organizations', \App\Http\Controllers\OrganizationController::class);
+    Route::apiResource('/organization-types', \App\Http\Controllers\OrganizationTypeController::class);
     //Route::apiResource('/sales/memos', \App\Http\Controllers\SaleMemoController::class);
     Route::post('/sales/{id}/memos', [\App\Http\Controllers\SaleMemoController::class, 'store']);
     Route::apiResource('/reports', \App\Http\Controllers\ReportController::class)->only(['show']);

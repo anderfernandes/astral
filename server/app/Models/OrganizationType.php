@@ -10,6 +10,14 @@ class OrganizationType extends Model
 {
     use HasFactory;
     
+    protected function casts() : array {
+        return [
+            'taxable' => 'boolean'
+        ];
+    }
+
+    protected $fillable = [ 'name', 'description', 'taxable' ];
+
     /**
      * Returns the `User` who created this record.
      */

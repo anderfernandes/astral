@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class ReportController extends Controller
 {
     private $rules = [
-        'cashier' => ['required', 'integer'],
+        'cashier' => ['required', 'integer'], // TODO: ONLY USER IDS IN THE DATABASE
         'start' => ['required', 'integer'],
         'end' => ['required', 'integer'],
     ];
@@ -54,7 +54,7 @@ class ReportController extends Controller
             ["created_at", "<=", $end],
         ];
 
-        if ($cashier != "0") {
+        if ($cashier > 1) {
             $filters[] = ["cashier_id", $cashier];
         }
 
@@ -130,7 +130,7 @@ class ReportController extends Controller
             ['created_at', '<=', $end],
         ];
 
-        if ($cashier != 0) {
+        if ($cashier > 1) {
             $filters[] = ['cashier_id', $cashier];
         }
 
