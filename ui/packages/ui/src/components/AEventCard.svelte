@@ -18,23 +18,24 @@
 	let { data }: IAEventCardProps = $props();
 </script>
 
-<a
-	href={`/events/${data.id}`}
-	class="relative flex h-96 w-60 flex-col justify-end gap-1 rounded-2xl p-6 text-sm"
->
-	<div
-		class="absolute left-0 top-0 z-10 h-full w-full rounded-2xl bg-gradient-to-t from-zinc-900 from-20%"
-	></div>
-	<img
-		class="absolute left-0 top-0 h-full w-full rounded-2xl object-cover"
-		src={data.show.cover}
-		alt="Black Holes: The Other Side of Infinity"
-	/>
-	<span class="z-10 w-[calc(100%)] truncate text-zinc-400">
-		{new Date(data.start).toDateString()} &middot; {data.type.name}
-	</span>
-	<span class="z-10 w-[calc(100%)] truncate text-lg font-bold text-white">{data.show.name}</span>
-	<span class="zinc-500 z-10 w-[calc(100%)] truncate text-white">
-		{data.show.type?.name} &middot; {data.seats.available} seats
-	</span>
-</a>
+<div class="w-[250px] space-y-3">
+	<span data-state="closed"
+		><div class="overflow-hidden rounded-md">
+			<img
+				alt="React Rendezvous"
+				loading="lazy"
+				width="250"
+				height="330"
+				decoding="async"
+				data-nimg="1"
+				class="aspect-[3/4] h-auto w-auto object-cover transition-all hover:scale-105"
+				style="color: transparent;"
+				src={data.show.cover}
+			/>
+		</div></span
+	>
+	<div class="space-y-1 text-sm">
+		<h3 class="font-medium leading-none">{data.show.name}</h3>
+		<p class="text-muted-foreground text-xs">{data.show.type?.name} &middot; {data.type.name}</p>
+	</div>
+</div>

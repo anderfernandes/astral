@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SaleCollection;
 use App\Http\Resources\SaleResource;
 use App\Models\Event;
 use App\Models\Product;
@@ -16,17 +15,17 @@ use Illuminate\Support\Facades\Validator;
 class SaleController extends Controller
 {
     private array $rules = [
-        "tickets.*.type_id" => ["integer"],
-        "tickets.*.event_id" => ["integer"],
-        "tickets.*.quantity" => ["integer"],
-        "products.*.id" => ["integer"],
-        "products.*.quantity" => ["integer"],
-        "organization_id" => ["integer", "nullable"],
-        "customer_id" => ["required", "integer"],
-        "tendered" => ["numeric", "nullable"],
-        "method_id" => ["integer"],
-        "reference" => ["min:2", "max:8", "nullable"],
-        "taxable" => ["boolean", "nullable"]
+        'tickets.*.type_id' => ['integer'],
+        'tickets.*.event_id' => ['integer'],
+        'tickets.*.quantity' => ['integer'],
+        'products.*.id' => ['integer'],
+        'products.*.quantity' => ['integer'],
+        'organization_id' => ['integer', 'nullable'],
+        'customer_id' => ['required', 'integer'],
+        'tendered' => ['numeric', 'nullable'],
+        'method_id' => ['integer'],
+        'reference' => ['min:2', 'max:8', 'nullable'],
+        'taxable' => ['boolean', 'nullable'],
     ];
 
     /**
@@ -35,7 +34,7 @@ class SaleController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $relations = [
-            "payments.method", "customer", "events.type", "creator", "products.type", "tickets.type"
+            'payments.method', 'customer', 'events.type', 'creator', 'products.type', 'tickets.type',
         ];
 
         $sales = (new Sale)->with($relations)->orderByDesc('id')->get();
@@ -52,12 +51,12 @@ class SaleController extends Controller
 
         if ($validator->fails()) {
             return response([
-                "errors" => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
         if ($request->has('method_id')) {
-            $method = (new \App\Models\PaymentMethod())->find($request->input("method_id"));
+            $method = (new \App\Models\PaymentMethod)->find($request->input('method_id'));
 
             if ($method == null) {
                 return response(['message' => 'Invalid payment method.']);
@@ -66,19 +65,19 @@ class SaleController extends Controller
 
         $subtotal = 0;
 
-        $tax_rate = (new \App\Models\Setting())->find(1)->tax / 100;
+        $tax_rate = (new \App\Models\Setting)->find(1)->tax / 100;
 
         if ($request->has('taxable') && $request->input('taxable')) {
             $tax_rate = 0;
         }
 
-        if ($request->has("products")) {
-            foreach ($request->input("products") as $sale_product) {
+        if ($request->has('products')) {
+            foreach ($request->input('products') as $sale_product) {
 
-                $product = (new Product())->find($sale_product['id']);
+                $product = (new Product)->find($sale_product['id']);
 
                 if ($product == null) {
-                    return response(['message' => "Product not found."], 422);
+                    return response(['message' => 'Product not found.'], 422);
                 }
 
                 if ($product->inventory) {
@@ -93,12 +92,12 @@ class SaleController extends Controller
             }
         }
 
-        if ($request->has("tickets")) {
+        if ($request->has('tickets')) {
             foreach ($request->input('tickets') as $sale_ticket) {
-                $ticket_type = (new TicketType())->find($sale_ticket["type_id"]);
+                $ticket_type = (new TicketType)->find($sale_ticket['type_id']);
 
                 if ($ticket_type == null) {
-                    return response(["message" => "Invalid ticket type."], 422);
+                    return response(['message' => 'Invalid ticket type.'], 422);
                 }
 
                 $subtotal += (int) $sale_ticket['quantity'] * $ticket_type->price;
@@ -120,38 +119,38 @@ class SaleController extends Controller
 
         // Create sale
         $sale = (new Sale)->create([
-            "creator_id" => $request->user()->id,
-            "customer_id" => $request->input("customer_id"),
-            "organization_id" => 1,
-            "status" => "open", // TODO: MARK AS COMPLETE IF BALANCE IS ZERO
-            "taxable" => $request->has("taxable"),
-            "subtotal" => $subtotal,
-            "tax" => $tax,
-            "total" => $total,
-            "refund" => false, // TODO: replace whole sale refund with refunded payments
-            "source" => $source,
-            "sell_to_organization" => false
+            'creator_id' => $request->user()->id,
+            'customer_id' => $request->input('customer_id'),
+            'organization_id' => 1,
+            'status' => 'open', // TODO: MARK AS COMPLETE IF BALANCE IS ZERO
+            'taxable' => $request->has('taxable'),
+            'subtotal' => $subtotal,
+            'tax' => $tax,
+            'total' => $total,
+            'refund' => false, // TODO: replace whole sale refund with refunded payments
+            'source' => $source,
+            'sell_to_organization' => false,
         ]);
 
         // Create new payment if it exists
         if ($request->has('method_id')) {
-            $method = (new \App\Models\PaymentMethod())->find($request->input("method_id"));
+            $method = (new \App\Models\PaymentMethod)->find($request->input('method_id'));
 
-            $tendered = $method->type == "cash" ? $request->input('tendered') : $total;
+            $tendered = $method->type == 'cash' ? $request->input('tendered') : $total;
 
             $sale->payments()->create([
-                "cashier_id" => $request->user()->id, // TODO: GET THIS FROM AUTH USER,
-                "method_id" => $request["method_id"],
-                "total" => $total,
-                "tendered" => $tendered,
-                "change_due" => $tendered - $total,
-                "reference" => $request->has("reference") ? $request->input("reference") : null,
-                "source" => $source,
-                "refunded" => $request->has("refunded")
+                'cashier_id' => $request->user()->id, // TODO: GET THIS FROM AUTH USER,
+                'method_id' => $request['method_id'],
+                'total' => $total,
+                'tendered' => $tendered,
+                'change_due' => $tendered - $total,
+                'reference' => $request->has('reference') ? $request->input('reference') : null,
+                'source' => $source,
+                'refunded' => $request->has('refunded'),
             ]);
 
             if ($sale->balance <= 0) {
-                $sale->update(["status" => "complete"]);
+                $sale->update(['status' => 'complete']);
             }
         }
 
@@ -164,10 +163,10 @@ class SaleController extends Controller
             foreach ($request->input('tickets') as $sale_ticket) {
                 for ($i = 0; $i < $sale_ticket['quantity']; $i++) {
                     $tickets[] = [
-                        "customer_id" => (int) $request->input("customer_id"),
-                        "type_id" => (int) $sale_ticket["type_id"],
-                        "event_id" => (int) $sale_ticket["event_id"],
-                        "cashier_id" => $request->user()->id,
+                        'customer_id' => (int) $request->input('customer_id'),
+                        'type_id' => (int) $sale_ticket['type_id'],
+                        'event_id' => (int) $sale_ticket['event_id'],
+                        'cashier_id' => $request->user()->id,
                     ];
                 }
             }
@@ -181,7 +180,7 @@ class SaleController extends Controller
         if ($request->has('products')) {
             $products = [];
 
-            foreach ($request->input("products") as $sale_product) {
+            foreach ($request->input('products') as $sale_product) {
                 for ($i = 0; $i < $sale_product['quantity']; $i++) {
                     $products[] = $sale_product['id'];
                 }
@@ -190,14 +189,14 @@ class SaleController extends Controller
         }
 
         // Sale memo
-        if ($request->has("memo")) {
+        if ($request->has('memo')) {
             $sale->memos()->create([
-                "message" => $request->input("memo"),
-                "author_id" => $request->user()->id
+                'message' => $request->input('memo'),
+                'author_id' => $request->user()->id,
             ]);
         }
 
-        return response(["data" => $sale->id, 'tickets' => $tickets], 201);
+        return response(['data' => $sale->id, 'tickets' => $tickets], 201);
     }
 
     /**
@@ -210,7 +209,7 @@ class SaleController extends Controller
             'payments.cashier',
             'products.type',
             'customer', 'creator', 'organization',
-            'memos.author.role'
+            'memos.author.role',
         ]));
     }
 
@@ -236,29 +235,29 @@ class SaleController extends Controller
     public function destroy(Sale $sale, Request $request): Response
     {
         if ($sale->payments()->get() == null || $sale->payments()->count() <= 0) {
-            return response(["message" => "This sale doesn't have any payments."], 422);
+            return response(['message' => "This sale doesn't have any payments."], 422);
         }
 
         if ($sale->refund) {
-            return response(["message" => "This sale has already been refunded."], 422);
+            return response(['message' => 'This sale has already been refunded.'], 422);
         }
 
         // Refunding sale: mark payments as refunded, if tickets then void, if products restore stock
 
-        $sale->update(["refund" => true]);
+        $sale->update(['refund' => true]);
 
-        $sale->payments()->update(["refunded" => true]);
+        $sale->payments()->update(['refunded' => true]);
 
         // Group distinct products, loop through them, add stock back if keep inventory is true
         $products = $sale->products()->where('inventory', true)->distinct()->get();
 
         foreach ($products as $product) {
             $count = $sale->products()->get()->where('id', $product->id)->count();
-            $product->update(["stock" => $product->stock + $count]);
+            $product->update(['stock' => $product->stock + $count]);
         }
 
-        $sale->memos()->create(["message" => "Sale was refunded.", "author_id" => $request->user()->id]);
+        $sale->memos()->create(['message' => 'Sale was refunded.', 'author_id' => $request->user()->id]);
 
-        return response(["data" => $sale->id], 200);
+        return response(['data' => $sale->id], 200);
     }
 }

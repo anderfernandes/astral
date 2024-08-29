@@ -113,8 +113,6 @@ class SaleTest extends TestCase
             'customer_id' => $this->user->id,
         ]);
 
-        dd($response->json());
-
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 }
