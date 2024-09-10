@@ -1,0 +1,124 @@
+<script lang="ts">
+	import { page } from '$app/stores';
+
+	let { children, data } = $props();
+</script>
+
+<main class="flex w-full">
+	<aside class="fixed left-0 top-0 hidden h-screen w-14 flex-col border-r lg:flex">
+		<a href="/cashier" class="flex size-14 items-center justify-center border-b">
+			<div class="size-9 rounded-full bg-background p-1 shadow-sm">
+				<svg
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+					stroke="currentColor"
+					stroke-width="1.5"
+				>
+					<circle cx="12" cy="12" r="5" fill="transparent" />
+					<path
+						stroke="currentColor"
+						fill="transparent"
+						d="M 3.3357286,6.9976809 6.3405211,6.3405212 6.9976805,3.3357289 9.9284869,4.2690082 12,1.9953613 14.071513,4.2690081 17.002319,3.3357286 17.659479,6.3405211 20.664271,6.9976805 19.730992,9.9284869 22.004639,12 l -2.273647,2.071513 0.933279,2.930806 -3.004792,0.65716 L 17.00232,20.664271 14.071513,19.730992 12,22.004639 9.9284871,19.730992 6.9976809,20.664271 6.3405212,17.659479 3.3357289,17.00232 4.2690082,14.071513 1.9953613,12 4.2690081,9.9284871 Z"
+					/>
+				</svg>
+			</div>
+		</a>
+		<a href="/cashier/sales" class="flex size-14 items-center justify-center">
+			<div
+				class="flex size-9 items-center justify-center rounded-full bg-background shadow-sm"
+				class:bg-primary={$page.url.pathname.includes('/cashier/sales')}
+				class:text-primary-foreground={$page.url.pathname.includes('/cashier/sales')}
+			>
+				<svg
+					class="size-5"
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+					<path d="M3 6h18" />
+					<path d="M16 10a4 4 0 0 1-8 0" />
+				</svg>
+			</div>
+		</a>
+		<a href="/cashier/reports" class="flex size-14 items-center justify-center">
+			<div
+				class="flex size-9 items-center justify-center rounded-full bg-background shadow-sm"
+				class:bg-primary={$page.url.pathname.includes('/cashier/reports')}
+				class:text-primary-foreground={$page.url.pathname.includes('/cashier/reports')}
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="size-5"
+					><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+					<path d="M14 2v4a2 2 0 0 0 2 2h4" />
+					<path d="m16 13-3.5 3.5-2-2L8 17" />
+				</svg>
+			</div>
+		</a>
+		<div class="grow"></div>
+		<form method="POST" action="/logout" class="flex size-14 items-center justify-center">
+			<button
+				type="submit"
+				class="flex size-9 items-center justify-center rounded border border-input bg-background p-1 shadow-sm"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="size-5"
+				>
+					<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+					<polyline points="16 17 21 12 16 7" />
+					<line x1="21" x2="9" y1="12" y2="12" />
+				</svg>
+			</button>
+		</form>
+	</aside>
+	<nav
+		class="fixed top-0 flex h-14 w-[calc(100vw-3.5rem)] items-center border-b bg-background/60 px-6 backdrop-blur lg:left-14"
+	>
+		<h1 class="text-xl font-semibold">Cashier</h1>
+		<div class="flex grow items-center justify-end gap-2">
+			<span class="text-sm">{data.account?.firstname}</span>
+			<div class="flex size-9 items-center justify-center rounded-full bg-secondary">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path d="M18 20a6 6 0 0 0-12 0" />
+					<circle cx="12" cy="10" r="4" />
+					<circle cx="12" cy="12" r="10" />
+				</svg>
+			</div>
+		</div>
+	</nav>
+	<section class="mt-14 flex w-full flex-col lg:ml-14 lg:flex-row">
+		{@render children()}
+	</section>
+</main>
