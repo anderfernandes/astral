@@ -13,9 +13,9 @@ class MembershipController extends Controller
 {
     protected array $rules = [
         'primary_id' => ['required', 'integer', 'exists:users,id'], // TODO: MAKE SURE ALL PRIMARY AND SECONDARIES DIFFER
-        'secondaries' => ['array'],
+        'secondaries' => ['nullable', 'array'],
         'type_id' => ['required', 'integer', 'exists:member_types,id'],
-        'tendered' => ['required', 'numeric'],
+        'tendered' => ['nullable', 'numeric'],
         'method_id' => ['required', 'integer', 'exists:payment_methods,id'],
         'start' => ['nullable', 'date'],
     ];
@@ -47,35 +47,56 @@ class MembershipController extends Controller
             return response(['errors' => $validator->errors()], 422);
         }
 
-        $membershipType = (new \App\Models\MembershipType)->firstOrFail($request->input('type_id'));
+        $paymentMethod = (new \App\Models\PaymentMethod)->find($request->input('method_id'));
 
-        $method = (new \App\Models\PaymentMethod)->firstOrFail($request->input('method_id'));
+        if ($paymentMethod == null) {
+            return response(['message' => 'Invalid payment method.'], 422);
+        }
+
+        $membershipType = (new \App\Models\MembershipType)->find($request->input('type_id'));
+
+        if ($membershipType == null) {
+            return response(['message' => 'Invalid membership type.'], 422);
+        }
 
         // TODO: CHECK IF TENDERED IS GREATER THAN MEMBERSHIP COST
 
         // TODO: CHECK IF ALL SECONDARIES EXISTS
 
+        // Calcualte totals
+        $tax_rate = (new \App\Models\Setting)->find(1)->tax / 100;
+        $subtotal = $membershipType->price + count($request->input('secondaries') ?? []) * $membershipType->secondary_price;
+        $tax = round($subtotal * $tax_rate, 2);
+        $total = $subtotal + $tax;
+        $tendered = $paymentMethod->type == 'cash' ? (float) $request->input('tendered') : $total;
+        $change_due = $paymentMethod->type == 'cash' ? $tendered - $total : 0;
+
         // Create sale
 
         $sale = (new \App\Models\Sale)->create([
             'method_id' => $request->input('method_id'),
-            'tendered' => $request->input('tendered'),
+            'subtotal' => $subtotal,
+            'tax' => $tax,
+            'total' => $total,
             'customer_id' => $request->input('primary_id'), // TODO: ADD MEMBERSHIP PRODUCT
             'creator_id' => $request->user()->id,
             'status' => 'complete',
             'source' => 'admin', // TODO: GET SOURCE FROM REQUEST URL
             'taxable' => true,
             'refund' => false,
+            'sell_to_organization' => false,
             'organization_id' => 1,
         ]);
 
         // Add payment
 
         $sale->payments()->create([
-            'tendered' => $request->input('tendered'),
-            'method_id' => $request->input('method_id'),
+            'tendered' => $tendered,
+            'change_due' => $change_due,
             'cashier_id' => $request->user()->id,
             'source' => 'admin',
+            'reference' => $paymentMethod->type === 'cash' ? '' : $request->input('reference'),
+            'method_id' => $paymentMethod->id,
         ]);
 
         // Create membership
@@ -83,7 +104,7 @@ class MembershipController extends Controller
         $start = $request->has('start') ? Carbon::parse($request->input('start')) : Carbon::now();
 
         $membership = (new Membership)->create([
-            'type_id' => $request->input('type_id'),
+            'type_id' => $membershipType->id,
             'creator_id' => $request->user()->id,
             'start' => $start,
             'end' => $start->addDays($membershipType->duration),
@@ -91,11 +112,14 @@ class MembershipController extends Controller
         ]);
 
         // Set membership id on primary
-        (new \App\Models\User)->firstOrFail($request->input('primary_id'))->update(['membership_id' => $membership->id]);
+        (new \App\Models\User)->firstOrFail($request->input('primary_id'))
+            ->update(['membership_id' => $membership->id]);
 
         // Set membership id on secondaries if any
-        if (! is_null($request->input('secondaries'))) {
-            (DB::table('users'))->whereIn('id', $request->input('secondaries'))->update(['membership_id' => $membership->id]);
+        if ($request->has('secondaries')) {
+            (DB::table('users'))
+                ->whereIn('id', $request->input('secondaries'))
+                ->update(['membership_id' => $membership->id]);
         }
 
         return response(['data' => $membership->id], 201);

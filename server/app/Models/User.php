@@ -52,6 +52,13 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+/**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['membership_id'];
+
     /**
      * Returns the role of the user.
      */

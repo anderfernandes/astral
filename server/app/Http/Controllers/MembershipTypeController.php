@@ -27,7 +27,7 @@ class MembershipTypeController extends Controller
     public function index(): Response
     {
         return response([
-            'data' => MembershipType::all(),
+            'data' => (new MembershipType)->where('id', '>', 1)->get(),
         ], 200);
     }
 
@@ -57,6 +57,8 @@ class MembershipTypeController extends Controller
             'duration' => $request->input('duration'),
             'max_secondaries' => $request->input('max_secondaries'),
             'secondary_price' => $request->input('secondary_price'),
+            'is_active' => $request->has('is_active'),
+            'keep_remaining_days' => $request->has('keep_remaining_days'),
         ]);
 
         return response(['data' => $membership_type->id], 201);
@@ -89,13 +91,15 @@ class MembershipTypeController extends Controller
             return response(['errors' => $validator->errors()], 422);
         }
 
-        (new MembershipType)->update([
+        $membershipType->update([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'price' => $request->input('price'),
             'duration' => $request->input('duration'),
             'max_secondaries' => $request->input('max_secondaries'),
             'secondary_price' => $request->input('secondary_price'),
+            'is_active' => $request->has('is_active'),
+            'keep_remaining_days' => $request->has('keep_remaining_days'),
         ]);
 
         return response(['data' => $membershipType->id], 200);

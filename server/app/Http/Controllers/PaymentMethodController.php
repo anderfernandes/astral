@@ -11,9 +11,11 @@ class PaymentMethodController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $payment_methods = (new PaymentMethod())->all();
+        $payment_methods = $request->has('type')
+            ? (new PaymentMethod)->whereIn('type', explode(',', $request->query('type')))->get()
+            : (new PaymentMethod)->all();
 
         return response(['data' => $payment_methods], 200);
     }

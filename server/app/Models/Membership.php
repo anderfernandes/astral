@@ -36,7 +36,7 @@ class Membership extends Model
     /**
      * Relationships that will be loaded by default.
      */
-    protected $with = ['primary', 'secondaries'];
+    protected $with = ['primary', 'secondaries', 'type'];
     
     /**
      * Get the attributes that should be cast.
@@ -54,7 +54,7 @@ class Membership extends Model
      */
     public function type(): BelongsTo
     {
-        return $this->belongsTo(MembershipType::class, 'membership_type_id');
+        return $this->belongsTo(MembershipType::class, 'type_id');
     }
     
     /**

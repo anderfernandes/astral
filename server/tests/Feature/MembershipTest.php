@@ -54,6 +54,7 @@ class MembershipTest extends TestCase
             'type_id' => $membershipType['id'],
             'tendered' => $membershipType['price'],
             'method_id' => $method['id'],
+            'reference' => '1234',
             //'start' => ['nullable', 'date']
         ]);
         
@@ -77,6 +78,7 @@ class MembershipTest extends TestCase
             'type_id' => $membershipType['id'],
             'tendered' => $membershipType['price'],
             'method_id' => $method['id'],
+            'reference' => '1234',
             //'start' => ['nullable', 'date']
         ]);
         
