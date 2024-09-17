@@ -24,10 +24,14 @@ class MembershipTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $membershipTypes = (new MembershipType)->where('id', '>', 1);
+
+        if ($request->has('active')) $membershipTypes = $membershipTypes->where('is_active', true);
+
         return response([
-            'data' => (new MembershipType)->where('id', '>', 1)->get(),
+            'data' => $membershipTypes->get(),
         ], 200);
     }
 

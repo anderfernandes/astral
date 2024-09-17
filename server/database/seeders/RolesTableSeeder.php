@@ -16,9 +16,10 @@ class RolesTableSeeder extends Seeder
     {
         // 1
         DB::table('roles')->insert([
-            'name'        => 'walk-up',
-            'description' => 'Walk-up account.',
-            'type'        => 'walk-up',
+            'name'        => 'Visitor',
+            'description' => 'Visitor accounts.',
+            'type'        => 'individuals',
+            'staff'       => false,
             'created_at'  => now(),
         ]);
         // 2
@@ -62,14 +63,6 @@ class RolesTableSeeder extends Seeder
             'created_at'  => now(),
         ]);
         // 7
-        DB::table('roles')->insert([
-            'name'        => 'Visitor',
-            'description' => 'Visitor accounts.',
-            'type'        => 'individuals',
-            'staff'       => false,
-            'created_at'  => now(),
-        ]);
-        // 8
         DB::table('roles')->insert([
             'name'        => 'Teacher',
             'description' => 'Teacher accounts.',

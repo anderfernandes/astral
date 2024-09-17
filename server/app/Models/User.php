@@ -12,12 +12,13 @@ use Laravel\Sanctum\HasApiTokens;
 
 /**
  * A user.
+ *
  * @mixin \Illuminate\Database\Eloquent\Builder
  * @mixin \Illuminate\Database\Query\Builder
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that aren't mass assignable.
@@ -52,12 +53,12 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-/**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['membership_id'];
+    protected $fillable = ['firstname', 'lastname', 'email', 'address', 'city', 'state', 'zip', 'password', 'role_id', 'membership_id'];
 
     /**
      * Returns the role of the user.

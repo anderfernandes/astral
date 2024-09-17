@@ -91,12 +91,15 @@ class MembershipController extends Controller
         // Add payment
 
         $sale->payments()->create([
+            'cashier_id' => $request->user()->id,
+            'method_id' => $paymentMethod->id,
+            'total' => $total,
             'tendered' => $tendered,
             'change_due' => $change_due,
-            'cashier_id' => $request->user()->id,
+            'reference' => $request->has('reference') ? $request->input('reference') : null,
             'source' => 'admin',
-            'reference' => $paymentMethod->type === 'cash' ? '' : $request->input('reference'),
-            'method_id' => $paymentMethod->id,
+            'refunded' => false,
+
         ]);
 
         // Create membership
@@ -107,13 +110,12 @@ class MembershipController extends Controller
             'type_id' => $membershipType->id,
             'creator_id' => $request->user()->id,
             'start' => $start,
-            'end' => $start->addDays($membershipType->duration),
+            'end' => $start->addDays($membershipType->duration)->endOfDay(),
             'primary_id' => $request->input('primary_id'),
         ]);
 
         // Set membership id on primary
-        (new \App\Models\User)->firstOrFail($request->input('primary_id'))
-            ->update(['membership_id' => $membership->id]);
+        (new \App\Models\User)->find($request->input('primary_id'))->update(['membership_id' => $membership->id]);
 
         // Set membership id on secondaries if any
         if ($request->has('secondaries')) {

@@ -29,7 +29,7 @@ class UserController extends Controller
     public function index(Request $request): Response
     {
         if ($request->query('type') == 'individual') {
-            $individuals = (new User())->where('type', 'individual')->with(['role'])->get();
+            $individuals = (new User)->where('type', 'individual')->with(['role'])->get();
             return response([ 'data' => $individuals ]);
         }
 
@@ -67,7 +67,7 @@ class UserController extends Controller
         $visitor_role = DB::table('roles')->select('id')
             ->where('name', 'like', 'visitor')->first();
 
-        $user = (new User())->create([
+        $user = (new User)->create([
             'firstname' => $request->input('firstname'),
             'lastname' => $request->input('lastname'),
             'email' => $request->input('email'),

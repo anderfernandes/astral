@@ -7,7 +7,7 @@ podman build -t astral:beta .
 ```
 
 ```bash
-podman-compose up
+podman compose up -d 
 ```
 
 ```bash

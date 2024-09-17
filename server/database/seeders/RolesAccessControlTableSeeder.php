@@ -140,23 +140,5 @@ class RolesAccessControlTableSeeder extends Seeder
             'role_id'       => 7,
             'created_at'    => now(config('app.timezone'))->toDateTimeString(),
         ]);
-        // 8
-        DB::table('roles_access_control')->insert([
-            'dashboard'     => null,
-            'shows'         => null,
-            'products'      => null,
-            'calendar'      => null,
-            'sales'         => null,
-            'reports'       => null,
-            'members'       => null,
-            'users'         => null,
-            'organizations' => null,
-            'bulletin'      => null,
-            'settings'      => null,
-            'admin'         => false,
-            'cashier'       => false,
-            'role_id'       => 8,
-            'created_at'    => now(config('app.timezone'))->toDateTimeString(),
-        ]);
     }
 }
