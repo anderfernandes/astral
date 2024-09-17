@@ -1,13 +1,24 @@
 <script>
+	import { enhance } from '$app/forms';
 	import { AButton, ACheckbox, AInput, ASelect } from 'ui';
+
+	let { form } = $props();
 </script>
+
+<svelte:head>
+	<title>New User | Astral</title>
+</svelte:head>
 
 <section class="flex flex-col gap-6 lg:mx-60">
 	<div class="flex items-center">
 		<h2 class="grow text-3xl font-bold tracking-tight">New User</h2>
 	</div>
+	{#if form?.message}
+		<p class="text-sm text-red-500">{form.message}</p>
+	{/if}
 </section>
-<form method="POST" class="grid gap-4 lg:mx-60">
+
+<form method="POST" class="grid gap-4 lg:mx-60" use:enhance>
 	<div class="grid gap-4 lg:grid-cols-2">
 		<AInput
 			name="firstname"

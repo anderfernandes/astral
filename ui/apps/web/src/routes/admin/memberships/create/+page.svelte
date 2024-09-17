@@ -172,7 +172,7 @@
 		</div>
 		<div class="flex justify-end gap-3">
 			<AButton text="Reset" type="reset" variant="secondary" />
-			<AButton text="Save" />
+			<AButton text="Save" disabled={tendered < total} />
 		</div>
 	</form>
 </section>

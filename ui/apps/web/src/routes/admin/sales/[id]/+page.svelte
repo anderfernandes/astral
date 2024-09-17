@@ -464,7 +464,7 @@
 					</td>
 					<td
 						class="hidden p-2 align-middle md:table-cell [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
-						>$250.00
+						>{payment.cashier.firstname}
 					</td>
 				</tr>
 			{/each}

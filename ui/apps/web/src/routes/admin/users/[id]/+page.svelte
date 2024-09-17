@@ -49,6 +49,7 @@
 			{data.user.state}
 			{data.user.zip}
 		</p>
+		<span>{data.user.membership_id}</span>
 	</div>
 	<AButton text="Edit" href={`/admin/users/${data.user.id}/edit`} />
 </section>
