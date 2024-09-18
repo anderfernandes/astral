@@ -24,7 +24,7 @@
 <section class="flex w-full flex-col gap-6">
 	<div>
 		<div class="flex items-center gap-3">
-			<a href="/admin/sales">
+			<a href="/admin/sales" aria-label="sales">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="24"
@@ -35,8 +35,11 @@
 					stroke-width="2"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					class="size-5"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg
+					class="size-5"
 				>
+					<path d="m12 19-7-7 7-7" />
+					<path d="M19 12H5" />
+				</svg>
 			</a>
 			<h1 class="text-lg font-semibold md:text-2xl">Sale #{data.sale.id}</h1>
 		</div>
