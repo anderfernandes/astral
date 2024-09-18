@@ -6,7 +6,11 @@
 
 <main class="flex w-full">
 	<aside class="fixed left-0 top-0 hidden h-screen w-14 flex-col border-r lg:flex">
-		<a href="/cashier" class="flex size-14 items-center justify-center border-b">
+		<a
+			href="/cashier"
+			aria-label="cashier"
+			class="flex size-14 items-center justify-center border-b"
+		>
 			<div class="size-9 rounded-full bg-background p-1 shadow-sm">
 				<svg
 					viewBox="0 0 24 24"
@@ -23,7 +27,7 @@
 				</svg>
 			</div>
 		</a>
-		<a href="/cashier/sales" class="flex size-14 items-center justify-center">
+		<a href="/cashier/sales" aria-label="sales" class="flex size-14 items-center justify-center">
 			<div
 				class="flex size-9 items-center justify-center rounded-full bg-background shadow-sm"
 				class:bg-primary={$page.url.pathname.includes('/cashier/sales')}
@@ -47,7 +51,11 @@
 				</svg>
 			</div>
 		</a>
-		<a href="/cashier/reports" class="flex size-14 items-center justify-center">
+		<a
+			href="/cashier/reports"
+			aria-label="reports"
+			class="flex size-14 items-center justify-center"
+		>
 			<div
 				class="flex size-9 items-center justify-center rounded-full bg-background shadow-sm"
 				class:bg-primary={$page.url.pathname.includes('/cashier/reports')}
@@ -74,6 +82,7 @@
 		<form method="POST" action="/logout" class="flex size-14 items-center justify-center">
 			<button
 				type="submit"
+				aria-label="logout"
 				class="flex size-9 items-center justify-center rounded border border-input bg-background p-1 shadow-sm"
 			>
 				<svg

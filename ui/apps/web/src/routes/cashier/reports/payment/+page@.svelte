@@ -3,12 +3,12 @@
 </script>
 
 <svelte:head>
-	<title>Payment Report | {data.organization.name} &middot; Astral</title>
+	<title>Payment Report | {data.settings.organization.name} &middot; Astral</title>
 </svelte:head>
 
 <section class="p-6 text-sm">
 	<h5 class="text-center font-medium">Payment Report</h5>
-	<h5 class="text-center font-medium">{data.organization.name}</h5>
+	<h5 class="text-center font-medium">{data.settings.organization.name}</h5>
 	<br />
 	<p>
 		Run: {Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(

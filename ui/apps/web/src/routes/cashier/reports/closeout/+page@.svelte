@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-	<title>Closeout Report | {data.organization.name} &middot; Astral</title>
+	<title>Closeout Report | {data.settings.organization.name} &middot; Astral</title>
 </svelte:head>
 
 <section class="flex w-96 flex-col p-6 text-xs">

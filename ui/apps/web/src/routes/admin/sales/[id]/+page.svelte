@@ -505,7 +505,7 @@
 	{#each data.sale.memos as memo}
 		{@const created_at = new Date(memo.created_at)}
 		<div
-			class="flex flex-col items-start gap-2 rounded-lg py-2 text-left text-sm transition-all hover:bg-accent"
+			class="flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent"
 		>
 			<div class="flex w-full flex-col gap-1">
 				<div class="flex items-center">
@@ -524,7 +524,6 @@
 			<div class="line-clamp-2 text-xs text-muted-foreground">
 				{memo.message}
 			</div>
-			<hr />
 		</div>
 	{:else}
 		<span class="text-sm w-full text-center">No memos on this sale.</span>
