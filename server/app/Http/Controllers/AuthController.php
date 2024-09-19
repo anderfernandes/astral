@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +14,6 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     /** Registers a new user.
-     * @param  Request  $request
-     * @return Response
      */
     public function register(Request $request): Response
     {
@@ -31,7 +27,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response([
                 'message' => 'Invalid form data',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -47,8 +43,8 @@ class AuthController extends Controller
             'firstname' => $request->input('firstname'),
             'lastname' => $request->input('lastname'),
             'email' => $request->input('email'),
-            'password' => Hash::make($request->input("password")),
-            'role_id' => $visitor_role->id
+            'password' => Hash::make($request->input('password')),
+            'role_id' => $visitor_role->id,
         ]);
 
         $user->sendEmailVerificationNotification();
@@ -66,18 +62,18 @@ class AuthController extends Controller
 
         $validator = Validator::make($credentials, [
             'email' => ['required', 'min:2', 'max:64'],
-            'password' => ['required']
+            'password' => ['required'],
         ]);
 
         if ($validator->fails()) {
             return response([
-                'message' => 'Invalid credentials.'
+                'message' => 'Invalid credentials.',
             ], 422);
         }
 
         // TODO: remember password
 
-        if (!Auth::attempt($credentials)) {
+        if (! Auth::attempt($credentials)) {
             return response()->noContent(401);
         }
 
@@ -91,7 +87,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request): Response
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return response()->noContent(422);
         }
 
@@ -106,7 +102,7 @@ class AuthController extends Controller
     public function forgot(Request $request): Response
     {
         $validator = Validator::make($request->only(['email']), [
-            'email' => ['required', 'email']
+            'email' => ['required', 'email'],
         ]);
 
         if ($validator->fails()) {
@@ -116,21 +112,47 @@ class AuthController extends Controller
         $status = Password::sendResetLink($request->only('email'));
 
         return response([
-            'status' => $status, 'a' => config('trustedproxy.proxies'), 'b' => $request->isFromTrustedProxy()
+            'status' => $status,
+            'a' => config('trustedproxy.proxies'),
+            'b' => $request->isFromTrustedProxy(),
         ], $status === Password::RESET_LINK_SENT ? 200 : 404);
     }
 
     /**
      * Verifies a user account.
-     * TODO: verify hash and activate account
+     * If never verified, will return 200.
      */
-    public function verify(string $id, string $hash): Response
+    public function verify(Request $request): Response
     {
-        //$user =  (new \App\Models\User())->find($id);
+        $token = $request->query('token');
+
+        if (! $request->has('token') || $token == null) {
+            return response()->noContent(400);
+        }
+
+        $emails = DB::table('users')
+            ->where('email_verified_at', null)
+            ->pluck('email');
+
+        foreach ($emails as $email) {
+            if (sha1($email) == $token) {
+                $user = (new \App\Models\User)->firstWhere('email', $email);
+
+                if ($user->email_verified_at != null) {
+                    return response()->noContent(400);
+                }
+
+                $user->update(['email_verified_at' => \Illuminate\Support\Facades\Date::now()]);
+
+                return response()->noContent(200);
+            }
+        }
+
+        //$user = (new \App\Models\User())->find($id);
 
         //$user->markEmailAsVerified();
 
-        return response()->noContent(302);
+        return response()->noContent(400);
     }
 
     /**
@@ -146,6 +168,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             $errors = $validator->errors();
+
             return response()->noContent(422);
         }
 
@@ -153,7 +176,7 @@ class AuthController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
                 $user->forceFill([
-                    'password' => Hash::make($password)
+                    'password' => Hash::make($password),
                 ])->setRememberToken(\Illuminate\Support\Str::random(60));
 
                 $user->save();

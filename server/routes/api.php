@@ -3,7 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Auth\Middleware\Authenticate;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +14,7 @@ Route::get('/settings', [SettingController::class, 'index']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/forgot', [AuthController::class, 'forgot']);
-Route::get('/verify/{id}/{hash}', [AuthController::class, 'verify']);
+Route::get('/verify', [AuthController::class, 'verify']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.update');
 Route::apiResource('/events', \App\Http\Controllers\EventController::class);
 Route::apiResource('/sales', \App\Http\Controllers\SaleController::class);
