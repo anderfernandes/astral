@@ -3,56 +3,25 @@
 	import { AButton, AInput } from 'ui';
 
 	let { data } = $props();
-	const { version } = data;
+	const { version, settings } = data;
+	const { organization } = settings;
 </script>
 
 <svelte:head>
-	<title>Register | {data.settings.organization.name} &middot; Astral</title>
+	<title>Reset Password | {organization.name} &middot; Astral</title>
 </svelte:head>
 
 <main class="grid h-screen grid-cols-2">
 	<section class="hidden bg-[url('/storage/cover.jpg')] bg-cover bg-center p-6 text-white lg:block">
-		<h1 class="relative z-20 flex items-center text-lg font-medium">
-			{data.settings.organization.name}
-		</h1>
+		<h1 class="relative z-20 flex items-center text-lg font-medium">{organization.name}</h1>
 	</section>
-	<section class="flex w-screen flex-col items-center justify-center gap-3 py-12 lg:w-full">
+	<section class="flex w-screen flex-col items-center justify-center gap-3 lg:w-full">
 		<article class="grid gap-3">
-			<h1 class="text-3xl font-bold">Register</h1>
-			<p class="text-balance text-muted-foreground">Fill out the form below to create an account</p>
+			<h1 class="text-3xl font-bold">Reset Password</h1>
+			<p class="text-balance text-muted-foreground">
+				Fill out the form below to recover your account
+			</p>
 			<form class="grid gap-6" method="POST" use:enhance>
-				<AInput
-					name="firstname"
-					type="text"
-					required
-					label="First Name"
-					placeholder="First Name"
-					hint="Your first name."
-				/>
-				<AInput
-					name="lastname"
-					type="text"
-					required
-					label="Last Name"
-					placeholder="Last Name"
-					hint="Your last name."
-				/>
-				<AInput
-					name="email"
-					type="email"
-					required
-					label="Email"
-					placeholder="Email"
-					hint="An email for your account."
-				/>
-				<AInput
-					name="email_confirmation"
-					type="email"
-					required
-					label="Email Confirmation"
-					placeholder="Confirm Email"
-					hint="Type your email again."
-				/>
 				<AInput
 					name="password"
 					type="password"
@@ -69,7 +38,7 @@
 					placeholder="Password"
 					hint="Type your password again."
 				/>
-				<AButton text="Submit" />
+				<AButton type="submit" text="Submit" />
 			</form>
 			<div class="mt-4 text-center text-sm">
 				<a class="underline" href="/login">I already have an account.</a>

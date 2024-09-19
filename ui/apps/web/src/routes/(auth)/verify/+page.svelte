@@ -17,24 +17,11 @@
 	</section>
 	<section class="flex w-screen flex-col items-center justify-center gap-3 lg:w-full">
 		<article class="grid gap-3">
-			<h1 class="text-3xl font-bold">Account Recovery</h1>
-			<p class="text-balance text-muted-foreground">
-				Fill out the form below to recover your account
+			<h1 class="text-center text-3xl font-bold">Account Verification</h1>
+			<p class="text-balance text-center text-muted-foreground">
+				Your account has been verified. Please log in.
 			</p>
-			<form class="grid gap-6" method="POST" use:enhance>
-				<AInput
-					name="email"
-					type="email"
-					required
-					label="Email"
-					placeholder="Email"
-					hint="An email for your account."
-				/>
-				<AButton type="submit" text="Submit" />
-			</form>
-			<div class="mt-4 text-center text-sm">
-				<a class="underline" href="/login">I already have an account.</a>
-			</div>
+			<AButton href="/login" text="Login" />
 			<div role="none" class="my-4 h-[1px] w-full shrink-0 bg-border"></div>
 			<div class="mt-4 text-center text-sm">
 				<div
