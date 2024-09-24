@@ -9,7 +9,7 @@ export const actions = {
 			body: data
 		});
 
-		if (req.status === 200) redirect(302, '/login');
+		if (req.status === 201) redirect(302, '/login');
 		else if (req.status === 422) {
 			await req.json();
 		} else {

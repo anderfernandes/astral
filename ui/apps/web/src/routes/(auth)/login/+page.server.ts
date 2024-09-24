@@ -21,19 +21,19 @@ export const actions = {
 			body: await request.formData()
 		});
 
-		//console.log(req.status, req.headers);
+		console.log(req.status);
 
 		if (req.status > 299) {
-			const res: IResponseWithValidationErrors = await req.json();
+			//const res: IResponseWithValidationErrors = await req.json();
 
-			console.log(req.status, res);
+			//console.log(req.status, res);
 
-			return fail(req.status, res);
+			return fail(req.status, { message: 'Invalid credentials.' });
 		}
 
 		const { token, path } = (await req.json()) as { token: string; path: string };
 
-		console.log(token, path);
+		//console.log(token, path);
 
 		cookies.set('astral_token', token, {
 			secure: NODE_ENV === 'production',

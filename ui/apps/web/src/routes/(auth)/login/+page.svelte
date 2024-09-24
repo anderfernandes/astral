@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { AButton, ACheckbox, AInput } from 'ui';
 
-	let { data } = $props();
+	let { data, form } = $props();
 </script>
 
 <svelte:head>
@@ -37,7 +38,10 @@
 				Enter your email below to login to your account.
 			</p>
 			<br />
-			<form class="grid gap-6" method="POST">
+			{#if form?.message}
+				<p class="mb-3 text-center text-sm text-red-500">{form.message}</p>
+			{/if}
+			<form class="grid gap-6" method="POST" use:enhance>
 				<AInput
 					name="email"
 					type="text"

@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { payment }: { payment: { total: number; sale_id: number } } = $props();
+	let { payment }: { payment: IPayment } = $props();
 </script>
 
 <div class="flex items-center">

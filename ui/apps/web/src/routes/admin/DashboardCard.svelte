@@ -31,6 +31,6 @@
 				? Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
 				: amount}
 		</div>
-		<p class="text-xs text-muted-foreground">+20.1% from last month</p>
+		<!-- <p class="text-xs text-muted-foreground">+20.1% from last month</p> -->
 	</div>
 </div>

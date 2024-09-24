@@ -2,23 +2,32 @@
 	import { AButton } from 'ui';
 
 	let { data } = $props();
+	let { account } = data;
 </script>
 
 <svelte:head>
-	<title>{data.user.firstname} {data.user.lastname} Details &middot; Astral Admin</title>
+	<title>{account?.firstname} {account?.lastname}'s Account &middot; Astral</title>
 </svelte:head>
 
-<section class="flex items-center gap-6">
-	<div class="flex grow flex-col gap-1">
+<section class="flex items-center gap-6 p-6">
+	<div class="flex grow flex-col gap-3">
 		<h3 class="flex items-center gap-1 text-lg font-medium">
-			{data.user.firstname}
-			{data.user.lastname}
+			<a href="/" aria-label="Back to Home">
+				<svg class="size-5" viewBox="0 0 24 24">
+					<path
+						fill="currentColor"
+						d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"
+					/>
+				</svg>
+			</a>
+			{account?.firstname}
+			{account?.lastname}
 			<div
 				class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
 			>
-				{data.user.role.name}
+				{account?.role.name}
 			</div>
-			{#if data.user.role.staff}
+			{#if account?.role.staff}
 				<div
 					class="inline-flex items-center rounded-md border border-transparent bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
 				>
@@ -44,12 +53,16 @@
 					d="M18 22v-3"
 				/><circle cx="10" cy="10" r="3" /></svg
 			>
-			{data.user.address}
-			{data.user.city},
-			{data.user.state}
-			{data.user.zip}
+			{account?.address}
+			{account?.city},
+			{account?.state}
+			{account?.zip}
 		</p>
-		<!-- <span>{data.user.membership_id}</span> -->
+		<!-- <span>{account?.membership_id}</span> -->
+		<div class="flex justify-end">
+			{#if account?.role.staff}
+				<AButton text="Admin" href={`/admin`} />
+			{/if}
+		</div>
 	</div>
-	<AButton text="Edit" href={`/admin/users/${data.user.id}/edit`} />
 </section>

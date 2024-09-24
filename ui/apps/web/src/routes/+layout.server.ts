@@ -8,7 +8,7 @@ export const load = async ({ fetch, cookies }) => {
 
 	const token = cookies.get('astral_token');
 
-	if (!token || token.length === 0) return { settings };
+	if (!token || token.length === 0) return { settings, version: npm_package_version };
 
 	req = await fetch('/user', {
 		headers: { Authorization: 'Bearer ' + token }

@@ -40,14 +40,16 @@
 					Login
 				</a>
 			{:else}
-				<button
+				<a
+					href="/account"
 					class="inline-flex h-9 w-9 items-center justify-center whitespace-nowrap rounded-full bg-secondary text-sm font-medium text-secondary-foreground shadow-sm transition-colors hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
 					type="button"
 					id="radix-:R1db9uuuuu6ja:"
 					aria-haspopup="menu"
 					aria-expanded="false"
 					data-state="closed"
-					><svg
+				>
+					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"
 						height="24"
@@ -58,11 +60,12 @@
 						stroke-linecap="round"
 						stroke-linejoin="round"
 						class="lucide lucide-circle-user h-5 w-5"
-						><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="10" r="3"></circle><path
-							d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"
-						></path></svg
-					><span class="sr-only">Toggle user menu</span></button
-				>
+					>
+						<circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="10" r="3" />
+						<path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+					</svg>
+					<span class="sr-only">Toggle user menu</span>
+				</a>
 			{/if}
 		</div>
 	</div>
