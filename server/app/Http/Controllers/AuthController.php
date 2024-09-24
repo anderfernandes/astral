@@ -73,7 +73,7 @@ class AuthController extends Controller
 
         // TODO: remember password
 
-        if (! Auth::attempt($credentials)) {
+        if (!Auth::attempt($credentials)) {
             return response()->noContent(401);
         }
 
