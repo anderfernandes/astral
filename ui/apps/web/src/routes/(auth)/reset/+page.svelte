@@ -17,9 +17,9 @@
 	</section>
 	<section class="flex w-screen flex-col items-center justify-center gap-3 lg:w-full">
 		<article class="grid gap-3">
-			<h1 class="text-3xl font-bold">Reset Password</h1>
-			<p class="text-balance text-muted-foreground">
-				Fill out the form below to recover your account
+			<h1 class="text-center text-3xl font-bold">Reset Password</h1>
+			<p class="text-balance text-center text-muted-foreground">
+				Set a new password, different from your last five.
 			</p>
 			<form class="grid gap-6" method="POST" use:enhance>
 				<AInput
