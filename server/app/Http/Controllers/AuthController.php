@@ -111,11 +111,7 @@ class AuthController extends Controller
 
         $status = Password::sendResetLink($request->only('email'));
 
-        return response([
-            'status' => $status,
-            'a' => config('trustedproxy.proxies'),
-            'b' => $request->isFromTrustedProxy(),
-        ], $status === Password::RESET_LINK_SENT ? 200 : 404);
+        return response()->noContent($status === Password::RESET_LINK_SENT ? 200 : 404);
     }
 
     /**
@@ -158,11 +154,11 @@ class AuthController extends Controller
     /**
      * Resets a user's password.
      */
-    public function forgotPassword(Request $request): Response
+    public function reset(Request $request): Response
     {
         $validator = Validator::make($request->only('email', 'password', 'password_confirmation', 'token'), [
             'token' => ['required'],
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', 'exists:users,email'],
             'password' => ['required', 'min:8', 'confirmed'],
         ]);
 

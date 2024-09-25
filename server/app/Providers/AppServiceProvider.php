@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
             return (new MailMessage)
                 ->subject("Reset your $organization password")
                 ->line('You are receiving this email because we received a password reset request for your account.')
-                ->action('Reset Password', env('APP_URL').'/reset?token='.$url)
+                ->action('Reset Password', env('APP_URL').'/reset?token='.$url.'&email='.$notifiable->getEmailForPasswordReset())
                 ->line('This password reset link will expire in 1 hour.')
                 ->line('If you did not request a password reset, no further action is required');
         });

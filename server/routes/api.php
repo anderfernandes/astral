@@ -15,7 +15,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/forgot', [AuthController::class, 'forgot']);
 Route::get('/verify', [AuthController::class, 'verify']);
-Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.update');
+Route::post('/reset', [AuthController::class, 'reset'])->name('password.update');
 Route::apiResource('/events', \App\Http\Controllers\EventController::class);
 Route::apiResource('/sales', \App\Http\Controllers\SaleController::class);
 Route::apiResource('/products', \App\Http\Controllers\ProductController::class)->only(['index', 'show']);
