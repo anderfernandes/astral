@@ -74,7 +74,7 @@
 	</button>
 	<input type="hidden" value={value?.toISOString()} {name} />
 	{#if hint}
-		<span id=":r1m1:-form-item-description" class="text-[0.8rem] text-muted-foreground">
+		<span id=":r1m1:-form-item-description" class="text-sm text-muted-foreground">
 			{hint}
 		</span>
 	{/if}

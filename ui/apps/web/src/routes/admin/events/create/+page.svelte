@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+
 	// TODO: GET SEATS FROM SETTINGS
 
 	import { addHours } from 'date-fns';
@@ -15,13 +17,8 @@
 	<title>New Event &middot; Astral</title>
 </svelte:head>
 
-<section class="space-y-6 p-6 lg:mx-60 2xl:mx-96">
-	<div class="space-y-1">
-		<h2 class="text-2xl font-semibold tracking-tight">New Event</h2>
-		<p class="text-sm text-muted-foreground">Fill out the form below to create a new event.</p>
-	</div>
-
-	<hr />
+<section class="grid gap-6">
+	<h2 class="text-2xl font-semibold tracking-tight">New Event</h2>
 
 	{#if form?.errors}
 		<AAlert type="error" title="Please fix the following errors.">
@@ -31,33 +28,35 @@
 		</AAlert>
 	{/if}
 
-	<form class="space-y-8" method="POST">
+	<form class="space-y-8" method="POST" use:enhance>
 		<!-- <ACheckbox
 			label="All Day"
 			name="0[is_all_day]"
 			hint="Check if this is an all day event."
 			disabled
 		/> -->
-		<ASelect
-			name="0[type_id]"
-			label="Type"
-			hint="The type of event."
-			options={event_types}
-			required
-		/>
 		<ACheckbox
 			label="Public"
 			name="0[is_public]"
 			hint="Check if this event is available for the general public to attend."
 			checked
 		/>
-		<ASelect
-			name="0[show_id]"
-			label="Show"
-			hint="The show attendees will be seeing in this event."
-			options={shows}
-			required
-		/>
+		<div class="grid gap-3 lg:grid-cols-2">
+			<ASelect
+				name="0[type_id]"
+				label="Type"
+				hint="The type of event."
+				options={event_types}
+				required
+			/>
+			<ASelect
+				name="0[show_id]"
+				label="Show"
+				hint="The show attendees will be seeing in this event."
+				options={shows}
+				required
+			/>
+		</div>
 		<div class="grid gap-3 lg:grid-cols-2">
 			<ADateTimePicker
 				name="0[start]"

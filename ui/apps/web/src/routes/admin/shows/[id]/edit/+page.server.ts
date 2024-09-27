@@ -3,6 +3,7 @@ import { fail, redirect } from '@sveltejs/kit';
 export const actions = {
 	default: async ({ request, fetch, params }) => {
 		const data = await request.formData();
+		data.append('_method', 'PUT');
 		console.log(data);
 
 		const req = await fetch(`/shows/${params.id}`, {
@@ -15,7 +16,7 @@ export const actions = {
 			console.log(req.status, errors);
 
 			return fail(req.status, {
-				message: 'An error has occurred.',
+				message: 'Please fix the errors shown.',
 				errors
 			});
 		}

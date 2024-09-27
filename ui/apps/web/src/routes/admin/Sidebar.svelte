@@ -11,8 +11,8 @@
 	let { account, version }: ISidebarProps = $props();
 </script>
 
-<aside class="hidden w-full border-r lg:flex lg:w-72 lg:flex-col">
-	<div class="group flex h-full flex-col gap-4 p-2">
+<aside class="fixed mt-16 hidden h-[calc(100vh-66px)] w-[288px] lg:flex lg:w-72 lg:flex-col">
+	<div class="group mb-3 flex h-full flex-col gap-4 p-2">
 		<nav
 			class="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2"
 		>

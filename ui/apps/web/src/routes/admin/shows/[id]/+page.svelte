@@ -6,10 +6,10 @@
 </script>
 
 <svelte:head>
-	<title>Show Details - {show.name} ({show.type?.name})</title>
+	<title>Show Details {show.name} ({show.type?.name}) &middot; Astral</title>
 </svelte:head>
 
-<section class="mt-16 space-y-6 p-6 lg:mx-96">
+<article class="grid gap-6">
 	<div class="flex w-full justify-end">
 		<AButton text="Edit" href={`/admin/shows/${show.id}/edit`} />
 	</div>
@@ -53,4 +53,4 @@
 			{show.description}
 		</p>
 	</div>
-</section>
+</article>

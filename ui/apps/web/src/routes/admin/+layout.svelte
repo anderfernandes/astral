@@ -6,12 +6,14 @@
 	let { account, settings } = data;
 </script>
 
-<div class="h-full overflow-hidden rounded-[0.5rem] bg-background lg:border">
-	<Navbar />
-	<section class="flex h-full pt-16">
+<div class="flex h-screen w-full justify-center">
+	<section class="flex h-screen w-full xl:w-[1080px]">
+		<Navbar />
 		<Sidebar {account} version={settings.version} />
-		<div class="h-[calc(100vh-4rem)] w-full flex-1 space-y-4 overflow-y-auto p-6">
+		<div class="w-full p-6 lg:ml-[288px]">
+			<br /><br />
 			{@render children()}
+			<br />
 		</div>
 	</section>
 </div>

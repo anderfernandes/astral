@@ -8,12 +8,13 @@
 	<title>Shows - Astral Admin</title>
 </svelte:head>
 
-<div class="flex items-center justify-between space-y-2">
-	<div class="flex flex-col space-y-1.5 py-6">
-		<h2 class="text-3xl font-bold tracking-tight">Shows</h2>
-	</div>
-	<div class="flex items-center space-x-2">
-		<!-- <div class="grid gap-2">
+<article class="grid">
+	<div class="flex items-center justify-between space-y-2">
+		<div class="flex flex-col space-y-1.5 py-6">
+			<h2 class="text-3xl font-bold tracking-tight">Shows</h2>
+		</div>
+		<div class="flex items-center space-x-2">
+			<!-- <div class="grid gap-2">
 			<button
 				class="inline-flex h-9 w-[260px] items-center justify-start whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-left text-sm font-normal shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
 				id="date"
@@ -38,32 +39,33 @@
 				>Jan 20, 2023 - Feb 09, 2023</button
 			>
 		</div> -->
-		<AButton text="New Show" href="/admin/shows/create" />
+			<AButton text="New Show" href="/admin/shows/create" />
+		</div>
 	</div>
-</div>
 
-<div class="flex space-x-4">
-	{#each data.shows as show}
-		<a href={`/admin/shows/${show.id}`} class="w-[150px] space-y-3">
-			<span data-state="closed"
-				><div class="overflow-hidden rounded-md">
-					<img
-						alt={show.name}
-						loading="lazy"
-						width="150"
-						height="150"
-						decoding="async"
-						data-nimg="1"
-						class="aspect-square h-auto w-auto object-cover transition-all hover:scale-105"
-						style="color: transparent;"
-						src={show.cover}
-					/>
-				</div></span
-			>
-			<div class="space-y-1 text-sm">
-				<h3 class="truncate font-medium leading-none">{show.name}</h3>
-				<p class="text-xs text-muted-foreground">{show.type?.name}</p>
-			</div>
-		</a>
-	{/each}
-</div>
+	<div class="grid grid-cols-2 gap-3 lg:flex lg:space-x-4">
+		{#each data.shows as show}
+			<a href={`/admin/shows/${show.id}`} class="w-full space-y-3 lg:w-[150px]">
+				<span data-state="closed"
+					><div class="overflow-hidden rounded-md">
+						<img
+							alt={show.name}
+							loading="lazy"
+							width="150"
+							height="150"
+							decoding="async"
+							data-nimg="1"
+							class="aspect-square h-auto w-auto object-cover transition-all hover:scale-105"
+							style="color: transparent;"
+							src={show.cover}
+						/>
+					</div></span
+				>
+				<div class="space-y-1 text-sm">
+					<h3 class="truncate font-medium leading-none">{show.name}</h3>
+					<p class="text-xs text-muted-foreground">{show.type?.name}</p>
+				</div>
+			</a>
+		{/each}
+	</div>
+</article>

@@ -56,6 +56,7 @@
 			onclick={() => {
 				open = !open;
 			}}
+			aria-label="date"
 			class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-[6px] border border-input bg-background p-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
 		>
 			<svg
@@ -105,6 +106,7 @@
 			</div>
 		{/if}
 		<a
+			aria-label="previous"
 			href={`/admin/calendar?view=${data.view}&start=${data.previous.start}&end=${data.previous.end}`}
 			class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary p-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
 		>
@@ -123,6 +125,7 @@
 			</svg>
 		</a>
 		<a
+			aria-label="today"
 			href="/admin/calendar"
 			class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary p-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
 		>
@@ -147,6 +150,7 @@
 			</svg>
 		</a>
 		<a
+			aria-label="next"
 			href={`/admin/calendar?view=${data.view}&start=${data.next.start}&end=${data.next.end}`}
 			class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary p-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
 		>
@@ -167,5 +171,5 @@
 		<AButton text="New Event" href="/admin/events/create" />
 	</div>
 </div>
-
+<br />
 <Calendar data={data.events} />

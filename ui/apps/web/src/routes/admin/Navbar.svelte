@@ -199,59 +199,58 @@
 					Settings
 				</SidebarItem>
 			</div>
-			<form action="/logout" class="grid" method="POST">
+			<form action="/logout" class="flex justify-end" method="POST">
 				<AButton text="Logout" type="submit" />
 			</form>
 		</div>
 	</div>
 {/if}
 
-<div
-	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+<header
+	class="fixed top-0 flex w-full flex-col bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:w-[1080px]"
 >
-	<div class="border-b">
-		<div class="flex h-16 items-center px-4">
-			<div
-				class="inline-flex h-9 w-[200px] items-center whitespace-nowrap rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+	<div class="flex h-16 items-center px-4">
+		<div
+			class="inline-flex h-9 items-center whitespace-nowrap px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+		>
+			<svg
+				onclick={toggle}
+				onkeypress={toggle}
+				role="button"
+				tabindex="0"
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="-ml-2 mr-4 block lg:hidden"
 			>
+				<line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line
+					x1="4"
+					x2="20"
+					y1="18"
+					y2="18"
+				/>
+			</svg>
+			<span class="relative -ml-2 mr-2 flex size-8 shrink-0 overflow-hidden">
 				<svg
-					onclick={toggle}
-					onkeypress={toggle}
-					role="button"
-					tabindex="0"
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
 					viewBox="0 0 24 24"
-					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
 					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="-ml-2 mr-4 block lg:hidden"
+					stroke-width="1.75"
 				>
-					<line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line
-						x1="4"
-						x2="20"
-						y1="18"
-						y2="18"
+					<circle cx="12" cy="12" r="4.5" fill="transparent" />
+					<path
+						stroke="currentColor"
+						fill="transparent"
+						d="M 3.3357286,6.9976809 6.3405211,6.3405212 6.9976805,3.3357289 9.9284869,4.2690082 12,1.9953613 14.071513,4.2690081 17.002319,3.3357286 17.659479,6.3405211 20.664271,6.9976805 19.730992,9.9284869 22.004639,12 l -2.273647,2.071513 0.933279,2.930806 -3.004792,0.65716 L 17.00232,20.664271 14.071513,19.730992 12,22.004639 9.9284871,19.730992 6.9976809,20.664271 6.3405212,17.659479 3.3357289,17.00232 4.2690082,14.071513 1.9953613,12 4.2690081,9.9284871 Z"
 					/>
 				</svg>
-				<span class="relative -ml-2 mr-2 flex size-8 shrink-0 overflow-hidden">
-					<svg
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-						stroke="currentColor"
-						stroke-width="1.75"
-					>
-						<circle cx="12" cy="12" r="4.5" fill="transparent" />
-						<path
-							stroke="currentColor"
-							fill="transparent"
-							d="M 3.3357286,6.9976809 6.3405211,6.3405212 6.9976805,3.3357289 9.9284869,4.2690082 12,1.9953613 14.071513,4.2690081 17.002319,3.3357286 17.659479,6.3405211 20.664271,6.9976805 19.730992,9.9284869 22.004639,12 l -2.273647,2.071513 0.933279,2.930806 -3.004792,0.65716 L 17.00232,20.664271 14.071513,19.730992 12,22.004639 9.9284871,19.730992 6.9976809,20.664271 6.3405212,17.659479 3.3357289,17.00232 4.2690082,14.071513 1.9953613,12 4.2690081,9.9284871 Z"
-						/>
-					</svg>
-					<!-- <svg
+				<!-- <svg
 						version="1.1"
 						xmlns="http://www.w3.org/2000/svg"
 						xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -277,11 +276,11 @@
 							></g
 						>
 					</svg> -->
-				</span>
-				<h1 class="text-xl font-bold">Astral</h1>
-			</div>
-			<nav class="mx-6 flex items-center space-x-4 lg:space-x-6">
-				<!-- <a
+			</span>
+			<h1 class="text-xl font-bold">Astral</h1>
+		</div>
+		<nav class="mx-6 flex items-center space-x-4 lg:space-x-6">
+			<!-- <a
                     class="text-sm font-medium transition-colors hover:text-primary"
                     href="/examples/dashboard">Overview</a
                 ><a
@@ -294,33 +293,33 @@
                     class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                     href="/examples/dashboard">Settings</a
                 > -->
-			</nav>
-			<div class="ml-auto flex items-center space-x-4">
-				<a
-					href="/cashier"
-					class="ml-auto hidden h-8 items-center justify-center whitespace-nowrap rounded-md border border-input bg-background px-3 text-xs font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 lg:flex"
-					type="button"
-					id="radix-:r3g:"
-					aria-haspopup="menu"
-					aria-expanded="false"
-					data-state="closed"
+		</nav>
+		<div class="ml-auto flex items-center space-x-4">
+			<a
+				href="/cashier"
+				class="ml-auto hidden h-8 items-center justify-center whitespace-nowrap rounded-md border border-input bg-background px-3 text-xs font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 lg:flex"
+				type="button"
+				id="radix-:r3g:"
+				aria-haspopup="menu"
+				aria-expanded="false"
+				data-state="closed"
+			>
+				<svg class="size-4" viewBox="0 0 24 24"
+					><path
+						fill="currentColor"
+						d="M2,17H22V21H2V17M6.25,7H9V6H6V3H14V6H11V7H17.8C18.8,7 19.8,8 20,9L20.5,16H3.5L4.05,9C4.05,8 5.05,7 6.25,7M13,9V11H18V9H13M6,9V10H8V9H6M9,9V10H11V9H9M6,11V12H8V11H6M9,11V12H11V11H9M6,13V14H8V13H6M9,13V14H11V13H9M7,4V5H13V4H7Z"
+					></path></svg
 				>
-					<svg class="size-4" viewBox="0 0 24 24"
-						><path
-							fill="currentColor"
-							d="M2,17H22V21H2V17M6.25,7H9V6H6V3H14V6H11V7H17.8C18.8,7 19.8,8 20,9L20.5,16H3.5L4.05,9C4.05,8 5.05,7 6.25,7M13,9V11H18V9H13M6,9V10H8V9H6M9,9V10H11V9H9M6,11V12H8V11H6M9,11V12H11V11H9M6,13V14H8V13H6M9,13V14H11V13H9M7,4V5H13V4H7Z"
-						></path></svg
-					>
-					Cashier
-				</a>
-				<div>
-					<input
-						class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:w-[100px] lg:w-[300px]"
-						placeholder="Search..."
-						type="search"
-					/>
-				</div>
-				<!-- <button
+				Cashier
+			</a>
+			<div>
+				<input
+					class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:w-[100px] lg:w-[300px]"
+					placeholder="Search..."
+					type="search"
+				/>
+			</div>
+			<!-- <button
 					class="relative inline-flex h-8 w-8 items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
 					type="button"
 					id="radix-:r38:"
@@ -344,7 +343,6 @@
 						</svg>
 					</span>
 				</button> -->
-			</div>
 		</div>
 	</div>
-</div>
+</header>
