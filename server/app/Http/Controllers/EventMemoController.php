@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\EventMemo;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class EventMemoController extends Controller
 {
+    private array $rules = [
+        'message' => ['required', 'min:3', 'max:255']
+    ];
     /**
      * Display a listing of the resource.
      */
@@ -26,9 +31,18 @@ class EventMemoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, \App\Models\Event $event) : Response
     {
-        //
+        $validator = Validator::make($request->only('message'), $this->rules);
+
+        if ($validator->fails()) return response(['errors' => $validator->errors()], 422);
+
+        $event->memos()->create([
+            'message' => $request->input('message'),
+            'author_id' => $request->user()->id
+        ]);
+
+        return response()->noContent(201);
     }
 
     /**

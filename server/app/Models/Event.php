@@ -78,7 +78,7 @@ class Event extends Model
      */
     public function memos(): HasMany
     {
-        return $this->hasMany(EventMemo::class);
+        return $this->hasMany(EventMemo::class)->orderByDesc('id');
     }
 
     /**
