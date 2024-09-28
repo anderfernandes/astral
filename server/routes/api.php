@@ -42,4 +42,5 @@ Route::middleware(Authenticate::using('sanctum'))->group(function () {
     Route::apiResource('/roles', \App\Http\Controllers\RoleController::class)->only(['index']);
     Route::post('/stripe/session/create', [\App\Http\Controllers\StripeController::class, 'create']);
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index']);
+    Route::post('/events/{event}/memos', [\App\Http\Controllers\EventMemoController::class, 'store']);
 });
