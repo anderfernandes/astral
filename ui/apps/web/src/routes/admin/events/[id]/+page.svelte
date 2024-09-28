@@ -1,14 +1,41 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { formatDistanceToNow } from 'date-fns';
-	import { AButton, AChip } from 'ui';
+	import { AButton, AChip, ADialog, ATextArea } from 'ui';
 
 	let { data } = $props();
 	let { event } = data;
 	const start = new Date(event.start);
+	let dialog = $state(false);
+	const toggle = () => (dialog = !dialog);
 </script>
 
-<section class="mt-16 space-y-6 p-6 lg:mx-96">
+<section class="grid gap-6">
 	<div class="flex items-center gap-2">
+		<!-- { TODO: Handle query strings to keep calendar state } -->
+		<a href="/admin/calendar" aria-label="back">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="size-6"
+			>
+				<path d="m12 19-7-7 7-7" />
+				<path d="M19 12H5" />
+			</svg>
+		</a>
+		<div class="grow"></div>
+		<div>
+			<AButton text="Edit" href={`/admin/events/${data.event.id}/edit`} />
+		</div>
+	</div>
+	<div class="-mb-3 flex justify-center gap-3">
 		{#if event.is_public}
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -41,13 +68,10 @@
 				d="M22 21v-2a4 4 0 0 0-3-3.87"
 			/><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg
 		>
-		<span class="grow">{event.seats.available}/{data.event.seats.total}</span>
-		<div>
-			<AButton text="Edit" href={`/admin/events/${data.event.id}/edit`} />
-		</div>
+		<span class="lg:grow">{event.seats.available}/{data.event.seats.total}</span>
 	</div>
 	<div class="grid gap-3 lg:flex">
-		<div class="w-[150px] space-y-3">
+		<div class="flex w-full justify-center space-y-3 px-16 lg:w-[150px] lg:px-0">
 			<div class="overflow-hidden rounded-md">
 				<img
 					alt="Thinking Components"
@@ -55,7 +79,6 @@
 					width="150"
 					height="150"
 					decoding="async"
-					data-nimg="1"
 					class="aspect-square h-auto w-auto object-cover transition-all hover:scale-105"
 					style="color: transparent;"
 					src={event.show.cover}
@@ -74,7 +97,30 @@
 			<p class="flex-1 whitespace-pre-wrap text-sm">{event.show.description}</p>
 		</div>
 	</div>
-	<h3 class="font-semibold leading-none tracking-tight">Memos ({event.memos.length})</h3>
+	<div class="flex items-center">
+		<h3 class="grow font-semibold leading-none tracking-tight">Memos ({event.memos.length})</h3>
+		<AButton onclick={toggle}>New Memo</AButton>
+		{#if dialog}
+			<ADialog
+				onclose={toggle}
+				title="New Memo"
+				subtitle="Write anything that might help others run this event."
+			>
+				<form method="POST" class="grid gap-6">
+					<ATextArea
+						name="message"
+						label="Memo"
+						placeholder="Write anything that might help others run this event."
+						required
+					/>
+					<div class="flex justify-end gap-3">
+						<AButton variant="secondary" type="reset" text="Clear" />
+						<AButton type="submit" text="Submit" />
+					</div>
+				</form>
+			</ADialog>
+		{/if}
+	</div>
 	{#each event.memos as memo}
 		<div
 			class="flex w-full flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent"

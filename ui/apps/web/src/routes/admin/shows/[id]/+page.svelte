@@ -9,10 +9,64 @@
 	<title>Show Details {show.name} ({show.type?.name}) &middot; Astral</title>
 </svelte:head>
 
-<article class="grid gap-6">
-	<div class="flex w-full justify-end">
-		<AButton text="Edit" href={`/admin/shows/${show.id}/edit`} />
+<header
+	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:w-[calc(1080px-288px)]"
+>
+	<div class="flex h-16 items-center px-6">
+		<a href="/admin/shows" aria-label="back">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="size-6"
+			>
+				<path d="m12 19-7-7 7-7" />
+				<path d="M19 12H5" />
+			</svg>
+		</a>
+		<div class="ml-auto">
+			<AButton text="Edit" href={`/admin/shows/${show.id}/edit`} />
+		</div>
 	</div>
+</header>
+
+<article class="mt-16 grid gap-6">
+	<div class="flex w-full items-center justify-end gap-3">
+		<div class="w-20 grow lg:w-full">
+			<h2 class="truncate text-center text-2xl font-semibold tracking-tight">
+				{show.name}
+			</h2>
+		</div>
+	</div>
+
+	<div class="-mt-3 flex w-full justify-center gap-3">
+		<AChip text={show.type?.name} basic />
+		<span class="flex items-center gap-1 text-sm">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="size-5"
+			>
+				<circle cx="12" cy="12" r="10" />
+				<polyline points="12 6 12 12 16 14" />
+			</svg>
+			{show.duration} mins
+		</span>
+	</div>
+
 	<div class="flex justify-center overflow-hidden rounded-md">
 		<img
 			alt={show.name}
@@ -27,28 +81,6 @@
 		/>
 	</div>
 	<div class="space-y-1">
-		<h2 class="text-center text-2xl font-semibold tracking-tight">
-			{show.name}
-		</h2>
-		<div class="flex w-full justify-center gap-3 py-3">
-			<AChip text={show.type?.name} basic />
-			<span class="flex items-center gap-1 text-sm">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="size-4"
-					><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg
-				>
-				{show.duration} mins
-			</span>
-		</div>
 		<p class="text-center text-sm text-muted-foreground">
 			{show.description}
 		</p>

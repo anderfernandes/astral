@@ -3,13 +3,14 @@
 	import { AButton, ACheckbox, ADateTimePicker, ASelect, ASlider, ATextArea } from 'ui';
 
 	let { data } = $props();
-	let { event_types, event, shows, organization } = data;
+	let { organization } = data.settings;
+	let { event_types, event, shows } = data;
 
 	let start = $state<Date>(new Date(event.start));
 	let end = $state(new Date(event.end));
 </script>
 
-<section class="space-y-6 p-6 lg:mx-96">
+<section class="grid gap-6">
 	<div class="space-y-1">
 		<h2 class="text-2xl font-semibold tracking-tight">
 			Edit Event #{event.id}

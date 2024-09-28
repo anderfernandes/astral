@@ -15,7 +15,7 @@
 </script>
 
 {#each data as { date, events }}
-	<h3 class="font-semibold leading-none tracking-tight">
+	<h3 class="mb-3 font-semibold leading-none tracking-tight">
 		{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(date))}
 	</h3>
 	{#each events as event}

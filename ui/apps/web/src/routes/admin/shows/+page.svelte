@@ -1,5 +1,6 @@
 <script>
 	import { AButton } from 'ui';
+	import Navbar from '../Navbar.svelte';
 
 	let { data } = $props();
 </script>
@@ -8,9 +9,11 @@
 	<title>Shows - Astral Admin</title>
 </svelte:head>
 
-<article class="grid">
-	<div class="flex items-center justify-between space-y-2">
-		<div class="flex flex-col space-y-1.5 py-6">
+<Navbar />
+
+<article class="mt-10 grid">
+	<div class="mb-6 flex items-center justify-between space-y-2">
+		<div class="flex flex-col space-y-1.5">
 			<h2 class="text-3xl font-bold tracking-tight">Shows</h2>
 		</div>
 		<div class="flex items-center space-x-2">
@@ -43,7 +46,7 @@
 		</div>
 	</div>
 
-	<div class="grid grid-cols-2 gap-3 lg:flex lg:space-x-4">
+	<div class="grid grid-cols-2 gap-6 lg:flex lg:gap-0 lg:space-x-4">
 		{#each data.shows as show}
 			<a href={`/admin/shows/${show.id}`} class="w-full space-y-3 lg:w-[150px]">
 				<span data-state="closed"

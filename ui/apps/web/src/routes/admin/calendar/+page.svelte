@@ -14,8 +14,8 @@
 	<title>Calendar - Astral Admin</title>
 </svelte:head>
 
-<div class="grid items-center justify-between space-y-2 md:flex">
-	<div class="flex flex-col space-y-1.5 py-6">
+<div class="grid space-y-2 md:flex md:items-center md:justify-between">
+	<div class="flex flex-col justify-center">
 		<h2 class="text-3xl font-bold tracking-tight">
 			{#if data.view === 'day'}
 				{@const start = data.start.split('-').map((n) => parseInt(n))}

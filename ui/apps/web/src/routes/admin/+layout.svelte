@@ -8,10 +8,9 @@
 
 <div class="flex h-screen w-full justify-center">
 	<section class="flex h-screen w-full xl:w-[1080px]">
-		<Navbar />
+		<!-- <Navbar /> -->
 		<Sidebar {account} version={settings.version} />
 		<div class="w-full p-6 lg:ml-[288px]">
-			<br /><br />
 			{@render children()}
 			<br />
 		</div>

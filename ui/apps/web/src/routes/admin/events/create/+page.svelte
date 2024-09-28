@@ -18,6 +18,24 @@
 </svelte:head>
 
 <section class="grid gap-6">
+	<!-- { TODO: Pass query string to keep calendar URL state } -->
+	<a href="/admin/calendar" aria-label="back" class="-mb-3">
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			class="size-6"
+		>
+			<path d="m12 19-7-7 7-7" />
+			<path d="M19 12H5" />
+		</svg>
+	</a>
 	<h2 class="text-2xl font-semibold tracking-tight">New Event</h2>
 
 	{#if form?.errors}
