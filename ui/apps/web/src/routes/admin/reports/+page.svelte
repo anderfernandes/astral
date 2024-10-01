@@ -8,11 +8,11 @@
 	<title>Astral Cashier | Reports</title>
 </svelte:head>
 
-<section class="flex w-full flex-col gap-3">
+<section class="mt-16 flex w-full flex-col gap-3">
 	<div class="flex items-center">
 		<h1 class="text-lg font-semibold md:text-2xl">Reports</h1>
 	</div>
-	<div class="grid md:gap-3 lg:grid-cols-3">
+	<div class="grid md:gap-3 lg:grid-cols-2">
 		<div class="rounded-xl border bg-card text-card-foreground shadow">
 			<div class="flex flex-col space-y-1.5 p-6 pb-3">
 				<h3 class="font-semibold leading-none tracking-tight">Closeout</h3>

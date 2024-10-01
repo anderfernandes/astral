@@ -19,7 +19,7 @@
 
 <div class="mt-16 grid gap-3 lg:flex lg:items-center">
 	<div class="flex flex-col justify-center">
-		<h2 class="text-xl font-bold">
+		<h2 class="text-lg font-semibold md:text-2xl">
 			{#if data.view === 'day'}
 				{@const start = data.start.split('-').map((n) => parseInt(n))}
 				{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(

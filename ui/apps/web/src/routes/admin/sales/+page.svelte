@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Navbar from '../Navbar.svelte';
+
 	interface ITicketWithQuantity extends ITicket {
 		quantity: number;
 	}
@@ -13,7 +15,9 @@
 	<title>Sales - Astral Cashier</title>
 </svelte:head>
 
-<section class="flex w-full flex-col gap-3">
+<Navbar />
+
+<section class="mt-16 flex w-full flex-col gap-3">
 	<div class="flex items-center">
 		<h1 class="text-lg font-semibold md:text-2xl">Sales</h1>
 	</div>

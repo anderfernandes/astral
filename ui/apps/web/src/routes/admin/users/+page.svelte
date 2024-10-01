@@ -8,9 +8,9 @@
 	<title>Users &middot; Astral Admin</title>
 </svelte:head>
 
-<section class="flex flex-col gap-6">
+<section class="mt-16 flex flex-col gap-6">
 	<div class="flex items-center">
-		<h2 class="grow text-3xl font-bold tracking-tight">Users</h2>
+		<h2 class="grow text-lg font-semibold md:text-2xl">Users</h2>
 		<AButton text="New User" href="/admin/users/create" />
 	</div>
 	<div class="flex flex-col gap-3">

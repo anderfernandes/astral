@@ -5,7 +5,7 @@
 	let { data } = $props();
 </script>
 
-<section class="flex w-full flex-col gap-3">
+<section class="mt-16 flex w-full flex-col gap-3">
 	<div class="flex w-full items-center">
 		<h1 class="grow text-lg font-semibold md:text-2xl">Memberships</h1>
 		<AButton text="New Membership" href="/admin/memberships/create" />

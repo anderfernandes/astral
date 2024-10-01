@@ -1,12 +1,15 @@
 <script>
 	import { AButton } from 'ui';
+	import Navbar from '../Navbar.svelte';
 
 	let { data } = $props();
 </script>
 
-<div class="flex items-center justify-between space-y-2">
+<Navbar />
+
+<div class="mt-16 flex items-center justify-between space-y-2">
 	<div class="flex flex-col space-y-1.5 py-6">
-		<h2 class="text-3xl font-bold tracking-tight">Products</h2>
+		<h2 class="text-lg font-semibold md:text-2xl">Products</h2>
 	</div>
 	<div class="flex items-center space-x-2">
 		<!-- <div class="grid gap-2">
@@ -44,7 +47,7 @@
 			href={`/admin/products/${product.id}`}
 			class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
 		>
-			<span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+			<span class="relative flex size-16 shrink-0 overflow-hidden rounded">
 				<img class="aspect-square h-full w-full" src={product.cover} alt={product.name} />
 			</span>
 			<div class="space-y-1">

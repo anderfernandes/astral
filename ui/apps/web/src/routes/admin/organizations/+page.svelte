@@ -8,16 +8,14 @@
 	<title>Organizations - Astral Admin</title>
 </svelte:head>
 
-<div class="flex items-center justify-between space-y-2">
-	<div class="flex flex-col space-y-1.5 py-6">
-		<h2 class="text-3xl font-bold tracking-tight">Organizations</h2>
-	</div>
-	<div class="flex items-center space-x-2">
-		<AButton text="New Organization" href="/admin/organizations/create" />
-	</div>
-</div>
+<div class="mt-16 grid gap-6">
+	<div class="flex items-center justify-between space-y-2">
+		<h2 class="grow text-lg font-semibold md:text-2xl">Organizations</h2>
 
-<div class="grid gap-3">
+		<div class="flex items-center space-x-2">
+			<AButton text="New Organization" href="/admin/organizations/create" />
+		</div>
+	</div>
 	{#each data.organizations as { id, name, city, state, phone, type }}
 		<a
 			href={`/admin/organizations/${id}`}
