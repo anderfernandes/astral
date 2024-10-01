@@ -10,9 +10,9 @@
 </svelte:head>
 
 <header
-	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:w-[calc(1080px-288px)]"
+	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 px-5 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:-mx-6 lg:w-[calc(1080px-288px)]"
 >
-	<div class="flex h-16 items-center px-6">
+	<div class="flex h-16 items-center">
 		<a href="/admin/shows" aria-label="back">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

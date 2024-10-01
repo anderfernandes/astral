@@ -1,5 +1,6 @@
 <script>
 	import DashboardCard from './DashboardCard.svelte';
+	import Navbar from './Navbar.svelte';
 	import OverviewChart from './OverviewChart.svelte';
 	import RecentPaymentItem from './RecentPaymentItem.svelte';
 
@@ -12,8 +13,10 @@
 	<title>Dashboard &middot; Astral</title>
 </svelte:head>
 
-<article class="grid gap-6">
-	<div class="flex items-center justify-between space-y-2">
+<Navbar />
+
+<article class="mt-16 grid gap-6">
+	<div class="flex items-center justify-between">
 		<h2 class="text-3xl font-bold tracking-tight">Dashboard</h2>
 	</div>
 	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

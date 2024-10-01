@@ -17,27 +17,32 @@
 	<title>New Event &middot; Astral</title>
 </svelte:head>
 
-<section class="grid gap-6">
-	<!-- { TODO: Pass query string to keep calendar URL state } -->
-	<a href="/admin/calendar" aria-label="back" class="-mb-3">
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			class="size-6"
-		>
-			<path d="m12 19-7-7 7-7" />
-			<path d="M19 12H5" />
-		</svg>
-	</a>
-	<h2 class="text-2xl font-semibold tracking-tight">New Event</h2>
+<header
+	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 px-5 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:-mx-6 lg:w-[calc(1080px-288px)]"
+>
+	<div class="flex h-16 items-center gap-3">
+		<a href="/admin/calendar" aria-label="back">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="size-6"
+			>
+				<path d="m12 19-7-7 7-7" />
+				<path d="M19 12H5" />
+			</svg>
+		</a>
+		<h3 class="font-semibold leading-none tracking-tight">New Event</h3>
+	</div>
+</header>
 
+<section class="mt-16 grid gap-6">
 	{#if form?.errors}
 		<AAlert type="error" title="Please fix the following errors.">
 			{#each form.errors as { field, errors }}

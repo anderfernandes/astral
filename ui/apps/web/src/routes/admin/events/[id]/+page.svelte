@@ -10,9 +10,10 @@
 	const toggle = () => (dialog = !dialog);
 </script>
 
-<section class="grid gap-6">
-	<div class="flex items-center gap-2">
-		<!-- { TODO: Handle query strings to keep calendar state } -->
+<header
+	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 px-5 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:-mx-6 lg:w-[calc(1080px-288px)]"
+>
+	<div class="flex h-16 items-center gap-3">
 		<a href="/admin/calendar" aria-label="back">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -35,6 +36,9 @@
 			<AButton text="Edit" href={`/admin/events/${data.event.id}/edit`} />
 		</div>
 	</div>
+</header>
+
+<section class="mt-16 grid gap-6">
 	<div class="-mb-3 flex justify-center gap-3">
 		{#if event.is_public}
 			<svg
@@ -70,6 +74,7 @@
 		>
 		<span class="lg:grow">{event.seats.available}/{data.event.seats.total}</span>
 	</div>
+
 	<div class="grid gap-3 lg:flex">
 		<div class="flex w-full justify-center space-y-3 px-16 lg:w-[150px] lg:px-0">
 			<div class="overflow-hidden rounded-md">
@@ -97,6 +102,7 @@
 			<p class="flex-1 whitespace-pre-wrap text-sm">{event.show.description}</p>
 		</div>
 	</div>
+
 	<div class="flex items-center">
 		<h3 class="grow font-semibold leading-none tracking-tight">Memos ({event.memos.length})</h3>
 		<AButton onclick={toggle}>New Memo</AButton>

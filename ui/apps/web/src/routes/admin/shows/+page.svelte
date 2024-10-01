@@ -11,7 +11,7 @@
 
 <Navbar />
 
-<article class="mt-10 grid">
+<article class="mt-16 grid">
 	<div class="mb-6 flex items-center justify-between space-y-2">
 		<div class="flex flex-col space-y-1.5">
 			<h2 class="text-3xl font-bold tracking-tight">Shows</h2>

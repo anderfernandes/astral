@@ -2,8 +2,12 @@
 	import { page } from '$app/stores';
 	import { AButton } from 'ui';
 	import SidebarItem from './SidebarItem.svelte';
+	import type { Snippet } from 'svelte';
+
+	const { title = '' } = $props();
 
 	let open = $state(false);
+
 	const toggle = () => {
 		open = !open;
 	};
@@ -233,5 +237,6 @@
 				y2="18"
 			/>
 		</svg>
+		{title}
 	</div>
 </header>

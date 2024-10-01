@@ -5,6 +5,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { format } from 'date-fns';
+	import Navbar from '../Navbar.svelte';
 
 	let { data } = $props();
 	let open = $state(false);
@@ -14,9 +15,11 @@
 	<title>Calendar - Astral Admin</title>
 </svelte:head>
 
-<div class="grid space-y-2 md:flex md:items-center md:justify-between">
+<Navbar title="Calendar" />
+
+<div class="mt-16 grid gap-3 lg:flex lg:items-center">
 	<div class="flex flex-col justify-center">
-		<h2 class="text-3xl font-bold tracking-tight">
+		<h2 class="text-xl font-bold">
 			{#if data.view === 'day'}
 				{@const start = data.start.split('-').map((n) => parseInt(n))}
 				{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
@@ -39,19 +42,21 @@
 			{/if}
 		</h2>
 	</div>
-	<div class="flex items-center space-x-2">
-		<ASelect
-			onchange={(e) => {
-				goto(`/admin/calendar?view=${e.currentTarget.value}`, { invalidateAll: true });
-			}}
-			options={[
-				{ text: 'Day', value: 'day' },
-				{ text: 'Week', value: 'week' },
-				{ text: 'Month', value: 'month' }
-			]}
-			name="view"
-			value={data.view}
-		/>
+	<div class="flex items-center space-x-2 lg:ml-auto">
+		<div class="w-full">
+			<ASelect
+				onchange={(e) => {
+					goto(`/admin/calendar?view=${e.currentTarget.value}`, { invalidateAll: true });
+				}}
+				options={[
+					{ text: 'Day', value: 'day' },
+					{ text: 'Week', value: 'week' },
+					{ text: 'Month', value: 'month' }
+				]}
+				name="view"
+				value={data.view}
+			/>
+		</div>
 		<button
 			onclick={() => {
 				open = !open;
@@ -168,7 +173,18 @@
 				><path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
 			</svg>
 		</a>
-		<AButton text="New Event" href="/admin/events/create" />
+		<a
+			aria-label="next"
+			href="/admin/events/create"
+			class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary p-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+		>
+			<svg class="size-5" viewBox="0 0 24 24">
+				<path
+					fill="currentColor"
+					d="M19 19V8H5V19H19M16 1H18V3H19C20.11 3 21 3.9 21 5V19C21 20.11 20.11 21 19 21H5C3.89 21 3 20.1 3 19V5C3 3.89 3.89 3 5 3H6V1H8V3H16V1M11 9.5H13V12.5H16V14.5H13V17.5H11V14.5H8V12.5H11V9.5Z"
+				/>
+			</svg>
+		</a>
 	</div>
 </div>
 <br />

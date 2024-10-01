@@ -11,7 +11,7 @@
 </svelte:head>
 
 <header
-	class="fixed top-0 flex w-full flex-col bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:w-[1080px]"
+	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 px-5 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:-mx-6 lg:w-[calc(1080px-288px)]"
 >
 	<div class="flex h-16 items-center gap-3">
 		<a href={`/admin/shows/${show.id}`} aria-label="back">
