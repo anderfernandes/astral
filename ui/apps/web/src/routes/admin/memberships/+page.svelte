@@ -1,9 +1,12 @@
 <script>
 	import { formatDistanceToNow } from 'date-fns';
 	import { AButton } from 'ui';
+	import Navbar from '../Navbar.svelte';
 
 	let { data } = $props();
 </script>
+
+<Navbar />
 
 <section class="mt-16 flex w-full flex-col gap-3">
 	<div class="flex w-full items-center">

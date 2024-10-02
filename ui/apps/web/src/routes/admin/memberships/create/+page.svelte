@@ -34,18 +34,43 @@
 	<title>New Membership | Astral Admin</title>
 </svelte:head>
 
-<section class="mx-48 grid gap-6">
-	<h1 class="grow text-lg font-semibold md:text-2xl">New Membership</h1>
+<header
+	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 px-5 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:-mx-6 lg:w-[calc(1080px-288px)]"
+>
+	<div class="flex h-16 items-center gap-3">
+		<a href="/admin/memberships" aria-label="back">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="size-6"
+			>
+				<path d="m12 19-7-7 7-7" />
+				<path d="M19 12H5" />
+			</svg>
+		</a>
+		<h3 class="font-semibold leading-none tracking-tight">New Membership</h3>
+	</div>
+</header>
 
+<section class="mt-24 grid gap-6">
 	<form method="POST" class="grid gap-6">
-		<ASelect
-			name="type_id"
-			options={data.membership_types}
-			bind:value={membership_type_id}
-			label="Type"
-			required
-			placeholder="Select one"
-		/>
+		<div class="grid gap-6 lg:grid-cols-2">
+			<ASelect
+				name="type_id"
+				options={data.membership_types}
+				bind:value={membership_type_id}
+				label="Type"
+				required
+				placeholder="Select one"
+			/>
+		</div>
 		<div class="grid h-14 text-center" class:grid-cols-4={selected}>
 			{#if selected}
 				<div>

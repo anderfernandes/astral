@@ -3,7 +3,7 @@
 	import { AButton, ACheckbox, ADatePicker, AFileUpload, AInput, ASelect, ATextArea } from 'ui';
 
 	let { data, form } = $props();
-	let { show, show_types } = data;
+	const { show, show_types } = data;
 </script>
 
 <svelte:head>

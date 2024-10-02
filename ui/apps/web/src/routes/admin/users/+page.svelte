@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { AButton } from 'ui';
+	import Navbar from '../Navbar.svelte';
 
 	let { data } = $props();
 </script>
@@ -7,6 +8,8 @@
 <svelte:head>
 	<title>Users &middot; Astral Admin</title>
 </svelte:head>
+
+<Navbar />
 
 <section class="mt-16 flex flex-col gap-6">
 	<div class="flex items-center">

@@ -203,7 +203,12 @@
 					Settings
 				</SidebarItem>
 			</div>
-			<form action="/logout" class="flex justify-end" method="POST">
+			<form action="/logout" class="flex justify-end gap-3" method="POST">
+				<a
+					href="/cashier"
+					class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md border border-input bg-background px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+					>Cashier</a
+				>
 				<AButton text="Logout" type="submit" />
 			</form>
 		</div>
