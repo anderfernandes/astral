@@ -15,9 +15,9 @@ class OrganizationController extends Controller
       //'state' => ['required', 'min:3', 'max:31'],
       'zip' => ['required', 'size:5'],
       //'country' => ['required'],
-      'phone' => ['required', 'size:10'],
-      'fax' => ['size:10'],
-      'email' => ['email', 'unique:users,email'],
+      'phone' => ['required', 'min:10'],
+      'fax' => ['nullable', 'min:10'],
+      'email' => ['email'],
       'website' => ['nullable', 'url'],
       'type_id' => ['required', 'integer', 'exists:organization_types,id'],
     ];

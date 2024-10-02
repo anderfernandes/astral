@@ -20,7 +20,7 @@ class UserController extends Controller
         'city' => ['nullable', 'min:3', 'max:63'],
         'state' => ['nullable', 'min:3', 'max:63'],
         'zip' => ['nullable', 'size:5'],
-        'newsletter' => ['nullable']
+        'newsletter' => ['nullable'],
     ];
 
     /**
@@ -30,12 +30,13 @@ class UserController extends Controller
     {
         if ($request->query('type') == 'individual') {
             $individuals = (new User)->where('type', 'individual')->with(['role'])->get();
-            return response([ 'data' => $individuals ]);
+
+            return response(['data' => $individuals]);
         }
 
-        $walk_up = (new User())->find(1);
+        $walk_up = (new User)->find(1);
 
-        $users = (new User())->where([['type', 'individual'], ['staff', $request->has('staff')]]);
+        $users = (new User)->where([['type', 'individual'], ['staff', $request->has('staff')]]);
 
         if ($request->has('q')) {
             $q = $request->query('q');
@@ -46,7 +47,7 @@ class UserController extends Controller
 
         $users = $users->with(['role'])->orderBy('firstname')->get();
 
-        if (!$request->has('staff')) {
+        if (! $request->has('staff')) {
             $users = [$walk_up, ...$users];
         }
 
@@ -76,8 +77,8 @@ class UserController extends Controller
             'state' => $request->input('state'),
             'zip' => $request->input('zip'),
             'newsletter' => $request->has('newsletter'),
-            'password' => Hash::make($request->input("password")),
-            'role_id' => $visitor_role->id
+            'password' => Hash::make($request->input('password')),
+            'role_id' => $visitor_role->id,
         ]);
 
         $user->sendEmailVerificationNotification();
@@ -129,11 +130,11 @@ class UserController extends Controller
             'state' => $request->input('state'),
             'zip' => $request->input('zip'),
             'newsletter' => $request->has('newsletter'),
-            'password' => Hash::make($request->input("password")),
-            'role_id' => $request->input('role_id')
+            'password' => Hash::make($request->input('password')),
+            'role_id' => $request->input('role_id'),
         ]);
 
-        $user->sendEmailVerificationNotification();
+        //$user->sendEmailVerificationNotification();
 
         return response(['data' => $user->id], 200);
     }
