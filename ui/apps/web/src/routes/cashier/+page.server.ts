@@ -1,6 +1,7 @@
 import { fail } from '@sveltejs/kit';
 
-export const load = async ({ fetch }) => {
+export const load = async ({ fetch, url }) => {
+	console.log(url.toString());
 	const [days, customers, payment_methods, products] = await Promise.all([
 		fetch('/events?start=2024-08-01&end=2024-12-31&calendar')
 			.then((res) => res.json())
@@ -19,7 +20,7 @@ export const load = async ({ fetch }) => {
 			.then((res) => res.data as IProduct[])
 	]);
 
-	console.log(days);
+	console.log(products);
 
 	return { days, customers, payment_methods, products };
 };

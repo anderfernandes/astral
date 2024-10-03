@@ -107,7 +107,7 @@
 		<AFileUpload
 			value={data.product.cover}
 			name="cover"
-			label="Cover"
+			label="Picture"
 			required
 			hint="A picture of the product."
 		/>

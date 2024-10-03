@@ -24,7 +24,7 @@
 <section class="flex w-full flex-col gap-6 px-6 py-4">
 	<div>
 		<div class="flex items-center gap-3">
-			<a href="/cashier/sales">
+			<a href="/cashier/sales" aria-label="sale">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="24"
@@ -464,7 +464,7 @@
 					</td>
 					<td
 						class="hidden p-2 align-middle md:table-cell [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
-						>$250.00
+						>{payment.cashier.firstname}
 					</td>
 				</tr>
 			{/each}

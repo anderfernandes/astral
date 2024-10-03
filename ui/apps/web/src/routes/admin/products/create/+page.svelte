@@ -8,17 +8,33 @@
 	<title>Products - Astral Admin</title>
 </svelte:head>
 
-<section class="h-[calc(100%)] overflow-y-auto">
-	<div class="space-y-1 md:mx-64">
-		<h2 class="text-2xl font-semibold tracking-tight">New Product</h2>
-		<p class="text-sm text-muted-foreground">Changes take effect upon clicking save.</p>
+<header
+	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 px-5 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:-mx-6 lg:w-[calc(1080px-288px)]"
+>
+	<div class="flex h-16 items-center">
+		<a href="/admin/products" aria-label="back">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="size-6"
+			>
+				<path d="m12 19-7-7 7-7" />
+				<path d="M19 12H5" />
+			</svg>
+		</a>
+		<h2 class="px-3 font-semibold leading-none tracking-tight">New Product</h2>
 	</div>
-	<br />
-	<form
-		method="POST"
-		enctype="multipart/form-data"
-		class="grid gap-6 overflow-y-auto px-3 md:mx-64"
-	>
+</header>
+
+<section class="mt-16 grid gap-3">
+	<form method="POST" enctype="multipart/form-data" class="grid gap-6">
 		<ACheckbox
 			checked
 			name="is_active"
@@ -81,7 +97,7 @@
 			placeholder="The quantity of this product you currently have."
 			type="number"
 		/>
-		<AFileUpload name="cover" label="Cover" required hint="A picture of the product." />
+		<AFileUpload name="cover" label="Picture" required hint="A picture of the product." />
 		<div class="flex justify-end gap-3">
 			<AButton text="Submit" type="submit" />
 		</div>

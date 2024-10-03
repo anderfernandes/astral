@@ -48,7 +48,11 @@
 			class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
 		>
 			<span class="relative flex size-16 shrink-0 overflow-hidden rounded">
-				<img class="aspect-square h-full w-full" src={product.cover} alt={product.name} />
+				<img
+					class="aspect-square h-full w-full object-cover"
+					src={product.cover}
+					alt={product.name}
+				/>
 			</span>
 			<div class="space-y-1">
 				<p class="text-sm font-medium leading-none">{product.name} &middot; ${product.price}</p>
