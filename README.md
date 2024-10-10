@@ -1,5 +1,18 @@
 <p align="center">
-  <img src="https://astral.anderfernandes.com/assets/astral-logo-dark.png" width="100">
+  <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      stroke="currentColor"
+      stroke-width="1.25"
+      width="100"
+  >
+      <circle cx="12" cy="12" r="4.5" fill="transparent" />
+      <path
+          stroke="currentColor"
+          fill="transparent"
+          d="M 3.3357286,6.9976809 6.3405211,6.3405212 6.9976805,3.3357289 9.9284869,4.2690082 12,1.9953613 14.071513,4.2690081 17.002319,3.3357286 17.659479,6.3405211 20.664271,6.9976805 19.730992,9.9284869 22.004639,12 l -2.273647,2.071513 0.933279,2.930806 -3.004792,0.65716 L 17.00232,20.664271 14.071513,19.730992 12,22.004639 9.9284871,19.730992 6.9976809,20.664271 6.3405212,17.659479 3.3357289,17.00232 4.2690082,14.071513 1.9953613,12 4.2690081,9.9284871 Z"
+      />
+  </svg>
 </p>
 <h1 align="center">Astral</h1>
 <p align="center">
@@ -9,21 +22,22 @@
   <img src="https://img.shields.io/github/license/anderfernandes/astral" />
 </p>
 
-We believe in empowering small and medium non-profit educational centers such as planetariums, science centers and museums so that they can inspire their communities through entertainment that educates and inspires.
+We help people run small and medium non-profit educational centers so that they can focus on inspiring and teaching the wonders of science and the universe to the communities they serve.
 
 Astral is an open source point of sale (POS), customer relationship manager (CRM),
 box office, membership, marketing and reservation manager for non-profit educational organizations
-such as planetariums, museums and science centers. It will allow your organization to:
+such as planetariums, science centers and museums. It helps them:
 
-- Point of sale for tickets and products
-- Generate sale, attendance and revenue reports
-- Manage events, shows, products, sales, members, users, organizations and work shifts
+- Run a point of sale for tickets and products
+- Generate sale, invoices and receipts
+- Generate attendance and revenue reports
+- Manage events, shows, products, memberships, users, organizations and work shifts
 - Schedule and manage events such as school field trips, birthday parties, special events, civic events, etc, with automated email and/or in app notifications
 - Calendar view with past, present and future events and sales
 - Send automated marketing emails such as newsletters, reminders and alerts to members, teachers and visitors
 - Process credit card payments online
 
-If your organization has Astral, it can be installed (PWA) or run straight from modern browsers in smartphones, tablets, PC, MacOS or Linux.
+Astral runs straight from modern browsers in smartphones, tablets, PC, MacOS or Linux.
 
 If you work in a non-profit planetarium, museum or science center and are struggling to find the right app to help you run things, Astral is what you are looking for.
 
