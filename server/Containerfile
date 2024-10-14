@@ -1,6 +1,6 @@
-FROM archlinux
+FROM archlinux:latest
 
-RUN pacman -Sy
+RUN pacman -Syy
 
 RUN pacman -S php composer sqlite3 php-sqlite php-gd --noconfirm
 
@@ -22,9 +22,9 @@ RUN sqlite3 database/database.sqlite .databases .quit
 
 RUN php artisan storage:link
 
-RUN php artisan key:generate
-
 RUN php artisan config:cache
+
+RUN php artisan key:generate
 
 EXPOSE 8000
 
