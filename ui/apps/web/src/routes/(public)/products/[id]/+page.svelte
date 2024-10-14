@@ -1,6 +1,7 @@
 <script lang="ts">
 	let { data } = $props();
-	const { organization, product } = data;
+	const { settings, product } = data;
+	const { organization } = settings;
 </script>
 
 <svelte:head>
@@ -8,7 +9,7 @@
 </svelte:head>
 
 <section class="grid gap-3 p-6">
-	<a href="/">
+	<a href="/" aria-label="Home">
 		<svg class="h-6 w-6" viewBox="0 0 24 24">
 			<path
 				fill="currentColor"

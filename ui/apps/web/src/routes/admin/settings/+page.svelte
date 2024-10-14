@@ -1,5 +1,5 @@
 <script>
-	import { AButton, ACheckbox, AInput } from 'ui';
+	import { AButton, ACheckbox, AFileUpload, AInput } from 'ui';
 
 	let { data } = $props();
 </script>
@@ -11,7 +11,7 @@
 <br />
 
 <form method="POST" class="grid gap-3">
-	<div class="grid lg:grid-cols-4 lg:gap-3">
+	<div class="grid gap-3 lg:grid-cols-4">
 		<div class="col-span-2">
 			<AInput
 				name="organization"
@@ -21,6 +21,9 @@
 				value={data.settings?.organization.name}
 				placeholder="Organization Name"
 			/>
+		</div>
+		<div class="col-span-2">
+			<AFileUpload name="logo" label="Logo" required hint="The logo of your organization." />
 		</div>
 		<div class="col-span-1">
 			<AInput

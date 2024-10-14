@@ -9,18 +9,18 @@
 <div class="border-b">
 	<div class="flex h-16 items-center px-4">
 		<nav class="flex items-center space-x-4 lg:mx-3 lg:space-x-6">
-			<h1 class="hidden text-xl font-bold lg:block">{data.settings?.organization.name}</h1>
+			<h1 class="text-xl font-bold">{data.settings?.organization.name}</h1>
 			<a
-				class="text-sm font-medium transition-colors hover:text-primary"
+				class="hidden text-sm font-medium transition-colors hover:text-primary lg:block"
 				href="/examples/dashboard"
 			>
 				Home
 			</a>
 			<a
-				class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+				class="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-primary lg:block"
 				href="/examples/dashboard">Events</a
 			><a
-				class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+				class="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-primary lg:block"
 				href="/examples/dashboard">Products</a
 			>
 		</nav>
@@ -112,13 +112,13 @@
 				<span data-state="closed">
 					<div class="overflow-hidden rounded-md">
 						<img
-							alt="Thinking Components"
+							alt={product.name}
 							loading="lazy"
 							width="150"
 							height="150"
 							decoding="async"
 							data-nimg="1"
-							class="aspect-square h-auto w-auto object-cover transition-all hover:scale-105"
+							class="aspect-square h-full w-full object-cover transition-all hover:scale-105"
 							style="color: transparent;"
 							src={product.cover}
 						/>
