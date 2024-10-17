@@ -1,7 +1,7 @@
 {
     "name": "anderfernandes/astral",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "We help people run small and medium non-profit educational centers so that they can focus on inspiring and teaching the communities they serve.",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
@@ -13,6 +13,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
@@ -46,6 +47,10 @@
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail\" \"npm run dev\" --names=server,queue,logs,vite"
         ]
     },
     "extra": {
