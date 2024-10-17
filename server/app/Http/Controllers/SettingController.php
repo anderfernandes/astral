@@ -38,8 +38,8 @@ class SettingController extends Controller
                 'email' => $settings->email,
                 'website' => $settings->website,
                 'seats' => $settings->seats,
-                'logo' => $settings->logo,
-                'cover' => $settings->cover,
+                'logo' => "/storage/$settings->logo",
+                'cover' => "/storage/$settings->cover",
                 'tax' => $settings->tax,
             ],
             'version' => '1.0.0-beta.0',
@@ -58,7 +58,7 @@ class SettingController extends Controller
      */
     public function update(Request $request): Response
     {
-        $validator = Validator::make($request->only('organization', 'seats', 'address', 'phone', 'email'),
+        $validator = Validator::make($request->only('organization', 'seats', 'address', 'phone', 'email', 'logo'),
             $this->rules);
 
         if ($validator->fails()) {
@@ -66,6 +66,10 @@ class SettingController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
+
+        $logo = $request->hasFile('logo') && $request->file('logo') != null && $request->file('logo')->getSize() > 0
+            ? $request->file('logo')->store('', 'public')
+            : '/storage/default.png';
 
         DB::table('settings')->where('id', 1)->update([
             'organization' => $request->input('organization'),
@@ -75,7 +79,7 @@ class SettingController extends Controller
             'email' => $request->input('email'),
             'website' => $request->input('website'),
             'seats' => $request->input('seats'),
-            //'logo' => $settings->logo,
+            'logo' => $logo,
             //'cover' => $settings->cover,
             'tax' => $request->input('tax'),
         ]);
