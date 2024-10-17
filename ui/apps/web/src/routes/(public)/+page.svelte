@@ -1,5 +1,6 @@
 <script lang="ts">
 	let { data } = $props();
+	const { settings } = data;
 </script>
 
 <svelte:head>
@@ -8,9 +9,12 @@
 
 <div class="border-b">
 	<div class="flex h-16 items-center px-4">
-		<nav class="flex items-center space-x-4 lg:mx-3 lg:space-x-6">
-			<h1 class="text-xl font-bold">{data.settings?.organization.name}</h1>
-			<a
+		<nav class="flex items-center space-x-4 lg:mx-3 lg:space-x-4">
+			<img src={settings.organization.logo} width="32" height="32" alt="Logo" />
+			<h1 class="relative z-20 flex items-center text-lg font-medium">
+				{data.settings?.organization.name}
+			</h1>
+			<!-- <a
 				class="hidden text-sm font-medium transition-colors hover:text-primary lg:block"
 				href="/examples/dashboard"
 			>
@@ -22,7 +26,7 @@
 			><a
 				class="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-primary lg:block"
 				href="/examples/dashboard">Products</a
-			>
+			> -->
 		</nav>
 		<div class="ml-auto flex items-center space-x-4">
 			<div class="hidden lg:block">

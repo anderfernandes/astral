@@ -3,6 +3,7 @@
 	import { AButton, ACheckbox, AInput } from 'ui';
 
 	let { data, form } = $props();
+	const { settings } = data;
 </script>
 
 <svelte:head>
@@ -11,7 +12,14 @@
 
 <main class="grid h-screen grid-cols-2">
 	<section class="hidden bg-[url('/storage/cover.jpg')] bg-cover bg-center p-6 text-white lg:block">
-		<h1 class="relative z-20 flex items-center text-lg font-medium">
+		<h1 class="relative z-20 flex items-center gap-3 text-lg font-medium">
+			<img
+				src={settings.organization.logo}
+				class="object-cover"
+				width="32"
+				height="32"
+				alt="Logo"
+			/>
 			{data.settings?.organization.name}
 		</h1>
 	</section>

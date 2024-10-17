@@ -2,15 +2,18 @@
 	import { AButton, ACheckbox, AFileUpload, AInput } from 'ui';
 
 	let { data } = $props();
+	const { settings } = data;
 </script>
 
 <svelte:head>
 	<title>Settings - Astral Admin</title>
 </svelte:head>
 
-<br />
-
-<form method="POST" class="grid gap-3">
+<form
+	method="POST"
+	enctype="multipart/form-data"
+	class="grid gap-3 overflow-y-auto lg:h-[calc(100%)]"
+>
 	<div class="grid gap-3 lg:grid-cols-4">
 		<div class="col-span-2">
 			<AInput
@@ -22,10 +25,16 @@
 				placeholder="Organization Name"
 			/>
 		</div>
-		<div class="col-span-2">
-			<AFileUpload name="logo" label="Logo" required hint="The logo of your organization." />
+		<div class="col-span-2 lg:col-span-4">
+			<AFileUpload
+				name="logo"
+				value={settings.organization.logo}
+				label="Logo"
+				required
+				hint="The logo of your organization."
+			/>
 		</div>
-		<div class="col-span-1">
+		<div class="col-span-2">
 			<AInput
 				name="seats"
 				value={data.settings?.organization.seats}
@@ -36,7 +45,7 @@
 				required
 			/>
 		</div>
-		<div class="col-span-1">
+		<div class="col-span-2">
 			<AInput name="tax" value={data.settings?.organization.tax} label="Sales Tax" required />
 		</div>
 	</div>

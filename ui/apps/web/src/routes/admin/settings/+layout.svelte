@@ -7,7 +7,7 @@
 
 <Navbar />
 
-<article class="grid gap-3">
+<article class="grid gap-3 lg:-mt-12">
 	<h2 class="mb-3 mt-16 text-lg font-semibold md:text-2xl">Settings</h2>
 
 	<div class="flex w-full overflow-x-auto lg:w-[744px]">

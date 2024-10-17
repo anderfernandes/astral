@@ -45,6 +45,7 @@ declare global {
 			cover: string;
 			tax: number;
 			astc: boolean;
+			logo: string;
 		};
 		version: string;
 		timezone: string;
