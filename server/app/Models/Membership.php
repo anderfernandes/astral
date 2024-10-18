@@ -70,7 +70,7 @@ class Membership extends Model
      */
     public function secondaries(): HasMany
     {
-        return $this->hasMany(User::class, 'membership_id')->where('id', '!=', $this->primary_id);
+        return $this->hasMany(User::class);
     }
     
     /**
