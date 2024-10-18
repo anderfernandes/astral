@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { AInput, ASelect, ASlider, AButton } from 'ui';
+	import AdminLayout from '../../AdminLayout.svelte';
 
 	let { data } = $props();
 
@@ -30,37 +31,15 @@
 	});
 </script>
 
-<svelte:head>
-	<title>New Membership | Astral Admin</title>
-</svelte:head>
-
-<header
-	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 px-5 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:-mx-6 lg:w-[calc(1080px-288px)]"
->
-	<div class="flex h-16 items-center gap-3">
-		<a href="/admin/memberships" aria-label="back">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				class="size-6"
-			>
-				<path d="m12 19-7-7 7-7" />
-				<path d="M19 12H5" />
-			</svg>
-		</a>
-		<h3 class="font-semibold leading-none tracking-tight">New Membership</h3>
+{#snippet header()}
+	<div class="flex w-full items-center justify-between">
+		<h2 class="text-xl font-bold">Shows</h2>
+		<AButton text="New Show" href="/admin/shows/create" />
 	</div>
-</header>
+{/snippet}
 
-<section class="mt-24 grid gap-6">
-	<form method="POST" class="grid gap-6">
+<AdminLayout title="New Membership" {header} backHref="/admin/memberships">
+	<form method="post" class="grid gap-6">
 		<div class="grid gap-6 lg:grid-cols-2">
 			<ASelect
 				name="type_id"
@@ -200,4 +179,4 @@
 			<AButton text="Save" disabled={tendered < total} />
 		</div>
 	</form>
-</section>
+</AdminLayout>

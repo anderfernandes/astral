@@ -2,18 +2,19 @@
 	import { formatDistanceToNow } from 'date-fns';
 	import { AButton } from 'ui';
 	import Navbar from '../Navbar.svelte';
+	import AdminLayout from '../AdminLayout.svelte';
 
 	let { data } = $props();
 </script>
 
-<Navbar />
-
-<section class="mt-16 flex w-full flex-col gap-3">
-	<div class="flex w-full items-center">
-		<h1 class="grow text-lg font-semibold md:text-2xl">Memberships</h1>
+{#snippet header()}
+	<div class="flex w-full items-center justify-between">
+		<h2 class="text-xl font-bold">Memberships</h2>
 		<AButton text="New Membership" href="/admin/memberships/create" />
 	</div>
+{/snippet}
 
+<AdminLayout title="Memberships" {header} nav>
 	<div class="grid gap-3">
 		{#each data.memberships as membership}
 			<a
@@ -38,8 +39,10 @@
 					</div>
 				</div>
 				<div class="line-clamp-2 text-xs text-muted-foreground">
-					{membership.secondaries.length}
-					{membership.secondaries.length === 1 ? 'secondary' : 'secondaries'}
+					{membership.secondaries.filter((s) => s.id !== membership.primary_id).length}
+					{membership.secondaries.filter((s) => s.id !== membership.primary_id).length === 1
+						? 'secondary'
+						: 'secondaries'}
 				</div>
 				<!-- <div class="flex items-center gap-2">
 					<div
@@ -56,4 +59,4 @@
 			</a>
 		{/each}
 	</div>
-</section>
+</AdminLayout>

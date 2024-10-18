@@ -11,8 +11,8 @@
 </svelte:head>
 
 <main class="grid h-screen grid-cols-2">
-	<section class="hidden bg-[url('/storage/cover.jpg')] bg-cover bg-center p-6 text-white lg:block">
-		<h1 class="relative z-20 flex items-center gap-3 text-lg font-medium">
+	<section class="hidden bg-[url('/storage/cover.jpg')] bg-cover bg-center text-white lg:block">
+		<h1 class="relative z-20 flex items-center gap-4 px-7 py-[0.65rem] text-lg font-medium">
 			<img
 				src={settings.organization.logo}
 				class="object-cover"
@@ -20,7 +20,7 @@
 				height="32"
 				alt="Logo"
 			/>
-			{data.settings?.organization.name}
+			{settings?.organization.name}
 		</h1>
 	</section>
 	<section class="flex w-screen flex-col items-center justify-center gap-3 lg:w-full">
@@ -49,7 +49,7 @@
 			{#if form?.message}
 				<p class="mb-3 text-center text-sm text-red-500">{form.message}</p>
 			{/if}
-			<form class="grid gap-6" method="POST" use:enhance>
+			<form class="grid gap-6" method="post" use:enhance>
 				<AInput
 					name="email"
 					type="text"

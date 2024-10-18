@@ -2,8 +2,10 @@
 	import { formatDistanceToNow } from 'date-fns';
 	import uniqBy from 'lodash/uniqBy.js';
 	import { AButton, ADialog } from 'ui';
+	import AdminLayout from '../../AdminLayout.svelte';
 
 	let { data } = $props();
+	const { sale } = data;
 
 	const paid = data.sale.payments.reduce((a, b) => a + b.total, 0);
 
@@ -17,32 +19,15 @@
 	const updated_at = new Date(data.sale.updated_at);
 </script>
 
-<svelte:head>
-	<title>Sale #{data.sale.id} Details | Astral Cashier</title>
-</svelte:head>
+{#snippet header()}
+	<div class="flex w-full items-center justify-between">
+		<h2 class="text-xl font-bold">Sale #{sale.id}</h2>
+		<!-- <AButton text="Edit" href={`/admin/sales/${sale.id}/edit`} /> -->
+	</div>
+{/snippet}
 
-<section class="flex w-full flex-col gap-6">
+<AdminLayout title={`Sale #${sale.id}`} {header} backHref="/admin/sales">
 	<div>
-		<div class="flex items-center gap-3">
-			<a href="/admin/sales" aria-label="sales">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="size-5"
-				>
-					<path d="m12 19-7-7 7-7" />
-					<path d="M19 12H5" />
-				</svg>
-			</a>
-			<h1 class="text-lg font-semibold md:text-2xl">Sale #{data.sale.id}</h1>
-		</div>
 		<div class="my-1 flex gap-3 text-sm text-muted-foreground">
 			<div class="flex items-center gap-1">
 				<svg
@@ -480,14 +465,14 @@
 			<h3 class="font-semibold leading-none tracking-tight">Memos ({data.sale.memos.length})</h3>
 			<p class="text-sm text-muted-foreground">Notes left on a sale.</p>
 		</div>
-		<AButton text="Add" onclick={toggle} />
+		<AButton text="New Memo" onclick={toggle} />
 		{#if dialog}
 			<ADialog
 				onclose={toggle}
 				title="Add Memo"
 				subtitle={`A new memo will be added to Sale #${data.sale.id}.`}
 			>
-				<form method="POST" action="?/memo">
+				<form method="post" action="?/memo">
 					<div class="grid gap-4">
 						<textarea
 							name="message"
@@ -528,4 +513,4 @@
 	{:else}
 		<span class="text-sm w-full text-center">No memos on this sale.</span>
 	{/each}
-</section>
+</AdminLayout>

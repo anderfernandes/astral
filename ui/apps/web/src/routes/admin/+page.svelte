@@ -1,7 +1,6 @@
 <script>
+	import AdminLayout from './AdminLayout.svelte';
 	import DashboardCard from './DashboardCard.svelte';
-	import Navbar from './Navbar.svelte';
-	import OverviewChart from './OverviewChart.svelte';
 	import RecentPaymentItem from './RecentPaymentItem.svelte';
 
 	let { data } = $props();
@@ -9,16 +8,11 @@
 	const { events, users, sales, tickets, payments } = data;
 </script>
 
-<svelte:head>
-	<title>Dashboard &middot; Astral</title>
-</svelte:head>
+{#snippet header()}
+	<h2 class="text-xl font-bold">Dashboard</h2>
+{/snippet}
 
-<Navbar />
-
-<article class="mt-16 grid gap-6">
-	<div class="flex items-center justify-between">
-		<h2 class="text-3xl font-bold tracking-tight">Dashboard</h2>
-	</div>
+<AdminLayout title="Dasboard" {header} nav>
 	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 		<DashboardCard title="Users" amount={users} />
 		<DashboardCard title="Events" amount={events} />
@@ -26,7 +20,6 @@
 		<DashboardCard title="Tickets" amount={tickets} />
 	</div>
 	<div class="flex gap-4">
-		<!-- <OverviewChart data={overview} /> -->
 		<div class="col-span-3 w-full rounded-xl border bg-card text-card-foreground shadow">
 			<div class="flex flex-col space-y-1.5 p-6">
 				<h3 class="font-semibold leading-none tracking-tight">Recent Payments</h3>
@@ -41,4 +34,4 @@
 			</div>
 		</div>
 	</div>
-</article>
+</AdminLayout>

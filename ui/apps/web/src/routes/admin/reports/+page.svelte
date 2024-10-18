@@ -1,17 +1,15 @@
 <script lang="ts">
 	import { AButton, ADateTimePicker, ASelect } from 'ui';
+	import AdminLayout from '../AdminLayout.svelte';
 
 	let { data } = $props();
 </script>
 
-<svelte:head>
-	<title>Astral Cashier | Reports</title>
-</svelte:head>
+{#snippet header()}
+	<h2 class="text-xl font-bold">Reports</h2>
+{/snippet}
 
-<section class="mt-16 flex w-full flex-col gap-3">
-	<div class="flex items-center">
-		<h1 class="text-lg font-semibold md:text-2xl">Reports</h1>
-	</div>
+<AdminLayout title="Reports" {header} nav>
 	<div class="grid md:gap-3 lg:grid-cols-2">
 		<div class="rounded-xl border bg-card text-card-foreground shadow">
 			<div class="flex flex-col space-y-1.5 p-6 pb-3">
@@ -21,7 +19,7 @@
 				</p>
 			</div>
 
-			<form class="grid gap-4 p-6 pt-0" action="/cashier/reports/closeout" method="GET">
+			<form class="grid gap-4 p-6 pt-0" action="/cashier/reports/closeout" method="get">
 				<ASelect
 					name="cashier"
 					options={data.users}
@@ -42,7 +40,7 @@
 				</p>
 			</div>
 
-			<form class="grid gap-4 p-6 pt-0" action="/cashier/reports/payment" method="GET">
+			<form class="grid gap-4 p-6 pt-0" action="/cashier/reports/payment" method="get">
 				<ASelect
 					name="cashier"
 					options={data.users}
@@ -56,4 +54,4 @@
 			</form>
 		</div>
 	</div>
-</section>
+</AdminLayout>

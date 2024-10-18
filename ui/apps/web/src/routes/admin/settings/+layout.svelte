@@ -1,16 +1,17 @@
 <script lang="ts">
+	import AdminLayout from '../AdminLayout.svelte';
 	import Navbar from '../Navbar.svelte';
 	import ATabItem from './ATabItem.svelte';
 
 	let { children } = $props();
 </script>
 
-<Navbar />
+{#snippet header()}
+	<h2 class="text-xl font-bold">Settings</h2>
+{/snippet}
 
-<article class="grid gap-3 lg:-mt-12">
-	<h2 class="mb-3 mt-16 text-lg font-semibold md:text-2xl">Settings</h2>
-
-	<div class="flex w-full overflow-x-auto lg:w-[744px]">
+<AdminLayout title="Settings" {header} nav>
+	<div class="-mt-3 flex w-full overflow-x-auto">
 		<ATabItem text="General" href="/admin/settings">
 			<svg class="size-5" viewBox="0 0 24 24"
 				><path
@@ -111,6 +112,7 @@
 			</svg>
 		</ATabItem>
 	</div>
-
-	{@render children()}
-</article>
+	<div class="-my-6 h-[calc(100vh-152px)] overflow-y-auto py-6" style="scrollbar-width:none">
+		{@render children()}
+	</div>
+</AdminLayout>

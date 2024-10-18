@@ -11,16 +11,16 @@
 	let { account, version }: ISidebarProps = $props();
 </script>
 
-<aside class="fixed hidden h-screen w-[288px] lg:flex lg:w-72 lg:flex-col">
-	<div class="group mb-3 flex h-full flex-col gap-4 px-2">
-		<nav class="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center">
-			<div class="flex h-16 items-center gap-3 px-3">
+<aside class="fixed hidden h-screen w-[288px] border-x lg:flex lg:w-72 lg:flex-col">
+	<div class="group mb-3 flex h-full flex-col gap-4 px-4">
+		<nav class="grid gap-1 group-[[data-collapsed=true]]:justify-center">
+			<div class="-mx-4 mb-2 flex h-16 items-center gap-3 border-b px-6">
 				<svg
 					viewBox="0 0 24 24"
 					xmlns="http://www.w3.org/2000/svg"
 					stroke="currentColor"
 					stroke-width="1.75"
-					class="size-8"
+					class="size-7"
 				>
 					<circle cx="12" cy="12" r="4.5" fill="transparent" />
 					<path
@@ -222,7 +222,7 @@
 						<p class="text-sm text-muted-foreground">{account.role.name}</p>
 					</div>
 				</div>
-				<form action="/logout" class="grid" method="POST">
+				<form action="/logout" class="grid" method="post">
 					<AButton text="Logout" type="submit" />
 				</form>
 			{/if}

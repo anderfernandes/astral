@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AdminLayout from '../AdminLayout.svelte';
 	import Navbar from '../Navbar.svelte';
 
 	interface ITicketWithQuantity extends ITicket {
@@ -11,16 +12,11 @@
 	let { data } = $props();
 </script>
 
-<svelte:head>
-	<title>Sales - Astral Cashier</title>
-</svelte:head>
+{#snippet header()}
+	<h2 class="text-xl font-bold">Sales</h2>
+{/snippet}
 
-<Navbar />
-
-<section class="mt-16 flex w-full flex-col gap-3">
-	<div class="flex items-center">
-		<h1 class="text-lg font-semibold md:text-2xl">Sales</h1>
-	</div>
+<AdminLayout title="Sales" {header} nav>
 	<div class="relative w-full overflow-auto">
 		<table class="w-full caption-bottom text-sm">
 			<thead class="[&amp;_tr]:border-b">
@@ -253,4 +249,4 @@
 			</tbody>
 		</table>
 	</div>
-</section>
+</AdminLayout>

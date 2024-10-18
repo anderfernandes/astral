@@ -7,12 +7,11 @@
 </script>
 
 <div class="flex h-screen w-full justify-center">
-	<section class="flex h-screen w-full xl:w-[1080px]">
+	<section class="flex h-screen w-full max-w-screen-2xl">
 		<!-- <Navbar /> -->
 		<Sidebar {account} version={settings.version} />
-		<div class="w-full px-6 lg:ml-[288px]">
+		<div class="h-screen w-full lg:ml-[288px]">
 			{@render children()}
-			<br />
 		</div>
 	</section>
 </div>

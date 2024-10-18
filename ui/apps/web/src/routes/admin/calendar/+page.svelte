@@ -6,57 +6,51 @@
 	import { goto } from '$app/navigation';
 	import { format } from 'date-fns';
 	import Navbar from '../Navbar.svelte';
+	import AdminLayout from '../AdminLayout.svelte';
 
 	let { data } = $props();
 	let open = $state(false);
 </script>
 
-<svelte:head>
-	<title>Calendar - Astral Admin</title>
-</svelte:head>
+{#snippet header()}
+	<h2 class="grow truncate text-xl font-bold">
+		{#if data.view === 'day'}
+			{@const start = data.start.split('-').map((n) => parseInt(n))}
+			{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
+				new Date(start[0], start[1] - 1, start[2])
+			)}
+		{:else if data.view === 'week'}
+			{@const start = data.start.split('-').map((n) => parseInt(n))}
+			{@const end = data.end.split('-').map((n) => parseInt(n))}
+			{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
+				new Date(start[0], start[1] - 1, start[2])
+			)} ~
+			{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
+				new Date(end[0], end[1] - 1, end[2])
+			)}
+		{:else}
+			{Intl.DateTimeFormat('en-US', {
+				month: 'short',
+				year: 'numeric'
+			}).format(new Date(data.end))}
+		{/if}
+	</h2>
+{/snippet}
 
-<Navbar title="Calendar" />
-
-<div class="mt-16 grid gap-3 lg:flex lg:items-center">
-	<div class="flex flex-col justify-center">
-		<h2 class="text-lg font-semibold md:text-2xl">
-			{#if data.view === 'day'}
-				{@const start = data.start.split('-').map((n) => parseInt(n))}
-				{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
-					new Date(start[0], start[1] - 1, start[2])
-				)}
-			{:else if data.view === 'week'}
-				{@const start = data.start.split('-').map((n) => parseInt(n))}
-				{@const end = data.end.split('-').map((n) => parseInt(n))}
-				{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
-					new Date(start[0], start[1] - 1, start[2])
-				)} ~
-				{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
-					new Date(end[0], end[1] - 1, end[2])
-				)}
-			{:else}
-				{Intl.DateTimeFormat('en-US', {
-					month: 'short',
-					year: 'numeric'
-				}).format(new Date(data.end))}
-			{/if}
-		</h2>
-	</div>
-	<div class="flex items-center space-x-2 lg:ml-auto">
-		<div class="w-full">
-			<ASelect
-				onchange={(e) => {
-					goto(`/admin/calendar?view=${e.currentTarget.value}`, { invalidateAll: true });
-				}}
-				options={[
-					{ text: 'Day', value: 'day' },
-					{ text: 'Week', value: 'week' },
-					{ text: 'Month', value: 'month' }
-				]}
-				name="view"
-				value={data.view}
-			/>
-		</div>
+<AdminLayout title="Calendar" {header} nav>
+	<div class="flex gap-2">
+		<ASelect
+			onchange={(e) => {
+				goto(`/admin/calendar?view=${e.currentTarget.value}`, { invalidateAll: true });
+			}}
+			options={[
+				{ text: 'Day', value: 'day' },
+				{ text: 'Week', value: 'week' },
+				{ text: 'Month', value: 'month' }
+			]}
+			name="view"
+			value={data.view}
+		/>
 		<button
 			onclick={() => {
 				open = !open;
@@ -186,6 +180,5 @@
 			</svg>
 		</a>
 	</div>
-</div>
-<br />
-<Calendar data={data.events} />
+	<Calendar data={data.events} />
+</AdminLayout>

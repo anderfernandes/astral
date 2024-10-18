@@ -1,21 +1,19 @@
 <script lang="ts">
 	import { formatDistanceToNow } from 'date-fns';
 	import { AChip } from 'ui';
+	import AdminLayout from '../../AdminLayout.svelte';
 
 	let { data } = $props();
-	let { number, primary, secondaries } = data.membership;
+	const { id, is_expired, number, primary, secondaries, primary_id } = data.membership;
 	const end = new Date(data.membership.end);
 </script>
 
-<section class="flex w-full flex-col gap-3">
-	<div class="flex w-full items-center">
-		<h1 class="grow text-lg font-semibold md:text-2xl">Memberships Details</h1>
-	</div>
+{#snippet header()}
+	<h2 class="text-xl font-bold">Membership #{number} Details</h2>
+	<AChip text={is_expired ? 'expired' : 'current'} />
+{/snippet}
 
-	<div>
-		<AChip text={data.membership.is_expired ? 'expired' : 'current'} />
-	</div>
-
+<AdminLayout title={`Membership #${number} Details`} {header} backHref="/admin/memberships/">
 	<div class="grid lg:grid-cols-3">
 		<div>
 			<h3 class="text-lg font-medium">{primary.firstname} {primary.lastname}</h3>
@@ -29,10 +27,12 @@
 		</div>
 	</div>
 	<div class="flex flex-col space-y-1.5">
-		<h3 class="font-semibold leading-none tracking-tight">Secondaries ({secondaries.length})</h3>
+		<h3 class="font-semibold leading-none tracking-tight">
+			Secondaries ({secondaries.filter((s) => s.id !== primary_id).length})
+		</h3>
 		<p class="text-sm text-muted-foreground">Additional users of this membership</p>
 	</div>
-	{#each secondaries as secondary}
+	{#each secondaries.filter((s) => s.id !== primary.id) as secondary}
 		<div class="flex items-center">
 			<span class="relative flex h-9 w-9 shrink-0 overflow-hidden">
 				<svg viewBox="0 0 24 24">
@@ -51,4 +51,4 @@
 	{:else}
 		<p>No secondaries on this membership.</p>
 	{/each}
-</section>
+</AdminLayout>

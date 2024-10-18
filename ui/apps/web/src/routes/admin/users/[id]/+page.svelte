@@ -1,41 +1,19 @@
 <script lang="ts">
 	import { AButton } from 'ui';
+	import AdminLayout from '../../AdminLayout.svelte';
 
 	let { data } = $props();
 	const { user } = data;
 </script>
 
-<svelte:head>
-	<title>{data.user.firstname} {data.user.lastname} Details &middot; Astral Admin</title>
-</svelte:head>
-
-<header
-	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 px-5 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:-mx-6 lg:w-[calc(1080px-288px)]"
->
-	<div class="flex h-16 items-center gap-3">
-		<a href="/admin/users" aria-label="back">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				class="size-6"
-			>
-				<path d="m12 19-7-7 7-7" />
-				<path d="M19 12H5" />
-			</svg>
-		</a>
-		<h3 class="grow font-semibold leading-none tracking-tight">User #{user.id}</h3>
+{#snippet header()}
+	<div class="flex w-full items-center justify-between">
+		<h2 class="text-xl font-bold">User #{user.id} Details</h2>
 		<AButton text="Edit" href={`/admin/users/${user.id}/edit`} />
 	</div>
-</header>
+{/snippet}
 
-<section class="mt-24 flex items-center gap-6">
+<AdminLayout title={`User #${user.id} Details`} {header} backHref="/admin/users">
 	<div class="flex grow flex-col gap-1">
 		<h3 class="flex items-center gap-1 text-lg font-medium">
 			{user.firstname}
@@ -78,4 +56,4 @@
 		</p>
 		<!-- <span>{data.user.membership_id}</span> -->
 	</div>
-</section>
+</AdminLayout>

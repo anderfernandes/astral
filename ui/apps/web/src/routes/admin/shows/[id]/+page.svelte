@@ -1,42 +1,20 @@
 <script lang="ts">
 	import { AButton, AChip } from 'ui';
+	import AdminLayout from '../../AdminLayout.svelte';
 
 	let { data } = $props();
-	let { show } = data;
+	const { show } = data;
+	const title = `Show Details ${show.name} (${show.type?.name})`;
 </script>
 
-<svelte:head>
-	<title>Show Details {show.name} ({show.type?.name}) &middot; Astral</title>
-</svelte:head>
-
-<header
-	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 px-5 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:-mx-6 lg:w-[calc(1080px-288px)]"
->
-	<div class="flex h-16 items-center">
-		<a href="/admin/shows" aria-label="back">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				class="size-6"
-			>
-				<path d="m12 19-7-7 7-7" />
-				<path d="M19 12H5" />
-			</svg>
-		</a>
-		<div class="ml-auto">
-			<AButton text="Edit" href={`/admin/shows/${show.id}/edit`} />
-		</div>
+{#snippet header()}
+	<div class="flex w-full items-center justify-between">
+		<h2 class="text-xl font-bold">Show #{show.id} Details</h2>
+		<AButton text="Edit" href={`/admin/shows/${show.id}/edit`} />
 	</div>
-</header>
+{/snippet}
 
-<article class="mt-16 grid gap-6">
+<AdminLayout {title} {header} backHref="/admin/shows">
 	<div class="flex w-full items-center justify-end gap-3">
 		<div class="w-20 grow lg:w-full">
 			<h2 class="truncate text-center text-2xl font-semibold tracking-tight">
@@ -85,4 +63,4 @@
 			{show.description}
 		</p>
 	</div>
-</article>
+</AdminLayout>

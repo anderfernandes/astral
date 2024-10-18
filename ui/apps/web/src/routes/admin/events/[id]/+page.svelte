@@ -2,43 +2,24 @@
 	import { enhance } from '$app/forms';
 	import { formatDistanceToNow } from 'date-fns';
 	import { AButton, AChip, ADialog, ATextArea } from 'ui';
+	import AdminLayout from '../../AdminLayout.svelte';
 
 	let { data } = $props();
-	let { event } = data;
+	const { event } = data;
 	const start = new Date(event.start);
 	let dialog = $state(false);
 	const toggle = () => (dialog = !dialog);
+	const title = `Event Details ${event.id} (${event.type?.name})`;
 </script>
 
-<header
-	class="fixed left-0 top-0 flex w-full flex-col bg-background/95 px-5 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:left-[inherit] lg:-mx-6 lg:w-[calc(1080px-288px)]"
->
-	<div class="flex h-16 items-center gap-3">
-		<a href="/admin/calendar" aria-label="back">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				class="size-6"
-			>
-				<path d="m12 19-7-7 7-7" />
-				<path d="M19 12H5" />
-			</svg>
-		</a>
-		<div class="grow"></div>
-		<div>
-			<AButton text="Edit" href={`/admin/events/${data.event.id}/edit`} />
-		</div>
+{#snippet header()}
+	<div class="flex w-full items-center justify-between">
+		<h2 class="text-xl font-bold">Event #{event.id} Details</h2>
+		<AButton text="Edit" href={`/admin/events/${event.id}/edit`} />
 	</div>
-</header>
+{/snippet}
 
-<section class="mt-16 grid gap-6">
+<AdminLayout {title} {header} backHref="/admin/calendar">
 	<div class="-mb-3 flex justify-center gap-3">
 		{#if event.is_public}
 			<svg
@@ -74,7 +55,6 @@
 		>
 		<span class="lg:grow">{event.seats.available}/{data.event.seats.total}</span>
 	</div>
-
 	<div class="grid gap-3 lg:flex">
 		<div class="flex w-full justify-center space-y-3 px-16 lg:w-[150px] lg:px-0">
 			<div class="overflow-hidden rounded-md">
@@ -112,7 +92,7 @@
 				title="New Memo"
 				subtitle="Write anything that might help others run this event."
 			>
-				<form method="POST" class="grid gap-6">
+				<form method="post" class="grid gap-6">
 					<ATextArea
 						name="message"
 						label="Memo"
@@ -151,4 +131,6 @@
 	{:else}
 		<span>This event doesn't have any memos.</span>
 	{/each}
-</section>
+</AdminLayout>
+
+<section class="mt-16 grid gap-6"></section>

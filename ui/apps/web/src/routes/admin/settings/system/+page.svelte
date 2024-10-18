@@ -3,11 +3,11 @@
 </script>
 
 <div>
-	<div class="flex flex-col space-y-1.5 p-6 pb-3">
+	<div class="mb-3 flex flex-col space-y-1.5">
 		<h3 class="font-semibold leading-none tracking-tight">System Information</h3>
 		<p class="text-sm text-muted-foreground">Useful information about the application</p>
 	</div>
-	<div class="grid gap-1 p-6 pt-0">
+	<div class="grid gap-1">
 		<div
 			class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
 		>
