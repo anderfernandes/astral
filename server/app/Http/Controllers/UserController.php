@@ -89,7 +89,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $user): Response
     {
         if ($user->id == 1) {
             return response()->noContent(404);
