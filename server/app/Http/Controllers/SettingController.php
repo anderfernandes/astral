@@ -38,7 +38,7 @@ class SettingController extends Controller
                 'email' => $settings->email,
                 'website' => $settings->website,
                 'seats' => $settings->seats,
-                'logo' => str_contains($settings->logo, "default") ? $settings->logo : "/storage/$settings->logo",
+                'logo' => str_contains($settings->logo, "logo") ? $settings->logo : "/storage/$settings->logo",
                 'cover' => str_contains($settings->cover, "cover") ? $settings->cover : "/storage/$settings->cover",
                 'tax' => $settings->tax,
             ],
