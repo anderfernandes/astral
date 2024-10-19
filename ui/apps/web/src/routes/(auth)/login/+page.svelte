@@ -1,90 +1,102 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import { AButton, ACheckbox, AInput } from 'ui';
 
-	let { data, form } = $props();
+	let { data } = $props();
 	const { settings } = data;
+	let loading = $state(false);
+	let hasErrors = $state(false);
 </script>
 
 <svelte:head>
-	<title>Login | {data.settings?.organization.name} &middot; Astral</title>
+	<title>Login | {settings?.organization.name} &middot; Astral</title>
 </svelte:head>
 
-<main class="grid h-screen grid-cols-2">
-	<section class="hidden bg-[url('/storage/cover.jpg')] bg-cover bg-center text-white lg:block">
-		<h1 class="relative z-20 flex items-center gap-4 px-7 py-[0.65rem] text-lg font-medium">
-			<img
-				src={settings.organization.logo}
-				class="object-cover"
-				width="32"
-				height="32"
-				alt="Logo"
-			/>
-			{settings?.organization.name}
-		</h1>
-	</section>
-	<section class="flex w-screen flex-col items-center justify-center gap-3 lg:w-full">
-		<article class="grid gap-3">
-			<div class="flex w-full justify-center">
-				<svg
-					viewBox="0 0 24 24"
+<h1 class="text-center text-3xl font-bold">Login</h1>
+<p class="text-balance text-center text-sm text-muted-foreground">
+	Enter your email below to login to your account.
+</p>
+<form
+	class="grid gap-3"
+	method="post"
+	use:enhance={() => {
+		hasErrors = false;
+		loading = true;
+		return async ({ result }) => {
+			console.log(result.status);
+			if (result.status! >= 400) {
+				loading = false;
+				hasErrors = true;
+			} else await applyAction(result);
+		};
+	}}
+>
+	<AInput
+		name="email"
+		type="text"
+		required
+		label="Email"
+		placeholder="Email"
+		hint="The email you used to create an account."
+		disabled={loading}
+	/>
+	<AInput
+		name="password"
+		type="password"
+		required
+		label="Password"
+		placeholder="Password"
+		hint="Your account password."
+		disabled={loading}
+	/>
+	<ACheckbox
+		name="remember"
+		label="Remember"
+		hint="Check if you are loging in using a personal device."
+		disabled={loading}
+	/>
+	<AButton text="Login" type="submit" {loading} />
+	<a class="ml-auto inline-block text-sm underline" href="/forgot"> Forgot your password? </a>
+	<div class="mt-4 text-center text-sm">
+		Don't have an account?<!-- --> <a class="underline" href="/register">Register</a>
+	</div>
+</form>
+{#if hasErrors}
+	<ol
+		tabindex="-1"
+		class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"
+	>
+		<li
+			role="status"
+			aria-live="off"
+			aria-atomic="true"
+			tabindex="-1"
+			class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border bg-background p-6 pr-8 text-foreground shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none"
+			style="user-select: none; touch-action: none;"
+			data-radix-collection-item=""
+		>
+			<div class="grid gap-1">
+				<div class="text-sm font-semibold">Uh oh! Something went wrong.</div>
+				<div class="text-sm opacity-90">Invalid credentials.</div>
+			</div>
+			<button
+				aria-label="Error"
+				type="button"
+				class="absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100"
+				><svg
 					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
 					stroke="currentColor"
-					stroke-width="1.75"
-					class="size-16"
-				>
-					<circle cx="12" cy="12" r="5" fill="transparent" />
-					<path
-						stroke="currentColor"
-						fill="transparent"
-						d="M 3.3357286,6.9976809 6.3405211,6.3405212 6.9976805,3.3357289 9.9284869,4.2690082 12,1.9953613 14.071513,4.2690081 17.002319,3.3357286 17.659479,6.3405211 20.664271,6.9976805 19.730992,9.9284869 22.004639,12 l -2.273647,2.071513 0.933279,2.930806 -3.004792,0.65716 L 17.00232,20.664271 14.071513,19.730992 12,22.004639 9.9284871,19.730992 6.9976809,20.664271 6.3405212,17.659479 3.3357289,17.00232 4.2690082,14.071513 1.9953613,12 4.2690081,9.9284871 Z"
-					/>
-				</svg>
-			</div>
-			<h1 class="text-center text-3xl font-bold">Login</h1>
-			<p class="text-balance text-center text-sm text-muted-foreground">
-				Enter your email below to login to your account.
-			</p>
-			<br />
-			{#if form?.message}
-				<p class="mb-3 text-center text-sm text-red-500">{form.message}</p>
-			{/if}
-			<form class="grid gap-6" method="post" use:enhance>
-				<AInput
-					name="email"
-					type="text"
-					required
-					label="Email"
-					placeholder="Email"
-					hint="The email you used to create an account."
-				/>
-				<AInput
-					name="password"
-					type="password"
-					required
-					label="Password"
-					placeholder="Password"
-					hint="Your account password."
-				/>
-				<ACheckbox
-					name="remember"
-					label="Remember"
-					hint="Check if you are loging in using a personal device."
-				/>
-				<AButton text="Login" type="submit" />
-				<a class="ml-auto inline-block text-sm underline" href="/forgot"> Forgot your password? </a>
-			</form>
-			<div class="mt-4 text-center text-sm">
-				Don't have an account?<!-- --> <a class="underline" href="/register">Register</a>
-			</div>
-			<div role="none" class="my-4 h-[1px] w-full shrink-0 bg-border"></div>
-			<div class="mt-4 text-center text-sm">
-				<div
-					class="inline-flex items-center rounded-md border border-transparent bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-				>
-					{data.settings?.version}
-				</div>
-			</div>
-		</article>
-	</section>
-</main>
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="lucide lucide-x h-4 w-4"
+					><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg
+				></button
+			>
+		</li>
+	</ol>
+{/if}
