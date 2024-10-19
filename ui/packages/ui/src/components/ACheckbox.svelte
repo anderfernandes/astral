@@ -16,7 +16,7 @@
 		type="checkbox"
 		id={name}
 		{checked}
-		class="form-checkbox h-4 w-4 rounded border-gray-300 border-primary bg-background text-primary ring-offset-background checked:border-primary checked:hover:border-primary focus:ring-1 focus:ring-background dark:text-background"
+		class="form-checkbox h-4 w-4 rounded border border-gray-300 bg-background text-primary ring-offset-background checked:border-border checked:hover:border-border focus:ring-1 focus:ring-background dark:text-background"
 	/>
 	<div class="space-y-1 leading-none">
 		<label

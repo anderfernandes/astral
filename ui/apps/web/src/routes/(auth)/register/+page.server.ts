@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
 	default: async ({ request, fetch }) => {
@@ -11,7 +11,7 @@ export const actions = {
 
 		if (req.status === 201) redirect(302, '/login');
 		else if (req.status === 422) {
-			await req.json();
+			return fail(req.status, await req.json());
 		} else {
 			console.log(req.status);
 		}
