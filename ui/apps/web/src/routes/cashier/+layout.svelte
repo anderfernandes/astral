@@ -5,78 +5,9 @@
 	const { account } = data;
 </script>
 
-<div class="flex w-full justify-center">
-	<main class="flex w-full lg:w-[1080px]">
-		<nav
-			class="fixed bottom-0 left-0 grid h-14 w-full auto-cols-auto grid-flow-col justify-items-center bg-background backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:hidden"
-		>
-			<a href="/cashier" aria-label="sales" class="flex size-14 items-center justify-center">
-				<div
-					class="flex size-9 items-center justify-center rounded-full bg-background shadow-sm"
-					class:bg-primary={$page.url.pathname === '/cashier'}
-					class:text-primary-foreground={$page.url.pathname === '/cashier'}
-				>
-					<svg class="size-5" viewBox="0 0 24 24"
-						><path
-							fill="currentColor"
-							d="M2,17H22V21H2V17M6.25,7H9V6H6V3H14V6H11V7H17.8C18.8,7 19.8,8 20,9L20.5,16H3.5L4.05,9C4.05,8 5.05,7 6.25,7M13,9V11H18V9H13M6,9V10H8V9H6M9,9V10H11V9H9M6,11V12H8V11H6M9,11V12H11V11H9M6,13V14H8V13H6M9,13V14H11V13H9M7,4V5H13V4H7Z"
-						></path></svg
-					>
-				</div>
-			</a>
-			<a href="/cashier/sales" aria-label="sales" class="flex size-14 items-center justify-center">
-				<div
-					class="flex size-9 items-center justify-center rounded-full bg-background shadow-sm"
-					class:bg-primary={$page.url.pathname.includes('/cashier/sales')}
-					class:text-primary-foreground={$page.url.pathname.includes('/cashier/sales')}
-				>
-					<svg
-						class="size-5"
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-						<path d="M3 6h18" />
-						<path d="M16 10a4 4 0 0 1-8 0" />
-					</svg>
-				</div>
-			</a>
-			<a
-				href="/cashier/reports"
-				aria-label="reports"
-				class="flex size-14 items-center justify-center"
-			>
-				<div
-					class="flex size-9 items-center justify-center rounded-full bg-background shadow-sm"
-					class:bg-primary={$page.url.pathname.includes('/cashier/reports')}
-					class:text-primary-foreground={$page.url.pathname.includes('/cashier/reports')}
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="size-5"
-						><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-						<path d="M14 2v4a2 2 0 0 0 2 2h4" />
-						<path d="m16 13-3.5 3.5-2-2L8 17" />
-					</svg>
-				</div>
-			</a>
-		</nav>
-		<aside class="left-0 top-0 hidden h-screen w-14 flex-col border-r lg:flex">
+<div class="flex h-svh w-screen justify-center">
+	<div class="flex w-full max-w-screen-2xl">
+		<aside class="hidden h-screen w-14 flex-col border-x lg:flex">
 			<a
 				href="/cashier"
 				aria-label="cashier"
@@ -150,7 +81,7 @@
 				</div>
 			</a>
 			<div class="grow"></div>
-			<form method="POST" action="/logout" class="flex size-14 items-center justify-center">
+			<form method="post" action="/logout" class="flex size-14 items-center justify-center">
 				<button
 					type="submit"
 					aria-label="logout"
@@ -173,33 +104,33 @@
 				</button>
 			</form>
 		</aside>
-		<nav
-			class="absolute top-0 flex h-14 w-full items-center border-b bg-background/60 px-6 backdrop-blur lg:ml-14 lg:w-[calc(1080px-3.5rem)]"
-		>
-			<h1 class="text-xl font-semibold">Cashier</h1>
-			<div class="flex grow items-center justify-end gap-2">
-				<span class="text-sm">{account?.firstname}</span>
-				<div class="flex size-9 items-center justify-center rounded-full bg-secondary">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<path d="M18 20a6 6 0 0 0-12 0" />
-						<circle cx="12" cy="10" r="4" />
-						<circle cx="12" cy="12" r="10" />
-					</svg>
+		<section class="flex h-screen w-full flex-col border-r">
+			<nav class="flex h-14 w-full items-center border-b bg-background/60 px-6 backdrop-blur">
+				<h1 class="text-xl font-semibold">Cashier</h1>
+				<div class="flex grow items-center justify-end gap-2">
+					<span class="text-sm">{account?.firstname}</span>
+					<div class="flex size-9 items-center justify-center rounded-full bg-secondary">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<path d="M18 20a6 6 0 0 0-12 0" />
+							<circle cx="12" cy="10" r="4" />
+							<circle cx="12" cy="12" r="10" />
+						</svg>
+					</div>
 				</div>
+			</nav>
+			<div class="flex h-[calc(100%-56px)] w-full flex-col overflow-y-auto lg:flex-row">
+				{@render children()}
 			</div>
-		</nav>
-		<section class="mt-14 flex h-[calc(100vh-56px)] w-full flex-col overflow-y-auto lg:flex-row">
-			{@render children()}
 		</section>
-	</main>
+	</div>
 </div>

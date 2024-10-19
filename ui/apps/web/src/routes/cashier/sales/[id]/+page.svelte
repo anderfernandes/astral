@@ -238,21 +238,23 @@
 						src={event.show.cover}
 					/>
 					<div class="flex flex-col gap-1">
-						<div class="flex gap-1">
+						<div class="grid gap-1 lg:flex">
 							<p class="align-middle text-sm font-medium">
 								#{event.id}
 								{event.show.name}
 							</p>
-							<span
-								class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-							>
-								{event.type.name}
-							</span>
-							<span
-								class="inline-flex items-center rounded-md border border-transparent bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-							>
-								{event.show.type?.name}
-							</span>
+							<div>
+								<span
+									class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+								>
+									{event.type.name}
+								</span>
+								<span
+									class="inline-flex items-center rounded-md border border-transparent bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+								>
+									{event.show.type?.name}
+								</span>
+							</div>
 						</div>
 						<span class="text-sm text-muted-foreground">
 							{Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(
@@ -333,7 +335,7 @@
 		<h3 class="font-semibold leading-none tracking-tight">Totals</h3>
 		<p class="text-sm text-muted-foreground">Costs, payments and balances.</p>
 	</div>
-	<div class="grid grid-cols-5 gap-3">
+	<div class="grid grid-cols-2 gap-3 lg:grid-cols-5">
 		<div class="flex flex-col items-center justify-center gap-3">
 			<h3 class="font-semibold leading-none tracking-tight">Subtotal</h3>
 			<div class="flex items-baseline gap-2 text-3xl font-bold tabular-nums leading-none">
@@ -380,38 +382,34 @@
 	<table class="w-full caption-bottom text-sm">
 		<thead class="[&amp;_tr]:border-b"
 			><tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-				><th
-					class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] h-10 px-2 text-left align-middle font-medium text-muted-foreground"
-				>
-					#
-				</th>
+				><th class="h-10 px-2 text-left align-middle font-medium text-muted-foreground"> # </th>
 				<th
-					class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden h-10 px-2 text-left align-middle font-medium text-muted-foreground sm:table-cell"
+					class="h-10 px-2 text-left align-middle font-medium text-muted-foreground sm:table-cell"
 				>
 					Method
 				</th>
 				<th
-					class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden h-10 px-2 text-left align-middle font-medium text-muted-foreground sm:table-cell"
+					class="h-10 px-2 text-left align-middle font-medium text-muted-foreground sm:table-cell"
 				>
 					Paid
 				</th>
 				<th
-					class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden h-10 px-2 text-left align-middle font-medium text-muted-foreground md:table-cell"
+					class="h-10 px-2 text-left align-middle font-medium text-muted-foreground md:table-cell"
 				>
 					Tendered
 				</th>
 				<th
-					class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden h-10 px-2 text-left align-middle font-medium text-muted-foreground md:table-cell"
+					class="hidden h-10 px-2 text-left align-middle font-medium text-muted-foreground md:table-cell"
 				>
 					Change
 				</th>
 				<th
-					class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden h-10 px-2 text-left align-middle font-medium text-muted-foreground md:table-cell"
+					class="hidden h-10 px-2 text-left align-middle font-medium text-muted-foreground md:table-cell"
 				>
 					Date
 				</th>
 				<th
-					class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden h-10 px-2 text-left align-middle font-medium text-muted-foreground md:table-cell"
+					class="h-10 px-2 text-left align-middle font-medium text-muted-foreground md:table-cell"
 				>
 					Cashier
 				</th>
@@ -420,50 +418,38 @@
 		<tbody class="[&amp;_tr:last-child]:border-0">
 			{#each data.sale.payments as payment}
 				<tr class="border-b transition-colors hover:bg-muted/50">
-					<td
-						class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] p-2 align-middle"
-					>
+					<td class="p-2 align-middle">
 						{payment.id}
 					</td>
-					<td
-						class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden p-2 align-middle sm:table-cell"
-					>
+					<td class="p-2 align-middle sm:table-cell">
 						<div
 							class="inline-flex items-center rounded-md border border-transparent bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
 						>
 							{payment.method.name}
 						</div>
 					</td>
-					<td
-						class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden p-2 align-middle sm:table-cell"
-					>
+					<td class="p-2 align-middle sm:table-cell">
 						{Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
 							payment.total
 						)}
 					</td>
-					<td
-						class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden p-2 align-middle md:table-cell"
-					>
+					<td class="p-2 align-middle md:table-cell">
 						{Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
 							payment.tendered
 						)}
 					</td>
-					<td
-						class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden p-2 align-middle md:table-cell"
-					>
+					<td class="hidden p-2 align-middle md:table-cell">
 						{Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
 							payment.change_due
 						)}
 					</td>
-					<td
-						class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden p-2 align-middle md:table-cell"
-					>
+					<td class="hidden p-2 align-middle md:table-cell">
 						{Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(
 							new Date(payment.created_at)
 						)}
 					</td>
 					<td
-						class="hidden p-2 align-middle md:table-cell [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+						class="p-2 align-middle md:table-cell [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
 						>{payment.cashier.firstname}
 					</td>
 				</tr>
@@ -484,7 +470,7 @@
 				title="Add Memo"
 				subtitle={`A new memo will be added to Sale #${data.sale.id}.`}
 			>
-				<form method="POST" action="?/memo">
+				<form method="post" action="?/memo">
 					<div class="grid gap-4">
 						<textarea
 							name="message"

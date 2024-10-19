@@ -498,7 +498,7 @@
 	</div>
 
 	<!-- Register -->
-	<form method="POST" class="p-4">
+	<form method="post" class="p-4">
 		<ul class="grid gap-3 text-sm">
 			<li>
 				<ASelect
