@@ -4,17 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
-        $roles = (new Role())->where('id', '!=', 1)->get();
-
-        return response(['data' => $roles], 200);
+        return response(['data' => Role::whereNot('type', 'members')->get()], 200);
     }
 
     /**
