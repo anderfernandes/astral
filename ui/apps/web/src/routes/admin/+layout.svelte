@@ -10,7 +10,7 @@
 	<section class="flex h-screen w-full max-w-screen-2xl">
 		<!-- <Navbar /> -->
 		<Sidebar {account} version={settings.version} />
-		<div class="h-screen w-full lg:ml-[288px]">
+		<div class="h-screen w-full border-r lg:ml-[288px]">
 			{@render children()}
 		</div>
 	</section>
