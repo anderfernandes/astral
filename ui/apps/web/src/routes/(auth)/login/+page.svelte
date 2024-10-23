@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import { update } from 'lodash';
 	import { AButton, ACheckbox, AInput } from 'ui';
 
-	let { data, form } = $props();
+	const { data, form } = $props();
 	const { settings } = data;
 	let loading = $state(false);
 </script>
