@@ -37,7 +37,7 @@
 		{/if}
 	</label>
 	<textarea
-		class="flex min-h-[60px] w-full rounded-md border border-input p-4 text-sm shadow-sm placeholder:text-muted-foreground focus:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+		class="form-textarea flex min-h-[60px] w-full rounded-md border border-input p-4 text-sm shadow-sm placeholder:text-muted-foreground focus:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
 		class:bg-transparent={errors.length === 0}
 		class:bg-red-50={errors.length > 0}
 		{id}

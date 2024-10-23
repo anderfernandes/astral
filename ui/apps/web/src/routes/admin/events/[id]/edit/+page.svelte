@@ -2,13 +2,15 @@
 	import { addHours } from 'date-fns';
 	import { AButton, ACheckbox, ADateTimePicker, ASelect, ASlider, ATextArea } from 'ui';
 	import AdminLayout from '../../../AdminLayout.svelte';
+	import { applyAction, enhance } from '$app/forms';
 
-	let { data } = $props();
+	const { data } = $props();
 	const { organization } = data.settings;
 	const { event_types, event, shows } = data;
 
 	let start = $state<Date>(new Date(event.start));
 	let end = $state(new Date(event.end));
+	let loading = $state(false);
 </script>
 
 {#snippet header()}
@@ -16,7 +18,20 @@
 {/snippet}
 
 <AdminLayout title={`Edit Event #${event.id}`} {header} backHref={`/admin/events/${event.id}`}>
-	<form class="space-y-8" method="post">
+	<form
+		class="space-y-8"
+		method="post"
+		use:enhance={() => {
+			loading = true;
+			return async ({ result, update }) => {
+				console.log(result.status);
+				if (result.status! >= 400) {
+					loading = false;
+				} else await applyAction(result);
+				await update();
+			};
+		}}
+	>
 		<ASelect
 			name="type_id"
 			label="Type"
@@ -78,7 +93,7 @@
 		<input type="hidden" name="_method" value="PUT" />
 		<div class="flex justify-end gap-3">
 			<AButton text="Reset" type="reset" variant="secondary" />
-			<AButton text="Save" />
+			<AButton text="Save" {loading} />
 		</div>
 	</form>
 </AdminLayout>

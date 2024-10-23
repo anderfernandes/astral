@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 
 	// TODO: GET SEATS FROM SETTINGS
 
@@ -7,11 +7,12 @@
 	import { AAlert, AButton, ACheckbox, ADateTimePicker, ASelect, ASlider, ATextArea } from 'ui';
 	import AdminLayout from '../../AdminLayout.svelte';
 
-	let { data, form } = $props();
-	let { event_types, shows } = data;
+	const { data, form } = $props();
+	const { event_types, shows } = data;
 
 	let start = $state<Date>();
 	let end = $derived(start ? addHours(start, 1) : undefined);
+	let loading = $state(false);
 </script>
 
 {#snippet header()}
@@ -26,13 +27,20 @@
 			{/each}
 		</AAlert>
 	{/if}
-	<form class="space-y-8" method="post" use:enhance>
-		<!-- <ACheckbox
-		label="All Day"
-		name="0[is_all_day]"
-		hint="Check if this is an all day event."
-		disabled
-	/> -->
+	<form
+		class="space-y-8"
+		method="post"
+		use:enhance={() => {
+			loading = true;
+			return async ({ result, update }) => {
+				console.log(result.status);
+				if (result.status! >= 400) {
+					loading = false;
+				} else await applyAction(result);
+				await update();
+			};
+		}}
+	>
 		<ACheckbox
 			label="Public"
 			name="0[is_public]"
@@ -90,7 +98,7 @@
 		/>
 		<div class="flex justify-end gap-3">
 			<AButton text="Reset" type="reset" variant="secondary" />
-			<AButton text="Save" />
+			<AButton text="Save" {loading} />
 		</div>
 	</form>
 </AdminLayout>

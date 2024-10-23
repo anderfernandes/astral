@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import { formatDistanceToNow } from 'date-fns';
 	import { AButton, AChip, ADialog, ATextArea } from 'ui';
 	import AdminLayout from '../../AdminLayout.svelte';
@@ -10,6 +10,7 @@
 	let dialog = $state(false);
 	const toggle = () => (dialog = !dialog);
 	const title = `Event Details ${event.id} (${event.type?.name})`;
+	let loading = $state(false);
 </script>
 
 {#snippet header()}
@@ -53,7 +54,7 @@
 				d="M22 21v-2a4 4 0 0 0-3-3.87"
 			/><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg
 		>
-		<span class="lg:grow">{event.seats.available}/{data.event.seats.total}</span>
+		<span class="lg:grow">{event.seats.available}/{event.seats.total}</span>
 	</div>
 	<div class="grid gap-3 lg:flex">
 		<div class="flex w-full justify-center space-y-3 px-16 lg:w-[150px] lg:px-0">
@@ -72,7 +73,7 @@
 		</div>
 		<div>
 			<div class="flex gap-3">
-				<h3 class="text-lg font-medium">{event.show.name}</h3>
+				<h3 class="truncate text-lg font-medium">{event.show.name}</h3>
 				<AChip basic text={event.show.type?.name} />
 			</div>
 			<p class="text-sm text-muted-foreground">
@@ -84,7 +85,9 @@
 	</div>
 
 	<div class="flex items-center">
-		<h3 class="grow font-semibold leading-none tracking-tight">Memos ({event.memos.length})</h3>
+		<h3 class="grow font-semibold leading-none tracking-tight">
+			Memos ({data.event.memos.length})
+		</h3>
 		<AButton onclick={toggle}>New Memo</AButton>
 		{#if dialog}
 			<ADialog
@@ -92,7 +95,22 @@
 				title="New Memo"
 				subtitle="Write anything that might help others run this event."
 			>
-				<form method="post" class="grid gap-6">
+				<form
+					method="post"
+					class="grid gap-6"
+					use:enhance={() => {
+						loading = true;
+						return async ({ result, update }) => {
+							console.log(result.status);
+							if (result.status! >= 400) {
+								loading = false;
+							} else await applyAction(result);
+							dialog = false;
+							await update();
+							loading = false;
+						};
+					}}
+				>
 					<ATextArea
 						name="message"
 						label="Memo"
@@ -101,13 +119,13 @@
 					/>
 					<div class="flex justify-end gap-3">
 						<AButton variant="secondary" type="reset" text="Clear" />
-						<AButton type="submit" text="Submit" />
+						<AButton type="submit" text="Submit" {loading} />
 					</div>
 				</form>
 			</ADialog>
 		{/if}
 	</div>
-	{#each event.memos as memo}
+	{#each data.event.memos as memo}
 		<div
 			class="flex w-full flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent"
 		>

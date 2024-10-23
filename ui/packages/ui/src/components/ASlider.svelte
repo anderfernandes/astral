@@ -32,9 +32,17 @@
 	<div class="flex w-full justify-center text-5xl font-bold tracking-tighter">
 		{value}
 	</div>
-	<div class="flex gap-3">
+	<div class="flex items-center gap-3">
 		<span>{min}</span>
-		<input type="range" bind:value class="grow accent-primary" {min} {max} {name} {disabled} />
+		<input
+			type="range"
+			bind:value
+			class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-secondary accent-primary"
+			{min}
+			{max}
+			{name}
+			{disabled}
+		/>
 		<span>{max == 0 ? '' : max}</span>
 	</div>
 	<span class="text-[0.8rem] text-muted-foreground">

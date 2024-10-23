@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import { AButton, ACheckbox, ADatePicker, AFileUpload, AInput, ASelect, ATextArea } from 'ui';
 	import AdminLayout from '../../../AdminLayout.svelte';
 
-	let { data, form } = $props();
+	const { data, form } = $props();
 	const { show, show_types } = data;
+	let loading = $state(false);
 </script>
 
 {#snippet header()}
@@ -12,7 +13,21 @@
 {/snippet}
 
 <AdminLayout title={`Edit Show #${show.id}`} {header} backHref={`/admin/shows/${show.id}`}>
-	<form method="post" class="grid gap-6" enctype="multipart/form-data" use:enhance>
+	<form
+		method="post"
+		class="grid gap-6"
+		enctype="multipart/form-data"
+		use:enhance={() => {
+			loading = true;
+			return async ({ result, update }) => {
+				console.log(result.status);
+				if (result.status! >= 400) {
+					loading = false;
+				} else await applyAction(result);
+				await update();
+			};
+		}}
+	>
 		<ACheckbox
 			checked={show.is_active}
 			name="is_active"
@@ -79,7 +94,7 @@
 		/>
 		<div class="flex justify-end gap-3">
 			<AButton text="Reset" type="reset" variant="secondary" />
-			<AButton text="Save" />
+			<AButton text="Save" {loading} />
 		</div>
 	</form>
 	{#if form?.errors}
