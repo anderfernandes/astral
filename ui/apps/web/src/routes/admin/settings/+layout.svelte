@@ -119,7 +119,10 @@
 			</svg>
 		</ATabItem>
 	</div>
-	<div class="-my-6 h-[calc(100vh-152px)] overflow-y-auto py-6" style="scrollbar-width:none">
+	<div
+		class="grid h-[calc(100vh-120px)] content-start gap-3 overflow-y-auto"
+		style="scrollbar-width:none"
+	>
 		{@render children()}
 	</div>
 </AdminLayout>

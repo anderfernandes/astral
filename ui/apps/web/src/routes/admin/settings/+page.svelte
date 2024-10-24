@@ -1,8 +1,10 @@
-<script>
+<script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
 	import { AButton, ACheckbox, AFileUpload, AInput } from 'ui';
 
-	let { data } = $props();
+	const { data } = $props();
 	const { settings } = data;
+	let loading = $state(false);
 </script>
 
 <svelte:head>
@@ -12,7 +14,19 @@
 <form
 	method="POST"
 	enctype="multipart/form-data"
-	class="grid gap-3 overflow-y-auto lg:h-[calc(100%)]"
+	class="grid gap-3 overflow-y-auto pb-6 lg:h-[calc(100%)]"
+	use:enhance={() => {
+		loading = true;
+		return async ({ result, update }) => {
+			console.log(result.status);
+			if (result.status! >= 400) {
+				loading = false;
+			} else await applyAction(result);
+
+			await update();
+			loading = false;
+		};
+	}}
 >
 	<div class="grid gap-3 lg:grid-cols-4">
 		<div class="col-span-2">
@@ -90,6 +104,6 @@
 		</div>
 	</div>
 	<div>
-		<AButton type="submit" text="Submit" />
+		<AButton type="submit" text="Submit" {loading} />
 	</div>
 </form>

@@ -40,8 +40,7 @@
 </nav>
 
 <article
-	class="flex h-[calc(100svh-129px)] flex-col gap-6 overflow-y-auto p-6"
-	class:h-[calc(100svh-64px)]={!nav}
+	class="flex h-[calc(100svh-128px)] flex-col gap-3 overflow-y-auto px-6 pt-6 lg:h-[calc(100svh-64px)]"
 >
 	{@render children()}
 </article>
