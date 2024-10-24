@@ -3,8 +3,9 @@
 	import uniqBy from 'lodash/uniqBy.js';
 	import { AButton, ADialog } from 'ui';
 	import AdminLayout from '../../AdminLayout.svelte';
+	import { applyAction, enhance } from '$app/forms';
 
-	let { data } = $props();
+	const { data } = $props();
 	const { sale } = data;
 
 	const paid = data.sale.payments.reduce((a, b) => a + b.total, 0);
@@ -14,6 +15,8 @@
 	const toggle = () => {
 		dialog = !dialog;
 	};
+
+	let loading = $state(false);
 
 	const created_at = new Date(data.sale.created_at);
 	const updated_at = new Date(data.sale.updated_at);
@@ -472,7 +475,22 @@
 				title="Add Memo"
 				subtitle={`A new memo will be added to Sale #${data.sale.id}.`}
 			>
-				<form method="post" action="?/memo">
+				<form
+					method="post"
+					action="?/memo"
+					use:enhance={() => {
+						loading = true;
+						return async ({ result, update }) => {
+							console.log(result.status);
+							if (result.status! >= 400) {
+								loading = false;
+							} else await applyAction(result);
+							dialog = false;
+							await update();
+							loading = false;
+						};
+					}}
+				>
 					<div class="grid gap-4">
 						<textarea
 							name="message"
@@ -480,7 +498,7 @@
 							placeholder="Memo"
 						></textarea>
 						<div class="flex items-center justify-end">
-							<AButton text="Save" type="submit" />
+							<AButton text="Save" type="submit" {loading} />
 						</div>
 					</div>
 				</form>

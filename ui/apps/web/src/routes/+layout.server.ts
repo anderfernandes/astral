@@ -1,5 +1,7 @@
-import { npm_package_version } from '$env/static/private';
+import { npm_package_version, npm_config_npm_version } from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
+import { fileURLToPath } from 'url';
+import { readFileSync } from 'fs';
 
 export const load = async ({ fetch, cookies }) => {
 	let req = await fetch('/settings');
@@ -22,5 +24,32 @@ export const load = async ({ fetch, cookies }) => {
 
 	const account = (await req.json()) as IUser;
 
-	return { settings, account, version: npm_package_version };
+	const sveltePackage = JSON.parse(
+		readFileSync(
+			fileURLToPath(new URL('../../../../node_modules/svelte/package.json', import.meta.url)),
+			'utf-8'
+		)
+	);
+
+	const kitPackage = JSON.parse(
+		readFileSync(
+			fileURLToPath(
+				new URL('../../../../node_modules/@sveltejs/kit/package.json', import.meta.url)
+			),
+			'utf-8'
+		)
+	);
+
+	console.log(kitPackage.version);
+
+	const ui: string[] = [
+		process.versions.node,
+		npm_config_npm_version,
+		sveltePackage.version,
+		kitPackage.version
+	];
+
+	console.log(ui);
+
+	return { settings, account, version: npm_package_version, ui };
 };

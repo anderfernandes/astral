@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { data } = $props();
+	const { data } = $props();
 </script>
 
 <div>
@@ -107,8 +107,33 @@
 				<line x1="6" x2="6.01" y1="6" y2="6" /><line x1="6" x2="6.01" y1="18" y2="18" />
 			</svg>
 			<div class="space-y-1">
-				<p class="text-sm font-medium leading-none">Other</p>
+				<p class="text-sm font-medium leading-none">Server</p>
 				<p class="text-sm text-muted-foreground">{data.settings.other}</p>
+			</div>
+		</div>
+		<div
+			class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="lucide lucide-monitor-smartphone"
+				><path d="M18 8V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8" /><path
+					d="M10 19v-3.96 3.15"
+				/><path d="M7 19h5" /><rect width="6" height="10" x="16" y="12" rx="2" /></svg
+			>
+			<div class="space-y-1">
+				<p class="text-sm font-medium leading-none">UI</p>
+				<p class="text-sm text-muted-foreground">
+					{data.ui?.at(0)}/{data.ui?.at(1)}/{data.ui?.at(2)}/{data.ui?.at(3)}
+				</p>
 			</div>
 		</div>
 		<div
@@ -189,9 +214,11 @@
 				/>
 			</svg>
 			<div class="w-full space-y-1 lg:w-4/5">
-				<p class="text-sm font-medium leading-none">Extensions</p>
+				<p class="text-sm font-medium leading-none">
+					Extensions: {data.settings.extensions.length}
+				</p>
 				<div class="text-sm text-muted-foreground">
-					<p>{data.settings.extensions.length}</p>
+					<br />
 					<div class="flex flex-wrap gap-1">
 						{#each data.settings.extensions as extension}
 							<span
