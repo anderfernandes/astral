@@ -2,13 +2,11 @@ import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
 	default: async ({ request, fetch }) => {
-		const data = await request.formData();
-
-		console.log(data);
+		const form = await request.formData();
 
 		const req = await fetch('/users', {
 			method: 'POST',
-			body: data
+			body: form
 		});
 
 		if (req.status > 299) {
@@ -17,6 +15,8 @@ export const actions = {
 			return fail(req.status, { message: 'An error occurred.' });
 		}
 
-		redirect(302, '/admin/users');
+		const { data } = await req.json();
+
+		redirect(302, `/admin/users/${data}`);
 	}
 };

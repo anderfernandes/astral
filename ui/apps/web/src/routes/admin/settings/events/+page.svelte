@@ -1,13 +1,18 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
 	import { AButton, ACheckbox, ADialog, AInput, ATextArea } from 'ui';
 
-	let { data } = $props();
+	const { data } = $props();
 
 	let selected: IEventType | undefined = $state();
-	let open = $state(false);
+
+	let dialog = $state(false);
+
 	const toggle = () => {
-		open = !open;
+		dialog = !dialog;
 	};
+
+	let loading = $state(false);
 </script>
 
 <div class="flex justify-end">
@@ -97,13 +102,28 @@
 	{/each}
 </div>
 
-{#if open}
+{#if dialog}
 	<ADialog
 		onclose={toggle}
 		title={selected === undefined ? 'New Event Type' : 'Edit Event Type'}
 		subtitle="Make sure you can't reuse event types. Changing event types affected events created with the type."
 	>
-		<form method="POST" class="grid gap-3">
+		<form
+			method="POST"
+			class="grid gap-3"
+			use:enhance={() => {
+				loading = true;
+				return async ({ result, update }) => {
+					console.log(result.status);
+					if (result.status! >= 400) {
+						loading = false;
+					} else await applyAction(result);
+					dialog = false;
+					await update();
+					loading = false;
+				};
+			}}
+		>
 			{#if selected}
 				<input type="hidden" name="id" value={selected.id} />
 			{/if}
@@ -130,7 +150,7 @@
 				hint="Makes all events of this type available to the general public."
 			/>
 			<div class="flex justify-end gap-3">
-				<AButton text="Save" type="submit" />
+				<AButton text="Save" type="submit" {loading} />
 				<AButton text="Close" variant="secondary" onclick={toggle} />
 			</div>
 		</form>

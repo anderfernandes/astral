@@ -1,9 +1,11 @@
-<script>
+<script lang="ts">
 	import { AButton, ACheckbox, AFileUpload, AInput, ASelect, ATextArea } from 'ui';
 	import AdminLayout from '../../../AdminLayout.svelte';
+	import { applyAction, enhance } from '$app/forms';
 
-	let { data } = $props();
+	const { data } = $props();
 	const { product } = data;
+	let loading = $state(false);
 </script>
 
 {#snippet header()}
@@ -15,7 +17,21 @@
 	{header}
 	backHref={`/admin/products/${product.id}`}
 >
-	<form method="post" enctype="multipart/form-data" class="grid gap-6">
+	<form
+		method="post"
+		enctype="multipart/form-data"
+		class="grid gap-6"
+		use:enhance={() => {
+			loading = true;
+			return async ({ result, update }) => {
+				console.log(result.status);
+				if (result.status! >= 400) {
+					loading = false;
+				} else await applyAction(result);
+				await update();
+			};
+		}}
+	>
 		<ACheckbox
 			checked={data.product.is_active}
 			name="is_active"
@@ -91,7 +107,7 @@
 			hint="A picture of the product."
 		/>
 		<div class="flex justify-end gap-3">
-			<AButton text="Submit" type="submit" />
+			<AButton text="Submit" type="submit" {loading} />
 		</div>
 	</form>
 </AdminLayout>

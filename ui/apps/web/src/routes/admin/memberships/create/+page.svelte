@@ -2,7 +2,7 @@
 	import { AInput, ASelect, ASlider, AButton } from 'ui';
 	import AdminLayout from '../../AdminLayout.svelte';
 
-	let { data } = $props();
+	const { data } = $props();
 
 	let membership_type_id = $state<number>();
 
@@ -15,20 +15,22 @@
 	let tendered = $state(0);
 
 	let { subtotal, tax, total } = $derived.by(() => {
-		const primary_subtotal = selected?.price || 0;
+		let primary_subtotal = selected?.price || 0;
 
-		const secondaries_subtotal = selected?.secondary_price
+		let secondaries_subtotal = selected?.secondary_price
 			? selected.secondary_price * number_of_secondaries
 			: 0;
 
-		const subtotal = primary_subtotal + secondaries_subtotal;
+		let subtotal = primary_subtotal + secondaries_subtotal;
 
-		const tax = subtotal * (data.settings.organization.tax / 100);
+		let tax = subtotal * (data.settings.organization.tax / 100);
 
-		const total = subtotal + tax;
+		let total = subtotal + tax;
 
 		return { subtotal, tax, total };
 	});
+
+	let loading = $state(false);
 </script>
 
 {#snippet header()}
@@ -153,7 +155,7 @@
 				label="Tendered"
 				placeholder="Tendered"
 				disabled={payment_method_id !== 1}
-				bind:value={tendered}
+				value={tendered.toFixed(2)}
 				required
 			/>
 			<ASelect
@@ -176,7 +178,7 @@
 		</div>
 		<div class="flex justify-end gap-3">
 			<AButton text="Reset" type="reset" variant="secondary" />
-			<AButton text="Save" disabled={tendered < total} />
+			<AButton text="Save" disabled={tendered < total} {loading} />
 		</div>
 	</form>
 </AdminLayout>

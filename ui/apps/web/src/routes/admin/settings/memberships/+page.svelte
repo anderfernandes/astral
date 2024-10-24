@@ -1,14 +1,16 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
 	import { AButton, ACheckbox, ADialog, AInput, ATextArea } from 'ui';
 
-	let { data } = $props();
+	const { data } = $props();
 
 	let selected = $state<IMembershipType>();
 
-	let open = $state(false);
+	let dialog = $state(false);
+	let loading = $state(false);
 
 	const toggle = () => {
-		open = !open;
+		dialog = !dialog;
 	};
 </script>
 
@@ -74,13 +76,28 @@
 	{/each}
 </section>
 
-{#if open}
+{#if dialog}
 	<ADialog
 		onclose={toggle}
 		title="Membership Type"
 		subtitle={selected ? `Edit ${selected.name}` : 'New Membership Type'}
 	>
-		<form method="POST" class="grid gap-3">
+		<form
+			method="POST"
+			class="grid gap-3"
+			use:enhance={() => {
+				loading = true;
+				return async ({ result, update }) => {
+					console.log(result.status);
+					if (result.status! >= 400) {
+						loading = false;
+					} else await applyAction(result);
+					dialog = false;
+					await update();
+					loading = false;
+				};
+			}}
+		>
 			{#if selected}
 				<input type="hidden" name="id" value={selected.id} />
 			{/if}
@@ -149,7 +166,7 @@
 				hint="Adds the remaining days of the membership, if any, to a membership renewal"
 			/>
 			<div class="flex justify-end gap-2">
-				<AButton text="Save" type="submit" />
+				<AButton text="Save" type="submit" {loading} />
 				<AButton text="Close" variant="secondary" onclick={toggle} />
 			</div>
 		</form>

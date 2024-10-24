@@ -16,11 +16,11 @@
 		type="checkbox"
 		id={name}
 		{checked}
-		class="form-checkbox h-4 w-4 rounded border border-gray-300 bg-background text-primary ring-offset-background checked:border-border checked:hover:border-border focus:ring-1 focus:ring-background dark:text-background"
+		class="form-checkbox h-4 w-4 cursor-pointer rounded border border-gray-300 bg-background text-primary ring-offset-background checked:border-border checked:hover:border-border focus:ring-1 focus:ring-background dark:text-background"
 	/>
 	<div class="space-y-1 leading-none">
 		<label
-			class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+			class="cursor-pointer text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 			for={name}>{label}</label
 		>
 		<p id=":r13:-form-item-description" class="text-sm text-muted-foreground">

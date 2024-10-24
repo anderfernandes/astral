@@ -1,13 +1,18 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
 	import { AButton, ACheckbox, AChip, ADialog, AInput, ATextArea } from 'ui';
 
-	let { data } = $props();
+	const { data } = $props();
 
 	let selected: ITicketType | undefined = $state();
-	let open = $state(false);
+
+	let dialog = $state(false);
+
 	const toggle = () => {
-		open = !open;
+		dialog = !dialog;
 	};
+
+	let loading = $state(false);
 </script>
 
 <svelte:head>
@@ -78,7 +83,21 @@
 						>
 					{/if}
 					{#if ticket_type.is_active}
-						<span class="size-3 rounded-full bg-green-500"></span>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="size-4"
+							><path d="M7 10v12" /><path
+								d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"
+							/></svg
+						>
 					{/if}
 				</div>
 				<p class="text-left text-sm text-muted-foreground">{ticket_type.description}</p>
@@ -87,13 +106,28 @@
 	{/each}
 </div>
 
-{#if open}
+{#if dialog}
 	<ADialog
 		onclose={toggle}
 		title={selected === undefined ? 'New Ticket Type' : `Edit Ticket Type`}
 		subtitle="Make sure you can't reuse the ones that already exist."
 	>
-		<form method="POST" class="grid gap-3">
+		<form
+			method="POST"
+			class="grid gap-3"
+			use:enhance={() => {
+				loading = true;
+				return async ({ result, update }) => {
+					console.log(result.status);
+					if (result.status! >= 400) {
+						loading = false;
+					} else await applyAction(result);
+					dialog = false;
+					await update();
+					loading = false;
+				};
+			}}
+		>
 			{#if selected?.id}
 				<input type="hidden" name="_method" value="PUT" />
 				<input type="hidden" name="id" value={selected.id} />
@@ -142,7 +176,7 @@
 				hint="Makes this ticket type available in Cashier."
 			/>
 			<div class="mt-2 flex justify-end gap-3">
-				<AButton text="Save" type="submit" />
+				<AButton text="Save" type="submit" {loading} />
 				<AButton text="Close" variant="secondary" />
 			</div>
 		</form>

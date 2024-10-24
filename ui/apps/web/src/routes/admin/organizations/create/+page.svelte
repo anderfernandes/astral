@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { AAlert, AButton, AInput, ASelect } from 'ui';
 	import AdminLayout from '../../AdminLayout.svelte';
+	import { applyAction, enhance } from '$app/forms';
 
-	let { data, form } = $props();
+	const { data, form } = $props();
+	let loading = $state(false);
 </script>
 
 {#snippet header()}
@@ -15,7 +17,20 @@
 			<AAlert title={form.message} type="error" />
 		</div>
 	{/if}
-	<form method="post" class="grid gap-6">
+	<form
+		method="post"
+		class="grid gap-6"
+		use:enhance={() => {
+			loading = true;
+			return async ({ result, update }) => {
+				console.log(result.status);
+				if (result.status! >= 400) {
+					loading = false;
+				} else await applyAction(result);
+				await update();
+			};
+		}}
+	>
 		<AInput
 			name="name"
 			required
@@ -30,7 +45,7 @@
 			hint="Address of the organization"
 			placeholder="Address"
 		/>
-		<AInput name="city" required placeholder="City" />
+		<AInput name="city" required placeholder="City" label="City" />
 		<ASelect
 			required
 			label="State"
@@ -52,10 +67,10 @@
 		<AInput
 			type="tel"
 			name="fax"
-			required
 			label="Fax"
 			placeholder="Fax"
 			hint="Fax or secondary phone"
+			maxlength={10}
 		/>
 		<AInput
 			name="email"
@@ -76,7 +91,7 @@
 		/>
 		<div class="flex justify-end gap-3">
 			<AButton text="Reset" type="reset" variant="secondary" />
-			<AButton text="Save" />
+			<AButton text="Save" {loading} />
 		</div>
 	</form>
 </AdminLayout>

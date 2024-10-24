@@ -1,10 +1,11 @@
-<script>
-	import { enhance } from '$app/forms';
+<script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
 	import { AButton, ACheckbox, AInput, ASelect } from 'ui';
 	import AdminLayout from '../../../AdminLayout.svelte';
 
-	let { data, form } = $props();
+	const { data, form } = $props();
 	const { user } = data;
+	let loading = $state(false);
 </script>
 
 {#snippet header()}
@@ -38,7 +39,20 @@
 			</div>
 		</div>
 	{/if}
-	<form method="POST" class="grid gap-6" use:enhance>
+	<form
+		method="POST"
+		class="grid gap-6"
+		use:enhance={() => {
+			loading = true;
+			return async ({ result, update }) => {
+				console.log(result.status);
+				if (result.status! >= 400) {
+					loading = false;
+				} else await applyAction(result);
+				await update();
+			};
+		}}
+	>
 		<div class="grid gap-4 lg:grid-cols-2">
 			<AInput
 				value={user.firstname}
@@ -89,7 +103,14 @@
 				hint="The state where the user lives."
 				options={[{ value: 'Texas', text: 'Texas' }]}
 			/>
-			<AInput name="zip" label="Zip" placeholder="Zip" hint="Zip code." />
+			<AInput
+				value={user.zip}
+				name="zip"
+				label="Zip"
+				placeholder="Zip"
+				hint="Zip code."
+				maxlength={5}
+			/>
 		</div>
 		<ACheckbox
 			checked={user.newsletter}
@@ -106,7 +127,7 @@
 			options={data.roles}
 		/>
 		<div>
-			<AButton text="Save" type="submit" />
+			<AButton text="Save" type="submit" {loading} />
 		</div>
 	</form>
 </AdminLayout>

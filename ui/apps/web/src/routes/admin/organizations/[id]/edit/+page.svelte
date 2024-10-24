@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import { AAlert, AButton, AInput, ASelect } from 'ui';
 	import AdminLayout from '../../../AdminLayout.svelte';
 
-	let { data, form } = $props();
+	const { data, form } = $props();
 	const { organization, organization_types } = data;
+	let loading = $state(false);
 </script>
 
 {#snippet header()}
@@ -22,7 +23,20 @@
 		</div>
 	{/if}
 
-	<form method="post" class="grid gap-6" use:enhance>
+	<form
+		method="post"
+		class="grid gap-6"
+		use:enhance={() => {
+			loading = true;
+			return async ({ result, update }) => {
+				console.log(result.status);
+				if (result.status! >= 400) {
+					loading = false;
+				} else await applyAction(result);
+				await update();
+			};
+		}}
+	>
 		<AInput
 			value={organization.name}
 			name="name"
@@ -39,7 +53,7 @@
 			hint="Address of the organization"
 			placeholder="Address"
 		/>
-		<AInput value={organization.city} name="city" required placeholder="City" />
+		<AInput label="City" value={organization.city} name="city" required placeholder="City" />
 		<ASelect
 			required
 			label="State"
@@ -95,7 +109,7 @@
 		/>
 		<div class="flex justify-end gap-3">
 			<AButton text="Reset" type="reset" variant="secondary" />
-			<AButton text="Save" />
+			<AButton text="Save" {loading} />
 		</div>
 	</form>
 </AdminLayout>
