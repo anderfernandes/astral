@@ -108,6 +108,14 @@ declare global {
 		is_public: boolean;
 	}
 
+	interface ITicketWithQuantity extends ITicket {
+		quantity: number;
+	}
+
+	interface IProductWithQuantity extends IProduct {
+		quantity: number;
+	}
+
 	/**
 	 * Event Type
 	 */

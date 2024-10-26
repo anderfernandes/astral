@@ -10,8 +10,8 @@
 	<h2 class="text-xl font-bold">Settings</h2>
 {/snippet}
 
-<AdminLayout title="Settings" {header} nav>
-	<div class="-mt-3 flex w-full overflow-x-auto">
+<AdminLayout title="Settings" {header}>
+	<div class="grid h-14 auto-cols-auto grid-flow-col overflow-x-auto lg:h-16" style="scroll">
 		<ATabItem text="General" href="/admin/settings">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

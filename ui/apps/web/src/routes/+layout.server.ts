@@ -40,16 +40,12 @@ export const load = async ({ fetch, cookies }) => {
 		)
 	);
 
-	console.log(kitPackage.version);
-
 	const ui: string[] = [
 		process.versions.node,
 		npm_config_npm_version,
 		sveltePackage.version,
 		kitPackage.version
 	];
-
-	console.log(ui);
 
 	return { settings, account, version: npm_package_version, ui };
 };

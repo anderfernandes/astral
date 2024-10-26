@@ -116,7 +116,7 @@
 				</button>
 			</form>
 		</aside>
-		<section class="flex h-screen w-full flex-col border-r">
+		<section class="flex h-svh w-full flex-col border-r">
 			<nav class="flex h-14 w-full items-center border-b bg-background/60 px-6 backdrop-blur">
 				<h1 class="text-xl font-semibold">Cashier</h1>
 				<div class="flex grow items-center justify-end gap-2">
@@ -141,11 +141,11 @@
 				</div>
 			</nav>
 			<div
-				class="flex h-[calc(100%-112px)] w-full flex-col overflow-y-auto lg:h-[calc(100%-56px)] lg:flex-row"
+				class="flex h-[calc(100svh-112px)] w-full flex-col overflow-y-auto lg:h-[calc(100svh-56px)] lg:flex-row"
 			>
 				{@render children()}
 			</div>
-			<nav class="flex h-14 justify-center border border-t lg:hidden">
+			<nav class="flex h-14 justify-center border-t lg:hidden">
 				<a href="/cashier" aria-label="cashier" class="flex size-14 items-center justify-center">
 					<div
 						class="flex size-12 items-center justify-center rounded-full bg-background shadow-sm"
@@ -217,6 +217,28 @@
 						>
 					</div>
 				</a>
+				<form method="post" action="/logout" class="flex size-14 items-center justify-center">
+					<button
+						type="submit"
+						aria-label="logout"
+						class="flex size-9 items-center justify-center rounded bg-background p-1 shadow-sm"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="size-5"
+						>
+							<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+							<polyline points="16 17 21 12 16 7" />
+							<line x1="21" x2="9" y1="12" y2="12" />
+						</svg>
+					</button>
+				</form>
 			</nav>
 		</section>
 	</div>

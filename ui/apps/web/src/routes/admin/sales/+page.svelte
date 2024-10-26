@@ -1,13 +1,5 @@
 <script lang="ts">
 	import AdminLayout from '../AdminLayout.svelte';
-	import Navbar from '../Navbar.svelte';
-
-	interface ITicketWithQuantity extends ITicket {
-		quantity: number;
-	}
-	interface IProductWithQuantity extends IProduct {
-		quantity: number;
-	}
 
 	let { data } = $props();
 </script>
@@ -21,11 +13,6 @@
 		<table class="w-full caption-bottom text-sm">
 			<thead class="[&amp;_tr]:border-b">
 				<tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-					<th
-						class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden h-10 w-[100px] px-2 text-left align-middle font-medium text-muted-foreground sm:table-cell"
-					>
-						<span class="sr-only">Image</span>
-					</th>
 					<th
 						class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] h-10 px-2 text-left align-middle font-medium text-muted-foreground"
 					>
@@ -65,26 +52,7 @@
 			</thead>
 			<tbody class="[&amp;_tr:last-child]:border-0">
 				{#each data.sales as sale}
-					{@const cover =
-						sale.events && sale.events?.length! > 0
-							? sale.events[0].show.cover
-							: '/storage/default.png'}
 					<tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-						<td
-							class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden p-2 align-middle sm:table-cell"
-						>
-							<img
-								alt="Product"
-								loading="lazy"
-								width="64"
-								height="64"
-								decoding="async"
-								data-nimg="1"
-								class="aspect-square rounded-md object-cover"
-								style="color:transparent"
-								src={cover}
-							/>
-						</td>
 						<td
 							class="[&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] p-2 align-middle font-medium"
 						>
