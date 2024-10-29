@@ -59,7 +59,19 @@ class SaleController extends Controller
             $method = (new \App\Models\PaymentMethod)->find($request->input('method_id'));
 
             if ($method == null) {
-                return response(['message' => 'Invalid payment method.']);
+                $validator->errors()->add("method_id", "Invalid payment method.");
+
+                return response([
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            if ($method->type != 'cash' && strlen($request->input('reference')) <= 2) {
+                $validator->errors()->add("method_id", "Non cash payments require CC or check reference.");
+
+                return response([
+                    'errors' => $validator->errors(),
+                ], 422);
             }
         }
 
