@@ -72,7 +72,7 @@
 </svelte:head>
 
 <!-- Tickets and Products -->
-<div class="flex flex-col gap-3 p-3 lg:w-1/2">
+<div class="flex flex-col gap-3 px-6 py-3 lg:w-1/2">
 	<!-- Tabs -->
 	<div
 		class="flex w-full flex-col-reverse justify-center lg:flex lg:flex-row lg:items-center lg:gap-3"
@@ -186,29 +186,26 @@
 					>
 					{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(day.date))}
 				</p>
-				<div class="grid gap-2">
+				<div class="grid content-center gap-3">
 					{#each day.events as event}
 						{@const start = new Date(event.start)}
 						{@const end = new Date(event.end)}
-						<div class="flex gap-3">
-							<div class="flex flex-col justify-center">
-								<img
-									src={event.show.cover}
-									class="aspect-square rounded-md object-cover"
-									width="127"
-									height="127"
-									alt={event.show.name}
-								/>
-							</div>
-							<div class="flex flex-col gap-1">
-								<h3 class="font-medium">{event.show.name}</h3>
-								<p class="text-sm text-muted-foreground">
+						<div class="flex items-center gap-3">
+							<img
+								src={event.show.cover}
+								class="aspect-square size-[127px] rounded-md object-cover"
+								alt={event.show.name}
+							/>
+							<div class="grid gap-1">
+								<span class="text-xs text-muted-foreground">#{event.id}</span>
+								<h4 class="truncate font-medium">{event.show.name}</h4>
+								<span class="truncate text-sm text-muted-foreground">
 									{Intl.DateTimeFormat('en-US', {
 										dateStyle: 'medium',
 										timeStyle: 'short'
 									}).format(start)}
 									({formatDistanceToNow(start, { addSuffix: true })})
-								</p>
+								</span>
 								<div class="flex gap-1">
 									<span
 										class="inline-flex items-center rounded-md border border-transparent bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -247,53 +244,51 @@
 </div>
 
 <!-- Register -->
-
 <div class="grid lg:w-1/2 lg:grid-cols-2">
 	<!-- Cart -->
-	<div class="flex flex-col gap-3 p-3 lg:h-[calc(100vh-3.5rem)]">
-		<div>
+	<div class="grid content-start gap-1 p-3">
+		<div class="mb-3">
 			<h3 class="group flex items-center gap-2 text-lg font-semibold tracking-tight">
 				Cart ({count})
 			</h3>
 			<p class="text-sm text-muted-foreground">Tickets and Products</p>
 		</div>
-
 		{#each cart.tickets as cart_ticket}
-			<div
-				class="flex items-start space-x-4 rounded-md bg-accent p-2 text-accent-foreground transition-all"
-			>
-				<div class="flex h-full items-center">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="size-9"
-					>
-						<path
-							d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"
-						/>
-						<path d="M13 5v2" />
-						<path d="M13 17v2" /><path d="M13 11v2" />
-					</svg>
-				</div>
-				<div class="grid w-full space-y-1">
-					<div class="flex gap-3 text-sm font-medium leading-none lg:w-full">
-						<span class="w-full truncate lg:w-20">
-							{cart_ticket.ticket_type.name} ${cart_ticket.ticket_type.price} x {cart_ticket.quantity}
-						</span>
+			<div class="hover:bg flex items-center gap-1 text-sm">
+				<div class="grid w-full content-center gap-1">
+					<h5 class="truncate font-semibold">
+						#{cart_ticket.event.id}
+						{cart_ticket.event.show.name} ({cart_ticket.event.type.name})
+					</h5>
+					<h5 class="inline-flex items-center gap-1 truncate">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="size-4"
+						>
+							<path
+								d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"
+							/>
+							<path d="M13 5v2" />
+							<path d="M13 17v2" /><path d="M13 11v2" />
+						</svg>
+						{cart_ticket.ticket_type.name} ${cart_ticket.ticket_type.price} x {cart_ticket.quantity}
+					</h5>
+					<div class="flex gap-3">
 						<button
-							aria-label="+1 ticket"
 							onclick={() => {
 								cart_ticket.quantity++;
 							}}
-						>
-							<svg
+							class="inline-flex h-9 w-9 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+							aria-label="+1 ticket"
+							><svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -307,15 +302,15 @@
 							>
 								<path d="M5 12h14" />
 								<path d="M12 5v14" />
-							</svg>
-						</button>
+							</svg><span class="sr-only">Archive</span></button
+						>
 						<button
-							aria-label="-1 ticket"
 							onclick={() => {
 								if (cart_ticket.quantity > 1) cart_ticket.quantity--;
 							}}
-						>
-							<svg
+							aria-label="-1 ticket"
+							class="inline-flex h-9 w-9 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+							><svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -328,8 +323,8 @@
 								class="size-4"
 							>
 								<path d="M5 12h14" />
-							</svg>
-						</button>
+							</svg><span class="sr-only">Archive</span></button
+						>
 						<button
 							aria-label="remove ticket"
 							onclick={() => {
@@ -346,8 +341,8 @@
 											)
 									);
 							}}
-						>
-							<svg
+							class="inline-flex h-9 w-9 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+							><svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -363,55 +358,52 @@
 								<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
 								<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
 								<line x1="10" x2="10" y1="11" y2="17" /><line x1="14" x2="14" y1="11" y2="17" />
-							</svg>
-						</button>
-					</div>
-					<div class="flex text-xs text-muted-foreground">
-						<span class="grow">
-							#{cart_ticket.event.id}
-							{cart_ticket.event.show.name} ({cart_ticket.event.type.name})
-						</span>
+							</svg><span class="sr-only">Archive</span></button
+						>
 					</div>
 				</div>
+				<img
+					src={cart_ticket.event.show.cover}
+					class="aspect-square size-[72px] rounded-full object-cover"
+					alt={cart_ticket.event.show.name}
+				/>
 			</div>
 		{/each}
-
 		{#each cart.products as cart_product}
-			<div
-				class="flex items-start space-x-4 rounded-md bg-accent p-2 text-accent-foreground transition-all"
-			>
-				<div class="flex h-full items-center">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="size-9"
-					>
-						<path
-							d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
-						/>
-						<path d="m3.3 7 8.7 5 8.7-5" />
-						<path d="M12 22V12" />
-					</svg>
-				</div>
-				<div class="grid w-full space-y-1">
-					<div class="flex gap-3 text-sm font-medium leading-none lg:w-full">
-						<span class="w-full truncate lg:w-20">
-							{cart_product.product.name}
-						</span>
+			<div class="hover:bg flex items-center gap-1 text-sm">
+				<div class="grid w-full content-center gap-1">
+					<h5 class="truncate font-semibold">
+						{cart_product.product.name}
+					</h5>
+					<h5 class="inline-flex items-center gap-1 truncate">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="size-4"
+						>
+							<path
+								d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"
+							/>
+							<path d="M13 5v2" />
+							<path d="M13 17v2" /><path d="M13 11v2" />
+						</svg>
+						${cart_product.product.price} x {cart_product.quantity}
+					</h5>
+					<div class="flex gap-3">
 						<button
 							onclick={() => {
 								cart_product.quantity++;
 							}}
-							aria-label={`+1 ${cart_product.product.name}`}
-						>
-							<svg
+							class="inline-flex h-9 w-9 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+							aria-label="+1 ticket"
+							><svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -425,15 +417,15 @@
 							>
 								<path d="M5 12h14" />
 								<path d="M12 5v14" />
-							</svg>
-						</button>
+							</svg><span class="sr-only">Archive</span></button
+						>
 						<button
 							onclick={() => {
 								if (cart_product.quantity > 1) cart_product.quantity--;
 							}}
-							aria-label={`-1 ${cart_product.product.name}`}
-						>
-							<svg
+							aria-label="-1 ticket"
+							class="inline-flex h-9 w-9 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+							><svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -446,9 +438,10 @@
 								class="size-4"
 							>
 								<path d="M5 12h14" />
-							</svg>
-						</button>
+							</svg><span class="sr-only">Archive</span></button
+						>
 						<button
+							aria-label="remove ticket"
 							onclick={() => {
 								if (
 									confirm(
@@ -459,9 +452,8 @@
 										(p) => p.product.id !== cart_product.product.id
 									);
 							}}
-							aria-label={`remove ${cart_product.product.name}`}
-						>
-							<svg
+							class="inline-flex h-9 w-9 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+							><svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -477,15 +469,15 @@
 								<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
 								<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
 								<line x1="10" x2="10" y1="11" y2="17" /><line x1="14" x2="14" y1="11" y2="17" />
-							</svg>
-						</button>
-					</div>
-					<div class="flex text-xs text-muted-foreground">
-						<span class="grow">
-							{cart_product.product.type?.name} &middot; ${cart_product.product.price} x {cart_product.quantity}
-						</span>
+							</svg><span class="sr-only">Archive</span></button
+						>
 					</div>
 				</div>
+				<img
+					src={cart_product.product.cover}
+					class="aspect-square size-[72px] rounded-full object-cover"
+					alt={cart_product.product.name}
+				/>
 			</div>
 		{/each}
 	</div>

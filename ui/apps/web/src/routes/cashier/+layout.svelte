@@ -118,7 +118,23 @@
 		</aside>
 		<section class="flex h-svh w-full flex-col border-r">
 			<nav class="flex h-14 w-full items-center border-b bg-background/60 px-6 backdrop-blur">
-				<h1 class="text-xl font-semibold">Cashier</h1>
+				<h1 class="flex items-center gap-2 text-xl font-semibold">
+					<svg
+						class="size-8 lg:hidden"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+						stroke="currentColor"
+						stroke-width="1.5"
+					>
+						<circle cx="12" cy="12" r="5" fill="transparent" />
+						<path
+							stroke="currentColor"
+							fill="transparent"
+							d="M 3.3357286,6.9976809 6.3405211,6.3405212 6.9976805,3.3357289 9.9284869,4.2690082 12,1.9953613 14.071513,4.2690081 17.002319,3.3357286 17.659479,6.3405211 20.664271,6.9976805 19.730992,9.9284869 22.004639,12 l -2.273647,2.071513 0.933279,2.930806 -3.004792,0.65716 L 17.00232,20.664271 14.071513,19.730992 12,22.004639 9.9284871,19.730992 6.9976809,20.664271 6.3405212,17.659479 3.3357289,17.00232 4.2690082,14.071513 1.9953613,12 4.2690081,9.9284871 Z"
+						/>
+					</svg>
+					Cashier
+				</h1>
 				<div class="flex grow items-center justify-end gap-2">
 					<span class="text-sm">{account?.firstname}</span>
 					<div class="flex size-9 items-center justify-center rounded-full bg-secondary">
@@ -141,7 +157,7 @@
 				</div>
 			</nav>
 			<div
-				class="flex h-[calc(100svh-112px)] w-full flex-col overflow-y-auto lg:h-[calc(100svh-56px)] lg:flex-row"
+				class="flex h-[calc(100svh-113px)] w-full flex-col overflow-y-auto lg:h-[calc(100svh-56px)] lg:flex-row"
 			>
 				{@render children()}
 			</div>

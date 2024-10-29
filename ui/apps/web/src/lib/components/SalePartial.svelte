@@ -254,38 +254,33 @@
 				<p class="text-sm text-muted-foreground">The tickets purchased in this sale.</p>
 			</div>
 			{#each sale.events! as event}
-				<div class="flex gap-3">
+				<div class="flex items-center gap-3">
 					<img
 						alt={event.show.name}
-						loading="lazy"
-						width="80"
-						height="80"
-						decoding="async"
-						data-nimg="1"
-						class="aspect-square rounded-md object-cover"
+						class="aspect-square h-[112px] w-[80px] rounded-md object-cover"
 						style="color:transparent"
 						src={event.show.cover}
 					/>
-					<div class="flex flex-col gap-1">
-						<div class="grid gap-1 lg:flex">
-							<p class="align-middle text-sm font-medium">
-								#{event.id}
-								{event.show.name}
-							</p>
-							<div>
-								<span
-									class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-								>
-									{event.type.name}
-								</span>
-								<span
-									class="inline-flex items-center rounded-md border border-transparent bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-								>
-									{event.show.type?.name}
-								</span>
-							</div>
+					<div class="grid gap-1">
+						<span class="text-xs text-muted-foreground">
+							#{event.id}
+						</span>
+						<h5 class="truncate align-middle text-sm font-medium">
+							{event.show.name}
+						</h5>
+						<div>
+							<span
+								class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+							>
+								{event.type.name}
+							</span>
+							<span
+								class="inline-flex items-center rounded-md border border-transparent bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+							>
+								{event.show.type?.name}
+							</span>
 						</div>
-						<span class="text-sm text-muted-foreground">
+						<span class="text-xs text-muted-foreground">
 							{Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(
 								new Date(event.start)
 							)}
