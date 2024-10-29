@@ -13,9 +13,13 @@ class PaymentMethodController extends Controller
      */
     public function index(Request $request): Response
     {
-        $payment_methods = $request->has('type')
-            ? (new PaymentMethod)->whereIn('type', explode(',', $request->query('type')))->get()
-            : (new PaymentMethod)->all();
+        $payment_methods = new PaymentMethod();
+
+        if ($request->has('type')) {
+            $payment_methods = $payment_methods->whereIn('type', explode(',', $request->query('type')));
+        }
+
+        $payment_methods = $payment_methods->where('type', '!=', 'online')->get();
 
         return response(['data' => $payment_methods], 200);
     }
