@@ -1,10 +1,13 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
 	import { beforeNavigate, invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { formatDistanceToNow } from 'date-fns';
 	import { AButton, ADatePicker, AInput, ASelect } from 'ui';
 
-	let { data } = $props();
+	let { data, form } = $props();
+
+	let loading = $state(false);
 
 	let tendered = $state('0.00');
 
@@ -28,16 +31,6 @@
 		// Update tendered
 		tendered = tendered === '0.00' ? e.currentTarget.value : tendered.concat(e.currentTarget.value);
 	};
-
-	interface ICartTicket {
-		ticket_type: ITicketType;
-		event: IEvent;
-		quantity: number;
-	}
-	interface ICartProduct {
-		product: IProduct;
-		quantity: number;
-	}
 
 	let cart = $state<{ tickets: ICartTicket[]; products: ICartProduct[] }>({
 		tickets: [],
@@ -498,7 +491,26 @@
 	</div>
 
 	<!-- Register -->
-	<form method="post" class="p-4">
+	<form
+		method="post"
+		class="p-4"
+		use:enhance={() => {
+			loading = true;
+			return async ({ result, update }) => {
+				console.log(result.status);
+				if (result.status! >= 400) {
+					loading = false;
+				} else {
+					await applyAction(result);
+					loading = false;
+					cart = { tickets: [], products: [] };
+					tendered = '0.00';
+					method = data.payment_methods[0].id;
+				}
+				await update();
+			};
+		}}
+	>
 		<ul class="grid gap-3 text-sm">
 			<li>
 				<ASelect
@@ -506,7 +518,7 @@
 					options={data.customers}
 					placeholder="Customer"
 					required
-					value={1}
+					value={data.customers[0].id}
 				/>
 			</li>
 			<li class="flex items-center justify-between">
@@ -554,12 +566,18 @@
 					onchange={(e) => {
 						const value = e.currentTarget.value;
 						tendered = value !== '1' ? total.toFixed(2) : '0.00';
+						//method = parseInt(value);
 					}}
-					value={1}
+					value={data.payment_methods[0].id}
 				/>
 			</li>
 			<li>
-				<AInput name="reference" placeholder="Reference" required={method !== 1} />
+				<AInput
+					name="reference"
+					placeholder="Reference"
+					required={method !== 1}
+					errors={form?.errors?.method_id || []}
+				/>
 			</li>
 			<li class="grid grid-cols-3 gap-3">
 				<div class="flex items-center justify-center">
@@ -674,6 +692,7 @@
 			</li>
 			<li class="grid gap-3">
 				<AButton
+					{loading}
 					type="submit"
 					onclick={(e) => {
 						if (!confirm('Are you sure you want to save this sale?')) e.preventDefault();

@@ -10,7 +10,7 @@
 <div class="h-svh w-screen">
 	<div class="mx-auto flex w-full lg:max-w-screen-xl">
 		<Sidebar {account} version={settings.version} />
-		<div class="flex w-screen flex-col lg:w-[calc(100%-16rem)]">
+		<div class="flex w-screen flex-col lg:w-[calc(100%-16rem)] lg:border-r">
 			<main class="h-[calc(100svh-64px)] lg:h-svh">
 				{@render children()}
 			</main>

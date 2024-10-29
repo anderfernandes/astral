@@ -36,8 +36,11 @@ export const actions = {
 		});
 
 		if (req.status > 299) {
-			console.log(req.status, await req.json());
-			return fail(req.status, { message: 'An error has occurred.' });
+			const res: IResponseWithValidationErrors = await req.json();
+			console.log(res);
+			return fail(req.status, res);
 		}
+
+		return { success: true };
 	}
 };

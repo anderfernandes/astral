@@ -6,8 +6,8 @@
 </script>
 
 <div class="flex h-svh w-screen justify-center">
-	<div class="flex w-full max-w-screen-2xl">
-		<aside class="hidden h-screen w-14 flex-col border-x lg:flex">
+	<div class="flex w-full max-w-screen-xl">
+		<aside class="hidden h-screen w-14 flex-col lg:flex lg:border-x">
 			<div aria-label="cashier" class="flex size-14 items-center justify-center border-b">
 				<div class="size-9 rounded-full bg-background p-1 shadow-sm">
 					<svg

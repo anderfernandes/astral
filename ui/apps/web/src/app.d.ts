@@ -391,6 +391,16 @@ declare global {
 		cashier: IUser;
 		refunded: boolean;
 	}
+
+	interface ICartTicket {
+		ticket_type: ITicketType;
+		event: IEvent;
+		quantity: number;
+	}
+	interface ICartProduct {
+		product: IProduct;
+		quantity: number;
+	}
 }
 
 export {};
