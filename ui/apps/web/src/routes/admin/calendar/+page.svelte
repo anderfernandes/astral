@@ -37,7 +37,7 @@
 	</h2>
 {/snippet}
 
-<AdminLayout title="Calendar" {header} nav>
+<AdminLayout title="Calendar" {header}>
 	<div class="flex gap-2">
 		<ASelect
 			onchange={(e) => {

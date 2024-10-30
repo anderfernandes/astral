@@ -12,11 +12,11 @@
 	<h2 class="text-xl font-bold">Dashboard</h2>
 {/snippet}
 
-<AdminLayout title="Dasboard" {header} nav>
+<AdminLayout title="Dasboard" {header}>
 	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 		<DashboardCard title="Users" amount={users} />
 		<DashboardCard title="Events" amount={events} />
-		<DashboardCard title="Sales" amount={sales} currency />
+		<DashboardCard title="Sales" amount={sales} />
 		<DashboardCard title="Tickets" amount={tickets} />
 	</div>
 	<div class="flex gap-4">
