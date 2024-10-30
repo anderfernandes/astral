@@ -59,7 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $fillable = ['firstname', 'lastname', 'email', 'phone', 'address', 'city', 'state', 'zip', 'password', 'newsletter', 'role_id', 'membership_id', 'email_verified_at'];
+    protected $fillable = ['firstname', 'lastname', 'email', 'phone', 'address', 'city', 'state', 'zip', 'password', 'newsletter', 'role_id', 'membership_id', 'email_verified_at', 'organization_id'];
 
     /**
      * Returns the role of the user.
@@ -67,5 +67,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * An user's organization.
+     */
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    /**
+     * The membership of a user.
+     */
+    public function membership(): BelongsTo
+    {
+        return $this->belongsTo(Membership::class);
     }
 }

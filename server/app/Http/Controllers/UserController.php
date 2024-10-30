@@ -16,7 +16,7 @@ class UserController extends Controller
         'firstname' => ['required', 'min:3', 'max:63'],
         'lastname' => ['required', 'min:3', 'max:127'],
         'email' => ['required', 'email', 'unique:users,email'],
-        'phone' => ['nullable', 'unique:users,phone'],
+        'phone' => ['nullable'],
         'address' => ['nullable', 'min:3', 'max:255'],
         'city' => ['nullable', 'min:3', 'max:63'],
         'state' => ['nullable', 'min:3', 'max:63'],
@@ -97,7 +97,7 @@ class UserController extends Controller
             return response()->noContent(404);
         }
 
-        return response($user->load(['role']), 200);
+        return response($user->load(['role', 'membership', 'organization']), 200);
     }
 
     /**
@@ -123,6 +123,16 @@ class UserController extends Controller
             }
         }
 
+
+
+        if ($request->has('organization_id')) {
+            $organization = \App\Models\Organization::find($request->input('organization_id'));
+
+            if ($organization == null) {
+                return response()->noContent(422);
+            }
+        }
+
         $user->update([
             'firstname' => $request->input('firstname'),
             'lastname' => $request->input('lastname'),
@@ -135,6 +145,7 @@ class UserController extends Controller
             'newsletter' => $request->has('newsletter'),
             'password' => Hash::make($request->input('password')),
             'role_id' => $request->input('role_id'),
+            'organization_id' => $request->has('organization_id') ? $request->input('organization_id') : 1
         ]);
 
         //$user->sendEmailVerificationNotification();
