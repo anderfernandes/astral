@@ -9,14 +9,16 @@
 </script>
 
 {#snippet header()}
-	<h2 class="text-xl font-bold">Membership #{number} Details</h2>
+	<h2 class="font-semibold leading-none tracking-tight">Membership #{number} Details</h2>
 	<AChip text={is_expired ? 'expired' : 'current'} />
 {/snippet}
 
 <AdminLayout title={`Membership #${number} Details`} {header} backHref="/admin/memberships/">
 	<div class="grid lg:grid-cols-3">
 		<div>
-			<h3 class="text-lg font-medium">{primary.firstname} {primary.lastname}</h3>
+			<a href={`/admin/users/${primary.id}`} class="text-lg font-medium"
+				>{primary.firstname} {primary.lastname}</a
+			>
 			<p class="text-sm text-muted-foreground">#{number}</p>
 		</div>
 		<div>
@@ -42,10 +44,10 @@
 					/>
 				</svg>
 			</span>
-			<div class="ml-4 space-y-1">
+			<a href={`/admin/users/${secondary.id}`} class="ml-4 space-y-1">
 				<p class="text-sm font-medium leading-none">{secondary.firstname} {secondary.lastname}</p>
 				<p class="text-sm text-muted-foreground">{secondary.email}</p>
-			</div>
+			</a>
 			<!-- <div class="ml-auto font-medium">+$1,999.00</div> -->
 		</div>
 	{:else}

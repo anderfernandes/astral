@@ -35,8 +35,7 @@
 
 {#snippet header()}
 	<div class="flex w-full items-center justify-between">
-		<h2 class="text-xl font-bold">Shows</h2>
-		<AButton text="New Show" href="/admin/shows/create" />
+		<h2 class="font-semibold leading-none tracking-tight">New Membership</h2>
 	</div>
 {/snippet}
 

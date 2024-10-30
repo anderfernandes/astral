@@ -18,7 +18,7 @@
 				<a
 					href="/admin"
 					class:active={$page.url.pathname === '/admin'}
-					class="flex h-16 min-w-20 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] min-w-20 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +48,7 @@
 				<a
 					href="/admin/calendar"
 					class:active={$page.url.pathname.includes('/calendar')}
-					class="flex h-16 min-w-20 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] min-w-20 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@
 				<a
 					href="/admin/shows"
 					class:active={$page.url.pathname.includes('/shows')}
-					class="flex h-16 min-w-20 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] min-w-20 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +94,7 @@
 				<a
 					href="/admin/sales"
 					class:active={$page.url.pathname.includes('/sales')}
-					class="flex h-16 min-w-20 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] min-w-20 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +114,7 @@
 				<a
 					href="/admin/products"
 					class:active={$page.url.pathname.includes('/products')}
-					class="flex h-16 min-w-20 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] min-w-20 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg class="size-6" viewBox="0 0 24 24"
 						><path
@@ -127,7 +127,7 @@
 				<a
 					href="/admin/reports"
 					class:active={$page.url.pathname.includes('/reports')}
-					class="flex h-16 min-w-20 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] min-w-20 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +150,7 @@
 				<a
 					href="/admin/users"
 					class:active={$page.url.pathname.includes('/users')}
-					class="flex h-16 w-20 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] w-20 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg class="size-6" viewBox="0 0 24 24">
 						<path
@@ -164,7 +164,7 @@
 				<a
 					href="/admin/organizations"
 					class:active={$page.url.pathname.includes('/organizations')}
-					class="flex h-16 w-24 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] w-24 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg class="size-6" viewBox="0 0 24 24"
 						><path
@@ -177,7 +177,7 @@
 				<a
 					href="/admin/memberships"
 					class:active={$page.url.pathname.includes('/memberships')}
-					class="flex h-16 w-24 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] w-24 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg class="size-6" viewBox="0 0 24 24"
 						><path
@@ -190,7 +190,7 @@
 				<a
 					href="/admin/settings"
 					class:active={$page.url.pathname.includes('/settings')}
-					class="flex h-16 min-w-20 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] min-w-20 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -209,7 +209,7 @@
 				</a>
 				<a
 					href="/cashier"
-					class="flex h-16 min-w-20 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] min-w-20 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<svg class="size-6"
 						><path
@@ -223,7 +223,7 @@
 					action="/logout"
 					method="post"
 					use:enhance
-					class="flex h-16 min-w-20 flex-col items-center justify-center gap-1 font-medium"
+					class="flex h-[63px] min-w-20 flex-col items-center justify-center gap-1 font-medium"
 				>
 					<button type="submit" class="flex w-full flex-col items-center justify-center gap-1">
 						<svg

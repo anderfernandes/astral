@@ -4,7 +4,7 @@
 	import AdminLayout from '../../../AdminLayout.svelte';
 
 	const { data, form } = $props();
-	const { user } = data;
+	const { user, roles, organizations } = data;
 	let loading = $state(false);
 </script>
 
@@ -125,19 +125,29 @@
 				maxlength={5}
 			/>
 		</div>
+		<div class="grid gap-4 lg:grid-cols-2">
+			<ASelect
+				value={user.role_id}
+				name="role_id"
+				label="Role"
+				placeholder="Select one"
+				hint="The role of the user."
+				options={roles}
+			/>
+			<ASelect
+				value={user.organization_id}
+				name="organization_id"
+				label="Organization"
+				placeholder="Select one"
+				hint="Put them in an organization if they belong to one."
+				options={organizations}
+			/>
+		</div>
 		<ACheckbox
 			checked={user.newsletter}
 			name="newsletter"
 			label="Send newsletters"
 			hint="Check if this user should receive email newsletters."
-		/>
-		<ASelect
-			value={user.role_id}
-			name="role_id"
-			label="Role"
-			placeholder="Select one"
-			hint="The role of the user."
-			options={data.roles}
 		/>
 		<div>
 			<AButton text="Save" type="submit" {loading} />

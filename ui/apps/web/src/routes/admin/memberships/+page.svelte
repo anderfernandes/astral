@@ -9,12 +9,12 @@
 
 {#snippet header()}
 	<div class="flex w-full items-center justify-between">
-		<h2 class="text-xl font-bold">Memberships</h2>
+		<h2 class="font-semibold leading-none tracking-tight">Memberships</h2>
 		<AButton text="New Membership" href="/admin/memberships/create" />
 	</div>
 {/snippet}
 
-<AdminLayout title="Memberships" {header} nav>
+<AdminLayout title="Memberships" {header}>
 	<div class="grid gap-3">
 		{#each data.memberships as membership}
 			<a

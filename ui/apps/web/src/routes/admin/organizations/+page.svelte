@@ -13,7 +13,7 @@
 	</div>
 {/snippet}
 
-<AdminLayout title="Organizations" {header} nav>
+<AdminLayout title="Organizations" {header}>
 	{#each data.organizations as { id, name, city, state, phone, type }}
 		<a
 			href={`/admin/organizations/${id}`}
@@ -26,7 +26,7 @@
 				</h3>
 				<p class="text-sm text-muted-foreground">
 					{city}, {state}
-					{phone}
+					{phone?.replace(/\D+/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')}
 				</p>
 			</div>
 		</a>

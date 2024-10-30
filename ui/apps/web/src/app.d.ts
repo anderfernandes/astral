@@ -291,6 +291,7 @@ declare global {
 		membership_id?: number;
 		type?: 'walk-up' | 'organization' | 'individual';
 		organization_id?: number;
+		organization?: IOrganization;
 		address: string | null;
 		city: string | null;
 		state: string | null;

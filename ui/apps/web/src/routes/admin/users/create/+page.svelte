@@ -45,14 +45,26 @@
 				required
 			/>
 		</div>
-		<AInput
-			type="email"
-			name="email"
-			label="Email"
-			placeholder="Email"
-			hint="The email of the user. Must not be on record already."
-			required
-		/>
+		<div class="grid gap-4 lg:grid-cols-2">
+			<AInput
+				type="text"
+				name="email"
+				label="Email"
+				placeholder="Email"
+				hint="The email of the user. Must not be on record already."
+				required
+			/>
+			<AInput
+				type="tel"
+				name="phone"
+				label="Phone"
+				placeholder="Phone"
+				hint="Mobile phone."
+				minlength={10}
+				maxlength={10}
+				required
+			/>
+		</div>
 		<div class="grid gap-4 lg:grid-cols-2">
 			<AInput
 				name="address"

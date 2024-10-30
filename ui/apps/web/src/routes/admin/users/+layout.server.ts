@@ -1,6 +1,8 @@
 export const load = async ({ fetch }) => {
-	const req = await fetch('/roles');
-	const res: { data: IUser[] } = await req.json();
+	const [roles, organizations]: [{ data: IRole[] }, { data: IOrganization[] }] = await Promise.all([
+		fetch('/roles').then((res) => res.json()),
+		fetch('/organizations').then((res) => res.json())
+	]);
 
-	return { roles: res.data };
+	return { roles: roles.data, organizations: organizations.data };
 };
