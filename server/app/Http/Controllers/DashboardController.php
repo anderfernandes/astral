@@ -14,7 +14,7 @@ class DashboardController extends Controller
 
         $data['users'] = DB::table('users')->count();
         $data['events'] = DB::table('events')->count();
-        $data['sales'] = DB::table('sales')->where('total')->count();
+        $data['sales'] = DB::table('sales')->count();
         $data['tickets'] = DB::table('tickets')->count();
         $data['payments'] = DB::table('payments')->latest()->take(5)->get();
 
