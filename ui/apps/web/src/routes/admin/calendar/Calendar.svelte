@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { isSameDay, startOfDay } from 'date-fns';
-	import uniq from 'lodash/uniq';
 	import { AChip } from 'ui';
 
 	interface ICalendarProps {

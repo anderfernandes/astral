@@ -131,9 +131,9 @@
 			>
 			<div class="space-y-1">
 				<p class="text-sm font-medium leading-none">UI</p>
-				<p class="text-sm text-muted-foreground">
+				<!-- <p class="text-sm text-muted-foreground">
 					{data.ui?.at(0)}/{data.ui?.at(1)}/{data.ui?.at(2)}/{data.ui?.at(3)}
-				</p>
+				</p> -->
 			</div>
 		</div>
 		<div

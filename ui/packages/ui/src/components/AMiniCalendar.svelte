@@ -1,6 +1,5 @@
 <script lang="ts">
 	import {
-		addDays,
 		addMonths,
 		eachDayOfInterval,
 		endOfMonth,

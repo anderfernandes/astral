@@ -2,7 +2,6 @@
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import AMiniCalendar from './AMiniCalendar.svelte';
 	import AInput from './AInput.svelte';
-	import { getTime } from 'date-fns';
 
 	interface IDateTimePickerProps
 		extends Pick<HTMLInputAttributes, 'name' | 'placeholder' | 'required'> {

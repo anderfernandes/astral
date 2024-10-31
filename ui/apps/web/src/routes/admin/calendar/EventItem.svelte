@@ -76,11 +76,8 @@
 		<a
 			href={`/admin/events/${id}/edit`}
 			class="inline-flex h-9 w-9 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-			aria-haspopup="true"
 			type="button"
-			id="radix-:Rsqmipuuuuu6ja:"
-			aria-expanded="false"
-			data-state="closed"
+			aria-label="Edit Event"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

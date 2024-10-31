@@ -1,11 +1,8 @@
 <script>
 	import { AButton, AMiniCalendar, ASelect } from 'ui';
-	import EventItem from './EventItem.svelte';
 	import Calendar from './Calendar.svelte';
-	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { format } from 'date-fns';
-	import Navbar from '../Navbar.svelte';
 	import AdminLayout from '../AdminLayout.svelte';
 
 	let { data } = $props();
