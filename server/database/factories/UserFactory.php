@@ -22,11 +22,14 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'firstname' => fake()->firstName,
-            'lastname' => fake()->lastName,
-            'email' => fake()->email,
-            'password' => fake()->password,
-            'role_id' => 1
+            'firstname' => fake()->firstName(),
+            'lastname' => fake()->lastName(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => fake()->password(8),
+            'role_id' => 1,
+            'organization_id' => 1,
+            'membership_id' => 1,
+            'creator_id' => 1,
         ];
     }
 

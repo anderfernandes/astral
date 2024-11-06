@@ -15,19 +15,20 @@ class PasswordRecoveryTest extends TestCase
      */
     public function test_account_register(): void
     {
-        $email = fake()->email;
-        $password = fake()->password;
+        $user = \App\Models\User::factory()->make();
+        $password = fake()->password(8);
 
         $this->post('/api/register', [
-            'firstname' => fake()->firstName,
-            'lastname' => fake()->lastName,
-            'email' => $email,
+            'firstname' => $user->firstname,
+            'lastname' => $user->lastname,
+            'email' => $user->email,
+            'email_confirmation' => $user->email,
             'password' => $password,
-            'password_confirmation' => $password
+            'password_confirmation' => $password,
         ]);
 
         $response = $this->post('/api/forgot', [
-            'email' => $email,
+            'email' => $user->email,
         ], [
             "HEADER_X_FORWARDED_HOST" => "192.168.1.187"
         ]);

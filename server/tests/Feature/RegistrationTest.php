@@ -13,12 +13,14 @@ class RegistrationTest extends TestCase
      */
     public function test_registration(): void
     {
+        $email = fake()->email;
         $password = fake()->password(8);
 
         $response = $this->post('/api/register', [
             'firstname' => fake()->firstName,
             'lastname' => fake()->lastName,
-            'email' => fake()->email,
+            'email' => $email,
+            'email_confirmation' => $email,
             'password' => $password,
             'password_confirmation' => $password
         ]);

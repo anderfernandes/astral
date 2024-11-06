@@ -31,7 +31,7 @@ class SaleMemoTest extends TestCase
             'customer_id' => $this->user->id,
         ])->json('data');
 
-        $response = $this->post('/api/sales/memos', [
+        $response = $this->post("/api/sales/{$sale_id}/memos", [
             'message' => fake()->text,
             'author_id' => 1,
             'sale_id' => $sale_id

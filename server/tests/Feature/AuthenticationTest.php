@@ -2,54 +2,64 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
+use App\Models\User;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
     /**
-     * Tests user login
+     * Indicates whether the default seeder should run before each test.
      */
+    protected bool $seed = false;
+
+    protected User $user;
+    protected string $password;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = User::factory()->make();
+        $this->password = fake()->password(8);
+    }
+
+    public function test_register(): void
+    {
+        $response = $this->post('/api/register', [
+            'firstname' => $this->user->firstname,
+            'lastname' => $this->user->lastname,
+            'email' => $this->user->email,
+            'email_confirmation' => $this->user->email,
+            'password' => $this->password,
+            'password_confirmation' => $this->password,
+        ]);
+
+        $response->assertStatus(201);
+    }
+
     public function test_login(): void
     {
-        $email = fake()->email;
-        $password = fake()->password(8);
-
         $this->post('/api/register', [
-            'firstname' => fake()->firstName,
-            'lastname' => fake()->lastName,
-            'email' => $email,
-            'password' => $password,
-            'password_confirmation' => $password,
+            'firstname' => $this->user->firstname,
+            'lastname' => $this->user->lastname,
+            'email' => $this->user->email,
+            'email_confirmation' => $this->user->email,
+            'password' => $this->password,
+            'password_confirmation' => $this->password,
         ]);
 
         $response = $this->post('/api/login', [
-            'email' => $email,
-            'password' => $password
+            'email' => $this->user->email,
+            'password' => $this->password,
         ]);
 
         $response->assertStatus(200);
     }
 
-    /**
-     * Tests login validation rules
-     */
     public function test_login_validation(): void
     {
-        $email = fake()->email;
-        $password = fake()->password;
-
-        $this->post('/api/register', [
-            'firstname' => fake()->firstName,
-            'lastname' => fake()->lastName,
-            'email' => $email,
-            'password' => $password,
-            'password_confirmation' => $password,
-        ]);
-
         $response = $this->post('/api/login', [
-            'email' => $email
+            'email' => $this->user->email
         ]);
 
         $response->assertStatus(422);
@@ -57,19 +67,17 @@ class AuthenticationTest extends TestCase
 
     public function test_login_with_wrong_password(): void
     {
-        $email = fake()->email;
-        $password = fake()->password;
-
         $this->post('/api/register', [
-            'firstname' => fake()->firstName,
-            'lastname' => fake()->lastName,
-            'email' => $email,
-            'password' => $password,
-            'password_confirmation' => $password,
+            'firstname' => $this->user->firstname,
+            'lastname' => $this->user->lastname,
+            'email' => $this->user->email,
+            'email_confirmation' => $this->user->email,
+            'password' => $this->password,
+            'password_confirmation' => $this->password,
         ]);
 
         $response = $this->post('/api/login', [
-            'email' => $email,
+            'email' => $this->user->email,
             'password' => fake()->password
         ]);
 

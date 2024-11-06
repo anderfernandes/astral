@@ -18,10 +18,10 @@ class AuthController extends Controller
     public function register(Request $request): Response
     {
         $validator = Validator::make($request->input(), [
-            'firstname' => ['required', 'min:2', 'max:64'],
-            'lastname' => ['required', 'min:2', 'max:64'],
-            'email' => ['required', 'email', 'min:3', 'max:64', 'unique:users,email', 'confirmed'],
-            'password' => ['required', 'confirmed', 'min:8', 'max:64'],
+            'firstname' => ['required', 'min:2', 'max:63'],
+            'lastname' => ['required', 'min:2', 'max:63'],
+            'email' => ['required', 'email', 'min:3', 'max:63', 'unique:users,email', 'confirmed'],
+            'password' => ['required', 'confirmed', 'min:8', 'max:63'],
         ]);
 
         if ($validator->fails()) {
@@ -61,8 +61,8 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         $validator = Validator::make($credentials, [
-            'email' => ['required', 'min:2', 'max:64'],
-            'password' => ['required'],
+            'email' => ['required', 'min:2', 'max:63', 'exists:users,email'],
+            'password' => ['required', 'min:8', 'max:63'],
         ]);
 
         if ($validator->fails()) {

@@ -123,8 +123,6 @@ class UserController extends Controller
             }
         }
 
-
-
         if ($request->has('organization_id')) {
             $organization = \App\Models\Organization::find($request->input('organization_id'));
 
@@ -144,7 +142,7 @@ class UserController extends Controller
             'zip' => $request->input('zip'),
             'newsletter' => $request->has('newsletter'),
             'password' => Hash::make($request->input('password')),
-            'role_id' => $request->input('role_id'),
+            'role_id' => $request->input('role_id') || $user->role_id,
             'organization_id' => $request->has('organization_id') ? $request->input('organization_id') : 1
         ]);
 

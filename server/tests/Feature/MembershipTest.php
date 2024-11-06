@@ -72,7 +72,7 @@ class MembershipTest extends TestCase
 
         $response = $this->get("/api/memberships/$id");
 
-        $response->assertJsonCount(2, 'secondaries');
+        $response->assertJsonCount(3, 'secondaries');
     }
 
 /**
