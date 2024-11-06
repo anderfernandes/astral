@@ -50,10 +50,10 @@ class RegistrationTest extends TestCase
     public function test_account_verification(): void
     {
         $user = DB::table('users')->whereNotNull('id')->get()->last();
-        $hash = fake()->sha1;
+        $token = fake()->sha1;
 
-        $response = $this->get("/api/verify/$user->id/$hash");
+        $response = $this->get("/api/verify?token=$token");
 
-        $response->assertStatus(302);
+        $response->assertStatus(400);
     }
 }
