@@ -1,7 +1,7 @@
 import { npm_package_version, npm_config_npm_version } from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
-import { fileURLToPath } from 'url';
-import { readFileSync } from 'fs';
+//import { fileURLToPath } from 'url';
+//import { readFileSync } from 'fs';
 
 export const load = async ({ fetch, cookies }) => {
 	let req = await fetch('/settings');

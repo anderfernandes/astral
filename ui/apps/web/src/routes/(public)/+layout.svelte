@@ -3,5 +3,7 @@
 </script>
 
 <main>
-	{@render children()}
+	<div class="mx-auto w-full max-w-screen-2xl">
+		{@render children()}
+	</div>
 </main>

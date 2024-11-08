@@ -1,7 +1,6 @@
 <script>
 	import { formatDistanceToNow } from 'date-fns';
 	import { AButton } from 'ui';
-	import Navbar from '../Navbar.svelte';
 	import AdminLayout from '../AdminLayout.svelte';
 
 	let { data } = $props();

@@ -21,9 +21,9 @@ export const actions = {
 			body: await request.formData()
 		});
 
-		console.log(req.status);
-
 		if (req.status > 299) {
+			console.log(await req.json());
+
 			//const res: IResponseWithValidationErrors = await req.json();
 
 			//console.log(req.status, res);

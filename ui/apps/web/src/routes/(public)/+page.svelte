@@ -7,7 +7,7 @@
 	<title>{data.settings?.organization.name} Home | Astral</title>
 </svelte:head>
 
-<div class="border-b">
+<div>
 	<div class="flex h-16 items-center px-4">
 		<nav class="flex items-center space-x-4 lg:mx-3">
 			<img src={settings.organization.logo} width="32" height="32" alt="Logo" />

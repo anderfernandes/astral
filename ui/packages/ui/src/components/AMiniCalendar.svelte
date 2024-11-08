@@ -10,7 +10,7 @@
 		startOfWeek
 	} from 'date-fns';
 
-	import chunk from 'lodash/chunk';
+	import { chunk } from '@std/collections';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	interface IMiniCalendarProps extends Pick<HTMLButtonAttributes, 'onclick'> {

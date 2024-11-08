@@ -6,7 +6,7 @@
 		"dev": "vite dev --port 3000 --host",
 		"build": "vite build",
 		"preview": "vite preview --host",
-		"test": "npm run test:integration && npm run test:unit",
+		"test": "npx playwright install && npx playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
