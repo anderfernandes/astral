@@ -1,0 +1,13 @@
+# Introduction
+
+Astral helps non-profit planetariums, science centers and museums to focus on what really matters: inspiring and teaching their community about the wonders of science and the universe. It does that by helping these organizations manage their events, sales, visitors and memberships.
+
+## Why Astral
+
+Teaching is one of the best things an individual or organization can do to make the world a better place. That is the thought that led to the creating of Astral.
+
+When our point of sale software couldn't be used anymore because it was too old, and all possible replacements were terrible in addition to asking for way too much, Astral was created and made free and open source so that it can help organizations that find themselves in the same situation, or are just tired of something that doesn't help them at all.
+
+## Getting Started
+
+The easiest way to setup Astral is to clone the repo, build the `server` and `ui` containers and run them behind a proxy.
