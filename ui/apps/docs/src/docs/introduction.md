@@ -11,3 +11,5 @@ When our point of sale software couldn't be used anymore because it was too old,
 ## Getting Started
 
 The easiest way to setup Astral is to clone the repo, build the `server` and `ui` containers and run them behind a proxy.
+
+Astral can be served from any Windows or Linux that can run containers as well as cloud services like Microsoft Azure, Amazon Web Services, Google Cloud, etc.
