@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('website')->nullable();
             $table->integer('seats');
-            $table->string('logo')->nullable()->default('/storage/logo.png');
+            $table->string('logo')->nullable()->default('/storage/logo.svg');
             $table->string('cover')->nullable()->default('/storage/cover.jpg');
             $table->float('tax')->nullable()->default(8.25);
             $table->string('membership_text')->nullable();

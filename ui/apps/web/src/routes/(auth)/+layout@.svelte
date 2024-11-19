@@ -4,8 +4,10 @@
 </script>
 
 <main class="grid h-svh grid-cols-2">
-	<section class="hidden bg-[url('/storage/cover.jpg')] bg-cover bg-center text-white lg:block">
-		<h1 class="relative z-20 flex items-center gap-4 px-7 py-[0.65rem] text-lg font-medium">
+	<section class="relative hidden bg-[url('/storage/cover.jpg')] bg-cover bg-center lg:block">
+		<h1
+			class="relative z-20 flex h-1/5 items-start gap-4 bg-gradient-to-b from-background/35 to-transparent p-6 text-lg font-medium text-white"
+		>
 			<img
 				src={settings.organization.logo}
 				class="object-cover"

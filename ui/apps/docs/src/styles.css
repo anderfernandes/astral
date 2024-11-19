@@ -77,7 +77,7 @@
 	}
 
 	h3 {
-		@apply font-semibold
+		@apply font-semibold;
 	}
 
 	p {
@@ -85,7 +85,15 @@
 	}
 
 	code {
-		@apply font-mono bg-muted border p-1 rounded text-sm
+		@apply rounded border bg-muted p-[2px] font-mono text-sm;
+	}
+
+	ul {
+		@apply ml-6 list-disc;
+	}
+
+	ol {
+		@apply ml-6 list-decimal;
 	}
 }
 
