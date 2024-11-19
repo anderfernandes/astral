@@ -14,7 +14,7 @@
 <form
 	method="POST"
 	enctype="multipart/form-data"
-	class="grid gap-3 overflow-y-auto pb-6 lg:h-[calc(100%)]"
+	class="grid gap-3 overflow-y-auto px-1 pb-6 lg:h-[calc(100%)]"
 	use:enhance={() => {
 		loading = true;
 		return async ({ result, update }) => {

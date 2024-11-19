@@ -16,6 +16,8 @@ You may register as a regular user and be given access to Astral Admin or have a
 
 On the top right corner of the **Home Page**, click in **Login**. Enter your credentials and you are good to go.
 
+<img src="https://raw.githubusercontent.com/anderfernandes/astral/refs/heads/beta/ui/apps/docs/src/docs/Screenshot_20241118_205756.png" />
+
 <div id="account-recovery"></div>
 
 ### Account Recovery

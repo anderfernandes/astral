@@ -6,7 +6,7 @@
 <main class="grid h-svh grid-cols-2">
 	<section class="relative hidden bg-[url('/storage/cover.jpg')] bg-cover bg-center lg:block">
 		<h1
-			class="relative z-20 flex h-1/5 items-start gap-4 bg-gradient-to-b from-background/35 to-transparent p-6 text-lg font-medium text-white"
+			class="relative z-20 flex h-1/6 items-start gap-4 bg-gradient-to-b from-background/35 to-transparent p-6 text-lg font-medium text-white"
 		>
 			<img
 				src={settings.organization.logo}

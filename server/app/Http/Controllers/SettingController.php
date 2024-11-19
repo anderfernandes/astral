@@ -69,7 +69,7 @@ class SettingController extends Controller
 
         $logo = $request->hasFile('logo') && $request->file('logo') != null && $request->file('logo')->getSize() > 0
             ? $request->file('logo')->store('', 'public')
-            : '/storage/default.png';
+            : '/storage/logo.svg';
 
         DB::table('settings')->where('id', 1)->update([
             'organization' => $request->input('organization'),
