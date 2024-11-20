@@ -6,7 +6,7 @@
 
 {#if active}
 	<a
-		class="flex flex-col items-center justify-center gap-3 whitespace-nowrap rounded-md bg-primary p-3 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 lg:inline-flex lg:h-9 lg:flex-row lg:justify-start lg:px-3 dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
+		class="flex flex-col items-center justify-center gap-3 whitespace-nowrap rounded-md bg-primary p-3 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 lg:inline-flex lg:h-9 lg:flex-row lg:justify-start lg:px-3"
 		{href}
 	>
 		{@render children()}
