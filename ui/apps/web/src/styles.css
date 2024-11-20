@@ -57,7 +57,7 @@
 		@apply scroll-smooth;
 	}
 	body {
-		@apply bg-background text-foreground;
+		@apply w-full bg-background text-foreground;
 		/* font-feature-settings: "rlig" 1, "calt" 1; */
 		font-synthesis-weight: none;
 		text-rendering: optimizeLegibility;
@@ -65,7 +65,7 @@
 
 	html,
 	body {
-		height: 100%;
+		height: 100svh;
 	}
 }
 

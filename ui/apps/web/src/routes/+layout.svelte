@@ -4,8 +4,6 @@
 	let { children } = $props();
 </script>
 
-<div class="flex h-full justify-center">
-	<div class="3xl:max-w-screen-2xl h-full w-full">
-		{@render children()}
-	</div>
-</div>
+<main class="mx-auto lg:max-w-screen-xl">
+	{@render children()}
+</main>

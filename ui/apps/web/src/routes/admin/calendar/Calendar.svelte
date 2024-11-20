@@ -19,13 +19,12 @@
 	{#each events as event}
 		<a
 			href={`/admin/events/${event.id}`}
-			class="flex border-l-8 border-primary pl-2 transition-colors hover:bg-muted/50"
+			class="flex w-full overflow-x-auto border-l-8 border-primary py-3 pl-2 transition-colors hover:bg-muted/50 lg:py-0"
 		>
 			<div class="mr-2 flex flex-col items-center justify-center">
 				<span>
 					{Intl.DateTimeFormat('en-US', { timeStyle: 'short' }).format(new Date(event.start))}
 				</span>
-				<AChip text={event.type.name} />
 			</div>
 			<img
 				alt={`${event.show.name} cover`}
@@ -38,7 +37,8 @@
 				src={event.show.cover}
 			/>
 			<div class="px-3">
-				<div class="flex items-center gap-2">
+				<div class="flex items-center gap-1">
+					<AChip text={event.type.name} />
 					{#if event.is_public}
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
