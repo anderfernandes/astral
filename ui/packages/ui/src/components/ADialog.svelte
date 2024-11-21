@@ -11,11 +11,11 @@
 	const { title, subtitle, children, onclose }: IDialogProps = $props();
 </script>
 
-<div class="fixed left-0 top-0 h-svh max-h-svh w-screen bg-black/70 p-6" style="margin:0">
+<div class="fixed left-0 top-0 z-50 h-svh max-h-svh w-screen bg-black/70 p-6" style="margin:0">
 	<div
 		role="dialog"
 		data-state="open"
-		class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:max-w-[425px] sm:rounded-lg"
+		class="fixed left-[50%] top-[50%] grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background px-3 pb-0 pt-6 shadow-lg duration-200 sm:max-w-[425px] sm:rounded-lg"
 		tabindex="-1"
 		style="pointer-events: auto;"
 	>
@@ -23,7 +23,7 @@
 			<h2 id="radix-:r34:" class="text-lg font-semibold leading-none tracking-tight">
 				{title}
 			</h2>
-			<p id="radix-:r35:" class="text-sm text-muted-foreground">
+			<p class="text-sm text-muted-foreground">
 				{subtitle}
 			</p>
 		</div>
@@ -52,5 +52,6 @@
 			</svg>
 			<span class="sr-only">Close</span>
 		</button>
+		<br />
 	</div>
 </div>

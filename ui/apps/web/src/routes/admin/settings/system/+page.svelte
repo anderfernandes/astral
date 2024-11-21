@@ -2,6 +2,10 @@
 	const { data } = $props();
 </script>
 
+<svelte:head>
+	<title>System Settings | Astral</title>
+</svelte:head>
+
 <div>
 	<div class="mb-3 flex flex-col space-y-1.5">
 		<h3 class="font-semibold leading-none tracking-tight">System Information</h3>

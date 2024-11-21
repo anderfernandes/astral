@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>Product Settings - Astral Admin</title>
+	<title>Product Settings | Astral</title>
 </svelte:head>
 
 <div class="flex justify-end">

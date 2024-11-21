@@ -225,7 +225,7 @@
 	</div>
 </aside>
 
-<section class="mx-auto grid gap-3 px-6 pb-[5.5rem] lg:pb-6 lg:pl-[16rem]">
+<section class="mx-auto grid gap-3 px-6 pb-16 lg:pb-6 lg:pl-[16rem]">
 	<!-- <header
 		class="fixed top-0 -ml-6 h-16 w-full border-b bg-yellow-200 p-6 lg:w-[calc(1280px-16rem)]"
 	>
@@ -235,7 +235,7 @@
 </section>
 
 <nav
-	class="fixed bottom-0 left-0 grid h-16 w-full auto-cols-auto grid-flow-col overflow-x-auto border border-t bg-background text-xs lg:hidden"
+	class="fixed bottom-0 left-0 z-10 grid h-16 w-full auto-cols-auto grid-flow-col overflow-x-auto border border-t bg-background text-xs lg:hidden"
 >
 	<a
 		href="/admin"
@@ -269,8 +269,8 @@
 	</a>
 	<a
 		href="/admin/calendar"
-		class:active={$page.url.pathname.includes('/calendar') ||
-			$page.url.pathname.includes('/events')}
+		class:active={$page.url.pathname.includes('/admin/calendar') ||
+			$page.url.pathname.includes('/admin/events')}
 		class="flex h-full min-w-20 flex-col items-center justify-center gap-1 font-medium"
 	>
 		<svg
@@ -296,7 +296,7 @@
 	</a>
 	<a
 		href="/admin/shows"
-		class:active={$page.url.pathname.includes('/shows')}
+		class:active={$page.url.pathname.includes('/admin/shows')}
 		class="flex h-full min-w-20 flex-col items-center justify-center gap-1 font-medium"
 	>
 		<svg
@@ -316,7 +316,7 @@
 	</a>
 	<a
 		href="/admin/sales"
-		class:active={$page.url.pathname.includes('/sales')}
+		class:active={$page.url.pathname.includes('/admin/sales')}
 		class="flex h-full min-w-20 flex-col items-center justify-center gap-1 font-medium"
 	>
 		<svg
@@ -336,7 +336,7 @@
 	</a>
 	<a
 		href="/admin/products"
-		class:active={$page.url.pathname.includes('/products')}
+		class:active={$page.url.pathname.includes('/admin/products')}
 		class="flex h-full min-w-20 flex-col items-center justify-center gap-1 font-medium"
 	>
 		<svg class="size-6" viewBox="0 0 24 24"
@@ -349,7 +349,7 @@
 	</a>
 	<a
 		href="/admin/reports"
-		class:active={$page.url.pathname.includes('/reports')}
+		class:active={$page.url.pathname.includes('/admin/reports')}
 		class="flex h-full min-w-20 flex-col items-center justify-center gap-1 font-medium"
 	>
 		<svg
@@ -372,7 +372,7 @@
 	</a>
 	<a
 		href="/admin/users"
-		class:active={$page.url.pathname.includes('/users')}
+		class:active={$page.url.pathname.includes('/admin/users')}
 		class="flex h-full w-20 flex-col items-center justify-center gap-1 font-medium"
 	>
 		<svg class="size-6" viewBox="0 0 24 24">
@@ -386,7 +386,7 @@
 	</a>
 	<a
 		href="/admin/organizations"
-		class:active={$page.url.pathname.includes('/organizations')}
+		class:active={$page.url.pathname.includes('/admin/organizations')}
 		class="flex h-full w-24 flex-col items-center justify-center gap-1 font-medium"
 	>
 		<svg class="size-6" viewBox="0 0 24 24"
@@ -399,7 +399,7 @@
 	</a>
 	<a
 		href="/admin/memberships"
-		class:active={$page.url.pathname.includes('/memberships')}
+		class:active={$page.url.pathname.includes('/admin/memberships')}
 		class="flex h-full w-24 flex-col items-center justify-center gap-1 font-medium"
 	>
 		<svg class="size-6" viewBox="0 0 24 24"
@@ -412,7 +412,7 @@
 	</a>
 	<a
 		href="/admin/settings"
-		class:active={$page.url.pathname.includes('/settings')}
+		class:active={$page.url.pathname.includes('/admin/settings')}
 		class="flex h-full min-w-20 flex-col items-center justify-center gap-1 font-medium"
 	>
 		<svg

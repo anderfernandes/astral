@@ -4,6 +4,10 @@
 	let { data } = $props();
 </script>
 
+<svelte:head>
+	<title>Show Settings | Astral</title>
+</svelte:head>
+
 <div class="grid gap-3">
 	{#each data.show_types as show_type}
 		<button

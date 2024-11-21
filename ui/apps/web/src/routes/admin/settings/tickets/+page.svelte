@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>Ticket Settings - Astral Admin</title>
+	<title>Ticket Settings | Astral</title>
 </svelte:head>
 
 <div class="flex justify-end">

@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { distinctBy } from '@std/collections';
 	import { formatDistanceToNow } from 'date-fns';
-	import uniqBy from 'lodash/uniqBy';
 	import { AButton, ADialog } from 'ui';
 
 	const { sale }: { sale: ISale } = $props();
@@ -17,25 +17,8 @@
 	const updated_at = new Date(sale.updated_at);
 </script>
 
-<section class="flex w-full flex-col gap-6 px-6 py-4">
+<section class="flex w-full flex-col gap-6">
 	<div>
-		<div class="flex items-center gap-3">
-			<a href="/cashier/sales" aria-label="sale">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="size-5"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg
-				>
-			</a>
-			<h1 class="text-lg font-semibold md:text-2xl">Sale #{sale.id}</h1>
-		</div>
 		<div class="my-1 flex gap-3 text-sm text-muted-foreground">
 			<div class="flex items-center gap-1">
 				<svg
@@ -286,10 +269,10 @@
 							)}
 						</span>
 						<div class="flex gap-1">
-							{#each uniqBy(sale.tickets, 'type_id') as ticket}
-								{@const quantity = sale.tickets.filter(
-									(t) => t.event_id === event.id && t.type_id === t.type_id
-								).length}
+							{#each distinctBy(sale.tickets, (t) => t.type_id) as ticket}
+								{@const quantity = sale.tickets
+									.filter((t) => t.event_id === ticket.event_id)
+									.filter((t) => t.type_id === ticket.type_id).length}
 								<div
 									class="inline-flex items-center gap-1 rounded-md border px-2.5 py-0.5 text-xs font-semibold text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
 								>
@@ -331,7 +314,7 @@
 			<p class="text-sm text-muted-foreground">The products purchased in this sale.</p>
 		</div>
 		<div class="grid gap-3 lg:grid-cols-3">
-			{#each uniqBy(sale.products, 'id') as product}
+			{#each distinctBy(sale.products, (p) => p.id) as product}
 				{@const quantity = sale.products.filter((p) => p.id === product.id).length}
 				<div class="flex items-center space-x-4 space-y-2">
 					<span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">

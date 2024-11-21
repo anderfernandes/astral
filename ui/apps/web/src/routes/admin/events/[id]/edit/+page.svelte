@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { addHours } from 'date-fns';
 	import { AButton, ACheckbox, ADateTimePicker, ASelect, ASlider, ATextArea } from 'ui';
-	import AdminLayout from '../../../AdminLayout.svelte';
 	import { applyAction, enhance } from '$app/forms';
 
 	const { data } = $props();
@@ -15,10 +14,14 @@
 	console.log(event);
 </script>
 
-<h2
+<svelte:head>
+	<title>Edit Event #{event.id} | Astral</title>
+</svelte:head>
+
+<header
 	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 font-semibold backdrop-blur"
 >
-	<a href="/admin/calendar" aria-label="back">
+	<a href={`/admin/events/${event.id}`} aria-label="back">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			width="24"
@@ -35,8 +38,10 @@
 			<path d="M19 12H5" />
 		</svg>
 	</a>
-	Edit Event #{event.id}
-</h2>
+	<h2>
+		Edit Event #{event.id}
+	</h2>
+</header>
 
 <form
 	class="space-y-8 lg:w-[calc(100%-20rem)]"

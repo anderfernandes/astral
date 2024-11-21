@@ -2,7 +2,6 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { formatDistanceToNow } from 'date-fns';
 	import { AButton, AChip, ADialog, ATextArea } from 'ui';
-	import AdminLayout from '../../AdminLayout.svelte';
 
 	let { data } = $props();
 	const { event } = data;
@@ -13,7 +12,11 @@
 	let loading = $state(false);
 </script>
 
-<div
+<svelte:head>
+	<title>Event #{event.id} Details | Astral</title>
+</svelte:head>
+
+<header
 	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 font-semibold backdrop-blur"
 >
 	<a href="/admin/calendar" aria-label="back">
@@ -35,7 +38,7 @@
 	</a>
 	<h2 class="grow">Event #{event.id} Details</h2>
 	<AButton text="Edit" href={`/admin/events/${event.id}/edit`} />
-</div>
+</header>
 
 <div class="flex justify-center gap-3">
 	{#if event.is_public}

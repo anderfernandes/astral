@@ -84,7 +84,7 @@
 	>
 		<form
 			method="POST"
-			class="grid gap-3"
+			class="mx-3 grid gap-3"
 			use:enhance={() => {
 				loading = true;
 				return async ({ result, update }) => {

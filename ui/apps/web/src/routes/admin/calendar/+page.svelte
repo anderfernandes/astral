@@ -3,11 +3,14 @@
 	import Calendar from './Calendar.svelte';
 	import { goto } from '$app/navigation';
 	import { format } from 'date-fns';
-	import AdminLayout from '../AdminLayout.svelte';
 
 	let { data } = $props();
 	let open = $state(false);
 </script>
+
+<svelte:head>
+	<title>Calendar | Astral</title>
+</svelte:head>
 
 <header class="sticky top-0 -mx-6 flex h-16 items-center gap-2 p-6 backdrop-blur">
 	<ASelect

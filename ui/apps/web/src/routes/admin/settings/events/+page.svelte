@@ -15,6 +15,10 @@
 	let loading = $state(false);
 </script>
 
+<svelte:head>
+	<title>Event Settings | Astral</title>
+</svelte:head>
+
 <div class="flex justify-end">
 	<AButton
 		text="New Event Type"

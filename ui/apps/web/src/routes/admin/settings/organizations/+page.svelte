@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>Settings - Astral Admin</title>
+	<title>Organization Settings - Astral</title>
 </svelte:head>
 
 <section class="grid gap-3">
