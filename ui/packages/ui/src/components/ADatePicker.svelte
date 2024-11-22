@@ -31,15 +31,17 @@
 </script>
 
 <div class="relative flex flex-col space-y-2">
-	<label
-		class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-		for=":r1m1:-form-item"
-	>
-		{label}
-		{#if required}
-			<span class="text-red-500">*</span>
-		{/if}
-	</label>
+	{#if label}
+		<label
+			class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+			for=":r1m1:-form-item"
+		>
+			{label}
+			{#if required}
+				<span class="text-red-500">*</span>
+			{/if}
+		</label>
+	{/if}
 	<button
 		class="inline-flex h-9 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 pl-3 text-left text-sm font-normal shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
 		id=":r1m1:-form-item"

@@ -225,7 +225,7 @@
 	</div>
 </aside>
 
-<section class="mx-auto grid gap-3 px-6 pb-16 lg:pb-6 lg:pl-[16rem]">
+<section class="mx-auto grid gap-3 px-6 pb-20 lg:pb-6 lg:pl-[16rem]">
 	<!-- <header
 		class="fixed top-0 -ml-6 h-16 w-full border-b bg-yellow-200 p-6 lg:w-[calc(1280px-16rem)]"
 	>
@@ -235,7 +235,7 @@
 </section>
 
 <nav
-	class="fixed bottom-0 left-0 z-10 grid h-16 w-full auto-cols-auto grid-flow-col overflow-x-auto border border-t bg-background text-xs lg:hidden"
+	class="fixed bottom-0 left-0 z-10 grid h-16 w-full auto-cols-auto grid-flow-col overflow-x-auto border-t bg-background text-xs lg:hidden"
 >
 	<a
 		href="/admin"
