@@ -3,7 +3,7 @@ import { fail } from '@sveltejs/kit';
 export const load = async ({ fetch, url }) => {
 	console.log(url.toString());
 	const [days, customers, payment_methods, products] = await Promise.all([
-		fetch('/events?start=2024-08-01&end=2024-12-31&calendar')
+		fetch(`/events?end=${new Date().getFullYear()}-12-31&calendar`)
 			.then((res) => res.json())
 			.then((res) => res.data as { date: string; events: IEvent[] }[]),
 		fetch('/users')

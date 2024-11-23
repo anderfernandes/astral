@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
 	import { distinctBy } from '@std/collections';
 	import { formatDistanceToNow } from 'date-fns';
 	import { AButton, ADialog } from 'ui';
@@ -6,6 +7,8 @@
 	const { sale }: { sale: ISale } = $props();
 
 	let dialog = $state(false);
+
+	let loading = $state(false);
 
 	const toggle = () => {
 		dialog = !dialog;
@@ -31,7 +34,7 @@
 					stroke-width="2"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					class="size-4"
+					class="size-5"
 				>
 					<path d="M18 20a6 6 0 0 0-12 0" />
 					<circle cx="12" cy="10" r="4" />
@@ -50,7 +53,7 @@
 					stroke-width="2"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					class="size-4"
+					class="size-5"
 				>
 					<path d="M3 5v14" />
 					<path d="M21 12H7" />
@@ -69,7 +72,7 @@
 					stroke-width="2"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					class="size-4"
+					class="size-5"
 				>
 					<path d="M18 21a6 6 0 0 0-12 0" />
 					<circle cx="12" cy="11" r="4" />
@@ -88,7 +91,7 @@
 					stroke-width="2"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					class="size-4"
+					class="size-5"
 				>
 					<path
 						d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"
@@ -100,23 +103,12 @@
 		</div>
 		<div class="flex gap-3 text-sm text-muted-foreground">
 			<div class="flex items-center gap-1">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="size-4"
+				<svg class="size-5" viewBox="0 0 24 24"
+					><path
+						fill="currentColor"
+						d="M19,3H18V1H16V3H8V1H6V3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H10V19H5V8H19V9H21V5A2,2 0 0,0 19,3M21.7,13.35L20.7,14.35L18.65,12.35L19.65,11.35C19.85,11.14 20.19,11.13 20.42,11.35L21.7,12.63C21.89,12.83 21.89,13.15 21.7,13.35M12,18.94L18.07,12.88L20.12,14.88L14.06,21H12V18.94Z"
+					></path></svg
 				>
-					<path
-						d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"
-					/>
-					<circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
-				</svg>
 				<span
 					>{Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(
 						created_at
@@ -136,7 +128,7 @@
 						stroke-width="2"
 						stroke-linecap="round"
 						stroke-linejoin="round"
-						class="size-4"
+						class="size-5"
 					>
 						<path
 							d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"
@@ -245,13 +237,10 @@
 						src={event.show.cover}
 					/>
 					<div class="grid gap-1">
-						<span class="text-xs text-muted-foreground">
-							#{event.id}
-						</span>
-						<h5 class="truncate align-middle text-sm font-medium">
-							{event.show.name}
-						</h5>
-						<div>
+						<div class="flex items-center gap-1">
+							<span class="text-sm text-muted-foreground">
+								#{event.id}
+							</span>
 							<span
 								class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
 							>
@@ -263,12 +252,21 @@
 								{event.show.type?.name}
 							</span>
 						</div>
-						<span class="text-xs text-muted-foreground">
+						<h5 class="truncate align-middle text-sm font-medium">
+							{event.show.name}
+						</h5>
+						<span class="flex text-sm text-muted-foreground">
+							<svg class="size-5" viewBox="0 0 24 24"
+								><path
+									fill="currentColor"
+									d="M19,3H18V1H16V3H8V1H6V3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H10V19H5V8H19V9H21V5A2,2 0 0,0 19,3M21.7,13.35L20.7,14.35L18.65,12.35L19.65,11.35C19.85,11.14 20.19,11.13 20.42,11.35L21.7,12.63C21.89,12.83 21.89,13.15 21.7,13.35M12,18.94L18.07,12.88L20.12,14.88L14.06,21H12V18.94Z"
+								></path></svg
+							>
 							{Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(
 								new Date(event.start)
 							)}
 						</span>
-						<div class="flex gap-1">
+						<div class="flex flex-wrap gap-1">
 							{#each distinctBy(sale.tickets, (t) => t.type_id) as ticket}
 								{@const quantity = sale.tickets
 									.filter((t) => t.event_id === ticket.event_id)
@@ -286,7 +284,7 @@
 										stroke-width="2"
 										stroke-linecap="round"
 										stroke-linejoin="round"
-										class="size-4"
+										class="size-5"
 									>
 										<path
 											d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"
@@ -473,7 +471,21 @@
 				title="Add Memo"
 				subtitle={`A new memo will be added to Sale #${sale.id}.`}
 			>
-				<form method="post" action="?/memo">
+				<form
+					method="post"
+					action="?/memo"
+					use:enhance={() => {
+						loading = true;
+						return async ({ result, update }) => {
+							console.log(result.status);
+							if (result.status! >= 400) {
+								loading = false;
+							} else await applyAction(result);
+							await update();
+							dialog = false;
+						};
+					}}
+				>
 					<div class="grid gap-4">
 						<textarea
 							name="message"
@@ -481,7 +493,7 @@
 							placeholder="Memo"
 						></textarea>
 						<div class="flex items-center justify-end">
-							<AButton text="Save" type="submit" />
+							<AButton text="Save" type="submit" {loading} />
 						</div>
 					</div>
 				</form>

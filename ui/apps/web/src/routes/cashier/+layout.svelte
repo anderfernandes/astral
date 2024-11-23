@@ -111,7 +111,7 @@
 		</form>
 	</aside>
 
-	<section class="grid w-full gap-3 p-6 pb-16 lg:mb-0 lg:ml-14">
+	<section class="grid w-full gap-3 p-6 pb-20 lg:mb-0 lg:ml-14">
 		{@render children()}
 	</section>
 
@@ -137,7 +137,7 @@
 			href="/cashier/sales"
 			aria-label="cashier"
 			class="flex flex-col items-center justify-center gap-2"
-			class:active={$page.url.pathname === '/cashier/sales'}
+			class:active={$page.url.pathname.includes('/cashier/sales')}
 		>
 			<svg
 				class="size-5"
@@ -162,7 +162,7 @@
 			href="/cashier/reports"
 			aria-label="cashier"
 			class="flex flex-col items-center justify-center gap-2"
-			class:active={$page.url.pathname === '/cashier/reports'}
+			class:active={$page.url.pathname.includes('/cashier/reports')}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

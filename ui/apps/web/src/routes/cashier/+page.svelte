@@ -73,7 +73,7 @@
 
 <div>
 	<header
-		class="-mt-6 flex h-16 w-full items-center justify-center gap-1 bg-background/50 backdrop-blur lg:ml-0 lg:justify-start lg:pr-6"
+		class="-mt-6 flex h-16 w-full items-center justify-center gap-1 bg-background/50 backdrop-blur lg:ml-0 lg:justify-start lg:pr-4"
 	>
 		<!-- Tabs -->
 		<div
@@ -131,6 +131,7 @@
 		</div>
 		<ADatePicker format={{ dateStyle: 'medium' }} value={new Date()} />
 	</header>
+
 	<div class="grid gap-3 lg:grid-flow-col lg:grid-cols-12">
 		<!-- Events or Products -->
 		<div class="grid content-start lg:col-span-6">
