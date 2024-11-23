@@ -11,7 +11,7 @@ Astral will be a system that will allow non-profit organizations (such as Planet
 Build image:
 
 ```
-docker build -t anderfernandes/astral:1.0.0-beta.5 .
+docker build -t anderfernandes/astral:1.0.0-alpha.5 .
 ```
 
 Once you're done, run the container with `docker-compose`.
