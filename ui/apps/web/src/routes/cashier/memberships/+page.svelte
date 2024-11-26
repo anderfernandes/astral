@@ -10,16 +10,16 @@
 </svelte:head>
 
 <header
-	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 font-semibold backdrop-blur"
+	class="sticky top-0 -mx-6 -mt-6 flex h-16 w-screen items-center bg-background/50 px-6 backdrop-blur lg:-mx-0 lg:w-full lg:pl-0 lg:pr-4"
 >
-	<h2 class="grow text-xl font-semibold">Memberships</h2>
-	<AButton text="New Membership" href="/admin/memberships/create" />
+	<h2 class="grow">Memberships</h2>
+	<AButton text="New Membership" href="memberships/create" />
 </header>
 
 <div class="grid gap-3">
 	{#each data.memberships as membership}
 		<a
-			href={`/admin/memberships/${membership.id}`}
+			href={`/cashier/memberships/${membership.id}`}
 			class="flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent"
 		>
 			<div class="flex w-full flex-col gap-1">

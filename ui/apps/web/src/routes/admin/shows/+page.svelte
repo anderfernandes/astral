@@ -1,7 +1,5 @@
 <script>
 	import { AButton } from 'ui';
-	import Navbar from '../Navbar.svelte';
-	import AdminLayout from '../AdminLayout.svelte';
 
 	let { data } = $props();
 </script>
@@ -9,7 +7,7 @@
 <header
 	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 font-semibold backdrop-blur"
 >
-	<h2 class="grow">Shows</h2>
+	<h2 class="grow text-xl font-semibold">Shows</h2>
 	<AButton text="New Show" href="/admin/shows/create" />
 </header>
 

@@ -3,7 +3,7 @@
 	import { AButton, ACheckbox, AFileUpload, AInput } from 'ui';
 
 	const { data } = $props();
-	const { settings } = data;
+	console.log(data.settings.organization);
 	let loading = $state(false);
 </script>
 
@@ -15,15 +15,18 @@
 	method="POST"
 	enctype="multipart/form-data"
 	class="grid gap-3 overflow-y-auto px-1 pb-6"
-	use:enhance={() => {
+	use:enhance={({ cancel }) => {
+		if (!confirm('Are you sure you want to update your organization settings?')) {
+			cancel();
+			return;
+		}
 		loading = true;
 		return async ({ result, update }) => {
-			console.log(result.status);
+			console.log('SETTINGS SAVE STATUS: ', result.status);
 			if (result.status! >= 400) {
 				loading = false;
 			} else await applyAction(result);
-
-			await update();
+			await update({ reset: false, invalidateAll: true });
 			loading = false;
 		};
 	}}
@@ -42,7 +45,7 @@
 		<div class="col-span-2 lg:col-span-4">
 			<AFileUpload
 				name="logo"
-				value={settings.organization.logo}
+				value={data.settings.organization.logo}
 				label="Logo"
 				required
 				hint="The logo of your organization."

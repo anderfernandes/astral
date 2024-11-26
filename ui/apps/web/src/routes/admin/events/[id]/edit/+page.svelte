@@ -38,7 +38,7 @@
 			<path d="M19 12H5" />
 		</svg>
 	</a>
-	<h2>
+	<h2 class="text-xl font-semibold">
 		Edit Event #{event.id}
 	</h2>
 </header>

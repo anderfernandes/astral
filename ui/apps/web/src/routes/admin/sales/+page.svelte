@@ -9,7 +9,7 @@
 <header
 	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 font-semibold backdrop-blur"
 >
-	<h2 class="grow">Sales</h2>
+	<h2 class="grow text-xl font-semibold">Sales</h2>
 </header>
 
 <div class="relative w-full overflow-auto">

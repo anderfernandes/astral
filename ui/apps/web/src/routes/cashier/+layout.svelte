@@ -6,7 +6,7 @@
 </script>
 
 <div>
-	<aside class="fixed hidden h-screen w-14 border-x lg:flex lg:flex-col">
+	<aside class="fixed hidden h-screen w-14 border-t lg:flex lg:flex-col">
 		<div aria-label="cashier" class="flex size-14 items-center justify-center border-b">
 			<div class="size-9 rounded-full bg-background p-1 shadow-sm">
 				<svg
@@ -86,6 +86,23 @@
 				>
 			</div>
 		</a>
+		<a
+			href="/cashier/memberships"
+			aria-label="memberships"
+			class="flex size-14 items-center justify-center"
+		>
+			<div
+				class="flex size-9 items-center justify-center rounded-full bg-background shadow-sm"
+				class:active={$page.url.pathname.includes('/cashier/memberships')}
+			>
+				<svg class="size-5" viewBox="0 0 24 24"
+					><path
+						fill="currentColor"
+						d="M20 22.09L22.45 23.58L21.8 20.77L24 18.89L21.11 18.64L20 16L18.87 18.64L16 18.89L18.18 20.77L17.5 23.58L20 22.09M14.08 21H2C.91 20.96 .04 20.09 0 19V5C.04 3.91 .91 3.04 2 3H22C23.09 3.04 23.96 3.91 24 5V15.53C23.42 15 22.75 14.61 22 14.34V5H2V19H14.08C14.03 19.33 14 19.66 14 20C14 20.34 14.03 20.68 14.08 21M14 17H4V15.75C4 14.09 7.34 13.25 9 13.25C10.66 13.25 14 14.09 14 15.75V17M14 11H18V12H14V11M9 7C7.63 7 6.5 8.13 6.5 9.5C6.5 10.87 7.63 12 9 12C10.37 12 11.5 10.87 11.5 9.5C11.5 8.13 10.37 7 9 7M14 9H20V10H14V9M14 7H20V8H14V7Z"
+					></path></svg
+				>
+			</div>
+		</a>
 		<div class="grow"></div>
 		<form method="post" action="/logout" class="flex size-14 items-center justify-center pb-6">
 			<button
@@ -116,7 +133,7 @@
 	</section>
 
 	<nav
-		class="fixed bottom-0 left-0 z-10 grid h-16 w-full grid-cols-3 border-t bg-background lg:hidden"
+		class="fixed bottom-0 left-0 z-10 grid h-16 w-full grid-cols-4 border-t bg-background lg:hidden"
 	>
 		<a
 			href="/cashier"
@@ -135,7 +152,7 @@
 
 		<a
 			href="/cashier/sales"
-			aria-label="cashier"
+			aria-label="sales"
 			class="flex flex-col items-center justify-center gap-2"
 			class:active={$page.url.pathname.includes('/cashier/sales')}
 		>
@@ -157,10 +174,9 @@
 			</svg>
 			<span class="text-xs">Sales</span>
 		</a>
-
 		<a
 			href="/cashier/reports"
-			aria-label="cashier"
+			aria-label="report"
 			class="flex flex-col items-center justify-center gap-2"
 			class:active={$page.url.pathname.includes('/cashier/reports')}
 		>
@@ -180,6 +196,29 @@
 				/><path d="M8 13h2" /><path d="M14 13h2" /><path d="M8 17h2" /><path d="M14 17h2" /></svg
 			>
 			<span class="text-xs">Reports</span>
+		</a>
+		<a
+			href="/cashier/memberships"
+			aria-label="memberships"
+			class="flex flex-col items-center justify-center gap-2"
+			class:active={$page.url.pathname.includes('/cashier/memberships')}
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="size-5"
+				><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path
+					d="M14 2v4a2 2 0 0 0 2 2h4"
+				/><path d="M8 13h2" /><path d="M14 13h2" /><path d="M8 17h2" /><path d="M14 17h2" /></svg
+			>
+			<span class="text-xs">Memberships</span>
 		</a>
 	</nav>
 </div>

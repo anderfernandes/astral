@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { AButton, ACheckbox, ADatePicker, AFileUpload, AInput, ASelect, ATextArea } from 'ui';
-	import AdminLayout from '../../AdminLayout.svelte';
 
 	const { data } = $props();
 	const { show_types } = data;
@@ -28,7 +27,7 @@
 			<path d="M19 12H5" />
 		</svg>
 	</a>
-	<h2 class="grow">New Show</h2>
+	<h2 class="grow text-xl font-semibold">New Show</h2>
 </header>
 
 <form

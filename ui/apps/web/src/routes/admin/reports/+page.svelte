@@ -15,7 +15,7 @@
 <header
 	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 font-semibold backdrop-blur"
 >
-	<h2 class="grow">Reports</h2>
+	<h2 class="grow text-xl font-semibold">Reports</h2>
 </header>
 
 <div class="grid md:gap-3 lg:grid-cols-2">

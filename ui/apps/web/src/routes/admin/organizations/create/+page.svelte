@@ -30,7 +30,7 @@
 			<path d="M19 12H5" />
 		</svg>
 	</a>
-	<h2 class="grow">New Organizations</h2>
+	<h2 class="grow text-xl font-semibold">New Organizations</h2>
 </header>
 
 {#if form?.message}

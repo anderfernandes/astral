@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { AInput, ASelect, ASlider, AButton } from 'ui';
 
-	const { data } = $props();
+	interface IMembershipFormProps {
+		membership_types: IMembershipType[];
+		settings: ISettings;
+		users: { text: string; value: number }[];
+		payment_methods: IPaymentMethod[];
+	}
+
+	const { membership_types, settings, users, payment_methods }: IMembershipFormProps = $props();
 
 	let membership_type_id = $state<number>();
 
@@ -9,7 +16,7 @@
 
 	let payment_method_id = $state<number>();
 
-	let selected = $derived.by(() => data.membership_types.find((t) => t.id === membership_type_id));
+	let selected = $derived.by(() => membership_types.find((t) => t.id === membership_type_id));
 
 	let tendered = $state(0);
 
@@ -22,7 +29,7 @@
 
 		let subtotal = primary_subtotal + secondaries_subtotal;
 
-		let tax = subtotal * (data.settings.organization.tax / 100);
+		let tax = subtotal * (settings.organization.tax / 100);
 
 		let total = subtotal + tax;
 
@@ -32,38 +39,11 @@
 	let loading = $state(false);
 </script>
 
-<svelte:head>
-	<title>New Membership | Astral</title>
-</svelte:head>
-
-<header
-	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 font-semibold backdrop-blur"
->
-	<a href="/admin/memberships" aria-label="back">
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			class="size-6"
-		>
-			<path d="m12 19-7-7 7-7" />
-			<path d="M19 12H5" />
-		</svg>
-	</a>
-	<h2 class="grow text-xl font-semibold">New Membership</h2>
-</header>
-
 <form method="post" class="grid gap-6 lg:w-[calc(100%-20rem)]">
 	<div class="grid gap-6 lg:grid-cols-2">
 		<ASelect
 			name="type_id"
-			options={data.membership_types}
+			options={membership_types}
 			bind:value={membership_type_id}
 			label="Type"
 			required
@@ -106,7 +86,7 @@
 	</div>
 	<ASelect
 		name="primary_id"
-		options={data.users}
+		options={users}
 		label="Primary"
 		required
 		placeholder="Select one"
@@ -122,7 +102,7 @@
 	/>
 	<div class="grid lg:grid-cols-2 lg:gap-6">
 		{#each Array(number_of_secondaries) as _, i}
-			<ASelect name={`secondaries[${i}]`} options={data.users} label={`Secondary #${i + 1}`} />
+			<ASelect name={`secondaries[${i}]`} options={users} label={`Secondary #${i + 1}`} />
 		{/each}
 	</div>
 	<ul class="grid gap-3 text-sm">
@@ -133,7 +113,7 @@
 			</span>
 		</li>
 		<li class="flex items-center justify-between">
-			<span class="text-muted-foreground">Tax ({data.settings.organization.tax}%)</span>
+			<span class="text-muted-foreground">Tax ({settings.organization.tax}%)</span>
 			<span> {Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(tax)}</span>
 		</li>
 		<li class="flex items-center justify-between font-semibold">
@@ -177,7 +157,7 @@
 		<ASelect
 			name="method_id"
 			bind:value={payment_method_id}
-			options={data.payment_methods}
+			options={payment_methods}
 			onchange={(e) => {
 				tendered = e.currentTarget.value === '1' ? 0 : total;
 			}}

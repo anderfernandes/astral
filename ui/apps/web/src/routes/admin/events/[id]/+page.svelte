@@ -36,7 +36,7 @@
 			<path d="M19 12H5" />
 		</svg>
 	</a>
-	<h2 class="grow">Event #{event.id} Details</h2>
+	<h2 class="grow text-xl font-semibold">Event #{event.id} Details</h2>
 	<AButton text="Edit" href={`/admin/events/${event.id}/edit`} />
 </header>
 

@@ -12,7 +12,7 @@
 </svelte:head>
 
 <header
-	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 font-semibold backdrop-blur"
+	class="sticky top-0 -mx-6 -mt-6 flex h-16 w-screen items-center bg-background/50 px-6 backdrop-blur lg:-mx-0 lg:w-full lg:pl-0 lg:pr-4"
 >
 	<a href="/admin/memberships" aria-label="back">
 		<svg
@@ -31,15 +31,13 @@
 			<path d="M19 12H5" />
 		</svg>
 	</a>
-	<h2 class="text-xl font-semibold">Membership #{data.membership.number} Details</h2>
+	<h2>Membership #{data.membership.number} Details</h2>
 	<AChip text={is_expired ? 'expired' : 'current'} />
 </header>
 
 <div class="grid lg:grid-cols-3">
 	<div>
-		<a href={`/admin/users/${primary.id}`} class="text-lg font-medium"
-			>{primary.firstname} {primary.lastname}</a
-		>
+		<div class="text-lg font-medium">{primary.firstname} {primary.lastname}</div>
 		<p class="text-sm text-muted-foreground">#{data.membership.number}</p>
 	</div>
 	<div>
@@ -65,10 +63,10 @@
 				/>
 			</svg>
 		</span>
-		<a href={`/admin/users/${secondary.id}`} class="ml-4 space-y-1">
+		<div class="ml-4 space-y-1">
 			<p class="text-sm font-medium leading-none">{secondary.firstname} {secondary.lastname}</p>
 			<p class="text-sm text-muted-foreground">{secondary.email}</p>
-		</a>
+		</div>
 		<!-- <div class="ml-auto font-medium">+$1,999.00</div> -->
 	</div>
 {:else}

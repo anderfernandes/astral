@@ -19,7 +19,7 @@
 </svelte:head>
 
 <h2
-	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 font-semibold backdrop-blur"
+	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 text-xl font-bold backdrop-blur"
 >
 	<a href="/admin/calendar" aria-label="back">
 		<svg

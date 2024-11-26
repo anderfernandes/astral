@@ -11,7 +11,7 @@
 <header
 	class="sticky top-0 -mx-6 flex h-16 items-center gap-3 bg-background/50 px-6 font-semibold backdrop-blur"
 >
-	<h2 class="grow">Users</h2>
+	<h2 class="grow text-xl font-semibold">Users</h2>
 	<AButton text="New User" href="/admin/users/create" />
 </header>
 

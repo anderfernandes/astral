@@ -68,12 +68,12 @@
 </script>
 
 <svelte:head>
-	<title>Astral - Cashier</title>
+	<title>Cashier | Astral</title>
 </svelte:head>
 
 <div>
 	<header
-		class="-mt-6 flex h-16 w-full items-center justify-center gap-1 bg-background/50 backdrop-blur lg:ml-0 lg:justify-start lg:pr-4"
+		class="sticky top-0 -mx-6 -mt-6 flex h-16 w-screen items-center bg-background/50 px-6 backdrop-blur lg:-mx-0 lg:w-full lg:pl-0 lg:pr-4"
 	>
 		<!-- Tabs -->
 		<div
@@ -101,7 +101,7 @@
 							d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"
 						/><path d="M13 5v2" /><path d="M13 17v2" /><path d="M13 11v2" /></svg
 					>
-					<div>Tickets</div>
+					<div class="hidden lg:block">Tickets</div>
 				</a>
 				<a
 					href="?tab=products"
@@ -125,9 +125,18 @@
 							d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
 						/><path d="m3.3 7 8.7 5 8.7-5" /><path d="M12 22V12" /></svg
 					>
-					<div>Products</div>
+					<div class="hidden lg:block">Products</div>
 				</a>
 			</div>
+		</div>
+		<div class="flex items-center gap-1 px-1 text-sm">
+			<svg class="size-5" viewBox="0 0 24 24"
+				><path
+					fill="currentColor"
+					d="M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z"
+				></path></svg
+			>
+			{data.account?.firstname}
 		</div>
 		<ADatePicker format={{ dateStyle: 'medium' }} value={new Date()} />
 	</header>
@@ -578,116 +587,69 @@
 							errors={form?.errors?.method_id || []}
 						/>
 					</li>
-					<li class="grid grid-cols-3 gap-3">
-						<div class="flex items-center justify-center">
-							<button
-								value="7"
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								7
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								value="8"
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								8
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								value="9"
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								9
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								value="4"
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								4
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								value="5"
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								5
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								value="6"
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								6
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								value="1"
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								1
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								value="2"
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								2
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								value="3"
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								3
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								value="0"
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								0
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								value="."
-								onclick={handleKeyPress}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								.
-							</button>
-						</div>
-						<div class="flex items-center justify-center">
-							<button
-								onclick={() => {
-									tendered = '0.00';
-								}}
-								class="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-							>
-								C
-							</button>
-						</div>
+					<li class="grid grid-cols-3 justify-items-center gap-1">
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value="7">7</button
+						>
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value="8">8</button
+						>
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value="9">9</button
+						>
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value="4">4</button
+						>
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value="5">5</button
+						>
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value="6">6</button
+						>
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value="1">1</button
+						>
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value="2">2</button
+						>
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value="3">3</button
+						>
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value="0">0</button
+						>
+						<button
+							onclick={handleKeyPress}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							value=".">.</button
+						>
+						<button
+							onclick={() => {
+								tendered = '0.00';
+							}}
+							class="size-16 rounded-lg bg-foreground text-xl font-semibold text-background"
+							>C</button
+						>
 					</li>
 					<li class="grid gap-3">
 						<AButton

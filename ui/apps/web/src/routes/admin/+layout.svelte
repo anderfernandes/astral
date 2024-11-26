@@ -55,7 +55,8 @@
 		</SidebarItem>
 		<SidebarItem
 			href="/admin/calendar"
-			active={$page.url.pathname.includes('/calendar') || $page.url.pathname.includes('/events')}
+			active={$page.url.pathname.includes('/admin/calendar') ||
+				$page.url.pathname.includes('/admin/events')}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

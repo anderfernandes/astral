@@ -24,22 +24,12 @@
 	<div>
 		<div class="my-1 flex gap-3 text-sm text-muted-foreground">
 			<div class="flex items-center gap-1">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="size-5"
+				<svg class="size-5" viewBox="0 0 24 24"
+					><path
+						fill="currentColor"
+						d="M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z"
+					></path></svg
 				>
-					<path d="M18 20a6 6 0 0 0-12 0" />
-					<circle cx="12" cy="10" r="4" />
-					<circle cx="12" cy="12" r="10" />
-				</svg>
 				<span> {sale.creator?.firstname}</span>
 			</div>
 			<div class="flex items-center gap-1">
@@ -61,23 +51,13 @@
 				</svg>
 				<span>{sale.source}</span>
 			</div>
-			<div class="flex items-center gap-1">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="size-5"
+			<div class="flex items-center gap-1 truncate">
+				<svg class="size-5" viewBox="0 0 24 24"
+					><path
+						fill="currentColor"
+						d="M19,19H5V5H19M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M16.5,16.25C16.5,14.75 13.5,14 12,14C10.5,14 7.5,14.75 7.5,16.25V17H16.5M12,12.25A2.25,2.25 0 0,0 14.25,10A2.25,2.25 0 0,0 12,7.75A2.25,2.25 0 0,0 9.75,10A2.25,2.25 0 0,0 12,12.25Z"
+					></path></svg
 				>
-					<path d="M18 21a6 6 0 0 0-12 0" />
-					<circle cx="12" cy="11" r="4" />
-					<rect width="18" height="18" x="3" y="3" rx="2" />
-				</svg>
 				<span>{sale.customer?.firstname} {sale.customer?.lastname}</span>
 			</div>
 			<div class="flex items-center gap-1">

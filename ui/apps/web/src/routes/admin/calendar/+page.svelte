@@ -131,7 +131,7 @@
 	</a>
 </header>
 
-<h2 class="grow truncate text-xl font-bold">
+<h2 class="grow truncate text-xl font-semibold">
 	{#if data.view === 'day'}
 		{@const start = data.start.split('-').map((n) => parseInt(n))}
 		{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(

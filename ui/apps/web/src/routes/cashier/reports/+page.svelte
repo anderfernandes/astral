@@ -9,7 +9,7 @@
 </svelte:head>
 
 <header
-	class="sticky top-0 -mx-6 -mt-6 flex h-16 w-full items-center gap-1 bg-background/50 px-6 backdrop-blur lg:ml-0 lg:px-0 lg:pr-4"
+	class="sticky top-0 -mx-6 -mt-6 flex h-16 w-screen items-center bg-background/50 px-6 backdrop-blur lg:-mx-0 lg:w-full lg:pl-0 lg:pr-4"
 >
 	<h2 class="font-semibold">Reports</h2>
 </header>
