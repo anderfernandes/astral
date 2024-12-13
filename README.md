@@ -22,20 +22,9 @@
   <img src="https://img.shields.io/github/license/anderfernandes/astral" />
 </p>
 
-We help people run small and medium non-profit educational centers so that they can focus on inspiring and teaching the wonders of science and the universe to the communities they serve.
+We help small and medium non-profit planetariums, museums and science centers teach the wonders of science and the universe to the communities they serve.
 
-Astral is an open source point of sale (POS), customer relationship manager (CRM),
-box office, membership, marketing and reservation manager for non-profit educational organizations
-such as planetariums, science centers and museums. It helps them:
-
-- Run a point of sale for tickets and products
-- Generate sale, invoices and receipts
-- Generate attendance and revenue reports
-- Manage events, shows, products, memberships, users, organizations and work shifts
-- Schedule and manage events such as school field trips, birthday parties, special events, civic events, etc, with automated email and/or in app notifications
-- Calendar view with past, present and future events and sales
-- Send automated marketing emails such as newsletters, reminders and alerts to members, teachers and visitors
-- Process credit card payments online
+Astral is an open source app made to help non-profit educational organizations manage events, sales, visitors and memberships.
 
 Astral runs straight from modern browsers in smartphones, tablets, PC, MacOS or Linux.
 
@@ -45,9 +34,7 @@ If you work in a non-profit planetarium, museum or science center and are strugg
 
 ## Learning Astral
 
-Astral has an extensive and thorough [documentation](https://astral.anderfernandes.com/docs).
-
-The master repository constains the code to the latest alpha pre-release. Documentation for the beta release will be worked on as we develop them.
+Visit our [documentation](https://github.com/anderfernandes/astral/blob/beta/ui/apps/docs/src/docs/introduction.md).
 
 <hr />
 
@@ -62,7 +49,7 @@ We would like to extend our thanks to the following organizations for their feed
 
 ## Contributing
 
-Thank you for considering contributing to Astral! We are not planning on taking any pull requests at this moment.
+Thank you for considering contributing to Astral! We are not planning on taking any public pull requests at this moment.
 
 <hr />
 

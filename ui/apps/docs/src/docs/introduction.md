@@ -1,6 +1,6 @@
 # Introduction
 
-Astral helps non-profit planetariums, science centers and museums to focus on what really matters: inspiring and teaching their community about the wonders of science and the universe. It does that by helping these organizations manage their events, sales, visitors and memberships.
+Astral helps small and medium non-profit planetariums, museums and science centers teach the wonders of science and the universe to the communities they serve. It does that by helping these organizations manage their events, sales, visitors and memberships.
 
 ## Why Astral
 

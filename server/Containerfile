@@ -7,6 +7,9 @@ RUN pacman -S php composer sqlite3 php-sqlite php-gd --noconfirm
 RUN echo 'extension=gd' >> /etc/php/php.ini
 RUN echo 'extension=pdo_sqlite' >> /etc/php/php.ini
 RUN echo 'extension=sqlite3' >> /etc/php/php.ini
+RUN echo 'zend_extension=opcache' >> /etc/php/php.ini
+RUN echo 'extension=iconv' >> /etc/php/conf.d/extensions.ini
+RUN echo 'extension=intl' >> /etc/php/conf.d/extensions.ini
 
 RUN mkdir -p /var/www/html
 
