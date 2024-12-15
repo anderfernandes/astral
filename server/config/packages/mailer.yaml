@@ -1,0 +1,10 @@
+framework:
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+        envelope:
+            sender: 'no-reply@astralplanetarium.org'
+
+when@test:
+    framework:
+        mailer:
+            dsn: 'null://null'
