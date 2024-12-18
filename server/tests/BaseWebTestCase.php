@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Entity\EventType;
 use App\Entity\ShowType;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +14,8 @@ use Symfony\Component\Finder\Finder;
 abstract class BaseWebTestCase extends WebTestCase
 {
     public User $user;
+
+    public EventType $eventType;
 
     public KernelBrowser $client;
 
@@ -46,16 +49,28 @@ abstract class BaseWebTestCase extends WebTestCase
             ->setIsActive(true)
             ->setCreator($user);
 
+        $eventType = new EventType();
+
+        $eventType
+            ->setName('Test Event Type')
+            ->setDescription('An event type for testing purposes')
+            ->setColor('white')
+            ->setBackgroundColor('black')
+            ->setIsPublic(true)
+            ->setCreator($user);
+
         $this->client = static::createClient();
 
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
         $entityManager->persist($user);
         $entityManager->persist($showType);
+        $entityManager->persist($eventType);
 
         $entityManager->flush();
 
         $this->user = $user;
+        $this->eventType = $eventType;
     }
 
     public static function tearDownAfterClass(): void

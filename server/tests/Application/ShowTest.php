@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ShowTest extends BaseWebTestCase
 {
-    private array $show;
+    public array $show;
 
     public function setUp(): void
     {

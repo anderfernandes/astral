@@ -31,6 +31,7 @@ security:
         # - { path: '^/register', roles: PUBLIC_ACCESS }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/users, roles: ROLE_USER }
+        - { path: ^/events, roles: ROLE_USER }
 
 when@test:
     security:

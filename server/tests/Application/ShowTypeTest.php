@@ -89,7 +89,7 @@ class ShowTypeTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function testUpdateWithBadData()
+    public function testUpdateWithBadData(): void
     {
         $this->client->loginUser($this->user);
 
