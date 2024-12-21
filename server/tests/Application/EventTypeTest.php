@@ -5,7 +5,6 @@ namespace App\Tests\Application;
 use App\Tests\BaseWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class EventTypeTest extends BaseWebTestCase
 {
@@ -84,7 +83,7 @@ class EventTypeTest extends BaseWebTestCase
         $this->client->request('PUT', "/event-types/$id", [
             ...$this->anotherEventType,
             'name' => 'Changed Event Type',
-            'description' => 'Yet another changed event type'
+            'description' => 'Yet another changed event type',
         ]);
 
         $this->assertResponseIsSuccessful();

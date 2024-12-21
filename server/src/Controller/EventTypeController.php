@@ -26,9 +26,8 @@ class EventTypeController extends AbstractController
     public function create(
         #[MapRequestPayload] EventTypeDto $eventTypeDto,
         EntityManagerInterface $entityManager,
-        ValidatorInterface $validator
-    ): Response
-    {
+        ValidatorInterface $validator,
+    ): Response {
         $eventType = new EventType();
 
         $eventType
@@ -41,8 +40,9 @@ class EventTypeController extends AbstractController
 
         $errors = $validator->validate($eventType);
 
-        if (count($errors) > 0)
+        if (count($errors) > 0) {
             return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         $entityManager->persist($eventType);
 
@@ -63,9 +63,8 @@ class EventTypeController extends AbstractController
         #[MapRequestPayload] EventTypeDto $eventTypeDto,
         EventType $eventType,
         EntityManagerInterface $entityManager,
-        ValidatorInterface $validator
-        ): Response
-    {
+        ValidatorInterface $validator,
+    ): Response {
         $eventType
             ->setName($eventTypeDto->name)
             ->setName($eventTypeDto->name)
@@ -77,8 +76,9 @@ class EventTypeController extends AbstractController
 
         $errors = $validator->validate($eventType);
 
-        if (count($errors) > 0)
+        if (count($errors) > 0) {
             return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         $entityManager->persist($eventType);
 

@@ -3,8 +3,6 @@
 namespace App\Tests\Application;
 
 use App\Tests\BaseWebTestCase;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ShowTest extends BaseWebTestCase
@@ -59,7 +57,7 @@ class ShowTest extends BaseWebTestCase
     public function testShow(): void
     {
         $this->client->loginUser($this->user);
-        
+
         $this->client->request('POST', '/shows', $this->show);
 
         $this->client->request('GET', '/shows/2');
@@ -74,7 +72,7 @@ class ShowTest extends BaseWebTestCase
         $this->client->request('POST', '/shows', [
             ...$this->show,
             'name' => 'Updated Show Name',
-            'description' => 'Updated show description'
+            'description' => 'Updated show description',
         ]);
 
         $this->assertResponseIsSuccessful();

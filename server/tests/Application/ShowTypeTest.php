@@ -45,7 +45,7 @@ class ShowTypeTest extends BaseWebTestCase
         $this->expectException(HttpException::class);
 
         $this->client->request('POST', '/show-types', [
-            'test' => 'test'
+            'test' => 'test',
         ]);
 
         $this->assertResponseIsUnprocessable();

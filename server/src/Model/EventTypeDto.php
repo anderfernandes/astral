@@ -10,8 +10,6 @@ class EventTypeDto
         public string $color,
         public string $backgroundColor,
         public bool $isPublic,
-        )
-    {
-
+    ) {
     }
 }

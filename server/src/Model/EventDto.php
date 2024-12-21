@@ -5,13 +5,12 @@ namespace App\Model;
 class EventDto
 {
     public function __construct(
-        public \DateTimeInterface $starting,
+        public int $starting,
         public int $seats,
         public int $typeId,
-        public ?\DateTimeInterface $ending,
+        public ?int $ending,
         public ?array $shows,
         public ?bool $isPublic = false,
-        )
-    {
+    ) {
     }
 }
