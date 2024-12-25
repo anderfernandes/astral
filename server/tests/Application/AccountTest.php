@@ -15,9 +15,14 @@ class AccountTest extends BaseWebTestCase
 
         $faker = \Faker\Factory::create();
 
+        $password = $faker->realTextBetween(6, 12);
+        $email = $faker->email();
+
         $this->registeredUser = [
-            'email' => $faker->email(),
-            'password' => $faker->realTextBetween(6, 12),
+            'email' => $email,
+            'emailConfirmation' => $email,
+            'password' => $password,
+            'passwordConfirmation' => $password,
             'firstName' => $faker->firstName(),
             'lastName' => $faker->lastName(),
             'address' => $faker->streetAddress(),

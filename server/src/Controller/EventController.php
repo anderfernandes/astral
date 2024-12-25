@@ -121,7 +121,7 @@ class EventController extends AbstractController
         if ($eventDto->starting > $eventDto->ending) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
-        
+
         // Check if event type exists
         $eventType = $entityManager->getRepository(EventType::class)->find($eventDto->typeId);
 
@@ -141,8 +141,6 @@ class EventController extends AbstractController
         if (null === $shows) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
-
-
 
         $event->setStarting((new \DateTime())->setTimestamp($eventDto->starting))
             ->setEnding((new \DateTime())->setTimestamp($eventDto->ending))

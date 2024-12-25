@@ -20,6 +20,58 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AccountController extends AbstractController
 {
+    #[Route('/register', name: 'register', methods: ['POST'], format: 'json')]
+    public function register(
+        #[MapRequestPayload] UserDto $userDto,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher,
+        ValidatorInterface $validator,
+        MailerInterface $mailer,
+    ): Response {
+        $user = new User();
+
+        $user
+            ->setEmail($userDto->email)
+            ->setPassword($passwordHasher->hashPassword($user, $userDto->password))
+            ->setFirstName($userDto->firstName)
+            ->setLastName($userDto->lastName)
+            ->setAddress($userDto->address)
+            ->setCity($userDto->city)
+            ->setState($userDto->state)
+            ->setZip($userDto->zip)
+            ->setCountry('United States')
+            ->setPhone($userDto->phone)
+            ->setDateOfBirth($userDto->dateOfBirth)
+            ->setIsActive(false);
+
+        $errors = $validator->validate($user);
+
+        if (count($errors) > 0) {
+            return new Response($errors);
+        }
+
+        $entityManager->persist($user);
+
+        $entityManager->flush();
+
+        $token = password_hash($user->getEmail(), PASSWORD_DEFAULT);
+        $hash = (new \DateTime('+15 minutes'))->getTimestamp();
+
+        $email = (new TemplatedEmail())
+            ->to($user->getEmail())
+            ->subject('Verify your Astral Planetarium account')
+            ->htmlTemplate('emails/activate.html.twig')
+            ->context([
+                'expires' => new \DateTime('+15 minutes'),
+                'name' => $user->getFirstName(),
+                'link' => "http://localhost:3000/activate?token=$token&hash=$hash",
+            ]);
+
+        $mailer->send($email);
+
+        return new Response(status: Response::HTTP_OK);
+    }
+
     #[Route('/account', name: 'account', methods: ['GET'], format: 'json')]
     public function account(#[CurrentUser] ?User $user): Response
     {
@@ -79,58 +131,6 @@ class AccountController extends AbstractController
         return new Response(status: Response::HTTP_OK);
     }
 
-    #[Route('/register', name: 'register', methods: ['POST'], format: 'json')]
-    public function register(
-        #[MapRequestPayload] UserDto $userDto,
-        EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher,
-        ValidatorInterface $validator,
-        MailerInterface $mailer,
-    ): Response {
-        $user = new User();
-
-        $user
-            ->setEmail($userDto->email)
-            ->setPassword($passwordHasher->hashPassword($user, $userDto->password))
-            ->setFirstName($userDto->firstName)
-            ->setLastName($userDto->lastName)
-            ->setAddress($userDto->address)
-            ->setCity($userDto->city)
-            ->setState($userDto->state)
-            ->setZip($userDto->zip)
-            ->setCountry('United States')
-            ->setPhone($userDto->phone)
-            ->setDateOfBirth($userDto->dateOfBirth)
-            ->setIsActive(false);
-
-        $errors = $validator->validate($user);
-
-        if (count($errors) > 0) {
-            return new Response((string) $errors);
-        }
-
-        $entityManager->persist($user);
-
-        $entityManager->flush();
-
-        $token = password_hash($user->getEmail(), PASSWORD_DEFAULT);
-        $hash = (new \DateTime('+15 minutes'))->getTimestamp();
-
-        $email = (new TemplatedEmail())
-            ->to($user->getEmail())
-            ->subject('Verify your Astral Planetarium account')
-            ->htmlTemplate('emails/activate.html.twig')
-            ->context([
-                'expires' => new \DateTime('+15 minutes'),
-                'name' => $user->getFirstName(),
-                'link' => "http://localhost:8000/activate?token=$token&hash=$hash",
-            ]);
-
-        $mailer->send($email);
-
-        return new Response(status: Response::HTTP_OK);
-    }
-
     #[Route('/activate', name: 'activate', methods: ['GET'], format: 'json')]
     public function activate(
         Request $request,
@@ -142,8 +142,9 @@ class AccountController extends AbstractController
 
         // TODO: HANDLE EXPIRATION
 
-        if (null === $token) {
+        if ($token === null) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
+            //return $this->json(['message' => 'Invalid token'], Response::HTTP_BAD_REQUEST);
         }
 
         $sql = '
@@ -157,6 +158,7 @@ class AccountController extends AbstractController
             if (password_verify($email, $token)) {
                 $user = $users->findOneBy(['email' => $email]);
                 $user->setIsActive(true);
+                $user->setActivatedAt();
                 // TODO: VERIFED_AT
                 $entityManager->persist($user);
                 $entityManager->flush();
@@ -166,6 +168,7 @@ class AccountController extends AbstractController
         }
 
         return new Response(status: Response::HTTP_BAD_REQUEST);
+        //return $this->json(['message' => 'Email not found'], Response::HTTP_BAD_REQUEST);
     }
 
     #[Route('/logout', name: 'logout', methods: ['POST'], format: 'json')]

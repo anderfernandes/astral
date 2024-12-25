@@ -7,38 +7,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UserDto
 {
     public function __construct(
-        #[Assert\NotBlank]
+        #[Assert\EqualTo(
+            propertyPath: 'emailConfirmation',
+            message: 'Email confirmation must match'
+        )]
         public string $email,
-
-        #[Assert\NotBlank]
+        public string $emailConfirmation,
+        #[Assert\EqualTo(
+            propertyPath: 'passwordConfirmation',
+            message: 'Password confirmation must match'
+        )]
         public string $password,
-
-        #[Assert\NotBlank]
+        public string $passwordConfirmation,
         public string $firstName,
-
-        #[Assert\NotBlank]
         public string $lastName,
-
-        #[Assert\NotBlank]
-        public string $address,
-
-        #[Assert\NotBlank]
-        public string $city,
-
-        #[Assert\NotBlank]
-        public string $state,
-
-        #[Assert\NotBlank]
-        public string $zip,
-
-        #[Assert\NotBlank]
-        public string $country,
-
-        #[Assert\NotBlank]
-        public string $phone,
-
-        #[Assert\NotBlank]
-        public \DateTimeImmutable $dateOfBirth,
+        public ?string $address,
+        public ?string $city,
+        public ?string $state,
+        public ?string $zip,
+        public ?string $country,
+        public ?string $phone,
+        public ?\DateTimeImmutable $dateOfBirth,
     ) {
     }
 }
