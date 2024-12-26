@@ -1,5 +1,8 @@
-<h5>Dear {{ name }},<h5>
+{% extends "base.html.twig" %}
+
+{% block body %}
+<p>Dear {{ name }},<p>
 <p>Please click on the button below to set a new password for your account. The link expires in 15 minutes.</p>
-<a href="http://localhost:8000/reset?token={{ token }}&hash={{ hash }}">Reset Password</a>
+{{ include('components/button.html.twig') }}
 <p>If you didn't request to reset to recover your account, we recommend login in and resetting your password.</p>
-<p>Regards,<br />Astral Planetarium</p>
+{% endblock %}

@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SettingController extends AbstractController
 {
@@ -21,9 +21,9 @@ class SettingController extends AbstractController
             'zip' => $_ENV['ZIP'],
             'country' => $_ENV['COUNTRY'],
             'phone' => $_ENV['PHONE'],
-            'tax' => (int)$_ENV['TAX'],
-            'seats' => (int)$_ENV['SEATS'],
-            'timezone' => $_ENV['TIMEZONE']
+            'tax' => (int) $_ENV['TAX'],
+            'seats' => (int) $_ENV['SEATS'],
+            'timezone' => $_ENV['TIMEZONE'],
         ]);
     }
 }

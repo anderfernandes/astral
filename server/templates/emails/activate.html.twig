@@ -1,5 +1,8 @@
-<h5>Dear {{ name }},<h5>
-<p>Welcome to <strong>Astral Planetarium</strong>!</p>
+{% extends "base.html.twig" %}
+
+{% block body %}
+<p>Dear {{ name }},<p>
+<p>Welcome to <strong>{{ app.request.server.get('NAME') }}</strong>!</p>
 <p>Please click on the button below to activate your account. The link expires in 15 minutes.</p>
-<a href="{{ link }}">Activate Account</a>
-<p>Regards,<br />Astral Planetarium</p>
+{{ include('components/button.html.twig') }}
+{% endblock %}

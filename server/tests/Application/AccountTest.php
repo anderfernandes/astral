@@ -3,6 +3,8 @@
 namespace App\Tests\Application;
 
 use App\Tests\BaseWebTestCase;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 
 class AccountTest extends BaseWebTestCase
@@ -91,12 +93,11 @@ class AccountTest extends BaseWebTestCase
     {
         $this->client->request('POST', '/register', $this->registeredUser);
 
-        // TODO: USE CRAWLSER TO AUTOMATICALLY GET ACTIVATION LINK
+        $email = $this->getMailerMessage()->getHtmlBody();
 
-        $email = $this->getMailerMessage()->__serialize()[3][2];
-        $link = explode("\n", $email)[3];
-        $href = parse_url(explode('"', $link)[1]);
-        $uri = html_entity_decode($href['path'].'?'.$href['query']);
+        $crawler = new Crawler($email);
+
+        $uri = $crawler->filter('a.button')->last()->link()->getUri();
 
         $this->client->request('GET', $uri);
 
@@ -162,10 +163,11 @@ class AccountTest extends BaseWebTestCase
             'email' => $this->registeredUser['email'],
         ]);
 
-        $email = $this->getMailerMessage()->__serialize()[3][2];
-        $link = explode("\n", $email)[2];
-        $href = parse_url(explode('"', $link)[1]);
-        $uri = $href['path'].'?'.$href['query'];
+        $email = $this->getMailerMessage()->getHtmlBody();
+
+        $crawler = new Crawler($email);
+
+        $uri = $crawler->filter('a.button')->last()->link()->getUri();
 
         $password = $faker = \Faker\Factory::create()->password();
 

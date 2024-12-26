@@ -55,16 +55,19 @@ class AccountController extends AbstractController
         $entityManager->flush();
 
         $token = password_hash($user->getEmail(), PASSWORD_DEFAULT);
-        $hash = (new \DateTime('+15 minutes'))->getTimestamp();
+        $expires = (new \DateTime('+15 minutes'));
 
         $email = (new TemplatedEmail())
             ->to($user->getEmail())
-            ->subject('Verify your Astral Planetarium account')
+            ->subject("Activate your {$_ENV['NAME']} account")
             ->htmlTemplate('emails/activate.html.twig')
             ->context([
-                'expires' => new \DateTime('+15 minutes'),
-                'name' => $user->getFirstName(),
-                'link' => "http://localhost:3000/activate?token=$token&hash=$hash",
+                'expires' => $expires,
+                'name' => 'John Doe',
+                'button' => [
+                    'text' => 'Activate Account',
+                    'href' => "{$_ENV['FRONTEND_URL']}/activate?token=$token&hash={$expires->getTimestamp()}",
+                ],
             ]);
 
         $mailer->send($email);
@@ -142,9 +145,9 @@ class AccountController extends AbstractController
 
         // TODO: HANDLE EXPIRATION
 
-        if ($token === null) {
+        if (null === $token) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
-            //return $this->json(['message' => 'Invalid token'], Response::HTTP_BAD_REQUEST);
+            // return $this->json(['message' => 'Invalid token'], Response::HTTP_BAD_REQUEST);
         }
 
         $sql = '
@@ -168,7 +171,7 @@ class AccountController extends AbstractController
         }
 
         return new Response(status: Response::HTTP_BAD_REQUEST);
-        //return $this->json(['message' => 'Email not found'], Response::HTTP_BAD_REQUEST);
+        // return $this->json(['message' => 'Email not found'], Response::HTTP_BAD_REQUEST);
     }
 
     #[Route('/logout', name: 'logout', methods: ['POST'], format: 'json')]
@@ -194,15 +197,20 @@ class AccountController extends AbstractController
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
 
+        $expires = new \DateTime('+15 minutes');
+        $token = password_hash($user->getEmail(), PASSWORD_DEFAULT); // TODO: ENCRYPT
+
         $email = (new TemplatedEmail())
             ->to($user->getEmail())
-            ->subject('Reset your Astral Planetarium account')
+            ->subject("Reset your {$_ENV['NAME']} account")
             ->htmlTemplate('emails/forgot.html.twig')
             ->context([
-                'expires' => new \DateTime('+15 minutes'),
-                'name' => $user->getFirstName(),
-                'token' => \password_hash($user->getEmail(), PASSWORD_DEFAULT), // TODO: ENCRYPT
-                'hash' => (new \DateTime('+15 minutes'))->getTimestamp(),
+                'expires' => $expires,
+                'name' => 'John Doe',
+                'button' => [
+                    'text' => 'Reset Password',
+                    'href' => "{$_ENV['FRONTEND_URL']}/reset?token=$token&hash={$expires->getTimestamp()}",
+                ],
             ]);
 
         $mailer->send($email);
@@ -224,12 +232,11 @@ class AccountController extends AbstractController
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $expires = (new \DateTime());
-        $expires->setTimestamp($request->query->getInt('hash'));
+        $expires = (new \DateTime())->setTimestamp($request->query->getInt('hash'));
 
-        if ((new \DateTime()) > $expires) {
+        /*if ((new \DateTime()) > $expires) {
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        }*/
 
         $token = $request->query->getString('token');
 
@@ -237,17 +244,23 @@ class AccountController extends AbstractController
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }*/
 
-        $emails = $entityManager->getConnection()->executeQuery('SELECT email FROM users')->fetchFirstColumn();
+        $emails = $entityManager
+            ->getConnection()
+            ->executeQuery('SELECT email FROM users')
+            ->fetchFirstColumn();
 
         foreach ($emails as $email) {
             if (\password_verify($email, $token)) {
                 $user = $users->findOneBy(['email' => $email]);
+
                 if (null === $user) {
                     return new Response(status: Response::HTTP_BAD_REQUEST);
                 }
+
                 $user->setPassword(
                     $passwordHasher->hashPassword($user, $password)
                 );
+
                 $entityManager->persist($user);
                 $entityManager->flush();
 
