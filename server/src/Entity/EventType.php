@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EventTypeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventTypeRepository::class)]
 #[ORM\Table(name: 'event_types')]
@@ -16,19 +17,26 @@ class EventType
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank, Assert\Length(min:2, max: 127)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank, Assert\Length(min:2, max: 255)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank, Assert\Length(min:2, max: 255)]
     private ?string $color = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank, Assert\Length(min:2, max: 255)]
     private ?string $backgroundColor = null;
 
     #[ORM\Column]
     private ?bool $isPublic = false;
+
+    #[ORM\Column]
+    private ?bool $isActive = false;
 
     #[ORM\ManyToOne]
     private ?User $creator = null;
@@ -141,6 +149,18 @@ class EventType
     public function setIsPublic(bool $isPublic): static
     {
         $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    public function getIsActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

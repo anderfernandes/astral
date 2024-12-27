@@ -78,7 +78,7 @@ class AccountController extends AbstractController
     #[Route('/account', name: 'account', methods: ['GET'], format: 'json')]
     public function account(#[CurrentUser] ?User $user): Response
     {
-        if (null === $user) {
+        if ($user === null) {
             return new Response(status: Response::HTTP_UNAUTHORIZED);
         }
 

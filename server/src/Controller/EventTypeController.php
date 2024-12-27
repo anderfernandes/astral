@@ -18,7 +18,12 @@ class EventTypeController extends AbstractController
     #[Route('/event-types', name: 'event-types_index', methods: ['GET'], format: 'json')]
     public function index(EventTypeRepository $eventTypes): Response
     {
-        return $this->json(['data' => $eventTypes->findAll()]);
+        $eventTypes = $eventTypes->createQueryBuilder('t')
+            ->orderBy('t.id', 'DESC')
+            ->getQuery()
+            ->execute();
+
+        return $this->json(['data' => $eventTypes]);
     }
 
     #[IsGranted('ROLE_USER')]
@@ -36,6 +41,7 @@ class EventTypeController extends AbstractController
             ->setColor($eventTypeDto->color)
             ->setBackgroundColor($eventTypeDto->backgroundColor)
             ->setIsPublic($eventTypeDto->isPublic)
+            ->setIsActive($eventTypeDto->isActive)
             ->setCreator($this->getUser());
 
         $errors = $validator->validate($eventType);
@@ -51,7 +57,7 @@ class EventTypeController extends AbstractController
         return $this->json(['data' => $eventType->getId()], status: Response::HTTP_CREATED);
     }
 
-    #[Route('/event-types/{id}', name: 'event_types_show', methods: ['GET'], format: 'json')]
+    #[Route('/event-types/{id}', name: 'event-types_show', methods: ['GET'], format: 'json')]
     public function show(EventType $eventType): Response
     {
         return $this->json($eventType);
@@ -67,12 +73,12 @@ class EventTypeController extends AbstractController
     ): Response {
         $eventType
             ->setName($eventTypeDto->name)
-            ->setName($eventTypeDto->name)
             ->setDescription($eventTypeDto->description)
             ->setColor($eventTypeDto->color)
             ->setBackgroundColor($eventTypeDto->backgroundColor)
             ->setIsPublic($eventTypeDto->isPublic)
-            ->setCreator($this->getUser());
+            ->setIsActive($eventTypeDto->isActive)
+            ->setUpdatedAt(new \DateTimeImmutable());
 
         $errors = $validator->validate($eventType);
 
