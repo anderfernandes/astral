@@ -9,6 +9,7 @@ use App\Repository\ShowRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -27,22 +28,26 @@ class ShowController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route('/shows', name: 'shows_create', methods: ['POST'], format: 'json')]
     public function create(
-        #[MapRequestPayload] ShowDto $showDto,
+        //#[MapRequestPayload] ShowDto $showDto,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
         Request $request,
     ): Response {
         $show = new Show();
+        $payload = $request->getPayload();
+        $type = $entityManager->getRepository(ShowType::class)
+            ->find($payload->getInt('typeId'));
 
-        $type = $entityManager->getRepository(ShowType::class)->find($showDto->typeId);
-
-        if (null === $type) {
+        if ($type == null) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
 
         if ($request->files->has('cover')) {
+            /**
+             * @var $cover UploadedFile
+             */
             $cover = $request->files->get('cover');
-            $filename = '/'.bin2hex(random_bytes(15)).'.'.$cover->getExtension();
+            $filename = '/'.bin2hex(random_bytes(15)).'.'.$cover->guessExtension();
             (new Filesystem())->copy(
                 $cover,
                 $this->getParameter('uploads_dir').$filename);
@@ -51,14 +56,14 @@ class ShowController extends AbstractController
         }
 
         $show
-            ->setName($showDto->name)
+            ->setName($payload->getString('name'))
             ->setType($type)
-            ->setDuration($showDto->duration)
-            ->setDescription($showDto->description)
+            ->setDuration($payload->getInt('duration'))
+            ->setDescription($payload->getString('description'))
             ->setCreator($this->getUser())
-            ->setIsActive($showDto->isActive)
-            ->setTrailerUrl($showDto->trailerUrl)
-            ->setExpiration($showDto->expiration);
+            ->setIsActive($payload->has('isActive'))
+            ->setTrailerUrl($payload->getString('trailerUrl'))
+            ->setExpiration($payload->has('expiration') ? new \DateTime($payload->getString('expiration')) : null);
 
         $errors = $validator->validate($show);
 
@@ -94,8 +99,11 @@ class ShowController extends AbstractController
         }
 
         if ($request->files->has('cover')) {
+            /**
+             * @var $cover UploadedFile
+             */
             $cover = $request->files->get('cover');
-            $filename = '/'.bin2hex(random_bytes(15)).'.'.$cover->getExtension();
+            $filename = '/'.bin2hex(random_bytes(15)).'.'.$cover->guessExtension();
             (new Filesystem())->copy(
                 $cover,
                 $this->getParameter('uploads_dir').$filename);

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ShowRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ShowRepository::class)]
 #[ORM\Table(name: 'shows')]
@@ -16,15 +17,18 @@ class Show
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank, Assert\Length(min: 3, max: 255)]
     private ?string $name = null;
 
     #[ORM\ManyToOne]
     private ?ShowType $type = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank, Assert\Positive]
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank, Assert\Length(min: 3, max: 255)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
@@ -33,7 +37,7 @@ class Show
     #[ORM\Column]
     private ?bool $isActive = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $trailerUrl = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]

@@ -7,7 +7,7 @@ class ShowTypeDto
     public function __construct(
         public string $name,
         public string $description,
-        public bool $isActive,
+        public ?bool $isActive,
     ) {
     }
 }
