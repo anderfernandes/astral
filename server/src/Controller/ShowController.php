@@ -63,7 +63,7 @@ class ShowController extends AbstractController
             ->setCreator($this->getUser())
             ->setIsActive($payload->has('isActive'))
             ->setTrailerUrl($payload->getString('trailerUrl'))
-            ->setExpiration($payload->has('expiration') ? new \DateTime($payload->getString('expiration')) : null);
+            ->setExpiration($payload->getString('expiration') ? new \DateTime($payload->getString('expiration')) : null);
 
         $errors = $validator->validate($show);
 
@@ -84,15 +84,16 @@ class ShowController extends AbstractController
         return $this->json($show);
     }
 
-    #[Route('/shows/{id}', name: 'shows_update', methods: ['PUT'], format: 'json')]
+    #[Route('/shows/{id}', name: 'shows_update', methods: ['POST'], format: 'json')]
     public function update(
         Show $show,
-        #[MapRequestPayload] ShowDto $showDto,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
         Request $request,
     ): Response {
-        $type = $entityManager->getRepository(ShowType::class)->find($showDto->typeId);
+        $payload = $request->getPayload();
+
+        $type = $entityManager->getRepository(ShowType::class)->find($payload->getInt('typeId'));
 
         if (null === $type) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
@@ -103,23 +104,26 @@ class ShowController extends AbstractController
              * @var $cover UploadedFile
              */
             $cover = $request->files->get('cover');
+
             $filename = '/'.bin2hex(random_bytes(15)).'.'.$cover->guessExtension();
+
             (new Filesystem())->copy(
                 $cover,
                 $this->getParameter('uploads_dir').$filename);
-            // $cover->move($this->getParameter('uploads_dir'), $filename);
+
             $show->setCover($filename);
         }
 
         $show
-            ->setName($showDto->name)
+            ->setName($payload->getString('name'))
             ->setType($type)
-            ->setDuration($showDto->duration)
-            ->setDescription($showDto->description)
+            ->setDuration($payload->getInt('duration'))
+            ->setDescription($payload->getString('description'))
             ->setCreator($this->getUser())
-            ->setIsActive($showDto->isActive)
-            ->setTrailerUrl($showDto->trailerUrl)
-            ->setExpiration($showDto->expiration);
+            ->setIsActive($payload->has('isActive'))
+            ->setTrailerUrl($payload->getString('trailerUrl'))
+            ->setUpdatedAt(new \DateTimeImmutable())
+            ->setExpiration($payload->getString('expiration') ? new \DateTime($payload->getString('expiration')) : null);
 
         $errors = $validator->validate($show);
 
