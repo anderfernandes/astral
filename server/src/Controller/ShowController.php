@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Show;
 use App\Entity\ShowType;
-use App\Model\ShowDto;
 use App\Repository\ShowRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,7 +11,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -32,8 +30,9 @@ class ShowController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
         Request $request,
-    ): Response {
-        $show = new Show();
+    ): Response
+    {
+
         $payload = $request->getPayload();
         $type = $entityManager->getRepository(ShowType::class)
             ->find($payload->getInt('typeId'));
@@ -41,6 +40,16 @@ class ShowController extends AbstractController
         if ($type == null) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
+
+        $show = new Show(
+            name: $payload->getString('name'),
+            type: $type,
+            duration: $payload->getInt('duration'),
+            description: $payload->getString('description'),
+            expiration: $payload->getString('expiration') ? new \DateTime($payload->getString('expiration')) : null,
+            trailerUrl: $payload->getString('trailerUrl'),
+            isActive: $payload->has('isActive')
+            );
 
         if ($request->files->has('cover')) {
             /**
@@ -54,16 +63,6 @@ class ShowController extends AbstractController
             // $cover->move($this->getParameter('uploads_dir'), $filename);
             $show->setCover($filename);
         }
-
-        $show
-            ->setName($payload->getString('name'))
-            ->setType($type)
-            ->setDuration($payload->getInt('duration'))
-            ->setDescription($payload->getString('description'))
-            ->setCreator($this->getUser())
-            ->setIsActive($payload->has('isActive'))
-            ->setTrailerUrl($payload->getString('trailerUrl'))
-            ->setExpiration($payload->getString('expiration') ? new \DateTime($payload->getString('expiration')) : null);
 
         $errors = $validator->validate($show);
 

@@ -52,8 +52,22 @@ class Show
     #[ORM\ManyToOne]
     private ?User $creator = null;
 
-    public function __construct()
+    public function __construct(
+        string $name,
+        ShowType $type,
+        int $duration,
+        string $description,
+        ?\DateTimeInterface $expiration,
+        ?string $trailerUrl,
+        bool $isActive = false
+    )
     {
+        $this->name = $name;
+        $this->type = $type;
+        $this->duration = $duration;
+        $this->description = $description;
+        $this->expiration = $expiration;
+        $this->isActive = $isActive;
         $this->createdAt = new \DateTimeImmutable();
     }
 
