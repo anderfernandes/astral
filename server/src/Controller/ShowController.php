@@ -26,18 +26,16 @@ class ShowController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route('/shows', name: 'shows_create', methods: ['POST'], format: 'json')]
     public function create(
-        //#[MapRequestPayload] ShowDto $showDto,
+        // #[MapRequestPayload] ShowDto $showDto,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
         Request $request,
-    ): Response
-    {
-
+    ): Response {
         $payload = $request->getPayload();
         $type = $entityManager->getRepository(ShowType::class)
             ->find($payload->getInt('typeId'));
 
-        if ($type == null) {
+        if (null == $type) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
 
@@ -49,7 +47,7 @@ class ShowController extends AbstractController
             expiration: $payload->getString('expiration') ? new \DateTime($payload->getString('expiration')) : null,
             trailerUrl: $payload->getString('trailerUrl'),
             isActive: $payload->has('isActive')
-            );
+        );
 
         if ($request->files->has('cover')) {
             /**

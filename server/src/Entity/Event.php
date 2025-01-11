@@ -47,10 +47,36 @@ class Event
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    public function __construct()
-    {
+    /**
+     * @var Collection<int, EventMemo>
+     */
+    #[ORM\OneToMany(targetEntity: EventMemo::class, mappedBy: 'event')]
+    private Collection $memos;
+
+    /**
+     * @param Show[] $shows
+     */
+    public function __construct(
+        \DateTimeInterface $starting,
+        \DateTimeInterface $ending,
+        bool $isPublic,
+        int $seats,
+        EventType $type,
+        array $shows = [],
+    ) {
         $this->shows = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
+        $this->memos = new ArrayCollection();
+
+        $this->starting = $starting;
+        $this->ending = $ending;
+        $this->isPublic = $isPublic;
+        $this->seats = $seats;
+        $this->type = $type;
+
+        foreach ($shows as $show) {
+            $this->addShow($show);
+        }
     }
 
     public function getId(): ?int
@@ -174,6 +200,36 @@ class Event
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventMemo>
+     */
+    public function getMemos(): Collection
+    {
+        return $this->memos;
+    }
+
+    public function addMemo(EventMemo $memo): static
+    {
+        if (!$this->memos->contains($memo)) {
+            $this->memos->add($memo);
+            $memo->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMemo(EventMemo $memo): static
+    {
+        if ($this->memos->removeElement($memo)) {
+            // set the owning side to null (unless already changed)
+            if ($memo->getEvent() === $this) {
+                $memo->setEvent(null);
+            }
+        }
 
         return $this;
     }

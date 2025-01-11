@@ -17,19 +17,19 @@ class EventType
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank, Assert\Length(min:2, max: 127)]
+    #[Assert\NotBlank, Assert\Length(min: 2, max: 127)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank, Assert\Length(min:2, max: 255)]
+    #[Assert\NotBlank, Assert\Length(min: 2, max: 255)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank, Assert\Length(min:2, max: 255)]
+    #[Assert\NotBlank, Assert\Length(min: 2, max: 255)]
     private ?string $color = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank, Assert\Length(min:2, max: 255)]
+    #[Assert\NotBlank, Assert\Length(min: 2, max: 255)]
     private ?string $backgroundColor = null;
 
     #[ORM\Column]

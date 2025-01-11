@@ -10,7 +10,7 @@ class EventTypeDto
         public ?string $color = 'white',
         public ?string $backgroundColor = 'black',
         public ?bool $isPublic = false,
-        public ?bool $isActive = false
+        public ?bool $isActive = false,
     ) {
     }
 }

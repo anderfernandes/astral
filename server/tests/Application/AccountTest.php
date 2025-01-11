@@ -3,7 +3,6 @@
 namespace App\Tests\Application;
 
 use App\Tests\BaseWebTestCase;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 

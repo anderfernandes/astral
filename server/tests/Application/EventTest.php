@@ -2,16 +2,11 @@
 
 namespace App\Tests\Application;
 
-use App\Entity\Event;
 use App\Entity\Show;
 use App\Model\EventDto;
-use App\Repository\EventTypeRepository;
-use App\Repository\ShowRepository;
 use App\Repository\ShowTypeRepository;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class EventTest extends BaseWebTestCase
@@ -58,7 +53,7 @@ class EventTest extends BaseWebTestCase
             typeId: 1,
             ending: $starting->add(\DateInterval::createFromDateString('1 hour'))->getTimestamp(),
             shows: [1],
-            isPublic: rand(0,1)
+            isPublic: rand(0, 1)
         );
 
         $this->events[] = new EventDto(
@@ -80,7 +75,7 @@ class EventTest extends BaseWebTestCase
         $serializer = static::getContainer()->get(SerializerInterface::class);
 
         $this->client->request('POST', '/events', [
-            $serializer->normalize($this->events[0])
+            $serializer->normalize($this->events[0]),
         ]);
 
         $this->client->request('GET', '/events/1');
@@ -96,7 +91,7 @@ class EventTest extends BaseWebTestCase
 
         $this->client->request('POST', '/events', [
             $serializer->normalize($this->events[0]),
-            $serializer->normalize($this->events[1])
+            $serializer->normalize($this->events[1]),
         ]);
 
         $this->client->request('GET', '/events/1');
@@ -114,7 +109,7 @@ class EventTest extends BaseWebTestCase
         $this->events[0]->shows[1] = 2;
 
         $this->client->request('POST', '/events', [
-            $serializer->normalize($this->events[0])
+            $serializer->normalize($this->events[0]),
         ]);
 
         $this->client->request('GET', '/events/1');
@@ -133,7 +128,7 @@ class EventTest extends BaseWebTestCase
 
         $this->client->request('POST', '/events', [
             $serializer->normalize($this->events[0]),
-            $serializer->normalize($this->events[1])
+            $serializer->normalize($this->events[1]),
         ]);
 
         $this->client->request('GET', '/events/1');

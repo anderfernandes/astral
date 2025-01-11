@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class EventController extends AbstractController
@@ -57,37 +56,41 @@ class EventController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
-    ): Response
-    {
+    ): Response {
         $payload = $request->getPayload()->all();
 
         foreach ($payload as $data) {
-
-            $event = new Event();
-
             // Check if starting time is greater than ending time
-            if ($data['starting'] > $data['ending']) return new Response(status: Response::HTTP_BAD_REQUEST);
+            if ($data['starting'] > $data['ending']) {
+                return new Response(status: Response::HTTP_BAD_REQUEST);
+            }
 
             // Check if event type exists
             $eventType = $entityManager->getRepository(EventType::class)->find($data['typeId']);
 
-            if ($eventType === null) return new Response(status: Response::HTTP_BAD_REQUEST);
+            if (null === $eventType) {
+                return new Response(status: Response::HTTP_BAD_REQUEST);
+            }
 
             // TODO: HANDLE ALL DAY EVENTS, EVENTS THAT COME IN WITH NO ENDING
 
-            $event
-                ->setStarting((new \DateTime())->setTimestamp($data['starting']))
-                ->setEnding((new \DateTime())->setTimestamp($data['ending']))
-                ->setIsPublic($data['isPublic'])
-                ->setSeats($data['seats'])
-                ->setType($eventType)
-                ->setCreator($this->getUser());
+            $event = new Event(
+                starting: (new \DateTime())->setTimestamp($data['starting']),
+                ending: (new \DateTime())->setTimestamp($data['ending']),
+                isPublic: $data['isPublic'],
+                seats: $data['seats'],
+                type: $eventType
+            );
+
+            $event->setCreator($this->getUser());
 
             // Check if shows exist
             foreach ($data['shows'] as $showId) {
                 $show = $entityManager->getRepository(Show::class)->find($showId);
 
-                if ($show === null) return new Response(status: Response::HTTP_BAD_REQUEST);
+                if (null === $show) {
+                    return new Response(status: Response::HTTP_BAD_REQUEST);
+                }
 
                 $event->addShow($show);
             }
@@ -110,12 +113,6 @@ class EventController extends AbstractController
     public function show(Event $event): Response
     {
         return $this->json($event);
-    }
-
-    #[Route('/events/test', name: 'events_test', methods: ['POST'], format: 'json')]
-    public function test(Request $request): Response
-    {
-        return $this->json($request->getPayload()->all());
     }
 
     #[IsGranted('ROLE_USER')]

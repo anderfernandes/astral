@@ -57,11 +57,10 @@ class Show
         ShowType $type,
         int $duration,
         string $description,
-        ?\DateTimeInterface $expiration,
-        ?string $trailerUrl,
-        bool $isActive = false
-    )
-    {
+        ?\DateTimeInterface $expiration = null,
+        ?string $trailerUrl = null,
+        bool $isActive = false,
+    ) {
         $this->name = $name;
         $this->type = $type;
         $this->duration = $duration;
