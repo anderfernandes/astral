@@ -51,6 +51,7 @@ class Event
      * @var Collection<int, EventMemo>
      */
     #[ORM\OneToMany(targetEntity: EventMemo::class, mappedBy: 'event')]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $memos;
 
     /**

@@ -11,6 +11,7 @@ class EventDto
         public ?int $ending,
         public ?array $shows,
         public ?bool $isPublic = false,
+        public ?string $memo = null
     ) {
     }
 }

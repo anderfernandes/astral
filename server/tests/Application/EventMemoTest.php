@@ -9,6 +9,7 @@ use App\Repository\ShowRepository;
 use App\Repository\ShowTypeRepository;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class EventMemoTest extends BaseWebTestCase
 {
@@ -66,5 +67,36 @@ class EventMemoTest extends BaseWebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
+    }
+
+    public function testCreateWithoutContent()
+    {
+        $this->client->loginUser($this->user);
+
+        $this->getClient()->request('POST', '/events/1/memos', []);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function testCreateWithContentTooShort()
+    {
+        $this->client->loginUser($this->user);
+
+        $this->getClient()->request('POST', '/events/1/memos', [
+            'content' => 'ab'
+        ]);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function testCreateWithContentTooLong()
+    {
+        $this->client->loginUser($this->user);
+
+        $this->getClient()->request('POST', '/events/1/memos', [
+            'content' => \Faker\Factory::create()->realTextBetween(256, 512)
+        ]);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\EventMemo;
 use App\Entity\EventType;
 use App\Entity\Show;
 use App\Model\EventDto;
@@ -123,6 +124,9 @@ class EventController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
     ): Response {
+        if ($eventDto->memo === null || strlen($eventDto->memo) <= 0)
+            return new Response(status: Response::HTTP_BAD_REQUEST);
+
         if ($eventDto->starting > $eventDto->ending) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
@@ -163,6 +167,14 @@ class EventController extends AbstractController
             return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        $memo = new EventMemo(
+            content: $eventDto->memo,
+            author: $this->getUser(),
+        );
+
+        $event->addMemo($memo);
+
+        $entityManager->persist($memo);
         $entityManager->persist($event);
         $entityManager->flush();
 

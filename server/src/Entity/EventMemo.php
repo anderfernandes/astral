@@ -6,6 +6,7 @@ use App\Repository\EventMemoRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Ignore;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventMemoRepository::class)]
 class EventMemo
@@ -16,6 +17,8 @@ class EventMemo
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 255)]
     private ?string $content = null;
 
     #[ORM\ManyToOne]
@@ -32,7 +35,7 @@ class EventMemo
     #[Ignore]
     private ?Event $event = null;
 
-    public function __construct(string $content, User $author, ?Event $event)
+    public function __construct(string $content, User $author, ?Event $event = null)
     {
         $this->createdAt = new \DateTimeImmutable();
 

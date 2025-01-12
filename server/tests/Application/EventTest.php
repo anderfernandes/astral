@@ -7,6 +7,7 @@ use App\Model\EventDto;
 use App\Repository\ShowTypeRepository;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class EventTest extends BaseWebTestCase
@@ -47,15 +48,6 @@ class EventTest extends BaseWebTestCase
 
         $starting = (new \DateTimeImmutable('+7 days'))->setTime(10, 30, 0);
 
-        $eventB = new EventDto(
-            starting: $starting->getTimestamp(),
-            seats: rand(100, 200),
-            typeId: 1,
-            ending: $starting->add(\DateInterval::createFromDateString('1 hour'))->getTimestamp(),
-            shows: [1],
-            isPublic: rand(0, 1)
-        );
-
         $this->events[] = new EventDto(
             starting: $starting->add(\DateInterval::createFromDateString('1 hour'))->getTimestamp(),
             seats: rand(100, 200),
@@ -65,7 +57,14 @@ class EventTest extends BaseWebTestCase
             isPublic: rand(0, 1)
         );
 
-        $this->events[] = $eventB;
+        $this->events[] = new EventDto(
+            starting: $starting->getTimestamp(),
+            seats: rand(100, 200),
+            typeId: 1,
+            ending: $starting->add(\DateInterval::createFromDateString('1 hour'))->getTimestamp(),
+            shows: [1],
+            isPublic: rand(0, 1)
+        );
     }
 
     public function testCreateEvent(): void
@@ -135,5 +134,46 @@ class EventTest extends BaseWebTestCase
         $this->client->request('GET', '/events/2');
 
         $this->assertResponseIsSuccessful();
+    }
+
+    public function testUpdateEvent()
+    {
+        $this->client->loginUser($this->user);
+
+        /**
+         * @var $serializer SerializerInterface
+         */
+        $serializer = static::getContainer()->get(SerializerInterface::class);
+
+        $this->client->request('POST', '/events', [
+            $serializer->normalize($this->events[0]),
+        ]);
+
+        $this->events[0]->seats = rand(200, 300);
+        $this->events[0]->memo = "This is a test memo for an updated event";
+
+        $this->client->request('PUT', '/events/1', $serializer->normalize($this->events[0]));
+
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testUpdateEventWithoutMemo()
+    {
+        $this->client->loginUser($this->user);
+
+        /**
+         * @var $serializer SerializerInterface
+         */
+        $serializer = static::getContainer()->get(SerializerInterface::class);
+
+        $this->client->request('POST', '/events', [
+            $serializer->normalize($this->events[0]),
+        ]);
+
+        $this->events[0]->seats = rand(200, 300);
+
+        $this->client->request('PUT', '/events/1', $serializer->normalize($this->events[0]));
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
     }
 }
