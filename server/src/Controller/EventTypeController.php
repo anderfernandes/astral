@@ -54,7 +54,7 @@ class EventTypeController extends AbstractController
 
         $entityManager->flush();
 
-        return $this->json(['data' => $eventType->getId()], status: Response::HTTP_CREATED);
+        return $this->json(['data' => $eventType->getId()], Response::HTTP_CREATED);
     }
 
     #[Route('/event-types/{id}', name: 'event-types_show', methods: ['GET'], format: 'json')]

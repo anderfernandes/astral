@@ -124,8 +124,9 @@ class EventController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
     ): Response {
-        if ($eventDto->memo === null || strlen($eventDto->memo) <= 0)
+        if (null === $eventDto->memo || strlen($eventDto->memo) <= 0) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
+        }
 
         if ($eventDto->starting > $eventDto->ending) {
             return new Response(status: Response::HTTP_BAD_REQUEST);

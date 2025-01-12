@@ -150,7 +150,7 @@ class EventTest extends BaseWebTestCase
         ]);
 
         $this->events[0]->seats = rand(200, 300);
-        $this->events[0]->memo = "This is a test memo for an updated event";
+        $this->events[0]->memo = 'This is a test memo for an updated event';
 
         $this->client->request('PUT', '/events/1', $serializer->normalize($this->events[0]));
 

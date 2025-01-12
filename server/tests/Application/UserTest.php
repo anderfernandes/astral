@@ -68,7 +68,7 @@ class UserTest extends BaseWebTestCase
             ...$user,
             'address' => $faker->address(),
             'emailConfirmation' => $user['email'],
-            'passwordConfirmation' => $user['password']
+            'passwordConfirmation' => $user['password'],
         ]);
 
         $this->assertResponseIsSuccessful();

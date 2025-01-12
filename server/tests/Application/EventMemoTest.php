@@ -83,7 +83,7 @@ class EventMemoTest extends BaseWebTestCase
         $this->client->loginUser($this->user);
 
         $this->getClient()->request('POST', '/events/1/memos', [
-            'content' => 'ab'
+            'content' => 'ab',
         ]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -94,7 +94,7 @@ class EventMemoTest extends BaseWebTestCase
         $this->client->loginUser($this->user);
 
         $this->getClient()->request('POST', '/events/1/memos', [
-            'content' => \Faker\Factory::create()->realTextBetween(256, 512)
+            'content' => \Faker\Factory::create()->realTextBetween(256, 512),
         ]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
