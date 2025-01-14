@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\TicketType;
+use App\Repository\EventTypeRepository;
 use App\Repository\TicketTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,8 +28,12 @@ class TicketTypeController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/ticket-types', name: 'ticket-types_create', methods: ['POST'], format: 'json')]
-    public function create(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
-    {
+    public function create(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
+        EventTypeRepository $eventTypes,
+    ): Response {
         $payload = $request->getPayload();
 
         $ticketType = new TicketType(
@@ -45,6 +50,22 @@ class TicketTypeController extends AbstractController
 
         if (count($errors) > 0) {
             return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $entityManager->persist($ticketType);
+
+        // handle allowed event types
+        if ($payload->has('eventTypes')) {
+            foreach ($payload->all('eventTypes') as $eventTypeId) {
+                $eventType = $eventTypes->find($eventTypeId);
+
+                if (null === $eventType) {
+                    return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+
+                $ticketType->addEventType($eventType);
+                //$entityManager->persist($eventType);
+            }
         }
 
         $entityManager->persist($ticketType);
@@ -84,5 +105,11 @@ class TicketTypeController extends AbstractController
         $entityManager->flush();
 
         return new Response(status: Response::HTTP_OK);
+    }
+
+    #[Route('/ticket-types/{id}', name: 'ticket-types_show', methods: ['GET'], format: 'json')]
+    public function show(TicketType $ticketType): Response
+    {
+        return $this->json($ticketType);
     }
 }

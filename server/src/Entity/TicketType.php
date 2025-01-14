@@ -3,10 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\TicketTypeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\MaxDepth;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TicketTypeRepository::class)]
+#[ORM\Table(name: 'ticket_types')]
 class TicketType
 {
     #[ORM\Id]
@@ -15,12 +20,15 @@ class TicketType
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank, Assert\Length(min: 2, max: 127)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank, Assert\Length(min: 2, max: 127)]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?int $price = null;
 
     #[ORM\Column]
@@ -41,6 +49,12 @@ class TicketType
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    /**
+     * @var Collection<int, EventType>
+     */
+    #[ORM\ManyToMany(targetEntity: EventType::class, mappedBy: 'ticketTypes')]
+    private Collection $eventTypes;
+
     public function __construct(
         string $name,
         string $description,
@@ -59,6 +73,7 @@ class TicketType
         $this->creator = $creator;
 
         $this->createdAt = new \DateTimeImmutable();
+        $this->eventTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -170,6 +185,33 @@ class TicketType
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventType>
+     */
+    public function getEventTypes(): Collection
+    {
+        return $this->eventTypes;
+    }
+
+    public function addEventType(EventType $eventType): static
+    {
+        if (!$this->eventTypes->contains($eventType)) {
+            $this->eventTypes->add($eventType);
+            $eventType->addTicketType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventType(EventType $eventType): static
+    {
+        if ($this->eventTypes->removeElement($eventType)) {
+            $eventType->removeTicketType($this);
+        }
 
         return $this;
     }

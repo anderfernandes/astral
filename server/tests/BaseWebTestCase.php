@@ -49,15 +49,11 @@ abstract class BaseWebTestCase extends WebTestCase
             ->setIsActive(true)
             ->setCreator($user);
 
-        $eventType = new EventType();
-
-        $eventType
-            ->setName('Test Event Type')
-            ->setDescription('An event type for testing purposes')
-            ->setColor('white')
-            ->setBackgroundColor('black')
-            ->setIsPublic(true)
-            ->setCreator($user);
+        $eventType = new EventType(
+            name: 'Test Event Type',
+            description: 'An event type for testing purposes',
+            creator: $user
+        );
 
         $this->client = static::createClient();
 

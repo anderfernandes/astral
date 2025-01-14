@@ -9,6 +9,7 @@ use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventMemoRepository::class)]
+#[ORM\Table(name: 'event_memos')]
 class EventMemo
 {
     #[ORM\Id]

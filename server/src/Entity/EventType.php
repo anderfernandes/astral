@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventTypeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -47,9 +49,30 @@ class EventType
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    public function __construct()
-    {
+    /**
+     * @var Collection<int, TicketType>
+     */
+    #[ORM\ManyToMany(targetEntity: TicketType::class, inversedBy: 'eventTypes')]
+    private Collection $ticketTypes;
+
+    public function __construct(
+        string $name,
+        string $description,
+        User $creator,
+        bool $isPublic = false,
+        bool $isActive = false,
+        ?string $color = 'white',
+        ?string $backgroundColor = 'black',
+    ) {
+        $this->name = $name;
+        $this->description = $description;
+        $this->color = $color;
+        $this->backgroundColor = $backgroundColor;
+        $this->creator = $creator;
+        $this->isPublic = $isPublic;
+        $this->isActive = $isActive;
         $this->createdAt = new \DateTimeImmutable();
+        $this->ticketTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -161,6 +184,30 @@ class EventType
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TicketType>
+     */
+    private function getTicketTypes(): Collection
+    {
+        return $this->ticketTypes;
+    }
+
+    public function addTicketType(TicketType $ticketType): static
+    {
+        if (!$this->ticketTypes->contains($ticketType)) {
+            $this->ticketTypes->add($ticketType);
+        }
+
+        return $this;
+    }
+
+    public function removeTicketType(TicketType $ticketType): static
+    {
+        $this->ticketTypes->removeElement($ticketType);
 
         return $this;
     }
