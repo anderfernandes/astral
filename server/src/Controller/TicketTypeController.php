@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TicketTypeController extends AbstractController
@@ -52,10 +54,8 @@ class TicketTypeController extends AbstractController
             return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $entityManager->persist($ticketType);
-
         // handle allowed event types
-        if ($payload->has('eventTypes')) {
+        /*if (count($payload->all('eventTypes')) > 0 && $payload->has('eventTypes')) {
             foreach ($payload->all('eventTypes') as $eventTypeId) {
                 $eventType = $eventTypes->find($eventTypeId);
 
@@ -63,10 +63,9 @@ class TicketTypeController extends AbstractController
                     return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
-                $ticketType->addEventType($eventType);
-                //$entityManager->persist($eventType);
+                if ($eventType->getIsActive()) $ticketType->addEventType($eventType);
             }
-        }
+        }*/
 
         $entityManager->persist($ticketType);
 
@@ -82,6 +81,7 @@ class TicketTypeController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
+        EventTypeRepository $eventTypes
     ): Response {
         $payload = $request->getPayload();
 
@@ -100,6 +100,32 @@ class TicketTypeController extends AbstractController
             return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        if ($payload->has('eventTypes')) {
+            // DELETE ALL CURRENT ASSOCIATIONS AND ENTER NEW ONES
+
+            // USE A DELETE STATEMENT
+            $conn = $entityManager->getConnection();
+
+            $query = '
+                DELETE
+                FROM event_type_ticket_type
+                WHERE ticket_type_id = :ticket_type_id
+            ';
+
+            $conn->executeQuery($query, ['ticket_type_id' => $ticketType->getId()]);
+
+            // CREATE NEW ASSOCIATIONS
+            foreach ($payload->all('eventTypes') as $eventTypeId) {
+                $eventType = $eventTypes->find($eventTypeId);
+
+                if (null === $eventType) {
+                    return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+
+                if ($eventType->getIsActive()) $ticketType->addEventType($eventType);
+            }
+        }
+
         $entityManager->persist($ticketType);
 
         $entityManager->flush();
@@ -110,6 +136,7 @@ class TicketTypeController extends AbstractController
     #[Route('/ticket-types/{id}', name: 'ticket-types_show', methods: ['GET'], format: 'json')]
     public function show(TicketType $ticketType): Response
     {
-        return $this->json($ticketType);
+        //dd($ticketType->getEventTypes());
+        return $this->json($ticketType,Response::HTTP_OK);
     }
 }

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventTypeRepository::class)]
@@ -191,7 +192,7 @@ class EventType
     /**
      * @return Collection<int, TicketType>
      */
-    private function getTicketTypes(): Collection
+    public function getTicketTypes(): Collection
     {
         return $this->ticketTypes;
     }

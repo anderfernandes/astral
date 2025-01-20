@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\EventType;
 use App\Model\EventTypeDto;
 use App\Repository\EventTypeRepository;
+use App\Repository\TicketTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,22 +34,38 @@ class EventTypeController extends AbstractController
         #[MapRequestPayload] EventTypeDto $eventTypeDto,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
+        Request $request,
+        TicketTypeRepository $ticketTypes
     ): Response {
-        $eventType = new EventType();
+        $payload = $request->getPayload();
 
-        $eventType
-            ->setName($eventTypeDto->name)
-            ->setDescription($eventTypeDto->description)
-            ->setColor($eventTypeDto->color)
-            ->setBackgroundColor($eventTypeDto->backgroundColor)
-            ->setIsPublic($eventTypeDto->isPublic)
-            ->setIsActive($eventTypeDto->isActive)
-            ->setCreator($this->getUser());
+        $eventType = new EventType(
+            name: $eventTypeDto->name,
+            description: $eventTypeDto->description,
+            creator: $this->getUser(),
+            isPublic: $eventTypeDto->isPublic,
+            isActive: $eventTypeDto->isActive,
+            color: $eventTypeDto->color,
+            backgroundColor: $eventTypeDto->backgroundColor,
+        );
 
         $errors = $validator->validate($eventType);
 
         if (count($errors) > 0) {
             return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if ($payload->has('ticketTypes') && count($payload->all('ticketTypes')) > 0) {
+            foreach ($payload->all('ticketTypes') as $ticketTypeId) {
+                $ticketType = $ticketTypes->find($ticketTypeId);
+
+                if ($ticketType === null) {
+                    continue;
+                }
+
+                if ($ticketType->getIsActive())
+                    $eventType->addTicketType($ticketType);
+            }
         }
 
         $entityManager->persist($eventType);
@@ -70,7 +88,10 @@ class EventTypeController extends AbstractController
         EventType $eventType,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
+        Request $request,
+        TicketTypeRepository $ticketTypes
     ): Response {
+        $payload = $request->getPayload();
         $eventType
             ->setName($eventTypeDto->name)
             ->setDescription($eventTypeDto->description)
@@ -84,6 +105,32 @@ class EventTypeController extends AbstractController
 
         if (count($errors) > 0) {
             return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if ($payload->has('ticketTypes')) {
+            // DELETE ALL CURRENT ASSOCIATIONS AND ENTER NEW ONES
+
+            $connection = $entityManager->getConnection();
+
+            $query = '
+                DELETE FROM event_type_ticket_type
+                WHERE event_type_id = :event_type_id
+            ';
+
+            $connection->executeQuery($query, ['event_type_id' => $eventType->getId()]);
+
+            // CREATE ASSOCIATIONS
+
+            foreach ($payload->all('ticketTypes') as $ticketTypeId) {
+                $ticketType = $ticketTypes->find($ticketTypeId);
+
+                if ($ticketType === null) {
+                    continue;
+                }
+
+                if ($ticketType->getIsActive())
+                    $eventType->addTicketType($ticketType);
+            }
         }
 
         $entityManager->persist($eventType);

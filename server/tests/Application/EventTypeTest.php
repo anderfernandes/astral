@@ -39,6 +39,16 @@ class EventTypeTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
     }
 
+    public function testCreateEventTypeWithTicketType(): void
+    {
+        $this->client->request('POST', '/event-types', [
+            ...$this->anotherEventType,
+            'eventTypes' => [1, 2]
+        ]);
+
+        $this->assertResponseIsSuccessful();
+    }
+
     public function testCreateEventTypeWithBadData(): void
     {
         $this->client->loginUser($this->user);

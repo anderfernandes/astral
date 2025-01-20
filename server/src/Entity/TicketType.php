@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\MaxDepth;
+use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TicketTypeRepository::class)]
@@ -53,6 +53,7 @@ class TicketType
      * @var Collection<int, EventType>
      */
     #[ORM\ManyToMany(targetEntity: EventType::class, mappedBy: 'ticketTypes')]
+    #[Ignore]
     private Collection $eventTypes;
 
     public function __construct(
@@ -182,7 +183,7 @@ class TicketType
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 

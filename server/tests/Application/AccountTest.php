@@ -83,6 +83,8 @@ class AccountTest extends BaseWebTestCase
 
     public function testShowWithoutLogin()
     {
+        $this->client->request('POST', '/logout');
+
         $this->client->request('GET', '/account');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
@@ -130,6 +132,8 @@ class AccountTest extends BaseWebTestCase
 
     public function testLogoutWithoutLogin()
     {
+        $this->client->request('POST', '/logout');
+        
         $this->client->request('POST', '/register', $this->registeredUser);
 
         $this->client->request('POST', '/logout');
