@@ -50,13 +50,14 @@ class Show
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne]
-    private ?User $creator = null;
+    private User $creator;
 
     public function __construct(
         string $name,
         ShowType $type,
         int $duration,
         string $description,
+        ?User $creator,
         ?\DateTimeInterface $expiration = null,
         ?string $trailerUrl = null,
         bool $isActive = false,
@@ -65,6 +66,7 @@ class Show
         $this->type = $type;
         $this->duration = $duration;
         $this->description = $description;
+        $this->creator = $creator;
         $this->expiration = $expiration;
         $this->isActive = $isActive;
         $this->createdAt = new \DateTimeImmutable();

@@ -35,7 +35,7 @@ class EventTypeController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
         Request $request,
-        TicketTypeRepository $ticketTypes
+        TicketTypeRepository $ticketTypes,
     ): Response {
         $payload = $request->getPayload();
 
@@ -43,8 +43,8 @@ class EventTypeController extends AbstractController
             name: $eventTypeDto->name,
             description: $eventTypeDto->description,
             creator: $this->getUser(),
-            isPublic: $eventTypeDto->isPublic,
             isActive: $eventTypeDto->isActive,
+            isPublic: $eventTypeDto->isPublic,
             color: $eventTypeDto->color,
             backgroundColor: $eventTypeDto->backgroundColor,
         );
@@ -59,12 +59,13 @@ class EventTypeController extends AbstractController
             foreach ($payload->all('ticketTypes') as $ticketTypeId) {
                 $ticketType = $ticketTypes->find($ticketTypeId);
 
-                if ($ticketType === null) {
+                if (null === $ticketType) {
                     continue;
                 }
 
-                if ($ticketType->getIsActive())
+                if ($ticketType->getIsActive()) {
                     $eventType->addTicketType($ticketType);
+                }
             }
         }
 
@@ -89,9 +90,10 @@ class EventTypeController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
         Request $request,
-        TicketTypeRepository $ticketTypes
+        TicketTypeRepository $ticketTypes,
     ): Response {
         $payload = $request->getPayload();
+
         $eventType
             ->setName($eventTypeDto->name)
             ->setDescription($eventTypeDto->description)
@@ -121,15 +123,17 @@ class EventTypeController extends AbstractController
 
             // CREATE ASSOCIATIONS
 
-            foreach ($payload->all('ticketTypes') as $ticketTypeId) {
+            foreach (array_unique($payload->all('ticketTypes')) as $ticketTypeId) {
                 $ticketType = $ticketTypes->find($ticketTypeId);
 
-                if ($ticketType === null) {
+                if (null === $ticketType) {
                     continue;
                 }
 
-                if ($ticketType->getIsActive())
+                if ($ticketType->getIsActive()) {
                     $eventType->addTicketType($ticketType);
+                    $entityManager->persist($ticketType);
+                }
             }
         }
 

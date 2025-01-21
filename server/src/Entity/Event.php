@@ -24,7 +24,7 @@ class Event
     private ?\DateTimeInterface $ending = null;
 
     #[ORM\Column]
-    private ?bool $isPublic = null;
+    private bool $isPublic = false;
 
     #[ORM\Column]
     private ?int $seats = null;
@@ -39,7 +39,7 @@ class Event
     private Collection $shows;
 
     #[ORM\ManyToOne]
-    private ?User $creator = null;
+    private User $creator;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -60,10 +60,11 @@ class Event
     public function __construct(
         \DateTimeInterface $starting,
         \DateTimeInterface $ending,
-        bool $isPublic,
-        int $seats,
         EventType $type,
-        array $shows = [],
+        ?User $creator,
+        ?bool $isPublic = false,
+        ?int $seats = 0,
+        ?array $shows = [],
     ) {
         $this->shows = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
@@ -74,6 +75,7 @@ class Event
         $this->isPublic = $isPublic;
         $this->seats = $seats;
         $this->type = $type;
+        $this->creator = $creator;
 
         foreach ($shows as $show) {
             $this->addShow($show);

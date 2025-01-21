@@ -2,55 +2,133 @@
 
 namespace App\Tests\Application;
 
-use App\Entity\EventType;
-use App\Entity\TicketType;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class TicketTypeTest extends BaseWebTestCase
 {
-    public function testIndex(): void
-    {
-        $this->client->request('GET', 'ticket-types');
-
-        $this->assertResponseIsSuccessful();
-    }
-
     public function testCreateTicketType(): void
     {
+        // Arrange
+
+        $client = static::createClient();
+
         /**
-         * @var $serializer SerializerInterface
+         * @var $entityManger EntityManagerInterface
          */
-        $serializer = static::getContainer()->get(SerializerInterface::class);
+        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
 
-        $this->client->request('POST', '/ticket-types', $serializer->normalize($this->ticketTypes[0], 'json'));
+        $entityManger->persist(self::$user);
+        $entityManger->flush();
 
-        $this->assertResponseIsSuccessful();
+        $client->loginUser(self::$user);
+
+        /**
+         * @var $normalizer DenormalizerInterface&NormalizerInterface
+         */
+        $normalizer = static::getContainer()->get(NormalizerInterface::class);
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        // Act
+
+        $client->request('POST', '/ticket-types', [
+            'name' => 'Test Ticket Type',
+            'description' => 'A test ticket type to test event types',
+            'price' => 500,
+            'isActive' => true
+        ]);
+
+        $id = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $client->request('GET', "/ticket-types/$id");
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        $this->assertEquals('Test Ticket Type', $data['name']);
     }
 
-    public function testCreateTicketTypeWithoutData(): void
+    public function testCreateTicketTypeWithBadData(): void
     {
-        $this->client->request('POST', '/ticket-types', []);
+        // Arrange
+
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
+        // Act
+
+        $client->request('POST', '/ticket-types', ['name' => 'Test']);
+
+        // Assert
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function testUpdateTicketType(): void
     {
+        // Arrange
+
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
         /**
-         * @var $serializer SerializerInterface
+         * @var $normalizer DenormalizerInterface&NormalizerInterface
          */
-        $serializer = static::getContainer()->get(SerializerInterface::class);
+        $normalizer = static::getContainer()->get(NormalizerInterface::class);
 
-        $this->client->request('POST', '/ticket-types', $serializer->normalize($this->ticketTypes[0], 'json'));
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
-        $this->client->request('PUT', '/ticket-types/1', [
-            ...$serializer->normalize($this->ticketTypes[0], 'json'),
+        // Act
+
+        $client->request('PUT', '/ticket-types/1', [
             'name' => 'Updated Ticket Type',
+            'description' => 'A test ticket type to test event types',
+            'price' => 500,
+            'isActive' => false,
         ]);
 
-        $this->assertResponseIsSuccessful();
+        $client->request('GET', '/ticket-types/1');
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertEquals('Updated Ticket Type', $data['name']);
+    }
+
+    public function testIndex(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        // Act
+
+        $client->request('GET', '/ticket-types');
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertCount(1, $data);
     }
 }

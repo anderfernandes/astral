@@ -36,7 +36,7 @@ class EventMemo
     #[Ignore]
     private ?Event $event = null;
 
-    public function __construct(string $content, User $author, ?Event $event = null)
+    public function __construct(string $content, ?User $author, ?Event $event = null)
     {
         $this->createdAt = new \DateTimeImmutable();
 

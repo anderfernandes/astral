@@ -28,21 +28,20 @@ class AccountController extends AbstractController
         ValidatorInterface $validator,
         MailerInterface $mailer,
     ): Response {
-        $user = new User();
+        $user = new User(
+            email: $userDto->email,
+            firstName: $userDto->firstName,
+            lastName: $userDto->lastName,
+            dateOfBirth: $userDto->dateOfBirth,
+            address: $userDto->address,
+            city: $userDto->city,
+            state: $userDto->state,
+            zip: $userDto->zip,
+            country: $userDto->country,
+            phone: $userDto->phone,
+        );
 
-        $user
-            ->setEmail($userDto->email)
-            ->setPassword($passwordHasher->hashPassword($user, $userDto->password))
-            ->setFirstName($userDto->firstName)
-            ->setLastName($userDto->lastName)
-            ->setAddress($userDto->address)
-            ->setCity($userDto->city)
-            ->setState($userDto->state)
-            ->setZip($userDto->zip)
-            ->setCountry('United States')
-            ->setPhone($userDto->phone)
-            ->setDateOfBirth($userDto->dateOfBirth)
-            ->setIsActive(false);
+        $user->setPassword($passwordHasher->hashPassword($user, $userDto->password));
 
         $errors = $validator->validate($user);
 
@@ -85,7 +84,7 @@ class AccountController extends AbstractController
         return $this->json($user);
     }
 
-    #[Route('/account/update', name: 'account_update', methods: ['PUT'], format: 'json')]
+    #[Route('/account', name: 'account_update', methods: ['PUT'], format: 'json')]
     public function update(
         #[CurrentUser] ?User $user,
         #[MapRequestPayload] UserDto $userDto,
@@ -109,7 +108,8 @@ class AccountController extends AbstractController
             ->setCountry('United States')
             ->setPhone($userDto->phone)
             ->setDateOfBirth($userDto->dateOfBirth)
-            ->setIsActive(false);
+            ->setIsActive(false)
+            ->setUpdatedAt(new \DateTimeImmutable());
 
         $errors = $validator->validate($user);
 

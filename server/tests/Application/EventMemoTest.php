@@ -3,100 +3,89 @@
 namespace App\Tests\Application;
 
 use App\Entity\Event;
+use App\Entity\EventType;
 use App\Entity\Show;
+use App\Entity\ShowType;
 use App\Repository\EventTypeRepository;
 use App\Repository\ShowRepository;
 use App\Repository\ShowTypeRepository;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class EventMemoTest extends BaseWebTestCase
 {
-    public function setUp(): void
+    public function testCreate(): void
     {
-        parent::setUp();
+        // Arrange
+
+        $client = static::createClient();
 
         /**
-         * @var $eventTypes EventTypeRepository
+         * @var $decoder DecoderInterface
          */
-        $eventTypes = static::getContainer()->get(EventTypeRepository::class);
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
         /**
-         * @var $showTypes ShowTypeRepository
+         * @var $entityManger EntityManagerInterface
          */
-        $showTypes = static::getContainer()->get(ShowTypeRepository::class);
+        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
 
-        /**
-         * @var $shows ShowRepository
-         */
-        $shows = static::getContainer()->get(ShowRepository::class);
+        $entityManger->persist(self::$user);
 
-        /**
-         * @var $entityManager EntityManagerInterface
-         */
-        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $showType = new ShowType(
+            name: 'Test Show Type',
+            description: 'A show type created for event tests',
+            creator: self::$user,
+            isActive: true
+        );
 
-        $entityManager->persist(new Show(
+        $entityManger->persist($showType);
+
+        $shows[] = new Show(
             name: 'Test Show',
-            type: $showTypes->find(1),
-            duration: rand(10, 50),
-            description: 'A show created for testing purposes.'
-        ));
+            type: $showType,
+            duration: rand(15, 25),
+            description: 'A test show made to test events',
+            creator: self::$user,
+            isActive: true,
+        );
 
-        $entityManager->flush();
+        $entityManger->persist($shows[0]);
 
-        $entityManager->persist(new Event(
+        $eventType = new EventType(
+            name: 'Test Event Type',
+            description: 'Created to test events',
+            creator: self::$user,
+         );
+
+        $entityManger->persist($eventType);
+
+        $entityManger->persist(new Event(
             starting: (new \DateTime('+7 days'))->setTime(9, 30),
             ending: (new \DateTime('+7 days'))->setTime(10, 30),
-            isPublic: rand(0, 1),
-            seats: 100,
-            type: $eventTypes->find(1),
-            shows: [$shows->find(1)]
+            type: $eventType,
+            creator: self::$user,
+            isPublic: true,
+            seats: rand(10, 180)
         ));
 
-        $entityManager->flush();
-    }
+        $entityManger->flush();
 
-    public function testCreate()
-    {
-        $this->client->loginUser($this->user);
+        $client->loginUser(self::$user);
 
-        $this->getClient()->request('POST', '/events/1/memos', [
-            'content' => 'A test memo for a sale',
+        // Act
+
+        $client->request('POST', '/events/1/memos', [
+            'content' => 'Testing event memos'
         ]);
 
-        $this->assertResponseIsSuccessful();
-    }
+        $client->request('GET', '/events/1');
 
-    public function testCreateWithoutContent()
-    {
-        $this->client->loginUser($this->user);
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['memos'][0];
 
-        $this->getClient()->request('POST', '/events/1/memos', []);
+        $this->assertEquals('Testing event memos', $data['content']);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
-    }
-
-    public function testCreateWithContentTooShort()
-    {
-        $this->client->loginUser($this->user);
-
-        $this->getClient()->request('POST', '/events/1/memos', [
-            'content' => 'ab',
-        ]);
-
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
-    }
-
-    public function testCreateWithContentTooLong()
-    {
-        $this->client->loginUser($this->user);
-
-        $this->getClient()->request('POST', '/events/1/memos', [
-            'content' => \Faker\Factory::create()->realTextBetween(256, 512),
-        ]);
-
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

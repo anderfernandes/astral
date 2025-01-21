@@ -28,13 +28,12 @@ class ShowTypeController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
     ): Response {
-        $showType = new ShowType();
-
-        $showType
-            ->setName($showTypeDto->name)
-            ->setDescription($showTypeDto->description)
-            ->setIsActive($showTypeDto->isActive)
-            ->setCreator($this->getUser());
+        $showType = new ShowType(
+            name: $showTypeDto->name,
+            description: $showTypeDto->description,
+            creator: $this->getUser(),
+            isActive: $showTypeDto->isActive
+         );
 
         $errors = $validator->validate($showType);
 

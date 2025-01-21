@@ -12,7 +12,7 @@ if ($_SERVER['APP_DEBUG']) {
     umask(0000);
 }
 
-passthru(
+/*passthru(
     sprintf(
         'APP_ENV=%s php "%s/../bin/console" cache:clear --no-warmup',
         $_ENV['APP_ENV'],
@@ -42,4 +42,4 @@ passthru(
         $_ENV['APP_ENV'],
         __DIR__
     )
-);
+);*/

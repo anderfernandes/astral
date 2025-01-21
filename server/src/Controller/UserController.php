@@ -30,22 +30,21 @@ class UserController extends AbstractController
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
-    ): JsonResponse {
-        $user = new User();
+    ): Response {
+        $user = new User(
+            email: $userDto->email,
+            firstName: $userDto->firstName,
+            lastName: $userDto->lastName,
+            dateOfBirth: $userDto->dateOfBirth,
+            address: $userDto->address,
+            city: $userDto->city,
+            state: $userDto->state,
+            zip: $userDto->zip,
+            country: $userDto->country,
+            phone: $userDto->phone,
+        );
 
-        $user
-            ->setEmail($userDto->email)
-            ->setPassword($passwordHasher->hashPassword($user, $userDto->password))
-            ->setFirstName($userDto->firstName)
-            ->setLastName($userDto->lastName)
-            ->setAddress($userDto->address)
-            ->setCity($userDto->city)
-            ->setState($userDto->state)
-            ->setZip($userDto->zip)
-            ->setCountry($userDto->country || 'United States')
-            ->setPhone($userDto->phone)
-            ->setDateOfBirth($userDto->dateOfBirth)
-            ->setIsActive(false);
+        $user->setPassword($passwordHasher->hashPassword($user, $userDto->password));
 
         $errors = $validator->validate($user);
 

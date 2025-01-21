@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var ?string The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
@@ -78,8 +78,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $activatedAt = null;
 
-    public function __construct()
-    {
+    public function __construct(
+        string $email,
+        string $firstName,
+        string $lastName,
+        \DateTimeImmutable $dateOfBirth,
+        ?string $address = null,
+        ?string $city = null,
+        ?string $state = null,
+        ?string $zip = null,
+        ?string $country = null,
+        ?string $phone = null,
+        bool $isActive = false,
+    ) {
+        $this->email = $email;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->dateOfBirth = $dateOfBirth;
+        $this->address = $address;
+        $this->city = $city;
+        $this->state = $state;
+        $this->zip = $zip;
+        if (null !== $country) {
+            $this->country = $country;
+        }
+        $this->phone = $phone;
+        $this->isActive = $isActive;
         $this->createdAt = new \DateTimeImmutable();
     }
 

@@ -2,93 +2,192 @@
 
 namespace App\Tests\Application;
 
+use App\Entity\ShowType;
 use App\Tests\BaseWebTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class ShowTest extends BaseWebTestCase
 {
-    public array $show;
-
-    public function setUp(): void
+    public function testCreate(): void
     {
-        parent::setUp();
+        // Arrange
 
-        $this->show = [
+        $client = static::createClient();
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        /**
+         * @var $entityManger EntityManagerInterface
+         */
+        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
+
+        $entityManger->persist(self::$user);
+        $entityManger->flush();
+
+        $entityManger->persist(new ShowType(
+            name: 'Test Show Type',
+            description: 'The description of a Test Show Type',
+            creator: self::$user,
+            isActive: true
+        ));
+        $entityManger->flush();
+
+        $client->loginUser(self::$user);
+
+        // Act
+
+        $client->request('POST', '/shows', [
             'name' => 'Test Show',
             'typeId' => 1,
             'duration' => rand(15, 45),
-            'description' => 'A random description for a show test',
+            'description' => 'A random description for a test show',
             'isActive' => rand(0, 1),
             'trailerUrl' => \Faker\Factory::create()->url(),
             'expiration' => (new \DateTime('+5 years'))->format('c'),
-        ];
-    }
-
-    public function testIndex(): void
-    {
-        $this->client->request('GET', '/shows');
-
-        $this->assertResponseIsSuccessful();
-    }
-
-    public function testCreate(): void
-    {
-        $this->client->loginUser($this->user);
-
-        $this->client->request('POST', '/shows', $this->show, [
+        ],
+        [
             'cover' => new UploadedFile(
                 static::getContainer()->getParameter('uploads_dir').'/default.png',
                 'default.png'
             ),
         ]);
 
-        $this->assertResponseIsSuccessful();
+        $id = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $client->request('GET', "/shows/$id");
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertNotEquals('default.png', $data['cover']);
     }
 
-    public function testCreateWithoutCover(): void
+    public function testCreateWIthoutCover(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
 
-        $this->client->request('POST', '/shows', $this->show);
+        $client = static::createClient();
 
-        $this->assertResponseIsSuccessful();
-    }
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
-    public function testShow(): void
-    {
-        $this->client->loginUser($this->user);
+        $client->loginUser(self::$user);
 
-        $this->client->request('POST', '/shows', $this->show);
+        // Act
 
-        $this->client->request('GET', '/shows/2');
+        $client->request('POST', '/shows', [
+            'name' => 'Another Test Show',
+            'typeId' => 1,
+            'duration' => rand(15, 45),
+            'description' => 'A random description for a another test show',
+            'isActive' => rand(0, 1),
+            'expiration' => (new \DateTime('+5 years'))->format('c'),
+        ]);
 
-        $this->assertResponseIsSuccessful();
+        $id = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $client->request('GET', "/shows/$id");
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertEquals('default.png', $data['cover']);
     }
 
     public function testUpdate(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
 
-        $this->client->request('POST', '/shows', [
-            ...$this->show,
-            'name' => 'Updated Show Name',
-            'description' => 'Updated show description',
-        ]);
+        $client = static::createClient();
 
-        $this->assertResponseIsSuccessful();
-    }
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
-    public function testUpdateWithCover(): void
-    {
-        $this->client->loginUser($this->user);
+        $client->loginUser(self::$user);
 
-        $this->client->request('POST', '/shows', $this->show, [
+        // Act
+
+        $client->request('PUT', '/shows/2', [
+            'name' => 'Updated Test Show',
+            'typeId' => 1,
+            'duration' => rand(15, 45),
+            'description' => 'A random description for a another test show',
+            'isActive' => rand(0, 1),
+            'expiration' => (new \DateTime('+5 years'))->format('c'),
+        ],
+        [
             'cover' => new UploadedFile(
                 static::getContainer()->getParameter('uploads_dir').'/default.png',
                 'default.png'
             ),
         ]);
 
-        $this->assertResponseIsSuccessful();
+        $client->request('GET', '/shows/2');
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertNotEquals('default.png', $data['cover']);
+    }
+
+    public function testUpdateShowRemovingCover(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        $client->loginUser(self::$user);
+
+        // Act
+
+        $client->request('PUT', '/shows/2', [
+            'name' => 'Updated Test Show',
+            'typeId' => 1,
+            'duration' => rand(15, 45),
+            'description' => 'A random description for a another test show',
+            'isActive' => rand(0, 1),
+            'expiration' => (new \DateTime('+5 years'))->format('c'),
+        ]);
+
+        $client->request('GET', '/shows/2');
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertEquals('default.png', $data['cover']);
+    }
+
+    public function testIndex(): void
+    {
+        $client = static::createClient();
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        $client->request('GET', '/shows');
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $this->assertCount(2, $data);
     }
 }

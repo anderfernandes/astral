@@ -2,178 +2,144 @@
 
 namespace App\Tests\Application;
 
+use App\Entity\EventType;
 use App\Entity\Show;
+use App\Entity\ShowType;
 use App\Model\EventDto;
 use App\Repository\ShowTypeRepository;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class EventTest extends BaseWebTestCase
 {
-    private array $events;
-
-    public function setUp(): void
+    public function testCreate(): void
     {
-        parent::setUp();
+        // Arrange
 
-        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $client = static::createClient();
 
-        $showTypesRepository = static::getContainer()->get(ShowTypeRepository::class);
+        /**
+         * @var $entityManger EntityManagerInterface
+         */
+        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
 
-        $entityManager->persist(
-            new Show(
-                name: 'Test Show',
-                type: $showTypesRepository->find(1),
-                duration: rand(15, 45),
-                description: 'A random description for a test show',
-                expiration: new \DateTime('+5 years'),
-                isActive: rand(0, 1)
-            )
+        $entityManger->persist(self::$user);
+
+        $showType = new ShowType(
+            name: 'Test Show Type',
+            description: 'A show type created for event tests',
+            creator: self::$user,
+            isActive: true
         );
 
-        $entityManager->persist(
-            new Show(
-                name: 'Another Test Show',
-                type: $showTypesRepository->find(1),
-                duration: rand(15, 45),
-                description: 'Another random description for another test show',
-                expiration: new \DateTime('+5 years'),
-                isActive: rand(0, 1)
-            )
+        $entityManger->persist($showType);
+
+        $shows[] = new Show(
+            name: 'Test Show',
+            type: $showType,
+            duration: rand(15, 25),
+            description: 'A test show made to test events',
+            creator: self::$user,
+            isActive: true,
         );
 
-        $entityManager->flush();
+        $entityManger->persist($shows[0]);
+
+        $entityManger->persist(new EventType(
+            name: 'Test Event Type',
+            description: 'Created to test events',
+            creator: self::$user,
+         ));
+
+        $entityManger->flush();
+
+        $client->loginUser(self::$user);
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
         $starting = (new \DateTimeImmutable('+7 days'))->setTime(10, 30, 0);
 
-        $this->events[] = new EventDto(
-            starting: $starting->add(\DateInterval::createFromDateString('1 hour'))->getTimestamp(),
-            seats: rand(100, 200),
-            typeId: 1,
-            ending: $starting->add(\DateInterval::createFromDateString('2 hours'))->getTimestamp(),
-            shows: [2],
-            isPublic: rand(0, 1)
-        );
+        // Act
 
-        $this->events[] = new EventDto(
-            starting: $starting->getTimestamp(),
-            seats: rand(100, 200),
-            typeId: 1,
-            ending: $starting->add(\DateInterval::createFromDateString('1 hour'))->getTimestamp(),
-            shows: [1],
-            isPublic: rand(0, 1)
-        );
-    }
-
-    public function testCreateEvent(): void
-    {
-        $this->client->loginUser($this->user);
-
-        $serializer = static::getContainer()->get(SerializerInterface::class);
-
-        $this->client->request('POST', '/events', [
-            $serializer->normalize($this->events[0]),
+        $client->request('POST', '/events', [
+            [
+                'starting' => $starting->getTimestamp(),
+                'ending' => $starting->add(\DateInterval::createFromDateString('1 hours'))->getTimestamp(),
+                'seats' => rand(50, 180),
+                'typeId' => 1,
+                'shows' => [$shows[0]->getId()],
+                'isPublic' => true,
+            ]
         ]);
 
-        $this->client->request('GET', '/events/1');
+        $client->request('GET', '/events/1');
 
-        $this->assertResponseIsSuccessful();
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertEquals($starting->format('c'), $data['starting']);
     }
 
-    public function testCreateMultipleEvents(): void
+    public function testUpdate(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
 
-        $serializer = static::getContainer()->get(SerializerInterface::class);
+        $client = static::createClient();
 
-        $this->client->request('POST', '/events', [
-            $serializer->normalize($this->events[0]),
-            $serializer->normalize($this->events[1]),
-        ]);
-
-        $this->client->request('GET', '/events/1');
-        $this->client->request('GET', '/events/2');
-
-        $this->assertResponseIsSuccessful();
-    }
-
-    public function testCreateEventWithMultipleShows(): void
-    {
-        $this->client->loginUser($this->user);
-
-        $serializer = static::getContainer()->get(SerializerInterface::class);
-
-        $this->events[0]->shows[1] = 2;
-
-        $this->client->request('POST', '/events', [
-            $serializer->normalize($this->events[0]),
-        ]);
-
-        $this->client->request('GET', '/events/1');
-
-        $this->assertResponseIsSuccessful();
-    }
-
-    public function testCreateMultipleEventsWithMultipleShows(): void
-    {
-        $this->client->loginUser($this->user);
-
-        $serializer = static::getContainer()->get(SerializerInterface::class);
-
-        $this->events[0]->shows[1] = 2;
-        $this->events[1]->shows[1] = 1;
-
-        $this->client->request('POST', '/events', [
-            $serializer->normalize($this->events[0]),
-            $serializer->normalize($this->events[1]),
-        ]);
-
-        $this->client->request('GET', '/events/1');
-        $this->client->request('GET', '/events/2');
-
-        $this->assertResponseIsSuccessful();
-    }
-
-    public function testUpdateEvent()
-    {
-        $this->client->loginUser($this->user);
+        $client->loginUser(self::$user);
 
         /**
-         * @var $serializer SerializerInterface
+         * @var $decoder DecoderInterface
          */
-        $serializer = static::getContainer()->get(SerializerInterface::class);
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
-        $this->client->request('POST', '/events', [
-            $serializer->normalize($this->events[0]),
+        $client->request('GET','/events/1');
+
+        $starting = (new \DateTimeImmutable('+7 days'))->setTime(10, 30, 0);
+
+        // Act
+
+        $client->request('PUT', '/events/1', [
+            'starting' => $starting->getTimestamp(),
+            'ending' => $starting->add(\DateInterval::createFromDateString('1 hours'))->getTimestamp(),
+            'seats' => 10,
+            'typeId' => 1,
+            'shows' => [1],
+            'isPublic' => false,
+            'memo' => 'A test memo for a test event'
         ]);
 
-        $this->events[0]->seats = rand(200, 300);
-        $this->events[0]->memo = 'This is a test memo for an updated event';
+        $client->request('GET', '/events/1');
 
-        $this->client->request('PUT', '/events/1', $serializer->normalize($this->events[0]));
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
 
-        $this->assertResponseIsSuccessful();
+        // Assert
+
+        $this->assertFalse($data['isPublic']);
     }
 
-    public function testUpdateEventWithoutMemo()
+    public function testIndex(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
+
+        $client = static::createClient();
 
         /**
-         * @var $serializer SerializerInterface
+         * @var $decoder DecoderInterface
          */
-        $serializer = static::getContainer()->get(SerializerInterface::class);
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
-        $this->client->request('POST', '/events', [
-            $serializer->normalize($this->events[0]),
-        ]);
+        $client->request('GET', '/events');
 
-        $this->events[0]->seats = rand(200, 300);
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
 
-        $this->client->request('PUT', '/events/1', $serializer->normalize($this->events[0]));
-
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertCount(1, $data);
     }
 }

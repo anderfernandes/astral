@@ -3,32 +3,50 @@
 namespace App\Tests\Application;
 
 use App\Tests\BaseWebTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class UserTest extends BaseWebTestCase
 {
-    public function testIndex(): void
+    public function testCreate(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
 
-        $this->client->request('GET', '/users');
+        $client = static::createClient();
 
-        $this->assertResponseIsSuccessful();
-    }
+        /**
+         * @var $entityManger EntityManagerInterface
+         */
+        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
 
-    public function testCreateMissingData()
-    {
-        $this->client->loginUser($this->user);
+        $entityManger->persist(self::$user);
+        $entityManger->flush();
 
-        $this->client->catchExceptions(false);
-        $this->expectException(HttpException::class);
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        $client->loginUser(self::$user);
+
+        //$client->catchExceptions(false);
+        //$this->expectException(HttpException::class);
 
         $faker = \Faker\Factory::create();
 
-        $this->client->request('POST', '/users', [
-            'email' => $faker->email(),
-            'password' => $faker->password(),
+        $email = $faker->email();
+        $password = $faker->password();
+
+        $user = [
+            'email' => $email,
+            'emailConfirmation' => $email,
+            'password' => $password,
+            'passwordConfirmation' => $password,
+            'firstName' => $faker->firstName(),
             'lastName' => $faker->lastName(),
             'address' => $faker->streetAddress(),
             'city' => $faker->city(),
@@ -37,54 +55,176 @@ class UserTest extends BaseWebTestCase
             'country' => $faker->country(),
             'phone' => $faker->phoneNumber(),
             'dateOfBirth' => $faker->date(),
+        ];
+
+        // Act
+
+        $client->request('POST', '/users', $user);
+
+        $id = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $client->request('GET', "/users/$id");
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertEquals($data['email'], $email);
+    }
+
+    public function testCreateWithMissingData(): void
+        {
+        // Arrange
+
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
+        $client->catchExceptions(false);
+        $this->expectException(HttpException::class);
+
+        $faker = \Faker\Factory::create();
+
+        // Act
+
+        $client->request('POST', '/users', [
+            'email' => $faker->email(),
+            'password' => $faker->password(),
+            'lastName' => $faker->lastName(),
+            'address' => $faker->streetAddress(),
+            'city' => $faker->city(),
+            'state' => 'Texas',
+            'zip' => (string) $faker->randomNumber(5),
+            'country' => 'United States',
+            'phone' => $faker->phoneNumber(),
+            'dateOfBirth' => $faker->date(),
         ]);
+
+        // Assert
 
         $this->assertResponseIsUnprocessable();
     }
 
-    public function testShowWithBadId()
+    public function testShowWithBadId(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
 
-        $this->client->catchExceptions(false);
+        $client = static::createClient();
+
+        $client->catchExceptions(false);
         $this->expectException(HttpException::class);
 
-        $this->client->request('GET', '/users/99');
+        $client->loginUser(self::$user);
+
+        // Act
+
+        $client->request('GET', '/users/99');
+
+        // Assert
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    public function testUpdateAndShow()
+    public function testUpdate(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
+
+        $client = static::createClient();
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        $client->loginUser(self::$user);
+
+        $client->request('GET', '/users/2');
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
 
         $faker = \Faker\Factory::create();
+        $address = $faker->address();
 
-        $this->client->request('GET', '/users/1');
+        // Act
 
-        $user = json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->client->request('PUT', '/users/1', [
-            ...$user,
-            'address' => $faker->address(),
-            'emailConfirmation' => $user['email'],
-            'passwordConfirmation' => $user['password'],
+        $client->request('PUT', '/users/2', [
+            ...$data,
+            'address' => $address,
+            'emailConfirmation' => $data['email'],
+            'passwordConfirmation' => $data['password'],
         ]);
 
-        $this->assertResponseIsSuccessful();
+        $client->request('GET', '/users/2');
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertEquals($data['address'], $address);
     }
 
-    public function testUpdateWithBadData()
+    public function  testUpdateWithBadData(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
 
-        $this->client->catchExceptions(false);
+        $client = static::createClient();
+
+        $client->catchExceptions(false);
         $this->expectException(HttpException::class);
 
-        $faker = \Faker\Factory::create();
+        $client->loginUser(self::$user);
 
-        $this->client->request('PUT', '/users/2', []);
+        // Act
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        $client->request('PUT', '/users/2', [
+            'email' => 'test@test.com'
+        ]);
+
+        // Assert
+
+        $this->assertResponseIsUnprocessable();
+    }
+
+    public function testIndex(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        $client->loginUser(self::$user);
+
+        // Act
+
+        $client->request('GET', '/users');
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        // Assert
+
+        $this->assertCount(2, $data);
+    }
+
+    public function testIndexWithoutAuthentication(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        $client->catchExceptions(false);
+        $this->expectException(AccessDeniedException::class);
+
+        // Act
+
+        $client->request('GET', '/users');
+
+        //dd($client->getResponse()->getStatusCode());
+
+        // Assert
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 }

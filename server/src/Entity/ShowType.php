@@ -36,8 +36,17 @@ class ShowType
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    public function __construct()
+    public function __construct(
+        string $name,
+        string $description,
+        ?User $creator,
+        ?bool $isActive = false,
+        )
     {
+        $this->name = $name;
+        $this->description = $description;
+        $this->isActive = $isActive;
+        $this->creator = $creator;
         $this->createdAt = new \DateTimeImmutable();
     }
 

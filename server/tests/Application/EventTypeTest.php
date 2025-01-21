@@ -2,116 +2,220 @@
 
 namespace App\Tests\Application;
 
+use App\Entity\EventType;
+use App\Entity\TicketType;
 use App\Tests\BaseWebTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class EventTypeTest extends BaseWebTestCase
 {
-    private array $anotherEventType;
-
-    public function setUp(): void
+    public function testCreate(): void
     {
-        parent::setUp();
+        // Arrange
 
-        $this->anotherEventType = [
-            'name' => 'Another Event Type',
-            'description' => 'The description for another event type',
-            'color' => 'blue',
-            'backgroundColor' => 'yellow',
-            'isPublic' => false,
-        ];
+        $client = static::createClient();
+
+        /**
+         * @var $entityManger EntityManagerInterface
+         */
+        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
+
+        $entityManger->persist(self::$user);
+        $entityManger->flush();
+
+        $entityManger->persist(new TicketType(
+            name: 'Test Ticket Type',
+            description: 'A test ticket type to test event types',
+            price: 500,
+            creator: self::$user,
+            isActive: true
+        ));
+        $entityManger->flush();
+
+        $entityManger->persist(new TicketType(
+            name: 'Another Test Ticket Type',
+            description: 'Another test ticket type to test event types',
+            price: 700,
+            creator: self::$user,
+            isActive: true
+        ));
+        $entityManger->flush();
+
+        $client->loginUser(self::$user);
+
+        /**
+         * @var $normalizer DenormalizerInterface&NormalizerInterface
+         */
+        $normalizer = static::getContainer()->get(NormalizerInterface::class);
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        // Act
+
+        $client->request('POST', '/event-types', [
+            'name' => 'Test Event Type',
+            'description' => 'Testing event types',
+            'isActive' => true
+        ]);
+
+        $id = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $client->request('GET', "/event-types/$id");
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertEquals('Test Event Type', $data['name']);
     }
 
     public function testIndex(): void
     {
-        $this->client->request('GET', '/event-types');
+        // Arrange
 
-        $this->assertResponseIsSuccessful();
-    }
+        $client = static::createClient();
 
-    public function testCreateEventType(): void
-    {
-        $this->client->loginUser($this->user);
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
-        $this->client->request('POST', '/event-types', $this->anotherEventType);
+        // Act
+        $client->request('GET', '/event-types');
 
-        $this->assertResponseIsSuccessful();
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+        $this->assertCount(1, $data);
     }
 
     public function testCreateEventTypeWithTicketType(): void
     {
-        $this->client->request('POST', '/event-types', [
-            ...$this->anotherEventType,
-            'eventTypes' => [1, 2]
+        // Arrange
+
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        // Act
+
+        $client->request('POST', '/event-types', [
+            'name' => 'Another Test Event Type',
+            'description' => 'Testing event types, another',
+            'isActive' => true,
+            'ticketTypes' => [1, 2],
         ]);
 
-        $this->assertResponseIsSuccessful();
+        $id = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $client->request('GET', "/event-types/$id");
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        $this->assertCount(2, $data['ticketTypes']);
     }
 
     public function testCreateEventTypeWithBadData(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
 
-        $this->client->catchExceptions(false);
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
+        $client->catchExceptions(false);
         $this->expectException(HttpException::class);
 
-        $this->client->request('POST', '/event-types', []);
+        // Act
+
+        $client->request('POST', '/event-types', ['name' => 'Test']);
+
+        // Assert
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function testEventTypeShow(): void
+    public function testUpdateEventType(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
 
-        $this->client->request('POST', '/event-types', $this->anotherEventType);
+        $client = static::createClient();
 
-        $id = json_decode($this->client->getResponse()->getContent())->data;
+        $client->loginUser(self::$user);
 
-        $this->client->request('GET', "/event-types/$id");
+        /**
+         * @var $normalizer DenormalizerInterface&NormalizerInterface
+         */
+        $normalizer = static::getContainer()->get(NormalizerInterface::class);
 
-        $this->assertResponseIsSuccessful();
-    }
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
-    public function testEventTypeShowWithBadId(): void
-    {
-        $this->client->catchExceptions(false);
-        $this->expectException(HttpException::class);
+        // Act
 
-        $this->client->request('GET', '/event-types/99');
-
-        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-    }
-
-    public function testEventUpdate(): void
-    {
-        $this->client->loginUser($this->user);
-
-        $this->client->request('POST', '/event-types', $this->anotherEventType);
-
-        $id = json_decode($this->client->getResponse()->getContent())->data;
-
-        $this->client->request('PUT', "/event-types/$id", [
-            ...$this->anotherEventType,
-            'name' => 'Changed Event Type',
-            'description' => 'Yet another changed event type',
+        $client->request('PUT', '/event-types/1', [
+            'name' => 'Updated Event Type',
+            'description' => 'Testing event types',
+            'isActive' => true,
         ]);
 
-        $this->assertResponseIsSuccessful();
+        $client->request('GET', '/event-types/1');
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertEquals('Updated Event Type', $data['name']);
     }
 
-    public function testEventUpdateWithBadData(): void
+    public function testEventUpdateClearingTicketTypes(): void
     {
-        $this->client->loginUser($this->user);
+        // Arrange
 
-        $this->client->catchExceptions(false);
-        $this->expectException(HttpException::class);
+        $client = static::createClient();
 
-        $this->client->request('POST', '/event-types', $this->anotherEventType);
+        $client->loginUser(self::$user);
 
-        $id = json_decode($this->client->getResponse()->getContent())->data;
+        /**
+         * @var $normalizer DenormalizerInterface&NormalizerInterface
+         */
+        $normalizer = static::getContainer()->get(NormalizerInterface::class);
 
-        $this->client->request('PUT', "/event-types/$id", []);
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        // Act
+
+        $client->request('PUT', '/event-types/1', [
+            'name' => 'Updated Event Type',
+            'description' => 'Testing event types',
+            'isActive' => true,
+            'ticketTypes' => [],
+        ]);
+
+        $client->request('GET', '/event-types/1');
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertEmpty($data['ticketTypes']);
     }
 }

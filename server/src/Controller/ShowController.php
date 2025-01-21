@@ -32,6 +32,7 @@ class ShowController extends AbstractController
         Request $request,
     ): Response {
         $payload = $request->getPayload();
+
         $type = $entityManager->getRepository(ShowType::class)
             ->find($payload->getInt('typeId'));
 
@@ -44,6 +45,7 @@ class ShowController extends AbstractController
             type: $type,
             duration: $payload->getInt('duration'),
             description: $payload->getString('description'),
+            creator: $this->getUser(),
             expiration: $payload->getString('expiration') ? new \DateTime($payload->getString('expiration')) : null,
             trailerUrl: $payload->getString('trailerUrl'),
             isActive: $payload->has('isActive')
@@ -81,7 +83,7 @@ class ShowController extends AbstractController
         return $this->json($show);
     }
 
-    #[Route('/shows/{id}', name: 'shows_update', methods: ['POST'], format: 'json')]
+    #[Route('/shows/{id}', name: 'shows_update', methods: ['POST', 'PUT'], format: 'json')]
     public function update(
         Show $show,
         EntityManagerInterface $entityManager,
@@ -109,7 +111,7 @@ class ShowController extends AbstractController
                 $this->getParameter('uploads_dir').$filename);
 
             $show->setCover($filename);
-        }
+        } else $show->setCover('default.png');
 
         $show
             ->setName($payload->getString('name'))

@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventTypeRepository::class)]
@@ -41,8 +40,8 @@ class EventType
     #[ORM\Column]
     private ?bool $isActive = false;
 
-    #[ORM\ManyToOne]
-    private ?User $creator = null;
+    #[ORM\ManyToOne()]
+    private User $creator;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -59,9 +58,9 @@ class EventType
     public function __construct(
         string $name,
         string $description,
-        User $creator,
-        bool $isPublic = false,
-        bool $isActive = false,
+        ?User $creator,
+        ?bool $isActive = false,
+        ?bool $isPublic = false,
         ?string $color = 'white',
         ?string $backgroundColor = 'black',
     ) {

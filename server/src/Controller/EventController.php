@@ -78,9 +78,10 @@ class EventController extends AbstractController
             $event = new Event(
                 starting: (new \DateTime())->setTimestamp($data['starting']),
                 ending: (new \DateTime())->setTimestamp($data['ending']),
+                type: $eventType,
+                creator: $this->getUser(),
                 isPublic: $data['isPublic'],
-                seats: $data['seats'],
-                type: $eventType
+                seats: $data['seats']
             );
 
             $event->setCreator($this->getUser());
@@ -107,7 +108,7 @@ class EventController extends AbstractController
 
         $entityManager->flush();
 
-        return new Response(status: Response::HTTP_OK);
+        return new Response(status: Response::HTTP_CREATED);
     }
 
     #[Route('/events/{id}', name: 'events_show', methods: ['GET'], format: 'json')]
@@ -152,11 +153,20 @@ class EventController extends AbstractController
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
 
-        $event->setStarting((new \DateTime())->setTimestamp($eventDto->starting))
+        $event
+            ->setStarting((new \DateTime())->setTimestamp($eventDto->starting))
             ->setEnding((new \DateTime())->setTimestamp($eventDto->ending))
-            ->setIsPublic(false)
+            ->setIsPublic($eventDto->isPublic)
             ->setSeats($eventDto->seats)
             ->setType($eventType);
+
+        // Clear shows
+        $connection = $entityManager->getConnection();
+        $query = '
+            DELETE FROM event_show
+            WHERE event_id = :event_id
+        ';
+        $connection->executeQuery($query, ['event_id' => $event->getId()]);
 
         foreach ($shows as $show) {
             $event->addShow($show);
@@ -176,6 +186,7 @@ class EventController extends AbstractController
         $event->addMemo($memo);
 
         $entityManager->persist($memo);
+
         $entityManager->persist($event);
         $entityManager->flush();
 

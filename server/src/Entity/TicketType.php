@@ -32,16 +32,16 @@ class TicketType
     private ?int $price = null;
 
     #[ORM\Column]
-    private ?bool $isActive = null;
+    private bool $isActive = false;
 
     #[ORM\Column]
-    private ?bool $isCashier = null;
+    private ?bool $isCashier = false;
 
     #[ORM\Column]
-    private ?bool $isPublic = null;
+    private ?bool $isPublic = false;
 
     #[ORM\ManyToOne]
-    private ?User $creator = null;
+    private User $creator;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -60,10 +60,10 @@ class TicketType
         string $name,
         string $description,
         int $price,
-        bool $isActive,
-        bool $isCashier,
-        bool $isPublic,
         User $creator,
+        ?bool $isActive = false,
+        ?bool $isCashier = false,
+        ?bool $isPublic = false,
     ) {
         $this->name = $name;
         $this->description = $description;

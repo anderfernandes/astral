@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TicketTypeController extends AbstractController
@@ -42,10 +40,10 @@ class TicketTypeController extends AbstractController
             name: $payload->getString('name'),
             description: $payload->getString('description'),
             price: $payload->getInt('price'),
+            creator: $this->getUser(),
             isActive: $payload->getBoolean('isActive'),
             isCashier: $payload->getBoolean('isCashier'),
-            isPublic: $payload->getBoolean('isPublic'),
-            creator: $this->getUser()
+            isPublic: $payload->getBoolean('isPublic')
         );
 
         $errors = $validator->validate($ticketType);
@@ -81,7 +79,7 @@ class TicketTypeController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
-        EventTypeRepository $eventTypes
+        EventTypeRepository $eventTypes,
     ): Response {
         $payload = $request->getPayload();
 
@@ -100,7 +98,7 @@ class TicketTypeController extends AbstractController
             return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if ($payload->has('eventTypes')) {
+        /*if ($payload->has('eventTypes')) {
             // DELETE ALL CURRENT ASSOCIATIONS AND ENTER NEW ONES
 
             // USE A DELETE STATEMENT
@@ -122,9 +120,11 @@ class TicketTypeController extends AbstractController
                     return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
-                if ($eventType->getIsActive()) $ticketType->addEventType($eventType);
+                if ($eventType->getIsActive()) {
+                    $ticketType->addEventType($eventType);
+                }
             }
-        }
+        }*/
 
         $entityManager->persist($ticketType);
 
@@ -136,7 +136,7 @@ class TicketTypeController extends AbstractController
     #[Route('/ticket-types/{id}', name: 'ticket-types_show', methods: ['GET'], format: 'json')]
     public function show(TicketType $ticketType): Response
     {
-        //dd($ticketType->getEventTypes());
-        return $this->json($ticketType,Response::HTTP_OK);
+        // dd($ticketType->getEventTypes());
+        return $this->json($ticketType, Response::HTTP_OK);
     }
 }
