@@ -82,7 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         string $email,
         string $firstName,
         string $lastName,
-        \DateTimeImmutable $dateOfBirth,
+        ?\DateTimeImmutable $dateOfBirth = null,
         ?string $address = null,
         ?string $city = null,
         ?string $state = null,

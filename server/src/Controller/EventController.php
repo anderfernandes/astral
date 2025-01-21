@@ -66,6 +66,11 @@ class EventController extends AbstractController
                 return new Response(status: Response::HTTP_BAD_REQUEST);
             }
 
+            // Check if event has memo
+            if ($data['memo'] === null || strlen($data['memo'] <=3 )) {
+                return new Response(status: Response::HTTP_BAD_REQUEST);
+            }
+
             // Check if event type exists
             $eventType = $entityManager->getRepository(EventType::class)->find($data['typeId']);
 
@@ -104,6 +109,15 @@ class EventController extends AbstractController
             }
 
             $entityManager->persist($event);
+
+            $memo = new EventMemo(
+                content: $data['memo'],
+                author: $this->getUser(),
+            );
+
+            $event->addMemo($memo);
+
+            $entityManager->persist($memo);
         }
 
         $entityManager->flush();

@@ -75,6 +75,7 @@ class EventTest extends BaseWebTestCase
                 'typeId' => 1,
                 'shows' => [$shows[0]->getId()],
                 'isPublic' => true,
+                'memo' => 'test memo'
             ]
         ]);
 
@@ -84,7 +85,7 @@ class EventTest extends BaseWebTestCase
 
         // Assert
 
-        $this->assertEquals($starting->format('c'), $data['starting']);
+        $this->assertCount(1, $data['memos']);
     }
 
     public function testUpdate(): void
