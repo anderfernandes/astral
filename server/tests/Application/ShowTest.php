@@ -50,12 +50,12 @@ class ShowTest extends BaseWebTestCase
             'trailerUrl' => \Faker\Factory::create()->url(),
             'expiration' => (new \DateTime('+5 years'))->format('c'),
         ],
-        [
-            'cover' => new UploadedFile(
-                static::getContainer()->getParameter('uploads_dir').'/default.png',
-                'default.png'
-            ),
-        ]);
+            [
+                'cover' => new UploadedFile(
+                    static::getContainer()->getParameter('uploads_dir').'/default.png',
+                    'default.png'
+                ),
+            ]);
 
         $id = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
 
@@ -126,12 +126,12 @@ class ShowTest extends BaseWebTestCase
             'isActive' => rand(0, 1),
             'expiration' => (new \DateTime('+5 years'))->format('c'),
         ],
-        [
-            'cover' => new UploadedFile(
-                static::getContainer()->getParameter('uploads_dir').'/default.png',
-                'default.png'
-            ),
-        ]);
+            [
+                'cover' => new UploadedFile(
+                    static::getContainer()->getParameter('uploads_dir').'/default.png',
+                    'default.png'
+                ),
+            ]);
 
         $client->request('GET', '/shows/2');
 

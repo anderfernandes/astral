@@ -33,7 +33,7 @@ class ShowTypeController extends AbstractController
             description: $showTypeDto->description,
             creator: $this->getUser(),
             isActive: $showTypeDto->isActive
-         );
+        );
 
         $errors = $validator->validate($showType);
 

@@ -2,7 +2,6 @@
 
 namespace App\Tests\Application;
 
-use App\Entity\EventType;
 use App\Entity\TicketType;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
@@ -63,7 +62,7 @@ class EventTypeTest extends BaseWebTestCase
         $client->request('POST', '/event-types', [
             'name' => 'Test Event Type',
             'description' => 'Testing event types',
-            'isActive' => true
+            'isActive' => true,
         ]);
 
         $id = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];

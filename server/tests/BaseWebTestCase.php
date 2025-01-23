@@ -2,8 +2,6 @@
 
 namespace App\Tests;
 
-use App\Entity\EventType;
-use App\Entity\TicketType;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

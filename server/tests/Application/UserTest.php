@@ -25,7 +25,6 @@ class UserTest extends BaseWebTestCase
         $entityManger->persist(self::$user);
         $entityManger->flush();
 
-
         /**
          * @var $decoder DecoderInterface
          */
@@ -33,8 +32,8 @@ class UserTest extends BaseWebTestCase
 
         $client->loginUser(self::$user);
 
-        //$client->catchExceptions(false);
-        //$this->expectException(HttpException::class);
+        // $client->catchExceptions(false);
+        // $this->expectException(HttpException::class);
 
         $faker = \Faker\Factory::create();
 
@@ -73,7 +72,7 @@ class UserTest extends BaseWebTestCase
     }
 
     public function testCreateWithMissingData(): void
-        {
+    {
         // Arrange
 
         $client = static::createClient();
@@ -163,7 +162,7 @@ class UserTest extends BaseWebTestCase
         $this->assertEquals($data['address'], $address);
     }
 
-    public function  testUpdateWithBadData(): void
+    public function testUpdateWithBadData(): void
     {
         // Arrange
 
@@ -177,7 +176,7 @@ class UserTest extends BaseWebTestCase
         // Act
 
         $client->request('PUT', '/users/2', [
-            'email' => 'test@test.com'
+            'email' => 'test@test.com',
         ]);
 
         // Assert
@@ -222,7 +221,7 @@ class UserTest extends BaseWebTestCase
 
         $client->request('GET', '/users');
 
-        //dd($client->getResponse()->getStatusCode());
+        // dd($client->getResponse()->getStatusCode());
 
         // Assert
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);

@@ -2,7 +2,6 @@
 
 namespace App\Tests\Application;
 
-use App\Entity\User;
 use App\Tests\BaseWebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,7 +63,7 @@ class AccountTest extends BaseWebTestCase
 
         $client->request('POST', '/login', [
             'email' => $this->newUser['email'],
-            'password' => $this->newUser['password']
+            'password' => $this->newUser['password'],
         ]);
 
         // Assert
@@ -84,7 +83,7 @@ class AccountTest extends BaseWebTestCase
 
         $client->request('POST', '/login', [
             'email' => $this->newUser['email'],
-            'password' => 'test'
+            'password' => 'test',
         ]);
 
         // Assert
@@ -102,7 +101,7 @@ class AccountTest extends BaseWebTestCase
 
         $client->request('POST', '/login', [
             'email' => $this->newUser['email'],
-            'password' => $this->newUser['password']
+            'password' => $this->newUser['password'],
         ]);
 
         // Act
@@ -166,7 +165,7 @@ class AccountTest extends BaseWebTestCase
 
         // Act
 
-        $client->request('GET', "/activate?token=atesttoken");
+        $client->request('GET', '/activate?token=atesttoken');
 
         // Assert
 
@@ -187,7 +186,7 @@ class AccountTest extends BaseWebTestCase
 
         // Act
 
-        $client->request('GET', "/activate");
+        $client->request('GET', '/activate');
 
         // Assert
 
@@ -204,7 +203,7 @@ class AccountTest extends BaseWebTestCase
 
         $client->request('POST', '/login', [
             'email' => $this->newUser['email'],
-            'password' => $this->newUser['password']
+            'password' => $this->newUser['password'],
         ]);
 
         // Act
@@ -243,12 +242,12 @@ class AccountTest extends BaseWebTestCase
 
         $client->request('POST', '/login', [
             'email' => $this->newUser['email'],
-            'password' => $this->newUser['password']
+            'password' => $this->newUser['password'],
         ]);
 
         // Act
 
-    $client->request('PUT', '/account', $this->newUser);
+        $client->request('PUT', '/account', $this->newUser);
 
         // Assert
 
@@ -268,7 +267,7 @@ class AccountTest extends BaseWebTestCase
         $client->request('POST', '/register', $this->newUser);
 
         $client->request('POST', '/forgot', [
-            'email' => $this->newUser['email']
+            'email' => $this->newUser['email'],
         ]);
 
         $crawler = new Crawler($this->getMailerMessage()->getHtmlBody());
@@ -296,9 +295,9 @@ class AccountTest extends BaseWebTestCase
         $client = static::createClient();
 
         // Act
-        
+
         $client->request('POST', '/forgot', [
-            'email' => \Faker\Factory::create()->email()
+            'email' => \Faker\Factory::create()->email(),
         ]);
 
         // Assert

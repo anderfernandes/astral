@@ -18,10 +18,10 @@ class Event
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $starting = null;
+    private ?\DateTime $starting = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $ending = null;
+    private ?\DateTime $ending = null;
 
     #[ORM\Column]
     private bool $isPublic = false;
@@ -58,8 +58,8 @@ class Event
      * @param Show[] $shows
      */
     public function __construct(
-        \DateTimeInterface $starting,
-        \DateTimeInterface $ending,
+        \DateTime $starting,
+        \DateTime $ending,
         EventType $type,
         ?User $creator,
         ?bool $isPublic = false,
@@ -87,12 +87,12 @@ class Event
         return $this->id;
     }
 
-    public function getStarting(): ?\DateTimeInterface
+    public function getStarting(): ?\DateTime
     {
         return $this->starting;
     }
 
-    public function setStarting(\DateTimeInterface $starting): static
+    public function setStarting(\DateTime $starting): static
     {
         $this->starting = $starting;
 

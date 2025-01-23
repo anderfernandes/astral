@@ -5,11 +5,9 @@ namespace App\Tests\Application;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class TicketTypeTest extends BaseWebTestCase
 {
@@ -45,7 +43,7 @@ class TicketTypeTest extends BaseWebTestCase
             'name' => 'Test Ticket Type',
             'description' => 'A test ticket type to test event types',
             'price' => 500,
-            'isActive' => true
+            'isActive' => true,
         ]);
 
         $id = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];

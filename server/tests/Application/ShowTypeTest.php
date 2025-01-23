@@ -4,7 +4,6 @@ namespace App\Tests\Application;
 
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
@@ -67,7 +66,6 @@ class ShowTypeTest extends BaseWebTestCase
             'name' => 'Another Test Show Type',
         ]);
 
-
         // Assert
         $this->assertResponseIsUnprocessable();
     }
@@ -85,7 +83,7 @@ class ShowTypeTest extends BaseWebTestCase
 
         $client->loginUser(self::$user);
 
-        $client->request('PUT', "/show-types/1", [
+        $client->request('PUT', '/show-types/1', [
             'name' => 'Updated Show Type',
             'description' => 'An updated show type',
             'isActive' => false,

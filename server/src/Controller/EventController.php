@@ -8,7 +8,6 @@ use App\Entity\EventType;
 use App\Entity\Show;
 use App\Model\EventDto;
 use App\Repository\EventRepository;
-use Cassandra\Date;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,26 +48,37 @@ class EventController extends AbstractController
 
         return $this->json(['data' => $query->execute()]);*/
 
-        if ($request->query->has('format') && $request->query->get('format') === "calendar") {
-            $events = $events->findAll();
+        $events = $events->createQueryBuilder('e')
+                ->orderBy('e.starting', 'ASC')
+                ->getQuery()
+                ->execute();
 
+        if ($request->query->has('format') && 'calendar' === $request->query->get('format')) {
             $dates = array_map(function ($event) {
-                return (new \DateTime($event->getStarting()->format('Y-m-d')));
+                return (new \DateTime($event->getStarting()->format('c')))
+                    ->setTimezone(new \DateTimeZone('America/Chicago'))
+                    ->setTime(0, 0, 0, 0)
+                    ->format('c');
             }, $events);
+
+            $dates = array_values(array_unique($dates));
 
             sort($dates);
 
             $data = array_map(function ($date) use ($events) {
                 $events = array_filter($events, function ($event) use ($date) {
-                    return $event->getStarting()->format('Y-m-d') === $date->format('Y-m-d');
+                    return (new \DateTime($event->getStarting()->format('c')))
+                        ->setTimezone(new \DateTimeZone('America/Chicago'))
+                        ->setTime(0, 0, 0, 0)->format('c') === $date;
                 });
+
                 return ['date' => $date, 'events' => array_values($events)];
             }, $dates);
 
             return $this->json(['data' => $data, 'dates' => $dates]);
         }
 
-        return $this->json(['data' => $events->findAll()]);
+        return $this->json(['data' => $events]);
     }
 
     #[IsGranted('ROLE_USER')]
@@ -87,7 +97,7 @@ class EventController extends AbstractController
             }
 
             // Check if event has memo
-            if ($data['memo'] === null || strlen($data['memo'] <=3 )) {
+            if (null === $data['memo'] || strlen($data['memo'] <= 3)) {
                 return new Response(status: Response::HTTP_BAD_REQUEST);
             }
 

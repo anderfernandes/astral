@@ -6,12 +6,8 @@ use App\Entity\Event;
 use App\Entity\EventType;
 use App\Entity\Show;
 use App\Entity\ShowType;
-use App\Repository\EventTypeRepository;
-use App\Repository\ShowRepository;
-use App\Repository\ShowTypeRepository;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class EventMemoTest extends BaseWebTestCase
@@ -58,7 +54,7 @@ class EventMemoTest extends BaseWebTestCase
             name: 'Test Event Type',
             description: 'Created to test events',
             creator: self::$user,
-         );
+        );
 
         $entityManger->persist($eventType);
 
@@ -78,7 +74,7 @@ class EventMemoTest extends BaseWebTestCase
         // Act
 
         $client->request('POST', '/events/1/memos', [
-            'content' => 'Testing event memos'
+            'content' => 'Testing event memos',
         ]);
 
         $client->request('GET', '/events/1');
@@ -86,6 +82,5 @@ class EventMemoTest extends BaseWebTestCase
         $data = $decoder->decode($client->getResponse()->getContent(), 'json')['memos'][0];
 
         $this->assertEquals('Testing event memos', $data['content']);
-
     }
 }

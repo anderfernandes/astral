@@ -41,8 +41,7 @@ class ShowType
         string $description,
         ?User $creator,
         ?bool $isActive = false,
-        )
-    {
+    ) {
         $this->name = $name;
         $this->description = $description;
         $this->isActive = $isActive;

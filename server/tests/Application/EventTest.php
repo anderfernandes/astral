@@ -5,13 +5,9 @@ namespace App\Tests\Application;
 use App\Entity\EventType;
 use App\Entity\Show;
 use App\Entity\ShowType;
-use App\Model\EventDto;
-use App\Repository\ShowTypeRepository;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class EventTest extends BaseWebTestCase
 {
@@ -52,7 +48,7 @@ class EventTest extends BaseWebTestCase
             name: 'Test Event Type',
             description: 'Created to test events',
             creator: self::$user,
-         ));
+        ));
 
         $entityManger->flush();
 
@@ -75,8 +71,8 @@ class EventTest extends BaseWebTestCase
                 'typeId' => 1,
                 'shows' => [$shows[0]->getId()],
                 'isPublic' => true,
-                'memo' => 'test memo'
-            ]
+                'memo' => 'test memo',
+            ],
         ]);
 
         $client->request('GET', '/events/1');
@@ -101,7 +97,7 @@ class EventTest extends BaseWebTestCase
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
-        $client->request('GET','/events/1');
+        $client->request('GET', '/events/1');
 
         $starting = (new \DateTimeImmutable('+7 days'))->setTime(10, 30, 0);
 
@@ -114,7 +110,7 @@ class EventTest extends BaseWebTestCase
             'typeId' => 1,
             'shows' => [1],
             'isPublic' => false,
-            'memo' => 'A test memo for a test event'
+            'memo' => 'A test memo for a test event',
         ]);
 
         $client->request('GET', '/events/1');
