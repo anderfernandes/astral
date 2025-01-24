@@ -104,7 +104,7 @@ class Event
         return $this->ending;
     }
 
-    public function setEnding(\DateTimeInterface $ending): static
+    public function setEnding(\DateTime $ending): static
     {
         $this->ending = $ending;
 

@@ -18,11 +18,11 @@ class EventTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $entityManger EntityManagerInterface
+         * @var $entityManager EntityManagerInterface
          */
-        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
-        $entityManger->persist(self::$user);
+        $entityManager->persist(self::$user);
 
         $showType = new ShowType(
             name: 'Test Show Type',
@@ -31,7 +31,7 @@ class EventTest extends BaseWebTestCase
             isActive: true
         );
 
-        $entityManger->persist($showType);
+        $entityManager->persist($showType);
 
         $shows[] = new Show(
             name: 'Test Show',
@@ -42,15 +42,15 @@ class EventTest extends BaseWebTestCase
             isActive: true,
         );
 
-        $entityManger->persist($shows[0]);
+        $entityManager->persist($shows[0]);
 
-        $entityManger->persist(new EventType(
+        $entityManager->persist(new EventType(
             name: 'Test Event Type',
             description: 'Created to test events',
             creator: self::$user,
         ));
 
-        $entityManger->flush();
+        $entityManager->flush();
 
         $client->loginUser(self::$user);
 

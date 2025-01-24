@@ -46,10 +46,14 @@ class ShowController extends AbstractController
             duration: $payload->getInt('duration'),
             description: $payload->getString('description'),
             creator: $this->getUser(),
-            expiration: $payload->getString('expiration') ? new \DateTime($payload->getString('expiration')) : null,
-            trailerUrl: $payload->getString('trailerUrl'),
             isActive: $payload->has('isActive')
         );
+
+        if ($payload->has('expiration'))
+            $show->setExpiration(new \DateTime($payload->getString('expiration')));
+
+        if ($payload->has('trailerUrl'))
+            $show->setTrailerUrl($payload->getString('trailerUrl'));
 
         if ($request->files->has('cover')) {
             /**

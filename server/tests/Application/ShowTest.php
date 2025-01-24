@@ -68,7 +68,7 @@ class ShowTest extends BaseWebTestCase
         $this->assertNotEquals('default.png', $data['cover']);
     }
 
-    public function testCreateWIthoutCover(): void
+    public function testCreateWithoutCover(): void
     {
         // Arrange
 
@@ -100,7 +100,7 @@ class ShowTest extends BaseWebTestCase
 
         // Assert
 
-        $this->assertEquals('default.png', $data['cover']);
+        $this->assertEquals('/default.png', $data['cover']);
     }
 
     public function testUpdate(): void

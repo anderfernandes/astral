@@ -32,7 +32,7 @@ class Show
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $cover = 'default.png';
+    private ?string $cover = '/default.png';
 
     #[ORM\Column]
     private ?bool $isActive = null;
@@ -58,8 +58,6 @@ class Show
         int $duration,
         string $description,
         ?User $creator,
-        ?\DateTimeInterface $expiration = null,
-        ?string $trailerUrl = null,
         bool $isActive = false,
     ) {
         $this->name = $name;
@@ -67,7 +65,6 @@ class Show
         $this->duration = $duration;
         $this->description = $description;
         $this->creator = $creator;
-        $this->expiration = $expiration;
         $this->isActive = $isActive;
         $this->createdAt = new \DateTimeImmutable();
     }
