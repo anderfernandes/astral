@@ -33,6 +33,7 @@ security:
         # - { path: ^/events, roles: ROLE_USER }
         - { path: ^/users, roles: ROLE_USER }
         - { path: ^/sales, roles: ROLE_USER }
+        - { path: ^/reports, roles: ROLE_USER }
 
 when@test:
     security:

@@ -57,8 +57,8 @@ class Show
         ShowType $type,
         int $duration,
         string $description,
-        ?User $creator,
-        bool $isActive = false,
+        ?User $creator = null,
+        ?bool $isActive = false,
     ) {
         $this->name = $name;
         $this->type = $type;

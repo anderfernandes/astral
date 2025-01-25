@@ -62,6 +62,8 @@ class Sale
         ?User $customer = null,
     )
     {
+        $this->creator = $creator;
+        $this->customer = $customer;
         $this->createdAt = new \DateTimeImmutable();
         $this->payments = new ArrayCollection();
         $this->items = new ArrayCollection();
