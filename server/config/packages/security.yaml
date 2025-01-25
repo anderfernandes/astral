@@ -30,8 +30,9 @@ security:
         # - { path: '^/login', roles: PUBLIC_ACCESS }
         # - { path: '^/register', roles: PUBLIC_ACCESS }
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/users, roles: ROLE_USER }
         # - { path: ^/events, roles: ROLE_USER }
+        - { path: ^/users, roles: ROLE_USER }
+        - { path: ^/sales, roles: ROLE_USER }
 
 when@test:
     security:
