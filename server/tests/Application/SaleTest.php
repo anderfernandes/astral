@@ -281,4 +281,58 @@ class SaleTest extends BaseWebTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
+
+    public function testRefund(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        /**
+         * @var $serializer DenormalizerInterface&NormalizerInterface&DecoderInterface
+         */
+        $serializer = static::getContainer()->get(DenormalizerInterface::class);
+
+        $client->loginUser(self::$user);
+
+        // Act
+
+        $sale = new Sale();
+
+        foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
+
+            $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
+
+            $sale->addItem(new SaleItem(
+                name: $name,
+                description: $ticketType->getName(),
+                price: $ticketType->getPrice(),
+                quantity: rand(2, 10),
+                cover: self::$event->getShows()->first()->getCover(),
+                meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
+           ));
+        }
+
+        $payment = ["tendered" => $sale->getTotal(), "methodId" => self::$paymentMethods[0]->getId()];
+
+        $client->request('POST', "/sales", [
+            ...$serializer->normalize($sale, 'json'),
+            "payment" => $payment
+        ]);
+
+        $id = $serializer->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $client->request('PUT', "/sales/$id?refund");
+
+        $client->request('GET', "/sales/$id");
+
+        $data = $serializer->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertSame(
+            ['paymentCount' => 2, 'balance' => $sale->getTotal()],
+            ['paymentCount' => count($data['payments']), 'balance' => $data['balance']]
+        );
+    }
 }

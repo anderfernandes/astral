@@ -99,9 +99,43 @@ class SaleController extends AbstractController
         return $this->json(['data' => $sale->getId()], 201);
     }
 
-    #[Route('/sales/{id}', name: 'sales_show', methods: ['GET'], format: 'JSON')]
+    #[Route('/sales/{id}', name: 'sales_show', methods: ['GET'], format: 'json')]
     public function show(Sale $sale): Response
     {
         return $this->json($sale);
+    }
+
+    #[Route('/sales/{id}', name: 'sales_update', methods: ['PUT'], format: 'json')]
+    public function update(
+        Sale $sale,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        PaymentMethodRepository $paymentMethods,
+    ): Response
+    {
+        $payload = $request->getPayload();
+
+        if ($request->query->has('refund')) {
+
+            if ($sale->getPayments()->count() > 1 && $sale->getStatus() === SaleStatus::Completed)
+                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            $payment = new Payment(
+                tendered: $sale->getTotal() * -1,
+                method: $sale->getPayments()->last()->getMethod(),
+                cashier: $this->getUser(),
+                customer: $sale->getCustomer()
+            );
+
+            $sale->addPayment($payment);
+
+            $entityManager->persist($payment);
+        }
+
+        $entityManager->persist($sale);
+
+        $entityManager->flush();
+
+        return new Response(status: Response::HTTP_OK);
     }
 }
