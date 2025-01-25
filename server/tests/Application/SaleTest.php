@@ -36,8 +36,6 @@ class SaleTest extends BaseWebTestCase
     {
         parent::setUpBeforeClass();
 
-        self::bootKernel();
-
         /**
          * @var $passwordHasher UserPasswordHasherInterface
          */

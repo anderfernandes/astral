@@ -9,6 +9,21 @@ use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class ShowTypeTest extends BaseWebTestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        /**
+         * @var $entityManger EntityManagerInterface
+         */
+        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
+
+        $entityManger->persist(self::$user);
+        $entityManger->flush();
+
+        self::ensureKernelShutdown();
+    }
+
     public function testCreate(): void
     {
         // Arrange
@@ -19,14 +34,6 @@ class ShowTypeTest extends BaseWebTestCase
          * @var $decoder DecoderInterface
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
-
-        /**
-         * @var $entityManger EntityManagerInterface
-         */
-        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
-
-        $entityManger->persist(self::$user);
-        $entityManger->flush();
 
         $client->loginUser(self::$user);
 

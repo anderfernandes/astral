@@ -2,25 +2,34 @@
 
 namespace App\Tests\Application;
 
+use App\Entity\User;
 use App\Tests\BaseWebTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AccountTest extends BaseWebTestCase
 {
-    private array $newUser;
+    static array $newUser;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
         $faker = \Faker\Factory::create();
+
+        /**
+         * @var $entityManager EntityManagerInterface
+         */
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
         $password = $faker->realTextBetween(6, 12);
         $email = $faker->email();
 
-        $this->newUser = [
+        self::$newUser = [
             'email' => $email,
             'emailConfirmation' => $email,
             'password' => $password,
@@ -35,6 +44,10 @@ class AccountTest extends BaseWebTestCase
             'phone' => $faker->phoneNumber(),
             'dateOfBirth' => $faker->date(),
         ];
+
+        $entityManager->flush();
+
+        self::ensureKernelShutdown();
     }
 
     public function testRegister(): void
@@ -43,9 +56,14 @@ class AccountTest extends BaseWebTestCase
 
         $client = static::createClient();
 
+        /**
+         * @var $serializer DenormalizerInterface&NormalizerInterface&DecoderInterface
+         */
+        $serializer = static::getContainer()->get(DenormalizerInterface::class);
+
         // Act
 
-        $client->request('POST', '/register', $this->newUser);
+        $client->request('POST', '/register', self::$newUser);
 
         // Assert
         $this->assertResponseIsSuccessful();
@@ -57,13 +75,11 @@ class AccountTest extends BaseWebTestCase
 
         $client = static::createClient();
 
-        $client->request('POST', '/register', $this->newUser);
-
         // Act
 
         $client->request('POST', '/login', [
-            'email' => $this->newUser['email'],
-            'password' => $this->newUser['password'],
+            'email' => self::$newUser['email'],
+            'password' => self::$newUser['password'],
         ]);
 
         // Assert
@@ -77,13 +93,11 @@ class AccountTest extends BaseWebTestCase
 
         $client = static::createClient();
 
-        $client->request('POST', '/register', $this->newUser);
-
         // Act
 
         $client->request('POST', '/login', [
-            'email' => $this->newUser['email'],
-            'password' => 'test',
+            'email' => self::$newUser['email'],
+            'password' => \Faker\Factory::create()->password(),
         ]);
 
         // Assert
@@ -97,11 +111,9 @@ class AccountTest extends BaseWebTestCase
 
         $client = static::createClient();
 
-        $client->request('POST', '/register', $this->newUser);
-
         $client->request('POST', '/login', [
-            'email' => $this->newUser['email'],
-            'password' => $this->newUser['password'],
+            'email' => self::$newUser['email'],
+            'password' => self::$newUser['password'],
         ]);
 
         // Act
@@ -119,8 +131,6 @@ class AccountTest extends BaseWebTestCase
 
         $client = static::createClient();
 
-        $client->request('POST', '/register', $this->newUser);
-
         // Act
 
         $client->request('GET', '/account');
@@ -136,7 +146,27 @@ class AccountTest extends BaseWebTestCase
 
         $client = static::createClient();
 
-        $client->request('POST', '/register', $this->newUser);
+        $faker = \Faker\Factory::create();
+
+        $password = $faker->realTextBetween(6, 12);
+        $email = $faker->email();
+
+
+        $client->request('POST', '/register', [
+            'email' => $email,
+            'emailConfirmation' => $email,
+            'password' => $password,
+            'passwordConfirmation' => $password,
+            'firstName' => $faker->firstName(),
+            'lastName' => $faker->lastName(),
+            'address' => $faker->streetAddress(),
+            'city' => $faker->city(),
+            'state' => 'Texas',
+            'zip' => $faker->randomNumber(5),
+            'country' => $faker->country(),
+            'phone' => $faker->phoneNumber(),
+            'dateOfBirth' => $faker->date(),
+        ]);
 
         $crawler = new Crawler($this->getMailerMessage()->getHtmlBody());
 
@@ -157,7 +187,26 @@ class AccountTest extends BaseWebTestCase
 
         $client = static::createClient();
 
-        $client->request('POST', '/register', $this->newUser);
+        $faker = \Faker\Factory::create();
+
+        $password = $faker->realTextBetween(6, 12);
+        $email = $faker->email();
+
+        $client->request('POST', '/register', [
+            'email' => $email,
+            'emailConfirmation' => $email,
+            'password' => $password,
+            'passwordConfirmation' => $password,
+            'firstName' => $faker->firstName(),
+            'lastName' => $faker->lastName(),
+            'address' => $faker->streetAddress(),
+            'city' => $faker->city(),
+            'state' => 'Texas',
+            'zip' => $faker->randomNumber(5),
+            'country' => $faker->country(),
+            'phone' => $faker->phoneNumber(),
+            'dateOfBirth' => $faker->date(),
+        ]);
 
         $crawler = new Crawler($this->getMailerMessage()->getHtmlBody());
 
@@ -165,7 +214,9 @@ class AccountTest extends BaseWebTestCase
 
         // Act
 
-        $client->request('GET', '/activate?token=atesttoken');
+        $token = \Faker\Factory::create()->sha1();
+
+        $client->request('GET', "/activate?token=$token");
 
         // Assert
 
@@ -178,7 +229,26 @@ class AccountTest extends BaseWebTestCase
 
         $client = static::createClient();
 
-        $client->request('POST', '/register', $this->newUser);
+        $faker = \Faker\Factory::create();
+
+        $password = $faker->realTextBetween(6, 12);
+        $email = $faker->email();
+
+        $client->request('POST', '/register', [
+            'email' => $email,
+            'emailConfirmation' => $email,
+            'password' => $password,
+            'passwordConfirmation' => $password,
+            'firstName' => $faker->firstName(),
+            'lastName' => $faker->lastName(),
+            'address' => $faker->streetAddress(),
+            'city' => $faker->city(),
+            'state' => 'Texas',
+            'zip' => $faker->randomNumber(5),
+            'country' => $faker->country(),
+            'phone' => $faker->phoneNumber(),
+            'dateOfBirth' => $faker->date(),
+        ]);
 
         $crawler = new Crawler($this->getMailerMessage()->getHtmlBody());
 
@@ -199,11 +269,9 @@ class AccountTest extends BaseWebTestCase
 
         $client = static::createClient();
 
-        $client->request('POST', '/register', $this->newUser);
-
         $client->request('POST', '/login', [
-            'email' => $this->newUser['email'],
-            'password' => $this->newUser['password'],
+            'email' => self::$newUser['email'],
+            'password' => self::$newUser['password'],
         ]);
 
         // Act
@@ -238,16 +306,17 @@ class AccountTest extends BaseWebTestCase
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
-        $client->request('POST', '/register', $this->newUser);
-
         $client->request('POST', '/login', [
-            'email' => $this->newUser['email'],
-            'password' => $this->newUser['password'],
+            'email' => self::$newUser['email'],
+            'password' => self::$newUser['password'],
         ]);
 
         // Act
 
-        $client->request('PUT', '/account', $this->newUser);
+        $client->request('PUT', '/account', [
+            ...self::$newUser,
+            'address' => \Faker\Factory::create()->address()
+        ]);
 
         // Assert
 
@@ -264,10 +333,8 @@ class AccountTest extends BaseWebTestCase
 
         $client = static::createClient();
 
-        $client->request('POST', '/register', $this->newUser);
-
         $client->request('POST', '/forgot', [
-            'email' => $this->newUser['email'],
+            'email' => self::$newUser['email'],
         ]);
 
         $crawler = new Crawler($this->getMailerMessage()->getHtmlBody());

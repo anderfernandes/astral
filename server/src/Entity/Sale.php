@@ -80,7 +80,7 @@ class Sale
 
     public function getTax(): int
     {
-        return $this->getSubtotal() * $_ENV['TAX'];
+        return (int)round($this->getSubtotal() * $_ENV['TAX']);
     }
 
     public function getTotal(): int

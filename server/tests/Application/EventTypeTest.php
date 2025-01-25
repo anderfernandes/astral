@@ -13,11 +13,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class EventTypeTest extends BaseWebTestCase
 {
-    public function testCreate(): void
+    public static function setUpBeforeClass(): void
     {
-        // Arrange
-
-        $client = static::createClient();
+        parent::setUpBeforeClass();
 
         /**
          * @var $entityManger EntityManagerInterface
@@ -25,7 +23,6 @@ class EventTypeTest extends BaseWebTestCase
         $entityManger = static::getContainer()->get(EntityManagerInterface::class);
 
         $entityManger->persist(self::$user);
-        $entityManger->flush();
 
         $entityManger->persist(new TicketType(
             name: 'Test Ticket Type',
@@ -34,7 +31,6 @@ class EventTypeTest extends BaseWebTestCase
             creator: self::$user,
             isActive: true
         ));
-        $entityManger->flush();
 
         $entityManger->persist(new TicketType(
             name: 'Another Test Ticket Type',
@@ -43,19 +39,24 @@ class EventTypeTest extends BaseWebTestCase
             creator: self::$user,
             isActive: true
         ));
+
         $entityManger->flush();
+
+        self::ensureKernelShutdown();
+    }
+
+    public function testCreate(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
 
         $client->loginUser(self::$user);
 
         /**
-         * @var $normalizer DenormalizerInterface&NormalizerInterface
+         * @var $normalizer DenormalizerInterface&NormalizerInterface&DecoderInterface
          */
-        $normalizer = static::getContainer()->get(NormalizerInterface::class);
-
-        /**
-         * @var $decoder DecoderInterface
-         */
-        $decoder = static::getContainer()->get(DecoderInterface::class);
+        $serializer = static::getContainer()->get(NormalizerInterface::class);
 
         // Act
 
@@ -65,11 +66,11 @@ class EventTypeTest extends BaseWebTestCase
             'isActive' => true,
         ]);
 
-        $id = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+        $id = $serializer->decode($client->getResponse()->getContent(), 'json')['data'];
 
         $client->request('GET', "/event-types/$id");
 
-        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
+        $data = $serializer->decode($client->getResponse()->getContent(), 'json');
 
         // Assert
 

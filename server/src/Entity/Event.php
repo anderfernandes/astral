@@ -23,7 +23,7 @@ class Event
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTime $ending = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     private bool $isPublic = false;
 
     #[ORM\Column]

@@ -12,16 +12,11 @@ use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class EventMemoTest extends BaseWebTestCase
 {
-    public function testCreate(): void
+    public static function setUpBeforeClass(): void
     {
-        // Arrange
+        parent::setUpBeforeClass();
 
-        $client = static::createClient();
-
-        /**
-         * @var $decoder DecoderInterface
-         */
-        $decoder = static::getContainer()->get(DecoderInterface::class);
+        self::bootKernel();
 
         /**
          * @var $entityManger EntityManagerInterface
@@ -69,7 +64,21 @@ class EventMemoTest extends BaseWebTestCase
 
         $entityManger->flush();
 
+        self::ensureKernelShutdown();
+    }
+
+    public function testCreate(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
         $client->loginUser(self::$user);
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
 
         // Act
 

@@ -11,11 +11,9 @@ use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class UserTest extends BaseWebTestCase
 {
-    public function testCreate(): void
+    public static function setUpBeforeClass(): void
     {
-        // Arrange
-
-        $client = static::createClient();
+        parent::setUpBeforeClass();
 
         /**
          * @var $entityManger EntityManagerInterface
@@ -24,6 +22,15 @@ class UserTest extends BaseWebTestCase
 
         $entityManger->persist(self::$user);
         $entityManger->flush();
+
+        self::ensureKernelShutdown();
+    }
+
+    public function testCreate(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
 
         /**
          * @var $decoder DecoderInterface

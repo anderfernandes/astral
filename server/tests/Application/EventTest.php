@@ -11,11 +11,16 @@ use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class EventTest extends BaseWebTestCase
 {
-    public function testCreate(): void
-    {
-        // Arrange
+    /**
+     * @var $shows Show[]
+     */
+    static array $shows;
 
-        $client = static::createClient();
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::bootKernel();
 
         /**
          * @var $entityManager EntityManagerInterface
@@ -33,7 +38,7 @@ class EventTest extends BaseWebTestCase
 
         $entityManager->persist($showType);
 
-        $shows[] = new Show(
+        self::$shows[] = new Show(
             name: 'Test Show',
             type: $showType,
             duration: rand(15, 25),
@@ -42,7 +47,7 @@ class EventTest extends BaseWebTestCase
             isActive: true,
         );
 
-        $entityManager->persist($shows[0]);
+        $entityManager->persist(self::$shows[0]);
 
         $entityManager->persist(new EventType(
             name: 'Test Event Type',
@@ -51,6 +56,15 @@ class EventTest extends BaseWebTestCase
         ));
 
         $entityManager->flush();
+
+        self::ensureKernelShutdown();
+    }
+
+    public function testCreate(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
 
         $client->loginUser(self::$user);
 
@@ -69,7 +83,7 @@ class EventTest extends BaseWebTestCase
                 'ending' => $starting->add(\DateInterval::createFromDateString('1 hours'))->getTimestamp(),
                 'seats' => rand(50, 180),
                 'typeId' => 1,
-                'shows' => [$shows[0]->getId()],
+                'shows' => [self::$shows[0]->getId()],
                 'isPublic' => true,
                 'memo' => 'test memo',
             ],

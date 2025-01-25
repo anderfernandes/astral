@@ -11,11 +11,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class TicketTypeTest extends BaseWebTestCase
 {
-    public function testCreateTicketType(): void
+    public static function setUpBeforeClass(): void
     {
-        // Arrange
-
-        $client = static::createClient();
+        parent::setUpBeforeClass();
 
         /**
          * @var $entityManger EntityManagerInterface
@@ -25,12 +23,16 @@ class TicketTypeTest extends BaseWebTestCase
         $entityManger->persist(self::$user);
         $entityManger->flush();
 
-        $client->loginUser(self::$user);
+        self::ensureKernelShutdown();
+    }
 
-        /**
-         * @var $normalizer DenormalizerInterface&NormalizerInterface
-         */
-        $normalizer = static::getContainer()->get(NormalizerInterface::class);
+    public function testCreateTicketType(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
 
         /**
          * @var $decoder DecoderInterface

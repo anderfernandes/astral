@@ -10,6 +10,29 @@ use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class ShowTest extends BaseWebTestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        /**
+         * @var $entityManger EntityManagerInterface
+         */
+        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
+
+        $entityManger->persist(self::$user);
+
+        $entityManger->persist(new ShowType(
+            name: 'Test Show Type',
+            description: 'The description of a Test Show Type',
+            creator: self::$user,
+            isActive: true
+        ));
+
+        $entityManger->flush();
+
+        self::ensureKernelShutdown();
+    }
+
     public function testCreate(): void
     {
         // Arrange
@@ -20,22 +43,6 @@ class ShowTest extends BaseWebTestCase
          * @var $decoder DecoderInterface
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
-
-        /**
-         * @var $entityManger EntityManagerInterface
-         */
-        $entityManger = static::getContainer()->get(EntityManagerInterface::class);
-
-        $entityManger->persist(self::$user);
-        $entityManger->flush();
-
-        $entityManger->persist(new ShowType(
-            name: 'Test Show Type',
-            description: 'The description of a Test Show Type',
-            creator: self::$user,
-            isActive: true
-        ));
-        $entityManger->flush();
 
         $client->loginUser(self::$user);
 
