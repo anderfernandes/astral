@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 #[ORM\Table(name: 'payments')]
@@ -19,6 +20,7 @@ class Payment
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Ignore]
     private ?Sale $sale = null;
 
     #[ORM\ManyToOne]
@@ -26,7 +28,7 @@ class Payment
     private ?PaymentMethod $method = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn]
     private ?User $customer = null;
 
     #[ORM\ManyToOne]
@@ -37,6 +39,24 @@ class Payment
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $reference = null;
+
+
+    public function __construct(
+        int $tendered,
+        PaymentMethod $method,
+        ?User $cashier = null,
+        ?User $customer = null
+    )
+    {
+        $this->tendered = $tendered;
+        $this->method = $method;
+        $this->cashier = $cashier;
+        $this->customer = $customer;
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -123,6 +143,18 @@ class Payment
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function setReference(?string $reference): static
+    {
+        $this->reference = $reference;
 
         return $this;
     }

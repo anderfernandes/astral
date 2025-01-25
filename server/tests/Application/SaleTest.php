@@ -4,26 +4,44 @@ namespace App\Tests\Application;
 
 use App\Entity\Event;
 use App\Entity\EventType;
+use App\Entity\PaymentMethod;
 use App\Entity\Sale;
 use App\Entity\SaleItem;
 use App\Entity\Show;
 use App\Entity\ShowType;
 use App\Entity\TicketType;
+use App\Entity\User;
+use App\Enums\PaymentMethodType;
 use App\Enums\SaleSource;
+use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class SaleTest extends \App\Tests\BaseWebTestCase
+class SaleTest extends BaseWebTestCase
 {
-    private static Event $event;
+    static Event $event;
+
+    static User $customer;
+
+    /**
+     * @var $paymentMethods PaymentMethod[]
+     */
+    private static array $paymentMethods;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
         self::bootKernel();
+
+        /**
+         * @var $passwordHasher UserPasswordHasherInterface
+         */
+        $passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
 
         /**
          * @var $entityManager EntityManagerInterface
@@ -93,6 +111,36 @@ class SaleTest extends \App\Tests\BaseWebTestCase
 
         $entityManager->persist(self::$event);
 
+        self::$paymentMethods[] = new PaymentMethod(
+            name: "Cash",
+            description: "Cash payments",
+            type: PaymentMethodType::Cash,
+            creator: self::$user,
+        );
+
+        self::$paymentMethods[] = new PaymentMethod(
+            name: "Card",
+            description: "All debit and credit card payments",
+            type: PaymentMethodType::Card,
+            creator: self::$user,
+        );
+
+        foreach (self::$paymentMethods as $paymentMethod) {
+            $entityManager->persist($paymentMethod);
+        }
+
+        $faker = \Faker\Factory::create();
+
+        self::$customer = new User(
+            email: $faker->email(),
+            firstName: $faker->firstName(),
+            lastName: $faker->lastName(),
+        );
+
+        self::$customer->setPassword($passwordHasher->hashPassword(self::$user, $faker->password()));
+
+        $entityManager->persist(self::$customer);
+
         $entityManager->flush();
 
         self::ensureKernelShutdown();
@@ -129,8 +177,11 @@ class SaleTest extends \App\Tests\BaseWebTestCase
            ));
         }
 
-        //dd($normalizer->normalize($sale, 'json'));
-        $client->request('POST', "/sales", $serializer->normalize($sale, 'json'));
+
+        $client->request('POST', "/sales", [
+            ...$serializer->normalize($sale, 'json'),
+            "payment" => ["tendered" => $sale->getTotal(), "methodId" => self::$paymentMethods[0]->getId()]
+        ]);
 
         $id = $serializer->decode($client->getResponse()->getContent(), 'json')['data'];
 
@@ -141,5 +192,92 @@ class SaleTest extends \App\Tests\BaseWebTestCase
         // Assert
 
         $this->assertSameSize($sale->getItems(), $data['items']);
+    }
+
+    public function testCreateWithCustomer(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        /**
+         * @var $serializer DenormalizerInterface&NormalizerInterface&DecoderInterface
+         */
+        $serializer = static::getContainer()->get(DenormalizerInterface::class);
+
+        $client->loginUser(self::$user);
+
+        // Act
+
+        $sale = new Sale(customer: self::$customer);
+
+        foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
+
+            $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
+
+            $sale->addItem(new SaleItem(
+                name: $name,
+                description: $ticketType->getName(),
+                price: $ticketType->getPrice(),
+                quantity: rand(2, 10),
+                cover: self::$event->getShows()->first()->getCover(),
+                meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
+           ));
+        }
+
+
+        $client->request('POST', "/sales", [
+            ...$serializer->normalize($sale, 'json'),
+            "payment" => ["tendered" => $sale->getTotal(), "methodId" => self::$paymentMethods[0]->getId()]
+        ]);
+
+        $id = $serializer->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $client->request('GET', "/sales/$id");
+
+        $data = $serializer->decode($client->getResponse()->getContent(), 'json');
+
+        // Assert
+
+        $this->assertSameSize($sale->getItems(), $data['items']);
+    }
+
+    public function testCreateWithCustomerWithoutPayment(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        /**
+         * @var $serializer DenormalizerInterface&NormalizerInterface&DecoderInterface
+         */
+        $serializer = static::getContainer()->get(DenormalizerInterface::class);
+
+        $client->loginUser(self::$user);
+
+        // Act
+
+        $sale = new Sale(customer: self::$customer);
+
+        foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
+
+            $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
+
+            $sale->addItem(new SaleItem(
+                name: $name,
+                description: $ticketType->getName(),
+                price: $ticketType->getPrice(),
+                quantity: rand(2, 10),
+                cover: self::$event->getShows()->first()->getCover(),
+                meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
+           ));
+        }
+
+
+        $client->request('POST', "/sales", $serializer->normalize($sale, 'json'));
+
+        // Assert
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

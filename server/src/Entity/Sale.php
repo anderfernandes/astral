@@ -67,7 +67,8 @@ class Sale
         $this->items = new ArrayCollection();
     }
 
-    public function getSubtotal(): int {
+    public function getSubtotal(): int
+    {
         $subtotal = 0;
 
         foreach ($this->items as $item) {
@@ -75,6 +76,32 @@ class Sale
         }
 
         return $subtotal;
+    }
+
+    public function getTax(): int
+    {
+        return $this->getSubtotal() * $_ENV['TAX'];
+    }
+
+    public function getTotal(): int
+    {
+        return $this->getSubtotal() + $this->getTax();
+    }
+
+    public function getTendered(): int
+    {
+        $tendered = 0;
+
+        foreach ($this->payments as $payment) {
+            $tendered += $payment->getTendered();
+        }
+
+        return $tendered;
+    }
+
+    public function getBalance(): int
+    {
+        return $this->getTotal() - $this->getTendered();
     }
 
     public function getId(): ?int

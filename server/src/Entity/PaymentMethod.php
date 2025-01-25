@@ -38,6 +38,20 @@ class PaymentMethod
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    public function __construct(
+        string $name,
+        string $description,
+        PaymentMethodType $type,
+        User $creator
+    )
+    {
+        $this->name = $name;
+        $this->description = $description;
+        $this->type = $type;
+        $this->creator = $creator;
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

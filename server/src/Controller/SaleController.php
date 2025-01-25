@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Payment;
 use App\Entity\Sale;
 use App\Entity\SaleItem;
 use App\Enums\SaleSource;
+use App\Repository\PaymentMethodRepository;
 use App\Repository\SaleRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,12 +28,23 @@ class SaleController extends AbstractController
     public function create(
         Request $request,
         EntityManagerInterface $entityManager,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        PaymentMethodRepository $paymentMethods,
+        UserRepository $users
     ): Response
     {
+        $payload = $request->getPayload();
+
         $sale = new Sale(creator: $this->getUser());
 
-        foreach ($request->getPayload()->all("items") as $item) {
+        if ($payload->has("customerId")) {
+
+            $customer = $users->find($payload->getInt("customerId"));
+
+            if ($customer !== null) $sale->setCustomer($customer);
+        }
+
+        foreach ($payload->all("items") as $item) {
             $item = new SaleItem(
                 name: $item['name'],
                 description: $item['description'],
@@ -40,8 +54,33 @@ class SaleController extends AbstractController
                 meta: $item['meta'],
              );
 
-            $entityManager->persist($item);
             $sale->addItem($item);
+        }
+
+        if ($sale->getSource() !== SaleSource::Admin) {
+
+            if (!$payload->has("payment")) return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            $method = $paymentMethods->find($payload->all("payment")["methodId"]);
+
+            if ($method === null) return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            $payment = new Payment(
+                tendered: (int)$payload->all("payment")["tendered"],
+                method: $method
+            );
+
+            if ($sale->getCustomer() !== null) $payment->setCustomer($sale->getCustomer());
+
+            $sale->addPayment($payment);
+
+            if ($sale->getBalance() > 0) return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            $entityManager->persist($payment);
+        }
+
+        foreach ($sale->getItems() as $item) {
+            $entityManager->persist($item);
         }
 
         $entityManager->persist($sale);
