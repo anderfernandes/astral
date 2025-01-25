@@ -6,6 +6,7 @@ use App\Entity\Payment;
 use App\Entity\Sale;
 use App\Entity\SaleItem;
 use App\Enums\SaleSource;
+use App\Enums\SaleStatus;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\SaleRepository;
 use App\Repository\UserRepository;
@@ -46,6 +47,10 @@ class SaleController extends AbstractController
         }
 
         foreach ($payload->all("items") as $item) {
+
+            if ($item['quantity'] === 0)
+                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+
             $item = new SaleItem(
                 name: $item['name'],
                 description: $item['description'],
@@ -83,6 +88,9 @@ class SaleController extends AbstractController
         foreach ($sale->getItems() as $item) {
             $entityManager->persist($item);
         }
+
+        if ($sale->getBalance() <= 0)
+            $sale->setStatus(SaleStatus::Completed);
 
         $entityManager->persist($sale);
 

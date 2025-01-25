@@ -133,9 +133,8 @@ class SaleTest extends BaseWebTestCase
             email: $faker->email(),
             firstName: $faker->firstName(),
             lastName: $faker->lastName(),
+            password: password_hash($faker->password(), PASSWORD_DEFAULT)
         );
-
-        self::$customer->setPassword($passwordHasher->hashPassword(self::$user, $faker->password()));
 
         $entityManager->persist(self::$customer);
 
@@ -175,10 +174,11 @@ class SaleTest extends BaseWebTestCase
            ));
         }
 
+        $payment = ["tendered" => $sale->getTotal(), "methodId" => self::$paymentMethods[0]->getId()];
 
         $client->request('POST', "/sales", [
             ...$serializer->normalize($sale, 'json'),
-            "payment" => ["tendered" => $sale->getTotal(), "methodId" => self::$paymentMethods[0]->getId()]
+            "payment" => $payment
         ]);
 
         $id = $serializer->decode($client->getResponse()->getContent(), 'json')['data'];
@@ -189,7 +189,10 @@ class SaleTest extends BaseWebTestCase
 
         // Assert
 
-        $this->assertSameSize($sale->getItems(), $data['items']);
+        $this->assertSame(
+            ["itemsCount" => $sale->getItems()->count(), "balance" => $sale->getBalance() - $payment['tendered']],
+            ["itemsCount" => count($data['items']), "balance" => $data['balance']]
+        );
     }
 
     public function testCreateWithCustomer(): void

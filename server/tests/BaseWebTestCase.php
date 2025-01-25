@@ -31,6 +31,7 @@ abstract class BaseWebTestCase extends WebTestCase
             email: $faker->email(),
             firstName: $faker->firstName(),
             lastName: $faker->lastName(),
+            password: password_hash($faker->password(), PASSWORD_DEFAULT)
         );
 
         self::$user->setPassword($faker->password());

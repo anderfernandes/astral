@@ -26,6 +26,11 @@ class ReportTest extends BaseWebTestCase
     static Sale $sale;
 
     /**
+     * @var $cashiers User[]
+     */
+    static array $cashiers;
+
+    /**
      * @var $paymentMethods PaymentMethod[]
      */
     static array $paymentMethods;
@@ -33,11 +38,6 @@ class ReportTest extends BaseWebTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-
-        /**
-         * @var $passwordHasher UserPasswordHasherInterface
-         */
-        $passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
 
         /**
          * @var $entityManager EntityManagerInterface
@@ -131,11 +131,29 @@ class ReportTest extends BaseWebTestCase
             email: $faker->email(),
             firstName: $faker->firstName(),
             lastName: $faker->lastName(),
+            password: password_hash($faker->password(), PASSWORD_DEFAULT)
         );
 
-        self::$customer->setPassword($passwordHasher->hashPassword(self::$user, $faker->password()));
-
         $entityManager->persist(self::$customer);
+
+        self::$cashiers[] = new User(
+            email: $faker->email(),
+            firstName: $faker->firstName(),
+            lastName: $faker->lastName(),
+            password: password_hash($faker->password(), PASSWORD_DEFAULT)
+        );
+
+        self::$cashiers[] = new User(
+            email: $faker->email(),
+            firstName: $faker->firstName(),
+            lastName: $faker->lastName(),
+            password: password_hash($faker->password(), PASSWORD_DEFAULT)
+        );
+
+        foreach (self::$cashiers as $cashier)
+            $entityManager->persist($cashier);
+
+        $entityManager->flush();
 
         self::$sale = new Sale(creator: self::$user, customer: self::$customer);
 

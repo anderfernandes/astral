@@ -82,6 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         string $email,
         string $firstName,
         string $lastName,
+        string $password = null,
         ?\DateTimeImmutable $dateOfBirth = null,
         ?string $address = null,
         ?string $city = null,
@@ -94,6 +95,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
+        $this->password = $password;
         $this->dateOfBirth = $dateOfBirth;
         $this->address = $address;
         $this->city = $city;

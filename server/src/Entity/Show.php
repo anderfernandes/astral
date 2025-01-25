@@ -58,7 +58,7 @@ class Show
         int $duration,
         string $description,
         ?User $creator = null,
-        ?bool $isActive = false,
+        bool $isActive = false,
     ) {
         $this->name = $name;
         $this->type = $type;
