@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Repository\PaymentMethodRepository;
-use App\Repository\PaymentRepository;
-use App\Repository\SaleRepository;
 use App\Repository\UserRepository;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,12 +29,11 @@ class ReportController extends AbstractController
         $users = $entityManager->getRepository(User::class);
 
         /**
-         * @var $cashier User
+         * @var $cashier User|null
          */
-        $cashier = $users->find($request->query->getInt('cashier'));
-
-        if ($cashier === null)
-            return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+        $cashier = $request->query->has('cashier')
+            ? $users->find($request->query->getInt('cashier'))
+            : null;
 
         if (!$request->query->has('start') && !$request->query->has('end'))
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -56,7 +53,7 @@ class ReportController extends AbstractController
     }
 
     function generateCloseoutReport(
-        User $cashier,
+        ?User $cashier,
         \DateTimeImmutable $start,
         \DateTimeImmutable $end,
         EntityManagerInterface $entityManager
@@ -71,23 +68,98 @@ class ReportController extends AbstractController
             ', ['start' => $start->format('Y-m-d H:i:s'), 'end' => $end->format('Y-m-d H:i:s')])
             ->fetchAllAssociative();
 
-        $cashiers = [1];
+        $shiftCashiersIds = array_unique(array_column($payments, 'cashier_id'));
+
+        if ($cashier !== null) {
+            $shiftCashiersIds = [$cashier->getId()];
+
+            $filteredPayments = [];
+
+            foreach ($payments as $payment) {
+                if ($payment['cashier_id'] === $cashier->getId())
+                    $filteredPayments[] = $payment;
+            }
+
+            $payments = $filteredPayments;
+        }
+
+        $usedPaymentMethodsIds = array_unique(array_column($payments, 'method_id'));
 
         $methods = $entityManager->getConnection()
             ->executeQuery('
                 SELECT * FROM payment_methods m
+                WHERE m.id IN (?)
                 ORDER BY m.id ASC
-            ');
+            ', [$usedPaymentMethodsIds], [ArrayParameterType::INTEGER])
+            ->fetchAllAssociative();
+
+        $usedPaymentTypes = array_unique(array_column($methods, 'type'));
 
         $users = $entityManager->getConnection()
             ->executeQuery('
                 SELECT id, first_name, last_name FROM users u
-                WHERE u.id IN (:cashiers)
-                ORDER BY u.id ASC
-            ', ['cashiers' => implode(',', $cashiers)])
+                WHERE u.id IN (?)
+                ORDER BY u.id DESC
+            ', [$shiftCashiersIds], [ArrayParameterType::INTEGER])
             ->fetchAllAssociative();
 
-            return [$users];
+
+        $data = [];
+
+        foreach ($shiftCashiersIds as $shiftCashierId) {
+            $items = [];
+            $transactions = [];
+
+            foreach ($payments as $payment) {
+                $methodIndex = array_search($payment['method_id'], array_column($methods, 'id'));
+
+                $t = [
+                    ...$payment,
+                    'method' => $methods[$methodIndex]
+                ];
+
+                if ($cashier === null) {
+                    $transactions[] = $t;
+                    continue;
+                }
+                if ($payment['cashier_id'] === $shiftCashierId)
+                    $transactions[] = $t;
+            }
+
+            foreach ($usedPaymentTypes as $type) {
+                $filteredPayments = [];
+
+                foreach ($transactions as $transaction) {
+                    if ($transaction['method']['type'] === $type)
+                        $filteredPayments[] = $transaction;
+                }
+
+                $items[] = [
+                    'type' => $type,
+                    'transactions' => count($filteredPayments),
+                    'amount' => array_sum(array_column($filteredPayments, 'tendered'))
+                ];
+            }
+
+            $shiftCashierIndex = array_search($shiftCashierId, array_column($users, 'id'));
+
+            $data[] = [
+                'cashier' => $users[$shiftCashierIndex],
+                'items' => $items,
+                'transactions' => $transactions,
+                'total' => array_sum(array_column($transactions, 'tendered'))
+            ];
+        }
+
+        //return $users;
+
+        return [
+            'start' => $start,
+            'end' => $end,
+            'report' => $data,
+            'transactions' => count($payments),
+            'total' => array_sum(array_column($payments, 'tendered'))
+        ];
     }
 
     function generatePaymentReport(

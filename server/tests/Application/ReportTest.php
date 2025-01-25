@@ -16,6 +16,7 @@ use App\Enums\PaymentMethodType;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class ReportTest extends BaseWebTestCase
 {
@@ -23,7 +24,10 @@ class ReportTest extends BaseWebTestCase
 
     static Event $event;
 
-    static Sale $sale;
+    /**
+     * @var $sales Sale[]
+     */
+    static array $sales;
 
     /**
      * @var $cashiers User[]
@@ -155,38 +159,79 @@ class ReportTest extends BaseWebTestCase
 
         $entityManager->flush();
 
-        self::$sale = new Sale(creator: self::$user, customer: self::$customer);
+        foreach (self::$cashiers as $cashier) {
 
-        foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
+            $sale = new Sale(creator: $cashier, customer: self::$customer);
 
-            $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
+            foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
 
-            $item = new SaleItem(
-                name: $name,
-                description: $ticketType->getName(),
-                price: $ticketType->getPrice(),
-                quantity: rand(2, 10),
-                cover: self::$event->getShows()->first()->getCover(),
-                meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
-           );
+                $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
 
-            self::$sale->addItem($item);
+                $item = new SaleItem(
+                    name: $name,
+                    description: $ticketType->getName(),
+                    price: $ticketType->getPrice(),
+                    quantity: rand(2, 10),
+                    cover: self::$event->getShows()->first()->getCover(),
+                    meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
+                );
 
-            $entityManager->persist($item);
+                $sale->addItem($item);
+
+                $entityManager->persist($item);
+            }
+
+            $payment = new Payment(
+                tendered: $sale->getTotal(),
+                method: self::$paymentMethods[0],
+                cashier: $cashier,
+                customer: self::$customer
+            );
+
+            $sale->addPayment($payment);
+
+            $entityManager->persist($payment);
+
+            $entityManager->persist($sale);
+
+            self::$sales[] = $sale;
+
+            $sale = new Sale(creator: $cashier, customer: self::$customer);
+
+            foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
+
+                $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
+
+                $item = new SaleItem(
+                    name: $name,
+                    description: $ticketType->getName(),
+                    price: $ticketType->getPrice(),
+                    quantity: rand(2, 10),
+                    cover: self::$event->getShows()->first()->getCover(),
+                    meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
+                );
+
+                $sale->addItem($item);
+
+                $entityManager->persist($item);
+            }
+
+            $payment = new Payment(
+                tendered: $sale->getTotal(),
+                method: self::$paymentMethods[1],
+                cashier: $cashier,
+                customer: self::$customer
+            );
+
+            $sale->addPayment($payment);
+
+            $entityManager->persist($payment);
+
+            $entityManager->persist($sale);
+
+            self::$sales[] = $sale;
+
         }
-
-        $payment = new Payment(
-            tendered: self::$sale->getTotal(),
-            method: self::$paymentMethods[0],
-            cashier: self::$user,
-            customer: self::$customer
-        );
-
-        self::$sale->addPayment($payment);
-
-        $entityManager->persist($payment);
-
-        $entityManager->persist(self::$sale);
 
         $entityManager->flush();
 
@@ -200,16 +245,46 @@ class ReportTest extends BaseWebTestCase
 
         $client->loginUser(self::$user);
 
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
         // Act
 
-        $start = self::$sale->getCreatedAt()->setTime(0, 0)->getTimestamp();
-        $end = self::$sale->getCreatedAt()->setTime(0, 0)->modify('+1 day')->getTimestamp();
-        $cashier = self::$user->getId();
+        $start = self::$sales[0]->getCreatedAt()->setTime(0, 0)->getTimestamp();
+        $end = self::$sales[0]->getCreatedAt()->setTime(0, 0)->modify('+1 day')->getTimestamp();
+        $randomIndex = rand(0, count(self::$cashiers) - 1);
+        $cashier = self::$cashiers[$randomIndex]->getId();
 
         $client->request("GET", "/reports/closeout?start=$start&end=$end&cashier=$cashier");
 
-        dd($client->getResponse()->getContent());
+        // Assert
+
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testCloseoutAllCashiers(): void
+    {
+        // Arrange
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
+        /**
+         * @var $decoder DecoderInterface
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        // Act
+
+        $start = self::$sales[0]->getCreatedAt()->setTime(0, 0)->getTimestamp();
+        $end = self::$sales[0]->getCreatedAt()->setTime(0, 0)->modify('+1 day')->getTimestamp();
+
+        $client->request("GET", "/reports/closeout?start=$start&end=$end");
 
         // Assert
+
+        $this->assertResponseIsSuccessful();
     }
 }
