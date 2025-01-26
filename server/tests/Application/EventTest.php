@@ -12,9 +12,9 @@ use Symfony\Component\Serializer\Encoder\DecoderInterface;
 class EventTest extends BaseWebTestCase
 {
     /**
-     * @var $shows Show[]
+     * @var Show[]
      */
-    static array $shows;
+    public static array $shows;
 
     public static function setUpBeforeClass(): void
     {

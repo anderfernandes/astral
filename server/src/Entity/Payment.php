@@ -43,14 +43,12 @@ class Payment
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $reference = null;
 
-
     public function __construct(
         int $tendered,
         PaymentMethod $method,
         ?User $cashier = null,
-        ?User $customer = null
-    )
-    {
+        ?User $customer = null,
+    ) {
         $this->tendered = $tendered;
         $this->method = $method;
         $this->cashier = $cashier;

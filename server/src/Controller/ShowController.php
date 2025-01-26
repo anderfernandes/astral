@@ -49,11 +49,13 @@ class ShowController extends AbstractController
             isActive: $payload->has('isActive')
         );
 
-        if ($payload->has('expiration'))
+        if ($payload->has('expiration')) {
             $show->setExpiration(new \DateTime($payload->getString('expiration')));
+        }
 
-        if ($payload->has('trailerUrl'))
+        if ($payload->has('trailerUrl')) {
             $show->setTrailerUrl($payload->getString('trailerUrl'));
+        }
 
         if ($request->files->has('cover')) {
             /**

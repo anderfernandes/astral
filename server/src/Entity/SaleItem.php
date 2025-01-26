@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use App\Enums\SaleItemType;
 use App\Repository\SaleItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use \App\Enums\SaleItemType;
 use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: SaleItemRepository::class)]
@@ -30,7 +30,7 @@ class SaleItem
     private ?int $quantity = null;
 
     #[ORM\Column(length: 255)]
-    private string $cover = "/default.png";
+    private string $cover = '/default.png';
 
     #[ORM\Column]
     private array $meta = [];
@@ -50,9 +50,8 @@ class SaleItem
         int $quantity,
         string $cover,
         ?array $meta = [],
-        ?SaleItemType $type = SaleItemType::Ticket
-    )
-    {
+        ?SaleItemType $type = SaleItemType::Ticket,
+    ) {
         $this->name = $name;
         $this->description = $description;
         $this->price = $price;

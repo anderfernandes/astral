@@ -2,18 +2,15 @@
 
 namespace App\Tests\Application;
 
-use App\Entity\User;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AccountTest extends BaseWebTestCase
 {
-    static array $customer;
+    public static array $customer;
 
     public static function setUpBeforeClass(): void
     {
@@ -145,7 +142,6 @@ class AccountTest extends BaseWebTestCase
 
         $password = $faker->realTextBetween(6, 12);
         $email = $faker->email();
-
 
         $client->request('POST', '/register', [
             'email' => $email,
@@ -310,7 +306,7 @@ class AccountTest extends BaseWebTestCase
 
         $client->request('PUT', '/account', [
             ...self::$customer,
-            'address' => \Faker\Factory::create()->address()
+            'address' => \Faker\Factory::create()->address(),
         ]);
 
         // Assert

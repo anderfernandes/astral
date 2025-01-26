@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
+use App\Enums\SaleSource;
+use App\Enums\SaleStatus;
 use App\Repository\SaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use \App\Enums\SaleStatus;
-use \App\Enums\SaleSource;
 
 #[ORM\Entity(repositoryClass: SaleRepository::class)]
 #[ORM\Table(name: 'sales')]
@@ -60,8 +60,7 @@ class Sale
     public function __construct(
         ?User $creator = null,
         ?User $customer = null,
-    )
-    {
+    ) {
         $this->creator = $creator;
         $this->customer = $customer;
         $this->createdAt = new \DateTimeImmutable();
@@ -82,7 +81,7 @@ class Sale
 
     public function getTax(): int
     {
-        return (int)round($this->getSubtotal() * $_ENV['TAX']);
+        return (int) round($this->getSubtotal() * $_ENV['TAX']);
     }
 
     public function getTotal(): int

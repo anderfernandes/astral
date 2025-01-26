@@ -17,11 +17,11 @@ class ReportController extends AbstractController
     public function show(
         Request $request,
         string $report,
-        EntityManagerInterface $entityManager
-    ): Response
-    {
-        if (!in_array($report, ['closeout', 'payment']))
+        EntityManagerInterface $entityManager,
+    ): Response {
+        if (!in_array($report, ['closeout', 'payment'])) {
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         /**
          * @var $users UserRepository
@@ -35,14 +35,16 @@ class ReportController extends AbstractController
             ? $users->find($request->query->getInt('cashier'))
             : null;
 
-        if (!$request->query->has('start') && !$request->query->has('end'))
+        if (!$request->query->has('start') && !$request->query->has('end')) {
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         $start = (new \DateTimeImmutable())->setTimestamp($request->query->getInt('start'));
         $end = (new \DateTimeImmutable())->setTimestamp($request->query->getInt('end'));
 
-        if ($start > $end)
+        if ($start > $end) {
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         $data = match ($report) {
             'closeout' => $this->generateCloseoutReport($cashier, $start, $end, $entityManager),
@@ -52,14 +54,12 @@ class ReportController extends AbstractController
         return $this->json(['data' => $data, 'start' => $start, 'end' => $end]);
     }
 
-    function generateCloseoutReport(
+    public function generateCloseoutReport(
         ?User $cashier,
         \DateTimeImmutable $start,
         \DateTimeImmutable $end,
-        EntityManagerInterface $entityManager
-    ): array
-    {
-
+        EntityManagerInterface $entityManager,
+    ): array {
         $payments = $entityManager->getConnection()
             ->executeQuery('
                 SELECT * FROM payments p
@@ -70,14 +70,15 @@ class ReportController extends AbstractController
 
         $shiftCashiersIds = array_unique(array_column($payments, 'cashier_id'));
 
-        if ($cashier !== null) {
+        if (null !== $cashier) {
             $shiftCashiersIds = [$cashier->getId()];
 
             $filteredPayments = [];
 
             foreach ($payments as $payment) {
-                if ($payment['cashier_id'] === $cashier->getId())
+                if ($payment['cashier_id'] === $cashier->getId()) {
                     $filteredPayments[] = $payment;
+                }
             }
 
             $payments = $filteredPayments;
@@ -103,7 +104,6 @@ class ReportController extends AbstractController
             ', [$shiftCashiersIds], [ArrayParameterType::INTEGER])
             ->fetchAllAssociative();
 
-
         $data = [];
 
         foreach ($shiftCashiersIds as $shiftCashierId) {
@@ -115,29 +115,31 @@ class ReportController extends AbstractController
 
                 $t = [
                     ...$payment,
-                    'method' => $methods[$methodIndex]
+                    'method' => $methods[$methodIndex],
                 ];
 
-                if ($cashier === null) {
+                if (null === $cashier) {
                     $transactions[] = $t;
                     continue;
                 }
-                if ($payment['cashier_id'] === $shiftCashierId)
+                if ($payment['cashier_id'] === $shiftCashierId) {
                     $transactions[] = $t;
+                }
             }
 
             foreach ($usedPaymentTypes as $type) {
                 $filteredPayments = [];
 
                 foreach ($transactions as $transaction) {
-                    if ($transaction['method']['type'] === $type)
+                    if ($transaction['method']['type'] === $type) {
                         $filteredPayments[] = $transaction;
+                    }
                 }
 
                 $items[] = [
                     'type' => $type,
                     'transactions' => count($filteredPayments),
-                    'amount' => array_sum(array_column($filteredPayments, 'tendered'))
+                    'amount' => array_sum(array_column($filteredPayments, 'tendered')),
                 ];
             }
 
@@ -147,28 +149,27 @@ class ReportController extends AbstractController
                 'cashier' => $users[$shiftCashierIndex],
                 'items' => $items,
                 'transactions' => $transactions,
-                'total' => array_sum(array_column($transactions, 'tendered'))
+                'total' => array_sum(array_column($transactions, 'tendered')),
             ];
         }
 
-        //return $users;
+        // return $users;
 
         return [
             'start' => $start,
             'end' => $end,
             'report' => $data,
             'transactions' => count($payments),
-            'total' => array_sum(array_column($payments, 'tendered'))
+            'total' => array_sum(array_column($payments, 'tendered')),
         ];
     }
 
-    function generatePaymentReport(
+    public function generatePaymentReport(
         User $cashier,
         \DateTimeImmutable $start,
         \DateTimeImmutable $end,
-        EntityManagerInterface $entityManager
-    ): array
-    {
+        EntityManagerInterface $entityManager,
+    ): array {
         return [];
     }
 }

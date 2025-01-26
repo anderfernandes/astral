@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SaleController extends AbstractController
@@ -32,24 +31,24 @@ class SaleController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
         PaymentMethodRepository $paymentMethods,
-        UserRepository $users
-    ): Response
-    {
+        UserRepository $users,
+    ): Response {
         $payload = $request->getPayload();
 
         $sale = new Sale(creator: $this->getUser());
 
-        if ($payload->has("customerId")) {
+        if ($payload->has('customerId')) {
+            $customer = $users->find($payload->getInt('customerId'));
 
-            $customer = $users->find($payload->getInt("customerId"));
-
-            if ($customer !== null) $sale->setCustomer($customer);
+            if (null !== $customer) {
+                $sale->setCustomer($customer);
+            }
         }
 
-        foreach ($payload->all("items") as $item) {
-
-            if ($item['quantity'] === 0)
+        foreach ($payload->all('items') as $item) {
+            if (0 === $item['quantity']) {
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
             $item = new SaleItem(
                 name: $item['name'],
@@ -58,29 +57,36 @@ class SaleController extends AbstractController
                 quantity: $item['quantity'],
                 cover: $item['cover'],
                 meta: $item['meta'],
-             );
+            );
 
             $sale->addItem($item);
         }
 
-        if ($sale->getSource() !== SaleSource::Admin) {
+        if (SaleSource::Admin !== $sale->getSource()) {
+            if (!$payload->has('payment')) {
+                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
-            if (!$payload->has("payment")) return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            $method = $paymentMethods->find($payload->all('payment')['methodId']);
 
-            $method = $paymentMethods->find($payload->all("payment")["methodId"]);
-
-            if ($method === null) return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            if (null === $method) {
+                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
             $payment = new Payment(
-                tendered: (int)$payload->all("payment")["tendered"],
+                tendered: (int) $payload->all('payment')['tendered'],
                 method: $method
             );
 
-            if ($sale->getCustomer() !== null) $payment->setCustomer($sale->getCustomer());
+            if (null !== $sale->getCustomer()) {
+                $payment->setCustomer($sale->getCustomer());
+            }
 
             $sale->addPayment($payment);
 
-            if ($sale->getBalance() > 0) return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            if ($sale->getBalance() > 0) {
+                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
             $entityManager->persist($payment);
         }
@@ -89,8 +95,9 @@ class SaleController extends AbstractController
             $entityManager->persist($item);
         }
 
-        if ($sale->getBalance() <= 0)
+        if ($sale->getBalance() <= 0) {
             $sale->setStatus(SaleStatus::Completed);
+        }
 
         $entityManager->persist($sale);
 
@@ -111,14 +118,13 @@ class SaleController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         PaymentMethodRepository $paymentMethods,
-    ): Response
-    {
+    ): Response {
         $payload = $request->getPayload();
 
         if ($request->query->has('refund')) {
-
-            if ($sale->getPayments()->count() > 1 && $sale->getStatus() === SaleStatus::Completed)
+            if ($sale->getPayments()->count() > 1 && SaleStatus::Completed === $sale->getStatus()) {
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
             $payment = new Payment(
                 tendered: $sale->getTotal() * -1,

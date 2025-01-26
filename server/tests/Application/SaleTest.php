@@ -12,34 +12,27 @@ use App\Entity\ShowType;
 use App\Entity\TicketType;
 use App\Entity\User;
 use App\Enums\PaymentMethodType;
-use App\Enums\SaleSource;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class SaleTest extends BaseWebTestCase
 {
-    static Event $event;
+    public static Event $event;
 
-    static User $customer;
+    public static User $customer;
 
     /**
-     * @var $paymentMethods PaymentMethod[]
+     * @var PaymentMethod[]
      */
     private static array $paymentMethods;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-
-        /**
-         * @var $passwordHasher UserPasswordHasherInterface
-         */
-        $passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
 
         /**
          * @var $entityManager EntityManagerInterface
@@ -72,7 +65,7 @@ class SaleTest extends BaseWebTestCase
             name: 'Test Event Type',
             description: 'Created to test sales',
             creator: self::$user,
-         );
+        );
 
         $entityManager->persist($eventType);
 
@@ -82,7 +75,7 @@ class SaleTest extends BaseWebTestCase
             price: 600,
             creator: self::$user,
             isActive: true
-            );
+        );
 
         $ticketTypes[] = new TicketType(
             name: 'Another Ticket Type',
@@ -90,7 +83,7 @@ class SaleTest extends BaseWebTestCase
             price: 700,
             creator: self::$user,
             isActive: true
-         );
+        );
 
         foreach ($ticketTypes as $ticketType) {
             $entityManager->persist($ticketType);
@@ -110,15 +103,15 @@ class SaleTest extends BaseWebTestCase
         $entityManager->persist(self::$event);
 
         self::$paymentMethods[] = new PaymentMethod(
-            name: "Cash",
-            description: "Cash payments",
+            name: 'Cash',
+            description: 'Cash payments',
             type: PaymentMethodType::Cash,
             creator: self::$user,
         );
 
         self::$paymentMethods[] = new PaymentMethod(
-            name: "Card",
-            description: "All debit and credit card payments",
+            name: 'Card',
+            description: 'All debit and credit card payments',
             type: PaymentMethodType::Card,
             creator: self::$user,
         );
@@ -161,7 +154,6 @@ class SaleTest extends BaseWebTestCase
         $sale = new Sale();
 
         foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
-
             $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
 
             $sale->addItem(new SaleItem(
@@ -171,14 +163,14 @@ class SaleTest extends BaseWebTestCase
                 quantity: rand(2, 10),
                 cover: self::$event->getShows()->first()->getCover(),
                 meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
-           ));
+            ));
         }
 
-        $payment = ["tendered" => $sale->getTotal(), "methodId" => self::$paymentMethods[0]->getId()];
+        $payment = ['tendered' => $sale->getTotal(), 'methodId' => self::$paymentMethods[0]->getId()];
 
-        $client->request('POST', "/sales", [
+        $client->request('POST', '/sales', [
             ...$serializer->normalize($sale, 'json'),
-            "payment" => $payment
+            'payment' => $payment,
         ]);
 
         $id = $serializer->decode($client->getResponse()->getContent(), 'json')['data'];
@@ -190,8 +182,8 @@ class SaleTest extends BaseWebTestCase
         // Assert
 
         $this->assertSame(
-            ["itemsCount" => $sale->getItems()->count(), "balance" => $sale->getBalance() - $payment['tendered']],
-            ["itemsCount" => count($data['items']), "balance" => $data['balance']]
+            ['itemsCount' => $sale->getItems()->count(), 'balance' => $sale->getBalance() - $payment['tendered']],
+            ['itemsCount' => count($data['items']), 'balance' => $data['balance']]
         );
     }
 
@@ -213,7 +205,6 @@ class SaleTest extends BaseWebTestCase
         $sale = new Sale(customer: self::$customer);
 
         foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
-
             $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
 
             $sale->addItem(new SaleItem(
@@ -223,13 +214,12 @@ class SaleTest extends BaseWebTestCase
                 quantity: rand(2, 10),
                 cover: self::$event->getShows()->first()->getCover(),
                 meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
-           ));
+            ));
         }
 
-
-        $client->request('POST', "/sales", [
+        $client->request('POST', '/sales', [
             ...$serializer->normalize($sale, 'json'),
-            "payment" => ["tendered" => $sale->getTotal(), "methodId" => self::$paymentMethods[0]->getId()]
+            'payment' => ['tendered' => $sale->getTotal(), 'methodId' => self::$paymentMethods[0]->getId()],
         ]);
 
         $id = $serializer->decode($client->getResponse()->getContent(), 'json')['data'];
@@ -261,7 +251,6 @@ class SaleTest extends BaseWebTestCase
         $sale = new Sale(customer: self::$customer);
 
         foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
-
             $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
 
             $sale->addItem(new SaleItem(
@@ -271,11 +260,10 @@ class SaleTest extends BaseWebTestCase
                 quantity: rand(2, 10),
                 cover: self::$event->getShows()->first()->getCover(),
                 meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
-           ));
+            ));
         }
 
-
-        $client->request('POST', "/sales", $serializer->normalize($sale, 'json'));
+        $client->request('POST', '/sales', $serializer->normalize($sale, 'json'));
 
         // Assert
 
@@ -300,7 +288,6 @@ class SaleTest extends BaseWebTestCase
         $sale = new Sale();
 
         foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
-
             $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
 
             $sale->addItem(new SaleItem(
@@ -310,14 +297,14 @@ class SaleTest extends BaseWebTestCase
                 quantity: rand(2, 10),
                 cover: self::$event->getShows()->first()->getCover(),
                 meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
-           ));
+            ));
         }
 
-        $payment = ["tendered" => $sale->getTotal(), "methodId" => self::$paymentMethods[0]->getId()];
+        $payment = ['tendered' => $sale->getTotal(), 'methodId' => self::$paymentMethods[0]->getId()];
 
-        $client->request('POST', "/sales", [
+        $client->request('POST', '/sales', [
             ...$serializer->normalize($sale, 'json'),
-            "payment" => $payment
+            'payment' => $payment,
         ]);
 
         $id = $serializer->decode($client->getResponse()->getContent(), 'json')['data'];

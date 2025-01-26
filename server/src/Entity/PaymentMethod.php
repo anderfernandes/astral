@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use App\Enums\PaymentMethodType;
 use App\Repository\PaymentMethodRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use \App\Enums\PaymentMethodType;
 
 #[ORM\Entity(repositoryClass: PaymentMethodRepository::class)]
 #[ORM\Table(name: 'payment_methods')]
@@ -42,9 +42,8 @@ class PaymentMethod
         string $name,
         string $description,
         PaymentMethodType $type,
-        User $creator
-    )
-    {
+        User $creator,
+    ) {
         $this->name = $name;
         $this->description = $description;
         $this->type = $type;

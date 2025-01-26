@@ -15,29 +15,28 @@ use App\Entity\User;
 use App\Enums\PaymentMethodType;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class ReportTest extends BaseWebTestCase
 {
-    static User $customer;
+    public static User $customer;
 
-    static Event $event;
-
-    /**
-     * @var $sales Sale[]
-     */
-    static array $sales;
+    public static Event $event;
 
     /**
-     * @var $cashiers User[]
+     * @var Sale[]
      */
-    static array $cashiers;
+    public static array $sales;
 
     /**
-     * @var $paymentMethods PaymentMethod[]
+     * @var User[]
      */
-    static array $paymentMethods;
+    public static array $cashiers;
+
+    /**
+     * @var PaymentMethod[]
+     */
+    public static array $paymentMethods;
 
     public static function setUpBeforeClass(): void
     {
@@ -74,7 +73,7 @@ class ReportTest extends BaseWebTestCase
             name: 'Test Event Type',
             description: 'Created to test sales',
             creator: self::$user,
-         );
+        );
 
         $entityManager->persist($eventType);
 
@@ -84,7 +83,7 @@ class ReportTest extends BaseWebTestCase
             price: 600,
             creator: self::$user,
             isActive: true
-            );
+        );
 
         $ticketTypes[] = new TicketType(
             name: 'Another Ticket Type',
@@ -92,7 +91,7 @@ class ReportTest extends BaseWebTestCase
             price: 700,
             creator: self::$user,
             isActive: true
-         );
+        );
 
         foreach ($ticketTypes as $ticketType) {
             $entityManager->persist($ticketType);
@@ -112,15 +111,15 @@ class ReportTest extends BaseWebTestCase
         $entityManager->persist(self::$event);
 
         self::$paymentMethods[] = new PaymentMethod(
-            name: "Cash",
-            description: "Cash payments",
+            name: 'Cash',
+            description: 'Cash payments',
             type: PaymentMethodType::Cash,
             creator: self::$user,
         );
 
         self::$paymentMethods[] = new PaymentMethod(
-            name: "Card",
-            description: "All debit and credit card payments",
+            name: 'Card',
+            description: 'All debit and credit card payments',
             type: PaymentMethodType::Card,
             creator: self::$user,
         );
@@ -154,17 +153,16 @@ class ReportTest extends BaseWebTestCase
             password: password_hash($faker->password(), PASSWORD_DEFAULT)
         );
 
-        foreach (self::$cashiers as $cashier)
+        foreach (self::$cashiers as $cashier) {
             $entityManager->persist($cashier);
+        }
 
         $entityManager->flush();
 
         foreach (self::$cashiers as $cashier) {
-
             $sale = new Sale(creator: $cashier, customer: self::$customer);
 
             foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
-
                 $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
 
                 $item = new SaleItem(
@@ -199,7 +197,6 @@ class ReportTest extends BaseWebTestCase
             $sale = new Sale(creator: $cashier, customer: self::$customer);
 
             foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
-
                 $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
 
                 $item = new SaleItem(
@@ -230,7 +227,6 @@ class ReportTest extends BaseWebTestCase
             $entityManager->persist($sale);
 
             self::$sales[] = $sale;
-
         }
 
         $entityManager->flush();
@@ -257,7 +253,7 @@ class ReportTest extends BaseWebTestCase
         $randomIndex = rand(0, count(self::$cashiers) - 1);
         $cashier = self::$cashiers[$randomIndex]->getId();
 
-        $client->request("GET", "/reports/closeout?start=$start&end=$end&cashier=$cashier");
+        $client->request('GET', "/reports/closeout?start=$start&end=$end&cashier=$cashier");
 
         // Assert
 
@@ -281,7 +277,7 @@ class ReportTest extends BaseWebTestCase
         $start = self::$sales[0]->getCreatedAt()->setTime(0, 0)->getTimestamp();
         $end = self::$sales[0]->getCreatedAt()->setTime(0, 0)->modify('+1 day')->getTimestamp();
 
-        $client->request("GET", "/reports/closeout?start=$start&end=$end");
+        $client->request('GET', "/reports/closeout?start=$start&end=$end");
 
         // Assert
 
