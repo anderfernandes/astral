@@ -23,7 +23,7 @@ class EventTest extends BaseWebTestCase
         self::bootKernel();
 
         /**
-         * @var $entityManager EntityManagerInterface
+         * @var EntityManagerInterface $entityManager
          */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
@@ -69,7 +69,7 @@ class EventTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -107,7 +107,7 @@ class EventTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -143,7 +143,7 @@ class EventTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 

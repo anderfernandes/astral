@@ -18,7 +18,7 @@ class EventTypeTest extends BaseWebTestCase
         parent::setUpBeforeClass();
 
         /**
-         * @var $entityManger EntityManagerInterface
+         * @var EntityManagerInterface $entityManger
          */
         $entityManger = static::getContainer()->get(EntityManagerInterface::class);
 
@@ -54,7 +54,7 @@ class EventTypeTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $normalizer DenormalizerInterface&NormalizerInterface&DecoderInterface
+         * @var DenormalizerInterface&NormalizerInterface&DecoderInterface $serializer
          */
         $serializer = static::getContainer()->get(NormalizerInterface::class);
 
@@ -84,7 +84,7 @@ class EventTypeTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -106,7 +106,7 @@ class EventTypeTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -157,12 +157,7 @@ class EventTypeTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $normalizer DenormalizerInterface&NormalizerInterface
-         */
-        $normalizer = static::getContainer()->get(NormalizerInterface::class);
-
-        /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -192,12 +187,12 @@ class EventTypeTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $normalizer DenormalizerInterface&NormalizerInterface
+         * @var DenormalizerInterface&NormalizerInterface $normalizer
          */
         $normalizer = static::getContainer()->get(NormalizerInterface::class);
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 

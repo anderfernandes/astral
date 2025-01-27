@@ -16,7 +16,7 @@ class UserTest extends BaseWebTestCase
         parent::setUpBeforeClass();
 
         /**
-         * @var $entityManger EntityManagerInterface
+         * @var EntityManagerInterface $entityManger
          */
         $entityManger = static::getContainer()->get(EntityManagerInterface::class);
 
@@ -33,7 +33,7 @@ class UserTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -138,7 +138,7 @@ class UserTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -198,7 +198,7 @@ class UserTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 

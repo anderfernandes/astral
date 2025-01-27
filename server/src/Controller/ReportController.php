@@ -24,12 +24,12 @@ class ReportController extends AbstractController
         }
 
         /**
-         * @var $users UserRepository
+         * @var UserRepository $users
          */
         $users = $entityManager->getRepository(User::class);
 
         /**
-         * @var $cashier User|null
+         * @var User|null $cashier
          */
         $cashier = $request->query->has('cashier')
             ? $users->find($request->query->getInt('cashier'))

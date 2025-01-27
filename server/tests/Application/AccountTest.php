@@ -6,6 +6,7 @@ use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class AccountTest extends BaseWebTestCase
@@ -19,7 +20,7 @@ class AccountTest extends BaseWebTestCase
         $faker = \Faker\Factory::create();
 
         /**
-         * @var $entityManager EntityManagerInterface
+         * @var EntityManagerInterface $entityManager
          */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
@@ -159,7 +160,12 @@ class AccountTest extends BaseWebTestCase
             'dateOfBirth' => $faker->date(),
         ]);
 
-        $crawler = new Crawler($this->getMailerMessage()->getHtmlBody());
+        /**
+         * @var Email $email
+         */
+        $email = $this->getMailerMessage();
+
+        $crawler = new Crawler($email->getHtmlBody());
 
         $uri = $crawler->filter('a.button')->last()->link()->getUri();
 
@@ -199,7 +205,12 @@ class AccountTest extends BaseWebTestCase
             'dateOfBirth' => $faker->date(),
         ]);
 
-        $crawler = new Crawler($this->getMailerMessage()->getHtmlBody());
+        /**
+         * @var Email $email
+         */
+        $email = $this->getMailerMessage();
+
+        $crawler = new Crawler($email->getHtmlBody());
 
         $uri = $crawler->filter('a.button')->last()->link()->getUri();
 
@@ -241,7 +252,12 @@ class AccountTest extends BaseWebTestCase
             'dateOfBirth' => $faker->date(),
         ]);
 
-        $crawler = new Crawler($this->getMailerMessage()->getHtmlBody());
+        /**
+         * @var Email $email
+         */
+        $email = $this->getMailerMessage();
+
+        $crawler = new Crawler($email->getHtmlBody());
 
         $uri = $crawler->filter('a.button')->last()->link()->getUri();
 
@@ -293,7 +309,7 @@ class AccountTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -328,7 +344,12 @@ class AccountTest extends BaseWebTestCase
             'email' => self::$customer['email'],
         ]);
 
-        $crawler = new Crawler($this->getMailerMessage()->getHtmlBody());
+        /**
+         * @var Email $email
+         */
+        $email = $this->getMailerMessage();
+
+        $crawler = new Crawler($email->getHtmlBody());
 
         $uri = $crawler->filter('a.button')->last()->link()->getUri();
 

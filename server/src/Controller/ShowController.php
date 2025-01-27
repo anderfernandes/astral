@@ -58,15 +58,17 @@ class ShowController extends AbstractController
         }
 
         if ($request->files->has('cover')) {
-            /**
-             * @var $cover UploadedFile
-             */
+            /* @var UploadedFile $cover */
             $cover = $request->files->get('cover');
+
             $filename = '/'.bin2hex(random_bytes(15)).'.'.$cover->guessExtension();
-            (new Filesystem())->copy(
-                $cover,
-                $this->getParameter('uploads_dir').$filename);
-            // $cover->move($this->getParameter('uploads_dir'), $filename);
+
+            (
+                new Filesystem())->copy(
+                    $cover,
+                    $this->getParameter('uploads_dir').$filename
+                );
+
             $show->setCover($filename);
         }
 
@@ -106,7 +108,7 @@ class ShowController extends AbstractController
 
         if ($request->files->has('cover')) {
             /**
-             * @var $cover UploadedFile
+             * @var UploadedFile $cover
              */
             $cover = $request->files->get('cover');
 

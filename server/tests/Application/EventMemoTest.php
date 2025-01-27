@@ -19,7 +19,7 @@ class EventMemoTest extends BaseWebTestCase
         self::bootKernel();
 
         /**
-         * @var $entityManger EntityManagerInterface
+         * @var EntityManagerInterface $entityManger
          */
         $entityManger = static::getContainer()->get(EntityManagerInterface::class);
 
@@ -76,7 +76,7 @@ class EventMemoTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 

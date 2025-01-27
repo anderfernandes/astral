@@ -35,7 +35,7 @@ class SaleTest extends BaseWebTestCase
         parent::setUpBeforeClass();
 
         /**
-         * @var $entityManager EntityManagerInterface
+         * @var EntityManagerInterface $entityManager
          */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
@@ -143,7 +143,7 @@ class SaleTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $serializer DenormalizerInterface&NormalizerInterface&DecoderInterface
+         * @var DenormalizerInterface&NormalizerInterface&DecoderInterface $serializer
          */
         $serializer = static::getContainer()->get(DenormalizerInterface::class);
 
@@ -194,7 +194,7 @@ class SaleTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $serializer DenormalizerInterface&NormalizerInterface&DecoderInterface
+         * @var DenormalizerInterface&NormalizerInterface&DecoderInterface $serializer
          */
         $serializer = static::getContainer()->get(DenormalizerInterface::class);
 
@@ -240,7 +240,7 @@ class SaleTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $serializer DenormalizerInterface&NormalizerInterface&DecoderInterface
+         * @var DenormalizerInterface&NormalizerInterface&DecoderInterface $serializer
          */
         $serializer = static::getContainer()->get(DenormalizerInterface::class);
 
@@ -277,7 +277,7 @@ class SaleTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $serializer DenormalizerInterface&NormalizerInterface&DecoderInterface
+         * @var DenormalizerInterface&NormalizerInterface&DecoderInterface $serializer
          */
         $serializer = static::getContainer()->get(DenormalizerInterface::class);
 

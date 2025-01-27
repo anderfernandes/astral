@@ -16,7 +16,7 @@ class TicketTypeTest extends BaseWebTestCase
         parent::setUpBeforeClass();
 
         /**
-         * @var $entityManger EntityManagerInterface
+         * @var EntityManagerInterface $entityManger
          */
         $entityManger = static::getContainer()->get(EntityManagerInterface::class);
 
@@ -35,7 +35,7 @@ class TicketTypeTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -83,12 +83,12 @@ class TicketTypeTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $normalizer DenormalizerInterface&NormalizerInterface
+         * @var DenormalizerInterface&NormalizerInterface $normalizer
          */
         $normalizer = static::getContainer()->get(NormalizerInterface::class);
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -117,7 +117,7 @@ class TicketTypeTest extends BaseWebTestCase
         $client = static::createClient();
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 

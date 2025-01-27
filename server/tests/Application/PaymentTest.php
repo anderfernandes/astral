@@ -23,7 +23,7 @@ class PaymentTest extends BaseWebTestCase
         parent::setUpBeforeClass();
 
         /**
-         * @var $entityManager EntityManagerInterface
+         * @var EntityManagerInterface $entityManager
          */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
 

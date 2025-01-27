@@ -43,7 +43,7 @@ class ReportTest extends BaseWebTestCase
         parent::setUpBeforeClass();
 
         /**
-         * @var $entityManager EntityManagerInterface
+         * @var EntityManagerInterface $entityManager
          */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
@@ -242,7 +242,7 @@ class ReportTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
@@ -268,7 +268,7 @@ class ReportTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         /**
-         * @var $decoder DecoderInterface
+         * @var DecoderInterface $decoder
          */
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
