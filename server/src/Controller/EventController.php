@@ -97,7 +97,7 @@ class EventController extends AbstractController
             }
 
             // Check if event has memo
-            if (null === $data['memo'] || strlen($data['memo'] <= 3)) {
+            if (null === $data['memo'] || strlen($data['memo']) <= 3) {
                 return new Response(status: Response::HTTP_BAD_REQUEST);
             }
 
@@ -110,16 +110,19 @@ class EventController extends AbstractController
 
             // TODO: HANDLE ALL DAY EVENTS, EVENTS THAT COME IN WITH NO ENDING
 
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+
             $event = new Event(
                 starting: (new \DateTime())->setTimestamp($data['starting']),
                 ending: (new \DateTime())->setTimestamp($data['ending']),
                 type: $eventType,
-                creator: $this->getUser(),
+                creator: $user,
                 isPublic: $data['isPublic'],
-                seats: $data['seats']
+                seats: $data['seats'],
             );
 
-            $event->setCreator($this->getUser());
+            $event->setCreator($user);
 
             // Check if shows exist
             foreach ($data['shows'] as $showId) {
@@ -142,7 +145,7 @@ class EventController extends AbstractController
 
             $memo = new EventMemo(
                 content: $data['memo'],
-                author: $this->getUser(),
+                author: $user,
             );
 
             $event->addMemo($memo);
@@ -222,9 +225,12 @@ class EventController extends AbstractController
             return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         $memo = new EventMemo(
             content: $eventDto->memo,
-            author: $this->getUser(),
+            author: $user,
         );
 
         $event->addMemo($memo);

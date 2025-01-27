@@ -24,9 +24,12 @@ class EventMemoController extends AbstractController
     {
         $payload = $request->getPayload();
 
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         $eventMemo = new EventMemo(
             content: $payload->getString('content'),
-            author: $this->getUser(),
+            author: $user,
             event: $event
         );
 

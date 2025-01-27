@@ -36,11 +36,14 @@ class TicketTypeController extends AbstractController
     ): Response {
         $payload = $request->getPayload();
 
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         $ticketType = new TicketType(
             name: $payload->getString('name'),
             description: $payload->getString('description'),
             price: $payload->getInt('price'),
-            creator: $this->getUser(),
+            creator: $user,
             isActive: $payload->getBoolean('isActive'),
             isCashier: $payload->getBoolean('isCashier'),
             isPublic: $payload->getBoolean('isPublic')

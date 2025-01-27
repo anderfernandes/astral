@@ -60,7 +60,7 @@ class TicketType
         string $name,
         string $description,
         int $price,
-        User $creator,
+        ?User $creator,
         ?bool $isActive = false,
         ?bool $isCashier = false,
         ?bool $isPublic = false,

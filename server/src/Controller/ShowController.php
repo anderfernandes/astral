@@ -40,12 +40,15 @@ class ShowController extends AbstractController
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
 
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         $show = new Show(
             name: $payload->getString('name'),
             type: $type,
             duration: $payload->getInt('duration'),
             description: $payload->getString('description'),
-            creator: $this->getUser(),
+            creator: $user,
             isActive: $payload->has('isActive')
         );
 
@@ -128,7 +131,6 @@ class ShowController extends AbstractController
             ->setType($type)
             ->setDuration($payload->getInt('duration'))
             ->setDescription($payload->getString('description'))
-            ->setCreator($this->getUser())
             ->setIsActive($payload->has('isActive'))
             ->setTrailerUrl($payload->getString('trailerUrl'))
             ->setUpdatedAt(new \DateTimeImmutable())

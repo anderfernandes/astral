@@ -35,7 +35,10 @@ class SaleController extends AbstractController
     ): Response {
         $payload = $request->getPayload();
 
-        $sale = new Sale(creator: $this->getUser());
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $sale = new Sale($user);
 
         if ($payload->has('customerId')) {
             $customer = $users->find($payload->getInt('customerId'));
@@ -119,7 +122,10 @@ class SaleController extends AbstractController
         EntityManagerInterface $entityManager,
         PaymentMethodRepository $paymentMethods,
     ): Response {
-        $payload = $request->getPayload();
+
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
 
         if ($request->query->has('refund')) {
             if ($sale->getPayments()->count() > 1 && SaleStatus::Completed === $sale->getStatus()) {
@@ -129,7 +135,7 @@ class SaleController extends AbstractController
             $payment = new Payment(
                 tendered: $sale->getTotal() * -1,
                 method: $sale->getPayments()->last()->getMethod(),
-                cashier: $this->getUser(),
+                cashier: $user,
                 customer: $sale->getCustomer()
             );
 

@@ -28,10 +28,13 @@ class PaymentController extends AbstractController
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         $refund = new Payment(
             tendered: $payment->getTendered() * -1,
             method: $payment->getMethod(),
-            cashier: $this->getUser(),
+            cashier: $user,
             customer: $payment->getCustomer(),
         );
 

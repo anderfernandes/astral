@@ -37,12 +37,16 @@ class EventTypeController extends AbstractController
         Request $request,
         TicketTypeRepository $ticketTypes,
     ): Response {
-        $payload = $request->getPayload();
+
+    $payload = $request->getPayload();
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
 
         $eventType = new EventType(
             name: $eventTypeDto->name,
             description: $eventTypeDto->description,
-            creator: $this->getUser(),
+            creator: $user,
             isActive: $eventTypeDto->isActive,
             isPublic: $eventTypeDto->isPublic,
             color: $eventTypeDto->color,
