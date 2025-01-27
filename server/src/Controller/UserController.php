@@ -82,7 +82,7 @@ class UserController extends AbstractController
             ->setCity($userDto->city)
             ->setState($userDto->state)
             ->setZip($userDto->zip)
-            ->setCountry($userDto->country || 'United States')
+            ->setCountry($userDto->country ?? 'United States')
             ->setPhone($userDto->phone)
             ->setDateOfBirth($userDto->dateOfBirth)
             ->setIsActive(false);

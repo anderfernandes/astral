@@ -32,7 +32,7 @@ class Show
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $cover = '/default.png';
+    private string $cover = '/default.png';
 
     #[ORM\Column]
     private ?bool $isActive = null;

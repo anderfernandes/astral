@@ -1,5 +1,7 @@
 parameters:
-	level: 3
+	level: 4
 	paths:
 		- src
 		- tests
+	ignoreErrors:
+		- '#Property .+::\$id \(int\|null\) is never assigned int so it can be removed from the property type\.$#'
