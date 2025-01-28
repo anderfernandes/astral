@@ -50,8 +50,6 @@ class UserTest extends BaseWebTestCase
         $user = [
             'email' => $email,
             'emailConfirmation' => $email,
-            'password' => $password,
-            'passwordConfirmation' => $password,
             'firstName' => $faker->firstName(),
             'lastName' => $faker->lastName(),
             'address' => $faker->streetAddress(),

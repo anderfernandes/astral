@@ -13,14 +13,10 @@ class UserDto
         )]
         public string $email,
         public string $emailConfirmation,
-        #[Assert\EqualTo(
-            propertyPath: 'passwordConfirmation',
-            message: 'Password confirmation must match'
-        )]
-        public string $password,
-        public string $passwordConfirmation,
         public string $firstName,
         public string $lastName,
+        public ?string $password,
+        public ?string $passwordConfirmation,
         public ?string $address,
         public ?string $city,
         public ?string $state,

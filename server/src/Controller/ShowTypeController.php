@@ -28,7 +28,6 @@ class ShowTypeController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
     ): Response {
-
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
@@ -66,7 +65,6 @@ class ShowTypeController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
     ): Response {
-
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 

@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\ByteString;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
@@ -41,15 +42,15 @@ class UserController extends AbstractController
             state: $userDto->state,
             zip: $userDto->zip,
             country: $userDto->country,
-            phone: $userDto->phone,
+            phone: $userDto->phone
         );
 
-        $user->setPassword($passwordHasher->hashPassword($user, $userDto->password));
+        $user->setPassword($passwordHasher->hashPassword($user, ByteString::fromRandom(32)->toString()));
 
         $errors = $validator->validate($user);
 
         if (count($errors) > 0) {
-            return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $entityManager->persist($user);
