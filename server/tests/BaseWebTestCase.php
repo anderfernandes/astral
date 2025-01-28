@@ -28,8 +28,6 @@ abstract class BaseWebTestCase extends WebTestCase
             password: password_hash($faker->password(), PASSWORD_DEFAULT)
         );
 
-        self::$user->setPassword($faker->password());
-
         // $entityManager->persist(self::$user);
 
         // $entityManager->flush();

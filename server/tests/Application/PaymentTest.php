@@ -93,14 +93,14 @@ class PaymentTest extends BaseWebTestCase
         $paymentMethods[] = new PaymentMethod(
             name: 'Cash',
             description: 'Cash payments',
-            type: PaymentMethodType::Cash,
+            type: PaymentMethodType::CASH,
             creator: self::$user,
         );
 
         $paymentMethods[] = new PaymentMethod(
             name: 'Card',
             description: 'All debit and credit card payments',
-            type: PaymentMethodType::Card,
+            type: PaymentMethodType::CARD,
             creator: self::$user,
         );
 
