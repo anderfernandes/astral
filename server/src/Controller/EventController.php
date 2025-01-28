@@ -53,7 +53,7 @@ class EventController extends AbstractController
             return ['date' => $date, 'events' => array_values($events)];
         }, $dates);
 
-        return $this->json(['data' => $events]);
+        return $this->json(['data' => $data]);
     }
 
     #[IsGranted('ROLE_USER')]
