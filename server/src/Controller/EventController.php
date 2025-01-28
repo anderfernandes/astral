@@ -27,56 +27,31 @@ class EventController extends AbstractController
     #[Route('/events', name: 'events_index', methods: ['GET'], format: 'json')]
     public function index(EventRepository $events, Request $request): Response
     {
-        /*$start = $request->query->has('start')
-            ? (new \DateTime())->setTimestamp($request->query->getInt('start'))
-            : (new \DateTime())->setTime(0, 0, 0);
-
-        $end = $request->query->has('end')
-            ? new \DateTime($request->query->getString('end'))
-            : (new \DateTime())->setTime(23, 59, 59);
-
-        if ($start > $end) {
-            $start = $start->setTime(23, 59, 59);
-        }
-
-        $query = $events->createQueryBuilder('e')
-            ->where('e.starting >= :start')
-            ->setParameter('start', $start)
-            ->AndWhere('e.ending <= :end')
-            ->setParameter('end', $end)
-            ->getQuery();
-
-        return $this->json(['data' => $query->execute()]);*/
-
         $events = $events->createQueryBuilder('e')
                 ->orderBy('e.starting', 'ASC')
                 ->getQuery()
                 ->execute();
 
-        if ($request->query->has('format') && 'calendar' === $request->query->get('format')) {
-            $dates = array_map(function ($event) {
+        $dates = array_map(function ($event) {
+            return (new \DateTime($event->getStarting()->format('c')))
+                ->setTimezone(new \DateTimeZone('America/Chicago'))
+                ->setTime(0, 0, 0, 0)
+                ->format('c');
+        }, $events);
+
+        $dates = array_values(array_unique($dates));
+
+        sort($dates);
+
+        $data = array_map(function ($date) use ($events) {
+            $events = array_filter($events, function ($event) use ($date) {
                 return (new \DateTime($event->getStarting()->format('c')))
                     ->setTimezone(new \DateTimeZone('America/Chicago'))
-                    ->setTime(0, 0, 0, 0)
-                    ->format('c');
-            }, $events);
+                    ->setTime(0, 0, 0, 0)->format('c') === $date;
+            });
 
-            $dates = array_values(array_unique($dates));
-
-            sort($dates);
-
-            $data = array_map(function ($date) use ($events) {
-                $events = array_filter($events, function ($event) use ($date) {
-                    return (new \DateTime($event->getStarting()->format('c')))
-                        ->setTimezone(new \DateTimeZone('America/Chicago'))
-                        ->setTime(0, 0, 0, 0)->format('c') === $date;
-                });
-
-                return ['date' => $date, 'events' => array_values($events)];
-            }, $dates);
-
-            return $this->json(['data' => $data, 'dates' => $dates]);
-        }
+            return ['date' => $date, 'events' => array_values($events)];
+        }, $dates);
 
         return $this->json(['data' => $events]);
     }
