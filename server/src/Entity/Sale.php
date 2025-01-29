@@ -19,10 +19,10 @@ class Sale
     private ?int $id = null;
 
     #[ORM\Column(enumType: SaleStatus::class)]
-    private SaleStatus $status = SaleStatus::Open;
+    private SaleStatus $status = SaleStatus::OPEN;
 
     #[ORM\Column(enumType: SaleSource::class)]
-    private SaleSource $source = SaleSource::Cashier;
+    private SaleSource $source = SaleSource::CASHIER;
 
     #[ORM\Column]
     private bool $isTaxable = true;
@@ -102,7 +102,16 @@ class Sale
 
     public function getBalance(): int
     {
-        return $this->getTotal() - $this->getTendered();
+        $balance = $this->getTendered() - $this->getTotal();
+
+        return ($balance >= 0) ? 0 : $balance ;
+    }
+
+    public function getChange(): int
+    {
+        $balance = $this->getTendered() - $this->getTotal();
+
+        return ($balance >= 0) ? $balance : 0;
     }
 
     public function getId(): ?int

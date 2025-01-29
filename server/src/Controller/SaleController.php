@@ -56,7 +56,7 @@ class SaleController extends AbstractController
             $item = new SaleItem(
                 name: $item['name'],
                 description: $item['description'],
-                price: $item['price'],
+                price: $item['price'], // TODO: GET PRICE FROM DATABASE
                 quantity: $item['quantity'],
                 cover: $item['cover'],
                 meta: $item['meta'],
@@ -65,7 +65,7 @@ class SaleController extends AbstractController
             $sale->addItem($item);
         }
 
-        if (SaleSource::Admin !== $sale->getSource()) {
+        if (SaleSource::ADMIN !== $sale->getSource()) {
             if (!$payload->has('payment')) {
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
             }
@@ -87,7 +87,7 @@ class SaleController extends AbstractController
 
             $sale->addPayment($payment);
 
-            if ($sale->getBalance() > 0) {
+            if ($sale->getBalance() < 0) {
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
@@ -99,7 +99,7 @@ class SaleController extends AbstractController
         }
 
         if ($sale->getBalance() <= 0) {
-            $sale->setStatus(SaleStatus::Completed);
+            $sale->setStatus(SaleStatus::COMPLETED);
         }
 
         $entityManager->persist($sale);
@@ -126,7 +126,7 @@ class SaleController extends AbstractController
         $user = $this->getUser();
 
         if ($request->query->has('refund')) {
-            if ($sale->getPayments()->count() > 1 && SaleStatus::Completed === $sale->getStatus()) {
+            if ($sale->getPayments()->count() > 1 && SaleStatus::COMPLETED === $sale->getStatus()) {
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 

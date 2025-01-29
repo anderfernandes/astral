@@ -53,6 +53,7 @@ class PaymentMethodController extends AbstractController
         return $this->json($method);
     }
 
+    #[Route('/payment-methods/{id}', name: 'payment-methods_update', methods:['PUT'], format: 'json')]
     public function update(
         PaymentMethod $method,
         Request $request,
