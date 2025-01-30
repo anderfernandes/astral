@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Payment;
 use App\Entity\Sale;
 use App\Entity\SaleItem;
+use App\Enums\PaymentMethodType;
 use App\Enums\SaleSource;
 use App\Enums\SaleStatus;
 use App\Repository\PaymentMethodRepository;
@@ -78,8 +79,24 @@ class SaleController extends AbstractController
 
             $payment = new Payment(
                 tendered: (int) $payload->all('payment')['tendered'],
-                method: $method
+                method: $method,
             );
+
+            if (PaymentMethodType::CASH !== $method->getType()) {
+
+                if (!$payload->has('reference')) {
+                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+
+                $reference = $payload->getString('reference');
+
+                if (strlen($reference) <= 0) {
+                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+
+                $payment->setReference($payload->getString('reference'));
+                $payment->setTendered($sale->getTotal());
+            }
 
             if (null !== $sale->getCustomer()) {
                 $payment->setCustomer($sale->getCustomer());
@@ -87,9 +104,9 @@ class SaleController extends AbstractController
 
             $sale->addPayment($payment);
 
-            if ($sale->getBalance() < 0) {
-                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
+            //            if ($sale->getBalance() < 0) {
+            //                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            //            }
 
             $entityManager->persist($payment);
         }

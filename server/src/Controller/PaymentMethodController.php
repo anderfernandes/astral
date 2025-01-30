@@ -23,9 +23,8 @@ class PaymentMethodController extends AbstractController
     #[Route('/payment-methods', name: 'payment-methods_create', methods: ['POST'], format: 'json')]
     public function create(
         Request $request,
-        EntityManagerInterface $entityManager
-    ): Response
-    {
+        EntityManagerInterface $entityManager,
+    ): Response {
         $payload = $request->getPayload();
 
         /**
@@ -53,13 +52,12 @@ class PaymentMethodController extends AbstractController
         return $this->json($method);
     }
 
-    #[Route('/payment-methods/{id}', name: 'payment-methods_update', methods:['PUT'], format: 'json')]
+    #[Route('/payment-methods/{id}', name: 'payment-methods_update', methods: ['PUT'], format: 'json')]
     public function update(
         PaymentMethod $method,
         Request $request,
-        EntityManagerInterface $entityManager
-    ): Response
-    {
+        EntityManagerInterface $entityManager,
+    ): Response {
         $payload = $request->getPayload();
 
         $method

@@ -48,11 +48,13 @@ class Payment
         PaymentMethod $method,
         ?User $cashier = null,
         ?User $customer = null,
+        ?string $reference = null,
     ) {
         $this->tendered = $tendered;
         $this->method = $method;
         $this->cashier = $cashier;
         $this->customer = $customer;
+        $this->reference = $reference;
         $this->createdAt = new \DateTimeImmutable();
     }
 

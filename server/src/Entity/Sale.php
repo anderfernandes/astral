@@ -104,7 +104,7 @@ class Sale
     {
         $balance = $this->getTendered() - $this->getTotal();
 
-        return ($balance >= 0) ? 0 : $balance ;
+        return ($balance >= 0) ? 0 : $balance;
     }
 
     public function getChange(): int

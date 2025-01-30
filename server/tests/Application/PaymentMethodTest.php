@@ -37,7 +37,7 @@ class PaymentMethodTest extends BaseWebTestCase
         $client->request('POST', '/payment-methods', [
             'name' => 'Test Payment Type',
             'description' => 'A test payment type',
-            'type' => 'other'
+            'type' => 'other',
         ]);
 
         $id = json_decode($client->getResponse()->getContent())->data;
@@ -67,7 +67,7 @@ class PaymentMethodTest extends BaseWebTestCase
         $client->request('POST', '/payment-methods', [
             'name' => 'Updated Test Payment Type',
             'description' => 'An updated test payment type',
-            'type' => 'check'
+            'type' => 'check',
         ]);
 
         $id = json_decode($client->getResponse()->getContent())->data;

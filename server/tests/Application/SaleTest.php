@@ -4,7 +4,6 @@ namespace App\Tests\Application;
 
 use App\Entity\Event;
 use App\Entity\EventType;
-use App\Entity\Payment;
 use App\Entity\PaymentMethod;
 use App\Entity\Sale;
 use App\Entity\SaleItem;
@@ -319,7 +318,7 @@ class SaleTest extends BaseWebTestCase
         // Assert
 
         $this->assertEquals(
-            ['itemsCount' => $sale->getItems()->count(), 'balance' => ($sale->getBalance())],
+            ['itemsCount' => $sale->getItems()->count(), 'balance' => $sale->getBalance()],
             ['itemsCount' => count($data['items']), 'balance' => $data['balance']]
         );
     }
