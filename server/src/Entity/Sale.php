@@ -57,6 +57,12 @@ class Sale
     #[ORM\OneToMany(targetEntity: SaleItem::class, mappedBy: 'sale')]
     private Collection $items;
 
+    /**
+     * @var Collection<int, SaleMemo>
+     */
+    #[ORM\OneToMany(targetEntity: SaleMemo::class, mappedBy: 'sale')]
+    private Collection $memos;
+
     public function __construct(
         ?User $creator = null,
         ?User $customer = null,
@@ -66,6 +72,7 @@ class Sale
         $this->createdAt = new \DateTimeImmutable();
         $this->payments = new ArrayCollection();
         $this->items = new ArrayCollection();
+        $this->memos = new ArrayCollection();
     }
 
     public function getSubtotal(): int
@@ -293,6 +300,36 @@ class Sale
             // set the owning side to null (unless already changed)
             if ($item->getSale() === $this) {
                 $item->setSale(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SaleMemo>
+     */
+    public function getMemos(): Collection
+    {
+        return $this->memos;
+    }
+
+    public function addMemo(SaleMemo $memo): static
+    {
+        if (!$this->memos->contains($memo)) {
+            $this->memos->add($memo);
+            $memo->setSale($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMemo(SaleMemo $memo): static
+    {
+        if ($this->memos->removeElement($memo)) {
+            // set the owning side to null (unless already changed)
+            if ($memo->getSale() === $this) {
+                $memo->setSale(null);
             }
         }
 

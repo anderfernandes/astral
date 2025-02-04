@@ -7,7 +7,7 @@
 <hr />
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0--beta.0-black" />
+  <img src="https://img.shields.io/badge/version-2.0.0--alpha.0-black" />
   <img src="https://img.shields.io/github/issues/anderfernandes/astral" />
   <img src="https://img.shields.io/github/stars/anderfernandes/astral" />
   <img src="https://img.shields.io/github/license/anderfernandes/astral" />
