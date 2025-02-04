@@ -23,7 +23,11 @@ class SaleController extends AbstractController
     #[Route('/sales', name: 'sales_index', methods: ['GET'], format: 'json')]
     public function index(SaleRepository $sales): Response
     {
-        return $this->json(['data' => $sales->findAll()]);
+        $sales = $sales->createQueryBuilder('s')
+            ->orderBy('s.id', 'DESC')
+            ->getQuery()
+            ->execute();
+        return $this->json(['data' => $sales]);
     }
 
     #[Route('/sales', name: 'sales_create', methods: ['POST'], format: 'json')]
@@ -80,6 +84,7 @@ class SaleController extends AbstractController
             $payment = new Payment(
                 tendered: (int) $payload->all('payment')['tendered'],
                 method: $method,
+                cashier: $this->getUser()
             );
 
             if (PaymentMethodType::CASH !== $method->getType()) {

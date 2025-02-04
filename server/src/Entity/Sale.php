@@ -114,6 +114,18 @@ class Sale
         return ($balance >= 0) ? $balance : 0;
     }
 
+    public function getPaid(): int
+    {
+        $paid = 0;
+
+        foreach ($this->payments as $payment)
+            $paid += $payment->getTendered();
+
+        if ($paid >= $this->getTotal()) return $this->getTotal();
+
+        return $paid;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
