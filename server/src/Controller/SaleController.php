@@ -27,6 +27,7 @@ class SaleController extends AbstractController
             ->orderBy('s.id', 'DESC')
             ->getQuery()
             ->execute();
+
         return $this->json(['data' => $sales]);
     }
 
@@ -40,10 +41,10 @@ class SaleController extends AbstractController
     ): Response {
         $payload = $request->getPayload();
 
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
+        /** @var \App\Entity\User $cashier * */
+        $cashier = $this->getUser();
 
-        $sale = new Sale($user);
+        $sale = new Sale(creator: $cashier);
 
         if ($payload->has('customerId')) {
             $customer = $users->find($payload->getInt('customerId'));
@@ -84,11 +85,10 @@ class SaleController extends AbstractController
             $payment = new Payment(
                 tendered: (int) $payload->all('payment')['tendered'],
                 method: $method,
-                cashier: $this->getUser()
+                cashier: $cashier
             );
 
             if (PaymentMethodType::CASH !== $method->getType()) {
-
                 if (!$payload->has('reference')) {
                     return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
                 }

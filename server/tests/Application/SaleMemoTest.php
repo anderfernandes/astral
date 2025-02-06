@@ -22,7 +22,7 @@ class SaleMemoTest extends BaseWebTestCase
 
         self::bootKernel();
 
-        /** @var EntityManagerInterface $entityManager **/
+        /** @var EntityManagerInterface $entityManager * */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
         $entityManager->persist(self::$user);

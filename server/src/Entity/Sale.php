@@ -125,10 +125,13 @@ class Sale
     {
         $paid = 0;
 
-        foreach ($this->payments as $payment)
+        foreach ($this->payments as $payment) {
             $paid += $payment->getTendered();
+        }
 
-        if ($paid >= $this->getTotal()) return $this->getTotal();
+        if ($paid >= $this->getTotal()) {
+            return $this->getTotal();
+        }
 
         return $paid;
     }

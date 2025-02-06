@@ -20,9 +20,8 @@ class SaleMemoController extends AbstractController
         Sale $sale,
         Request $request,
         ValidatorInterface $validator,
-        EntityManagerInterface $entityManager
-    ): Response
-    {
+        EntityManagerInterface $entityManager,
+    ): Response {
         $payload = $request->getPayload();
 
         /** @var \App\Entity\User $user */
@@ -37,7 +36,7 @@ class SaleMemoController extends AbstractController
         $errors = $validator->validate($memo);
 
         if (count($errors) > 0) {
-            return new Response(status: Response:: HTTP_UNPROCESSABLE_ENTITY);
+            return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $entityManager->persist($memo);
