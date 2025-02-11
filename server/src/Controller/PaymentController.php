@@ -22,7 +22,7 @@ class PaymentController extends AbstractController
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $sale = $entityManager->getRepository(Sale::class)->find($payment->getSale()->getId());
+        $sale = $entityManager->getRepository(Sale::class)->find($payment->getSale()['id']);
 
         if (null === $sale) {
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);

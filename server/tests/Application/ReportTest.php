@@ -255,9 +255,20 @@ class ReportTest extends BaseWebTestCase
 
         $client->request('GET', "/reports/closeout?start=$start&end=$end&cashier=$cashier");
 
-        // Assert
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
 
-        $this->assertResponseIsSuccessful();
+        $total = 0;
+
+        foreach (self::$sales as $sale) {
+            foreach ($sale->getPayments() as $payment) {
+                if ($payment->getCashier()->getId() === $cashier) {
+                    $total += $payment->getTendered();
+                }
+            }
+        }
+
+        // Assert
+        $this->assertEquals([$data['total']], [$total]);
     }
 
     public function testCloseoutAllCashiers(): void
@@ -273,14 +284,90 @@ class ReportTest extends BaseWebTestCase
         $decoder = static::getContainer()->get(DecoderInterface::class);
 
         // Act
-
         $start = self::$sales[0]->getCreatedAt()->setTime(0, 0)->getTimestamp();
         $end = self::$sales[0]->getCreatedAt()->setTime(0, 0)->modify('+1 day')->getTimestamp();
 
         $client->request('GET', "/reports/closeout?start=$start&end=$end");
 
-        // Assert
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
 
-        $this->assertResponseIsSuccessful();
+        $total = 0;
+
+        foreach (self::$sales as $sale) {
+            foreach ($sale->getPayments() as $payment) {
+                $total += $payment->getTendered();
+            }
+        }
+
+        // Assert
+        $this->assertEquals([$data['total']], [$total]);
+    }
+
+    public function testPayment(): void
+    {
+        // Arrange
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
+        /**
+         * @var DecoderInterface $decoder
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        // Act
+        $start = self::$sales[0]->getCreatedAt()->setTime(0, 0)->getTimestamp();
+        $end = self::$sales[0]->getCreatedAt()->setTime(0, 0)->modify('+1 day')->getTimestamp();
+        $randomIndex = rand(0, count(self::$cashiers) - 1);
+        $cashier = self::$cashiers[$randomIndex]->getId();
+
+        $client->request('GET', "/reports/payment?start=$start&end=$end&cashier=$cashier");
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $cashierTotals = 0;
+
+        foreach (self::$sales as $sale) {
+            foreach ($sale->getPayments() as $payment) {
+                if ($payment->getCashier()->getId() === $cashier) {
+                    $cashierTotals += $payment->getTendered();
+                }
+            }
+        }
+
+        // Assert
+        $this->assertEquals([$data['totals']], [$cashierTotals]);
+    }
+
+    public function testPaymentAllCashiers()
+    {
+        // Arrange
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
+        /**
+         * @var DecoderInterface $decoder
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        // Act
+        $start = self::$sales[0]->getCreatedAt()->setTime(0, 0)->getTimestamp();
+        $end = self::$sales[0]->getCreatedAt()->setTime(0, 0)->modify('+1 day')->getTimestamp();
+
+        $client->request('GET', "/reports/payment?start=$start&end=$end");
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $totals = 0;
+
+        foreach (self::$sales as $sale) {
+            foreach ($sale->getPayments() as $payment) {
+                $totals += $payment->getTendered();
+            }
+        }
+
+        // Assert
+        $this->assertEquals([$data['totals']], [$totals]);
     }
 }

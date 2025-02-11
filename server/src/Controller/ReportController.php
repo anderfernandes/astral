@@ -63,7 +63,7 @@ class ReportController extends AbstractController
         \DateTimeImmutable $end,
         EntityManagerInterface $entityManager,
     ): array {
-        /* @var Payment[] $payments */
+        /** @var Payment[] $payments * */
         $payments = $entityManager->createQuery(
             'SELECT p FROM App\Entity\Payment p
                 WHERE p.createdAt >= :start AND p.createdAt <= :end
@@ -119,7 +119,7 @@ class ReportController extends AbstractController
         $shiftCashiers = $entityManager->createQuery(
             'SELECT u FROM App\Entity\User u
                 WHERE u.id IN (:ids)
-                ORDER BY u.id DESC'
+                ORDER BY u.firstName ASC'
         )->setParameter('ids', $shiftCashiersIds, ArrayParameterType::INTEGER)
             ->getResult();
 
@@ -184,11 +184,86 @@ class ReportController extends AbstractController
     }
 
     public function generatePaymentReport(
-        User $cashier,
+        ?User $cashier,
         \DateTimeImmutable $start,
         \DateTimeImmutable $end,
         EntityManagerInterface $entityManager,
     ): array {
-        return [];
+        /** @var Payment[] $payments * */
+        $payments = $entityManager->createQuery(
+            'SELECT p FROM App\Entity\Payment p
+                WHERE p.createdAt >= :start AND p.createdAt <= :end
+                ORDER BY p.id ASC'
+        )->setParameters([
+            'start' => $start->format('Y-m-d H:i:s'),
+            'end' => $end->format('Y-m-d H:i:s'),
+        ])->getResult();
+
+        $grandTotal = 0;
+
+        $transactions = [];
+
+        if (null === $cashier) {
+            $shiftCashierIds = [];
+
+            foreach ($payments as $payment) {
+                $shiftCashierIds[] = $payment->getCashier()->getId();
+            }
+
+            $shiftCashierIds = array_unique($shiftCashierIds);
+
+            /** @var User[] $cashiers * */
+            $shiftCashiers = $entityManager->createQuery(
+                'SELECT u FROM App\Entity\User u
+                WHERE u.id IN (:shiftCashierIds)
+                ORDER BY u.firstName ASC'
+            )->setParameter('shiftCashierIds', $shiftCashierIds)
+                ->getResult();
+
+            foreach ($shiftCashiers as $shiftCashier) {
+                $cashierTransactions = [];
+                $total = 0;
+
+                foreach ($payments as $payment) {
+                    if ($payment->getCashier()->getId() === $shiftCashier->getId()) {
+                        $cashierTransactions[] = $payment;
+                        $total += $payment->getTendered();
+                    }
+                }
+
+                $transactions[] = [
+                    'cashier' => $shiftCashier,
+                    'total' => $total,
+                    'transactions' => $cashierTransactions,
+                ];
+
+                $grandTotal += $total;
+            }
+        } else {
+            $cashierTransactions = [];
+            $total = 0;
+
+            foreach ($payments as $payment) {
+                if ($payment->getCashier()->getId() === $cashier->getId()) {
+                    $cashierTransactions[] = $payment;
+                    $total += $payment->getTendered();
+                }
+            }
+
+            $transactions[] = [
+                'cashier' => $cashier,
+                'total' => $total,
+                'transactions' => $cashierTransactions,
+            ];
+
+            $grandTotal += $total;
+        }
+
+        return [
+            'start' => $start,
+            'end' => $end,
+            'totals' => $grandTotal,
+            'data' => $transactions,
+        ];
     }
 }

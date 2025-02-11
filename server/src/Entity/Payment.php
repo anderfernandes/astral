@@ -4,7 +4,9 @@ namespace App\Entity;
 
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Attribute\Ignore;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 #[ORM\Table(name: 'payments')]
@@ -20,7 +22,7 @@ class Payment
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Ignore]
+
     private ?Sale $sale = null;
 
     #[ORM\ManyToOne]
@@ -75,9 +77,14 @@ class Payment
         return $this;
     }
 
-    public function getSale(): ?Sale
+    public function getSale(): array
     {
-        return $this->sale;
+        return [
+            'id' => $this->sale->getId(),
+            'tendered' => $this->sale->getTendered(),
+            'change' => $this->sale->getChange(),
+            'total' => $this->sale->getTotal()
+        ];
     }
 
     public function setSale(?Sale $sale): static

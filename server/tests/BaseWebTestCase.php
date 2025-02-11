@@ -36,7 +36,7 @@ abstract class BaseWebTestCase extends WebTestCase
 
         passthru(
             sprintf(
-                'APP_ENV=%s php "%s/../bin/console" doctrine:database:drop --force',
+                'APP_ENV=%s php "%s/../bin/console" doctrine:database:drop --force --quiet',
                 $_ENV['APP_ENV'],
                 __DIR__
             )
@@ -44,7 +44,7 @@ abstract class BaseWebTestCase extends WebTestCase
 
         passthru(
             sprintf(
-                'APP_ENV=%s php "%s/../bin/console" doctrine:database:create',
+                'APP_ENV=%s php "%s/../bin/console" doctrine:database:create --quiet',
                 $_ENV['APP_ENV'],
                 __DIR__
             )
@@ -52,7 +52,7 @@ abstract class BaseWebTestCase extends WebTestCase
 
         passthru(
             sprintf(
-                'APP_ENV=%s php "%s/../bin/console" doctrine:schema:create',
+                'APP_ENV=%s php "%s/../bin/console" doctrine:schema:create --quiet',
                 $_ENV['APP_ENV'],
                 __DIR__
             )
