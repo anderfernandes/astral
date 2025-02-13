@@ -21,7 +21,7 @@ class SettingController extends AbstractController
             'zip' => $_ENV['ZIP'],
             'country' => $_ENV['COUNTRY'],
             'phone' => $_ENV['PHONE'],
-            'tax' => (int) $_ENV['TAX'],
+            'tax' => (float) $_ENV['TAX'],
             'seats' => (int) $_ENV['SEATS'],
             'timezone' => $_ENV['TIMEZONE'],
         ]);

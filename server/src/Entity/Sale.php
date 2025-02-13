@@ -271,7 +271,7 @@ class Sale
     {
         if ($this->payments->removeElement($payment)) {
             // set the owning side to null (unless already changed)
-            if ($payment->getSale() === $this) {
+            if ($payment->getSale() == $this) {
                 $payment->setSale(null);
             }
         }

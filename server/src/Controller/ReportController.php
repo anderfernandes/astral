@@ -212,7 +212,7 @@ class ReportController extends AbstractController
 
             $shiftCashierIds = array_unique($shiftCashierIds);
 
-            /** @var User[] $cashiers * */
+            /** @var User[] $shiftCashiers * */
             $shiftCashiers = $entityManager->createQuery(
                 'SELECT u FROM App\Entity\User u
                 WHERE u.id IN (:shiftCashierIds)
