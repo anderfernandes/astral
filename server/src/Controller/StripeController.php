@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use Stripe\Exception\ApiErrorException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +15,7 @@ class StripeController extends AbstractController
         $payload = $request->getPayload();
 
         // TODO: CHECK IF THERE ARE SEATS AVAILABLE BEFORE TAKING MONEY!
+        // TODO: ENSURE ALL STRIPE STUFF IS OK BEFORE DOING ANYTHING WITH STRIPE
 
         $stripe = new \Stripe\StripeClient($_ENV['STRIPE_SECRET_KEY']);
 
@@ -28,8 +28,8 @@ class StripeController extends AbstractController
                     'currency' => 'USD',
                     'unit_amount' => $item['price'],
                     'product_data' => [
-                        'name' => $item['description'] . ' ' . $item['name'],
-                        'description' => $item['type'],
+                        'name' => $item['name'] . ' ' . $item['type'],
+                        'description' => $item['description'],
                         'images' => ['http://localhost:3000' . $item['cover']]
                     ]
                 ]
@@ -37,15 +37,25 @@ class StripeController extends AbstractController
         }
 
         try {
+            $taxRate = $stripe->taxRates->retrieve($_ENV['STRIPE_TAX_RATE_ID']);
+
+            if ($taxRate === null)
+                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            for ($i = 0; $i < count($line_items); $i++) {
+                $line_items[$i]['tax_rates'] = [$taxRate->id];
+            }
+
+
             $checkout = $stripe->checkout->sessions->create([
                 'mode' => 'payment',
                 'success_url' => "http://localhost:3000/",
                 'cancel_url' => "http://localhost:3000/cart",
                 'line_items' => $line_items
             ]);
-            return $this->json(['data' => $checkout->url]);
+            return $this->json(['data' => $checkout->url, 'items' => $line_items]);
         } catch (\Stripe\Exception\ApiErrorException $e) {
-            return $this->json($e->getError(), status: $e->getHttpStatus());
+            return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }

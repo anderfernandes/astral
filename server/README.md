@@ -20,3 +20,9 @@ Astral is an open source app made to help non-profit educational organizations m
 Astral runs straight from modern browsers in smartphones, tablets, PC, MacOS or Linux.
 
 If you work in a non-profit planetarium, museum or science center and are struggling to find the right app to help you run things, Astral is what you are looking for.
+
+## Setup tax rates in Stripe
+
+Follow [this](https://dashboard.stripe.com/test/tax-rates) guide.
+
+Tax by default should be set as exclusive if they are not calculated separetely, as explained [here](https://docs.stripe.com/tax/products-prices-tax-codes-tax-behavior#setting-a-default-tax-behavior-(recommended)).
