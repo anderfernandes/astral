@@ -43,6 +43,21 @@ class Ticket
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    public function __construct(
+        TicketType $type,
+        Event $event,
+        ?User $customer = null,
+        ?User $cashier = null,
+    )
+    {
+        $this->type = $type;
+        $this->event = $event;
+        $this->customer = $customer;
+        $this->cashier = $cashier;
+
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
