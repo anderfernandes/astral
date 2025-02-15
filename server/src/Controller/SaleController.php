@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Payment;
 use App\Entity\Sale;
 use App\Entity\SaleItem;
+use App\Entity\Ticket;
 use App\Enums\PaymentMethodType;
 use App\Enums\SaleSource;
 use App\Enums\SaleStatus;
@@ -46,6 +47,31 @@ class SaleController extends AbstractController
 
         $sale = new Sale(creator: $cashier);
 
+        $saleEventsIds = [];
+        $saleTicketTypesIds = [];
+
+        foreach ($payload->all('items') as $item) {
+            $saleEventsIds[] = $item['meta']['eventId'];
+            $saleTicketTypesIds[] = $item['meta']['ticketTypeId'];
+        }
+
+        $saleEventsIds = array_unique($saleEventsIds);
+        $saleTicketTypesIds = array_unique($saleTicketTypesIds);
+
+        /** @var \App\Entity\Event[] $events **/
+        $events = $entityManager->createQuery(
+            'SELECT e FROM App\Entity\Event e
+                WHERE e.id IN (:saleEventsIds)
+                ORDER BY e.id ASC'
+            )->setParameter('saleEventsIds', $saleEventsIds)->getResult();
+
+        /** @var \App\Entity\TicketType[] $ticketTypes **/
+        $ticketTypes = $entityManager->createQuery(
+            'SELECT tt FROM App\Entity\TicketType tt
+                WHERE tt.id IN (:saleTicketTypesIds)
+                ORDER BY tt.id ASC'
+            )->setParameter('saleTicketTypesIds', $saleTicketTypesIds)->getResult();
+
         if ($payload->has('customerId')) {
             $customer = $users->find($payload->getInt('customerId'));
 
@@ -59,13 +85,55 @@ class SaleController extends AbstractController
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
+            $meta = $item['meta'];
+
+            /** @var \App\Entity\Event $event **/
+            $event = null;
+
+            foreach ($events as $e) {
+                if ($e->getId() === (int)$meta['eventId']) {
+                    $event = $e;
+                    break;
+                }
+            }
+
+            if ($event === null)
+                return $this->json(['message' => 'event error in sale item metadata']);
+                //return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            /** @var \App\Entity\TicketType $ticketType **/
+            $ticketType = null;
+
+            foreach ($ticketTypes as $tt) {
+                if ($tt->getId() === (int)$meta['ticketTypeId']) {
+                    $ticketType = $tt;
+                    break;
+                }
+            }
+
+            if ($ticketType === null)
+                return $this->json(['message' => 'ticket type error in sale item metadata']);
+                //return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            if ($item['type'] === 'ticket')
+                for ($i = 0; $i < $item['quantity']; $i++) {
+                    $ticket = new Ticket(type: $ticketType, event: $event);
+
+                    $sale->addTicket($ticket);
+
+                    $entityManager->persist($ticket);
+                }
+
             $item = new SaleItem(
                 name: $item['name'],
                 description: $item['description'],
                 price: $item['price'], // TODO: GET PRICE FROM DATABASE
                 quantity: $item['quantity'],
                 cover: $item['cover'],
-                meta: $item['meta'],
+                meta: [
+                    'eventId' => (int)$meta['eventId'],
+                    'ticketTypeId' => (int)$meta['eventId']
+                ],
             );
 
             $sale->addItem($item);

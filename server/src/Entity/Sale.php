@@ -63,6 +63,12 @@ class Sale
     #[ORM\OneToMany(targetEntity: SaleMemo::class, mappedBy: 'sale')]
     private Collection $memos;
 
+    /**
+     * @var Collection<int, Ticket>
+     */
+    #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'sale')]
+    private Collection $tickets;
+
     public function __construct(
         ?User $creator = null,
         ?User $customer = null,
@@ -73,6 +79,7 @@ class Sale
         $this->payments = new ArrayCollection();
         $this->items = new ArrayCollection();
         $this->memos = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
 
     public function getSubtotal(): int
@@ -333,6 +340,36 @@ class Sale
             // set the owning side to null (unless already changed)
             if ($memo->getSale() === $this) {
                 $memo->setSale(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ticket>
+     */
+    protected function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Ticket $ticket): static
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setSale($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): static
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getSale() === $this) {
+                $ticket->setSale(null);
             }
         }
 
