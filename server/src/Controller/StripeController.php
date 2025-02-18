@@ -39,7 +39,7 @@ class StripeController extends AbstractController
         try {
             $taxRate = $stripe->taxRates->retrieve($_ENV['STRIPE_TAX_RATE_ID']);
 
-            if ($taxRate === null)
+            if ($taxRate == null)
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
 
             for ($i = 0; $i < count($line_items); $i++) {

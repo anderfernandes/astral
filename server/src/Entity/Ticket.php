@@ -18,10 +18,6 @@ class Ticket
     private ?TicketType $type = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Event $event = null;
-
-    #[ORM\ManyToOne]
     private ?User $cashier = null;
 
     #[ORM\ManyToOne]
@@ -31,7 +27,7 @@ class Ticket
     private ?Organization $organization = null;
 
     #[ORM\Column]
-    private ?bool $isChecked = false;
+    private bool $isChecked = false;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -42,6 +38,10 @@ class Ticket
     #[ORM\ManyToOne(inversedBy: 'tickets')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Sale $sale = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Event $event = null;
 
     public function __construct(
         TicketType $type,
@@ -71,18 +71,6 @@ class Ticket
     public function setType(?TicketType $type): static
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    public function getEvent(): ?Event
-    {
-        return $this->event;
-    }
-
-    public function setEvent(?Event $event): static
-    {
-        $this->event = $event;
 
         return $this;
     }
@@ -167,6 +155,18 @@ class Ticket
     public function setSale(?Sale $sale): static
     {
         $this->sale = $sale;
+
+        return $this;
+    }
+
+    public function getEvent(): ?Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): static
+    {
+        $this->event = $event;
 
         return $this;
     }

@@ -87,7 +87,7 @@ class SaleController extends AbstractController
 
             $meta = $item['meta'];
 
-            /** @var \App\Entity\Event $event **/
+            /** @var ?\App\Entity\Event $event **/
             $event = null;
 
             foreach ($events as $e) {
@@ -101,7 +101,7 @@ class SaleController extends AbstractController
                 return $this->json(['message' => 'event error in sale item metadata']);
                 //return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
 
-            /** @var \App\Entity\TicketType $ticketType **/
+            /** @var ?\App\Entity\TicketType $ticketType **/
             $ticketType = null;
 
             foreach ($ticketTypes as $tt) {

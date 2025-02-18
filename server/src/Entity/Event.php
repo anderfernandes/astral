@@ -55,6 +55,12 @@ class Event
     private Collection $memos;
 
     /**
+     * @var Collection<int, Ticket>
+     */
+    #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'event')]
+    private Collection $tickets;
+
+    /**
      * @param Show[] $shows
      */
     public function __construct(
@@ -80,6 +86,7 @@ class Event
         foreach ($shows as $show) {
             $this->addShow($show);
         }
+        $this->tickets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -123,9 +130,15 @@ class Event
         return $this;
     }
 
-    public function getSeats(): ?int
+    public function getSeats(): array
     {
-        return $this->seats;
+        $taken = $this->getTickets()->count();
+
+        return [
+            'total' => $this->seats,
+            'taken' => $taken,
+            'available' => $this->seats - $taken
+        ];
     }
 
     public function setSeats(int $seats): static
@@ -231,6 +244,36 @@ class Event
             // set the owning side to null (unless already changed)
             if ($memo->getEvent() === $this) {
                 $memo->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ticket>
+     */
+    private function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Ticket $ticket): static
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): static
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getEvent() === $this) {
+                $ticket->setEvent(null);
             }
         }
 
