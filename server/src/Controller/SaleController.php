@@ -116,8 +116,8 @@ class SaleController extends AbstractController
 
             if ($item['type'] === 'ticket') {
 
-                if ($item['quantity'] > $event->getSeats()['available'])
-                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+                //if ($item['quantity'] > $event->getSeats()['available'])
+                    //return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
 
                 for ($i = 0; $i < $item['quantity']; $i++) {
                     $ticket = new Ticket(type: $ticketType, event: $event);
@@ -130,7 +130,7 @@ class SaleController extends AbstractController
                 $item = new SaleItem(
                     name: $item['name'],
                     description: $item['description'],
-                    price: $item['price'], // TODO: GET PRICE FROM DATABASE
+                    price: $ticketType->getPrice(),
                     quantity: $item['quantity'],
                     cover: $item['cover'],
                     meta: [
@@ -141,6 +141,18 @@ class SaleController extends AbstractController
 
                 $sale->addItem($item);
             }
+        }
+
+        foreach ($events as $event) {
+            $saleSeats = 0;
+
+            foreach ($sale->getItems() as $item) {
+                if ($item->getMeta()['eventId'] === $event->getId())
+                    $saleSeats += $item->getQuantity();
+            }
+
+            if ($saleSeats > $event->getSeats()['available'])
+                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         if (SaleSource::ADMIN !== $sale->getSource()) {
