@@ -81,43 +81,40 @@ class SaleController extends AbstractController
         }
 
         foreach ($payload->all('items') as $item) {
-            if (0 === $item['quantity']) {
-                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
-
-            $meta = $item['meta'];
-
-            /** @var ?\App\Entity\Event $event **/
-            $event = null;
-
-            foreach ($events as $e) {
-                if ($e->getId() === (int)$meta['eventId']) {
-                    $event = $e;
-                    break;
-                }
-            }
-
-            if ($event === null)
-                return $this->json(['message' => 'event error in sale item metadata']);
-                //return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
-
-            /** @var ?\App\Entity\TicketType $ticketType **/
-            $ticketType = null;
-
-            foreach ($ticketTypes as $tt) {
-                if ($tt->getId() === (int)$meta['ticketTypeId']) {
-                    $ticketType = $tt;
-                    break;
-                }
-            }
-
-            if ($ticketType === null)
-                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
 
             if ($item['type'] === 'ticket') {
 
-                //if ($item['quantity'] > $event->getSeats()['available'])
-                    //return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+                if (0 === $item['quantity']) {
+                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+
+                $meta = $item['meta'];
+
+                /** @var ?\App\Entity\Event $event **/
+                $event = null;
+
+                foreach ($events as $e) {
+                    if ($e->getId() === (int)$meta['eventId']) {
+                        $event = $e;
+                        break;
+                    }
+                }
+
+                if ($event === null)
+                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+
+                /** @var ?\App\Entity\TicketType $ticketType **/
+                $ticketType = null;
+
+                foreach ($ticketTypes as $tt) {
+                    if ($tt->getId() === (int)$meta['ticketTypeId']) {
+                        $ticketType = $tt;
+                        break;
+                    }
+                }
+
+                if ($ticketType === null)
+                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
 
                 for ($i = 0; $i < $item['quantity']; $i++) {
                     $ticket = new Ticket(type: $ticketType, event: $event);
