@@ -322,4 +322,62 @@ class SaleTest extends BaseWebTestCase
             ['itemsCount' => count($data['items']), 'balance' => $data['balance']]
         );
     }
+
+    public function testSellMoreThanAvailability(): void
+    {
+        // Arrange
+        $client = static::createClient();
+
+        /**
+         * @var EntityManagerInterface $entityManager
+         */
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+
+        $event = new Event(
+            starting: (new \DateTime('+7 days'))->setTime(9, 30),
+            ending: (new \DateTime('+7 days'))->setTime(10, 30),
+            type: $entityManager->getRepository(EventType::class)->find(1),
+            creator: $entityManager->getRepository(User::class)->find(1),
+            seats: 1,
+        );
+
+        $event->addShow($entityManager->getRepository(Show::class)->find(1));
+
+        $entityManager->persist($event);
+
+        $entityManager->flush();
+
+        /**
+         * @var DenormalizerInterface&NormalizerInterface&DecoderInterface $serializer
+         */
+        $serializer = static::getContainer()->get(DenormalizerInterface::class);
+
+        $client->loginUser(self::$user);
+
+        // Act
+
+        $sale = new Sale();
+
+        $name = $event->getId() . ' ' . $event->getShows()->first()->getName() . ' ' . $event->getType()->getName();
+
+        $ticketType = $event->getType()->getTicketTypes()->first();
+
+        $sale->addItem(new SaleItem(
+            name: $name,
+            description: $ticketType->getName(),
+            price: $ticketType->getPrice(),
+            quantity: rand(2, 10),
+            cover: $event->getShows()->first()->getCover(),
+            meta: ['eventId' => $event->getId(), 'ticketTypeId' => $ticketType->getId()]
+        ));
+
+        $payment = ['tendered' => $sale->getTotal(), 'methodId' => self::$paymentMethods[0]->getId()];
+
+        $client->request('POST', '/sales', [
+            ...$serializer->normalize($sale, 'json'),
+            'payment' => $payment,
+        ]);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
 }

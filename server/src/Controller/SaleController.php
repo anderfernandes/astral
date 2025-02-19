@@ -112,10 +112,13 @@ class SaleController extends AbstractController
             }
 
             if ($ticketType === null)
-                return $this->json(['message' => 'ticket type error in sale item metadata']);
-                //return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
 
-            if ($item['type'] === 'ticket')
+            if ($item['type'] === 'ticket') {
+
+                if ($item['quantity'] > $event->getSeats()['available'])
+                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+
                 for ($i = 0; $i < $item['quantity']; $i++) {
                     $ticket = new Ticket(type: $ticketType, event: $event);
 
@@ -124,19 +127,20 @@ class SaleController extends AbstractController
                     $entityManager->persist($ticket);
                 }
 
-            $item = new SaleItem(
-                name: $item['name'],
-                description: $item['description'],
-                price: $item['price'], // TODO: GET PRICE FROM DATABASE
-                quantity: $item['quantity'],
-                cover: $item['cover'],
-                meta: [
-                    'eventId' => (int)$meta['eventId'],
-                    'ticketTypeId' => (int)$meta['eventId']
-                ],
-            );
+                $item = new SaleItem(
+                    name: $item['name'],
+                    description: $item['description'],
+                    price: $item['price'], // TODO: GET PRICE FROM DATABASE
+                    quantity: $item['quantity'],
+                    cover: $item['cover'],
+                    meta: [
+                        'eventId' => (int)$meta['eventId'],
+                        'ticketTypeId' => (int)$meta['eventId']
+                    ],
+                );
 
-            $sale->addItem($item);
+                $sale->addItem($item);
+            }
         }
 
         if (SaleSource::ADMIN !== $sale->getSource()) {
