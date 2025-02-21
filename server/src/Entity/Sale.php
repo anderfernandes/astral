@@ -69,6 +69,9 @@ class Sale
     #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'sale')]
     private Collection $tickets;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $session = null;
+
     public function __construct(
         ?User $creator = null,
         ?User $customer = null,
@@ -372,6 +375,18 @@ class Sale
                 $ticket->setSale(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSession(): ?string
+    {
+        return $this->session;
+    }
+
+    public function setSession(?string $session): static
+    {
+        $this->session = $session;
 
         return $this;
     }

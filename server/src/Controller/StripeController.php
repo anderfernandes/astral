@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Sale;
+use App\Entity\SaleItem;
+use App\Enums\SaleSource;
+use App\Enums\SaleStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,6 +60,8 @@ class StripeController extends AbstractController
 
         $line_items = [];
 
+        $sale = new Sale();
+
         foreach ($payload->all('items') as $item) {
 
             if ($item['type'] === 'ticket') {
@@ -77,8 +83,7 @@ class StripeController extends AbstractController
                 }
 
                 if ($event === null)
-                    return $this->json(['message' => 'event error in sale item metadata']);
-                    //return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
 
                 /** @var ?\App\Entity\TicketType $ticketType **/
                 $ticketType = null;
@@ -105,6 +110,22 @@ class StripeController extends AbstractController
                         ]
                     ]
                 ];
+
+                $item = new SaleItem(
+                    name: $item['name'],
+                    description: $item['description'],
+                    price: $ticketType->getPrice(),
+                    quantity: $item['quantity'],
+                    cover: $item['cover'],
+                    meta: [
+                        'eventId' => (int)$meta['eventId'],
+                        'ticketTypeId' => (int)$meta['eventId']
+                    ],
+                );
+
+                $sale->addItem($item);
+
+                $entityManager->persist($item);
             }
         }
 
@@ -118,14 +139,28 @@ class StripeController extends AbstractController
                 $line_items[$i]['tax_rates'] = [$taxRate->id];
             }
 
-
             $checkout = $stripe->checkout->sessions->create([
                 'mode' => 'payment',
-                'success_url' => "http://localhost:3000/",
-                'cancel_url' => "http://localhost:3000/cart",
+                'success_url' => $_ENV['FRONTEND_URL'] . '/account/sales',
+                'cancel_url' => $_ENV['FRONTEND_URL'] . '/cart?canceled',
                 'line_items' => $line_items
             ]);
-            return $this->json(['data' => $checkout->url, 'items' => $line_items]);
+
+            $checkout->success_url = $_ENV['FRONTEND_URL'] . "/account/sales/$checkout->id";
+
+            /* @var \App\Entity\User $customer */
+            $customer = $this->getUser();
+
+            $sale->setCustomer($customer);
+            $sale->setSession($checkout->id);
+            $sale->setStatus(SaleStatus::OPEN);
+            $sale->setSource(SaleSource::INTERNAL);
+
+            $entityManager->persist($sale);
+
+            $entityManager->flush();
+
+            return $this->json(['data' => $checkout->url, 'id' => $checkout->success_url]);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }

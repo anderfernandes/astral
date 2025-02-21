@@ -190,10 +190,6 @@ class SaleController extends AbstractController
 
             $sale->addPayment($payment);
 
-            //            if ($sale->getBalance() < 0) {
-            //                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
-            //            }
-
             $entityManager->persist($payment);
         }
 
