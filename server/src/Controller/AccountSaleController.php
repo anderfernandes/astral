@@ -18,33 +18,54 @@ use Symfony\Component\Routing\Attribute\Route;
 class AccountSaleController extends AbstractController
 {
     #[Route('/account/sales', name: 'account-sales_index', methods: ['GET'], format: 'json')]
-    public function index(SaleRepository $sales)
+    public function index(SaleRepository $sales): Response
     {
-        /* @var \App\Entity\User $customer */
+        /** @var \App\Entity\User $customer **/
         $customer = $this->getUser();
 
-        return $this->json(['data' => $sales->findBy(['customer_id' => $customer->getId()])]);
+        return $this->json(['data' => $sales->findBy(['customer' => $customer])]);
     }
 
-    #[Route('/account/sales/{session}', name: 'account-sales_show', methods: ['GET'], format: 'json')]
-    public function show(string $session, SaleRepository $sales, PaymentMethodRepository $paymentMethods, EntityManagerInterface $entityManager): Response
+    #[Route('/account/sales/{id}', name: 'account-sales_show', methods: ['GET'], format: 'json')]
+    public function show(Sale $sale): Response
     {
-        $stripe = new \Stripe\StripeClient($_ENV['STRIPE_SECRET_KEY']);
+        return $this->json($sale);
+    }
 
+    #[Route('/account/sales/{session}', name: 'account-sales_update', methods: ['PUT'], format: 'json')]
+    public function update(
+        string $session,
+        SaleRepository $sales,
+        PaymentMethodRepository $paymentMethods,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
         $sale = $sales->findOneBy(['session' => $session]);
 
         if ($sale === null) {
-            return new Response(status: Response::HTTP_NOT_FOUND);
+            //return new Response(status: Response::HTTP_NOT_FOUND);
+            return $this->json(['error' => 'Sale not found'], status: RESPONSE:: HTTP_NOT_FOUND);
         }
 
         if ($sale->getStatus() === SaleStatus::OPEN && $sale->getSource() === SaleSource::INTERNAL) {
-            /* @var \Stripe\Checkout\Session $session */
-            $session = $stripe->checkout->sessions->retrieve($session);
+
+            try {
+                $stripe = new \Stripe\StripeClient($_ENV['STRIPE_SECRET_KEY']);
+
+                /* @var \Stripe\Checkout\Session $session */
+                $session = $stripe->checkout->sessions->retrieve($session);
+
+            } catch (\Stripe\Exception\ApiErrorException $e) {
+                //return new Response(status: Response::HTTP_NOT_FOUND);
+                return $this->json(['error' => 'Session not found'], status: RESPONSE:: HTTP_NOT_FOUND);
+            }
 
             $method = $paymentMethods->findOneBy(['type' => PaymentMethodType::ONLINE->value]);
 
-            if ($method === null)
-                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            if ($method === null) {
+                //return new Response(status: Response::HTTP_NOT_FOUND);
+                return $this->json(['error' => "Payment method not found"], status: RESPONSE:: HTTP_NOT_FOUND);
+            }
 
             $payment = new Payment(
                 tendered: $session->amount_total,
@@ -58,11 +79,15 @@ class AccountSaleController extends AbstractController
             if ($sale->getBalance() !== 0)
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
 
+            // TODO: CREATE TICKETS
+
             $sale->setStatus(SaleStatus::COMPLETED);
 
             $entityManager->persist($sale);
+
+            $entityManager->flush();
         }
 
-        return $this->json($sale);
+        return $this->json(['data' => $sale->getId()]);
     }
 }

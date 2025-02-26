@@ -141,14 +141,12 @@ class StripeController extends AbstractController
 
             $checkout = $stripe->checkout->sessions->create([
                 'mode' => 'payment',
-                'success_url' => $_ENV['FRONTEND_URL'] . '/account/sales',
+                'success_url' => $_ENV['FRONTEND_URL'] . '/account/orders/{CHECKOUT_SESSION_ID}',
                 'cancel_url' => $_ENV['FRONTEND_URL'] . '/cart?canceled',
                 'line_items' => $line_items
             ]);
 
-            $checkout->success_url = $_ENV['FRONTEND_URL'] . "/account/sales/$checkout->id";
-
-            /* @var \App\Entity\User $customer */
+            /** @var \App\Entity\User $customer **/
             $customer = $this->getUser();
 
             $sale->setCustomer($customer);
@@ -160,7 +158,7 @@ class StripeController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->json(['data' => $checkout->url, 'id' => $checkout->success_url]);
+            return $this->json(['data' => $checkout->url, 'id' => $checkout->id]);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
