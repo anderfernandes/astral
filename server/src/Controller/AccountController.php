@@ -16,6 +16,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AccountController extends AbstractController
@@ -84,6 +85,7 @@ class AccountController extends AbstractController
         return $this->json($user);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/account', name: 'account_update', methods: ['PUT'], format: 'json')]
     public function update(
         #[CurrentUser] ?User $user,

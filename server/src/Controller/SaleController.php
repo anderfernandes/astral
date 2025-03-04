@@ -219,7 +219,6 @@ class SaleController extends AbstractController
         Sale $sale,
         Request $request,
         EntityManagerInterface $entityManager,
-        PaymentMethodRepository $paymentMethods,
     ): Response {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();

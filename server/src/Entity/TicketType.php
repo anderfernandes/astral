@@ -56,6 +56,9 @@ class TicketType
     #[Ignore]
     private Collection $eventTypes;
 
+    #[ORM\Column]
+    private ?bool $isMembersOnly = false;
+
     public function __construct(
         string $name,
         string $description,
@@ -213,6 +216,18 @@ class TicketType
         if ($this->eventTypes->removeElement($eventType)) {
             $eventType->removeTicketType($this);
         }
+
+        return $this;
+    }
+
+    public function isMembersOnly(): ?bool
+    {
+        return $this->isMembersOnly;
+    }
+
+    public function setIsMembersOnly(bool $isMembersOnly): static
+    {
+        $this->isMembersOnly = $isMembersOnly;
 
         return $this;
     }
