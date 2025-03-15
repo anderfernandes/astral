@@ -174,7 +174,7 @@ class UserTest extends BaseWebTestCase
         $client = static::createClient();
 
         $client->catchExceptions(false);
-        $this->expectException(HttpException::class);
+        $this->expectException(\TypeError::class);
 
         $client->loginUser(self::$user);
 

@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -69,24 +70,28 @@ class UserController extends AbstractController
     #[Route('/users/{id}', name: 'users_update', methods: ['PUT'], format: 'json')]
     public function update(
         User $user,
-        #[MapRequestPayload] UserDto $userDto,
+        Request $request,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
     ): Response {
+        $payload = $request->getPayload();
+        
         $user
-            ->setEmail($userDto->email)
-            ->setPassword($passwordHasher->hashPassword($user, $userDto->password))
-            ->setFirstName($userDto->firstName)
-            ->setLastName($userDto->lastName)
-            ->setAddress($userDto->address)
-            ->setCity($userDto->city)
-            ->setState($userDto->state)
-            ->setZip($userDto->zip)
-            ->setCountry($userDto->country ?? 'United States')
-            ->setPhone($userDto->phone)
-            ->setDateOfBirth($userDto->dateOfBirth)
-            ->setIsActive(false);
+            ->setEmail($payload->get('email'))
+            //->setPassword($passwordHasher->hashPassword($user, $payload->get('email')))
+            ->setFirstName($payload->get('firstName'))
+            ->setLastName($payload->get('lastName'))
+            ->setAddress($payload->get('address'))
+            ->setCity($payload->get('city'))
+            ->setState($payload->get('state'))
+            ->setZip($payload->get('zip'))
+            ->setCountry('United States')
+            ->setPhone($payload->get('phone'))
+            ->setIsActive($payload->has('isActive'))
+            ->setRoles([$payload->get('role')])
+            ->setUpdatedAt(new \DateTimeImmutable());
+            //->setDateOfBirth(new \DateTimeImmutable($payload->get('dateOfBirth')))
 
         $errors = $validator->validate($user);
 
