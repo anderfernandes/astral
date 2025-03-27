@@ -5,6 +5,9 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session:
         name: 'ASTRALSESSID'
+        handler_id: 'session.handler.native_file'
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        cookie_secure: 'auto'
 
     #esi: true
     #fragments: true
