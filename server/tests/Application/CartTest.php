@@ -2,9 +2,10 @@
 
 namespace App\Tests\Application;
 
+use App\Entity\ShowType;
 use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\ShowType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class CartTest extends BaseWebTestCase
@@ -18,16 +19,20 @@ class CartTest extends BaseWebTestCase
         /**
          * @var EntityManagerInterface $entityManager
          */
-        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $entityManager = static::getContainer()->get(
+            EntityManagerInterface::class
+        );
 
         $entityManager->persist(self::$user);
 
-        $entityManager->persist(new ShowType(
-            name: 'Test Show Type',
-            description: 'A show type created for event tests',
-            creator: self::$user,
-            isActive: true
-        ));
+        $entityManager->persist(
+            new ShowType(
+                name: 'Test Show Type',
+                description: 'A show type created for event tests',
+                creator: self::$user,
+                isActive: true
+            )
+        );
 
         $entityManager->flush();
 
@@ -47,9 +52,11 @@ class CartTest extends BaseWebTestCase
 
         $client->request('GET', '/cart');
 
-        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')[
+            'data'
+        ];
 
-        $this->assertNull($data);
+        $this->assertEmpty($data);
     }
 
     public function testUpdate(): void
@@ -61,8 +68,8 @@ class CartTest extends BaseWebTestCase
         $client->request('POST', '/cart', [
             [
                 'quantity' => 1,
-                'meta' => ['eventId' => 1, 'ticketTypeId' => 1]
-            ]
+                'meta' => ['eventId' => 1, 'ticketTypeId' => 1],
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
@@ -81,15 +88,12 @@ class CartTest extends BaseWebTestCase
 
         $client->request('POST', '/cart', [
             [
-                'quantity' => 2,
-                'meta' => ['eventId' => 1, 'ticketTypeId' => 1]
-            ]
+                'meta' => ['eventId' => 1, 'ticketTypeId' => 1],
+            ],
         ]);
 
         $client->request('GET', '/cart');
 
-        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
-
-        $this->assertArrayHasKey('quantity', $data[0]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

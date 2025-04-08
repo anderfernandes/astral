@@ -57,7 +57,7 @@ class TicketType
     private Collection $eventTypes;
 
     #[ORM\Column]
-    private ?bool $isMembersOnly = false;
+    private bool $isMembersOnly = false;
 
     public function __construct(
         string $name,
