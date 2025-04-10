@@ -2,8 +2,12 @@
 
 namespace App\Tests\Application;
 
-use App\Entity\ShowType;
+use App\DataFixtures\AppFixtures;
+use App\Entity\User;
 use App\Tests\BaseWebTestCase;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
@@ -16,6 +20,9 @@ class CartTest extends BaseWebTestCase
 
         self::bootKernel();
 
+        $loader = new Loader();
+        $loader->addFixture(new AppFixtures(static::getContainer()->get('security.user_password_hasher')));
+
         /**
          * @var EntityManagerInterface $entityManager
          */
@@ -23,18 +30,10 @@ class CartTest extends BaseWebTestCase
             EntityManagerInterface::class
         );
 
-        $entityManager->persist(self::$user);
+        $executor = new ORMExecutor($entityManager, new ORMPurger());
+        $executor->execute($loader->getFixtures());
 
-        $entityManager->persist(
-            new ShowType(
-                name: 'Test Show Type',
-                description: 'A show type created for event tests',
-                creator: self::$user,
-                isActive: true
-            )
-        );
-
-        $entityManager->flush();
+        self::$user = $entityManager->getRepository(User::class)->findAll()[0];
 
         self::ensureKernelShutdown();
     }

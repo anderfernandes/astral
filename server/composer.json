@@ -84,6 +84,7 @@
         }
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.1",
         "fakerphp/faker": "^1.24.1",
         "friendsofphp/php-cs-fixer": "^3.73.1",
         "phpstan/phpstan": "^2.1.11",
