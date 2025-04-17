@@ -54,6 +54,10 @@ class CartController extends AbstractController
     #[Route('/cart', name: 'cart_update', methods: ['POST'], format: 'json')]
     public function update(Request $request, TicketTypeRepository $ticketTypes, EventRepository $events): Response
     {
+        if (!$request->getSession()->has('cart')) {
+            $request->getSession()->set('cart', []);
+        }
+
         $meta = [
             'eventId' => $request->getPayload()->getInt('eventId'),
             'ticketTypeId' => $request->getPayload()->getInt('ticketTypeId'),
