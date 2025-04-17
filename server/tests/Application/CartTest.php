@@ -65,13 +65,10 @@ class CartTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         $client->request('POST', '/cart', [
-            [
-                'quantity' => 1,
-                'meta' => ['eventId' => 1, 'ticketTypeId' => 1],
-            ],
+            'eventId' => 1, 'ticketTypeId' => 1,
         ]);
 
-        $this->assertResponseStatusCodeSame(200);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
     public function testShowWithItems(): void
@@ -86,13 +83,11 @@ class CartTest extends BaseWebTestCase
         $client->loginUser(self::$user);
 
         $client->request('POST', '/cart', [
-            [
-                'meta' => ['eventId' => 1, 'ticketTypeId' => 1],
-            ],
+            'eventId' => 1, 'ticketTypeId' => 1,
         ]);
 
         $client->request('GET', '/cart');
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 }

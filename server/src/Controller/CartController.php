@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\TicketType;
+use App\Repository\EventRepository;
+use App\Repository\TicketTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +52,7 @@ class CartController extends AbstractController
     }
 
     #[Route('/cart', name: 'cart_update', methods: ['POST'], format: 'json')]
-    public function update(Request $request): Response
+    public function update(Request $request, TicketTypeRepository $ticketTypes, EventRepository $events): Response
     {
         $meta = [
             'eventId' => $request->getPayload()->getInt('eventId'),
@@ -64,6 +66,7 @@ class CartController extends AbstractController
         }
 
         $hasItem = false;
+        $quantity = 0;
 
         foreach ($cart as &$item) {
             if (
@@ -71,6 +74,7 @@ class CartController extends AbstractController
                 && $item['meta']['eventId'] == $meta['eventId']
             ) {
                 $item['quantity'] = $item['quantity'] + 1;
+                $quantity = $item['quantity'];
                 $hasItem = true;
                 break;
             }
@@ -80,14 +84,26 @@ class CartController extends AbstractController
 
         if (!$hasItem) {
             $cart[] = ['meta' => $meta, 'quantity' => 1];
+            $quantity = 1;
         }
 
         // TODO: ENSURE UNIQUE, ENSURE EVENT EXISTS AND HAS SEATS, ENSURE TICKET TYPE EXISTS
         $request->getSession()->set('cart', $cart);
 
+        $ticketType = $ticketTypes->find($meta['ticketTypeId']);
+        $event = $events->find($meta['eventId']);
+
         // return new Response(status: Response::HTTP_OK);
         // return $this->json(["data" => $request->getSession()->get("cart", [])]);
-        return $this->json(['data' => $cart]);
+        return $this->json([
+            'name' => $ticketType->getName(),
+            'description' => '#'.$event->getId(),
+            'price' => $ticketType->getPrice(),
+            'cover' => '/uploads/'.$event->getShows()->first()->getCover(),
+            'type' => 'ticket',
+            'quantity' => $quantity,
+            'meta' => $meta,
+        ]);
     }
 
     #[Route('/cart', name: 'cart_clear', methods: ['DELETE'], format: 'json')]

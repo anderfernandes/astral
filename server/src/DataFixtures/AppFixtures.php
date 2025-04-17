@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\EventType;
 use App\Entity\Show;
 use App\Entity\ShowType;
+use App\Entity\TicketType;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -37,6 +38,13 @@ class AppFixtures extends Fixture
             creator: $user
         );
         $manager->persist($show);
+
+        $ticketType = new TicketType(
+            name: 'Test Ticket Type',
+            description: 'A test ticket type',
+            price: random_int(500, 1000), creator: $user
+        );
+        $manager->persist($ticketType);
 
         $eventType = new EventType(name: 'Test Event Type', description: 'A test event type', creator: $user);
         $manager->persist($eventType);
