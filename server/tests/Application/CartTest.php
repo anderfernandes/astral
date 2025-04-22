@@ -58,17 +58,71 @@ class CartTest extends BaseWebTestCase
         $this->assertEmpty($data);
     }
 
-    public function testUpdate(): void
+    public function testUpdateAddOne(): void
     {
         $client = static::createClient();
 
+        /**
+         * @var DecoderInterface $decoder
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
         $client->loginUser(self::$user);
 
-        $client->request('POST', '/cart', [
+        $meta = [
+            'eventId' => 1, 'ticketTypeId' => 1,
+        ];
+
+        $client->request('POST', '/cart', $meta);
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $this->assertArrayHasKey('meta', $data[0]);
+    }
+
+    public function testUpdateAddTwoDifferentEvents(): void
+    {
+        $client = static::createClient();
+
+        /**
+         * @var DecoderInterface $decoder
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        $client->loginUser(self::$user);
+
+        $metaA = [
+            'eventId' => 1, 'ticketTypeId' => 1,
+        ];
+
+        $client->request('POST', '/cart', $metaA);
+
+        $metaB = [
+            'eventId' => 2, 'ticketTypeId' => 2,
+        ];
+
+        $client->request('POST', '/cart', $metaB);
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $this->assertArrayHasKey('meta', $data[0]);
+    }
+
+    public function testUpdateRemoveOne(): void
+    {
+        $client = static::createClient();
+
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        $client->loginUser(self::$user);
+
+        $client->request('POST', '/cart?remove=one', [
             'eventId' => 1, 'ticketTypeId' => 1,
         ]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $this->assertArrayHasKey('meta', $data[0]);
     }
 
     public function testShowWithItems(): void

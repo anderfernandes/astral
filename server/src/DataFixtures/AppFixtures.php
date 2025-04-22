@@ -46,12 +46,29 @@ class AppFixtures extends Fixture
         );
         $manager->persist($ticketType);
 
+        $ticketType = new TicketType(
+            name: 'Another Test Ticket Type',
+            description: 'Another test ticket type',
+            price: random_int(500, 1000), creator: $user
+        );
+        $manager->persist($ticketType);
+
         $eventType = new EventType(name: 'Test Event Type', description: 'A test event type', creator: $user);
         $manager->persist($eventType);
 
         $event = new Event(
             starting: new \DateTime(),
-            ending: new \DateTime(),
+            ending: new \DateTime('+1 hour'),
+            type: $eventType,
+            creator: $user,
+            seats: random_int(9, 99),
+            shows: [$show]
+        );
+        $manager->persist($event);
+
+        $event = new Event(
+            starting: new \DateTime('+1 hour'),
+            ending: new \DateTime('+2 hours'),
             type: $eventType,
             creator: $user,
             seats: random_int(9, 99),
