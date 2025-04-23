@@ -20,30 +20,19 @@ class CartController extends AbstractController
         $cart = $request->getSession()->get('cart', []);
 
         if (count($cart) > 0) {
-            foreach ($cart as &$item) {
-                /** @var Event * */
-                $event = $entityManager->getRepository(Event::class)->find($item['meta']['eventId']);
+            $cart = new Cart($cart);
 
-                if (null == $event) {
-                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
+            $events = $entityManager->createQuery('
+                SELECT e FROM App\Entity\Event e
+                WHERE e.id IN (:ids)
+            ')->setParameter('ids', $cart->getEventIds())->getResult();
 
-                /** @var TicketType * */
-                $ticketType = $entityManager->getRepository(TicketType::class)->find($item['meta']['ticketTypeId']);
+            $ticketTypes = $entityManager->createQuery('
+                SELECT tt from App\Entity\TicketType tt
+                WHERE tt.id in (:ids)
+            ')->setParameter('ids', $cart->getTicketTypeIds())->getResult();
 
-                if (null == $ticketType) {
-                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
-
-                $item = [
-                    ...$item,
-                    'name' => $ticketType->getName(),
-                    'description' => '#'.$event->getId(),
-                    'price' => $ticketType->getPrice(),
-                    'cover' => '/uploads/'.$event->getShows()->first()->getCover(),
-                    'type' => 'ticket',
-                ];
-            }
+            $cart = $cart->getCartItemsWithData($events, $ticketTypes);
         }
 
         return $this->json(['data' => $cart]);
