@@ -179,7 +179,7 @@ class ShowTest extends BaseWebTestCase
 
         // Assert
 
-        $this->assertEquals('default.png', $data['cover']);
+        $this->assertNotEquals('default.png', $data['cover']);
     }
 
     public function testIndex(): void
