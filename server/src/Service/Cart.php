@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Service;
+
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class Cart
 {
@@ -13,11 +16,14 @@ class Cart
     /** @var int[] */
     private array $ticketTypeIds = [];
 
-    /**
-     * @param list<array{quantity: int, meta: array{eventId: int, ticketTypeId: int}}> $items
-     */
-    public function __construct(array $items)
+    public function __construct(private RequestStack $requestStack, private EntityManagerInterface $entityManager)
     {
+        if (!$requestStack->getSession()->has('cart')) {
+            $requestStack->getSession()->set('cart', []);
+        }
+
+        $items = $this->requestStack->getSession()->get('cart', []);
+
         foreach ($items as $item) {
             $this->items[] = new CartItem(
                 quantity: $item['quantity'],
@@ -129,6 +135,8 @@ class Cart
     public function clear(): void
     {
         $this->items = [];
+
+        $this->requestStack->getSession()->remove('cart');
     }
 
     /*
@@ -152,14 +160,24 @@ class Cart
     * @param TicketType[] $ticketTypes
     * @return list<array>
     */
-    public function getCartItemsWithData(array $events, array $ticketTypes): array
+    public function getCartItemsWithData(): array
     {
         $data = [];
+
+        $events = $this->entityManager->createQuery('
+                SELECT e FROM App\Entity\Event e
+                WHERE e.id IN (:ids)
+            ')->setParameter('ids', $this->getEventIds())->getResult();
+
+        $ticketTypes = $this->entityManager->createQuery('
+                SELECT tt from App\Entity\TicketType tt
+                WHERE tt.id in (:ids)
+            ')->setParameter('ids', $this->getTicketTypeIds())->getResult();
 
         foreach ($this->items as $item) {
             $meta = $item->getMeta();
 
-            /** @var Event|null $event */
+            /** @var \App\Entity\Event|null $event */
             $event = null;
 
             /* @var TicketType $ticketType */
@@ -204,6 +222,8 @@ class Cart
                 'type' => 'ticket',
             ];
         }
+
+        $this->requestStack->getSession()->set('cart', $this->getItems());
 
         return $data;
     }
