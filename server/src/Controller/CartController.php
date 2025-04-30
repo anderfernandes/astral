@@ -330,9 +330,13 @@ class Cart
 
             $data[] = [
                 'quantity' => $item->getQuantity(),
-                'meta' => ['eventId' => $meta->getEventId(), 'ticketTypeId' => $meta->getTicketTypeId()],
+                'meta' => [
+                    'eventId' => $meta->getEventId(),
+                    'ticketTypeId' => $meta->getTicketTypeId(),
+                    'eventStarting' => $event->getStarting(),
+                ],
                 'name' => $ticketType->getName(),
-                'description' => '#'.$event->getId(),
+                'description' => $event->getShows()->first()->getName(),
                 'price' => $ticketType->getPrice(),
                 'cover' => '/default.png' === $show->getCover() ? $show->getCover() : '/uploads/'.$show->getCover(),
                 'type' => 'ticket',

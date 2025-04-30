@@ -122,8 +122,6 @@ class ShowController extends AbstractController
                 $this->getParameter('uploads_dir').$filename);
 
             $show->setCover($filename);
-        } else {
-            $show->setCover('default.png');
         }
 
         $show
