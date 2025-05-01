@@ -81,15 +81,15 @@ class Cart
         // If item exists, add quantity to quantity
         if ($index >= 0) {
             $this->items[$index]->setQuantity($this->items[$index]->getQuantity() + $quantity);
+        } else {
+            // If item does not exists, add with quantity
+            $this->items[] = new CartItem($meta);
 
-            return;
+            $this->eventIds[] = $meta['eventId'];
+            $this->ticketTypeIds[] = $meta['ticketTypeId'];
         }
 
-        // If item does not exists, add with quantity
-        $this->items[] = new CartItem($meta);
-
-        $this->eventIds[] = $meta['eventId'];
-        $this->ticketTypeIds[] = $meta['ticketTypeId'];
+        $this->requestStack->getSession()->set('cart', $this->getItems());
     }
 
     /**
@@ -116,6 +116,8 @@ class Cart
         if (0 === $item->getQuantity()) {
             array_splice($this->items, $index, 1);
         }
+
+        $this->requestStack->getSession()->set('cart', $this->getItems());
     }
 
     /**
@@ -130,6 +132,8 @@ class Cart
         } // item doesn't exists
 
         array_splice($this->items, $index, 1);
+
+        $this->requestStack->getSession()->set('cart', $this->getItems());
     }
 
     public function clear(): void
@@ -139,27 +143,25 @@ class Cart
         $this->requestStack->getSession()->remove('cart');
     }
 
-    /*
-    * @return int[]
-    */
+    /**
+     * @return int[]
+     */
     public function getEventIds(): array
     {
         return array_unique($this->eventIds);
     }
 
-    /*
-    * @return int[]
-    */
+    /**
+     * @return int[]
+     */
     public function getTicketTypeIds(): array
     {
         return array_unique($this->ticketTypeIds);
     }
 
-    /*
-    * @param Event[] $events
-    * @param TicketType[] $ticketTypes
-    * @return list<array>
-    */
+    /**
+     * @return list<array{quantity: int, name: string, description: string, price: int, cover: string, type: string, meta: array{eventId: int, ticketTypeId: int, eventStarting: \DateTime|null}}>
+     */
     public function getCartItemsWithData(): array
     {
         $data = [];
@@ -180,7 +182,7 @@ class Cart
             /** @var \App\Entity\Event|null $event */
             $event = null;
 
-            /* @var TicketType $ticketType */
+            /** @var \App\Entity\TicketType|null $ticketType * */
             $ticketType = null;
 
             foreach ($events as $e) {
@@ -223,7 +225,7 @@ class Cart
             ];
         }
 
-        $this->requestStack->getSession()->set('cart', $this->getItems());
+        // $this->requestStack->getSession()->set('cart', $this->getItems());
 
         return $data;
     }
