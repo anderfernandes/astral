@@ -51,9 +51,7 @@ class CartTest extends BaseWebTestCase
 
         $client->request('GET', '/cart');
 
-        $data = $decoder->decode($client->getResponse()->getContent(), 'json')[
-            'data'
-        ];
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
 
         $this->assertEmpty($data);
     }
@@ -75,7 +73,7 @@ class CartTest extends BaseWebTestCase
 
         $client->request('POST', '/cart', $meta);
 
-        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
 
         $this->assertArrayHasKey('meta', $data[0]);
     }
@@ -103,7 +101,7 @@ class CartTest extends BaseWebTestCase
 
         $client->request('POST', '/cart', $metaB);
 
-        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
 
         $this->assertArrayHasKey('meta', $data[0]);
     }
@@ -120,7 +118,7 @@ class CartTest extends BaseWebTestCase
             'eventId' => 1, 'ticketTypeId' => 1,
         ]);
 
-        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json');
 
         $this->assertArrayHasKey('meta', $data[0]);
     }

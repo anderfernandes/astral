@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\PaymentMethodRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -9,8 +10,10 @@ use Symfony\Component\Routing\Attribute\Route;
 class SettingController extends AbstractController
 {
     #[Route('/settings/organization', name: 'settings_organization_show')]
-    public function organization(): Response
+    public function organization(PaymentMethodRepository $paymentMethods): Response
     {
+        $hasMethods = count($paymentMethods->findBy(['type' => 'online'])) > 0;
+
         return $this->json([
             'name' => $_ENV['NAME'],
             'logo' => $_ENV['LOGO'],
@@ -24,6 +27,7 @@ class SettingController extends AbstractController
             'tax' => (float) $_ENV['TAX'],
             'seats' => (int) $_ENV['SEATS'],
             'timezone' => $_ENV['TIMEZONE'],
+            'canCheckout' => $hasMethods,
         ]);
     }
 }

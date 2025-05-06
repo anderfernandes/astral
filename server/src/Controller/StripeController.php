@@ -2,11 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Sale;
-use App\Enums\SaleSource;
-use App\Enums\SaleStatus;
 use App\Service\Cart;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class StripeController extends AbstractController
 {
     #[Route('/stripe/checkout', name: 'stripe_checkout', methods: ['POST'], format: 'json')]
-    public function checkout(Request $request, Cart $cart, EntityManagerInterface $entityManager): Response
+    public function checkout(Request $request, Cart $cart): Response
     {
         if (count($cart->getItems()) <= 0) {
             return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -24,8 +20,6 @@ class StripeController extends AbstractController
         $stripe = new \Stripe\StripeClient($_ENV['STRIPE_SECRET_KEY']);
 
         $line_items = [];
-
-        $sale = new Sale();
 
         foreach ($cart->getCartItemsWithData() as $item) {
             $date = $item['meta']['eventStarting']->setTimezone(new \DateTimeZone('America/Chicago'))->format('D M j o @ g:i A');
@@ -58,21 +52,23 @@ class StripeController extends AbstractController
             $checkout = $stripe->checkout->sessions->create([
                 'mode' => 'payment',
                 'success_url' => $_ENV['FRONTEND_URL'].'/account/orders/{CHECKOUT_SESSION_ID}',
+                // 'success_url' => $_ENV['FRONTEND_URL'].'/account/orders/{CHECKOUT_SESSION_ID}',
                 'cancel_url' => $_ENV['FRONTEND_URL'].'/cart?canceled',
                 'line_items' => $line_items,
             ]);
 
-            /** @var \App\Entity\User $customer * */
-            $customer = $this->getUser();
+            // /** @var \App\Entity\User $customer * */
+            // $customer = $this->getUser();
 
-            $sale->setCustomer($customer);
-            $sale->setSession($checkout->id);
-            $sale->setStatus(SaleStatus::OPEN);
-            $sale->setSource(SaleSource::INTERNAL);
+            // $sale = new Sale();
+            // $sale->setCustomer($customer);
+            // $sale->setSession($checkout->id);
+            // $sale->setStatus(SaleStatus::OPEN);
+            // $sale->setSource(SaleSource::INTERNAL);
 
-            $entityManager->persist($sale);
+            // $entityManager->persist($sale);
 
-            $entityManager->flush();
+            // $entityManager->flush();
 
             return $this->json(['data' => $checkout->url, 'id' => $checkout->id]);
         } catch (\Stripe\Exception\ApiErrorException $e) {

@@ -220,7 +220,7 @@ class Cart
                 'name' => $ticketType->getName(),
                 'description' => $event->getShows()->first()->getName(),
                 'price' => $ticketType->getPrice(),
-                'cover' => '/default.png' === $show->getCover() ? $show->getCover() : '/uploads/'.$show->getCover(),
+                'cover' => '/default.png' === $show->getCover() ? $show->getCover() : '/uploads'.$show->getCover(),
                 'type' => 'ticket',
             ];
         }
