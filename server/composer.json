@@ -12,8 +12,8 @@
         "ext-iconv": "*",
         "doctrine/dbal": "^3.9.4",
         "doctrine/doctrine-bundle": "^2.14.0",
-        "doctrine/doctrine-migrations-bundle": "^3.4.1",
-        "doctrine/orm": "^3.3.2",
+        "doctrine/doctrine-migrations-bundle": "^3.4.2",
+        "doctrine/orm": "^3.3.3",
         "phpdocumentor/reflection-docblock": "^5.6.2",
         "phpstan/phpdoc-parser": "^2.1.0",
         "stripe/stripe-php": "^16.6.0",
@@ -87,11 +87,11 @@
         "doctrine/doctrine-fixtures-bundle": "^4.1",
         "fakerphp/faker": "^1.24.1",
         "friendsofphp/php-cs-fixer": "^3.75.0",
-        "phpstan/phpstan": "^2.1.12",
-        "phpunit/phpunit": "^9.6.22",
+        "phpstan/phpstan": "^2.1.14",
+        "phpunit/phpunit": "^9.6.23",
         "symfony/browser-kit": "7.2.*",
         "symfony/css-selector": "7.2.*",
-        "symfony/maker-bundle": "^1.62.1",
-        "symfony/phpunit-bridge": "^7.2"
+        "symfony/maker-bundle": "^1.63.0",
+        "symfony/phpunit-bridge": "^7.2.6"
     }
 }
