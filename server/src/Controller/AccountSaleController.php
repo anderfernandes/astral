@@ -125,6 +125,8 @@ class AccountSaleController extends AbstractController
 
         $entityManager->flush();
 
+        $cart->clear();
+
         return $this->json(['data' => $sale->getId()]);
     }
 }
