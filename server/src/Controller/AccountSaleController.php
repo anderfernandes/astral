@@ -31,9 +31,17 @@ class AccountSaleController extends AbstractController
         return $this->json(['data' => $sales]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/account/sales/{id}', name: 'account-sales_show', methods: ['GET'], format: 'json')]
-    public function show(Sale $sale): Response
+    public function show(Sale $sale, EntityManagerInterface $entityManager): Response
     {
+        $events = $entityManager->createQuery('
+            SELECT event from App\Entity\Event event
+            WHERE event.id in (:ids)
+        ')->setParameter('ids', $sale->getEventIds())->getResult();
+
+        $sale->setEvents($events);
+
         return $this->json($sale);
     }
 
@@ -83,7 +91,7 @@ class AccountSaleController extends AbstractController
 
         $sale = new Sale();
         $sale->setCustomer($customer);
-        $sale->setSession($session);
+        $sale->setSession($session->id);
         $sale->setSource(SaleSource::INTERNAL);
 
         foreach ($cart->getCartItemsWithData() as $item) {

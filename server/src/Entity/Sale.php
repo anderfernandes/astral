@@ -46,6 +46,11 @@ class Sale
     private ?Organization $organization = null;
 
     /**
+     * @var Event[]
+     */
+    private array $events = [];
+
+    /**
      * @var Collection<int, Payment>
      */
     #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'sale')]
@@ -389,5 +394,37 @@ class Sale
         $this->session = $session;
 
         return $this;
+    }
+
+    /**
+     * @param Event[] $events
+     */
+    public function setEvents(array $events): static
+    {
+        $this->events = $events;
+
+        return $this;
+    }
+
+    /**
+     * @return Event[]
+     */
+    public function getEvents(): array
+    {
+        return $this->events;
+    }
+
+    /**
+     * @return array<int>
+     */
+    public function getEventIds(): array
+    {
+        $ids = [];
+
+        foreach ($this->items as $item) {
+            $ids[] = $item->getMeta()['eventId'];
+        }
+
+        return array_unique($ids);
     }
 }
