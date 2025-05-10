@@ -69,6 +69,8 @@ class SaleTest extends BaseWebTestCase
 
         $entityManager->persist($eventType);
 
+        $ticketTypes = [];
+
         $ticketTypes[] = new TicketType(
             name: 'Test Ticket Type',
             description: 'A test ticket type to test sales',
@@ -358,7 +360,7 @@ class SaleTest extends BaseWebTestCase
 
         $sale = new Sale();
 
-        $name = $event->getId() . ' ' . $event->getShows()->first()->getName() . ' ' . $event->getType()->getName();
+        $name = $event->getId().' '.$event->getShows()->first()->getName().' '.$event->getType()->getName();
 
         $ticketType = $event->getType()->getTicketTypes()->first();
 

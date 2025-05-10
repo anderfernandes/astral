@@ -103,7 +103,22 @@ class Sale
 
     public function getTax(): int
     {
-        return (int) round($this->getSubtotal() * $_ENV['TAX']);
+        $total = 0;
+
+        $taxRate = isset($_ENV['TAX']) ? (float) $_ENV['TAX'] / 100 : 0;
+
+        foreach ($this->items as $item) {
+            $total += round($item->getPrice() * $item->getQuantity() * $taxRate * 100);
+        }
+
+        if (SaleSource::INTERNAL === $this->source) {
+            if (isset($_ENV['CONVENIENCE_FEE'])) {
+                $convenienceFee = (int) $_ENV['CONVENIENCE_FEE'];
+                $total += round($convenienceFee * $taxRate * 100);
+            }
+        }
+
+        return $total;
     }
 
     public function getTotal(): int

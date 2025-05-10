@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Enums\SaleItemType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -221,7 +222,7 @@ class Cart
                 'description' => $event->getShows()->first()->getName(),
                 'price' => $ticketType->getPrice(),
                 'cover' => '/default.png' === $show->getCover() ? $show->getCover() : '/uploads'.$show->getCover(),
-                'type' => 'ticket',
+                'type' => SaleItemType::Ticket->value,
             ];
         }
 

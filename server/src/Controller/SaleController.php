@@ -7,6 +7,7 @@ use App\Entity\Sale;
 use App\Entity\SaleItem;
 use App\Entity\Ticket;
 use App\Enums\PaymentMethodType;
+use App\Enums\SaleItemType;
 use App\Enums\SaleSource;
 use App\Enums\SaleStatus;
 use App\Repository\PaymentMethodRepository;
@@ -58,19 +59,19 @@ class SaleController extends AbstractController
         $saleEventsIds = array_unique($saleEventsIds);
         $saleTicketTypesIds = array_unique($saleTicketTypesIds);
 
-        /** @var \App\Entity\Event[] $events **/
+        /** @var \App\Entity\Event[] $events * */
         $events = $entityManager->createQuery(
             'SELECT e FROM App\Entity\Event e
                 WHERE e.id IN (:saleEventsIds)
                 ORDER BY e.id ASC'
-            )->setParameter('saleEventsIds', $saleEventsIds)->getResult();
+        )->setParameter('saleEventsIds', $saleEventsIds)->getResult();
 
-        /** @var \App\Entity\TicketType[] $ticketTypes **/
+        /** @var \App\Entity\TicketType[] $ticketTypes * */
         $ticketTypes = $entityManager->createQuery(
             'SELECT tt FROM App\Entity\TicketType tt
                 WHERE tt.id IN (:saleTicketTypesIds)
                 ORDER BY tt.id ASC'
-            )->setParameter('saleTicketTypesIds', $saleTicketTypesIds)->getResult();
+        )->setParameter('saleTicketTypesIds', $saleTicketTypesIds)->getResult();
 
         if ($payload->has('customerId')) {
             $customer = $users->find($payload->getInt('customerId'));
@@ -81,42 +82,42 @@ class SaleController extends AbstractController
         }
 
         foreach ($payload->all('items') as $item) {
-
-            if ($item['type'] === 'ticket') {
-
+            if (SaleItemType::Ticket->value === $item['type']) {
                 if (0 === $item['quantity']) {
                     return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 $meta = $item['meta'];
 
-                /** @var ?\App\Entity\Event $event **/
+                /** @var ?\App\Entity\Event $event * */
                 $event = null;
 
                 foreach ($events as $e) {
-                    if ($e->getId() === (int)$meta['eventId']) {
+                    if ($e->getId() === (int) $meta['eventId']) {
                         $event = $e;
                         break;
                     }
                 }
 
-                if ($event === null)
+                if (null === $event) {
                     return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
 
-                /** @var ?\App\Entity\TicketType $ticketType **/
+                /** @var ?\App\Entity\TicketType $ticketType * */
                 $ticketType = null;
 
                 foreach ($ticketTypes as $tt) {
-                    if ($tt->getId() === (int)$meta['ticketTypeId']) {
+                    if ($tt->getId() === (int) $meta['ticketTypeId']) {
                         $ticketType = $tt;
                         break;
                     }
                 }
 
-                if ($ticketType === null)
+                if (null === $ticketType) {
                     return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
 
-                for ($i = 0; $i < $item['quantity']; $i++) {
+                for ($i = 0; $i < $item['quantity']; ++$i) {
                     $ticket = new Ticket(type: $ticketType, event: $event);
 
                     $sale->addTicket($ticket);
@@ -131,8 +132,8 @@ class SaleController extends AbstractController
                     quantity: $item['quantity'],
                     cover: $item['cover'],
                     meta: [
-                        'eventId' => (int)$meta['eventId'],
-                        'ticketTypeId' => (int)$meta['eventId']
+                        'eventId' => (int) $meta['eventId'],
+                        'ticketTypeId' => (int) $meta['eventId'],
                     ],
                 );
 
@@ -144,12 +145,14 @@ class SaleController extends AbstractController
             $saleSeats = 0;
 
             foreach ($sale->getItems() as $item) {
-                if ($item->getMeta()['eventId'] === $event->getId())
+                if ($item->getMeta()['eventId'] === $event->getId()) {
                     $saleSeats += $item->getQuantity();
+                }
             }
 
-            if ($saleSeats > $event->getSeats()['available'])
+            if ($saleSeats > $event->getSeats()['available']) {
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
         }
 
         if (SaleSource::ADMIN !== $sale->getSource()) {

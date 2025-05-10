@@ -14,6 +14,14 @@ class SettingController extends AbstractController
     {
         $hasMethods = count($paymentMethods->findBy(['type' => 'online'])) > 0;
 
+        $stripe = new \Stripe\StripeClient($_ENV['STRIPE_SECRET_KEY']);
+
+        $taxRate = $stripe->taxRates->retrieve($_ENV['STRIPE_TAX_RATE_ID']);
+
+        $convenienceFee = isset($_ENV['CONVENIENCE_FEE']) ? (int) $_ENV['CONVENIENCE_FEE'] : 0;
+
+        $hasStripe = null != $stripe && null != $taxRate;
+
         return $this->json([
             'name' => $_ENV['NAME'],
             'logo' => $_ENV['LOGO'],
@@ -24,10 +32,11 @@ class SettingController extends AbstractController
             'zip' => $_ENV['ZIP'],
             'country' => $_ENV['COUNTRY'],
             'phone' => $_ENV['PHONE'],
-            'tax' => (float) $_ENV['TAX'],
+            'tax' => $_ENV['TAX'] ? $_ENV['TAX'] / 100 : 0,
             'seats' => (int) $_ENV['SEATS'],
             'timezone' => $_ENV['TIMEZONE'],
-            'canCheckout' => $hasMethods,
+            'canCheckout' => $hasMethods && $hasStripe,
+            'convenienceFee' => $convenienceFee,
         ]);
     }
 }

@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/github/license/anderfernandes/astral" />
 </p>
 
-We help small and medium non-profit planetariums, museums and science centers teach the wonders of science and the universe to the communities they serve.
+We non-profit planetariums, museums and science centers teach the wonders of science and the universe to the communities they serve.
 
 Astral is an open source app made to help non-profit educational organizations manage events, sales, visitors and memberships.
 
@@ -25,4 +25,6 @@ If you work in a non-profit planetarium, museum or science center and are strugg
 
 Follow [this](https://dashboard.stripe.com/test/tax-rates) guide.
 
-Tax by default should be set as exclusive if they are not calculated separetely, as explained [here](https://docs.stripe.com/tax/products-prices-tax-codes-tax-behavior#setting-a-default-tax-behavior-(recommended)).
+Tax by default should be set as exclusive as explained [here](https://docs.stripe.com/tax/products-prices-tax-codes-tax-behavior#setting-a-default-tax-behavior-(recommended)).
+
+Tax is calculated by line item.
