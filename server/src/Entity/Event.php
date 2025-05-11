@@ -137,7 +137,7 @@ class Event
         return [
             'total' => $this->seats,
             'taken' => $taken,
-            'available' => $this->seats - $taken
+            'available' => $this->seats - $taken,
         ];
     }
 

@@ -48,7 +48,7 @@ class SaleItem
         string $description,
         int $price,
         int $quantity,
-        string $cover,
+        ?string $cover = '/default.png',
         ?array $meta = [],
         ?SaleItemType $type = SaleItemType::Ticket,
     ) {

@@ -6,6 +6,7 @@ use App\Entity\Payment;
 use App\Entity\Sale;
 use App\Entity\SaleItem;
 use App\Enums\PaymentMethodType;
+use App\Enums\SaleItemType;
 use App\Enums\SaleSource;
 use App\Enums\SaleStatus;
 use App\Repository\PaymentMethodRepository;
@@ -83,12 +84,6 @@ class AccountSaleController extends AbstractController
         /** @var \App\Entity\User $customer * */
         $customer = $this->getUser();
 
-        $payment = new Payment(
-            tendered: $session->amount_total,
-            method: $method,
-            customer: $customer
-        );
-
         $sale = new Sale();
         $sale->setCustomer($customer);
         $sale->setSession($session->id);
@@ -112,16 +107,35 @@ class AccountSaleController extends AbstractController
             $entityManager->persist($item);
         }
 
+        if (SaleSource::INTERNAL === $sale->getSource()) {
+            $convenienceFee = (int) $_ENV['CONVENIENCE_FEE'];
+
+            if (isset($$convenienceFee)) {
+                $convenienceFeeItem = new SaleItem(
+                    name: 'Convenience Fee',
+                    description: 'Convenience Fee',
+                    price : (int) $_ENV['CONVENIENCE_FEE'],
+                    quantity: 1,
+                    type: SaleItemType::ConvenienceFee,
+                );
+
+                $sale->addItem($convenienceFeeItem);
+
+                $entityManager->persist($convenienceFeeItem);
+            }
+        }
+
+        $payment = new Payment(
+            tendered: $session->amount_total,
+            method: $method,
+            customer: $customer
+        );
+
         $sale->addPayment($payment);
 
-        // $entityManager->persist($sale);
-
-        // $entityManager->flush();
-
-        // $entityManager->persist($payment);
-
         if (0 !== $sale->getBalance()) {
-            return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            // return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->json(['sale' => $sale->getItems()], status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         // TODO: CREATE TICKETS

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enums\SaleItemType;
 use App\Enums\SaleSource;
 use App\Enums\SaleStatus;
 use App\Repository\SaleRepository;
@@ -95,6 +96,10 @@ class Sale
         $subtotal = 0;
 
         foreach ($this->items as $item) {
+            if (SaleItemType::ConvenienceFee === $item->getType()) {
+                continue;
+            }
+
             $subtotal += $item->getPrice() * $item->getQuantity();
         }
 
@@ -103,19 +108,16 @@ class Sale
 
     public function getTax(): int
     {
-        $total = 0;
-
-        $taxRate = isset($_ENV['TAX']) ? (float) $_ENV['TAX'] / 100 : 0;
-
-        foreach ($this->items as $item) {
-            $total += round($item->getPrice() * $item->getQuantity() * $taxRate * 100);
+        if (!$this->isTaxable) {
+            return 0;
         }
 
-        if (SaleSource::INTERNAL === $this->source) {
-            if (isset($_ENV['CONVENIENCE_FEE'])) {
-                $convenienceFee = (int) $_ENV['CONVENIENCE_FEE'];
-                $total += round($convenienceFee * $taxRate * 100);
-            }
+        $total = 0;
+
+        $taxRate = isset($_ENV['TAX']) ? ((float) $_ENV['TAX'] / 100) : 0;
+
+        foreach ($this->items as $item) {
+            $total += round($item->getPrice() * $item->getQuantity() * $taxRate);
         }
 
         return $total;
@@ -123,7 +125,16 @@ class Sale
 
     public function getTotal(): int
     {
-        return $this->getSubtotal() + $this->getTax();
+        $convenienceFee = 0;
+
+        foreach ($this->items as $item) {
+            if (SaleItemType::ConvenienceFee === $item->getType()) {
+                $convenienceFee = $item->getPrice();
+                break;
+            }
+        }
+
+        return $this->getSubtotal() + $this->getTax() + $convenienceFee;
     }
 
     public function getTendered(): int
@@ -159,9 +170,9 @@ class Sale
             $paid += $payment->getTendered();
         }
 
-        if ($paid >= $this->getTotal()) {
-            return $this->getTotal();
-        }
+        // if ($paid >= $this->getTotal()) {
+        //     return $this->getTotal();
+        // }
 
         return $paid;
     }
@@ -437,7 +448,9 @@ class Sale
         $ids = [];
 
         foreach ($this->items as $item) {
-            $ids[] = $item->getMeta()['eventId'];
+            if (SaleItemType::Ticket === $item->getType()) {
+                $ids[] = $item->getMeta()['eventId'];
+            }
         }
 
         return array_unique($ids);
