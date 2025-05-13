@@ -37,7 +37,7 @@ class AccountSaleController extends AbstractController
     public function show(Sale $sale, EntityManagerInterface $entityManager): Response
     {
         $events = $entityManager->createQuery('
-            SELECT event from App\Entity\Event event
+            SELECT event FROM App\Entity\Event event
             WHERE event.id in (:ids)
         ')->setParameter('ids', $sale->getEventIds())->getResult();
 
@@ -98,7 +98,7 @@ class AccountSaleController extends AbstractController
                 cover: $item['cover'],
                 meta: [
                     'eventId' => (int) $item['meta']['eventId'],
-                    'ticketTypeId' => (int) $item['meta']['eventId'],
+                    'ticketTypeId' => (int) $item['meta']['ticketTypeId'],
                 ],
             );
 

@@ -455,4 +455,20 @@ class Sale
 
         return array_unique($ids);
     }
+
+    /**
+     * @return int[]
+     */
+    public function getTicketTypeIds(): array
+    {
+        $ids = [];
+
+        foreach ($this->items as $item) {
+            if (SaleItemType::Ticket === $item->getType()) {
+                $ids[] = $item->getMeta()['ticketTypeId'];
+            }
+        }
+
+        return array_unique($ids);
+    }
 }

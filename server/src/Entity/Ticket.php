@@ -44,12 +44,11 @@ class Ticket
     private ?Event $event = null;
 
     public function __construct(
-        TicketType $type,
-        Event $event,
+        ?TicketType $type = null,
+        ?Event $event = null,
         ?User $customer = null,
         ?User $cashier = null,
-    )
-    {
+    ) {
         $this->type = $type;
         $this->event = $event;
         $this->customer = $customer;

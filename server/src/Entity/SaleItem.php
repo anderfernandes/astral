@@ -33,7 +33,7 @@ class SaleItem
     private string $cover = '/default.png';
 
     #[ORM\Column]
-    private array $meta = [];
+    private ?array $meta;
 
     #[ORM\Column(enumType: SaleItemType::class)]
     private ?SaleItemType $type = null;
@@ -49,7 +49,7 @@ class SaleItem
         int $price,
         int $quantity,
         ?string $cover = '/default.png',
-        ?array $meta = [],
+        ?array $meta = null,
         ?SaleItemType $type = SaleItemType::Ticket,
     ) {
         $this->name = $name;
