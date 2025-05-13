@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ORM\Table(name: 'events')]
@@ -58,6 +59,7 @@ class Event
      * @var Collection<int, Ticket>
      */
     #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'event')]
+    #[Ignore]
     private Collection $tickets;
 
     /**
@@ -86,6 +88,7 @@ class Event
         foreach ($shows as $show) {
             $this->addShow($show);
         }
+
         $this->tickets = new ArrayCollection();
     }
 
@@ -253,7 +256,7 @@ class Event
     /**
      * @return Collection<int, Ticket>
      */
-    private function getTickets(): Collection
+    public function getTickets(): Collection
     {
         return $this->tickets;
     }

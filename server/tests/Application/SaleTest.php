@@ -155,6 +155,8 @@ class SaleTest extends BaseWebTestCase
 
         $sale = new Sale();
 
+        $quantity = rand(2, 10);
+
         foreach (self::$event->getType()->getTicketTypes() as $ticketType) {
             $name = self::$event->getId().' '.self::$event->getShows()->first()->getName().' '.self::$event->getType()->getName();
 
@@ -162,7 +164,7 @@ class SaleTest extends BaseWebTestCase
                 name: $name,
                 description: $ticketType->getName(),
                 price: $ticketType->getPrice(),
-                quantity: rand(2, 10),
+                quantity: $quantity,
                 cover: self::$event->getShows()->first()->getCover(),
                 meta: ['eventId' => self::$event->getId(), 'ticketTypeId' => $ticketType->getId()]
             ));
@@ -177,6 +179,10 @@ class SaleTest extends BaseWebTestCase
 
         $id = $serializer->decode($client->getResponse()->getContent(), 'json')['data'];
 
+        $client->request('GET', "/sales/$id/tickets");
+
+        $ticketCount = count($serializer->decode($client->getResponse()->getContent(), 'json'));
+
         $client->request('GET', "/sales/$id");
 
         $data = $serializer->decode($client->getResponse()->getContent(), 'json');
@@ -184,8 +190,8 @@ class SaleTest extends BaseWebTestCase
         // Assert
 
         $this->assertEquals(
-            ['itemsCount' => $sale->getItems()->count(), 'balance' => ($sale->getTotal() - $payment['tendered'])],
-            ['itemsCount' => count($data['items']), 'balance' => $data['balance']]
+            ['items' => $sale->getItems()->count(), 'balance' => ($sale->getTotal() - $payment['tendered']), 'tickets' => $quantity * count($sale->getItems())],
+            ['items' => count($data['items']), 'balance' => $data['balance'], 'tickets' => $ticketCount]
         );
     }
 

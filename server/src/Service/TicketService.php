@@ -15,6 +15,9 @@ class TicketService
     {
     }
 
+    /**
+     * Creates ticket for a sale.
+     */
     public function create(Sale $sale): void
     {
         /** @var Event[] $events * */
@@ -55,10 +58,12 @@ class TicketService
 
                 $ticket->setCashier($sale->getCreator());
 
-                $this->entityManager->persist($ticket);
-
                 $sale->addTicket($ticket);
+
+                $this->entityManager->persist($ticket);
             }
         }
+
+        // $this->entityManager->flush();
     }
 }

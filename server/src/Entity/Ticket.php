@@ -4,13 +4,15 @@ namespace App\Entity;
 
 use App\Repository\TicketRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
+#[ORM\Table(name: 'tickets')]
 class Ticket
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\ManyToOne]
@@ -18,6 +20,7 @@ class Ticket
     private ?TicketType $type = null;
 
     #[ORM\ManyToOne]
+    #[Ignore]
     private ?User $cashier = null;
 
     #[ORM\ManyToOne]
@@ -39,7 +42,7 @@ class Ticket
     #[ORM\JoinColumn(nullable: false)]
     private ?Sale $sale = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'tickets')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Event $event = null;
 
@@ -110,12 +113,12 @@ class Ticket
         return $this;
     }
 
-    public function isChecked(): ?bool
+    public function getIsChecked(): ?bool
     {
         return $this->isChecked;
     }
 
-    public function setChecked(bool $isChecked): static
+    public function setIsChecked(bool $isChecked): static
     {
         $this->isChecked = $isChecked;
 

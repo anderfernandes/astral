@@ -12,7 +12,9 @@ use App\Enums\SaleSource;
 use App\Enums\SaleStatus;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\SaleRepository;
+use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
+use App\Service\TicketService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +42,7 @@ class SaleController extends AbstractController
         ValidatorInterface $validator,
         PaymentMethodRepository $paymentMethods,
         UserRepository $users,
+        TicketService $ticketService,
     ): Response {
         $payload = $request->getPayload();
 
@@ -117,13 +120,13 @@ class SaleController extends AbstractController
                     return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
-                for ($i = 0; $i < $item['quantity']; ++$i) {
-                    $ticket = new Ticket(type: $ticketType, event: $event);
+                // for ($i = 0; $i < $item['quantity']; ++$i) {
+                //     $ticket = new Ticket(type: $ticketType, event: $event);
 
-                    $sale->addTicket($ticket);
+                //     $sale->addTicket($ticket);
 
-                    $entityManager->persist($ticket);
-                }
+                //     $entityManager->persist($ticket);
+                // }
 
                 $item = new SaleItem(
                     name: $item['name'],
@@ -133,11 +136,13 @@ class SaleController extends AbstractController
                     cover: $item['cover'],
                     meta: [
                         'eventId' => (int) $meta['eventId'],
-                        'ticketTypeId' => (int) $meta['eventId'],
+                        'ticketTypeId' => (int) $meta['ticketTypeId'],
                     ],
                 );
 
                 $sale->addItem($item);
+
+                $entityManager->persist($item);
             }
         }
 
@@ -196,12 +201,13 @@ class SaleController extends AbstractController
             $entityManager->persist($payment);
         }
 
-        foreach ($sale->getItems() as $item) {
-            $entityManager->persist($item);
-        }
+        // foreach ($sale->getItems() as $item) {
+        //     $entityManager->persist($item);
+        // }
 
         if ($sale->getBalance() <= 0) {
             $sale->setStatus(SaleStatus::COMPLETED);
+            $ticketService->create($sale);
         }
 
         $entityManager->persist($sale);
@@ -215,6 +221,14 @@ class SaleController extends AbstractController
     public function show(Sale $sale): Response
     {
         return $this->json($sale);
+    }
+
+    #[Route('/sales/{id}/tickets', name: 'sale_tickets_show', methods: ['GET'], format: 'json')]
+    public function tickets(Sale $sale, TicketRepository $tickets): Response
+    {
+        $tickets = $tickets->findBy(['sale' => $sale]);
+
+        return $this->json($tickets);
     }
 
     #[Route('/sales/{id}', name: 'sales_update', methods: ['PUT'], format: 'json')]
