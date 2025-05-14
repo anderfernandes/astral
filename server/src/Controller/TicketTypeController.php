@@ -47,9 +47,8 @@ class TicketTypeController extends AbstractController
             isActive: $payload->getBoolean('isActive'),
             isCashier: $payload->getBoolean('isCashier'),
             isPublic: $payload->getBoolean('isPublic'),
+            isMembersOnly: $payload->getBoolean('isMembersOnly')
         );
-
-        $ticketType->setIsMembersOnly($payload->has('isMembersOnly'));
 
         $errors = $validator->validate($ticketType);
 
@@ -95,7 +94,7 @@ class TicketTypeController extends AbstractController
             ->setIsActive($payload->getBoolean('isActive'))
             ->setIsCashier($payload->getBoolean('isCashier'))
             ->setIsPublic($payload->getBoolean('isPublic'))
-            ->setIsMembersOnly($payload->has('isMembersOnly'))
+            ->setIsMembersOnly($payload->getBoolean('isMembersOnly'))
             ->setUpdatedAt(new \DateTimeImmutable());
 
         $errors = $validator->validate($ticketType);

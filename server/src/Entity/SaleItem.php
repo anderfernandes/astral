@@ -32,7 +32,7 @@ class SaleItem
     #[ORM\Column(length: 255)]
     private string $cover = '/default.png';
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?array $meta;
 
     #[ORM\Column(enumType: SaleItemType::class)]

@@ -12,6 +12,7 @@ use App\Enums\SaleStatus;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\SaleRepository;
 use App\Service\Cart;
+use App\Service\TicketService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +54,7 @@ class AccountSaleController extends AbstractController
         PaymentMethodRepository $paymentMethods,
         EntityManagerInterface $entityManager,
         Cart $cart,
+        TicketService $ticketService,
     ): Response {
         if (0 === count($cart->getItems())) {
             return $this->json(['error' => 'Cart is empty']);
@@ -86,6 +88,7 @@ class AccountSaleController extends AbstractController
 
         $sale = new Sale();
         $sale->setCustomer($customer);
+        // TODO: MAKE SURE SESSION DOES NOT EXIST
         $sale->setSession($session->id);
         $sale->setSource(SaleSource::INTERNAL);
 
@@ -110,11 +113,11 @@ class AccountSaleController extends AbstractController
         if (SaleSource::INTERNAL === $sale->getSource()) {
             $convenienceFee = (int) $_ENV['CONVENIENCE_FEE'];
 
-            if (isset($$convenienceFee)) {
+            if ($convenienceFee > 0) {
                 $convenienceFeeItem = new SaleItem(
                     name: 'Convenience Fee',
                     description: 'Convenience Fee',
-                    price : (int) $_ENV['CONVENIENCE_FEE'],
+                    price : $convenienceFee,
                     quantity: 1,
                     type: SaleItemType::ConvenienceFee,
                 );
@@ -138,11 +141,12 @@ class AccountSaleController extends AbstractController
             return $this->json(['sale' => $sale->getItems()], status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // TODO: CREATE TICKETS
-
         $sale->setStatus(SaleStatus::COMPLETED);
 
+        $ticketService->create($sale);
+
         $entityManager->persist($payment);
+
         $entityManager->persist($sale);
 
         $entityManager->flush();

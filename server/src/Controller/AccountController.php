@@ -63,7 +63,7 @@ class AccountController extends AbstractController
             ->htmlTemplate('emails/activate.html.twig')
             ->context([
                 'expires' => $expires,
-                'name' => 'John Doe',
+                'name' => $user->getFirstName().' '.$user->getLastName(),
                 'button' => [
                     'text' => 'Activate Account',
                     'href' => "{$_ENV['FRONTEND_URL']}/activate?token=$token&hash={$expires->getTimestamp()}",

@@ -67,6 +67,7 @@ class TicketType
         ?bool $isActive = false,
         ?bool $isCashier = false,
         ?bool $isPublic = false,
+        ?bool $isMembersOnly = false,
     ) {
         $this->name = $name;
         $this->description = $description;
@@ -74,6 +75,7 @@ class TicketType
         $this->isActive = $isActive;
         $this->isCashier = $isCashier;
         $this->isPublic = $isPublic;
+        $this->isMembersOnly = $isMembersOnly;
         $this->creator = $creator;
 
         $this->createdAt = new \DateTimeImmutable();
@@ -220,7 +222,7 @@ class TicketType
         return $this;
     }
 
-    public function isMembersOnly(): ?bool
+    public function getIsMembersOnly(): ?bool
     {
         return $this->isMembersOnly;
     }
