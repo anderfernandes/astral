@@ -96,7 +96,7 @@ class Sale
         $subtotal = 0;
 
         foreach ($this->items as $item) {
-            if (SaleItemType::ConvenienceFee === $item->getType()) {
+            if (SaleItemType::Surcharge === $item->getType()) {
                 continue;
             }
 
@@ -128,7 +128,7 @@ class Sale
         $convenienceFee = 0;
 
         foreach ($this->items as $item) {
-            if (SaleItemType::ConvenienceFee === $item->getType()) {
+            if (SaleItemType::Surcharge === $item->getType()) {
                 $convenienceFee = $item->getPrice();
                 break;
             }

@@ -7,5 +7,5 @@ enum SaleItemType: string
     case Ticket = 'Ticket';
     case Product = 'Product';
     case Membership = 'Membership';
-    case ConvenienceFee = 'Convenience Fee';
+    case Surcharge = 'Surcharge';
 }

@@ -119,7 +119,7 @@ class AccountSaleController extends AbstractController
                     description: 'Convenience Fee',
                     price : $convenienceFee,
                     quantity: 1,
-                    type: SaleItemType::ConvenienceFee,
+                    type: SaleItemType::Surcharge,
                 );
 
                 $sale->addItem($convenienceFeeItem);
