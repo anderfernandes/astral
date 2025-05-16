@@ -218,8 +218,15 @@ class SaleController extends AbstractController
     }
 
     #[Route('/sales/{id}', name: 'sales_show', methods: ['GET'], format: 'json')]
-    public function show(Sale $sale): Response
+    public function show(Sale $sale, EntityManagerInterface $entityManager): Response
     {
+        $events = $entityManager->createQuery('
+            SELECT event FROM App\Entity\Event event
+            WHERE event.id in (:ids)
+        ')->setParameter('ids', $sale->getEventIds())->getResult();
+
+        $sale->setEvents($events);
+
         return $this->json($sale);
     }
 
