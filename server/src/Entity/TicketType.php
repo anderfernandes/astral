@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -17,10 +18,12 @@ class TicketType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ticket:list', 'ticket:details'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank, Assert\Length(min: 2, max: 127)]
+    #[Groups(['ticket:list', 'ticket:details'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -29,15 +32,19 @@ class TicketType
 
     #[ORM\Column]
     #[Assert\NotBlank]
+    #[Groups(['ticket:list', 'ticket:details'])]
     private ?int $price = null;
 
     #[ORM\Column]
+    #[Groups(['ticket:list', 'ticket:details'])]
     private bool $isActive = false;
 
     #[ORM\Column]
+    #[Groups(['ticket:list', 'ticket:details'])]
     private ?bool $isCashier = false;
 
     #[ORM\Column]
+    #[Groups(['ticket:list', 'ticket:details'])]
     private ?bool $isPublic = false;
 
     #[ORM\ManyToOne]
@@ -57,6 +64,7 @@ class TicketType
     private Collection $eventTypes;
 
     #[ORM\Column]
+    #[Groups(['ticket:list', 'ticket:details'])]
     private bool $isMembersOnly = false;
 
     public function __construct(

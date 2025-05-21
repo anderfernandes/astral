@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ShowRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ShowRepository::class)]
@@ -14,17 +15,21 @@ class Show
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['show:list', 'show:details'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank, Assert\Length(min: 3, max: 255)]
+    #[Groups(['show:list', 'show:details'])]
     private ?string $name = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['show:list', 'show:details'])]
     private ?ShowType $type = null;
 
     #[ORM\Column]
     #[Assert\NotBlank, Assert\Positive]
+    #[Groups(['show:list'])]
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -32,6 +37,7 @@ class Show
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['show:list'])]
     private string $cover = '/default.png';
 
     #[ORM\Column]

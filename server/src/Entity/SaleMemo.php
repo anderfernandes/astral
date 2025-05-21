@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SaleMemoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: SaleMemoRepository::class)]
@@ -13,13 +14,16 @@ class SaleMemo
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['sale:details'])]
     private ?string $content = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['sale:details'])]
     private ?User $author = null;
 
     #[ORM\ManyToOne(inversedBy: 'memos')]
@@ -28,9 +32,11 @@ class SaleMemo
     private ?Sale $sale = null;
 
     #[ORM\Column]
+    #[Groups(['sale:details'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['sale:details'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct(string $content, User $author, Sale $sale)

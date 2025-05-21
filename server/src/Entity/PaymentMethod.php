@@ -6,6 +6,7 @@ use App\Enums\PaymentMethodType;
 use App\Repository\PaymentMethodRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: PaymentMethodRepository::class)]
 #[ORM\Table(name: 'payment_methods')]
@@ -14,9 +15,11 @@ class PaymentMethod
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['payment:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['payment:list'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
@@ -26,6 +29,7 @@ class PaymentMethod
     private ?string $icon = null;
 
     #[ORM\Column(enumType: PaymentMethodType::class)]
+    #[Groups(['payment:list'])]
     private ?PaymentMethodType $type = null;
 
     #[ORM\ManyToOne]

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
 #[ORM\Table(name: 'tickets')]
@@ -13,10 +14,12 @@ class Ticket
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['ticket:list'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ticket:list', 'ticket:details'])]
     private ?TicketType $type = null;
 
     #[ORM\ManyToOne]
@@ -24,6 +27,7 @@ class Ticket
     private ?User $cashier = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['ticket:list', 'ticket:details'])]
     private ?User $customer = null;
 
     #[ORM\ManyToOne]
@@ -44,6 +48,7 @@ class Ticket
 
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'tickets')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ticket:details'])]
     private ?Event $event = null;
 
     public function __construct(

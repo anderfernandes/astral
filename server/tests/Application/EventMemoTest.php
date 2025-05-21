@@ -34,6 +34,8 @@ class EventMemoTest extends BaseWebTestCase
 
         $entityManger->persist($showType);
 
+        $shows = [];
+
         $shows[] = new Show(
             name: 'Test Show',
             type: $showType,

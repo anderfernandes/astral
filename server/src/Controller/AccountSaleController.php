@@ -30,21 +30,27 @@ class AccountSaleController extends AbstractController
 
         $sales = $sales->findBy(['customer' => $customer]);
 
-        return $this->json(['data' => $sales]);
+        return $this->json(
+            data: ['data' => $sales],
+            context: ['groups' => ['sale:list', 'user:list', 'ticket:list', 'ticket-type:list']]
+        );
     }
 
     #[IsGranted('ROLE_USER')]
     #[Route('/account/sales/{id}', name: 'account-sales_show', methods: ['GET'], format: 'json')]
     public function show(Sale $sale, EntityManagerInterface $entityManager): Response
     {
-        $events = $entityManager->createQuery('
-            SELECT event FROM App\Entity\Event event
-            WHERE event.id in (:ids)
-        ')->setParameter('ids', $sale->getEventIds())->getResult();
+        // $events = $entityManager->createQuery('
+        //     SELECT event FROM App\Entity\Event event
+        //     WHERE event.id in (:ids)
+        // ')->setParameter('ids', $sale->getEventIds())->getResult();
 
-        $sale->setEvents($events);
+        // $sale->setEvents($events);
 
-        return $this->json($sale);
+        return $this->json(
+            data: $sale,
+            context: ['groups' => ['sale:details', 'user:list', 'payment:list', 'memo:list', 'ticket:list', 'event:list', 'show:list']]
+        );
     }
 
     #[Route('/account/sales/{session}', name: 'account-sales_update', methods: ['POST'], format: 'json')]
@@ -109,6 +115,15 @@ class AccountSaleController extends AbstractController
 
             $entityManager->persist($item);
         }
+
+        /** @var \App\Entity\Event[] $events */
+        $events = $entityManager->createQuery(
+            'SELECT e FROM App\Entity\Event e
+                        WHERE e.id IN (:saleEventsIds)
+                        ORDER BY e.id ASC'
+        )->setParameter('saleEventsIds', $sale->getEventIds())->getResult();
+
+        $sale->setEvents($events);
 
         if (SaleSource::INTERNAL === $sale->getSource()) {
             $convenienceFee = (int) $_ENV['CONVENIENCE_FEE'];

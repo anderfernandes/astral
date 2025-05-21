@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ORM\Table(name: 'events')]
@@ -16,27 +17,33 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['event:list', 'event:details'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['event:list', 'event:details'])]
     private ?\DateTime $starting = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['event:list'])]
     private ?\DateTime $ending = null;
 
     #[ORM\Column(nullable: false)]
+    #[Groups(['event:list'])]
     private bool $isPublic = false;
 
     #[ORM\Column]
     private ?int $seats = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['event:list', 'event:details'])]
     private ?EventType $type = null;
 
     /**
      * @var Collection<int, Show>
      */
     #[ORM\ManyToMany(targetEntity: Show::class)]
+    #[Groups(['event:list', 'event:details'])]
     private Collection $shows;
 
     #[ORM\ManyToOne]
@@ -53,14 +60,22 @@ class Event
      */
     #[ORM\OneToMany(targetEntity: EventMemo::class, mappedBy: 'event')]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
+    #[Groups(['event:list', 'event:details'])]
     private Collection $memos;
 
     /**
      * @var Collection<int, Ticket>
      */
     #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'event')]
-    #[Ignore]
+    #[Groups(['event:list'])]
     private Collection $tickets;
+
+    /**
+     * @var Collection<int, Sale>
+     */
+    #[ORM\ManyToMany(targetEntity: Sale::class, mappedBy: 'events')]
+    #[Ignore]
+    private Collection $sales;
 
     /**
      * @param Show[] $shows
@@ -90,6 +105,7 @@ class Event
         }
 
         $this->tickets = new ArrayCollection();
+        $this->sales = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -133,6 +149,10 @@ class Event
         return $this;
     }
 
+    /**
+     * @return array{total: int, taken: int, available: int}
+     */
+    #[Groups(['event:list'])]
     public function getSeats(): array
     {
         $taken = $this->getTickets()->count();
@@ -278,6 +298,33 @@ class Event
             if ($ticket->getEvent() === $this) {
                 $ticket->setEvent(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sale>
+     */
+    public function getSales(): Collection
+    {
+        return $this->sales;
+    }
+
+    public function addSale(Sale $sale): static
+    {
+        if (!$this->sales->contains($sale)) {
+            $this->sales->add($sale);
+            $sale->addEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSale(Sale $sale): static
+    {
+        if ($this->sales->removeElement($sale)) {
+            $sale->removeEvent($this);
         }
 
         return $this;

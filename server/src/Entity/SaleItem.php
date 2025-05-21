@@ -4,8 +4,8 @@ namespace App\Entity;
 
 use App\Enums\SaleItemType;
 use App\Repository\SaleItemRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: SaleItemRepository::class)]
@@ -15,6 +15,7 @@ class SaleItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?int $id = null;
 
     // #[ORM\Column(length: 255)]
@@ -24,18 +25,22 @@ class SaleItem
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?int $price = null;
 
     #[ORM\Column]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?int $quantity = null;
 
     // #[ORM\Column(length: 255)]
     private string $cover = '/default.png';
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?array $meta;
 
     #[ORM\Column(enumType: SaleItemType::class)]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?SaleItemType $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'items')]
@@ -44,10 +49,10 @@ class SaleItem
     private ?Sale $sale = null;
 
     public function __construct(
-        string $name,
-        string $description,
         int $price,
         int $quantity,
+        ?string $name = null,
+        ?string $description = null,
         ?string $cover = '/default.png',
         ?array $meta = null,
         ?SaleItemType $type = SaleItemType::Ticket,

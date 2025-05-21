@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ShowTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ShowTypeRepository::class)]
@@ -13,10 +14,12 @@ class ShowType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['show:list', 'show:details'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank, Assert\Length(min: 3, max: 255)]
+    #[Groups(['show:list', 'show:details'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]

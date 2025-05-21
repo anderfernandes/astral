@@ -4,9 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Context;
-use Symfony\Component\Serializer\Attribute\Ignore;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 #[ORM\Table(name: 'payments')]
@@ -15,34 +13,41 @@ class Payment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['payment:list'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['payment:list'])]
     private ?int $tendered = null;
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
     #[ORM\JoinColumn(nullable: false)]
-
     private ?Sale $sale = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['payment:list'])]
     private ?PaymentMethod $method = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn]
+    #[Groups(['payment:list'])]
     private ?User $customer = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['payment:list'])]
     private ?User $cashier = null;
 
     #[ORM\Column]
+    #[Groups(['payment:list'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['payment:list'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['payment:list'])]
     private ?string $reference = null;
 
     public function __construct(
@@ -83,7 +88,7 @@ class Payment
             'id' => $this->sale->getId(),
             'tendered' => $this->sale->getTendered(),
             'change' => $this->sale->getChange(),
-            'total' => $this->sale->getTotal()
+            'total' => $this->sale->getTotal(),
         ];
     }
 

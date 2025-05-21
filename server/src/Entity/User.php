@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -19,10 +19,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\Email]
+    #[Groups(['user:list'])]
     private ?string $email = null;
 
     /**
@@ -40,10 +42,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 2, max: 127)]
+    #[Groups(['user:list'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 2, max: 255), Assert\NotNull]
+    #[Groups(['user:list'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]

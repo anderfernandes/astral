@@ -181,7 +181,7 @@ class SaleTest extends BaseWebTestCase
 
         $client->request('GET', "/sales/$id/tickets");
 
-        $ticketCount = count($serializer->decode($client->getResponse()->getContent(), 'json'));
+        $ticketCount = count($serializer->decode($client->getResponse()->getContent(), 'json')['data']);
 
         $client->request('GET', "/sales/$id");
 

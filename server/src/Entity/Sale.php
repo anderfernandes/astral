@@ -9,6 +9,7 @@ use App\Repository\SaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SaleRepository::class)]
 #[ORM\Table(name: 'sales')]
@@ -17,66 +18,81 @@ class Sale
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?int $id = null;
 
     #[ORM\Column(enumType: SaleStatus::class)]
+    #[Groups(['sale:list', 'sale:details'])]
     private SaleStatus $status = SaleStatus::OPEN;
 
     #[ORM\Column(enumType: SaleSource::class)]
+    #[Groups(['sale:list', 'sale:details'])]
     private SaleSource $source = SaleSource::CASHIER;
 
     #[ORM\Column]
     private bool $isTaxable = true;
 
     #[ORM\ManyToOne]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?User $creator = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?User $customer = null;
 
     #[ORM\Column]
     private bool $isSellToOrganization = false;
 
     #[ORM\Column]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['sale:list', 'sale:details'])]
     private ?Organization $organization = null;
-
-    /**
-     * @var Event[]
-     */
-    private array $events = [];
 
     /**
      * @var Collection<int, Payment>
      */
     #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'sale')]
+    #[Groups(['sale:list', 'sale:details'])]
     private Collection $payments;
 
     /**
      * @var Collection<int, SaleItem>
      */
     #[ORM\OneToMany(targetEntity: SaleItem::class, mappedBy: 'sale')]
+    #[Groups(['sale:list', 'sale:details'])]
     private Collection $items;
 
     /**
      * @var Collection<int, SaleMemo>
      */
     #[ORM\OneToMany(targetEntity: SaleMemo::class, mappedBy: 'sale')]
+    #[Groups(['sale:list', 'sale:details'])]
     private Collection $memos;
 
     /**
      * @var Collection<int, Ticket>
      */
     #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'sale')]
+    #[Groups(['sale:list', 'sale:details'])]
     private Collection $tickets;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $session = null;
+
+    /**
+     * @var Collection<int, Event>
+     */
+    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'sales')]
+    #[ORM\JoinTable('sales_events')]
+    #[Groups(['sale:list', 'sale:details'])]
+    private Collection $events;
 
     public function __construct(
         ?User $creator = null,
@@ -89,8 +105,10 @@ class Sale
         $this->items = new ArrayCollection();
         $this->memos = new ArrayCollection();
         $this->tickets = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
+    #[Groups(['sale:details'])]
     public function getSubtotal(): int
     {
         $subtotal = 0;
@@ -106,6 +124,7 @@ class Sale
         return $subtotal;
     }
 
+    #[Groups(['sale:details'])]
     public function getTax(): int
     {
         if (!$this->isTaxable) {
@@ -123,6 +142,7 @@ class Sale
         return $total;
     }
 
+    #[Groups(['sale:list', 'sale:details'])]
     public function getTotal(): int
     {
         $convenienceFee = 0;
@@ -137,6 +157,7 @@ class Sale
         return $this->getSubtotal() + $this->getTax() + $convenienceFee;
     }
 
+    #[Groups(['sale:details'])]
     public function getTendered(): int
     {
         $tendered = 0;
@@ -148,6 +169,7 @@ class Sale
         return $tendered;
     }
 
+    #[Groups(['sale:list', 'sale:details'])]
     public function getBalance(): int
     {
         $balance = $this->getTendered() - $this->getTotal();
@@ -155,6 +177,7 @@ class Sale
         return ($balance >= 0) ? 0 : $balance;
     }
 
+    #[Groups(['sale:details'])]
     public function getChange(): int
     {
         $balance = $this->getTendered() - $this->getTotal();
@@ -162,6 +185,7 @@ class Sale
         return ($balance >= 0) ? $balance : 0;
     }
 
+    #[Groups(['sale:details'])]
     public function getPaid(): int
     {
         $paid = 0;
@@ -383,7 +407,7 @@ class Sale
     /**
      * @return Collection<int, Ticket>
      */
-    protected function getTickets(): Collection
+    public function getTickets(): Collection
     {
         return $this->tickets;
     }
@@ -423,24 +447,6 @@ class Sale
     }
 
     /**
-     * @param Event[] $events
-     */
-    public function setEvents(array $events): static
-    {
-        $this->events = $events;
-
-        return $this;
-    }
-
-    /**
-     * @return Event[]
-     */
-    public function getEvents(): array
-    {
-        return $this->events;
-    }
-
-    /**
      * @return array<int>
      */
     public function getEventIds(): array
@@ -470,5 +476,39 @@ class Sale
         }
 
         return array_unique($ids);
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Event[] $events
+     */
+    public function setEvents(array $events): static
+    {
+        $this->events = new ArrayCollection($events);
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): static
+    {
+        $this->events->removeElement($event);
+
+        return $this;
     }
 }

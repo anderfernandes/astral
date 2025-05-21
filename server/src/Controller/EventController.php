@@ -53,7 +53,10 @@ class EventController extends AbstractController
             return ['date' => $date, 'events' => array_values($events)];
         }, $dates);
 
-        return $this->json(['data' => $data]);
+        return $this->json(
+            data: ['data' => $data],
+            context: ['groups' => ['event:list', 'show:list', 'ticket:list']]
+        );
     }
 
     #[IsGranted('ROLE_USER')]
@@ -136,7 +139,10 @@ class EventController extends AbstractController
     #[Route('/events/{id}', name: 'events_show', methods: ['GET'], format: 'json')]
     public function show(Event $event): Response
     {
-        return $this->json($event);
+        return $this->json(
+            data: $event,
+            context: ['groups' => ['event:list', 'show:list', 'ticket:list']]
+        );
     }
 
     #[IsGranted('ROLE_USER')]

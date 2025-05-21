@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventTypeRepository::class)]
@@ -16,10 +17,12 @@ class EventType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['event:list', 'event:details'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank, Assert\Length(min: 2, max: 127)]
+    #[Groups(['event:list', 'event:details'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -53,6 +56,7 @@ class EventType
      * @var Collection<int, TicketType>
      */
     #[ORM\ManyToMany(targetEntity: TicketType::class, inversedBy: 'eventTypes')]
+    #[Groups('event:list')]
     private Collection $ticketTypes;
 
     public function __construct(

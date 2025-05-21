@@ -5,14 +5,12 @@ namespace App\Controller;
 use App\Entity\Payment;
 use App\Entity\Sale;
 use App\Entity\SaleItem;
-use App\Entity\Ticket;
 use App\Enums\PaymentMethodType;
 use App\Enums\SaleItemType;
 use App\Enums\SaleSource;
 use App\Enums\SaleStatus;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\SaleRepository;
-use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
 use App\Service\TicketService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,7 +30,10 @@ class SaleController extends AbstractController
             ->getQuery()
             ->execute();
 
-        return $this->json(['data' => $sales]);
+        return $this->json(
+            data: ['data' => $sales],
+            context: ['groups' => ['sale:list', 'user:list', 'ticket:list', 'ticket-type:list']]
+        );
     }
 
     #[Route('/sales', name: 'sales_create', methods: ['POST'], format: 'json')]
@@ -62,18 +63,18 @@ class SaleController extends AbstractController
         $saleEventsIds = array_unique($saleEventsIds);
         $saleTicketTypesIds = array_unique($saleTicketTypesIds);
 
-        /** @var \App\Entity\Event[] $events * */
+        /** @var \App\Entity\Event[] $events */
         $events = $entityManager->createQuery(
             'SELECT e FROM App\Entity\Event e
-                WHERE e.id IN (:saleEventsIds)
-                ORDER BY e.id ASC'
+                        WHERE e.id IN (:saleEventsIds)
+                        ORDER BY e.id ASC'
         )->setParameter('saleEventsIds', $saleEventsIds)->getResult();
 
         /** @var \App\Entity\TicketType[] $ticketTypes * */
         $ticketTypes = $entityManager->createQuery(
             'SELECT tt FROM App\Entity\TicketType tt
-                WHERE tt.id IN (:saleTicketTypesIds)
-                ORDER BY tt.id ASC'
+                        WHERE tt.id IN (:saleTicketTypesIds)
+                        ORDER BY tt.id ASC'
         )->setParameter('saleTicketTypesIds', $saleTicketTypesIds)->getResult();
 
         if ($payload->has('customerId')) {
@@ -85,18 +86,12 @@ class SaleController extends AbstractController
         }
 
         foreach ($payload->all('items') as $item) {
-            if (SaleItemType::Ticket->value === $item['type']) {
-                if (0 === $item['quantity']) {
-                    return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
-
-                $meta = $item['meta'];
-
-                /** @var ?\App\Entity\Event $event * */
+            if ($item['type'] === SaleItemType::Ticket->value) {
+                /** @var ?\App\Entity\Event $event */
                 $event = null;
 
                 foreach ($events as $e) {
-                    if ($e->getId() === (int) $meta['eventId']) {
+                    if ($e->getId() === (int) $item['meta']['eventId']) {
                         $event = $e;
                         break;
                     }
@@ -110,7 +105,7 @@ class SaleController extends AbstractController
                 $ticketType = null;
 
                 foreach ($ticketTypes as $tt) {
-                    if ($tt->getId() === (int) $meta['ticketTypeId']) {
+                    if ($tt->getId() === (int) $item['meta']['ticketTypeId']) {
                         $ticketType = $tt;
                         break;
                     }
@@ -120,23 +115,12 @@ class SaleController extends AbstractController
                     return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
-                // for ($i = 0; $i < $item['quantity']; ++$i) {
-                //     $ticket = new Ticket(type: $ticketType, event: $event);
-
-                //     $sale->addTicket($ticket);
-
-                //     $entityManager->persist($ticket);
-                // }
-
                 $item = new SaleItem(
-                    name: $item['name'],
-                    description: $item['description'],
                     price: $ticketType->getPrice(),
                     quantity: $item['quantity'],
-                    cover: $item['cover'],
                     meta: [
-                        'eventId' => (int) $meta['eventId'],
-                        'ticketTypeId' => (int) $meta['ticketTypeId'],
+                        'eventId' => (int) $item['meta']['eventId'],
+                        'ticketTypeId' => (int) $item['meta']['ticketTypeId'],
                     ],
                 );
 
@@ -158,9 +142,11 @@ class SaleController extends AbstractController
             if ($saleSeats > $event->getSeats()['available']) {
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
             }
+
+            $sale->addEvent($event);
         }
 
-        if (SaleSource::ADMIN !== $sale->getSource()) {
+        if (SaleSource::CASHIER === $sale->getSource()) {
             if (!$payload->has('payment')) {
                 return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
             }
@@ -198,16 +184,14 @@ class SaleController extends AbstractController
 
             $sale->addPayment($payment);
 
-            $entityManager->persist($payment);
-        }
+            if (0 !== $sale->getBalance()) {
+                return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
-        // foreach ($sale->getItems() as $item) {
-        //     $entityManager->persist($item);
-        // }
-
-        if ($sale->getBalance() <= 0) {
             $sale->setStatus(SaleStatus::COMPLETED);
             $ticketService->create($sale);
+
+            $entityManager->persist($payment);
         }
 
         $entityManager->persist($sale);
@@ -220,22 +204,19 @@ class SaleController extends AbstractController
     #[Route('/sales/{id}', name: 'sales_show', methods: ['GET'], format: 'json')]
     public function show(Sale $sale, EntityManagerInterface $entityManager): Response
     {
-        $events = $entityManager->createQuery('
-            SELECT event FROM App\Entity\Event event
-            WHERE event.id in (:ids)
-        ')->setParameter('ids', $sale->getEventIds())->getResult();
-
-        $sale->setEvents($events);
-
-        return $this->json($sale);
+        return $this->json(
+            data: $sale,
+            context: ['groups' => ['sale:details', 'user:list', 'payment:list', 'memo:list', 'ticket:list', 'event:list', 'show:list']]
+        );
     }
 
     #[Route('/sales/{id}/tickets', name: 'sale_tickets_show', methods: ['GET'], format: 'json')]
-    public function tickets(Sale $sale, TicketRepository $tickets): Response
+    public function tickets(Sale $sale): Response
     {
-        $tickets = $tickets->findBy(['sale' => $sale]);
-
-        return $this->json($tickets);
+        return $this->json(
+            data: ['data' => $sale->getTickets()],
+            context: ['groups' => ['ticket:details', 'event:details', 'user:list', 'show:details']]
+        );
     }
 
     #[Route('/sales/{id}', name: 'sales_update', methods: ['PUT'], format: 'json')]

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EventMemoRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,20 +16,25 @@ class EventMemo
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['event:list', 'event:details'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
+    #[Groups(['event:list', 'event:details'])]
     private ?string $content = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['event:list', 'event:details'])]
     private ?User $author = null;
 
     #[ORM\Column]
+    #[Groups(['event:list', 'event:details'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['event:list', 'event:details'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'memos')]
