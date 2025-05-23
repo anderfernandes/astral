@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Event;
 use App\Entity\EventType;
+use App\Entity\MembershipType;
 use App\Entity\Show;
 use App\Entity\ShowType;
 use App\Entity\TicketType;
@@ -75,6 +76,20 @@ class AppFixtures extends Fixture
             shows: [$show]
         );
         $manager->persist($event);
+
+        $manager->persist(new MembershipType(
+            name: 'Test Membership Type (no secondaries)',
+            duration: 365,
+            price: 2500,
+        ));
+
+        $manager->persist(new MembershipType(
+            name: 'Another Test Membership Type (with secondaries)',
+            duration: 365,
+            price: 12000,
+            max_secondaries: 2,
+            secondary_price: 20
+        ));
 
         $manager->flush();
     }

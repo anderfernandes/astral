@@ -84,6 +84,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $activatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'secondaries')]
+    private ?Membership $membership = null;
+
     public function __construct(
         string $email,
         string $firstName,
@@ -342,6 +345,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActivatedAt(): static
     {
         $this->activatedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getMembership(): ?Membership
+    {
+        return $this->membership;
+    }
+
+    public function setMembership(?Membership $membership): static
+    {
+        $this->membership = $membership;
 
         return $this;
     }
