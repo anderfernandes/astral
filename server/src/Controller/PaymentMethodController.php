@@ -17,7 +17,7 @@ class PaymentMethodController extends AbstractController
     #[Route('/payment-methods', name: 'payment-methods_index', methods: ['GET'], format: 'json')]
     public function index(PaymentMethodRepository $methods): Response
     {
-        return $this->json(['data' => $methods->findAll()]);
+        return $this->json(data: ['data' => $methods->findAll()], context: ['groups' => ['payment:list', 'user:list']]);
     }
 
     #[Route('/payment-methods', name: 'payment-methods_create', methods: ['POST'], format: 'json')]

@@ -21,9 +21,9 @@ class UserController extends AbstractController
     #[Route('/users', name: 'user_index', methods: ['GET'], format: 'json')]
     public function index(UserRepository $users): JsonResponse
     {
-        return $this->json([
-            'data' => $users->findAll(),
-        ]);
+        $data = $users->createQueryBuilder('u')->orderBy('u.firstName', 'ASC')->getQuery()->execute();
+
+        return $this->json(data: ['data' => $data], context: ['groups' => ['user:list']]);
     }
 
     #[Route('/users', name: 'user_create', methods: ['POST'], format: 'json')]
@@ -76,10 +76,10 @@ class UserController extends AbstractController
         ValidatorInterface $validator,
     ): Response {
         $payload = $request->getPayload();
-        
+
         $user
             ->setEmail($payload->get('email'))
-            //->setPassword($passwordHasher->hashPassword($user, $payload->get('email')))
+            // ->setPassword($passwordHasher->hashPassword($user, $payload->get('email')))
             ->setFirstName($payload->get('firstName'))
             ->setLastName($payload->get('lastName'))
             ->setAddress($payload->get('address'))
@@ -91,7 +91,7 @@ class UserController extends AbstractController
             ->setIsActive($payload->has('isActive'))
             ->setRoles([$payload->get('role')])
             ->setUpdatedAt(new \DateTimeImmutable());
-            //->setDateOfBirth(new \DateTimeImmutable($payload->get('dateOfBirth')))
+        // ->setDateOfBirth(new \DateTimeImmutable($payload->get('dateOfBirth')))
 
         $errors = $validator->validate($user);
 

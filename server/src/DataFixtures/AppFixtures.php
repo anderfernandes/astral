@@ -87,7 +87,7 @@ class AppFixtures extends Fixture
             name: 'Another Test Membership Type (with secondaries)',
             duration: 365,
             price: 12000,
-            max_secondaries: 2,
+            paid_secondaries: 2,
             secondary_price: 20
         ));
 

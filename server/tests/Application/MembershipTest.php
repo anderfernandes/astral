@@ -43,7 +43,7 @@ class MembershipTest extends BaseWebTestCase
             name: 'Another Test Membership Type (with secondaries)',
             duration: 365,
             price: [6000, 7500, 10000, 12500][random_int(0, 3)],
-            max_secondaries: random_int(1, 4),
+            paid_secondaries: random_int(1, 4),
             secondary_price: [2500, 3500][random_int(0, 1)],
         );
 

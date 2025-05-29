@@ -23,19 +23,36 @@ class MembershipType
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['membership:details'])]
     private ?string $description = null;
 
     #[ORM\Column]
-    private ?int $duration = null;
+    #[Groups(['membership:details'])]
+    private int $duration = 0;
 
     #[ORM\Column]
-    private ?int $price = null;
+    #[Groups(['membership:details'])]
+    private int $price = 0;
 
     #[ORM\Column]
-    private ?int $max_secondaries = null;
+    #[Groups(['membership:details'])]
+    private int $paid_secondaries = 0;
 
     #[ORM\Column]
+    #[Groups(['membership:details'])]
     private ?int $secondary_price = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['membership:details'])]
+    private ?int $free_secondaries = null;
+
+    #[ORM\Column]
+    #[Groups(['membership:details'])]
+    private bool $is_active = false;
+
+    #[ORM\Column]
+    #[Groups(['membership:details'])]
+    private bool $is_public = false;
 
     #[ORM\ManyToOne]
     private ?User $creator = null;
@@ -56,17 +73,23 @@ class MembershipType
         string $name,
         int $duration,
         int $price,
+        bool $is_active = false,
+        bool $is_public = false,
         ?string $description = null,
-        ?int $max_secondaries = 0,
+        ?int $paid_secondaries = 0,
         ?int $secondary_price = 0,
+        ?int $free_secondaries = 0,
         ?User $creator = null,
     ) {
         $this->name = $name;
         $this->duration = $duration;
         $this->price = $price;
         $this->description = $description;
-        $this->max_secondaries = $max_secondaries;
+        $this->paid_secondaries = $paid_secondaries;
         $this->secondary_price = $secondary_price;
+        $this->free_secondaries = $free_secondaries;
+        $this->is_active = $is_active;
+        $this->is_public = $is_public;
         $this->createdAt = new \DateTimeImmutable();
         $this->creator = $creator;
         $this->memberships = new ArrayCollection();
@@ -125,14 +148,14 @@ class MembershipType
         return $this;
     }
 
-    public function getMaxSecondaries(): ?int
+    public function getPaidSecondaries(): ?int
     {
-        return $this->max_secondaries;
+        return $this->paid_secondaries;
     }
 
-    public function setMaxSecondaries(int $max_secondaries): static
+    public function setPaidSecondaries(int $paid_secondaries): static
     {
-        $this->max_secondaries = $max_secondaries;
+        $this->paid_secondaries = $paid_secondaries;
 
         return $this;
     }
@@ -211,6 +234,42 @@ class MembershipType
                 $membership->setType(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFreeSecondaries(): ?int
+    {
+        return $this->free_secondaries;
+    }
+
+    public function setFreeSecondaries(?int $free_secondaries): static
+    {
+        $this->free_secondaries = $free_secondaries;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(bool $is_active): static
+    {
+        $this->is_active = $is_active;
+
+        return $this;
+    }
+
+    public function getIsPublic(): ?bool
+    {
+        return $this->is_public;
+    }
+
+    public function setIsPublic(bool $is_public): static
+    {
+        $this->is_public = $is_public;
 
         return $this;
     }

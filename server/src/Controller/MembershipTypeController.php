@@ -15,7 +15,7 @@ class MembershipTypeController extends AbstractController
     #[Route('/membership-types', name: 'membership-types_index', methods: ['GET'], format: 'json')]
     public function index(MembershipTypeRepository $membershipTypes): Response
     {
-        return $this->json(['data' => $membershipTypes->findAll()]);
+        return $this->json(data: ['data' => $membershipTypes->findAll()], context: ['groups' => ['membership:details']]);
     }
 
     #[Route('/membership-types', name: 'membership-types_create', methods: ['POST'], format: 'json')]
@@ -32,9 +32,11 @@ class MembershipTypeController extends AbstractController
             name: $payload->getString('name'),
             description: $payload->getString('description'),
             duration: $payload->getInt('duration'),
-            price: $payload->getInt('price'),
-            max_secondaries: $payload->getInt('max_secondaries'),
-            secondary_price: $payload->getInt('secondary_price'),
+            price: $payload->getInt('price') * 100,
+            paid_secondaries: $payload->getInt('paid_secondaries'),
+            secondary_price: $payload->getInt('secondary_price') * 100,
+            free_secondaries: $payload->getInt('free_secondaries'),
+            is_public: $payload->has('is_public') && $payload->getBoolean('is_public'),
             creator: $user
         );
 
@@ -42,13 +44,13 @@ class MembershipTypeController extends AbstractController
 
         $entityManager->flush();
 
-        return $this->json(['data' => $membershipType->getId()], Response::HTTP_CREATED);
+        return $this->json(data: ['data' => $membershipType->getId()], status: Response::HTTP_CREATED);
     }
 
     #[Route('/membership-types/{id}', name: 'membership-types_show', methods: ['GET'], format: 'json')]
     public function show(MembershipType $membershipType): Response
     {
-        return $this->json($membershipType);
+        return $this->json(data: $membershipType, context: ['groups' => ['membership:details']]);
     }
 
     #[Route('/membership-types/{id}', name: 'membership-types_update', methods: ['PUT'], format: 'json')]
@@ -63,9 +65,12 @@ class MembershipTypeController extends AbstractController
             ->setName($payload->getString('name'))
             ->setDescription($payload->getString('description'))
             ->setDuration($payload->getInt('duration'))
-            ->setPrice($payload->getInt('price'))
-            ->setMaxSecondaries($payload->getInt('max_secondaries'))
-            ->setSecondaryPrice($payload->getInt('secondary_price'));
+            ->setPrice($payload->getInt('price') * 100)
+            ->setPaidSecondaries($payload->getInt('paid_secondaries'))
+            ->setSecondaryPrice($payload->getInt('secondary_price') * 100)
+            ->setFreeSecondaries($payload->getInt('free_secondaries'))
+            ->setIsActive($payload->has('is_active') && $payload->getBoolean('is_active'))
+            ->setIsPublic($payload->has('is_public') && $payload->getBoolean('is_public'));
 
         $entityManager->persist($membershipType);
 

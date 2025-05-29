@@ -44,8 +44,8 @@ class MembershipController extends AbstractController
             SELECT user FROM App\Entity\User user
             WHERE user.id IN (:ids)
         ')
-        ->setParameter('ids', $payload->all('users'))
-        ->getResult();
+            ->setParameter('ids', $payload->all('users'))
+            ->getResult();
 
         if (count($users) <= 0) {
             return $this->json(data: ['error' => 'No users'], status: Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -58,8 +58,8 @@ class MembershipController extends AbstractController
             return $this->json(data: ['error' => 'Membership Type not found'], status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if (count($users) > $membershipType->getMaxSecondaries() + 1) {
-            return $this->json(data: ['error' => 'Invalid number of secondaries', 'a' => $membershipType->getMaxSecondaries(), 'b' => count($users)], status: Response::HTTP_UNPROCESSABLE_ENTITY);
+        if (count($users) > $membershipType->getPaidSecondaries() + 1) {
+            return $this->json(data: ['error' => 'Invalid number of secondaries', 'a' => $membershipType->getPaidSecondaries(), 'b' => count($users)], status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $sale = new Sale(
