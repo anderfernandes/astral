@@ -13,13 +13,11 @@
   <img src="https://img.shields.io/github/license/anderfernandes/astral" />
 </p>
 
-We non-profit planetariums, museums and science centers teach the wonders of science and the universe to the communities they serve.
+We help non-profit planetariums, museums and science centers teach the wonders of science and the universe to the communities they serve.
 
-Astral is an open source app made to help non-profit educational organizations manage events, sales, visitors and memberships.
+Astral is an open source point of sale system made to help non-profit educational organizations manage events, tickets, sales, visitors and memberships.
 
-Astral runs straight from modern browsers in smartphones, tablets, PC, MacOS or Linux.
-
-If you work in a non-profit planetarium, museum or science center and are struggling to find the right app to help you run things, Astral is what you are looking for.
+If you work in a non-profit planetarium, museum or science center and are struggling to find the right software to help you run things, Astral is what you are looking for.
 
 ## Setup tax rates in Stripe
 
