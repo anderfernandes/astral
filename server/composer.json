@@ -1,97 +1,97 @@
 {
-  "name": "anderfernandes/astral",
-  "version": "2.0.0",
-  "type": "project",
-  "description": "We help small and medium non-profit planetariums, museums and science centers teach the wonders of science and the universe to the communities they serve.",
-  "license": "MIT",
-  "minimum-stability": "stable",
-  "prefer-stable": true,
-  "require": {
-    "php": ">=8.2",
-    "ext-ctype": "*",
-    "ext-iconv": "*",
-    "doctrine/dbal": "^3.9.4",
-    "doctrine/doctrine-bundle": "^2.14.0",
-    "doctrine/doctrine-migrations-bundle": "^3.4.2",
-    "doctrine/orm": "^3.3.3",
-    "phpdocumentor/reflection-docblock": "^5.6.2",
-    "phpstan/phpdoc-parser": "^2.1.0",
-    "stripe/stripe-php": "^16.6.0",
-    "symfony/asset": "7.3.*",
-    "symfony/console": "7.3.*",
-    "symfony/dotenv": "7.3.*",
-    "symfony/finder": "7.3.*",
-    "symfony/flex": "^2.7.1",
-    "symfony/framework-bundle": "7.3.*",
-    "symfony/mailer": "7.3.*",
-    "symfony/property-access": "7.3.*",
-    "symfony/property-info": "7.3.*",
-    "symfony/runtime": "7.3.*",
-    "symfony/security-bundle": "7.3.*",
-    "symfony/serializer": "7.3.*",
-    "symfony/twig-bundle": "7.3.*",
-    "symfony/validator": "7.3.*",
-    "symfony/yaml": "7.3.*"
-  },
-  "config": {
-    "allow-plugins": {
-      "php-http/discovery": true,
-      "symfony/flex": true,
-      "symfony/runtime": true
+    "name": "anderfernandes/astral",
+    "version": "2.0.0",
+    "type": "project",
+    "description": "We help small and medium non-profit planetariums, museums and science centers teach the wonders of science and the universe to the communities they serve.",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "doctrine/dbal": "^3.9.4",
+        "doctrine/doctrine-bundle": "^2.14.0",
+        "doctrine/doctrine-migrations-bundle": "^3.4.2",
+        "doctrine/orm": "^3.3.3",
+        "phpdocumentor/reflection-docblock": "^5.6.2",
+        "phpstan/phpdoc-parser": "^2.1.0",
+        "stripe/stripe-php": "^16.6.0",
+        "symfony/asset": "7.3.*",
+        "symfony/console": "7.3.*",
+        "symfony/dotenv": "7.3.*",
+        "symfony/finder": "7.3.*",
+        "symfony/flex": "^2.7.1",
+        "symfony/framework-bundle": "7.3.*",
+        "symfony/mailer": "7.3.*",
+        "symfony/property-access": "7.3.*",
+        "symfony/property-info": "7.3.*",
+        "symfony/runtime": "7.3.*",
+        "symfony/security-bundle": "7.3.*",
+        "symfony/serializer": "7.3.*",
+        "symfony/twig-bundle": "7.3.*",
+        "symfony/validator": "7.3.*",
+        "symfony/yaml": "7.3.*"
     },
-    "bump-after-update": true,
-    "sort-packages": true
-  },
-  "autoload": {
-    "psr-4": {
-      "App\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "App\\Tests\\": "tests/"
-    }
-  },
-  "replace": {
-    "symfony/polyfill-ctype": "*",
-    "symfony/polyfill-iconv": "*",
-    "symfony/polyfill-php72": "*",
-    "symfony/polyfill-php73": "*",
-    "symfony/polyfill-php74": "*",
-    "symfony/polyfill-php80": "*",
-    "symfony/polyfill-php81": "*",
-    "symfony/polyfill-php82": "*"
-  },
-  "scripts": {
-    "auto-scripts": {
-      "cache:clear": "symfony-cmd",
-      "assets:install %PUBLIC_DIR%": "symfony-cmd"
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "symfony/flex": true,
+            "symfony/runtime": true
+        },
+        "bump-after-update": true,
+        "sort-packages": true
     },
-    "post-install-cmd": [
-      "@auto-scripts"
-    ],
-    "post-update-cmd": [
-      "@auto-scripts"
-    ]
-  },
-  "conflict": {
-    "symfony/symfony": "*"
-  },
-  "extra": {
-    "symfony": {
-      "allow-contrib": false,
-      "require": "7.3.*"
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "replace": {
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*",
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php81": "*",
+        "symfony/polyfill-php82": "*"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "7.3.*"
+        }
+    },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.1",
+        "fakerphp/faker": "^1.24.1",
+        "friendsofphp/php-cs-fixer": "^3.75.0",
+        "phpstan/phpstan": "^2.1.17",
+        "phpunit/phpunit": "^12.1.6",
+        "symfony/browser-kit": "7.3.*",
+        "symfony/css-selector": "7.3.*",
+        "symfony/maker-bundle": "^1.63.0",
+        "symfony/phpunit-bridge": "7.3.*"
     }
-  },
-  "require-dev": {
-    "doctrine/doctrine-fixtures-bundle": "^4.1",
-    "fakerphp/faker": "^1.24.1",
-    "friendsofphp/php-cs-fixer": "^3.75.0",
-    "phpstan/phpstan": "^2.1.17",
-    "phpunit/phpunit": "^9.6.23",
-    "symfony/browser-kit": "7.3.*",
-    "symfony/css-selector": "7.3.*",
-    "symfony/maker-bundle": "^1.63.0",
-    "symfony/phpunit-bridge": "7.3.*"
-  }
 }
