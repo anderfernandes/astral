@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Membership;
+use App\Entity\MembershipItem;
 use App\Entity\MembershipType;
 use App\Entity\Payment;
 use App\Entity\PaymentMethod;
@@ -52,14 +53,18 @@ class MembershipController extends AbstractController
         }
 
         /** @var ?MembershipType $membershipType */
-        $membershipType = $entityManager->getRepository(MembershipType::class)->find($payload->getInt('type_id'));
+        $membershipType = $entityManager->getRepository(MembershipType::class)->find($payload->getInt('typeId'));
 
         if (null === $membershipType) {
             return $this->json(data: ['error' => 'Membership Type not found'], status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if (count($users) > $membershipType->getPaidSecondaries() + 1) {
-            return $this->json(data: ['error' => 'Invalid number of secondaries', 'a' => $membershipType->getPaidSecondaries(), 'b' => count($users)], status: Response::HTTP_UNPROCESSABLE_ENTITY);
+        if (count($users) > $membershipType->getMaxPaidSecondaries() + 1) {
+            return $this->json(data: [
+                'error' => 'Invalid number of secondaries',
+                'a' => $membershipType->getMaxPaidSecondaries(),
+                'b' => count($users),
+            ], status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $sale = new Sale(
@@ -120,17 +125,22 @@ class MembershipController extends AbstractController
 
         $duration = $membershipType->getDuration();
 
-        $membership = new Membership(
-            starting: new \DateTimeImmutable($payload->getString('starting')),
-            ending: (new \DateTimeImmutable($payload->getString('starting')))->modify("+ $duration days"),
-            type: $membershipType,
-            users: $users
-        );
+        $membership = new Membership(users: $users);
 
         foreach ($users as $user) {
             $user->setMembership($membership);
             $entityManager->persist($user);
         }
+
+        $item = new MembershipItem(
+            starting: new \DateTimeImmutable($payload->getString('starting')),
+            ending: (new \DateTimeImmutable($payload->getString('starting')))->modify("+ $duration days"),
+            type: $membershipType
+        );
+
+        $entityManager->persist($item);
+
+        $membership->addItem($item);
 
         $entityManager->persist($membership);
 

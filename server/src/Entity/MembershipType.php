@@ -36,23 +36,23 @@ class MembershipType
 
     #[ORM\Column]
     #[Groups(['membership:details'])]
-    private int $paid_secondaries = 0;
+    private int $maxPaidSecondaries = 0;
 
     #[ORM\Column]
     #[Groups(['membership:details'])]
-    private ?int $secondary_price = null;
+    private ?int $secondaryPrice = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['membership:details'])]
-    private ?int $free_secondaries = null;
+    private ?int $maxFreeSecondaries = null;
 
     #[ORM\Column]
     #[Groups(['membership:details'])]
-    private bool $is_active = false;
+    private bool $isActive = false;
 
     #[ORM\Column]
     #[Groups(['membership:details'])]
-    private bool $is_public = false;
+    private bool $isPublic = false;
 
     #[ORM\ManyToOne]
     private ?User $creator = null;
@@ -71,25 +71,25 @@ class MembershipType
 
     public function __construct(
         string $name,
-        int $duration,
-        int $price,
-        bool $is_active = false,
-        bool $is_public = false,
+        ?int $duration = 0,
+        ?int $price = 0,
+        ?bool $isActive = false,
+        ?bool $isPublic = false,
         ?string $description = null,
-        ?int $paid_secondaries = 0,
-        ?int $secondary_price = 0,
-        ?int $free_secondaries = 0,
+        ?int $maxPaidSecondaries = 0,
+        ?int $secondaryPrice = 0,
+        ?int $maxFreeSecondaries = 0,
         ?User $creator = null,
     ) {
         $this->name = $name;
         $this->duration = $duration;
         $this->price = $price;
         $this->description = $description;
-        $this->paid_secondaries = $paid_secondaries;
-        $this->secondary_price = $secondary_price;
-        $this->free_secondaries = $free_secondaries;
-        $this->is_active = $is_active;
-        $this->is_public = $is_public;
+        $this->maxPaidSecondaries = $maxPaidSecondaries;
+        $this->secondaryPrice = $secondaryPrice;
+        $this->maxFreeSecondaries = $maxFreeSecondaries;
+        $this->isActive = $isActive;
+        $this->isPublic = $isPublic;
         $this->createdAt = new \DateTimeImmutable();
         $this->creator = $creator;
         $this->memberships = new ArrayCollection();
@@ -148,26 +148,26 @@ class MembershipType
         return $this;
     }
 
-    public function getPaidSecondaries(): ?int
+    public function getMaxPaidSecondaries(): ?int
     {
-        return $this->paid_secondaries;
+        return $this->maxPaidSecondaries;
     }
 
-    public function setPaidSecondaries(int $paid_secondaries): static
+    public function setMaxPaidSecondaries(int $maxPaidSecondaries): static
     {
-        $this->paid_secondaries = $paid_secondaries;
+        $this->maxPaidSecondaries = $maxPaidSecondaries;
 
         return $this;
     }
 
     public function getSecondaryPrice(): ?int
     {
-        return $this->secondary_price;
+        return $this->secondaryPrice;
     }
 
-    public function setSecondaryPrice(int $secondary_price): static
+    public function setSecondaryPrice(int $secondaryPrice): static
     {
-        $this->secondary_price = $secondary_price;
+        $this->secondaryPrice = $secondaryPrice;
 
         return $this;
     }
@@ -216,60 +216,38 @@ class MembershipType
         return $this->memberships;
     }
 
-    public function addMembership(Membership $membership): static
+    public function getMaxFreeSecondaries(): ?int
     {
-        if (!$this->memberships->contains($membership)) {
-            $this->memberships->add($membership);
-            $membership->setType($this);
-        }
-
-        return $this;
+        return $this->maxFreeSecondaries;
     }
 
-    public function removeMembership(Membership $membership): static
+    public function setMaxFreeSecondaries(?int $maxFreeSecondaries): static
     {
-        if ($this->memberships->removeElement($membership)) {
-            // set the owning side to null (unless already changed)
-            if ($membership->getType() === $this) {
-                $membership->setType(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getFreeSecondaries(): ?int
-    {
-        return $this->free_secondaries;
-    }
-
-    public function setFreeSecondaries(?int $free_secondaries): static
-    {
-        $this->free_secondaries = $free_secondaries;
+        $this->maxFreeSecondaries = $maxFreeSecondaries;
 
         return $this;
     }
 
     public function getIsActive(): ?bool
     {
-        return $this->is_active;
+        return $this->isActive;
     }
 
-    public function setIsActive(bool $is_active): static
+    public function setIsActive(bool $isActive): static
     {
-        $this->is_active = $is_active;
+        $this->isActive = $isActive;
 
         return $this;
     }
 
     public function getIsPublic(): ?bool
     {
-        return $this->is_public;
+        return $this->isPublic;
     }
 
-    public function setIsPublic(bool $is_public): static
+    public function setIsPublic(bool $isPublic): static
     {
-        $this->is_public = $is_public;
+        $this->isPublic = $isPublic;
 
         return $this;
     }

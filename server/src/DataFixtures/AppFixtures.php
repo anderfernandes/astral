@@ -87,8 +87,8 @@ class AppFixtures extends Fixture
             name: 'Another Test Membership Type (with secondaries)',
             duration: 365,
             price: 12000,
-            paid_secondaries: 2,
-            secondary_price: 20
+            maxPaidSecondaries: 2,
+            secondaryPrice: 20
         ));
 
         $manager->flush();

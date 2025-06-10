@@ -33,10 +33,11 @@ class MembershipTypeController extends AbstractController
             description: $payload->getString('description'),
             duration: $payload->getInt('duration'),
             price: $payload->getInt('price') * 100,
-            paid_secondaries: $payload->getInt('paid_secondaries'),
-            secondary_price: $payload->getInt('secondary_price') * 100,
-            free_secondaries: $payload->getInt('free_secondaries'),
-            is_public: $payload->has('is_public') && $payload->getBoolean('is_public'),
+            maxPaidSecondaries: $payload->getInt('maxPaidSecondaries'),
+            secondaryPrice: $payload->getInt('secondaryPrice') * 100,
+            maxFreeSecondaries: $payload->getInt('maxFreeSecondaries'),
+            isActive: $payload->has('isActive') && $payload->getBoolean('isActive'),
+            isPublic: $payload->has('isPublic') && $payload->getBoolean('isPublic'),
             creator: $user
         );
 
@@ -66,9 +67,9 @@ class MembershipTypeController extends AbstractController
             ->setDescription($payload->getString('description'))
             ->setDuration($payload->getInt('duration'))
             ->setPrice($payload->getInt('price') * 100)
-            ->setPaidSecondaries($payload->getInt('paid_secondaries'))
+            ->setMaxPaidSecondaries($payload->getInt('maxPaidSecondaries'))
             ->setSecondaryPrice($payload->getInt('secondary_price') * 100)
-            ->setFreeSecondaries($payload->getInt('free_secondaries'))
+            ->setMaxFreeSecondaries($payload->getInt('free_secondaries'))
             ->setIsActive($payload->has('is_active') && $payload->getBoolean('is_active'))
             ->setIsPublic($payload->has('is_public') && $payload->getBoolean('is_public'));
 

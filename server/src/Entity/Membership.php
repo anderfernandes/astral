@@ -20,14 +20,6 @@ class Membership
 
     #[ORM\Column]
     #[Groups(['membership:details'])]
-    private ?\DateTimeImmutable $starting = null;
-
-    #[ORM\Column]
-    #[Groups(['membership:details'])]
-    private ?\DateTimeImmutable $ending = null;
-
-    #[ORM\Column]
-    #[Groups(['membership:details'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
@@ -35,7 +27,7 @@ class Membership
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column]
-    private ?int $primary_id = null;
+    private ?int $primaryId = null;
 
     /**
      * @var Collection<int, User>
@@ -44,51 +36,32 @@ class Membership
     #[Groups(['membership:details'])]
     private Collection $users;
 
-    #[ORM\ManyToOne(inversedBy: 'memberships')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['membership:details'])]
-    private ?MembershipType $type = null;
+    #[ORM\ManyToOne]
+    private ?User $creator = null;
+
+    /**
+     * @var Collection<int, MembershipItem>
+     */
+    #[ORM\OneToMany(targetEntity: MembershipItem::class, mappedBy: 'membership')]
+    private Collection $items;
 
     /*
     * @param \App\Entity\User[] $users
     */
-    public function __construct(\DateTimeImmutable $starting, \DateTimeImmutable $ending, MembershipType $type, array $users)
+    public function __construct(array $users)
     {
-        $this->starting = $starting;
-        $this->ending = $ending;
-        $this->type = $type;
-        $this->primary_id = $users[0]->getId();
+        // $this->starting = $starting;
+        // $this->ending = $ending;
+        // $this->type = $type;
+        $this->primaryId = $users[0]->getId();
         $this->users = new ArrayCollection($users);
         $this->createdAt = new \DateTimeImmutable();
+        $this->items = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getStarting(): ?\DateTimeImmutable
-    {
-        return $this->starting;
-    }
-
-    public function setStarting(\DateTimeImmutable $starting): static
-    {
-        $this->starting = $starting;
-
-        return $this;
-    }
-
-    public function getEnding(): ?\DateTimeImmutable
-    {
-        return $this->ending;
-    }
-
-    public function setEnding(\DateTimeImmutable $ending): static
-    {
-        $this->ending = $ending;
-
-        return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -117,12 +90,12 @@ class Membership
 
     public function getPrimaryId(): ?int
     {
-        return $this->primary_id;
+        return $this->primaryId;
     }
 
-    public function setPrimaryId(int $primary_id): static
+    public function setPrimaryId(int $primaryId): static
     {
-        $this->primary_id = $primary_id;
+        $this->primaryId = $primaryId;
 
         return $this;
     }
@@ -157,14 +130,44 @@ class Membership
         return $this;
     }
 
-    public function getType(): ?MembershipType
+    public function getCreator(): ?User
     {
-        return $this->type;
+        return $this->creator;
     }
 
-    public function setType(?MembershipType $type): static
+    public function setCreator(?User $creator): static
     {
-        $this->type = $type;
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MembershipItem>
+     */
+    public function getItem(): Collection
+    {
+        return $this->items;
+    }
+
+    public function addItem(MembershipItem $item): static
+    {
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
+            $item->setMembership($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItem(MembershipItem $item): static
+    {
+        if ($this->items->removeElement($item)) {
+            // set the owning side to null (unless already changed)
+            if ($item->getMembership() === $this) {
+                $item->setMembership(null);
+            }
+        }
 
         return $this;
     }

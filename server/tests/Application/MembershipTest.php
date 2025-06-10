@@ -43,8 +43,8 @@ class MembershipTest extends BaseWebTestCase
             name: 'Another Test Membership Type (with secondaries)',
             duration: 365,
             price: [6000, 7500, 10000, 12500][random_int(0, 3)],
-            paid_secondaries: random_int(1, 4),
-            secondary_price: [2500, 3500][random_int(0, 1)],
+            maxPaidSecondaries: random_int(1, 4),
+            secondaryPrice: [2500, 3500][random_int(0, 1)],
         );
 
         foreach (self::$membershipTypes as $membershipType) {
@@ -94,7 +94,7 @@ class MembershipTest extends BaseWebTestCase
 
         $json = [
             'users' => [1],
-            'type_id' => 1,
+            'typeId' => 1,
             'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->setTimezone(new \DateTimeZone('America/Chicago'))->format('c'),
             'payment' => [
                 'methodId' => self::$paymentMethod->getId(),
@@ -133,7 +133,7 @@ class MembershipTest extends BaseWebTestCase
 
         $json = [
             'users' => [1, 2],
-            'type_id' => $membershipType->getId(),
+            'typeId' => $membershipType->getId(),
             'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->setTimezone(new \DateTimeZone('America/Chicago'))->format('c'),
             'payment' => [
                 'methodId' => self::$paymentMethod->getId(),
@@ -177,7 +177,7 @@ class MembershipTest extends BaseWebTestCase
 
         $json = [
             'users' => [1, 2],
-            'type_id' => $membershipType->getId(),
+            'typeId' => $membershipType->getId(),
             'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->setTimezone(new \DateTimeZone('America/Chicago'))->format('c'),
             'payment' => [
                 'methodId' => self::$paymentMethod->getId(),

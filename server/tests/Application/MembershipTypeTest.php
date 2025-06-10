@@ -46,8 +46,8 @@ class MembershipTypeTest extends BaseWebTestCase
             'description' => 'A test membership type',
             'duration' => 365,
             'price' => 7500,
-            'max_secondaries' => 1,
-            'secondary_price' => 25,
+            'maxPaidSecondaries' => 1,
+            'secondaryPrice' => 25,
         ];
 
         $client->request('POST', '/membership-types', $membershipType);
