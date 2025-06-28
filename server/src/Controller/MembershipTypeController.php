@@ -68,10 +68,10 @@ class MembershipTypeController extends AbstractController
             ->setDuration($payload->getInt('duration'))
             ->setPrice($payload->getInt('price') * 100)
             ->setMaxPaidSecondaries($payload->getInt('maxPaidSecondaries'))
-            ->setSecondaryPrice($payload->getInt('secondary_price') * 100)
-            ->setMaxFreeSecondaries($payload->getInt('free_secondaries'))
-            ->setIsActive($payload->has('is_active') && $payload->getBoolean('is_active'))
-            ->setIsPublic($payload->has('is_public') && $payload->getBoolean('is_public'));
+            ->setSecondaryPrice($payload->getInt('secondaryPrice') * 100)
+            ->setMaxFreeSecondaries($payload->getInt('maxFreeSecondaries'))
+            ->setIsActive($payload->has('isActive') && $payload->getBoolean('isActive'))
+            ->setIsPublic($payload->has('isPublic') && $payload->getBoolean('isPublic'));
 
         $entityManager->persist($membershipType);
 

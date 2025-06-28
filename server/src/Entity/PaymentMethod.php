@@ -23,6 +23,7 @@ class PaymentMethod
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['payment:list'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
