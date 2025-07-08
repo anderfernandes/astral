@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enums\MemberPosition;
 use App\Repository\MembershipRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,42 +27,32 @@ class Membership
     #[Groups(['membership:details'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column]
-    private ?int $primaryId = null;
-
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'membership')]
-    #[Groups(['membership:details'])]
-    private Collection $users;
-
     #[ORM\ManyToOne]
     private ?User $creator = null;
 
     /**
-     * @var Collection<int, MembershipItem>
+     * @var Collection<int, Member>
      */
-    #[ORM\OneToMany(targetEntity: MembershipItem::class, mappedBy: 'membership')]
-    private Collection $items;
+    #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'membership')]
+    private Collection $members;
 
-    /*
-    * @param \App\Entity\User[] $users
-    */
-    public function __construct(array $users)
+    public function __construct(?User $creator = null)
     {
-        // $this->starting = $starting;
-        // $this->ending = $ending;
-        // $this->type = $type;
-        $this->primaryId = $users[0]->getId();
-        $this->users = new ArrayCollection($users);
+        $this->creator = $creator;
+        $this->members = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
-        $this->items = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -88,48 +79,6 @@ class Membership
         return $this;
     }
 
-    public function getPrimaryId(): ?int
-    {
-        return $this->primaryId;
-    }
-
-    public function setPrimaryId(int $primaryId): static
-    {
-        $this->primaryId = $primaryId;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addSecondary(User $user): static
-    {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->setMembership($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSecondary(User $users): static
-    {
-        if ($this->users->removeElement($users)) {
-            // set the owning side to null (unless already changed)
-            if ($users->getMembership() === $this) {
-                $users->setMembership(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getCreator(): ?User
     {
         return $this->creator;
@@ -143,32 +92,102 @@ class Membership
     }
 
     /**
-     * @return Collection<int, MembershipItem>
+     * @return Collection<int, Member>
      */
-    public function getItem(): Collection
+    public function getMembers(): Collection
     {
-        return $this->items;
+        return $this->members;
     }
 
-    public function addItem(MembershipItem $item): static
+    public function addMember(Member $member): static
     {
-        if (!$this->items->contains($item)) {
-            $this->items->add($item);
-            $item->setMembership($this);
+        if (!$this->members->contains($member)) {
+            $this->members->add($member);
+            $member->setMembership($this);
         }
 
         return $this;
     }
 
-    public function removeItem(MembershipItem $item): static
+    public function removeMember(Member $member): static
     {
-        if ($this->items->removeElement($item)) {
+        if ($this->members->removeElement($member)) {
             // set the owning side to null (unless already changed)
-            if ($item->getMembership() === $this) {
-                $item->setMembership(null);
+            if ($member->getMembership() === $this) {
+                $member->setMembership(null);
             }
         }
 
         return $this;
+    }
+
+    #[Groups(['membership:details'])]
+    public function getPrimary(): ?Member
+    {
+        foreach ($this->members as $member) {
+            if (MemberPosition::PRIMARY === $member->getPosition()) {
+                return $member;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return Member[]
+     */
+    public function getSecondaries(?MemberPosition $secondaryPosition = null): array
+    {
+        /** @var Member[] */
+        $secondaries = [];
+
+        foreach ($this->members as $member) {
+            if (null === $secondaryPosition) {
+                if (MemberPosition::PRIMARY !== $member->getPosition()) {
+                    $secondaries[] = $member;
+                }
+            } else {
+                if ($secondaryPosition === $member->getPosition()) {
+                    $secondaries[] = $member;
+                }
+            }
+        }
+
+        return $secondaries;
+    }
+
+    /** @return Member[] */
+    public function getFreeSecondaries(): array
+    {
+        /** @var Member[] */
+        $secondaries = [];
+
+        foreach ($this->members as $member) {
+            if (MemberPosition::FREE_SECONDARY === $member->getPosition()) {
+                $secondaries[] = $member;
+            }
+        }
+
+        return $secondaries;
+    }
+
+    /** @return User[] */
+    public function getPaidSecondaries(): array
+    {
+        /** @var User[] */
+        $secondaries = [];
+
+        foreach ($this->members as $member) {
+            if (MemberPosition::PAID_SECONDARY === $member->getPosition()) {
+                $secondaries[] = $member->getUser();
+            }
+        }
+
+        return $secondaries;
+    }
+
+    public function getType(): MembershipType
+    {
+        return $this->getPrimary()->getType();
     }
 }

@@ -84,8 +84,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $activatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'secondaries')]
-    private ?Membership $membership = null;
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Member $member = null;
 
     public function __construct(
         string $email,
@@ -350,14 +350,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMembership(): ?Membership
+    public function getMembership(): ?Member
     {
-        return $this->membership;
+        return $this->member;
     }
 
-    public function setMembership(?Membership $membership): static
+    public function getMember(): ?Member
     {
-        $this->membership = $membership;
+        return $this->member;
+    }
+
+    public function setMember(?Member $member): static
+    {
+        $this->member = $member;
 
         return $this;
     }

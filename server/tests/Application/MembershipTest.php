@@ -43,6 +43,7 @@ class MembershipTest extends BaseWebTestCase
             name: 'Another Test Membership Type (with secondaries)',
             duration: 365,
             price: [6000, 7500, 10000, 12500][random_int(0, 3)],
+            maxFreeSecondaries: 1,
             maxPaidSecondaries: random_int(1, 4),
             secondaryPrice: [2500, 3500][random_int(0, 1)],
         );
@@ -62,14 +63,14 @@ class MembershipTest extends BaseWebTestCase
 
         $faker = \Faker\Factory::create();
 
-        self::$secondary = new User(
-            email: $faker->email(),
-            firstName: $faker->firstName(),
-            lastName: $faker->lastName(),
-            password: password_hash($faker->password(), PASSWORD_DEFAULT)
-        );
-
-        $entityManager->persist(self::$secondary);
+        for ($i = 0; $i < 5; ++$i) {
+            $entityManager->persist(new User(
+                email: $faker->email(),
+                firstName: $faker->firstName(),
+                lastName: $faker->lastName(),
+                password: password_hash($faker->password(), PASSWORD_DEFAULT)
+            ));
+        }
 
         $entityManager->flush();
 
@@ -93,9 +94,9 @@ class MembershipTest extends BaseWebTestCase
         $tendered += round($tendered * ((float) $_ENV['TAX'] / 100));
 
         $json = [
-            'users' => [1],
+            'primary' => 1,
             'typeId' => 1,
-            'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->setTimezone(new \DateTimeZone('America/Chicago'))->format('c'),
+            'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->getTimestamp(),
             'payment' => [
                 'methodId' => self::$paymentMethod->getId(),
                 'tendered' => $tendered,
@@ -109,8 +110,8 @@ class MembershipTest extends BaseWebTestCase
         $client->request('GET', "/memberships/$id");
 
         $membership = $serializer->decode($client->getResponse()->getContent(), 'json');
-        // dd($membership);
-        $this->assertCount(count($json['users']), $membership['users']);
+
+        $this->assertEquals($json['primary'], $membership['primary']['user']['id']);
     }
 
     public function testCreateAndShowWithSecondary(): void
@@ -132,9 +133,12 @@ class MembershipTest extends BaseWebTestCase
         $tendered += round($tendered * ((float) $_ENV['TAX'] / 100));
 
         $json = [
-            'users' => [1, 2],
+            'primary' => 2,
+            'secondaries' => [
+                'free' => [3],
+            ],
             'typeId' => $membershipType->getId(),
-            'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->setTimezone(new \DateTimeZone('America/Chicago'))->format('c'),
+            'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->getTimestamp(),
             'payment' => [
                 'methodId' => self::$paymentMethod->getId(),
                 'tendered' => $tendered,
@@ -150,11 +154,11 @@ class MembershipTest extends BaseWebTestCase
         $client->request('GET', "/memberships/$id");
 
         $membership = $serializer->decode($client->getResponse()->getContent(), 'json');
-        // dd($membership);
+        // dd($client->getResponse());
 
         // Assert
 
-        $this->assertCount(count($json['users']), $membership['users']);
+        $this->assertEquals($json['primary'], $membership['primary']['user']['id']);
     }
 
     public function testCreateWithMembershipTypeThatTakesNoSecondaries(): void
@@ -176,7 +180,10 @@ class MembershipTest extends BaseWebTestCase
         $tendered += round($tendered * ((float) $_ENV['TAX'] / 100));
 
         $json = [
-            'users' => [1, 2],
+            'primary' => 4,
+            'secondaries' => [
+                'paid' => [5],
+            ],
             'typeId' => $membershipType->getId(),
             'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->setTimezone(new \DateTimeZone('America/Chicago'))->format('c'),
             'payment' => [

@@ -3,13 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Membership;
-use App\Entity\MembershipItem;
-use App\Entity\MembershipType;
 use App\Entity\Payment;
 use App\Entity\PaymentMethod;
 use App\Entity\Sale;
 use App\Entity\SaleItem;
 use App\Entity\User;
+use App\Enums\MemberPosition;
 use App\Enums\SaleItemType;
 use App\Repository\MembershipRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,42 +39,36 @@ class MembershipController extends AbstractController
         /** @var User $creator */
         $creator = $this->getUser();
 
-        /** @var User[] $users */
-        $users = $entityManager->createQuery('
-            SELECT user FROM App\Entity\User user
-            WHERE user.id IN (:ids)
-        ')
-            ->setParameter('ids', $payload->all('users'))
-            ->getResult();
+        /** @var MembershipRepository $memberships */
+        $memberships = $entityManager->getRepository(Membership::class);
 
-        if (count($users) <= 0) {
-            return $this->json(data: ['error' => 'No users'], status: Response::HTTP_UNPROCESSABLE_ENTITY);
+        try {
+            $membership = $memberships->create(
+                primary: $payload->getInt('primary'),
+                secondaries: $payload->all('secondaries'),
+                typeId: $payload->getInt('typeId'),
+                starting: $payload->getInt('starting'),
+                creator: $creator
+            );
+        } catch (\Exception $e) {
+            return $this->json(['message' => $e->getMessage()], status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        /** @var ?MembershipType $membershipType */
-        $membershipType = $entityManager->getRepository(MembershipType::class)->find($payload->getInt('typeId'));
-
-        if (null === $membershipType) {
-            return $this->json(data: ['error' => 'Membership Type not found'], status: Response::HTTP_UNPROCESSABLE_ENTITY);
+        if (null === $membership->getPrimary()) {
+            return new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if (count($users) > $membershipType->getMaxPaidSecondaries() + 1) {
-            return $this->json(data: [
-                'error' => 'Invalid number of secondaries',
-                'a' => $membershipType->getMaxPaidSecondaries(),
-                'b' => count($users),
-            ], status: Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        // CREATE SALE AND SALE ITEMS BASED ON PRIMARY AND SECONDARIES (FREE AND PAID)
 
         $sale = new Sale(
             creator: $creator,
-            customer: $users[0],
+            customer: $membership->getPrimary()->getUser(),
         );
 
         $item = new SaleItem(
-            price: $membershipType->getPrice(),
+            price: $membership->getType()->getPrice(),
             quantity: 1,
-            meta: ['membershipTypeId' => $membershipType->getId(), 'userId' => $users[0]->getId(), 'isPrimary' => true],
+            meta: ['membershipTypeId' => $membership->getType()->getId(), 'userId' => $membership->getPrimary()->getId(), 'position' => MemberPosition::PRIMARY],
             type: SaleItemType::Membership
         );
 
@@ -83,21 +76,25 @@ class MembershipController extends AbstractController
 
         $sale->addItem($item);
 
-        foreach ($users as $user) {
-            if ($users[0]->getId() === $user->getId()) {
+        foreach ($membership->getSecondaries() as $member) {
+            if (MemberPosition::PRIMARY === $member->getPosition()) {
                 continue;
             }
 
-            $secondaryItem = new SaleItem(
-                price: $membershipType->getSecondaryPrice(),
+            $freeSecondaryItem = new SaleItem(
+                price: MemberPosition::PAID_SECONDARY === $member->getPosition() ? $membership->getType()->getSecondaryPrice() : 0,
                 quantity: 1,
-                meta: ['membershipTypeId' => $membershipType->getId(), 'userId' => $user->getId(), 'isPrimary' => false],
+                meta: [
+                    'membershipTypeId' => $membership->getType()->getId(),
+                    'userId' => $member->getUser()->getId(),
+                    'position' => $member->getPosition(),
+                ],
                 type: SaleItemType::Membership
             );
 
-            $entityManager->persist($secondaryItem);
+            $entityManager->persist($freeSecondaryItem);
 
-            $sale->addItem($secondaryItem);
+            $sale->addItem($freeSecondaryItem);
         }
 
         /** @var ?PaymentMethod $paymentMethod */
@@ -122,25 +119,6 @@ class MembershipController extends AbstractController
         }
 
         $entityManager->persist($sale);
-
-        $duration = $membershipType->getDuration();
-
-        $membership = new Membership(users: $users);
-
-        foreach ($users as $user) {
-            $user->setMembership($membership);
-            $entityManager->persist($user);
-        }
-
-        $item = new MembershipItem(
-            starting: new \DateTimeImmutable($payload->getString('starting')),
-            ending: (new \DateTimeImmutable($payload->getString('starting')))->modify("+ $duration days"),
-            type: $membershipType
-        );
-
-        $entityManager->persist($item);
-
-        $membership->addItem($item);
 
         $entityManager->persist($membership);
 
