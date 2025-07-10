@@ -18,11 +18,13 @@ class MembershipRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param array{free: int[], paid: int[]} $secondaries
+     * @param int[] $free
+     * @param int[] $paid
      */
     public function create(
         int $primary,
-        array $secondaries,
+        array $free,
+        array $paid,
         int $typeId,
         int $starting,
         ?\App\Entity\User $creator,
@@ -31,13 +33,12 @@ class MembershipRepository extends ServiceEntityRepository
             throw new \Exception('Invalid primary.');
         }
 
-        // TODO: MAKE SURE FREE AND PAID DON'T HAVE THE SAME VALUES
-        $free = array_key_exists('free', $secondaries) && null != $secondaries['free']
-            ? array_unique($secondaries['free'])
-            : [];
-        $paid = array_key_exists('paid', $secondaries) && null != $secondaries['paid']
-            ? array_unique($secondaries['paid'])
-            : [];
+        if (!empty(array_intersect($free, $paid))) {
+            throw new \Exception('A user cannot be a free and paid secondary at the same time.');
+        }
+
+        $free = array_unique($free);
+        $paid = array_unique($paid);
 
         /** @var int[] */
         $ids = [$primary, ...$free, ...$paid];

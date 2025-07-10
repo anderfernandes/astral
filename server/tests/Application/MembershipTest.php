@@ -134,9 +134,7 @@ class MembershipTest extends BaseWebTestCase
 
         $json = [
             'primary' => 2,
-            'secondaries' => [
-                'free' => [3],
-            ],
+            'free' => [3],
             'typeId' => $membershipType->getId(),
             'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->getTimestamp(),
             'payment' => [
@@ -181,9 +179,7 @@ class MembershipTest extends BaseWebTestCase
 
         $json = [
             'primary' => 4,
-            'secondaries' => [
-                'paid' => [5],
-            ],
+            'paid' => [5],
             'typeId' => $membershipType->getId(),
             'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->setTimezone(new \DateTimeZone('America/Chicago'))->format('c'),
             'payment' => [

@@ -45,7 +45,8 @@ class MembershipController extends AbstractController
         try {
             $membership = $memberships->create(
                 primary: $payload->getInt('primary'),
-                secondaries: $payload->all('secondaries'),
+                free: $payload->all('free'),
+                paid: $payload->all('paid'),
                 typeId: $payload->getInt('typeId'),
                 starting: $payload->getInt('starting'),
                 creator: $creator
