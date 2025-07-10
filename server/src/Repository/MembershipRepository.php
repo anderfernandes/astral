@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Member;
 use App\Entity\Membership;
 use App\Enums\MemberPosition;
+use App\Model\MembershipDto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -76,9 +78,11 @@ class MembershipRepository extends ServiceEntityRepository
         $membership = new Membership($creator);
 
         foreach ($users as $user) {
-            $member = new \App\Entity\Member();
-            $member->setUser($user);
-            $member->setType($type);
+            $member = new Member(
+                type: $type,
+                user: $user,
+                starting: (new \DateTimeImmutable())->setTimestamp($starting)
+            );
 
             if ($user->getId() === $primary) {
                 $member->setPosition(MemberPosition::PRIMARY);
@@ -88,15 +92,71 @@ class MembershipRepository extends ServiceEntityRepository
                 $member->setPosition(MemberPosition::PAID_SECONDARY);
             }
 
-            $member->setStarting(new \DateTimeImmutable()->setTimestamp($starting));
-            $member->setEnding(new \DateTimeImmutable()->setTimestamp($starting)->modify("+$duration days"));
-
             $this->getEntityManager()->persist($member);
 
             $membership->addMember($member);
         }
 
         // $this->getEntityManager()->persist($membership);
+
+        return $membership;
+    }
+
+    public function update(Membership $membership, MembershipDto $membershipDto): Membership
+    {
+        $ids = [
+            $membership->getPrimary()->getUser()->getId(),
+            ...$membershipDto->free,
+            ...$membershipDto->paid,
+        ];
+
+        /** @var ?\App\Entity\MembershipType $type */
+        $type = $this->getEntityManager()->getRepository(\App\Entity\MembershipType::class)->find($membershipDto->typeId);
+
+        if (null === $type) {
+            throw new \Exception('Invalid membership type.');
+        }
+
+        if (count($membershipDto->free) > $type->getMaxFreeSecondaries()) {
+            throw new \Exception($type->getName().' membership cannot have more than '.$type->getMaxFreeSecondaries().' free secondaries, '.count($membershipDto->free).' selected.');
+        }
+
+        if (count($membershipDto->paid) > $type->getMaxPaidSecondaries()) {
+            throw new \Exception($type->getName().' membership cannot have more than '.$type->getMaxPaidSecondaries().' paid secondaries, '.count($membershipDto->paid).' selected.');
+        }
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->getEntityManager()->getRepository(\App\Entity\User::class);
+
+        $users = $userRepository->getUsersByIds(array_unique($ids));
+
+        if (count($users) <= 0) {
+            throw new \Exception('Membership requires all members to be users.');
+        }
+
+        $duration = $type->getDuration();
+
+        foreach ($users as $user) {
+            $member = new Member(
+                type: $type,
+                user: $user,
+                starting: (new \DateTimeImmutable())->setTimestamp($membershipDto->starting)
+            );
+
+            if ($user->getId() === $membership->getPrimary()->getUser()->getId()) {
+                $member->setPosition(MemberPosition::PRIMARY);
+            } elseif (in_array($user->getId(), $membershipDto->free)) {
+                $member->setPosition(MemberPosition::FREE_SECONDARY);
+            } elseif (in_array($user->getId(), $membershipDto->paid)) {
+                $member->setPosition(MemberPosition::PAID_SECONDARY);
+            }
+
+            $this->getEntityManager()->persist($member);
+
+            $membership->addMember($member);
+        }
+
+        $membership->setUpdatedAt(new \DateTimeImmutable());
 
         return $membership;
     }

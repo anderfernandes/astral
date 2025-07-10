@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -84,8 +86,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $activatedAt = null;
 
-    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?Member $member = null;
+    /**
+     * @var Collection<int, Member>
+     */
+    #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'user')]
+    private Collection $memberships;
 
     public function __construct(
         string $email,
@@ -116,6 +121,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->phone = $phone;
         $this->isActive = $isActive;
         $this->createdAt = new \DateTimeImmutable();
+        $this->memberships = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -350,19 +356,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMembership(): ?Member
+    /**
+     * @return Collection<int, Member>
+     */
+    public function getMemberships(): Collection
     {
-        return $this->member;
+        return $this->memberships;
     }
 
-    public function getMember(): ?Member
+    public function addMember(Member $member): static
     {
-        return $this->member;
+        if (!$this->memberships->contains($member)) {
+            $this->memberships->add($member);
+            $member->setUser($this);
+        }
+
+        return $this;
     }
 
-    public function setMember(?Member $member): static
+    public function removeMember(Member $member): static
     {
-        $this->member = $member;
+        if ($this->memberships->removeElement($member)) {
+            // set the owning side to null (unless already changed)
+            if ($member->getUser() === $this) {
+                $member->setUser(null);
+            }
+        }
 
         return $this;
     }

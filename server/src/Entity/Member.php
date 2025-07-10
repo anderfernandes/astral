@@ -25,11 +25,6 @@ class Member
     private ?Membership $membership = null;
 
     #[Groups('membership:details')]
-    #[ORM\OneToOne(inversedBy: 'member', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
-
-    #[Groups('membership:details')]
     #[ORM\Column]
     private ?\DateTimeImmutable $starting = null;
 
@@ -41,6 +36,22 @@ class Member
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?MembershipType $type = null;
+
+    #[Groups('membership:details')]
+    #[ORM\ManyToOne(inversedBy: 'members')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    public function __construct(MembershipType $type, User $user, \DateTimeImmutable $starting)
+    {
+        $this->type = $type;
+        $this->user = $user;
+        $this->starting = $starting;
+
+        $duration = $type->getDuration();
+
+        $this->ending = $starting->modify("+$duration days");
+    }
 
     public function getId(): ?int
     {
@@ -67,18 +78,6 @@ class Member
     public function setMembership(?Membership $membership): static
     {
         $this->membership = $membership;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }
@@ -115,6 +114,18 @@ class Member
     public function setType(?MembershipType $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

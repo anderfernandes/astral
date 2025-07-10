@@ -329,6 +329,8 @@ class Sale
             $payment->setSale($this);
         }
 
+        $this->setStatus(0 === $this->getBalance() ? SaleStatus::COMPLETED : SaleStatus::OPEN);
+
         return $this;
     }
 
@@ -340,6 +342,8 @@ class Sale
                 $payment->setSale(null);
             }
         }
+
+        $this->setStatus(0 === $this->getBalance() ? SaleStatus::COMPLETED : SaleStatus::OPEN);
 
         return $this;
     }

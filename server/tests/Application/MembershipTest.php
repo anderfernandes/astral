@@ -152,7 +152,6 @@ class MembershipTest extends BaseWebTestCase
         $client->request('GET', "/memberships/$id");
 
         $membership = $serializer->decode($client->getResponse()->getContent(), 'json');
-        // dd($client->getResponse());
 
         // Assert
 
@@ -181,7 +180,7 @@ class MembershipTest extends BaseWebTestCase
             'primary' => 4,
             'paid' => [5],
             'typeId' => $membershipType->getId(),
-            'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->setTimezone(new \DateTimeZone('America/Chicago'))->format('c'),
+            'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->getTimestamp(),
             'payment' => [
                 'methodId' => self::$paymentMethod->getId(),
                 'tendered' => $tendered,
@@ -193,5 +192,43 @@ class MembershipTest extends BaseWebTestCase
         $client->request('POST', '/memberships', $json);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function testUpdateMembership(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
+        /**
+         * @var DenormalizableInterface&NormalizerInterface&DecoderInterface $serializer
+         */
+        $serializer = static::getContainer()->get(NormalizerInterface::class);
+
+        $membershipType = self::$membershipTypes[1];
+
+        $tendered = $membershipType->getPrice() + $membershipType->getSecondaryPrice();
+        $tendered += round($tendered * ((float) $_ENV['TAX'] / 100));
+
+        $json = [
+            'free' => [2],
+            'typeId' => $membershipType->getId(),
+            'starting' => (new \DateTimeImmutable('+400 days'))->setTime(0, 0)->getTimestamp(),
+            'payments' => [
+                ['methodId' => self::$paymentMethod->getId(), 'tendered' => $tendered],
+            ],
+        ];
+
+        // Act
+
+        $client->request('PUT', '/memberships/2', $json);
+
+        $id = $serializer->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        // Assert
+
+        $this->assertEquals(2, $id);
     }
 }

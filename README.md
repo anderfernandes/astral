@@ -55,4 +55,8 @@ Enter the payment, double check to make sure everything is to the customer likin
 
 ### Reneweing
 
+Membership renewals are subject to the following rules:
+- Primaries cannot be changed
+- Only an expired primary can be added as a secondary on another membership
+
 Go to `Memberships`, find the membership, click on it to go to details and click `Renew`.
