@@ -25,7 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Assert\Email]
+    #[Assert\Email, Assert\NotNull, Assert\NotBlank]
     #[Groups(['user:list'])]
     private ?string $email = null;
 

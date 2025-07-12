@@ -16,6 +16,22 @@ class PaymentMethodRepository extends ServiceEntityRepository
         parent::__construct($registry, PaymentMethod::class);
     }
 
+    /**
+     * Find payment method objects by a list of IDs.
+     *
+     * @param array $ids an array of payment method IDs
+     *
+     * @return PaymentMethod[] returns an array of PaymentMethod objects
+     */
+    public function findByIds(array $ids): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return PaymentMethod[] Returns an array of PaymentMethod objects
     //     */

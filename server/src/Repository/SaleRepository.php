@@ -8,7 +8,6 @@ use App\Entity\SaleItem;
 use App\Entity\User;
 use App\Enums\MemberPosition;
 use App\Enums\SaleItemType;
-use App\Model\PaymentDto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,7 +22,7 @@ class SaleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param PaymentDto[] $payments
+     * @param array<array{methodId: int, tendered: int}> $payments
      */
     public function createFromMembership(
         Membership $membership,
@@ -71,15 +70,15 @@ class SaleRepository extends ServiceEntityRepository
             $sale->addItem($secondaryItem);
         }
 
-        foreach ($payments as $paymentDto) {
+        foreach ($payments as $payment) {
             /** @var ?\App\Entity\PaymentMethod $method */
-            $method = $this->getEntityManager()->getRepository(\App\Entity\PaymentMethod::class)->find($paymentDto->methodId);
+            $method = $this->getEntityManager()->getRepository(\App\Entity\PaymentMethod::class)->find($payment['methodId']);
 
             $payment = new \App\Entity\Payment(
                 cashier: $creator,
                 customer: $membership->getPrimary()->getUser(),
                 method: $method,
-                tendered: $paymentDto->tendered
+                tendered: intval(floatval($payment['tendered']) * 100)
             );
 
             $this->getEntityManager()->persist($payment);

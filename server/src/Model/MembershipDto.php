@@ -7,9 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MembershipDto
 {
     /**
-     * @param int[]        $free
-     * @param int[]        $paid
-     * @param PaymentDto[] $payments
+     * @param int[]                                      $free
+     * @param int[]                                      $paid
+     * @param array<array{methodId: int, tendered: int}> $payments
      */
     public function __construct(
         #[Assert\NotBlank, Assert\NotNull]
@@ -18,14 +18,16 @@ class MembershipDto
         #[Assert\NotBlank, Assert\NotNull]
         public int $starting,
 
+        #[Assert\Type('array'), Assert\Unique, Assert\NotNull]
+        public array $payments,
+
         #[Assert\Type('array'), Assert\Unique]
         public array $free = [],
 
         #[Assert\Type('array'), Assert\Unique]
         public array $paid = [],
 
-        #[Assert\Type('array'), Assert\Unique]
-        public array $payments = [],
+        public ?int $primary = null,
     ) {
     }
 }

@@ -3,14 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Model\UserDto;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\ByteString;
@@ -28,31 +26,34 @@ class UserController extends AbstractController
 
     #[Route('/users', name: 'user_create', methods: ['POST'], format: 'json')]
     public function create(
-        #[MapRequestPayload] UserDto $userDto,
+        Request $request,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
     ): Response {
-        $user = new User(
-            email: $userDto->email,
-            firstName: $userDto->firstName,
-            lastName: $userDto->lastName,
-            dateOfBirth: $userDto->dateOfBirth,
-            address: $userDto->address,
-            city: $userDto->city,
-            state: $userDto->state,
-            zip: $userDto->zip,
-            country: $userDto->country,
-            phone: $userDto->phone
-        );
+        $payload = $request->getPayload();
 
-        $user->setPassword($passwordHasher->hashPassword($user, ByteString::fromRandom(32)->toString()));
+        // TODO: VALIDATION
+
+        $user = new User(
+            email: $payload->getString('email'),
+            firstName: $payload->getString('firstName'),
+            lastName: $payload->getString('lastName'),
+            address: $payload->getString('address'),
+            city: $payload->getString('city'),
+            state: $payload->getString('state'),
+            zip: $payload->getString('zip'),
+            country: $payload->getString('country'),
+            phone: $payload->getString('phone')
+        );
 
         $errors = $validator->validate($user);
 
         if (count($errors) > 0) {
-            return $this->json((string) $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->json(data: (string) $errors, status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+
+        $user->setPassword($passwordHasher->hashPassword($user, ByteString::fromRandom(32)->toString()));
 
         $entityManager->persist($user);
 

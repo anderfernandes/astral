@@ -49,7 +49,6 @@ class UserTest extends BaseWebTestCase
 
         $user = [
             'email' => $email,
-            'emailConfirmation' => $email,
             'firstName' => $faker->firstName(),
             'lastName' => $faker->lastName(),
             'address' => $faker->streetAddress(),
@@ -84,15 +83,11 @@ class UserTest extends BaseWebTestCase
 
         $client->loginUser(self::$user);
 
-        $client->catchExceptions(false);
-        $this->expectException(HttpException::class);
-
         $faker = \Faker\Factory::create();
 
         // Act
 
         $client->request('POST', '/users', [
-            'email' => $faker->email(),
             'password' => $faker->password(),
             'lastName' => $faker->lastName(),
             'address' => $faker->streetAddress(),

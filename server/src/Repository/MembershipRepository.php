@@ -19,38 +19,30 @@ class MembershipRepository extends ServiceEntityRepository
         parent::__construct($registry, Membership::class);
     }
 
-    /**
-     * @param int[] $free
-     * @param int[] $paid
-     */
     public function create(
-        int $primary,
-        array $free,
-        array $paid,
-        int $typeId,
-        int $starting,
+        MembershipDto $membershipDto,
         ?\App\Entity\User $creator,
     ): Membership {
-        if (null == $primary) {
+        if (null == $membershipDto->primary) {
             throw new \Exception('Invalid primary.');
         }
 
-        if (!empty(array_intersect($free, $paid))) {
+        if (!empty(array_intersect($membershipDto->free, $membershipDto->paid))) {
             throw new \Exception('A user cannot be a free and paid secondary at the same time.');
         }
 
-        $free = array_unique($free);
-        $paid = array_unique($paid);
+        $free = array_unique($membershipDto->free);
+        $paid = array_unique($membershipDto->paid);
 
         /** @var int[] */
-        $ids = [$primary, ...$free, ...$paid];
+        $ids = [$membershipDto->primary, ...$membershipDto->free, ...$membershipDto->paid];
 
         if (count($ids) <= 0) {
             throw new \Exception('Membership needs a primary.');
         }
 
         /** @var ?\App\Entity\MembershipType $type */
-        $type = $this->getEntityManager()->getRepository(\App\Entity\MembershipType::class)->find($typeId);
+        $type = $this->getEntityManager()->getRepository(\App\Entity\MembershipType::class)->find($membershipDto->typeId);
 
         if (null === $type) {
             throw new \Exception('Invalid membership type.');
@@ -81,10 +73,10 @@ class MembershipRepository extends ServiceEntityRepository
             $member = new Member(
                 type: $type,
                 user: $user,
-                starting: (new \DateTimeImmutable())->setTimestamp($starting)
+                starting: (new \DateTimeImmutable())->setTimestamp($membershipDto->starting)
             );
 
-            if ($user->getId() === $primary) {
+            if ($user->getId() === $membershipDto->primary) {
                 $member->setPosition(MemberPosition::PRIMARY);
             } elseif (in_array($user->getId(), $free)) {
                 $member->setPosition(MemberPosition::FREE_SECONDARY);
@@ -97,7 +89,7 @@ class MembershipRepository extends ServiceEntityRepository
             $membership->addMember($member);
         }
 
-        // $this->getEntityManager()->persist($membership);
+        $this->getEntityManager()->persist($membership);
 
         return $membership;
     }

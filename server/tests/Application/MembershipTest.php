@@ -97,9 +97,8 @@ class MembershipTest extends BaseWebTestCase
             'primary' => 1,
             'typeId' => 1,
             'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->getTimestamp(),
-            'payment' => [
-                'methodId' => self::$paymentMethod->getId(),
-                'tendered' => $tendered,
+            'payments' => [
+                ['methodId' => self::$paymentMethod->getId(), 'tendered' => $tendered],
             ],
         ];
 
@@ -137,9 +136,8 @@ class MembershipTest extends BaseWebTestCase
             'free' => [3],
             'typeId' => $membershipType->getId(),
             'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->getTimestamp(),
-            'payment' => [
-                'methodId' => self::$paymentMethod->getId(),
-                'tendered' => $tendered,
+            'payments' => [
+                ['methodId' => self::$paymentMethod->getId(), 'tendered' => $tendered],
             ],
         ];
 
@@ -181,9 +179,8 @@ class MembershipTest extends BaseWebTestCase
             'paid' => [5],
             'typeId' => $membershipType->getId(),
             'starting' => (new \DateTimeImmutable('+1 day'))->setTime(0, 0)->getTimestamp(),
-            'payment' => [
-                'methodId' => self::$paymentMethod->getId(),
-                'tendered' => $tendered,
+            'payments' => [
+                ['methodId' => self::$paymentMethod->getId(), 'tendered' => $tendered],
             ],
         ];
 
