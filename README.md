@@ -53,10 +53,21 @@ Go to `Memberships` and then `New Membership`. To appear as an option for primar
 
 Enter the payment, double check to make sure everything is to the customer liking and click `Save`. Only then the membership will be granted. It will be available to the customer right away.
 
+### Updating
+
+This section refers to adding or changing who the secondaries are. For extending/adding time/renewing a membership, see [renewing](#reneweing).
+
+Astral gives you the option to change or add secondaries of any unexpired memberships. We suggest you coming up with written an explicit policies for memberships in your organization that either allow or prohibit this. In case you do want to allow that, it can be done in admin.
+
+Find a membership and click `edit`. **Secondaries may be changed but primaries cannot**.
+
+Remember that adding paid secondaries always requires a payment. Changes will not extend the period of the membership, only [renewing](#reneweing) would do that.
+
 ### Reneweing
 
 Membership renewals are subject to the following rules:
+
 - Primaries cannot be changed
 - Only an expired primary can be added as a secondary on another membership
 
-Go to `Memberships`, find the membership, click on it to go to details and click `Renew`.
+Go to `Memberships`, find the membership, click on it to go to details and click `Renew`. The rest of the process is very similar to [creating](#creating).
