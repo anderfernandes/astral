@@ -18,7 +18,14 @@ class MembershipController extends AbstractController
     #[Route('/memberships', name: 'memberships_index', methods: ['GET'], format: 'json')]
     public function index(MembershipRepository $memberships): Response
     {
-        return $this->json(['data' => $memberships->findAll()]);
+        $memberships = $memberships->createQueryBuilder('m')
+            ->orderBy('m.id', 'DESC')
+            ->getQuery()
+            ->execute();
+
+        return $this->json(
+            ['data' => $memberships],
+            context: ['groups' => ['membership:details', 'user:list']]);
     }
 
     #[Route('/memberships/{id}', name: 'memberships_show', methods: ['GET'], format: 'json')]

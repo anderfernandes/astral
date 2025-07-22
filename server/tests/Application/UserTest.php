@@ -226,4 +226,54 @@ class UserTest extends BaseWebTestCase
         // Assert
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
+
+    public function testGetUsersWhoAreMembers(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
+        /**
+         * @var DecoderInterface $decoder
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        // Act
+
+        $client->request('GET', '/users?isMember=true');
+
+        // dd($client->getResponse()->getStatusCode());
+
+        // Assert
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $this->assertCount(0, $data);
+    }
+
+    public function testGetUsersWhoAreNotMembers(): void
+    {
+        // Arrange
+
+        $client = static::createClient();
+
+        $client->loginUser(self::$user);
+
+        /**
+         * @var DecoderInterface $decoder
+         */
+        $decoder = static::getContainer()->get(DecoderInterface::class);
+
+        // Act
+
+        $client->request('GET', '/users?isMember=false');
+
+        // Assert
+
+        $data = $decoder->decode($client->getResponse()->getContent(), 'json')['data'];
+
+        $this->assertTrue(count($data) > 0);
+    }
 }

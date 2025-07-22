@@ -55,13 +55,15 @@ Enter the payment, double check to make sure everything is to the customer likin
 
 ### Updating
 
-This section refers to adding or changing who the secondaries are. For extending/adding time/renewing a membership, see [renewing](#reneweing).
+This section refers to adding secondaries to memberships that have secondaries and have not used all of them. For extending/adding time/renewing a membership, see [renewing](#reneweing).
 
-Astral gives you the option to change or add secondaries of any unexpired memberships. We suggest you coming up with written an explicit policies for memberships in your organization that either allow or prohibit this. In case you do want to allow that, it can be done in admin.
+Astral gives you the option to add secondaries of any unexpired memberships.
 
-Find a membership and click `edit`. **Secondaries may be changed but primaries cannot**.
+Find a membership and click `edit`. **Only secondaries can be changed on a membership**.
 
-Remember that adding paid secondaries always requires a payment. Changes will not extend the period of the membership, only [renewing](#reneweing) would do that.
+This feature is useful if, for example, at the moment of a membership purchase, the primary selected no or not all secondaries they are allowed to have.
+
+Remember that **adding paid secondaries always requires a payment**. Changes will not extend the period of the membership, only [renewing](#reneweing) will do that.
 
 ### Reneweing
 
@@ -69,5 +71,14 @@ Membership renewals are subject to the following rules:
 
 - Primaries cannot be changed
 - Only an expired primary can be added as a secondary on another membership
+- The minimum membership starting date for non-expired memberships is the the ending date of the current one plus one day
 
 Go to `Memberships`, find the membership, click on it to go to details and click `Renew`. The rest of the process is very similar to [creating](#creating).
+
+### Canceling
+
+A membership can be canceled. This might come handy if a previous primary wants to be a secondary in someone else's membership.
+
+Go to `membership details` and click `cancel membership`.
+
+**Be careful! Canceling a current membership should only be done by customer request. Membership days are not transferable to other memberships.**

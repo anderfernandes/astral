@@ -186,6 +186,7 @@ class Membership
         return $secondaries;
     }
 
+    #[Groups(['membership:details'])]
     public function getType(): MembershipType
     {
         return $this->getPrimary()->getType();

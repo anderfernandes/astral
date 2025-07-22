@@ -17,11 +17,25 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserController extends AbstractController
 {
     #[Route('/users', name: 'user_index', methods: ['GET'], format: 'json')]
-    public function index(UserRepository $users): JsonResponse
+    public function index(UserRepository $users, Request $request): JsonResponse
     {
-        $data = $users->createQueryBuilder('u')->orderBy('u.firstName', 'ASC')->getQuery()->execute();
+        $users = $users->createQueryBuilder('u');
 
-        return $this->json(data: ['data' => $data], context: ['groups' => ['user:list']]);
+        if ($request->query->has('isMember')) {
+            // TODO: GET USERS WHOSE MEMBERSHIP'S STARTING DATE IS GREATER AND ENDING DATE IS LESS THAN TODAY
+            $users = $request->query->getBoolean('isMember')
+                ? $users->innerJoin('u.memberships', 'm')->groupBy('u.id')->having('COUNT(u.id) > 0')
+                : $users->leftJoin('u.memberships', 'm')->where('m IS NULL');
+
+            $users = $users->orderBy('u.firstName', 'DESC');
+        } else {
+            $users = $users->orderBy('u.id', 'DESC');
+        }
+
+        return $this->json(
+            data: ['data' => $users->getQuery()->getResult()],
+            context: ['groups' => ['user:list']]
+        );
     }
 
     #[Route('/users', name: 'user_create', methods: ['POST'], format: 'json')]
