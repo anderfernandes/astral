@@ -49,9 +49,41 @@ Astral will always ask to fill all the free secondaries before asking for paid s
 
 ### Creating
 
-Go to `Memberships` and then `New Membership`. To appear as an option for primary and secondaries, individuals will have to have an account. They can register or they can be added as an user.
+Go to `Memberships` and then `New Membership` and fill out the form providing the following data:
+
+#### Type
+
+The type of membership. Each type is supposed to have different benefits, set by your organization in settings.
+
+Changing this for values already set will reset all other fields because Astral needs to recalculate what options to give users for all other fields.
+
+#### Primary
+
+The owner of the membership. In order to appear in as an option in the dropdown, individual must have an account.
+
+#### Start
+
+The start date of the membership. This is automatically set based on today's date, but can be changed. Note that changing the start date will automatically change the end date based on the set length in days of the membership.
+
+Memberships by default start at the time they are purchased and end at the end of the day of their duration. For example, if a 365 day membership was purchased on August 26 at 9:02 PM, it will start at that date and time and end at August 26 of the next year at 11:59:59 PM.
+
+#### End
+
+The end date of the membership. It is automatically set, can be overriden to any date.
 
 Enter the payment, double check to make sure everything is to the customer liking and click `Save`. Only then the membership will be granted. It will be available to the customer right away.
+
+#### Free Secondaries
+
+If the selected membership type allows, the next step will be selecting the free secondaries. The user selected as the primary for this membership is not allowed to be selected as secondary as here.
+
+#### Paid Secondaries
+
+If the selected membership allows and if all alloed free secondary spots have been taken (if any), the next step is to select the free secondaries. The user selected as the primary for this membership is not allowed to be selected as secondary as here.
+
+#### Payments
+
+In order to create the membership, a payment must be made. Payments
 
 ### Updating
 

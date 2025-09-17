@@ -73,7 +73,7 @@ class MembershipRepository extends ServiceEntityRepository
             $member = new Member(
                 type: $type,
                 user: $user,
-                starting: (new \DateTimeImmutable())->setTimestamp($membershipDto->starting)
+                starting: new \DateTimeImmutable()
             );
 
             if ($user->getId() === $membershipDto->primary) {

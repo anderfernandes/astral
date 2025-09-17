@@ -16,7 +16,7 @@ class Membership
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['membership:details'])]
+    #[Groups(['membership:list', 'membership:details'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -186,7 +186,7 @@ class Membership
         return $secondaries;
     }
 
-    #[Groups(['membership:details'])]
+    #[Groups(['membership:list', 'membership:details'])]
     public function getType(): MembershipType
     {
         return $this->getPrimary()->getType();

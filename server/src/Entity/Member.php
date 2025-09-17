@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Enums\MemberPosition;
+use App\Model\MembershipData;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -128,5 +129,11 @@ class Member
         $this->user = $user;
 
         return $this;
+    }
+
+    #[Groups('membership:list')]
+    public function getMembershipData(): MembershipData
+    {
+        return new MembershipData($this);
     }
 }

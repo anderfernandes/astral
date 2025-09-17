@@ -16,7 +16,9 @@ class MembershipDto
         public int $typeId,
 
         #[Assert\NotBlank, Assert\NotNull]
-        public int $starting,
+        public string $starting,
+
+        public string $ending,
 
         #[Assert\Type('array'), Assert\Unique, Assert\NotNull]
         public array $payments,

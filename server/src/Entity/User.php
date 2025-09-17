@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\MembershipData;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -193,7 +194,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    #[\Deprecated]
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
@@ -384,5 +384,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    #[Groups('user:list')]
+    public function getMembership(): ?MembershipData
+    {
+        return $this->memberships->count() > 0 ? $this->memberships->last()->getMembershipData() : null;
     }
 }

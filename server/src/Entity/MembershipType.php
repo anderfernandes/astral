@@ -15,11 +15,11 @@ class MembershipType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['membership:details'])]
+    #[Groups(['membership:list', 'membership:details'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['membership:details'])]
+    #[Groups(['membership:list', 'membership:details'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
