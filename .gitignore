@@ -15,4 +15,5 @@ package-lock.json
 composer.lock
 /.vscode
 .DS_Store
-/storage/fonts/*
+/storage/fonts/*.ttf
+/storage/fonts/*.ufm
