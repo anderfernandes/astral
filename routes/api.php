@@ -1744,7 +1744,7 @@ Route::group(["prefix" => "public"], function () {
   });
   // This route will return shows in the database
   Route::get("organizations", function (Request $request) {
-    $organizations = Organization::where("id", "!=", 1)->get();
+    $organizations = Organization::where("id", "!=", 1)->orderBy('name', 'asc')->get();
     $organization_array = [];
     foreach ($organizations as $organization) {
       array_push($organization_array, [

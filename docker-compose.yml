@@ -1,18 +1,20 @@
-version: "3.9"
+version: "3.8"
 
 # Backend
 services:
   backend:
-    image: anderfernandes/astral:1.0.0-alpha.5
+    image: astral:1.0.0-alpha.5
+    container_name: astral
     ports:
       - 8000:8000
+    #environment:
+      #FORCE_HTTPS: "true"
     volumes:
-      - ./app:/usr/share/nginx/html/app
-      - ./bootstrap:/usr/share/nginx/html/bootstrap
-      - ./config:/usr/share/nginx/html/config
-      - ./public:/usr/share/nginx/html/public
-      - ./resources:/usr/share/nginx/html/resources
-      - ./routes:/usr/share/nginx/html/routes
-      - ./semantic:/usr/share/nginx/html/semantic
-      - ./storage:/usr/share/nginx/html/storage
-      - ./tests:/usr/share/nginx/html/tests
+      - ./app:/var/www/html/app
+      - ./bootstrap:/var/www/html/bootstrap
+      - ./config:/var/www/html/config
+      - ./database:/var/www/html/database
+      - ./resources:/var/www/html/resources
+      - ./routes:/var/www/html/routes
+      - ./storage:/var/www/html/storage
+

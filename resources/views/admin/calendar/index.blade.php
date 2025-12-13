@@ -115,7 +115,7 @@
       eventLimit: true,
       minTime: '08:00:00',
       titleFormat: 'dddd, MMMM D, YYYY',
-      events: '{{ $request->type == "sales" ? ' / api / calendar / sales ' : ' / api / calendar / events ' }}',
+      events: '/api/calendar/{{ $request->type }}',
       loading: function(isLoading, view) {
         if (!isLoading) setTitle()
       },

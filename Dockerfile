@@ -1,4 +1,6 @@
-FROM ubuntu:focal
+FROM debian:11
+
+RUN mkdir /run/php
 
 RUN apt update
 
@@ -7,34 +9,33 @@ RUN apt install -y tzdata --reinstall
 
 RUN apt install -y sqlite3 php-cli php-fpm php-sqlite3 php-gd php-xml nginx-core composer git
 
-#RUN echo 'extension=pdo_sqlite' >> /etc/php/7.4/cli/php.ini
 RUN echo 'extension=sqlite3' >> /etc/php/7.4/php.ini
+RUN echo 'clear_env = no' >> /etc/php/7.4/fpm/pool.d/www.conf
 
-#COPY nginx.conf ./etc/nginx
+COPY nginx.conf /etc/nginx/nginx.conf
 
-WORKDIR /usr/share/nginx/html
+WORKDIR /var/www/html
 
 COPY . .
 
+RUN mv .env.development .env
+
 RUN sqlite3 database/database.sqlite .databases .quit
 
-RUN cd vendor && cd.. || composer install
+RUN cd vendor && cd.. || composer install --optimize-autoloader
 
 RUN php artisan storage:link
 
-RUN php artisan migrate:fresh --seed --env=development
+RUN php artisan migrate:fresh --seed
 
-RUN php artisan key:generate --env=development
+RUN php artisan key:generate
+
+RUN php artisan config:clear
+RUN php artisan config:cache
+#RUN php artisan route:cache
+
+RUN nginx -t
 
 EXPOSE 8000
 
-# RUN php-fpm -F
-# RUN nginx
-
-# CMD ["nginx", "-g", "daemon off;"]
-
-# CMD /usr/bin/php-fpm7 -D; nginx
-
-#CMD php -S 0.0.0.0:8000 -t public
-
-CMD php artisan serve --host=0.0.0.0 --env=development
+CMD /usr/sbin/php-fpm7.4; /usr/sbin/nginx -g "daemon off;"
