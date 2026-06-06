@@ -9,7 +9,7 @@ export const saveMembershipTypeFn = createServerFn({ method: "POST" })
   .inputValidator((data: FormData) => {
     // TODO: VALIDATE
 
-    const item: MembershipTypeInsertable | MembershipTypeUpdetable = {
+    const item = {
       id: data.has("id") ? Number(data.get("id")) : undefined,
       name: data.get("name") as string,
       description: data.get("description") as string,
@@ -33,5 +33,5 @@ export const saveMembershipTypeFn = createServerFn({ method: "POST" })
       return;
     }
 
-    await MembershipType.create(data);
+    await MembershipType.create(data as MembershipType);
   });

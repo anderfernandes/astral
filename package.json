@@ -12,7 +12,7 @@
       "build": "vite build && tsc --noEmit",
       "preview": "vite preview",
       "start": "ts-node src/index.ts",
-      "test": "vitest --bail 1",
+      "test": "vitest run --bail 1",
       "db:migrate": "npx vite-node src/db/migrations.ts",
       "typeorm": "typeorm-ts-node-commonjs"
    },
@@ -33,7 +33,6 @@
       "@tanstack/solid-router": "^2.0.0-beta.13",
       "@tanstack/solid-start": "^2.0.0-beta.14",
       "solid-js": "^2.0.0-beta.7",
-      "sqlite3": "^6.0.1",
       "tailwindcss": "^4.2.2",
       "vite": "^8.0.8",
       "vitest": "^4.1.7"

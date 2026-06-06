@@ -10,7 +10,7 @@ import { SqliteDialect } from "@sequelize/sqlite3";
 import { PostgresDialect } from "@sequelize/postgres";
 import { MsSqlDialect } from "@sequelize/mssql";
 import { MySqlDialect } from "@sequelize/mysql";
-import { OracleDialect } from "@sequelize/oracle";
+import { MariaDbDialect } from "@sequelize/mariadb";
 import {
   Attribute,
   PrimaryKey,
@@ -136,6 +136,23 @@ if (process.env["DB_DRIVER"] === "sqlite") {
     define: {
       underscored: true,
     },
+  });
+
+  await db.sync();
+} else if (process.env["DB_DRIVER"] === "mariadb") {
+  const db = new Sequelize({
+    dialect: MariaDbDialect,
+    database: process.env["DB_DATABASE"],
+    user: process.env["DB_USER"],
+    password: process.env["DB_PASSWORD"],
+    host: process.env["DB_HOST"],
+    port: Number(process.env["DB_PORT"]) ?? 3306,
+    models,
+    define: {
+      underscored: true,
+    },
+    showWarnings: true,
+    connectTimeout: 1000,
   });
 
   await db.sync();

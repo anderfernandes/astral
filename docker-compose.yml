@@ -20,10 +20,19 @@ services:
       - "1433:1433"
 
   mysql:
-    image: docker.io/library/mysql:latest # <-- CORRECTED LINE
+    image: docker.io/library/mysql:latest
     container_name: mysql_astral_test_db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "MyStrongPassword123!"
     ports:
       - "3306:3306"
+
+  mariadb:
+    image: docker.io/library/mariadb:latest
+    container_name: mariadb_astral_test_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "MyStrongPassword123!"
+    ports:
+      - "3307:3306"
