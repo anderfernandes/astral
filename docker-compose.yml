@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: docker.io/library/postgres:latest
+    container_name: postgres_astral_test_db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "MyStrongPassword123!"
+    ports:
+      - "5432:5432"
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_astral_test_db
+    restart: always
+    userns: keep-id:uid=10001,gid=10001
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "MyStrongPassword123!" # MSSQL requires a strong password
+    ports:
+      - "1433:1433"
+
+  mysql:
+    image: docker.io/library/mysql:latest # <-- CORRECTED LINE
+    container_name: mysql_astral_test_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "MyStrongPassword123!"
+    ports:
+      - "3306:3306"

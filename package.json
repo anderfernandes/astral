@@ -1,0 +1,50 @@
+{
+   "name": "tanstack-solid-2",
+   "version": "1.0.0",
+   "description": "",
+   "private": true,
+   "type": "module",
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "scripts": {
+      "dev": "vite --port=3000 --host",
+      "build": "vite build && tsc --noEmit",
+      "preview": "vite preview",
+      "start": "ts-node src/index.ts",
+      "test": "vitest --bail 1",
+      "db:migrate": "npx vite-node src/db/migrations.ts",
+      "typeorm": "typeorm-ts-node-commonjs"
+   },
+   "dependencies": {
+      "@sequelize/core": "^7.0.0-alpha.48",
+      "@sequelize/db2": "^7.0.0-alpha.48",
+      "@sequelize/db2-ibmi": "^7.0.0-alpha.48",
+      "@sequelize/mariadb": "^7.0.0-alpha.48",
+      "@sequelize/mssql": "^7.0.0-alpha.48",
+      "@sequelize/mysql": "^7.0.0-alpha.48",
+      "@sequelize/oracle": "^7.0.0-alpha.48",
+      "@sequelize/postgres": "^7.0.0-alpha.48",
+      "@sequelize/snowflake": "^7.0.0-alpha.48",
+      "@sequelize/sqlite3": "^7.0.0-alpha.48",
+      "@solidjs/web": "^2.0.0-beta.7",
+      "@tailwindcss/vite": "^4.2.2",
+      "@tanstack/solid-query": "^6.0.0-beta.3",
+      "@tanstack/solid-router": "^2.0.0-beta.13",
+      "@tanstack/solid-start": "^2.0.0-beta.14",
+      "solid-js": "^2.0.0-beta.7",
+      "sqlite3": "^6.0.1",
+      "tailwindcss": "^4.2.2",
+      "vite": "^8.0.8",
+      "vitest": "^4.1.7"
+   },
+   "devDependencies": {
+      "@types/node": "^25.6.0",
+      "nitro": "^3.0.260522-beta",
+      "prettier": "^3.8.3",
+      "prettier-plugin-tailwindcss": "^0.7.2",
+      "typescript": "^6.0.3",
+      "vite-node": "^6.0.0",
+      "vite-plugin-solid": "^3.0.0-next.5"
+   }
+}

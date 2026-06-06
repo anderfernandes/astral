@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "@solidjs/web",
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "target": "ES2022",
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "verbatimModuleSyntax": false,
+    "experimentalDecorators": true,
+    "paths": {
+      "~components": ["./src/components/index.ts"],
+      "~db": ["./src/db/index.server.ts"],
+      "~repositories": ["./src/db/repositories/index.server.ts"],
+      "~utils/*": ["./src/utils/*"]
+    }
+  }
+}
