@@ -18,8 +18,9 @@ If you work in a non-profit planetarium, museum or science center and are strugg
 Astral works with the following databases:
 
 | Database                | Minimum Version |
-|-------------------------|-----------------|
+| ----------------------- | --------------- |
 | SQLite (`sqlite`)       | 3               |
 | Postgres (`postgres`)   | 11              |
 | MySQL (`mysql`)         | 8.0.19          |
+| MariaDB (`mariadb`)     | 10.4.30         |
 | Microsoft SQL (`mssql`) | 2017-2022       |
