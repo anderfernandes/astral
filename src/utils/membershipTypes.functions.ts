@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/solid-start";
-import { MembershipType } from "../models/MembershipType";
+import { MembershipType } from "~db";
 
 export const getMembershipTypesFn = createServerFn().handler(
   async () => await MembershipType.findAll({ raw: true }),

@@ -13,6 +13,7 @@ interface IInputProps extends Partial<
     | "minlength"
     | "maxlength"
     | "value"
+    | "defaultValue"
   >
 > {
   label: JSX.Element;
@@ -28,19 +29,38 @@ export function Input(props: IInputProps) {
         </Show>
       </label>
       <div class="mt-2">
-        <input
-          class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black disabled:cursor-not-allowed disabled:bg-gray-100 sm:text-sm/6"
-          type={props.type}
-          name={props.name}
-          placeholder={props.placeholder}
-          disabled={props.disabled}
-          required={props.required}
-          min={props.min}
-          max={props.max}
-          minlength={props.minlength}
-          maxlength={props.maxlength}
-          value={props.value}
-        />
+        <Show
+          when={props.value === undefined}
+          fallback={
+            <input
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black disabled:cursor-not-allowed disabled:bg-gray-100 sm:text-sm/6"
+              type={props.type}
+              name={props.name}
+              placeholder={props.placeholder}
+              disabled={props.disabled}
+              required={props.required}
+              min={props.min}
+              max={props.max}
+              minlength={props.minlength}
+              maxlength={props.maxlength}
+              value={props.value}
+            />
+          }
+        >
+          <input
+            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black disabled:cursor-not-allowed disabled:bg-gray-100 sm:text-sm/6"
+            type={props.type}
+            name={props.name}
+            placeholder={props.placeholder}
+            disabled={props.disabled}
+            required={props.required}
+            min={props.min}
+            max={props.max}
+            minlength={props.minlength}
+            maxlength={props.maxlength}
+            defaultValue={props.defaultValue}
+          />
+        </Show>
       </div>
     </div>
   );

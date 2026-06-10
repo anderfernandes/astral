@@ -17,7 +17,7 @@ function SignInPage() {
       <div class="hidden bg-[url('/sky-5114501_1280.jpg')] bg-cover bg-center lg:col-span-8 lg:block">
         left
       </div>
-      <div class="col-span-12 content-center p-8 lg:col-span-4">
+      <div class="col-span-12 grid content-center justify-items-center p-8 lg:col-span-4">
         <svg
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ function SignInPage() {
           Sign in to your account
         </h2>
         <form
-          class="grid gap-3"
+          class="grid w-full max-w-xs gap-3"
           onSubmit={async (e) => {
             e.preventDefault();
 

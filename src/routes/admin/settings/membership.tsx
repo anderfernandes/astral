@@ -54,7 +54,7 @@ function MembershipSettingsPage() {
           subtitle="Creates a membership type."
         >
           <form
-            class="grid max-h-96 gap-3 overflow-y-auto"
+            class="grid gap-3"
             onSubmit={(e) => {
               e.preventDefault();
 
@@ -145,7 +145,6 @@ function MembershipSettingsPage() {
         </Dialog>
       </Show>
       <ul role="list" class="divide-y divide-gray-100">
-        <Show when={query.isLoading}>Loading Membership Types...</Show>
         <Loading fallback={<span class="text-sm">Loading...</span>}>
           <For each={query.data}>
             {(item) => (
@@ -191,6 +190,9 @@ function MembershipSettingsPage() {
                         </svg>
                       </Show>
                     </p>
+                    <p class="mt-1 truncate text-xs/5 text-gray-500">
+                      {item.description}
+                    </p>
                     <div class="mt-1 flex flex-wrap gap-1">
                       <Badge
                         text={(item.price / 100).toLocaleString("en-US", {
@@ -219,22 +221,46 @@ function MembershipSettingsPage() {
                             />
                           </svg>
                           {item.maxPaidSecondaries} @{" "}
-                          {(item.price / 100).toLocaleString("en-US", {
-                            style: "currency",
-                            currency: "USD",
-                            maximumSignificantDigits: 2,
-                          })}{" "}
+                          {(item.paidSecondaryPrice / 100).toLocaleString(
+                            "en-US",
+                            {
+                              style: "currency",
+                              currency: "USD",
+                              maximumSignificantDigits: 2,
+                            },
+                          )}{" "}
                           each
                         </span>
                       </Badge>
+                      <Badge>
+                        <span class="flex items-center gap-1">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="size-4"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path d="M16 14v2.2l1.6 1" />
+                            <path d="M16 2v4" />
+                            <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" />
+                            <path d="M3 10h5" />
+                            <path d="M8 2v4" />
+                            <circle cx="16" cy="16" r="6" />
+                          </svg>
+                          {item.duration} days
+                        </span>
+                      </Badge>
                     </div>
-                    <p class="mt-1 truncate text-xs/5 text-gray-500">
-                      {item.description}
-                    </p>
                   </div>
                 </div>
                 <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                  <p class="text-sm/6 text-gray-900">{item.duration} days</p>
+                  {/* <p class="text-sm/6 text-gray-900">{item.duration} days</p> */}
                   {/* <p class="mt-1 text-xs/5 text-gray-500">
                     {(item.price / 100).toLocaleString("en-US", {
                       style: "currency",

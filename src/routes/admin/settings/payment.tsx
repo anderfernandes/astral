@@ -2,14 +2,7 @@ import { useMutation, useQuery } from "@tanstack/solid-query";
 import { createFileRoute } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { For, Loading, Show } from "solid-js";
-import {
-  Button,
-  Checkbox,
-  Dialog,
-  Input,
-  Radio,
-  Select,
-} from "../../../components";
+import { Button, Checkbox, Dialog, Input, Radio, Select } from "~components";
 
 export const Route = createFileRoute("/admin/settings/payment")({
   validateSearch: (search: { dialog: "create" | "edit"; id?: number }) =>
@@ -88,6 +81,10 @@ function PaymentSettingsPage() {
               label="Public"
               hint="Check to make method available in public portal."
             />
+            <div class="mt-3 flex justify-end gap-3">
+              <Button to="." text="Cancel" variant="secondary" />
+              <Button text="Save" type="submit" disabled={mutation.isPending} />
+            </div>
           </form>
         </Dialog>
       </Show>
@@ -126,15 +123,15 @@ const savePaymentMethod = createServerFn({ method: "POST" })
   });
 
 const getPaymentMethods = createServerFn().handler(async () => {
-  const req = await fetch("http://localhost:8000/payment-methods");
+  // const req = await fetch("http://localhost:8000/payment-methods");
 
-  console.log(req.status, req.url);
+  // console.log(req.status, req.url);
 
-  const { data } = await req.json();
+  // const { data } = await req.json();
 
-  console.log(data);
+  // console.log(data);
 
-  return data as IPaymentMethod[];
+  return [] as IPaymentMethod[];
 });
 
 interface IPaymentMethod {

@@ -45,7 +45,7 @@ export function Checkbox(props: ICheckboxProps) {
         </div>
       </div>
       <div class="text-sm/6">
-        <label for="comments" class="font-medium text-gray-900">
+        <label for={props.name} class="font-medium text-gray-900">
           {props.label}
         </label>
         <Show when={props.hint}>
