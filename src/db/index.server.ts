@@ -4,10 +4,10 @@ import { PostgresDialect } from "@sequelize/postgres";
 import { MsSqlDialect } from "@sequelize/mssql";
 import { MySqlDialect } from "@sequelize/mysql";
 import { MariaDbDialect } from "@sequelize/mariadb";
-import { MembershipType } from "../models";
+import { MembershipType, PaymentMethod } from "../models";
 
 const options = {
-  models: [MembershipType],
+  models: [MembershipType, PaymentMethod],
   define: {
     underscored: true,
   },
@@ -82,4 +82,4 @@ if (process.env["DB_DRIVER"] === "sqlite") {
   await db.sync();
 } else throw new Error("Invalid database driver");
 
-export { MembershipType };
+export { MembershipType, PaymentMethod };

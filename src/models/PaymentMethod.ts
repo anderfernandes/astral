@@ -1,26 +1,25 @@
 import {
   CreationOptional,
+  DataTypes,
   InferAttributes,
   InferCreationAttributes,
-  DataTypes,
   Model,
 } from "@sequelize/core";
-
 import {
   Attribute,
-  PrimaryKey,
   AutoIncrement,
-  NotNull,
-  Default,
   CreatedAt,
-  UpdatedAt,
+  Default,
+  NotNull,
+  PrimaryKey,
   Table,
+  UpdatedAt,
 } from "@sequelize/core/decorators-legacy";
 
 @Table({ timestamps: false })
-export class MembershipType extends Model<
-  InferAttributes<MembershipType>,
-  InferCreationAttributes<MembershipType>
+export class PaymentMethod extends Model<
+  InferAttributes<PaymentMethod>,
+  InferCreationAttributes<PaymentMethod>
 > {
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey
@@ -35,25 +34,9 @@ export class MembershipType extends Model<
   @NotNull
   declare description: string;
 
-  @Attribute(DataTypes.INTEGER)
+  @Attribute(DataTypes.STRING)
   @NotNull
-  declare duration: number;
-
-  @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare price: number;
-
-  @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare maxFreeSecondaries: number;
-
-  @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare maxPaidSecondaries: number;
-
-  @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare paidSecondaryPrice: number;
+  declare type: "CASH" | "CARD" | "CHECK" | "OTHER";
 
   @Attribute(DataTypes.BOOLEAN)
   @NotNull

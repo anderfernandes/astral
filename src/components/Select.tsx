@@ -1,26 +1,29 @@
 import { JSX } from "@solidjs/web";
 
-interface ISelectProps extends Partial<Pick<HTMLSelectElement, "name">> {
+interface ISelectProps extends Partial<
+  Pick<HTMLSelectElement, "name" | "value">
+> {
   children: JSX.Element;
   label?: JSX.Element;
 }
 
 export function Select(props: ISelectProps) {
-  const { label, children, ...otherProps } = props;
+  ///const { label, children, ...otherProps } = props;
   return (
     <div>
       <label for="country" class="block text-sm/6 font-medium text-gray-900">
-        {label}
+        {props.label}
       </label>
       <div class="mt-2 grid grid-cols-1">
         <select
-          id="country"
-          name="country"
-          autocomplete="country-name"
+          id={props.name}
+          name={props.name}
+          autocomplete={props.name}
+          value={props.value}
           class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6"
         >
           <option value={undefined}>Select one</option>
-          {children}
+          {props.children}
         </select>
         <svg
           viewBox="0 0 16 16"

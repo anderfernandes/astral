@@ -50,8 +50,12 @@ function MembershipSettingsPage() {
       </div>
       <Show when={search().dialog === "create" || search().dialog === "edit"}>
         <Dialog
-          title="New Membership Type"
-          subtitle="Creates a membership type."
+          title={selected() ? "Update Membership Type" : "New Membership Type"}
+          subtitle={
+            selected()
+              ? "Update an existing membership type"
+              : "Create a brand membership typ"
+          }
         >
           <form
             class="grid gap-3"

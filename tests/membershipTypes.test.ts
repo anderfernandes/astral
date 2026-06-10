@@ -15,7 +15,7 @@ test("1: save new membership type", async () => {
     createdAt: new Date(),
   });
 
-  expect(item.updateAt).toBeFalsy();
+  expect(item.updatedAt).toBeNull();
 });
 
 test("2: fetches all membership types", async () => {
@@ -29,9 +29,9 @@ test("3: update membership type", async () => {
 
   await item.update({
     name: "Updated Membership Type",
-    updateAt: new Date(),
+    updatedAt: new Date(),
   });
 
   expect(item.name).toBe("Updated Membership Type");
-  expect(item.updateAt).toBeDefined();
+  expect(item.updatedAt).toBeDefined();
 });

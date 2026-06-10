@@ -1,4 +1,5 @@
 import { JSX } from "@solidjs/web";
+import { Link } from "@tanstack/solid-router";
 
 interface IDialogProps {
   title?: JSX.Element;
@@ -47,6 +48,25 @@ export function Dialog(props: IDialogProps) {
                   />
                 </svg>
               </div> */}
+              <div class="absolute right-0 pr-4">
+                <Link to="." class="text-gray-400">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    data-slot="icon"
+                    aria-hidden="true"
+                    class="size-6"
+                  >
+                    <path
+                      d="M6 18 18 6M6 6l12 12"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </svg>
+                </Link>
+              </div>
               <div class="text-center sm:mt-0 sm:text-left">
                 <h3
                   id="dialog-title"

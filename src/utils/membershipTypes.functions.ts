@@ -28,10 +28,13 @@ export const saveMembershipTypeFn = createServerFn({ method: "POST" })
     if (data.id) {
       const item = await MembershipType.findByPk(data.id);
 
-      await item?.update(data);
+      await item?.update({ ...data, updatedAt: new Date() });
 
       return;
     }
 
-    await MembershipType.create(data as MembershipType);
+    await MembershipType.create({
+      ...data,
+      createdAt: new Date(),
+    });
   });
