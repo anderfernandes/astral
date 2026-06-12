@@ -9,29 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignInRouteImport } from './routes/sign-in'
-import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
+import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as AdminSettingsRouteRouteImport } from './routes/admin/settings/route'
 import { Route as AdminSettingsIndexRouteImport } from './routes/admin/settings/index'
 import { Route as AdminSettingsPaymentRouteImport } from './routes/admin/settings/payment'
 import { Route as AdminSettingsMembershipRouteImport } from './routes/admin/settings/membership'
 
-const SignInRoute = SignInRouteImport.update({
-  id: '/sign-in',
-  path: '/sign-in',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminRouteRoute = AdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -43,6 +38,16 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRouteRoute,
+} as any)
+const authSignInRoute = authSignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authRegisterRoute = authRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => authRouteRoute,
 } as any)
 const AdminSettingsRouteRoute = AdminSettingsRouteRouteImport.update({
   id: '/settings',
@@ -68,9 +73,9 @@ const AdminSettingsMembershipRoute = AdminSettingsMembershipRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
-  '/register': typeof RegisterRoute
-  '/sign-in': typeof SignInRoute
   '/admin/settings': typeof AdminSettingsRouteRouteWithChildren
+  '/register': typeof authRegisterRoute
+  '/sign-in': typeof authSignInRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/settings/membership': typeof AdminSettingsMembershipRoute
   '/admin/settings/payment': typeof AdminSettingsPaymentRoute
@@ -78,8 +83,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/register': typeof RegisterRoute
-  '/sign-in': typeof SignInRoute
+  '/register': typeof authRegisterRoute
+  '/sign-in': typeof authSignInRoute
   '/admin': typeof AdminIndexRoute
   '/admin/settings/membership': typeof AdminSettingsMembershipRoute
   '/admin/settings/payment': typeof AdminSettingsPaymentRoute
@@ -88,10 +93,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/(auth)': typeof authRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
-  '/register': typeof RegisterRoute
-  '/sign-in': typeof SignInRoute
   '/admin/settings': typeof AdminSettingsRouteRouteWithChildren
+  '/(auth)/register': typeof authRegisterRoute
+  '/(auth)/sign-in': typeof authSignInRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/settings/membership': typeof AdminSettingsMembershipRoute
   '/admin/settings/payment': typeof AdminSettingsPaymentRoute
@@ -102,9 +108,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/admin/settings'
     | '/register'
     | '/sign-in'
-    | '/admin/settings'
     | '/admin/'
     | '/admin/settings/membership'
     | '/admin/settings/payment'
@@ -121,10 +127,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/(auth)'
     | '/admin'
-    | '/register'
-    | '/sign-in'
     | '/admin/settings'
+    | '/(auth)/register'
+    | '/(auth)/sign-in'
     | '/admin/'
     | '/admin/settings/membership'
     | '/admin/settings/payment'
@@ -133,32 +140,24 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  authRouteRoute: typeof authRouteRouteWithChildren
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
-  RegisterRoute: typeof RegisterRoute
-  SignInRoute: typeof SignInRoute
 }
 
 declare module '@tanstack/solid-router' {
   interface FileRoutesByPath {
-    '/sign-in': {
-      id: '/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof SignInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)': {
+      id: '/(auth)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -174,6 +173,20 @@ declare module '@tanstack/solid-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRouteRoute
+    }
+    '/(auth)/sign-in': {
+      id: '/(auth)/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/register': {
+      id: '/(auth)/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof authRegisterRouteImport
+      parentRoute: typeof authRouteRoute
     }
     '/admin/settings': {
       id: '/admin/settings'
@@ -206,6 +219,20 @@ declare module '@tanstack/solid-router' {
   }
 }
 
+interface authRouteRouteChildren {
+  authRegisterRoute: typeof authRegisterRoute
+  authSignInRoute: typeof authSignInRoute
+}
+
+const authRouteRouteChildren: authRouteRouteChildren = {
+  authRegisterRoute: authRegisterRoute,
+  authSignInRoute: authSignInRoute,
+}
+
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
+  authRouteRouteChildren,
+)
+
 interface AdminSettingsRouteRouteChildren {
   AdminSettingsMembershipRoute: typeof AdminSettingsMembershipRoute
   AdminSettingsPaymentRoute: typeof AdminSettingsPaymentRoute
@@ -237,9 +264,8 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  authRouteRoute: authRouteRouteWithChildren,
   AdminRouteRoute: AdminRouteRouteWithChildren,
-  RegisterRoute: RegisterRoute,
-  SignInRoute: SignInRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
