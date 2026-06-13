@@ -11,9 +11,6 @@ import {
   PrimaryKey,
   AutoIncrement,
   NotNull,
-  Default,
-  CreatedAt,
-  UpdatedAt,
   Table,
 } from "@sequelize/core/decorators-legacy";
 

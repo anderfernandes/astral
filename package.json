@@ -12,9 +12,7 @@
       "build": "vite build && tsc --noEmit",
       "preview": "vite preview",
       "start": "ts-node src/index.ts",
-      "test": "vitest run --bail 1",
-      "db:migrate": "npx vite-node src/db/migrations.ts",
-      "typeorm": "typeorm-ts-node-commonjs"
+      "test": "vitest run --bail 1 --mode testing"
    },
    "dependencies": {
       "@sequelize/core": "^7.0.0-alpha.48",

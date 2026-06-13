@@ -4,10 +4,10 @@ import { PostgresDialect } from "@sequelize/postgres";
 import { MsSqlDialect } from "@sequelize/mssql";
 import { MySqlDialect } from "@sequelize/mysql";
 import { MariaDbDialect } from "@sequelize/mariadb";
-import { MembershipType, PaymentMethod } from "../models";
+import { MembershipType, PaymentMethod, User, Session } from "../models";
 
 const options = {
-  models: [MembershipType, PaymentMethod],
+  models: [MembershipType, PaymentMethod, User, Session],
   define: {
     underscored: true,
   },
@@ -16,7 +16,7 @@ const options = {
 if (process.env["DB_DRIVER"] === "sqlite") {
   const db = new Sequelize({
     dialect: SqliteDialect,
-    storage: process.env["DB_DATABASE"],
+    storage: String(process.env["DB_DATABASE"]),
     ...options,
   });
 
@@ -24,7 +24,7 @@ if (process.env["DB_DRIVER"] === "sqlite") {
 } else if (process.env["DB_DRIVER"] === "postgres") {
   const db = new Sequelize({
     dialect: PostgresDialect,
-    database: process.env["DB_DATABASE"],
+    database: String(process.env["DB_DATABASE"]),
     user: process.env["DB_USER"],
     password: process.env["DB_PASSWORD"],
     host: process.env["DB_HOST"],
@@ -38,16 +38,16 @@ if (process.env["DB_DRIVER"] === "sqlite") {
 } else if (process.env["DB_DRIVER"] === "mssql") {
   const db = new Sequelize({
     dialect: MsSqlDialect,
-    server: process.env["DB_SERVER"],
+    server: String(process.env["DB_SERVER"]),
     port: Number(process.env["DB_PORT"]) ?? 1433,
-    database: process.env["DB_DATABASE"],
+    database: String(process.env["DB_DATABASE"]),
     trustServerCertificate:
       Boolean(process.env["DB_TRUST_SERVER_CERTIFICATE"]) ?? true,
     authentication: {
       type: "default",
       options: {
-        userName: process.env["DB_USER"],
-        password: process.env["DB_PASSWORD"],
+        userName: String(process.env["DB_USER"]),
+        password: String(process.env["DB_PASSWORD"]),
       },
     },
     ...options,
@@ -57,10 +57,10 @@ if (process.env["DB_DRIVER"] === "sqlite") {
 } else if (process.env["DB_DRIVER"] === "mysql") {
   const db = new Sequelize({
     dialect: MySqlDialect,
-    database: process.env["DB_DATABASE"],
-    user: process.env["DB_USER"],
-    password: process.env["DB_PASSWORD"],
-    host: process.env["DB_HOST"],
+    database: String(process.env["DB_DATABASE"]),
+    user: String(process.env["DB_USER"]),
+    password: String(process.env["DB_PASSWORD"]),
+    host: String(process.env["DB_HOST"]),
     port: Number(process.env["DB_PORT"]) ?? 3306,
     ...options,
   });
@@ -69,10 +69,10 @@ if (process.env["DB_DRIVER"] === "sqlite") {
 } else if (process.env["DB_DRIVER"] === "mariadb") {
   const db = new Sequelize({
     dialect: MariaDbDialect,
-    database: process.env["DB_DATABASE"],
-    user: process.env["DB_USER"],
-    password: process.env["DB_PASSWORD"],
-    host: process.env["DB_HOST"],
+    database: String(process.env["DB_DATABASE"]),
+    user: String(process.env["DB_USER"]),
+    password: String(process.env["DB_PASSWORD"]),
+    host: String(process.env["DB_HOST"]),
     port: Number(process.env["DB_PORT"]) ?? 3306,
     showWarnings: true,
     connectTimeout: 1000,
@@ -82,4 +82,4 @@ if (process.env["DB_DRIVER"] === "sqlite") {
   await db.sync();
 } else throw new Error("Invalid database driver");
 
-export { MembershipType, PaymentMethod };
+export { MembershipType, PaymentMethod, User, Session };

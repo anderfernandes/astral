@@ -1,22 +1,22 @@
 import {
   CreationOptional,
   DataTypes,
-  InferAttributes,
-  InferCreationAttributes,
+  type InferAttributes,
+  type InferCreationAttributes,
   Model,
 } from "@sequelize/core";
 import {
   Attribute,
   AutoIncrement,
+  Default,
   NotNull,
   PrimaryKey,
-  Table,
+  Unique,
 } from "@sequelize/core/decorators-legacy";
 
-@Table({ timestamps: false })
-export class PaymentMethod extends Model<
-  InferAttributes<PaymentMethod>,
-  InferCreationAttributes<PaymentMethod>
+export class User extends Model<
+  InferAttributes<User>,
+  InferCreationAttributes<User>
 > {
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey
@@ -25,23 +25,25 @@ export class PaymentMethod extends Model<
 
   @Attribute(DataTypes.STRING)
   @NotNull
-  declare name: string;
+  @Unique
+  declare email: string;
 
   @Attribute(DataTypes.STRING)
   @NotNull
-  declare description: string;
+  declare password: string;
 
   @Attribute(DataTypes.STRING)
   @NotNull
-  declare type: "CASH" | "CARD" | "CHECK" | "OTHER";
+  declare firstName: string;
 
-  @Attribute(DataTypes.BOOLEAN)
+  @Attribute(DataTypes.STRING)
   @NotNull
-  declare isActive: boolean;
+  declare lastName: string;
 
-  @Attribute(DataTypes.BOOLEAN)
+  @Attribute(DataTypes.JSON)
   @NotNull
-  declare isPublic: boolean;
+  @Default([])
+  declare roles: ("ROLE_USER" | "ROLE_STAFF" | "ROLE_ADMIN")[];
 
   @Attribute(DataTypes.DATE)
   @NotNull
@@ -49,4 +51,7 @@ export class PaymentMethod extends Model<
 
   @Attribute(DataTypes.DATE)
   declare updatedAt: CreationOptional<Date>;
+
+  @Attribute(DataTypes.DATE)
+  declare activatedAt: CreationOptional<Date>;
 }
