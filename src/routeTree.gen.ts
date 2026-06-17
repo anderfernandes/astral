@@ -10,9 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as publicIndexRouteImport } from './routes/(public)/index'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as AdminSettingsRouteRouteImport } from './routes/admin/settings/route'
@@ -25,19 +26,23 @@ const AdminRouteRoute = AdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authRouteRoute = authRouteRouteImport.update({
-  id: '/(auth)',
+const publicRouteRoute = publicRouteRouteImport.update({
+  id: '/(public)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRouteRoute,
+} as any)
+const publicIndexRoute = publicIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => publicRouteRoute,
 } as any)
 const authSignInRoute = authSignInRouteImport.update({
   id: '/sign-in',
@@ -71,20 +76,20 @@ const AdminSettingsMembershipRoute = AdminSettingsMembershipRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin/settings': typeof AdminSettingsRouteRouteWithChildren
   '/register': typeof authRegisterRoute
   '/sign-in': typeof authSignInRoute
+  '/': typeof publicIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/settings/membership': typeof AdminSettingsMembershipRoute
   '/admin/settings/payment': typeof AdminSettingsPaymentRoute
   '/admin/settings/': typeof AdminSettingsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/register': typeof authRegisterRoute
   '/sign-in': typeof authSignInRoute
+  '/': typeof publicIndexRoute
   '/admin': typeof AdminIndexRoute
   '/admin/settings/membership': typeof AdminSettingsMembershipRoute
   '/admin/settings/payment': typeof AdminSettingsPaymentRoute
@@ -92,12 +97,13 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/(auth)': typeof authRouteRouteWithChildren
+  '/(public)': typeof publicRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin/settings': typeof AdminSettingsRouteRouteWithChildren
   '/(auth)/register': typeof authRegisterRoute
   '/(auth)/sign-in': typeof authSignInRoute
+  '/(public)/': typeof publicIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/settings/membership': typeof AdminSettingsMembershipRoute
   '/admin/settings/payment': typeof AdminSettingsPaymentRoute
@@ -106,32 +112,33 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/admin'
     | '/admin/settings'
     | '/register'
     | '/sign-in'
+    | '/'
     | '/admin/'
     | '/admin/settings/membership'
     | '/admin/settings/payment'
     | '/admin/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/register'
     | '/sign-in'
+    | '/'
     | '/admin'
     | '/admin/settings/membership'
     | '/admin/settings/payment'
     | '/admin/settings'
   id:
     | '__root__'
-    | '/'
     | '/(auth)'
+    | '/(public)'
     | '/admin'
     | '/admin/settings'
     | '/(auth)/register'
     | '/(auth)/sign-in'
+    | '/(public)/'
     | '/admin/'
     | '/admin/settings/membership'
     | '/admin/settings/payment'
@@ -139,8 +146,8 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   authRouteRoute: typeof authRouteRouteWithChildren
+  publicRouteRoute: typeof publicRouteRouteWithChildren
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
 }
 
@@ -153,18 +160,18 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof AdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(public)': {
+      id: '/(public)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof publicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(auth)': {
       id: '/(auth)'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof authRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -173,6 +180,13 @@ declare module '@tanstack/solid-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRouteRoute
+    }
+    '/(public)/': {
+      id: '/(public)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof publicIndexRouteImport
+      parentRoute: typeof publicRouteRoute
     }
     '/(auth)/sign-in': {
       id: '/(auth)/sign-in'
@@ -233,6 +247,18 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 )
 
+interface publicRouteRouteChildren {
+  publicIndexRoute: typeof publicIndexRoute
+}
+
+const publicRouteRouteChildren: publicRouteRouteChildren = {
+  publicIndexRoute: publicIndexRoute,
+}
+
+const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
+  publicRouteRouteChildren,
+)
+
 interface AdminSettingsRouteRouteChildren {
   AdminSettingsMembershipRoute: typeof AdminSettingsMembershipRoute
   AdminSettingsPaymentRoute: typeof AdminSettingsPaymentRoute
@@ -263,8 +289,8 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
+  publicRouteRoute: publicRouteRouteWithChildren,
   AdminRouteRoute: AdminRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
