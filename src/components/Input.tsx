@@ -16,7 +16,8 @@ interface IInputProps extends Partial<
     | "defaultValue"
   >
 > {
-  label: JSX.Element;
+  label?: JSX.Element;
+  hint?: JSX.Element;
 }
 
 export function Input(props: IInputProps) {
@@ -62,6 +63,9 @@ export function Input(props: IInputProps) {
           />
         </Show>
       </div>
+      <Show when={props.hint}>
+        <span class="text-sm text-gray-500">{props.hint}</span>
+      </Show>
     </div>
   );
 }

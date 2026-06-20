@@ -18,8 +18,10 @@ import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as AdminSettingsRouteRouteImport } from './routes/admin/settings/route'
 import { Route as AdminSettingsIndexRouteImport } from './routes/admin/settings/index'
+import { Route as publicMembershipsIndexRouteImport } from './routes/(public)/memberships/index'
 import { Route as AdminSettingsPaymentRouteImport } from './routes/admin/settings/payment'
 import { Route as AdminSettingsMembershipRouteImport } from './routes/admin/settings/membership'
+import { Route as publicMembershipsTypeIdRouteImport } from './routes/(public)/memberships/$typeId'
 
 const AdminRouteRoute = AdminRouteRouteImport.update({
   id: '/admin',
@@ -64,6 +66,11 @@ const AdminSettingsIndexRoute = AdminSettingsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminSettingsRouteRoute,
 } as any)
+const publicMembershipsIndexRoute = publicMembershipsIndexRouteImport.update({
+  id: '/memberships/',
+  path: '/memberships/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
 const AdminSettingsPaymentRoute = AdminSettingsPaymentRouteImport.update({
   id: '/payment',
   path: '/payment',
@@ -74,6 +81,11 @@ const AdminSettingsMembershipRoute = AdminSettingsMembershipRouteImport.update({
   path: '/membership',
   getParentRoute: () => AdminSettingsRouteRoute,
 } as any)
+const publicMembershipsTypeIdRoute = publicMembershipsTypeIdRouteImport.update({
+  id: '/memberships/$typeId',
+  path: '/memberships/$typeId',
+  getParentRoute: () => publicRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteRouteWithChildren
@@ -82,8 +94,10 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof authSignInRoute
   '/': typeof publicIndexRoute
   '/admin/': typeof AdminIndexRoute
+  '/memberships/$typeId': typeof publicMembershipsTypeIdRoute
   '/admin/settings/membership': typeof AdminSettingsMembershipRoute
   '/admin/settings/payment': typeof AdminSettingsPaymentRoute
+  '/memberships/': typeof publicMembershipsIndexRoute
   '/admin/settings/': typeof AdminSettingsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -91,8 +105,10 @@ export interface FileRoutesByTo {
   '/sign-in': typeof authSignInRoute
   '/': typeof publicIndexRoute
   '/admin': typeof AdminIndexRoute
+  '/memberships/$typeId': typeof publicMembershipsTypeIdRoute
   '/admin/settings/membership': typeof AdminSettingsMembershipRoute
   '/admin/settings/payment': typeof AdminSettingsPaymentRoute
+  '/memberships': typeof publicMembershipsIndexRoute
   '/admin/settings': typeof AdminSettingsIndexRoute
 }
 export interface FileRoutesById {
@@ -105,8 +121,10 @@ export interface FileRoutesById {
   '/(auth)/sign-in': typeof authSignInRoute
   '/(public)/': typeof publicIndexRoute
   '/admin/': typeof AdminIndexRoute
+  '/(public)/memberships/$typeId': typeof publicMembershipsTypeIdRoute
   '/admin/settings/membership': typeof AdminSettingsMembershipRoute
   '/admin/settings/payment': typeof AdminSettingsPaymentRoute
+  '/(public)/memberships/': typeof publicMembershipsIndexRoute
   '/admin/settings/': typeof AdminSettingsIndexRoute
 }
 export interface FileRouteTypes {
@@ -118,8 +136,10 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/'
     | '/admin/'
+    | '/memberships/$typeId'
     | '/admin/settings/membership'
     | '/admin/settings/payment'
+    | '/memberships/'
     | '/admin/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -127,8 +147,10 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/'
     | '/admin'
+    | '/memberships/$typeId'
     | '/admin/settings/membership'
     | '/admin/settings/payment'
+    | '/memberships'
     | '/admin/settings'
   id:
     | '__root__'
@@ -140,8 +162,10 @@ export interface FileRouteTypes {
     | '/(auth)/sign-in'
     | '/(public)/'
     | '/admin/'
+    | '/(public)/memberships/$typeId'
     | '/admin/settings/membership'
     | '/admin/settings/payment'
+    | '/(public)/memberships/'
     | '/admin/settings/'
   fileRoutesById: FileRoutesById
 }
@@ -216,6 +240,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof AdminSettingsIndexRouteImport
       parentRoute: typeof AdminSettingsRouteRoute
     }
+    '/(public)/memberships/': {
+      id: '/(public)/memberships/'
+      path: '/memberships'
+      fullPath: '/memberships/'
+      preLoaderRoute: typeof publicMembershipsIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
     '/admin/settings/payment': {
       id: '/admin/settings/payment'
       path: '/payment'
@@ -229,6 +260,13 @@ declare module '@tanstack/solid-router' {
       fullPath: '/admin/settings/membership'
       preLoaderRoute: typeof AdminSettingsMembershipRouteImport
       parentRoute: typeof AdminSettingsRouteRoute
+    }
+    '/(public)/memberships/$typeId': {
+      id: '/(public)/memberships/$typeId'
+      path: '/memberships/$typeId'
+      fullPath: '/memberships/$typeId'
+      preLoaderRoute: typeof publicMembershipsTypeIdRouteImport
+      parentRoute: typeof publicRouteRoute
     }
   }
 }
@@ -249,10 +287,14 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface publicRouteRouteChildren {
   publicIndexRoute: typeof publicIndexRoute
+  publicMembershipsTypeIdRoute: typeof publicMembershipsTypeIdRoute
+  publicMembershipsIndexRoute: typeof publicMembershipsIndexRoute
 }
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicIndexRoute: publicIndexRoute,
+  publicMembershipsTypeIdRoute: publicMembershipsTypeIdRoute,
+  publicMembershipsIndexRoute: publicMembershipsIndexRoute,
 }
 
 const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(

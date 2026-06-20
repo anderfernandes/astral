@@ -5,6 +5,13 @@ export const getMembershipTypesFn = createServerFn().handler(
   async () => await MembershipType.findAll({ raw: true }),
 );
 
+export const getMembershipTypeFn = createServerFn()
+  .inputValidator((data: { id: string | number }) => data)
+  .handler(
+    async ({ data: { id } }) =>
+      await MembershipType.findByPk(id, { raw: true }),
+  );
+
 export const saveMembershipTypeFn = createServerFn({ method: "POST" })
   .inputValidator((data: FormData) => {
     // TODO: VALIDATE
@@ -17,7 +24,7 @@ export const saveMembershipTypeFn = createServerFn({ method: "POST" })
       price: Number(data.get("price")) * 100,
       maxFreeSecondaries: Number(data.get("maxFreeSecondaries")),
       maxPaidSecondaries: Number(data.get("maxPaidSecondaries")),
-      paidSecondaryPrice: Number(data.get("paidSecondaryPrice")),
+      paidSecondaryPrice: Number(data.get("paidSecondaryPrice")) * 100,
       isActive: data.has("isActive"),
       isPublic: data.has("isPublic"),
     };

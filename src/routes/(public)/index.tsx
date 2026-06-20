@@ -8,7 +8,10 @@ export const Route = createFileRoute("/(public)/")({
 function IndexPage() {
   return (
     <section class="relative isolate h-screen bg-[url(/sky-5114501_1280.jpg)] bg-cover bg-center px-6 pt-14 lg:px-8">
-      <div class="absolute top-0 left-0 -z-10 h-screen w-screen bg-white/85">
+      <div
+        aria-hidden="true"
+        class="absolute top-0 left-0 -z-10 h-screen w-full bg-white/85"
+      >
         &nbsp;
       </div>
       <div

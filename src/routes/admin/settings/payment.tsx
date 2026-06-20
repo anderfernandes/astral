@@ -112,21 +112,28 @@ function PaymentSettingsPage() {
         </Dialog>
       </Show>
       <Loading fallback={<span class="text-sm">Loading...</span>}>
-        <For each={query.data}>
-          {(item) => (
-            <Link
-              to="."
-              search={{ dialog: "edit", id: item.id }}
-              class="flex max-w-sm"
-            >
-              {/* <img class="size-16 rounded-full" src="/img/profile.jpg" /> */}
-              <div class="wrap-anywhere">
-                <p class="font-medium">{item.name}</p>
-                <p>{item.type}</p>
-              </div>
-            </Link>
-          )}
-        </For>
+        <div class="mt-3 grid gap-3 lg:grid-cols-3">
+          <For each={query.data}>
+            {(item) => (
+              <Link
+                to="."
+                search={{ dialog: "edit", id: item.id }}
+                class="flex w-full rounded-xl border border-gray-300 p-6"
+              >
+                <div class="grid grow">
+                  <p class="font-medium">{item.name}</p>
+                  <p class="text-gray-500">{item.type}</p>
+                </div>
+                <svg viewBox="0 0 24 24" class="size-10">
+                  <path
+                    fill="currentColor"
+                    d="M15.58,16.8L12,14.5L8.42,16.8L9.5,12.68L6.21,10L10.46,9.74L12,5.8L13.54,9.74L17.79,10L14.5,12.68M20,12C20,10.89 20.9,10 22,10V6C22,4.89 21.1,4 20,4H4A2,2 0 0,0 2,6V10C3.11,10 4,10.9 4,12A2,2 0 0,1 2,14V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V14A2,2 0 0,1 20,12Z"
+                  />
+                </svg>
+              </Link>
+            )}
+          </For>
+        </div>
       </Loading>
     </div>
   );

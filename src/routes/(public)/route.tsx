@@ -1,4 +1,5 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/solid-router";
+import { Show } from "solid-js";
 import { Button } from "~components";
 import { getSettingsFn } from "~utils/settings.functions";
 
@@ -70,6 +71,14 @@ function RouteComponent() {
               <Link to="/" class="text-sm/6 font-semibold text-gray-900">
                 Home
               </Link>
+              <Show when={loaderData().hasMembershipTypes}>
+                <Link
+                  to="/memberships"
+                  class="text-sm/6 font-semibold text-gray-900"
+                >
+                  Memberships
+                </Link>
+              </Show>
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
               <Button to="/sign-in" text="Sign In &rarr;" />
@@ -130,6 +139,14 @@ function RouteComponent() {
                         >
                           Home
                         </Link>
+                        <Show when={loaderData().hasMembershipTypes}>
+                          <Link
+                            to="/memberships"
+                            class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                          >
+                            Memberships
+                          </Link>
+                        </Show>
                       </div>
                       <div class="py-6">
                         <Button to="/sign-in" text="Sign In &rarr;" />

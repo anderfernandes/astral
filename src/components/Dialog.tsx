@@ -29,7 +29,7 @@ export function Dialog(props: IDialogProps) {
           id="panel"
           class="relative w-96 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95 lg:max-w-96"
         >
-          <div class="bg-white px-4 pt-5 pb-4 sm:pb-4">
+          <div class="bg-white px-5 pt-5 pb-4 sm:pb-4">
             <div class="grid">
               {/* <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
                 <svg
@@ -48,7 +48,7 @@ export function Dialog(props: IDialogProps) {
                   />
                 </svg>
               </div> */}
-              <div class="absolute right-0 pr-4">
+              <div class="absolute right-0 pr-5">
                 <Link to="." class="text-gray-400">
                   <svg
                     viewBox="0 0 24 24"
@@ -78,7 +78,7 @@ export function Dialog(props: IDialogProps) {
                   <p class="text-sm text-gray-500">{props.subtitle}</p>
                 </div>
               </div>
-              <div class="-mx-4 -mb-4 grid max-h-96 overflow-y-auto px-4 pb-6">
+              <div class="-mx-5 -mb-4 grid max-h-96 overflow-y-auto px-5 pb-6">
                 {props.children}
               </div>
             </div>
