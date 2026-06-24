@@ -74,11 +74,11 @@ export function Dialog(props: IDialogProps) {
                 >
                   {props.title}
                 </h3>
-                <div class="my-2">
+                <div>
                   <p class="text-sm text-gray-500">{props.subtitle}</p>
                 </div>
               </div>
-              <div class="-mx-5 -mb-4 grid max-h-96 overflow-y-auto px-5 pb-6">
+              <div class="-mx-5 mt-2 -mb-4 grid max-h-96 overflow-y-auto px-5 pb-6">
                 {props.children}
               </div>
             </div>
