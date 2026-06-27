@@ -12,7 +12,9 @@
       "build": "vite build && tsc --noEmit",
       "preview": "vite preview",
       "start": "ts-node src/index.ts",
-      "test": "vitest run --bail 1 --mode testing"
+      "test": "npm run migrate:testing && vitest run --bail 1 --mode testing",
+      "migrate": "vite-node src/db/migrations.ts",
+      "migrate:testing": "rm -rf *.db && vite-node --mode testing src/db/migrations.ts"
    },
    "dependencies": {
       "@sequelize/core": "^7.0.0-alpha.48",
@@ -30,12 +32,15 @@
       "@tanstack/solid-query": "^6.0.0-beta.3",
       "@tanstack/solid-router": "^2.0.0-beta.13",
       "@tanstack/solid-start": "^2.0.0-beta.14",
+      "better-sqlite3": "^12.11.1",
+      "kysely": "^0.29.2",
       "solid-js": "^2.0.0-beta.7",
       "tailwindcss": "^4.2.2",
       "vite": "^8.0.8",
       "vitest": "^4.1.7"
    },
    "devDependencies": {
+      "@types/better-sqlite3": "^7.6.13",
       "@types/node": "^25.6.0",
       "nitro": "^3.0.260522-beta",
       "prettier": "^3.8.3",

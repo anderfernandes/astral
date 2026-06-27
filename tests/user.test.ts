@@ -1,27 +1,36 @@
 import { expect, test } from "vitest";
-import { User } from "~db";
+import { db } from "~db";
 
 test("1: save new user", async () => {
-  await User.create({
-    email: "user@astralcloud.org",
-    firstName: "Test",
-    lastName: "User",
-    password: "123456",
-    roles: [],
-    createdAt: new Date(),
-  });
-
-  const user = await User.findByPk(1);
+  const user = await db
+    .insertInto("users")
+    .values({
+      email: "user@astralcloud.org",
+      firstName: "Test",
+      lastName: "User",
+      password: "123456",
+      roles: "[]",
+    })
+    .returningAll()
+    .executeTakeFirstOrThrow();
 
   expect(user?.firstName).toBe("Test");
 });
 
 test("2: assing ROLE_USER to user", async () => {
-  const user = await User.findByPk(1);
+  // const user = await User.findByPk(1);
+  // await user?.update({
+  //   roles: ["ROLE_USER"],
+  // });
 
-  await user?.update({
-    roles: ["ROLE_USER"],
-  });
+  const user = await db
+    .updateTable("users")
+    .set({
+      roles: JSON.stringify(["ROLE_USER"]),
+    })
+    .where("id", "=", 1)
+    .returningAll()
+    .executeTakeFirst();
 
-  expect(user?.roles[0], "ROLE_USER");
+  expect(JSON.parse(user?.roles as string)[0], "ROLE_USER");
 });

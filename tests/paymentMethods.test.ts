@@ -1,30 +1,54 @@
 import { expect, test } from "vitest";
-import { PaymentMethod } from "~db";
+import { db } from "~db";
 
 test("1: save new payment method", async () => {
-  const item = await PaymentMethod.create({
-    name: "Test Payment Method",
-    description: "A test payment method",
-    type: "CASH",
-    isActive: true,
-    isPublic: true,
-    createdAt: new Date(),
-  });
+  // const item = await PaymentMethod.create({
+  //   name: "Test Payment Method",
+  //   description: "A test payment method",
+  //   type: "CASH",
+  //   isActive: true,
+  //   isPublic: true,
+  //   createdAt: new Date(),
+  // });
 
-  expect(item.updatedAt).toBeNull();
+  await db
+    .insertInto("paymentMethods")
+    .values({
+      name: "Test Payment Method",
+      description: "A test payment method",
+      type: "CASH",
+      isActive: 1,
+      isPublic: 1,
+    })
+    .returningAll()
+    .executeTakeFirstOrThrow();
+
+  const item = await db
+    .selectFrom("paymentMethods")
+    .where("id", "=", 1)
+    .selectAll()
+    .executeTakeFirst();
+
+  expect(item?.updatedAt).toBeNull();
 });
 
 test("2: update payment method", async () => {
-  const item = await PaymentMethod.findByPk(1);
+  db.updateTable("paymentMethods")
+    .set({ name: "Updated Test Payment Method", type: "OTHER" })
+    .where("id", "=", 1)
+    .execute();
 
-  await item?.update({
-    name: "Updated Test Payment Method",
-    updatedAt: new Date(),
-  });
+  const item = await db
+    .selectFrom("paymentMethods")
+    .where("id", "=", 1)
+    .selectAll()
+    .executeTakeFirst();
 
   expect(item?.name).toBe("Updated Test Payment Method");
 });
 
 test("3: get all payment methods", async () => {
-  expect(await PaymentMethod.findAll({ raw: true })).length(1);
+  const items = await db.selectFrom("paymentMethods").selectAll().execute();
+
+  expect(items.length).toBe(1);
 });

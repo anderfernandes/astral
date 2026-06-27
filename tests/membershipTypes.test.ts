@@ -1,37 +1,55 @@
+import { sql } from "kysely";
 import { expect, test } from "vitest";
-import { MembershipType } from "~db";
+import { db } from "~db";
 
 test("1: save new membership type", async () => {
-  const item = await MembershipType.create({
-    name: "New Membership Type",
-    description: "New Membership Type",
-    duration: 365,
-    price: 60,
-    maxFreeSecondaries: 0,
-    maxPaidSecondaries: 0,
-    paidSecondaryPrice: 0,
-    isActive: true,
-    isPublic: true,
-    createdAt: new Date(),
-  });
+  await db
+    .insertInto("membershipTypes")
+    .values({
+      name: "New Membership Type",
+      description: "New Membership Type",
+      duration: 365,
+      price: 60,
+      maxFreeSecondaries: 0,
+      maxPaidSecondaries: 0,
+      paidSecondaryPrice: 0,
+      isActive: 1,
+      isPublic: 1,
+    })
+    .returningAll()
+    .executeTakeFirstOrThrow();
 
-  expect(item.updatedAt).toBeNull();
+  const item = await db
+    .selectFrom("membershipTypes")
+    .where("id", "=", 1)
+    .selectAll()
+    .executeTakeFirst();
+
+  expect(item).toBeDefined();
+  expect(item?.updatedAt).toBeNull();
 });
 
-test("2: fetches all membership types", async () => {
-  const items = await MembershipType.findAll({ raw: true });
+test("2: get all membership types", async () => {
+  const items = await db.selectFrom("membershipTypes").selectAll().execute();
 
   expect(items).length(1);
 });
 
 test("3: update membership type", async () => {
-  const item = (await MembershipType.findByPk(1)) as MembershipType;
+  db.updateTable("membershipTypes")
+    .set({
+      name: "Updated Membership Type",
+      updatedAt: sql`CURRENT_TIMESTAMP`,
+    })
+    .where("id", "=", 1)
+    .execute();
 
-  await item.update({
-    name: "Updated Membership Type",
-    updatedAt: new Date(),
-  });
+  const item = await db
+    .selectFrom("membershipTypes")
+    .where("id", "=", 1)
+    .selectAll()
+    .executeTakeFirst();
 
-  expect(item.name).toBe("Updated Membership Type");
-  expect(item.updatedAt).toBeDefined();
+  expect(item?.name).toBe("Updated Membership Type");
+  expect(item?.updatedAt).toBeDefined();
 });
