@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/solid-query";
-import { createFileRoute } from "@tanstack/solid-router";
+import { createFileRoute, useNavigate } from "@tanstack/solid-router";
 import { useServerFn } from "@tanstack/solid-start";
-import { createSignal, Loading, Repeat, Show } from "solid-js";
+import { createSignal, For, Loading, Repeat, Show } from "solid-js";
 import { Button, Dialog, Input, Select } from "~components";
 import { getMembershipTypeFn } from "~utils/membershipTypes.functions";
 
@@ -17,6 +17,8 @@ function RouteComponent() {
 
   const search = Route.useSearch();
 
+  const navigate = useNavigate();
+
   const query = useQuery(() => ({
     queryKey: ["membership-type", params().typeId],
     queryFn: useServerFn(() =>
@@ -24,7 +26,7 @@ function RouteComponent() {
     ),
   }));
 
-  const [freeSecondaries, setFreeSecondaries] = createSignal([]);
+  const [freeSecondaries, setFreeSecondaries] = createSignal<ISaleItem[]>([]);
   const [paidSecondaries, setPaidSecondaries] = createSignal([]);
 
   return (
@@ -212,36 +214,71 @@ function RouteComponent() {
                 <Show when={(query.data?.maxFreeSecondaries as number) > 0}>
                   <div class="flex gap-3">
                     <Button
-                      to="."
                       search={{ dialog: "free-secondaries" }}
                       text="Add Free Secondary"
                       variant="secondary"
+                      disabled={
+                        (query.data?.maxFreeSecondaries as number) <=
+                        freeSecondaries().length
+                      }
+                      type="button"
+                      onClick={() => {
+                        navigate({
+                          to: ".",
+                          search: { dialog: "free-secondaries" },
+                        });
+                      }}
                     />
                     <Show when={search().dialog === "free-secondaries"}>
                       <Dialog
                         title="Add Free Secondary"
                         subtitle={`${freeSecondaries().length}/${query.data?.maxFreeSecondaries} selected`}
                       >
-                        <div class="grid gap-3">
+                        <form
+                          class="grid gap-3"
+                          onSubmit={(e) => {
+                            e.preventDefault();
+
+                            const data = new FormData(e.currentTarget);
+
+                            setFreeSecondaries((prev) => [
+                              ...prev,
+                              {
+                                type: "MEMBERSHIP_FREE_SECONDARY",
+                                firstName: data.get("firstName") as string,
+                                lastName: data.get("lastName") as string,
+                                email: data.get("email") as string,
+                              },
+                            ]);
+
+                            navigate({ to: "." });
+                          }}
+                        >
                           <Input
+                            defaultValue="Sarah"
                             label="First Name"
                             required
                             placeholder="First Name"
+                            name="firstName"
                           />
                           <Input
+                            defaultValue="Fernandes"
                             label="Last Name"
                             required
                             placeholder="Last Name"
+                            name="lastName"
                           />
                           <Input
+                            defaultValue="sarahfernandes@live.com"
                             label="Email"
                             placeholder="Email"
+                            name="email"
                             hint="You may leave it blank for a child under 18 without an email."
                           />
                           <div class="flex justify-end">
-                            <Button text="Add" />
+                            <Button text="Add" type="submit" />
                           </div>
-                        </div>
+                        </form>
                       </Dialog>
                     </Show>
                     <Button
@@ -413,6 +450,27 @@ function RouteComponent() {
                     </div>
                   </fieldset>
                 </div> */}
+                <div class="mt-10 grid gap-2">
+                  <For each={freeSecondaries()}>
+                    {(item, i) => (
+                      <div class="text-sm text-gray-600">
+                        <p class="flex gap-1">
+                          <span class="grow">
+                            {item.firstName} {item.lastName}
+                          </span>
+                          <span>
+                            {(0).toLocaleString("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                              maximumFractionDigits: 2,
+                            })}
+                          </span>
+                        </p>
+                        <p>{item.email}</p>
+                      </div>
+                    )}
+                  </For>
+                </div>
                 <p class="mt-10 text-sm text-gray-600">
                   You will be redirected to stripe to pay for your membership
                   and redirected back with and given the benefits once we
@@ -505,4 +563,11 @@ function RouteComponent() {
       </div>
     </section>
   );
+}
+
+interface ISaleItem {
+  type: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
