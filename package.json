@@ -13,20 +13,10 @@
       "preview": "vite preview",
       "start": "ts-node src/index.ts",
       "test": "npm run migrate:testing && vitest run --bail 1 --mode testing",
-      "migrate": "vite-node src/db/migrations.ts",
-      "migrate:testing": "rm -rf *.db && vite-node --mode testing src/db/migrations.ts"
+      "migrate": "vite-node src/db/migrations/index.ts",
+      "migrate:testing": "rm -rf *.db && vite-node --mode testing src/db/migrations/index.ts"
    },
    "dependencies": {
-      "@sequelize/core": "^7.0.0-alpha.48",
-      "@sequelize/db2": "^7.0.0-alpha.48",
-      "@sequelize/db2-ibmi": "^7.0.0-alpha.48",
-      "@sequelize/mariadb": "^7.0.0-alpha.48",
-      "@sequelize/mssql": "^7.0.0-alpha.48",
-      "@sequelize/mysql": "^7.0.0-alpha.48",
-      "@sequelize/oracle": "^7.0.0-alpha.48",
-      "@sequelize/postgres": "^7.0.0-alpha.48",
-      "@sequelize/snowflake": "^7.0.0-alpha.48",
-      "@sequelize/sqlite3": "^7.0.0-alpha.48",
       "@solidjs/web": "^2.0.0-beta.7",
       "@tailwindcss/vite": "^4.2.2",
       "@tanstack/solid-query": "^6.0.0-beta.3",
@@ -34,6 +24,7 @@
       "@tanstack/solid-start": "^2.0.0-beta.14",
       "better-sqlite3": "^12.11.1",
       "kysely": "^0.29.2",
+      "pg": "^8.22.0",
       "solid-js": "^2.0.0-beta.7",
       "tailwindcss": "^4.2.2",
       "vite": "^8.0.8",
@@ -42,6 +33,7 @@
    "devDependencies": {
       "@types/better-sqlite3": "^7.6.13",
       "@types/node": "^25.6.0",
+      "@types/pg": "^8.20.0",
       "nitro": "^3.0.260522-beta",
       "prettier": "^3.8.3",
       "prettier-plugin-tailwindcss": "^0.7.2",

@@ -130,13 +130,13 @@ function MembershipSettingsPage() {
               min="0"
             />
             <Checkbox
-              checked={selected()?.isActive as boolean}
+              checked={selected()?.isActive === 1}
               name="isActive"
               label="Active"
               hint="Check to make it available everywhere."
             />
             <Checkbox
-              checked={selected()?.isPublic as boolean}
+              checked={selected()?.isPublic === 1}
               name="isPublic"
               label="Public"
               hint="Check to make it available in the public portal."

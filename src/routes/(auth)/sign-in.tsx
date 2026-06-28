@@ -65,7 +65,7 @@ function SignInPage() {
 }
 
 const loginFn = createServerFn({ method: "POST" })
-  .inputValidator((data: { email: string; password: string }) => data)
+  .validator((data: { email: string; password: string }) => data)
   .handler(async ({ data }) => {
     const url = new URL("/login", "http://localhost:8000");
 

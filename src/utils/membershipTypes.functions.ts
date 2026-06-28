@@ -1,22 +1,25 @@
 import { createServerFn } from "@tanstack/solid-start";
-import { MembershipType } from "~db";
+import { db } from "~db";
 
 export const getMembershipTypesFn = createServerFn().handler(
-  async () => await MembershipType.findAll({ raw: true }),
+  async () => await db.selectFrom("membershipTypes").selectAll().execute(),
 );
 
 export const getMembershipTypeFn = createServerFn()
-  .inputValidator((data: { id: string | number }) => data)
+  .validator((data: { id: string | number }) => data)
   .handler(
     async ({ data: { id } }) =>
-      await MembershipType.findByPk(id, { raw: true }),
+      await await db
+        .selectFrom("membershipTypes")
+        .selectAll()
+        .executeTakeFirst(),
   );
 
 export const saveMembershipTypeFn = createServerFn({ method: "POST" })
-  .inputValidator((data: FormData) => {
+  .validator((data: FormData) => {
     // TODO: VALIDATE
 
-    const item = {
+    return {
       id: data.has("id") ? Number(data.get("id")) : undefined,
       name: data.get("name") as string,
       description: data.get("description") as string,
@@ -25,23 +28,24 @@ export const saveMembershipTypeFn = createServerFn({ method: "POST" })
       maxFreeSecondaries: Number(data.get("maxFreeSecondaries")),
       maxPaidSecondaries: Number(data.get("maxPaidSecondaries")),
       paidSecondaryPrice: Number(data.get("paidSecondaryPrice")) * 100,
-      isActive: data.has("isActive"),
-      isPublic: data.has("isPublic"),
+      isActive: Number(data.has("isActive")) as 0 | 1,
+      isPublic: Number(data.has("isPublic")) as 0 | 1,
     };
-
-    return item;
   })
   .handler(async ({ data }) => {
     if (data.id) {
-      const item = await MembershipType.findByPk(data.id);
-
-      await item?.update({ ...data, updatedAt: new Date() });
+      await db
+        .updateTable("membershipTypes")
+        .set(data)
+        .where("id", "=", data.id)
+        .execute();
 
       return;
     }
 
-    await MembershipType.create({
-      ...data,
-      createdAt: new Date(),
-    });
+    await db
+      .insertInto("membershipTypes")
+      .values(data)
+      .returningAll()
+      .execute();
   });

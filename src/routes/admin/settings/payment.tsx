@@ -3,7 +3,6 @@ import { createFileRoute, Link } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createMemo, For, Loading, Show } from "solid-js";
 import { Button, Checkbox, Dialog, Input, Radio, Select } from "~components";
-import { PaymentMethod } from "~db";
 import {
   getPaymentMethodsFn,
   savePaymentMethodFn,
@@ -93,13 +92,13 @@ function PaymentSettingsPage() {
               <option value="OTHER">OTHER</option>
             </Select>
             <Checkbox
-              checked={selected()?.isActive}
+              checked={selected()?.isActive === 1}
               name="isActive"
               label="Active"
               hint="Check if you want to make this payment type usable."
             />
             <Checkbox
-              checked={selected()?.isPublic}
+              checked={selected()?.isPublic === 1}
               name="isPublic"
               label="Public"
               hint="Check to make method available in public portal."

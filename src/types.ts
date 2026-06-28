@@ -27,7 +27,6 @@ declare global {
     id: string;
     userId: number;
     createdAt: ColumnType<Date, string | undefined, never>;
-    updatedAt: ColumnType<Date, string | undefined, never>;
     expiresAt: ColumnType<Date, string | undefined, never>;
   }
 
@@ -75,6 +74,12 @@ declare global {
     membershipTypes: IMembershipTypesTable;
     paymentMethods: IPaymentMethodsTable;
     sessions: ISessionsTable;
+  }
+}
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    DB_DRIVER: "sqlite" | "postgres";
   }
 }
 
