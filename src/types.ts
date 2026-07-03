@@ -69,11 +69,65 @@ declare global {
   type PaymentTypeInsertable = Insertable<IPaymentMethodsTable>;
   type PaymentTypeUpdateable = Updateable<IPaymentMethodsTable>;
 
+  interface IPaymentsTable {
+    id: Generated<number>;
+    method: PaymentMethod;
+    tendered: number;
+    saleId: number;
+    createdAt: ColumnType<Date, string | undefined, never>;
+    updatedAt: ColumnType<Date, string | undefined, never>;
+  }
+
+  type Payment = Selectable<IPaymentsTable>;
+  type PaymentInsertable = Selectable<IPaymentsTable>;
+  type PaymentUpdateable = Selectable<IPaymentsTable>;
+
+  interface ISaleItemsTable {
+    id: Generated<number>;
+    saleId: number;
+    type:
+      | "TICKET"
+      | "PRODUCT"
+      | "MEMBERSHIP (PRIMARY)"
+      | "MEMBERSHIP (FREE SECONDARY)"
+      | "MEMBERSHIP (PAID SECONDARY)"
+      | "CONVENIENCE FEE"
+      | "SURCHARGE"
+      | "DISCOUNT";
+    name: string;
+    description: string;
+    price: number;
+    quantity: number;
+    createdAt: ColumnType<Date, string | undefined, never>;
+    updatedAt: ColumnType<Date, string | undefined, never>;
+  }
+
+  type SaleItem = Selectable<ISaleItemsTable>;
+  type SaleItemInsertable = Insertable<ISaleItemsTable>;
+  type SaleItemUpdatable = Updateable<ISaleItemsTable>;
+
+  interface ISalesTable {
+    id: Generated<number>;
+    status: "OPEN" | "COMPLETED" | "CANCELED";
+    source: "CASHIER" | "ADMIN" | "CUSTOMER";
+    isTaxable: boolean;
+    createdAt: ColumnType<Date, string | undefined, never>;
+    updatedAt: ColumnType<Date, string | undefined, never>;
+    items: SaleItem[];
+    payments: Payment;
+  }
+
+  type Sale = Selectable<ISalesTable>;
+  type SaleInsertable = Insertable<ISalesTable>;
+  type SaleUpdateable = Updateable<ISalesTable>;
+
   interface IDatabase {
     users: IUsersTable;
     membershipTypes: IMembershipTypesTable;
     paymentMethods: IPaymentMethodsTable;
     sessions: ISessionsTable;
+    saleItems: ISaleItemsTable;
+    sales: ISalesTable;
   }
 }
 

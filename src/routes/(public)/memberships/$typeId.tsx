@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/solid-query";
 import { createFileRoute, useNavigate } from "@tanstack/solid-router";
 import { useServerFn } from "@tanstack/solid-start";
-import { createSignal, For, Loading, Repeat, Show } from "solid-js";
+import { createMemo, createSignal, For, Loading, Repeat, Show } from "solid-js";
 import { Button, Dialog, Input, Select } from "~components";
 import { getMembershipTypeFn } from "~utils/membershipTypes.functions";
 
@@ -19,6 +19,8 @@ function RouteComponent() {
 
   const navigate = useNavigate();
 
+  const parentLoaderData = Route.parentRoute.useLoaderData();
+
   const query = useQuery(() => ({
     queryKey: ["membership-type", params().typeId],
     queryFn: useServerFn(() =>
@@ -26,8 +28,32 @@ function RouteComponent() {
     ),
   }));
 
-  const [freeSecondaries, setFreeSecondaries] = createSignal<ISaleItem[]>([]);
-  const [paidSecondaries, setPaidSecondaries] = createSignal([]);
+  const membershipType = createMemo(() => query.data);
+
+  const [items, setItems] = createSignal<
+    Pick<SaleItem, "name" | "description" | "price" | "quantity" | "type">[]
+  >([
+    {
+      name: membershipType()?.name as string,
+      description: "MEMBERSHIP (PRIMARY)",
+      price: membershipType()?.price as number,
+      type: "MEMBERSHIP (PRIMARY)",
+      quantity: 1,
+    },
+  ]);
+
+  const totals = createMemo(() => {
+    const subtotal = items().reduce(
+      (total, item) => item.price * item.quantity + total,
+      0,
+    );
+    const tax = (parentLoaderData().taxRate / 10000) * subtotal;
+    return {
+      subtotal,
+      tax,
+      total: subtotal + tax,
+    };
+  });
 
   return (
     <section class="bg-white py-24">
@@ -114,19 +140,22 @@ function RouteComponent() {
           <div class="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto_auto_1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
             <div class="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
               <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-                {query.data?.name}
+                {membershipType()?.name}
               </h1>
             </div>
 
             <div class="mt-4 lg:row-span-3 lg:mt-0">
               <h2 class="sr-only">Product information</h2>
               <p class="text-3xl tracking-tight text-gray-900">
-                {((query.data?.price as number) / 100).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 2,
-                })}
+                {((membershipType()?.price as number) / 100).toLocaleString(
+                  "en-US",
+                  {
+                    style: "currency",
+                    currency: "USD",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2,
+                  },
+                )}
               </p>
 
               {/* <div class="mt-6">
@@ -217,10 +246,6 @@ function RouteComponent() {
                       search={{ dialog: "free-secondaries" }}
                       text="Add Free Secondary"
                       variant="secondary"
-                      disabled={
-                        (query.data?.maxFreeSecondaries as number) <=
-                        freeSecondaries().length
-                      }
                       type="button"
                       onClick={() => {
                         navigate({
@@ -229,11 +254,13 @@ function RouteComponent() {
                         });
                       }}
                     />
-                    <Show when={search().dialog === "free-secondaries"}>
-                      <Dialog
-                        title="Add Free Secondary"
-                        subtitle={`${freeSecondaries().length}/${query.data?.maxFreeSecondaries} selected`}
-                      >
+                    <Show
+                      when={
+                        search().dialog === "free-secondaries" ||
+                        search().dialog === "paid-secondaries"
+                      }
+                    >
+                      <Dialog title="Add Free Secondary">
                         <form
                           class="grid gap-3"
                           onSubmit={(e) => {
@@ -241,15 +268,18 @@ function RouteComponent() {
 
                             const data = new FormData(e.currentTarget);
 
-                            setFreeSecondaries((prev) => [
-                              ...prev,
-                              {
-                                type: "MEMBERSHIP_FREE_SECONDARY",
-                                firstName: data.get("firstName") as string,
-                                lastName: data.get("lastName") as string,
-                                email: data.get("email") as string,
-                              },
-                            ]);
+                            if (search().dialog === "free-secondaries") {
+                              setItems((prev) => [
+                                ...prev,
+                                {
+                                  name: `${data.get("firstName")} ${data.get("lastName")}`,
+                                  description: "MEMBERSHIP (FREE SECONDARY)",
+                                  price: 0,
+                                  type: "MEMBERSHIP (FREE SECONDARY)",
+                                  quantity: 1,
+                                },
+                              ]);
+                            }
 
                             navigate({ to: "." });
                           }}
@@ -281,14 +311,7 @@ function RouteComponent() {
                         </form>
                       </Dialog>
                     </Show>
-                    <Button
-                      disabled={
-                        freeSecondaries().length <
-                        (query.data?.maxFreeSecondaries as number)
-                      }
-                      text="Add Paid Secondary"
-                      variant="secondary"
-                    />
+                    <Button text="Add Paid Secondary" variant="secondary" />
                   </div>
                 </Show>
                 {/* <div>
@@ -451,25 +474,59 @@ function RouteComponent() {
                   </fieldset>
                 </div> */}
                 <div class="mt-10 grid gap-2">
-                  <For each={freeSecondaries()}>
+                  <For each={items()}>
                     {(item, i) => (
                       <div class="text-sm text-gray-600">
                         <p class="flex gap-1">
-                          <span class="grow">
-                            {item.firstName} {item.lastName}
-                          </span>
+                          <span class="grow">{item.name}</span>
                           <span>
-                            {(0).toLocaleString("en-US", {
+                            {(item.price / 100).toLocaleString("en-US", {
                               style: "currency",
                               currency: "USD",
                               maximumFractionDigits: 2,
                             })}
                           </span>
                         </p>
-                        <p>{item.email}</p>
+                        <p>{item.description}</p>
                       </div>
                     )}
                   </For>
+                  <div class="text-sm text-gray-600">
+                    <p class="flex gap-1">
+                      <span class="grow">Subtotal</span>
+                      <span>
+                        {(totals().subtotal / 100).toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                    </p>
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    <p class="flex gap-1">
+                      <span class="grow">Tax</span>
+                      <span>
+                        {(totals().tax / 100).toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                    </p>
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    <p class="flex gap-1">
+                      <span class="grow">Total</span>
+                      <span>
+                        {(totals().total / 100).toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                    </p>
+                  </div>
                 </div>
                 <p class="mt-10 text-sm text-gray-600">
                   You will be redirected to stripe to pay for your membership
@@ -480,7 +537,12 @@ function RouteComponent() {
                   type="submit"
                   class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-hidden"
                 >
-                  Pay
+                  Pay{" "}
+                  {(totals().total / 100).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    maximumFractionDigits: 2,
+                  })}
                 </button>
               </form>
             </div>
@@ -491,7 +553,7 @@ function RouteComponent() {
 
                 <div class="space-y-6">
                   <p class="text-base text-gray-900">
-                    {query.data?.description}
+                    {membershipType()?.description}
                   </p>
                 </div>
               </div>
@@ -563,11 +625,4 @@ function RouteComponent() {
       </div>
     </section>
   );
-}
-
-interface ISaleItem {
-  type: string;
-  firstName: string;
-  lastName: string;
-  email: string;
 }

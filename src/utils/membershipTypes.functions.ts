@@ -11,6 +11,7 @@ export const getMembershipTypeFn = createServerFn()
     async ({ data: { id } }) =>
       await await db
         .selectFrom("membershipTypes")
+        .where("id", "=", id as number)
         .selectAll()
         .executeTakeFirst(),
   );
