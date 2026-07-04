@@ -8,19 +8,22 @@ import {
   saveMembershipTypeFn,
 } from "~utils/membershipTypes.functions";
 
+interface ISearchParams {
+  dialog?: "create" | "edit";
+  id?: number;
+}
+
 export const Route = createFileRoute("/admin/settings/membership")({
-  validateSearch: (search: { dialog?: "create" | "edit"; id?: number }) =>
-    search,
+  validateSearch: (search: ISearchParams) => search,
   component: MembershipSettingsPage,
+  loaderDeps: ({ search: { dialog, id } }) => ({ dialog, id }),
+  loader: async () => getMembershipTypesFn(),
 });
 
 function MembershipSettingsPage() {
   const search = Route.useSearch();
 
-  const query = useQuery(() => ({
-    queryKey: ["membership-types", search().id, search().dialog],
-    queryFn: useServerFn(getMembershipTypesFn),
-  }));
+  const membershipTypes = Route.useLoaderData();
 
   const navigate = Route.useNavigate();
 
@@ -36,7 +39,7 @@ function MembershipSettingsPage() {
   }));
 
   const selected = createMemo(() =>
-    query.data?.find((item) => item.id == search().id),
+    membershipTypes()?.find((item) => item.id == search().id),
   );
 
   return (
@@ -150,7 +153,7 @@ function MembershipSettingsPage() {
       </Show>
       <ul role="list" class="divide-y divide-gray-100">
         <Loading fallback={<span class="text-sm">Loading...</span>}>
-          <For each={query.data}>
+          <For each={membershipTypes()}>
             {(item) => (
               <li class="flex justify-between gap-x-6 py-5">
                 <div class="flex min-w-0 grow gap-x-4">

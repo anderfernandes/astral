@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from "@tanstack/solid-query";
+import { useMutation } from "@tanstack/solid-query";
 import { createFileRoute, Link } from "@tanstack/solid-router";
-import { createServerFn, useServerFn } from "@tanstack/solid-start";
+import { useServerFn } from "@tanstack/solid-start";
 import { createMemo, For, Loading, Show } from "solid-js";
 import { Button, Checkbox, Dialog, Input, Radio, Select } from "~components";
 import {
@@ -8,22 +8,24 @@ import {
   savePaymentMethodFn,
 } from "~utils/paymentMethods.functions";
 
+interface ISearchParams {
+  dialog?: "create" | "edit";
+  id?: number;
+}
+
 export const Route = createFileRoute("/admin/settings/payment")({
-  validateSearch: (search: { dialog?: "create" | "edit"; id?: number }) =>
-    search,
+  validateSearch: (search: ISearchParams) => search,
   loaderDeps: ({ search: { dialog, id } }) => ({ dialog, id }),
   component: PaymentSettingsPage,
+  loader: async () => getPaymentMethodsFn(),
 });
 
 function PaymentSettingsPage() {
-  const query = useQuery(() => ({
-    queryKey: ["payment-methods"],
-    queryFn: useServerFn(getPaymentMethodsFn),
-  }));
-
   const search = Route.useSearch();
 
   const navigate = Route.useNavigate();
+
+  const paymentMethods = Route.useLoaderData();
 
   const mutation = useMutation(() => ({
     mutationFn: useServerFn(savePaymentMethodFn),
@@ -37,7 +39,7 @@ function PaymentSettingsPage() {
   }));
 
   const selected = createMemo(() =>
-    query.data?.find((item) => item.id == search().id),
+    paymentMethods()?.find((item) => item.id == search().id),
   );
 
   return (
@@ -112,7 +114,7 @@ function PaymentSettingsPage() {
       </Show>
       <Loading fallback={<span class="text-sm">Loading...</span>}>
         <div class="mt-3 grid gap-3 lg:grid-cols-3">
-          <For each={query.data}>
+          <For each={paymentMethods()}>
             {(item) => (
               <Link
                 to="."

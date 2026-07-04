@@ -10,6 +10,8 @@ export const Route = createFileRoute("/(public)")({
 
 function RouteComponent() {
   const loaderData = Route.useLoaderData();
+
+  const navigate = Route.useNavigate();
   return (
     <>
       <div class="bg-white">
@@ -19,7 +21,7 @@ function RouteComponent() {
             class="flex items-center justify-between p-6 lg:px-8"
           >
             <div class="flex lg:flex-1">
-              <a href="#" class="-m-1.5 p-1.5">
+              <Link to="/" class="-m-1.5 p-1.5">
                 <span class="sr-only">{loaderData().name}</span>
                 <svg
                   viewBox="0 0 24 24"
@@ -40,7 +42,7 @@ function RouteComponent() {
                   alt=""
                   class="h-8 w-auto"
                 /> */}
-              </a>
+              </Link>
             </div>
             <div class="flex lg:hidden">
               <button
@@ -89,7 +91,7 @@ function RouteComponent() {
               <div tabindex="0" class="fixed inset-0 focus:outline-none">
                 <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                   <div class="flex items-center justify-between">
-                    <a href="#" class="-m-1.5 p-1.5">
+                    <Link to="/" class="-m-1.5 p-1.5">
                       <span class="sr-only">{loaderData().name}</span>
                       <svg
                         viewBox="0 0 24 24"
@@ -105,7 +107,7 @@ function RouteComponent() {
                           d="M 3.3357286,6.9976809 6.3405211,6.3405212 6.9976805,3.3357289 9.9284869,4.2690082 12,1.9953613 14.071513,4.2690081 17.002319,3.3357286 17.659479,6.3405211 20.664271,6.9976805 19.730992,9.9284869 22.004639,12 l -2.273647,2.071513 0.933279,2.930806 -3.004792,0.65716 L 17.00232,20.664271 14.071513,19.730992 12,22.004639 9.9284871,19.730992 6.9976809,20.664271 6.3405212,17.659479 3.3357289,17.00232 4.2690082,14.071513 1.9953613,12 4.2690081,9.9284871 Z"
                         />
                       </svg>
-                    </a>
+                    </Link>
                     <button
                       type="button"
                       command="close"
@@ -133,19 +135,27 @@ function RouteComponent() {
                   <div class="mt-6 flow-root">
                     <div class="-my-6 divide-y divide-gray-500/10">
                       <div class="space-y-2 py-6">
-                        <Link
-                          to="/"
+                        <button
+                          command="close"
+                          commandfor="mobile-menu"
+                          onClick={() => {
+                            navigate({ to: "/" });
+                          }}
                           class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                         >
                           Home
-                        </Link>
+                        </button>
                         <Show when={loaderData().hasMembershipTypes}>
-                          <Link
-                            to="/memberships"
+                          <button
+                            command="close"
+                            commandfor="mobile-menu"
+                            onClick={() => {
+                              navigate({ to: "/memberships" });
+                            }}
                             class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                           >
                             Memberships
-                          </Link>
+                          </button>
                         </Show>
                       </div>
                       <div class="py-6">

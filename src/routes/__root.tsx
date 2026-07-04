@@ -27,7 +27,7 @@ export const Route = createRootRoute({
       },
     ],
   }),
-  component: RootComponent,
+  shellComponent: RootComponent,
 });
 
 const queryClient = new QueryClient();

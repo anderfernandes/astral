@@ -37,7 +37,7 @@ function IndexPage() {
         </div>
         <div class="text-center">
           <h1 class="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl">
-            To inspire the explorer in everyone.
+            Inspiring the explorer in everyone.
           </h1>
           <p class="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8">
             We connecting our community to the wonders of science, space, and
