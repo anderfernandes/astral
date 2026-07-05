@@ -29,7 +29,7 @@ Microsoft SQL and MySQL support will be added soon.
 Environment defined settings.
 
 - `NAME`
-- `SALE_TAX_RATE` (e.g. 825 to get 8.25%)
+- `SALE_TAX_RATE` (e.g. 8.25 to get 8.25%)
 - `CONVENIENCE_FEE` (e.g 350 to charge a $3.50 convenince fee for online sales)
 - `LOCALE`
 - `CURRENCY`

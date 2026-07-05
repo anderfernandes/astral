@@ -2,21 +2,16 @@ import { untrack } from "@solidjs/web";
 import { useQuery } from "@tanstack/solid-query";
 import { createFileRoute, useNavigate } from "@tanstack/solid-router";
 import { useServerFn } from "@tanstack/solid-start";
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  For,
-  Loading,
-  Repeat,
-  Show,
-} from "solid-js";
+import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { Button, Dialog, Input, Select } from "~components";
+import { toCurrencyString } from "~utils/index";
 import { getMembershipTypeFn } from "~utils/membershipTypes.functions";
 
 export const Route = createFileRoute("/(public)/memberships/$typeId")({
   validateSearch: (search: {
-    dialog?: "free-secondaries" | "paid-secondaries";
+    dialog?: "secondary" | "secondary";
+    type?: "free" | "paid";
+    email?: string;
   }) => search,
   component: RouteComponent,
   loader: ({ params: { typeId } }) =>
@@ -36,15 +31,43 @@ function RouteComponent() {
     Pick<SaleItem, "name" | "description" | "price" | "quantity" | "type">[]
   >([]);
 
+  const helpers = createMemo(() => {
+    return {
+      canAddFreeSecondaries:
+        items().filter((item) => item.type === "MEMBERSHIP (FREE SECONDARY)")
+          .length < membershipType()?.maxFreeSecondaries!,
+      canAddPaidSecondaries:
+        items().filter((item) => item.type === "MEMBERSHIP (PAID SECONDARY)")
+          .length < membershipType()?.maxPaidSecondaries!,
+    };
+  });
+
   createEffect(
     () => membershipType(),
     (value, prev) => {
-      setItems([
+      setItems((current) => [
+        ...current,
         {
           name: value?.name as string,
-          description: "MEMBERSHIP (PRIMARY)",
+          description: "",
           price: value?.price as number,
           type: "MEMBERSHIP (PRIMARY)",
+          quantity: 1,
+        },
+      ]);
+    },
+  );
+
+  createEffect(
+    () => parentLoaderData(),
+    (value, prev) => {
+      setItems((current) => [
+        ...current,
+        {
+          name: "Convenience Fee",
+          description: "",
+          price: value.convenienceFee,
+          type: "CONVENIENCE FEE",
           quantity: 1,
         },
       ]);
@@ -56,7 +79,9 @@ function RouteComponent() {
       (total, item) => item.price * item.quantity + total,
       0,
     );
-    const tax = (parentLoaderData().taxRate / 10000) * subtotal;
+
+    const tax = (parentLoaderData().taxRate / 100) * subtotal;
+
     return {
       subtotal,
       tax,
@@ -153,15 +178,9 @@ function RouteComponent() {
                 {membershipType()?.name}
               </h1>
               <h5 class="text-3xl tracking-tight text-gray-900">
-                {((membershipType()?.price as number) / 100).toLocaleString(
-                  "en-US",
-                  {
-                    style: "currency",
-                    currency: "USD",
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 2,
-                  },
-                )}
+                {toCurrencyString(membershipType()?.price as number, {
+                  minimumFractionDigits: 0,
+                })}
               </h5>
               <p class="text-base text-gray-900">
                 {membershipType()?.description}
@@ -198,14 +217,10 @@ function RouteComponent() {
                     <span class="text-gray-600">
                       up to {membershipType()?.maxPaidSecondaries} paid
                       secondaries @{" "}
-                      {(
-                        (membershipType()?.paidSecondaryPrice as number) / 100
-                      ).toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 2,
-                      })}
+                      {toCurrencyString(
+                        membershipType()?.paidSecondaryPrice as number,
+                        { minimumFractionDigits: 0 },
+                      )}
                       /year each
                     </span>
                   </li>
@@ -223,14 +238,14 @@ function RouteComponent() {
                   when={(membershipType()?.maxFreeSecondaries as number) > 0}
                 >
                   <Button
-                    search={{ dialog: "free-secondaries" }}
                     text="Add Free Secondary"
                     variant="secondary"
                     type="button"
+                    disabled={!helpers().canAddFreeSecondaries}
                     onClick={() => {
                       navigate({
                         to: ".",
-                        search: { dialog: "free-secondaries" },
+                        search: { dialog: "secondary", type: "free" },
                       });
                     }}
                   />
@@ -238,7 +253,21 @@ function RouteComponent() {
                 <Show
                   when={(membershipType()?.maxPaidSecondaries as number) > 0}
                 >
-                  <Button text="Add Paid Secondary" variant="secondary" />
+                  <Button
+                    text="Add Paid Secondary"
+                    variant="secondary"
+                    type="button"
+                    onClick={() => {
+                      navigate({
+                        to: ".",
+                        search: { dialog: "secondary", type: "paid" },
+                      });
+                    }}
+                    disabled={
+                      helpers().canAddFreeSecondaries &&
+                      helpers().canAddPaidSecondaries
+                    }
+                  />
                 </Show>
               </div>
               <For each={items()}>
@@ -246,52 +275,39 @@ function RouteComponent() {
                   <div class="text-sm text-gray-600">
                     <p class="flex gap-1">
                       <span class="grow">{item.name}</span>
-                      <span>
-                        {(item.price / 100).toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                          maximumFractionDigits: 2,
-                        })}
-                      </span>
+                      <span>{toCurrencyString(item.price)}</span>
                     </p>
                     <p>{item.description}</p>
+                    <Show when={item.type != "CONVENIENCE FEE"}>
+                      <p>{item.type}</p>
+                    </Show>
                   </div>
                 )}
               </For>
+
               <div class="text-sm text-gray-600">
                 <p class="flex gap-1">
                   <span class="grow">Subtotal</span>
-                  <span>
-                    {(totals().subtotal / 100).toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                      maximumFractionDigits: 2,
-                    })}
-                  </span>
+                  <span>{toCurrencyString(totals().subtotal)}</span>
                 </p>
               </div>
               <div class="text-sm text-gray-600">
                 <p class="flex gap-1">
-                  <span class="grow">Tax</span>
-                  <span>
-                    {(totals().tax / 100).toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                      maximumFractionDigits: 2,
-                    })}
+                  <span class="grow">
+                    Tax (
+                    {(parentLoaderData().taxRate / 100).toLocaleString(
+                      "en-US",
+                      { style: "percent", minimumSignificantDigits: 1 },
+                    )}
+                    )
                   </span>
+                  <span>{toCurrencyString(totals().tax)}</span>
                 </p>
               </div>
               <div>
                 <p class="flex gap-1">
                   <span class="grow">Total</span>
-                  <span>
-                    {(totals().total / 100).toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                      maximumFractionDigits: 2,
-                    })}
-                  </span>
+                  <span>{toCurrencyString(totals().total)}</span>
                 </p>
               </div>
               <p class="mt-10 text-sm text-gray-600">
@@ -303,22 +319,15 @@ function RouteComponent() {
                 type="submit"
                 class="mt-10 flex w-full cursor-pointer items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-hidden"
               >
-                Pay{" "}
-                {(totals().total / 100).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                  maximumFractionDigits: 2,
-                })}
+                Pay {toCurrencyString(totals().total)}
               </button>
             </form>
           </div>
-          <Show
-            when={
-              search().dialog === "free-secondaries" ||
-              search().dialog === "paid-secondaries"
-            }
-          >
-            <Dialog title="Add Free Secondary">
+          <Show when={search().dialog === "secondary"}>
+            <Dialog
+              title={`Add ${search().type} secondary`}
+              subtitle={`Adds a ${search().type} secondary to the membership`}
+            >
               <form
                 class="grid gap-3"
                 onSubmit={(e) => {
@@ -326,17 +335,41 @@ function RouteComponent() {
 
                   const data = new FormData(e.currentTarget);
 
-                  if (search().dialog === "free-secondaries") {
-                    setItems((prev) => [
-                      ...prev,
-                      {
+                  const email = String(data.get("email"));
+
+                  if (
+                    items().some((item) => item.description.includes(email))
+                  ) {
+                    alert(`${email} has already been added.`);
+                    return;
+                  }
+
+                  if (search().type === "free") {
+                    setItems((prev) => {
+                      prev.splice(1, 0, {
                         name: `${data.get("firstName")} ${data.get("lastName")}`,
-                        description: "MEMBERSHIP (FREE SECONDARY)",
+                        description: email,
                         price: 0,
                         type: "MEMBERSHIP (FREE SECONDARY)",
                         quantity: 1,
-                      },
-                    ]);
+                      });
+
+                      return [...prev];
+                    });
+                  }
+
+                  if (search().type === "paid") {
+                    setItems((prev) => {
+                      prev.splice(prev.length - 1, 0, {
+                        name: `${data.get("firstName")} ${data.get("lastName")}`,
+                        description: email,
+                        price: membershipType()?.paidSecondaryPrice as number,
+                        type: "MEMBERSHIP (PAID SECONDARY)",
+                        quantity: 1,
+                      });
+
+                      return [...prev];
+                    });
                   }
 
                   navigate({ to: "." });
@@ -359,9 +392,9 @@ function RouteComponent() {
                 <Input
                   defaultValue="sarahfernandes@live.com"
                   label="Email"
+                  required
                   placeholder="Email"
                   name="email"
-                  hint="You may leave it blank for a child under 18 without an email."
                 />
                 <div class="flex justify-end">
                   <Button text="Add" type="submit" />
