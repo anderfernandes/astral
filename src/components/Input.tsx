@@ -1,4 +1,4 @@
-import { JSX, Show } from "@solidjs/web";
+import { JSX, Match, Show, Switch } from "@solidjs/web";
 
 interface IInputProps extends Partial<
   Pick<
@@ -18,11 +18,12 @@ interface IInputProps extends Partial<
 > {
   label?: JSX.Element;
   hint?: JSX.Element;
+  errors?: string[];
 }
 
 export function Input(props: IInputProps) {
   return (
-    <div>
+    <div class="group" data-has-errors={props.errors?.length! > 0}>
       <label for="email" class="block text-sm font-medium text-gray-900">
         {props.label}
         <Show when={props.required}>
@@ -34,7 +35,7 @@ export function Input(props: IInputProps) {
           when={props.value === undefined}
           fallback={
             <input
-              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black disabled:cursor-not-allowed disabled:bg-gray-100 sm:text-sm/6"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 group-data-has-errors:bg-red-50 group-data-has-errors:text-red-900 group-data-has-errors:outline-red-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black group-data-has-errors:focus:outline-red-600 disabled:cursor-not-allowed disabled:bg-gray-100 sm:text-sm/6"
               type={props.type}
               name={props.name}
               placeholder={props.placeholder}
@@ -49,7 +50,7 @@ export function Input(props: IInputProps) {
           }
         >
           <input
-            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black disabled:cursor-not-allowed disabled:bg-gray-100 sm:text-sm/6"
+            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 group-data-has-errors:bg-red-50 group-data-has-errors:text-red-900 group-data-has-errors:outline-red-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black group-data-has-errors:focus:outline-red-600 disabled:cursor-not-allowed disabled:bg-gray-100 sm:text-sm/6"
             type={props.type}
             name={props.name}
             placeholder={props.placeholder}
@@ -63,9 +64,14 @@ export function Input(props: IInputProps) {
           />
         </Show>
       </div>
-      <Show when={props.hint}>
-        <span class="text-sm text-gray-500">{props.hint}</span>
-      </Show>
+      <Switch>
+        <Match when={props.errors?.length! > 0}>
+          <span class="text-sm text-red-600">{props.errors?.at(0)}</span>
+        </Match>
+        <Match when={props.hint}>
+          <span class="text-sm text-gray-500">{props.hint}</span>
+        </Match>
+      </Switch>
     </div>
   );
 }
