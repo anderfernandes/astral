@@ -14,7 +14,8 @@
       "start": "ts-node src/index.ts",
       "test": "npm run migrate:testing && vitest run --bail 1 --mode testing",
       "migrate": "vite-node src/db/migrations/index.ts",
-      "migrate:testing": "rm -rf *.db && vite-node --mode testing src/db/migrations/index.ts"
+      "migrate:testing": "rm -rf *.db && vite-node --mode testing src/db/migrations/index.ts",
+      "postinstall": "npm run migrate"
    },
    "dependencies": {
       "@solidjs/web": "next",

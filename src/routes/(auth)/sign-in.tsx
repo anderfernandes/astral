@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/solid-router";
-import { Button, Input } from "../../components";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { useMutation } from "@tanstack/solid-query";
+import { Input, Button } from "~components";
 
 export const Route = createFileRoute("/(auth)/sign-in")({
   component: SignInPage,
@@ -18,7 +18,7 @@ function SignInPage() {
         Sign in to your account
       </h2>
       <form
-        class="grid w-full max-w-xs gap-3"
+        class="grid gap-3"
         onSubmit={async (e) => {
           e.preventDefault();
 
