@@ -1,6 +1,6 @@
 node_modules
 package-lock.json
-pnpm-locl.lock
+pnpm-lock.lock
 
 .DS_Store
 .cache
