@@ -28,6 +28,7 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootComponent,
+  notFoundComponent: () => <section class="w-screen h-screen">Not Found</section>
 });
 
 const queryClient = new QueryClient();

@@ -15,7 +15,7 @@ function RouteComponent() {
   return (
     <section class="mx-auto w-full lg:max-w-540">
       <div class="fixed top-0 hidden h-screen w-64 flex-col bg-black lg:flex">
-        <div class="flex h-16 items-center px-4">
+        <Link to="/" class="flex h-16 items-center px-4">
           <svg
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@ function RouteComponent() {
           src="https://tailwindui.com/plus/img/logos/mark.svg?color=white"
           alt="Your Company"
         /> */}
-        </div>
+        </Link>
 
         <div class="flex flex-1 flex-col overflow-y-auto">
           <nav class="flex-1 space-y-1 px-2 py-4">

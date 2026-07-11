@@ -1,6 +1,6 @@
 {
-   "name": "tanstack-solid-2",
-   "version": "1.0.0",
+   "name": "astral",
+   "version": "2.0.0",
    "description": "",
    "private": true,
    "type": "module",
@@ -17,28 +17,31 @@
       "migrate:testing": "rm -rf *.db && vite-node --mode testing src/db/migrations/index.ts"
    },
    "dependencies": {
-      "@solidjs/web": "^2.0.0-beta.7",
+      "@solidjs/web": "next",
       "@tailwindcss/vite": "^4.2.2",
-      "@tanstack/solid-query": "^6.0.0-beta.3",
-      "@tanstack/solid-router": "^2.0.0-beta.13",
-      "@tanstack/solid-start": "^2.0.0-beta.14",
+      "@tanstack/solid-query": "beta",
+      "@tanstack/solid-router": "beta",
+      "@tanstack/solid-start": "beta",
       "better-sqlite3": "^12.11.1",
       "kysely": "^0.29.2",
       "pg": "^8.22.0",
-      "solid-js": "^2.0.0-beta.7",
+      "solid-js": "next",
       "tailwindcss": "^4.2.2",
       "vite": "^8.0.8",
       "vitest": "^4.1.7"
    },
    "devDependencies": {
-      "@types/better-sqlite3": "^7.6.13",
-      "@types/node": "^25.6.0",
-      "@types/pg": "^8.20.0",
-      "nitro": "^3.0.260522-beta",
-      "prettier": "^3.8.3",
-      "prettier-plugin-tailwindcss": "^0.7.2",
+      "@types/better-sqlite3": "latest",
+      "@types/node": "latest",
+      "@types/pg": "latest",
+      "nitro": "latest",
+      "prettier": "latest",
+      "prettier-plugin-tailwindcss": "latest",
       "typescript": "^6.0.3",
-      "vite-node": "^6.0.0",
-      "vite-plugin-solid": "^3.0.0-next.5"
+      "vite-node": "latest",
+      "vite-plugin-solid": "next"
+   },
+   "allowScripts": {
+      "better-sqlite3@12.11.1": true
    }
 }
