@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { db } from "~db";
 
 test("1: save new user", async () => {
-  const user = await db
+  await db
     .insertInto("users")
     .values({
       email: "user@astralcloud.org",
@@ -11,28 +11,38 @@ test("1: save new user", async () => {
       password: "123456",
       roles: "[]",
     })
-    .returningAll()
+    //.returningAll()
+    .execute();
+
+  const user = await db
+    .selectFrom("users")
+    .selectAll()
     .executeTakeFirstOrThrow();
 
   expect(user?.firstName).toBe("Test");
 });
 
 test("2: assing ROLE_USER to user", async () => {
-  const user = await db
+  await db
     .updateTable("users")
     .set({
       roles: JSON.stringify(["ROLE_USER"]),
     })
     .where("id", "=", 1)
-    .returningAll()
-    .executeTakeFirst();
+    //.returningAll()
+    .executeTakeFirstOrThrow();
+
+  const user = await db
+    .selectFrom("users")
+    .selectAll()
+    .executeTakeFirstOrThrow();
 
   expect(JSON.parse(user?.roles as string)[0], "ROLE_USER");
 });
 
 test("3: throw if email already registered", async () => {
-  await expect(
-    db
+  expect(
+    await db
       .insertInto("users")
       .values({
         email: "user@astralcloud.org",
@@ -41,6 +51,6 @@ test("3: throw if email already registered", async () => {
         password: "123456",
         roles: "[]",
       })
-      .execute(),
-  ).rejects.toThrow();
+      .executeTakeFirstOrThrow(),
+  ).toThrow();
 });

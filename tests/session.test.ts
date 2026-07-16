@@ -4,22 +4,7 @@ import { expect, test } from "vitest";
 import { db } from "~db";
 
 test("1: save new session", async () => {
-  // const user = await User.create({
-  //   email: "userwithsession@astralcloud.org",
-  //   firstName: "Test",
-  //   lastName: "User",
-  //   password: "123456",
-  //   roles: [],
-  //   createdAt: new Date(),
-  // });
-  // await Session.create({
-  //   id: randomBytes(32).toString("hex"),
-  //   userId: user.id,
-  //   createdAt: new Date(),
-  //   expiresAt: new Date(),
-  // });
-
-  const user = await db
+  await db
     .insertInto("users")
     .values({
       email: "session.user@astralcloud.org",
@@ -28,7 +13,13 @@ test("1: save new session", async () => {
       password: "123456",
       roles: "[]",
     })
-    .returningAll()
+    //.returningAll()
+    .executeTakeFirstOrThrow();
+
+  const user = await db
+    .selectFrom("users")
+    .where("email", "=", "session.user@astralcloud.org")
+    .selectAll()
     .executeTakeFirstOrThrow();
 
   let expiresAt: any;
@@ -39,16 +30,25 @@ test("1: save new session", async () => {
       break;
     case "sqlite":
       expiresAt = sql`datetime(${new Date().toISOString()})`;
+      break;
+    case "mssql":
+      expiresAt = new Date();
+      break;
   }
 
-  const session = await db
+  await db
     .insertInto("sessions")
     .values({
       id: randomBytes(32).toString("hex"),
       userId: user.id,
       expiresAt,
     })
-    .returningAll()
+    //.returningAll()
+    .executeTakeFirstOrThrow();
+
+  const session = await db
+    .selectFrom("sessions")
+    .selectAll()
     .executeTakeFirstOrThrow();
 
   expect(session).toBeDefined();

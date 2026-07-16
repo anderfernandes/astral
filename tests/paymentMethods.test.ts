@@ -20,14 +20,14 @@ test("1: save new payment method", async () => {
       isActive: 1,
       isPublic: 1,
     })
-    .returningAll()
+    //.returningAll()
     .executeTakeFirstOrThrow();
 
   const item = await db
     .selectFrom("paymentMethods")
     .where("id", "=", 1)
     .selectAll()
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();
 
   expect(item?.updatedAt).toBeNull();
 });
@@ -42,7 +42,7 @@ test("2: update payment method", async () => {
     .selectFrom("paymentMethods")
     .where("id", "=", 1)
     .selectAll()
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();
 
   expect(item?.name).toBe("Updated Test Payment Method");
 });

@@ -16,14 +16,14 @@ test("1: save new membership type", async () => {
       isActive: 1,
       isPublic: 1,
     })
-    .returningAll()
+    //.returningAll()
     .executeTakeFirstOrThrow();
 
   const item = await db
     .selectFrom("membershipTypes")
     .where("id", "=", 1)
     .selectAll()
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();
 
   expect(item).toBeDefined();
   expect(item?.updatedAt).toBeNull();
@@ -48,7 +48,7 @@ test("3: update membership type", async () => {
     .selectFrom("membershipTypes")
     .where("id", "=", 1)
     .selectAll()
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();
 
   expect(item?.name).toBe("Updated Membership Type");
   expect(item?.updatedAt).toBeDefined();
