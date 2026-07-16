@@ -205,7 +205,8 @@ function MembershipSettingsPage() {
                         text={(item.price / 100).toLocaleString("en-US", {
                           style: "currency",
                           currency: "USD",
-                          maximumSignificantDigits: 2,
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 2,
                         })}
                       />
                       <Badge>
@@ -233,7 +234,8 @@ function MembershipSettingsPage() {
                             {
                               style: "currency",
                               currency: "USD",
-                              maximumSignificantDigits: 2,
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 2,
                             },
                           )}{" "}
                           each

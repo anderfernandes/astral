@@ -9,7 +9,7 @@ export const getMembershipTypeFn = createServerFn()
   .validator((data: { id: string | number }) => data)
   .handler(
     async ({ data: { id } }) =>
-      await await db
+      await db
         .selectFrom("membershipTypes")
         .where("id", "=", id as number)
         .selectAll()
