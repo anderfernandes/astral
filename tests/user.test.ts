@@ -41,8 +41,8 @@ test("2: assing ROLE_USER to user", async () => {
 });
 
 test("3: throw if email already registered", async () => {
-  expect(
-    await db
+  await expect(
+    db
       .insertInto("users")
       .values({
         email: "user@astralcloud.org",
@@ -52,5 +52,5 @@ test("3: throw if email already registered", async () => {
         roles: "[]",
       })
       .executeTakeFirstOrThrow(),
-  ).toThrow();
+  ).rejects.toThrow();
 });
