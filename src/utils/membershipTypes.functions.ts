@@ -35,18 +35,16 @@ export const saveMembershipTypeFn = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }) => {
     if (data.id) {
+      const { id, ...membershipType } = data;
+
       await db
         .updateTable("membershipTypes")
-        .set(data)
-        .where("id", "=", data.id)
+        .set(membershipType)
+        .where("id", "=", id)
         .execute();
 
       return;
     }
 
-    await db
-      .insertInto("membershipTypes")
-      .values(data)
-      .returningAll()
-      .execute();
+    await db.insertInto("membershipTypes").values(data).execute();
   });

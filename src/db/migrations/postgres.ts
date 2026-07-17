@@ -105,4 +105,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     )
     .addColumn("updatedAt", "timestamp")
     .execute();
+
+  console.info(`${process.env["DB_DRIVER"]} migrations executed succesfully!`);
 }

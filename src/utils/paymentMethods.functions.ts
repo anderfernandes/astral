@@ -20,14 +20,16 @@ export const savePaymentMethodFn = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }) => {
     if (data.id) {
+      const { id, ...method } = data;
+
       await db
         .updateTable("paymentMethods")
-        .set(data)
-        .where("id", "=", data.id)
+        .set(method)
+        .where("id", "=", id)
         .execute();
 
       return;
     }
 
-    await db.insertInto("paymentMethods").values(data).returningAll().execute();
+    await db.insertInto("paymentMethods").values(data).execute();
   });

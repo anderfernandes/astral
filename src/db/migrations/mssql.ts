@@ -40,8 +40,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("maxFreeSecondaries", "integer", (c) => c.notNull())
     .addColumn("paidSecondaryPrice", "integer", (c) => c.notNull())
     .addColumn("maxPaidSecondaries", "integer", (c) => c.notNull())
-    .addColumn("isActive", sql`BIT`, (c) => c.notNull())
-    .addColumn("isPublic", sql`BIT`, (c) => c.notNull())
+    .addColumn("isActive", sql`TINYINT`, (c) => c.notNull())
+    .addColumn("isPublic", sql`TINYINT`, (c) => c.notNull())
     .addColumn("createdAt", "datetime", (c) =>
       c.notNull().defaultTo(sql`GETDATE()`),
     )
@@ -55,8 +55,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("name", "varchar(255)", (c) => c.notNull())
     .addColumn("description", "varchar(255)", (c) => c.notNull())
     .addColumn("type", "varchar(255)", (c) => c.notNull())
-    .addColumn("isActive", sql`BIT`, (c) => c.notNull())
-    .addColumn("isPublic", sql`BIT`, (c) => c.notNull())
+    .addColumn("isActive", sql`TINYINT`, (c) => c.notNull())
+    .addColumn("isPublic", sql`TINYINT`, (c) => c.notNull())
     .addColumn("createdAt", "datetime", (c) =>
       c.notNull().defaultTo(sql`GETDATE()`),
     )
@@ -99,7 +99,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("id", "integer", (c) => c.primaryKey().modifyEnd(sql`IDENTITY`))
     .addColumn("status", "varchar(255)", (c) => c.notNull())
     .addColumn("source", "varchar(255)", (c) => c.notNull())
-    .addColumn("isTaxable", sql`BIT`, (c) => c.notNull())
+    .addColumn("isTaxable", sql`TINYINT`, (c) => c.notNull())
     .addColumn("createdAt", "datetime", (c) =>
       c.notNull().defaultTo(sql`GETDATE()`),
     )
