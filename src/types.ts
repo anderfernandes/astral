@@ -23,16 +23,18 @@ declare global {
   type UserInsertable = Insertable<IUsersTable>;
   type UserUpdateable = Updateable<IUsersTable>;
 
-  interface ISessionsTable {
+  interface ITokensTable {
     id: string;
     userId: number;
+    purpose:
+      "activation" | "authentication" | "password recovery" | "email recovery";
     createdAt: ColumnType<Date, string | undefined, never>;
     expiresAt: ColumnType<Date, string | undefined, never>;
   }
 
-  type Session = Selectable<ISessionsTable>;
-  type SessionInsertable = Insertable<ISessionsTable>;
-  type SessionUpdateable = Updateable<ISessionsTable>;
+  type Session = Selectable<ITokensTable>;
+  type SessionInsertable = Insertable<ITokensTable>;
+  type SessionUpdateable = Updateable<ITokensTable>;
 
   interface IMembershipTypesTable {
     id: Generated<number>;
@@ -125,7 +127,7 @@ declare global {
     users: IUsersTable;
     membershipTypes: IMembershipTypesTable;
     paymentMethods: IPaymentMethodsTable;
-    sessions: ISessionsTable;
+    tokens: ITokensTable;
     saleItems: ISaleItemsTable;
     sales: ISalesTable;
   }

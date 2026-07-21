@@ -1,10 +1,14 @@
 import { useMutation } from "@tanstack/solid-query";
 import { createFileRoute, Link } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
+import { getRequest } from "@tanstack/solid-start/server";
+import { sql } from "kysely";
+import { randomBytes } from "node:crypto";
 import { createSignal, Match, Show, Switch } from "solid-js";
 import { Alert, Button, Input } from "~components";
 import { db } from "~db";
-import { createHash } from "~utils/index.server";
+import { createHash, encrypt } from "~utils/index.server";
+import mailer from "~utils/mailer.server";
 
 export const Route = createFileRoute("/(auth)/register")({
   component: RegisterPage,
@@ -63,6 +67,7 @@ function RegisterPage() {
               label="First Name"
               name="firstName"
               hint="First Name"
+              disabled={mutation.isPending}
               required
             />
             <Input
@@ -70,6 +75,8 @@ function RegisterPage() {
               hint="Last Name"
               label="Last Name"
               name="lastName"
+              disabled={mutation.isPending}
+              required
             />
           </div>
           <Input
@@ -80,6 +87,7 @@ function RegisterPage() {
             hint="Email"
             required
             errors={errors().filter((e) => e.toLowerCase().includes("email"))}
+            disabled={mutation.isPending}
           />
           <Input
             type="email"
@@ -89,6 +97,7 @@ function RegisterPage() {
             hint="Confirm Email"
             required
             errors={errors().filter((e) => e.toLowerCase().includes("email"))}
+            disabled={mutation.isPending}
           />
           <Input
             name="password"
@@ -101,6 +110,7 @@ function RegisterPage() {
             errors={errors().filter((e) =>
               e.toLowerCase().includes("password"),
             )}
+            disabled={mutation.isPending}
           />
           <Input
             name="passwordConfirmation"
@@ -112,8 +122,9 @@ function RegisterPage() {
             errors={errors().filter((e) =>
               e.toLowerCase().includes("password"),
             )}
+            disabled={mutation.isPending}
           />
-          <Button text="Register" type="submit" />
+          <Button text="Register" type="submit" disabled={mutation.isPending} />
         </form>
       </Show>
       <p class="mt-10 text-center text-sm/6 text-gray-500">
@@ -165,6 +176,40 @@ const registerFn = createServerFn({ method: "POST" })
           roles: JSON.stringify(["ROLE_USER"]),
         })
         .execute();
+
+      const user = await db
+        .selectFrom("users")
+        .where("email", "=", data.email)
+        .selectAll()
+        .executeTakeFirstOrThrow();
+
+      const token = randomBytes(32).toString("base64url");
+
+      const expiresAt = new Date();
+      expiresAt.setMinutes(expiresAt.getMinutes() + 15);
+
+      await db
+        .insertInto("tokens")
+        .values({
+          id: token,
+          userId: user?.id,
+          purpose: "activation",
+          expiresAt: (process.env["DB_DRIVER"] === "sqlite"
+            ? sql`DATETIME(${expiresAt.toISOString()})`
+            : expiresAt) as unknown as string,
+        })
+        .execute();
+
+      const url = new URL(getRequest().url);
+
+      const res = await mailer.sendMail({
+        from: process.env["MAIL_FROM"],
+        to: data.email,
+        subject: `Activate your ${process.env["NAME"]} account`,
+        html: `<h1>Welcome to ${process.env["NAME"]}!</h1><p>Click <a target="_blank" href="${url.origin}/activate?token=${token}">here</a> to activate your account.</p>`,
+      });
+
+      console.log(res);
 
       return { success: true };
     } catch (error) {

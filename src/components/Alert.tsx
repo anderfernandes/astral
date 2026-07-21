@@ -55,14 +55,14 @@ export function Alert(props: IAlertProps) {
             </Switch>
           </svg>
         </div>
-        <div class="ml-3 flex-1 md:flex md:justify-between">
+        <div class="ml-3 flex-1 md:justify-between">
           <Show when={props.title}>
-            <p class="text-sm text-black group-data-[variant=error]:text-red-800 group-data-[variant=success]:text-green-800">
+            <p class="mb-2 text-sm text-black group-data-[variant=error]:text-red-800 group-data-[variant=success]:text-green-800">
               {props.title}
             </p>
           </Show>
           <Show when={props.text}>
-            <p class="mt-2 text-sm text-gray-700 group-data-[variant=error]:text-red-700 group-data-[variant=success]:text-green-700 md:mt-0 md:ml-6">
+            <p class="text-sm text-gray-700 group-data-[variant=error]:text-red-700 group-data-[variant=success]:text-green-700">
               {props.text}
             </p>
           </Show>

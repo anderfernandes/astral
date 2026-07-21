@@ -18,13 +18,15 @@ export async function up(db: Kysely<any>): Promise<void> {
     .execute();
 
   await db.schema
-    .createTable("sessions")
+    .createTable("tokens")
     .ifNotExists()
     .addColumn("id", "varchar(255)", (c) => c.notNull())
     .addColumn("userId", "integer", (c) => c.notNull())
+    .addColumn("purpose", "varchar(255)", (c) => c.notNull())
     .addColumn("createdAt", "timestamp", (c) =>
       c.notNull().defaultTo(sql`current_timestamp`),
     )
+    .addColumn("updatedAt", "timestamp")
     .addColumn("expiresAt", "timestamp", (c) => c.notNull())
     .execute();
 

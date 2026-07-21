@@ -1,4 +1,8 @@
-import crypto from "node:crypto";
+import crypto, {
+  createCipheriv,
+  createDecipheriv,
+  randomBytes,
+} from "node:crypto";
 
 const KEY = process.env["KEY"];
 
@@ -34,4 +38,44 @@ export async function verifyHash(text: string, hash: string) {
   if (stored.length !== derived.length) return false;
 
   return crypto.timingSafeEqual(stored, derived);
+}
+
+export function encrypt(text: string) {
+  const iv = randomBytes(12);
+
+  const cipher = createCipheriv(
+    "aes-256-gcm",
+    process.env["KEY"] as string,
+    iv,
+  );
+
+  const encrypted = Buffer.concat([
+    cipher.update(text, "utf-8"),
+    cipher.final(),
+  ]);
+
+  return {
+    iv: iv.toString(),
+    cipherString: encrypted.toString("hex"),
+    tag: cipher.getAuthTag().toString(),
+  };
+}
+
+export function decrypt(data: {
+  iv: string;
+  cipherString: string;
+  tag: string;
+}) {
+  const decipher = createDecipheriv(
+    "aes-256-gcm",
+    process.env["KEY"] as string,
+    Buffer.from(data.iv, "hex"),
+  );
+
+  decipher.setAuthTag(Buffer.from(data.tag, "hex"));
+
+  return Buffer.concat([
+    decipher.update(Buffer.from(data.cipherString, "hex")),
+    decipher.final(),
+  ]).toString("utf-8");
 }

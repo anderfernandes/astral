@@ -11,7 +11,7 @@ function RouteComponent() {
         left
       </div>
       <div class="col-span-12 grid content-evenly overflow-y-auto p-4 lg:col-span-4">
-        <div class="grid w-full justify-self-center lg:max-w-sm">
+        <div class="grid w-full max-w-sm justify-self-center">
           <svg
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"

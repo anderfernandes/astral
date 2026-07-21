@@ -22,32 +22,23 @@ test("1: save new session", async () => {
     .selectAll()
     .executeTakeFirstOrThrow();
 
-  let expiresAt: any;
-
-  switch (process.env["DB_DRIVER"]) {
-    case "postgres":
-      expiresAt = new Date();
-      break;
-    case "sqlite":
-      expiresAt = sql`datetime(${new Date().toISOString()})`;
-      break;
-    case "mssql":
-      expiresAt = new Date();
-      break;
-  }
+  let expiresAt = (process.env["DB_DRIVER"] === "sqlite"
+    ? sql`DATETIME(${new Date().toISOString()})`
+    : new Date()) as unknown as string;
 
   await db
-    .insertInto("sessions")
+    .insertInto("tokens")
     .values({
       id: randomBytes(32).toString("hex"),
       userId: user.id,
+      purpose: "activation",
       expiresAt,
     })
     //.returningAll()
     .executeTakeFirstOrThrow();
 
   const session = await db
-    .selectFrom("sessions")
+    .selectFrom("tokens")
     .selectAll()
     .executeTakeFirstOrThrow();
 
