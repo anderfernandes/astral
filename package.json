@@ -14,11 +14,10 @@
       "start": "ts-node src/index.ts",
       "test": "npm run migrate:testing && vitest run --bail 1 --mode testing",
       "migrate": "vite-node src/db/migrations/index.ts",
-      "migrate:testing": "rm -rf *_testing.db && vite-node --mode testing src/db/migrations/index.ts",
-      "postinstall": "npm run migrate"
+      "migrate:testing": "rm -rf *_testing.db && vite-node --mode testing src/db/migrations/index.ts"
    },
    "dependencies": {
-      "@solidjs/web": "2.0.0-beta.17",
+      "@solidjs/web": "2.0.0-beta.21",
       "@tailwindcss/vite": "^4.3.3",
       "@tanstack/solid-query": "beta",
       "@tanstack/solid-router": "beta",
@@ -27,7 +26,7 @@
       "kysely": "^0.29.4",
       "nodemailer": "^9.0.3",
       "pg": "^8.22.0",
-      "solid-js": "2.0.0-beta.17",
+      "solid-js": "2.0.0-beta.21",
       "tailwindcss": "^4.3.3",
       "tarn": "^3.1.2",
       "tedious": "^20.0.0",
@@ -37,14 +36,14 @@
    "devDependencies": {
       "@types/better-sqlite3": "latest",
       "@types/node": "latest",
-      "@types/nodemailer": "^8.0.1",
+      "@types/nodemailer": "latest",
       "@types/pg": "latest",
       "nitro": "latest",
       "prettier": "latest",
       "prettier-plugin-tailwindcss": "latest",
       "typescript": "^6.0.3",
       "vite-node": "latest",
-      "vite-plugin-solid": "3.0.0-next.7"
+      "vite-plugin-solid": "3.0.0-next.14"
    },
    "allowScripts": {
       "better-sqlite3@12.11.1": true
