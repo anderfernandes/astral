@@ -29,12 +29,13 @@ declare global {
     purpose:
       "activation" | "authentication" | "password recovery" | "email recovery";
     createdAt: ColumnType<Date, string | undefined, never>;
+    updatedAt: ColumnType<Date, string | undefined, never>;
     expiresAt: ColumnType<Date, string | undefined, never>;
   }
 
-  type Session = Selectable<ITokensTable>;
-  type SessionInsertable = Insertable<ITokensTable>;
-  type SessionUpdateable = Updateable<ITokensTable>;
+  type Token = Selectable<ITokensTable>;
+  type TokenInsertable = Insertable<ITokensTable>;
+  type TokenUpdateable = Updateable<ITokensTable>;
 
   interface IMembershipTypesTable {
     id: Generated<number>;

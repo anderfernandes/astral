@@ -16,6 +16,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
+import { Route as authActivateRouteImport } from './routes/(auth)/activate'
 import { Route as AdminSettingsRouteRouteImport } from './routes/admin/settings/route'
 import { Route as AdminSettingsIndexRouteImport } from './routes/admin/settings/index'
 import { Route as publicMembershipsIndexRouteImport } from './routes/(public)/memberships/index'
@@ -56,6 +57,11 @@ const authRegisterRoute = authRegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => authRouteRoute,
 } as any)
+const authActivateRoute = authActivateRouteImport.update({
+  id: '/activate',
+  path: '/activate',
+  getParentRoute: () => authRouteRoute,
+} as any)
 const AdminSettingsRouteRoute = AdminSettingsRouteRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -90,6 +96,7 @@ const publicMembershipsTypeIdRoute = publicMembershipsTypeIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin/settings': typeof AdminSettingsRouteRouteWithChildren
+  '/activate': typeof authActivateRoute
   '/register': typeof authRegisterRoute
   '/sign-in': typeof authSignInRoute
   '/': typeof publicIndexRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings/': typeof AdminSettingsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/activate': typeof authActivateRoute
   '/register': typeof authRegisterRoute
   '/sign-in': typeof authSignInRoute
   '/': typeof publicIndexRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/(public)': typeof publicRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin/settings': typeof AdminSettingsRouteRouteWithChildren
+  '/(auth)/activate': typeof authActivateRoute
   '/(auth)/register': typeof authRegisterRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(public)/': typeof publicIndexRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/admin'
     | '/admin/settings'
+    | '/activate'
     | '/register'
     | '/sign-in'
     | '/'
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/admin/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/activate'
     | '/register'
     | '/sign-in'
     | '/'
@@ -158,6 +169,7 @@ export interface FileRouteTypes {
     | '/(public)'
     | '/admin'
     | '/admin/settings'
+    | '/(auth)/activate'
     | '/(auth)/register'
     | '/(auth)/sign-in'
     | '/(public)/'
@@ -226,6 +238,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof authRegisterRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/(auth)/activate': {
+      id: '/(auth)/activate'
+      path: '/activate'
+      fullPath: '/activate'
+      preLoaderRoute: typeof authActivateRouteImport
+      parentRoute: typeof authRouteRoute
+    }
     '/admin/settings': {
       id: '/admin/settings'
       path: '/settings'
@@ -272,11 +291,13 @@ declare module '@tanstack/solid-router' {
 }
 
 interface authRouteRouteChildren {
+  authActivateRoute: typeof authActivateRoute
   authRegisterRoute: typeof authRegisterRoute
   authSignInRoute: typeof authSignInRoute
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
+  authActivateRoute: authActivateRoute,
   authRegisterRoute: authRegisterRoute,
   authSignInRoute: authSignInRoute,
 }

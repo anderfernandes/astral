@@ -17,6 +17,7 @@
       "migrate:testing": "rm -rf *_testing.db && vite-node --mode testing src/db/migrations/index.ts"
    },
    "dependencies": {
+      "@js-temporal/polyfill": "^0.5.1",
       "@solidjs/web": "2.0.0-beta.21",
       "@tailwindcss/vite": "^4.3.3",
       "@tanstack/solid-query": "beta",
