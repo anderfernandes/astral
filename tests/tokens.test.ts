@@ -2,6 +2,7 @@ import { sql } from "kysely";
 import { randomBytes } from "node:crypto";
 import { expect, test } from "vitest";
 import { db } from "~db";
+import { getCurrentDateTimeString } from "~utils/index";
 
 test("1: save new session", async () => {
   await db
@@ -22,25 +23,21 @@ test("1: save new session", async () => {
     .selectAll()
     .executeTakeFirstOrThrow();
 
-  let expiresAt = (process.env["DB_DRIVER"] === "sqlite"
-    ? sql`DATETIME(${new Date().toISOString()})`
-    : new Date()) as unknown as string;
-
   await db
     .insertInto("tokens")
     .values({
-      id: randomBytes(32).toString("hex"),
+      id: randomBytes(32).toString("base64url"),
       userId: user.id,
       purpose: "activation",
-      expiresAt,
+      expiresAt: getCurrentDateTimeString(),
     })
     //.returningAll()
     .executeTakeFirstOrThrow();
 
-  const session = await db
+  const token = await db
     .selectFrom("tokens")
     .selectAll()
     .executeTakeFirstOrThrow();
 
-  expect(session).toBeDefined();
+  expect(token).toBeDefined();
 });

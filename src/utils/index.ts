@@ -13,13 +13,11 @@ export function toCurrencyString(
 }
 
 export function getCurrentDateTimeString() {
-  return console.log(
-    Temporal.Now.instant()
-      .toZonedDateTimeISO("UTC")
-      .toPlainDateTime()
-      .toString({ smallestUnit: "second" })
-      .replace("T", " "),
-  );
+  return Temporal.Now.instant()
+    .toZonedDateTimeISO("UTC")
+    .toPlainDateTime()
+    .toString({ smallestUnit: "second" })
+    .replace("T", " ");
 }
 
 export function toDateTimeString(datetime: string) {
