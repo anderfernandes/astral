@@ -3,13 +3,14 @@ import { randomBytes } from "node:crypto";
 import { expect, test } from "vitest";
 import { db } from "~db";
 import { getCurrentDateTimeString } from "~utils/index";
+import * as UserRepository from "~repositories/UserRepository";
 
 test("1: save new session", async () => {
   await db
     .insertInto("users")
     .values({
-      email: "session.user@astralcloud.org",
-      firstName: "Test",
+      email: "token.user@astralcloud.org",
+      firstName: "Token",
       lastName: "User",
       password: "123456",
       roles: "[]",
@@ -19,7 +20,7 @@ test("1: save new session", async () => {
 
   const user = await db
     .selectFrom("users")
-    .where("email", "=", "session.user@astralcloud.org")
+    .where("email", "=", "token.user@astralcloud.org")
     .selectAll()
     .executeTakeFirstOrThrow();
 

@@ -1,11 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/solid-router";
-import { createServerFn, createServerOnlyFn } from "@tanstack/solid-start";
-import { sql } from "kysely";
-import { db } from "~db";
-import { Temporal } from "@js-temporal/polyfill";
-import { getCurrentDateTimeString, toDateTimeString } from "~utils/index";
-import { Alert, Button } from "~components";
-import { Match, Show, Switch } from "solid-js";
+import { createServerOnlyFn } from "@tanstack/solid-start";
+import { Alert } from "~components";
+import { Show } from "solid-js";
+import * as UserRepository from "~repositories/UserRepository";
 
 export const Route = createFileRoute("/(auth)/activate")({
   component: ActivatePage,
@@ -14,9 +11,9 @@ export const Route = createFileRoute("/(auth)/activate")({
     token: search.token,
   }),
   loader: async ({ deps }) => {
-    const user = await activateAccountFn(deps.token);
+    const token = await activateAccountFn(deps.token);
 
-    if (!user) return { success: false };
+    if (!token) return { success: false };
 
     return { success: true };
   },
@@ -48,33 +45,4 @@ function ActivatePage() {
   );
 }
 
-const activateAccountFn = createServerOnlyFn(async (tokenId: string) => {
-  const token = await db
-    .selectFrom("tokens")
-    .where("id", "=", tokenId)
-    .where("expiresAt", "<=", getCurrentDateTimeString() as any)
-    .where("updatedAt", "=", null)
-    .selectAll()
-    .executeTakeFirst();
-
-  if (!token) return undefined;
-
-  await db
-    .updateTable("tokens")
-    .set({
-      updatedAt: getCurrentDateTimeString() as any,
-      expiresAt: getCurrentDateTimeString() as any,
-    })
-    .where("id", "=", tokenId)
-    .where("expiresAt", "<=", getCurrentDateTimeString() as any)
-    .executeTakeFirst();
-
-  db.updateTable("users")
-    .set({
-      activatedAt: getCurrentDateTimeString() as any,
-    })
-    .where("id", "=", token?.userId)
-    .executeTakeFirstOrThrow();
-
-  return token;
-});
+const activateAccountFn = createServerOnlyFn(UserRepository.activate);

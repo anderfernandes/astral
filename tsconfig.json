@@ -12,8 +12,8 @@
     "paths": {
       "~components": ["./src/components/index.ts"],
       "~db": ["./src/db/index.server.ts"],
-      "~repositories": ["./src/db/repositories/index.server.ts"],
-      "~utils/*": ["./src/utils/*"]
+      "~utils/*": ["./src/utils/*"],
+      "~repositories/UserRepository": ["./src/repositories/UserRepository.server.ts"],
     }
   }
 }
