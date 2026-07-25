@@ -1,10 +1,14 @@
 import { createFileRoute, Outlet } from "@tanstack/solid-router";
+import { getSettingsFn } from "~utils/settings.functions";
 
 export const Route = createFileRoute("/(auth)")({
   component: RouteComponent,
+  loader: () => getSettingsFn(),
 });
 
 function RouteComponent() {
+  const loaderData = Route.useLoaderData();
+
   return (
     <section class="mx-auto grid h-svh max-w-[2160px] grid-cols-12">
       <div class="hidden bg-[url('/sky-5114501_1280.jpg')] bg-cover bg-center lg:col-span-8 lg:block">
@@ -17,7 +21,7 @@ function RouteComponent() {
             xmlns="http://www.w3.org/2000/svg"
             stroke="currentColor"
             stroke-width="1.75"
-            class="mx-auto size-16"
+            class="mx-auto mb-4 size-16"
           >
             <circle cx="12" cy="12" r="5" fill="black" />
             <path

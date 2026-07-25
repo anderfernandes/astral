@@ -16,6 +16,7 @@ pnpm-lock.yaml
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/src/routeTree.gen.ts
 
 *.db
 .env.*

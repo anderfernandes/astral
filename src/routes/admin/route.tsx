@@ -63,6 +63,18 @@ function RouteComponent() {
               }
             />
             <SidebarItem
+              to="/admin/users"
+              text="Users"
+              icon={
+                <svg viewBox="0 0 24 24" class="size-6">
+                  <path
+                    fill="currentColor"
+                    d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"
+                  />
+                </svg>
+              }
+            />
+            <SidebarItem
               to="/admin/settings"
               text="Settings"
               icon={
@@ -117,11 +129,11 @@ function RouteComponent() {
           </a>
         </div>
       </div>
-      <div class="p-4 lg:mx-64">
+      <div class="mb-16 p-4 lg:mx-64 lg:mb-0">
         <Outlet />
       </div>
       <div class="fixed bottom-0 flex h-16 w-full bg-black lg:hidden">
-        <NavbarItemProps
+        <NavbarItem
           text="Dashboard"
           to="/admin"
           icon={
@@ -144,7 +156,19 @@ function RouteComponent() {
             </svg>
           }
         />
-        <NavbarItemProps
+        <NavbarItem
+          text="Users"
+          to="/admin/users"
+          icon={
+            <svg viewBox="0 0 24 24" class="size-6">
+              <path
+                fill="currentColor"
+                d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"
+              />
+            </svg>
+          }
+        />
+        <NavbarItem
           text="Settings"
           to="/admin/settings"
           icon={
@@ -181,7 +205,7 @@ function RouteComponent() {
   );
 }
 
-function NavbarItemProps(props: ISidebarItemProps) {
+function NavbarItem(props: ISidebarItemProps) {
   const { text, icon, to } = props;
   return (
     <Link
