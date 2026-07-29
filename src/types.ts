@@ -29,8 +29,8 @@ declare global {
     purpose:
       "activation" | "authentication" | "password recovery" | "email recovery";
     createdAt: ColumnType<Date, string | undefined, never>;
-    updatedAt: ColumnType<Date, string | undefined, never>;
-    expiresAt: ColumnType<Date, string | undefined, never>;
+    updatedAt: ColumnType<Date, string | undefined, string>;
+    expiresAt: ColumnType<Date | string, string, string>;
   }
 
   type Token = Selectable<ITokensTable>;

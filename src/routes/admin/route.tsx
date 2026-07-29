@@ -3,15 +3,76 @@ import {
   Link,
   LinkProps,
   Outlet,
+  redirect,
 } from "@tanstack/solid-router";
 import { JSX } from "@solidjs/web";
 import { Button } from "~components";
+import { getRequestHeader } from "@tanstack/solid-start/server";
+import { db } from "~db";
+import { getCurrentDateTimeString } from "~utils/index";
+import { createServerFn, useServerFn } from "@tanstack/solid-start";
+import { createMemo } from "solid-js";
+import { signoutFn } from "~utils/account.functions";
+import { useMutation } from "@tanstack/solid-query";
+
+const getUserFromToken = createServerFn().handler(async () => {
+  const header = getRequestHeader("Cookie");
+
+  if (!header) {
+    console.log("no header");
+    throw redirect({ to: "/sign-in" });
+  }
+
+  const token = header?.split("=")[1];
+
+  if (!token) {
+    console.log("no token");
+    throw redirect({ to: "/sign-in" });
+  }
+
+  return await db
+    .selectFrom("users")
+    .leftJoin("tokens", "users.id", "tokens.userId")
+    .select([
+      "users.id as id",
+      "users.email as email",
+      "users.firstName as firstName",
+      "users.lastName as lastName",
+      "users.roles",
+      // "tokens.id as tokenId",
+      // "tokens.expiresAt as tokenExpiresAt",
+      // "tokens.purpose as tokenPurpose",
+      // "tokens.createdAt as tokenCreatedAt",
+    ])
+    .where("tokens.id", "=", token as string)
+    .where("tokens.purpose", "=", "authentication")
+    .where("tokens.expiresAt", ">=", getCurrentDateTimeString() as any)
+    .executeTakeFirst();
+});
 
 export const Route = createFileRoute("/admin")({
   component: RouteComponent,
+  loader: async () => {
+    const user = await getUserFromToken();
+
+    if (!user) {
+      console.log("no user");
+      throw redirect({ to: "/sign-in" });
+    }
+
+    return { user };
+  },
 });
 
 function RouteComponent() {
+  const loaderData = Route.useLoaderData();
+
+  const user = createMemo(() => loaderData().user);
+
+  const mutation = useMutation(() => ({
+    mutationFn: useServerFn(signoutFn),
+  }));
+
   return (
     <section class="mx-auto w-full lg:max-w-540">
       <div class="fixed top-0 hidden h-screen w-64 flex-col bg-black lg:flex">
@@ -98,7 +159,18 @@ function RouteComponent() {
           </nav>
         </div>
         <div class="grid gap-4 p-4">
-          <Button to="/sign-in" text="Logout" variant="secondary" />
+          <form
+            class="grid"
+            onSubmit={async (e) => {
+              e.preventDefault();
+
+              if (confirm("Are you sure you want to sign out?")) {
+                mutation.mutate({});
+              }
+            }}
+          >
+            <Button text="Sign out" variant="secondary" />
+          </form>
           <a href="#" class="group block w-full">
             <div class="flex items-center">
               <div>
@@ -120,9 +192,11 @@ function RouteComponent() {
                 </svg>
               </div>
               <div class="ml-3">
-                <p class="text-sm font-medium text-white">Anderson Fernandes</p>
+                <p class="text-sm font-medium text-white">
+                  {user().firstName} {user().lastName}
+                </p>
                 <p class="text-xs font-medium text-gray-400 group-hover:text-white">
-                  Planetarium Assistant
+                  {user().roles}
                 </p>
               </div>
             </div>
@@ -189,8 +263,17 @@ function RouteComponent() {
             </svg>
           }
         />
-        <form class="flex basis-1/3 items-center justify-center">
-          <button class="flex flex-col items-center justify-center gap-1 px-2 text-xs text-white">
+        <form
+          class="flex basis-1/3 items-center justify-center"
+          onSubmit={async (e) => {
+            e.preventDefault();
+
+            if (confirm("Are you sure you want to sign out?")) {
+              mutation.mutate({});
+            }
+          }}
+        >
+          <button class="flex cursor-pointer flex-col items-center justify-center gap-1 px-2 text-xs text-white">
             <svg viewBox="0 0 24 24" class="size-6">
               <path
                 fill="currentColor"

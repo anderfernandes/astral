@@ -1,10 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/solid-router";
+import { createFileRoute, Link, redirect } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { useMutation } from "@tanstack/solid-query";
 import { Input, Button, Alert } from "~components";
 import { createSignal, Show } from "solid-js";
 import { db } from "~db";
 import { verifyHash } from "~utils/index.server";
+import { randomBytes } from "node:crypto";
+import { setResponseHeader } from "@tanstack/solid-start/server";
+import { Temporal } from "@js-temporal/polyfill";
 
 export const Route = createFileRoute("/(auth)/sign-in")({
   component: SignInPage,
@@ -126,11 +129,42 @@ const signInFn = createServerFn({ method: "POST" })
       .select(["id", "email", "password", "activatedAt"])
       .executeTakeFirstOrThrow();
 
-    console.log(user);
+    //console.log(user);
 
     if (!(await verifyHash(password, user.password))) {
       throw new Error("Invalid credentials.");
     }
 
-    return { success: true };
+    const token = randomBytes(32).toString("base64url");
+
+    const maxAge = 60 * 60 * 1;
+
+    const expiresAt = Temporal.Now.zonedDateTimeISO("UTC")
+      .add({ minutes: maxAge / 60 })
+      .toPlainDateTime()
+      .toString({ smallestUnit: "seconds" })
+      .replace("T", " ");
+
+    //console.log(expiresAt);
+
+    await db
+      .insertInto("tokens")
+      .values({
+        id: token,
+        userId: user.id,
+        purpose: "authentication",
+        expiresAt,
+      })
+      .executeTakeFirstOrThrow();
+
+    console.log(import.meta.env.PROD ? "PROD" : "NOT PROD");
+
+    setResponseHeader(
+      "Set-Cookie",
+      import.meta.env.PROD
+        ? `__Host-ASTRALSESSID=${token}; HttpOnly; Secure; SameSite=Lax; Path=/; MaxAge=${maxAge}`
+        : `ASTRALSESSID=${token}; HttpOnly; Path=/; MaxAge=${maxAge}`,
+    );
+
+    throw redirect({ to: "/admin" });
   });
