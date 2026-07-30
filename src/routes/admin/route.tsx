@@ -11,63 +11,29 @@ import { db } from "~db";
 import { getCurrentDateTimeString } from "~utils/index";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createMemo } from "solid-js";
-import { signoutFn } from "~utils/account.functions";
+import { getSignedInUserFn, signoutFn } from "~utils/account.functions";
 import { useMutation } from "@tanstack/solid-query";
 import { JSX } from "@solidjs/web/jsx-runtime";
-
-const getUserFromToken = createServerFn().handler(async () => {
-  const header = getRequestHeader("Cookie");
-
-  if (!header) {
-    console.log("no header");
-    throw redirect({ to: "/sign-in" });
-  }
-
-  const token = header?.split("=")[1];
-
-  if (!token) {
-    console.log("no token");
-    throw redirect({ to: "/sign-in" });
-  }
-
-  return await db
-    .selectFrom("users")
-    .leftJoin("tokens", "users.id", "tokens.userId")
-    .select([
-      "users.id as id",
-      "users.email as email",
-      "users.firstName as firstName",
-      "users.lastName as lastName",
-      "users.roles",
-      // "tokens.id as tokenId",
-      // "tokens.expiresAt as tokenExpiresAt",
-      // "tokens.purpose as tokenPurpose",
-      // "tokens.createdAt as tokenCreatedAt",
-    ])
-    .where("tokens.id", "=", token as string)
-    .where("tokens.purpose", "=", "authentication")
-    .where("tokens.expiresAt", ">=", getCurrentDateTimeString() as any)
-    .executeTakeFirst();
-});
+import { getSettingsFn } from "~utils/settings.functions";
 
 export const Route = createFileRoute("/admin")({
   component: RouteComponent,
-  loader: async () => {
-    const user = await getUserFromToken();
+  beforeLoad: async () => {
+    const user = await getSignedInUserFn();
 
     if (!user) {
       console.log("no user");
       throw redirect({ to: "/sign-in" });
     }
 
-    return { user };
+    return { user, settings: await getSettingsFn() };
   },
 });
 
 function RouteComponent() {
-  const loaderData = Route.useLoaderData();
+  const context = Route.useRouteContext();
 
-  const user = createMemo(() => loaderData().user);
+  const user = createMemo(() => context().user);
 
   const mutation = useMutation(() => ({
     mutationFn: useServerFn(signoutFn),
@@ -171,7 +137,7 @@ function RouteComponent() {
           >
             <Button text="Sign out" variant="secondary" />
           </form>
-          <a href="#" class="group block w-full">
+          <Link to="/account" class="group block w-full">
             <div class="flex items-center">
               <div>
                 <svg
@@ -200,13 +166,13 @@ function RouteComponent() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
       </div>
       <div class="mb-16 p-4 lg:mx-64 lg:mb-0">
         <Outlet />
       </div>
-      <div class="fixed bottom-0 flex h-16 w-full bg-black lg:hidden">
+      <nav class="fixed bottom-0 flex h-16 w-full bg-black lg:hidden">
         <NavbarItem
           text="Dashboard"
           to="/admin"
@@ -283,7 +249,7 @@ function RouteComponent() {
             Logout
           </button>
         </form>
-      </div>
+      </nav>
     </section>
   );
 }

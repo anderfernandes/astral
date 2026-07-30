@@ -25,6 +25,7 @@ export async function register(
         lastName: data.lastName,
         password: await createHash(data.password),
         roles: "[]",
+        creatorId: 0,
       })
       .execute();
 

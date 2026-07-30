@@ -10,6 +10,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("email", "varchar(255)", (c) => c.notNull().unique())
     .addColumn("password", "varchar(255)", (c) => c.notNull())
     .addColumn("roles", "varchar(255)", (c) => c.notNull())
+    .addColumn("creatorId", "integer", (c) => c.notNull())
     .addColumn("createdAt", "timestamp", (c) =>
       c.notNull().defaultTo(sql`now()`),
     )
@@ -44,6 +45,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("maxPaidSecondaries", "integer", (c) => c.notNull())
     .addColumn("isActive", "integer", (c) => c.notNull())
     .addColumn("isPublic", "integer", (c) => c.notNull())
+    .addColumn("creatorId", "integer", (c) => c.notNull())
     .addColumn("createdAt", "timestamp", (c) =>
       c.notNull().defaultTo(sql`now()`),
     )
@@ -59,6 +61,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("type", "varchar(255)", (c) => c.notNull())
     .addColumn("isActive", "integer", (c) => c.notNull())
     .addColumn("isPublic", "integer", (c) => c.notNull())
+    .addColumn("creatorId", "integer", (c) => c.notNull())
     .addColumn("createdAt", "timestamp", (c) =>
       c.notNull().defaultTo(sql`current_timestamp`),
     )
@@ -72,6 +75,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("methodId", "serial", (c) => c.notNull())
     .addColumn("tendered", "integer", (c) => c.notNull())
     .addColumn("saleId", "serial", (c) => c.notNull())
+    .addColumn("cashierId", "integer", (c) => c.notNull())
     .addColumn("processorSessionId", "varchar(255)", (c) => c.notNull())
     .addColumn("createdAt", "timestamp", (c) =>
       c.notNull().defaultTo(sql`current_timestamp`),
@@ -89,6 +93,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("description", "varchar(255)", (c) => c.notNull())
     .addColumn("price", "integer", (c) => c.notNull())
     .addColumn("quantity", "integer", (c) => c.notNull())
+    .addColumn("creatorId", "integer", (c) => c.notNull())
     .addColumn("createdAt", "timestamp", (c) =>
       c.notNull().defaultTo(sql`current_timestamp`),
     )
@@ -102,6 +107,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("status", "varchar(255)", (c) => c.notNull())
     .addColumn("source", "varchar(255)", (c) => c.notNull())
     .addColumn("isTaxable", "integer", (c) => c.notNull())
+    .addColumn("creatorId", "integer", (c) => c.notNull())
     .addColumn("createdAt", "timestamp", (c) =>
       c.notNull().defaultTo(sql`current_timestamp`),
     )

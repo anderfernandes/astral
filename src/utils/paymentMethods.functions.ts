@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/solid-start";
 import { db } from "~db";
+import { getSignedInUserFn } from "./account.functions";
+import { getCurrentDateTimeString } from ".";
 
 export const getPaymentMethodsFn = createServerFn().handler(
   async () => await db.selectFrom("paymentMethods").selectAll().execute(),
@@ -24,12 +26,17 @@ export const savePaymentMethodFn = createServerFn({ method: "POST" })
 
       await db
         .updateTable("paymentMethods")
-        .set(method)
+        .set({ updatedAt: getCurrentDateTimeString(), ...method })
         .where("id", "=", id)
         .execute();
 
       return;
     }
 
-    await db.insertInto("paymentMethods").values(data).execute();
+    const creatorId = (await getSignedInUserFn())?.id as number;
+
+    await db
+      .insertInto("paymentMethods")
+      .values({ creatorId, ...data })
+      .execute();
   });

@@ -19,6 +19,7 @@ test("1: save new payment method", async () => {
       type: "CASH",
       isActive: 1,
       isPublic: 1,
+      creatorId: 0,
     })
     //.returningAll()
     .executeTakeFirstOrThrow();

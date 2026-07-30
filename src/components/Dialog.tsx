@@ -1,4 +1,4 @@
-import { JSX } from "@solidjs/web";
+import { JSX } from "@solidjs/web/jsx-runtime";
 import { Link } from "@tanstack/solid-router";
 
 interface IDialogProps {

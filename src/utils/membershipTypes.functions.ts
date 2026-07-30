@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/solid-start";
 import { db } from "~db";
+import { getSignedInUserFn } from "./account.functions";
+import { getCurrentDateTimeString } from ".";
 
 export const getMembershipTypesFn = createServerFn().handler(
   async () => await db.selectFrom("membershipTypes").selectAll().execute(),
@@ -39,12 +41,17 @@ export const saveMembershipTypeFn = createServerFn({ method: "POST" })
 
       await db
         .updateTable("membershipTypes")
-        .set(membershipType)
+        .set({ updatedAt: getCurrentDateTimeString(), ...membershipType })
         .where("id", "=", id)
         .execute();
 
       return;
     }
 
-    await db.insertInto("membershipTypes").values(data).execute();
+    const creatorId = (await getSignedInUserFn())?.id as number;
+
+    await db
+      .insertInto("membershipTypes")
+      .values({ creatorId, ...data })
+      .execute();
   });

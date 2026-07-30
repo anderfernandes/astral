@@ -14,6 +14,7 @@ declare global {
     email: string;
     password: string;
     roles: string; //("ROLE_USER" | "ROLE_STAFF" | "ROLE_ADMIN")[];
+    creatorId: number;
     createdAt: ColumnType<Date, string | undefined, never>;
     updatedAt: ColumnType<Date, string | undefined, never>;
     activatedAt: ColumnType<Date, string | undefined, never>;
@@ -49,8 +50,9 @@ declare global {
     maxPaidSecondaries: number;
     isActive: 0 | 1;
     isPublic: 0 | 1;
+    creatorId: number;
     createdAt: ColumnType<Date, string | undefined, never>;
-    updatedAt: ColumnType<Date, string | undefined, never>;
+    updatedAt: ColumnType<Date, string | undefined, Date | string>;
   }
 
   type MembershipType = Selectable<IMembershipTypesTable>;
@@ -64,8 +66,9 @@ declare global {
     type: "CASH" | "CARD" | "CHECK" | "OTHER";
     isActive: 0 | 1;
     isPublic: 0 | 1;
+    creatorId: number;
     createdAt: ColumnType<Date, string | undefined, never>;
-    updatedAt: ColumnType<Date, string | undefined, never>;
+    updatedAt: ColumnType<Date, string | undefined, string>;
   }
 
   type PaymentMethod = Selectable<IPaymentMethodsTable>;
@@ -77,6 +80,7 @@ declare global {
     method: PaymentMethod;
     tendered: number;
     saleId: number;
+    cashierId: number;
     createdAt: ColumnType<Date, string | undefined, never>;
     updatedAt: ColumnType<Date, string | undefined, never>;
   }
@@ -101,6 +105,7 @@ declare global {
     description: string;
     price: number;
     quantity: number;
+    creatorId: number;
     createdAt: ColumnType<Date, string | undefined, never>;
     updatedAt: ColumnType<Date, string | undefined, never>;
   }
@@ -114,6 +119,7 @@ declare global {
     status: "OPEN" | "COMPLETED" | "CANCELED";
     source: "CASHIER" | "ADMIN" | "CUSTOMER";
     isTaxable: boolean;
+    creatorId: number;
     createdAt: ColumnType<Date, string | undefined, never>;
     updatedAt: ColumnType<Date, string | undefined, never>;
     items: SaleItem[];

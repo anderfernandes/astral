@@ -14,6 +14,7 @@ test("1: save new session", async () => {
       lastName: "User",
       password: "123456",
       roles: "[]",
+      creatorId: 0,
     })
     //.returningAll()
     .executeTakeFirstOrThrow();

@@ -1,14 +1,22 @@
-import { createFileRoute, Outlet } from "@tanstack/solid-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/solid-router";
+import { getSignedInUserFn } from "~utils/account.functions";
 import { getSettingsFn } from "~utils/settings.functions";
 
 export const Route = createFileRoute("/(auth)")({
+  beforeLoad: async () => {
+    const user = await getSignedInUserFn();
+
+    if (user) {
+      console.log("already logged in");
+      throw redirect({ to: "/account" });
+    }
+
+    return { settings: await getSettingsFn() };
+  },
   component: RouteComponent,
-  loader: () => getSettingsFn(),
 });
 
 function RouteComponent() {
-  const loaderData = Route.useLoaderData();
-
   return (
     <section class="mx-auto grid h-svh max-w-[2160px] grid-cols-12">
       <div class="hidden bg-[url('/sky-5114501_1280.jpg')] bg-cover bg-center lg:col-span-8 lg:block">

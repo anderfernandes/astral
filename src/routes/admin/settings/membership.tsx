@@ -57,7 +57,7 @@ function MembershipSettingsPage() {
           subtitle={
             selected()
               ? "Update an existing membership type"
-              : "Create a brand membership typ"
+              : "Create a brand membership type"
           }
         >
           <form

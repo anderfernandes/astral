@@ -1,15 +1,24 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/solid-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  redirect,
+} from "@tanstack/solid-router";
 import { Show } from "solid-js";
 import { Button } from "~components";
+import { getSignedInUserFn } from "~utils/account.functions";
 import { getSettingsFn } from "~utils/settings.functions";
 
 export const Route = createFileRoute("/(public)")({
+  beforeLoad: async () => ({
+    settings: await getSettingsFn(),
+    user: await getSignedInUserFn(),
+  }),
   component: RouteComponent,
-  loader: () => getSettingsFn(),
 });
 
 function RouteComponent() {
-  const loaderData = Route.useLoaderData();
+  const context = Route.useRouteContext();
 
   const navigate = Route.useNavigate();
   return (
@@ -22,7 +31,7 @@ function RouteComponent() {
           >
             <div class="flex lg:flex-1">
               <Link to="/" class="-m-1.5 p-1.5">
-                <span class="sr-only">{loaderData().name}</span>
+                <span class="sr-only">{context().settings.name}</span>
                 <svg
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +82,7 @@ function RouteComponent() {
               <Link to="/" class="text-sm/6 font-semibold text-gray-900">
                 Home
               </Link>
-              <Show when={loaderData().hasMembershipTypes}>
+              <Show when={context().settings.hasMembershipTypes}>
                 <Link
                   to="/memberships"
                   class="text-sm/6 font-semibold text-gray-900"
@@ -83,7 +92,29 @@ function RouteComponent() {
               </Show>
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-              <Button to="/sign-in" text="Sign In &rarr;" />
+              <Show
+                when={context().user}
+                fallback={<Button to="/sign-in" text="Sign In &rarr;" />}
+              >
+                <Link to="/account">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="size-6"
+                  >
+                    <path d="M17.925 20.056a6 6 0 0 0-11.851.001" />
+                    <circle cx="12" cy="11" r="4" />
+                    <circle cx="12" cy="12" r="10" />
+                  </svg>
+                </Link>
+              </Show>
             </div>
           </nav>
           <div>
@@ -92,7 +123,7 @@ function RouteComponent() {
                 <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                   <div class="flex items-center justify-between">
                     <Link to="/" class="-m-1.5 p-1.5">
-                      <span class="sr-only">{loaderData().name}</span>
+                      <span class="sr-only">{context().settings.name}</span>
                       <svg
                         viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
@@ -145,7 +176,7 @@ function RouteComponent() {
                         >
                           Home
                         </button>
-                        <Show when={loaderData().hasMembershipTypes}>
+                        <Show when={context().settings.hasMembershipTypes}>
                           <button
                             command="close"
                             commandfor="mobile-menu"
@@ -159,7 +190,14 @@ function RouteComponent() {
                         </Show>
                       </div>
                       <div class="py-6">
-                        <Button to="/sign-in" text="Sign In &rarr;" />
+                        <Show
+                          when={context().user}
+                          fallback={
+                            <Button to="/sign-in" text="Sign In &rarr;" />
+                          }
+                        >
+                          <Button to="/account" text="My Account &rarr;" />
+                        </Show>
                       </div>
                     </div>
                   </div>
@@ -190,7 +228,7 @@ function RouteComponent() {
                   />
                 </svg>
                 <span class="text-lg font-semibold text-gray-900">
-                  {loaderData().name}
+                  {context().settings.name}
                 </span>
               </div>
 
@@ -310,8 +348,8 @@ function RouteComponent() {
 
           <div class="mt-16 border-t border-gray-200 pt-8">
             <p class="text-sm text-gray-500">
-              &copy; {new Date().getFullYear()} {loaderData().name}. All rights
-              reserved.
+              &copy; {new Date().getFullYear()} {context().settings.name}. All
+              rights reserved.
             </p>
           </div>
         </div>

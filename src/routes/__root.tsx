@@ -12,7 +12,7 @@ import { HydrationScript, JSX } from "@solidjs/web";
 import "../styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{ user: User | undefined }>()({
   head: () => ({
     meta: [
       {
@@ -28,7 +28,9 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootComponent,
-  notFoundComponent: () => <section class="w-screen h-screen">Not Found</section>
+  notFoundComponent: () => (
+    <section class="h-screen w-screen">Not Found</section>
+  ),
 });
 
 const queryClient = new QueryClient();

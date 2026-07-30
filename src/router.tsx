@@ -6,6 +6,9 @@ export function getRouter() {
   const router = createRouter({
     routeTree,
     scrollRestoration: true,
+    context: {
+      user: undefined,
+    },
   });
 
   return router;

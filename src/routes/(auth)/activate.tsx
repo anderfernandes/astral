@@ -22,11 +22,16 @@ export const Route = createFileRoute("/(auth)/activate")({
 function ActivatePage() {
   const loaderData = Route.useLoaderData();
 
+  const context = Route.useRouteContext();
+
   return (
     <>
       <h2 class="my-3 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
         Activate
       </h2>
+      <span class="mb-8 text-center text-sm/6 text-gray-500">
+        {context().settings.name}
+      </span>
       <Show
         when={loaderData().success === true}
         fallback={

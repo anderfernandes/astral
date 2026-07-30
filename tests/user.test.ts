@@ -11,6 +11,7 @@ test("1: save new user", async () => {
       lastName: "User",
       password: "123456",
       roles: "[]",
+      creatorId: 0,
     })
     //.returningAll()
     .execute();
@@ -52,6 +53,7 @@ test("3: throw if email already registered", async () => {
         lastName: "User",
         password: "123456",
         roles: "[]",
+        creatorId: 0,
       })
       .executeTakeFirstOrThrow(),
   ).rejects.toThrow();

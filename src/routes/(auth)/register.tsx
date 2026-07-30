@@ -22,11 +22,16 @@ function RegisterPage() {
     },
   }));
 
+  const context = Route.useRouteContext();
+
   return (
     <>
       <h2 class="my-3 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
         Register
       </h2>
+      <span class="mb-8 text-center text-sm/6 text-gray-500">
+        {context().settings.name}
+      </span>
       <Show
         when={!mutation.data?.success}
         fallback={
@@ -162,8 +167,5 @@ const registerFn = createServerFn({ method: "POST" })
   })
   .handler(
     async ({ data }) =>
-      await UserRepository.register(
-        data,
-        (origin = new URL(getRequest().url).origin),
-      ),
+      await UserRepository.register(data, new URL(getRequest().url).origin),
   );

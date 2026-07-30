@@ -15,6 +15,7 @@ test("1: save new membership type", async () => {
       paidSecondaryPrice: 0,
       isActive: 1,
       isPublic: 1,
+      creatorId: 0,
     })
     //.returningAll()
     .executeTakeFirstOrThrow();

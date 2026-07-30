@@ -38,7 +38,7 @@ function SignInPage() {
     },
   }));
 
-  const loaderData = Route.parentRoute.useLoaderData();
+  const context = Route.useRouteContext();
 
   const [email, setEmail] = createSignal<string>();
 
@@ -50,9 +50,8 @@ function SignInPage() {
         Sign in to your account
       </h2>
       <span class="mb-8 text-center text-sm/6 text-gray-500">
-        {loaderData().name}
+        {context().settings.name}
       </span>
-
       <form
         class="grid w-full max-w-80 gap-3 justify-self-center"
         onSubmit={(e) => {
