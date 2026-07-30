@@ -5,7 +5,6 @@ import {
   Outlet,
   redirect,
 } from "@tanstack/solid-router";
-import { JSX } from "@solidjs/web";
 import { Button } from "~components";
 import { getRequestHeader } from "@tanstack/solid-start/server";
 import { db } from "~db";
@@ -14,6 +13,7 @@ import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createMemo } from "solid-js";
 import { signoutFn } from "~utils/account.functions";
 import { useMutation } from "@tanstack/solid-query";
+import { JSX } from "@solidjs/web/jsx-runtime";
 
 const getUserFromToken = createServerFn().handler(async () => {
   const header = getRequestHeader("Cookie");
