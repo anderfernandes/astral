@@ -9,7 +9,7 @@ import { Button } from "~components";
 import { getSignedInUserFn } from "~utils/account.functions";
 import { getSettingsFn } from "~utils/settings.functions";
 
-export const Route = createFileRoute("/(account)")({
+export const Route = createFileRoute("/account")({
   component: RouteComponent,
   beforeLoad: async () => {
     const user = await getSignedInUserFn();

@@ -19,7 +19,7 @@ function SignInPage() {
   const getUserMutation = useMutation(() => ({
     mutationFn: (email: string) => getUser({ data: { email } }),
     onSuccess: (data) => {
-      setEmail(data.email);
+      setUser(data);
     },
   }));
 
@@ -27,7 +27,7 @@ function SignInPage() {
 
   const signInMutation = useMutation(() => ({
     mutationFn: (password: string) =>
-      signIn({ data: { email: email() as string, password } }),
+      signIn({ data: { email: user()?.email as string, password } }),
     onSuccess: (data) => {
       console.log(data);
       console.log("signed in!");
@@ -40,14 +40,17 @@ function SignInPage() {
 
   const context = Route.useRouteContext();
 
-  const [email, setEmail] = createSignal<string>();
+  const [user, setUser] =
+    createSignal<Pick<User, "id" | "email" | "firstName">>();
 
   const [errors, setErrors] = createSignal<string[]>([]);
 
   return (
     <>
       <h2 class="text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-        Sign in to your account
+        <Show when={user()} fallback={<>Sign in to your account</>}>
+          Welcome back, {user()?.firstName}!
+        </Show>
       </h2>
       <span class="mb-8 text-center text-sm/6 text-gray-500">
         {context().settings.name}
@@ -59,7 +62,7 @@ function SignInPage() {
 
           const formData = new FormData(e.currentTarget);
 
-          if (!email()) {
+          if (!user()) {
             getUserMutation.mutate(formData.get("email") as string);
             return;
           }
@@ -69,12 +72,16 @@ function SignInPage() {
       >
         <Show
           when={errors().length > 0}
-          fallback={<Alert text="Enter your credentials." />}
+          fallback={
+            <Alert
+              text={user() ? "Enter your password." : "Enter your credentials."}
+            />
+          }
         >
           <Alert text={errors()[0]} variant="error" />
         </Show>
         <Input
-          disabled={signInMutation.isPending || email()?.length! > 0}
+          disabled={signInMutation.isPending || user()?.email.length! > 0}
           placeholder="Email"
           label="Email"
           type="email"
@@ -82,7 +89,7 @@ function SignInPage() {
 
           required
         />
-        <Show when={email()}>
+        <Show when={user()}>
           <Input
             placeholder="Password"
             disabled={signInMutation.isPending}
@@ -115,7 +122,7 @@ const getUserFn = createServerFn({ method: "POST" })
       await db
         .selectFrom("users")
         .where("email", "=", email)
-        .select("email")
+        .select(["id", "email", "firstName"])
         .executeTakeFirstOrThrow(),
   );
 

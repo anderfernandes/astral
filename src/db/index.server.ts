@@ -1,6 +1,6 @@
 import SQLite from "better-sqlite3";
 import { Kysely, MssqlDialect, PostgresDialect, SqliteDialect } from "kysely";
-import { Pool } from "pg";
+import * as pg from "pg";
 import * as tedious from "tedious";
 import * as tarn from "tarn";
 
@@ -8,7 +8,7 @@ function getDialect() {
   switch (process.env["DB_DRIVER"]) {
     case "postgres":
       return new PostgresDialect({
-        pool: new Pool({
+        pool: new pg.Pool({
           database: process.env["DB_DATABASE"],
           host: process.env["DB_HOST"],
           user: process.env["DB_USER"],
@@ -53,6 +53,10 @@ function getDialect() {
       throw new Error("Invalid dialect.");
   }
 }
+
+pg.types.setTypeParser(pg.types.builtins.TIMESTAMP, function (value) {
+  return value === null ? null : value;
+});
 
 export const db = new Kysely<IDatabase>({
   dialect: getDialect(),

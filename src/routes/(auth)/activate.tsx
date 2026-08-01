@@ -42,7 +42,7 @@ function ActivatePage() {
       </Show>
       <Link
         to="/sign-in"
-        class="text-center font-semibold text-black hover:text-black/75"
+        class="text-center text-sm font-semibold text-black hover:text-black/75"
       >
         Sign In
       </Link>

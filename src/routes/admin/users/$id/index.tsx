@@ -2,8 +2,10 @@ import { Temporal } from "@js-temporal/polyfill";
 import { useQuery } from "@tanstack/solid-query";
 import { createFileRoute } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
-import { Show } from "solid-js";
+import { createMemo, Show } from "solid-js";
+import { Button } from "~components";
 import { db } from "~db";
+import { toDateTimeString } from "~utils/index";
 
 export const Route = createFileRoute("/admin/users/$id/")({
   component: RouteComponent,
@@ -12,10 +14,14 @@ export const Route = createFileRoute("/admin/users/$id/")({
 function RouteComponent() {
   const params = Route.useParams();
 
+  const getUser = useServerFn(getUserFn);
+
   const query = useQuery(() => ({
     queryKey: ["users", params().id],
-    queryFn: useServerFn(() => getUserFn({ data: { id: params().id } })),
+    queryFn: () => getUser({ data: { id: params().id } }),
   }));
+
+  const user = createMemo(() => query.data);
 
   return (
     <div>
@@ -23,9 +29,24 @@ function RouteComponent() {
         <h3 class="text-base/7 font-semibold text-gray-900">User Details</h3>
         <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">User details</p>
       </div>
+      <form
+        class="mt-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+
+          if (
+            !confirm(
+              `Are you sure you want to make ${user()?.firstName} staff?`,
+            )
+          )
+            return;
+        }}
+      >
+        <Button text="Add Staff Role..." type="submit" />
+      </form>
       <div class="mt-6 border-t border-gray-100">
         <dl class="divide-y divide-gray-100">
-          <div class="grid grid-cols-2">
+          <div class="grid xl:grid-cols-2">
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt class="text-sm/6 font-medium text-gray-900">First Name</dt>
               <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
@@ -60,12 +81,16 @@ function RouteComponent() {
           <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm/6 font-medium text-gray-900">Created on</dt>
             <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {Temporal.Instant.from(
-                query.data?.createdAt + "-00:00",
-              ).toLocaleString("en-US", {
-                dateStyle: "full",
-                timeStyle: "short",
-              })}
+              {/* {new Date(
+                toDateTimeString(user()?.createdAt as string) + "+00:00",
+              ).toLocaleString()} */}
+
+              {Temporal.Instant.from(user()?.createdAt + "+00:00")
+                .toZonedDateTimeISO(Temporal.Now.timeZoneId())
+                .toLocaleString("en-US", {
+                  dateStyle: "medium",
+                  timeStyle: "medium",
+                })}
             </dd>
           </div>
           <Show when={query.data?.updatedAt}>
@@ -74,12 +99,12 @@ function RouteComponent() {
                 Last Updated on
               </dt>
               <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {Temporal.Instant.from(
-                  query.data?.updatedAt + "-00:00",
-                ).toLocaleString("en-US", {
-                  dateStyle: "full",
-                  timeStyle: "short",
-                })}
+                {Temporal.Instant.from(user()?.updatedAt + "+00:00")
+                  .toZonedDateTimeISO(Temporal.Now.timeZoneId())
+                  .toLocaleString("en-US", {
+                    dateStyle: "medium",
+                    timeStyle: "medium",
+                  })}
               </dd>
             </div>
           </Show>
@@ -87,12 +112,12 @@ function RouteComponent() {
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt class="text-sm/6 font-medium text-gray-900">Activated on</dt>
               <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {Temporal.Instant.from(
-                  query.data?.activatedAt + "-00:00",
-                ).toLocaleString("en-US", {
-                  dateStyle: "full",
-                  timeStyle: "short",
-                })}
+                {Temporal.Instant.from(user()?.activatedAt + "+00:00")
+                  .toZonedDateTimeISO(Temporal.Now.timeZoneId())
+                  .toLocaleString("en-US", {
+                    dateStyle: "medium",
+                    timeStyle: "medium",
+                  })}
               </dd>
             </div>
           </Show>
