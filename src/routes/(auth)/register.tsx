@@ -63,22 +63,24 @@ function RegisterPage() {
             </Match>
           </Switch>
           <div class="grid gap-3 lg:grid-cols-2">
-            <Input
-              placeholder="First Name"
-              label="First Name"
-              name="firstName"
-              hint="First Name"
-              disabled={mutation.isPending}
-              required
-            />
-            <Input
-              placeholder="Last Name"
-              hint="Last Name"
-              label="Last Name"
-              name="lastName"
-              disabled={mutation.isPending}
-              required
-            />
+            <div class="grid grid-cols-2 gap-3">
+              <Input
+                placeholder="First Name"
+                label="First Name"
+                name="firstName"
+                hint="First Name"
+                disabled={mutation.isPending}
+                required
+              />
+              <Input
+                placeholder="Last Name"
+                hint="Last Name"
+                label="Last Name"
+                name="lastName"
+                disabled={mutation.isPending}
+                required
+              />
+            </div>
           </div>
           <Input
             type="email"

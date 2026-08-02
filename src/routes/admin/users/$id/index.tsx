@@ -1,27 +1,41 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { useQuery } from "@tanstack/solid-query";
-import { createFileRoute } from "@tanstack/solid-router";
+import { createFileRoute, useRouter } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
-import { createMemo, Show } from "solid-js";
+import { createMemo, isPending, Loading, Show } from "solid-js";
 import { Button } from "~components";
 import { db } from "~db";
 import { toDateTimeString } from "~utils/index";
 
+function toDate(d: string | Date | undefined) {
+  if (typeof d === "string") return new Date(d + "+00:00");
+  return d;
+}
+
 export const Route = createFileRoute("/admin/users/$id/")({
   component: RouteComponent,
+  loader: async ({ params }) => {
+    const user = await getUserFn({ data: { id: params.id } });
+
+    return {
+      user: {
+        ...user,
+        createdAt: toDate(user.createdAt),
+        updatedAt: toDate(user.updatedAt),
+        activatedAt: toDate(user.activatedAt),
+      },
+    };
+  },
 });
 
 function RouteComponent() {
-  const params = Route.useParams();
+  const loaderData = Route.useLoaderData();
 
-  const getUser = useServerFn(getUserFn);
+  const user = createMemo(() => loaderData().user);
 
-  const query = useQuery(() => ({
-    queryKey: ["users", params().id],
-    queryFn: () => getUser({ data: { id: params().id } }),
-  }));
+  const router = useRouter();
 
-  const user = createMemo(() => query.data);
+  const saveUser = useServerFn(saveUserFn);
 
   return (
     <div>
@@ -29,99 +43,112 @@ function RouteComponent() {
         <h3 class="text-base/7 font-semibold text-gray-900">User Details</h3>
         <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">User details</p>
       </div>
-      <form
-        class="mt-4"
-        onSubmit={(e) => {
-          e.preventDefault();
+      <Loading fallback={<p>loading...</p>}>
+        <form
+          class="mt-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
 
-          if (
-            !confirm(
-              `Are you sure you want to make ${user()?.firstName} staff?`,
+            if (
+              !confirm(
+                `Are you sure you want to make ${user()?.firstName} staff?`,
+              )
             )
-          )
-            return;
-        }}
-      >
-        <Button text="Add Staff Role..." type="submit" />
-      </form>
-      <div class="mt-6 border-t border-gray-100">
-        <dl class="divide-y divide-gray-100">
-          <div class="grid xl:grid-cols-2">
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt class="text-sm/6 font-medium text-gray-900">First Name</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {query.data?.firstName}
-              </dd>
+              return;
+
+            await saveUser({
+              data: {
+                id: user().id,
+                roles: JSON.stringify(
+                  user().roles.includes("ROLE_STAFF")
+                    ? ["ROLE_USER"]
+                    : ["ROLE_USER", "ROLE_STAFF"],
+                ),
+              },
+            });
+
+            router.invalidate();
+          }}
+        >
+          <Button
+            text={
+              user().roles.includes("ROLE_STAFF")
+                ? "Remove Staff Role..."
+                : "Add Staff Role"
+            }
+            type="submit"
+          />
+        </form>
+        <div class="mt-6 border-t border-gray-100">
+          <dl class="divide-y divide-gray-100">
+            <div class="grid">
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">First Name</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  {user().firstName}
+                </dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Last Name</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  {user().lastName}
+                </dd>
+              </div>
             </div>
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt class="text-sm/6 font-medium text-gray-900">Last Name</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {query.data?.lastName}
-              </dd>
-            </div>
-          </div>
-          {/* <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            {/* <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm/6 font-medium text-gray-900">Application for</dt>
             <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
               Backend Developer
             </dd>
           </div> */}
-          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm/6 font-medium text-gray-900">Email address</dt>
-            <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {query.data?.email}
-            </dd>
-          </div>
-          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm/6 font-medium text-gray-900">Roles</dt>
-            <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {(JSON.parse(query.data?.roles as string) as []).join(", ")}
-            </dd>
-          </div>
-          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm/6 font-medium text-gray-900">Created on</dt>
-            <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {/* {new Date(
-                toDateTimeString(user()?.createdAt as string) + "+00:00",
-              ).toLocaleString()} */}
-
-              {Temporal.Instant.from(user()?.createdAt + "+00:00")
-                .toZonedDateTimeISO(Temporal.Now.timeZoneId())
-                .toLocaleString("en-US", {
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt class="text-sm/6 font-medium text-gray-900">Email address</dt>
+              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {user().email}
+              </dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt class="text-sm/6 font-medium text-gray-900">Roles</dt>
+              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {(JSON.parse(user().roles as string) as []).join(", ")}
+              </dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt class="text-sm/6 font-medium text-gray-900">Created on</dt>
+              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {user()?.createdAt?.toLocaleString("en-US", {
                   dateStyle: "medium",
-                  timeStyle: "medium",
+                  timeStyle: "short",
                 })}
-            </dd>
-          </div>
-          <Show when={query.data?.updatedAt}>
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt class="text-sm/6 font-medium text-gray-900">
-                Last Updated on
-              </dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {Temporal.Instant.from(user()?.updatedAt + "+00:00")
-                  .toZonedDateTimeISO(Temporal.Now.timeZoneId())
-                  .toLocaleString("en-US", {
-                    dateStyle: "medium",
-                    timeStyle: "medium",
-                  })}
               </dd>
             </div>
-          </Show>
-          <Show when={query.data?.updatedAt}>
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt class="text-sm/6 font-medium text-gray-900">Activated on</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {Temporal.Instant.from(user()?.activatedAt + "+00:00")
-                  .toZonedDateTimeISO(Temporal.Now.timeZoneId())
-                  .toLocaleString("en-US", {
+            <Show when={user().updatedAt}>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">
+                  Last Updated on
+                </dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  {user()?.updatedAt?.toLocaleString("en-US", {
                     dateStyle: "medium",
-                    timeStyle: "medium",
+                    timeStyle: "short",
                   })}
-              </dd>
-            </div>
-          </Show>
-          {/* <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                </dd>
+              </div>
+            </Show>
+            <Show when={user().updatedAt}>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">
+                  Activated on
+                </dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  {user()?.activatedAt?.toLocaleString("en-US", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </dd>
+              </div>
+            </Show>
+            {/* <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm/6 font-medium text-gray-900">Attachments</dt>
             <dd class="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
               <ul
@@ -193,8 +220,9 @@ function RouteComponent() {
               </ul>
             </dd>
           </div> */}
-        </dl>
-      </div>
+          </dl>
+        </div>
+      </Loading>
     </div>
   );
 }
@@ -209,3 +237,18 @@ const getUserFn = createServerFn()
         .selectAll()
         .executeTakeFirstOrThrow(),
   );
+
+const saveUserFn = createServerFn()
+  .validator((data: Partial<User>) => data)
+  .handler(async ({ data }) => {
+    console.log(data);
+    if (data.id) {
+      let query = db.updateTable("users");
+
+      if (data.roles) {
+        query = query.set({ roles: data.roles });
+      }
+
+      await query.where("id", "=", data.id).execute();
+    }
+  });

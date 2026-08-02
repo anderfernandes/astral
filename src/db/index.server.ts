@@ -54,9 +54,9 @@ function getDialect() {
   }
 }
 
-pg.types.setTypeParser(pg.types.builtins.TIMESTAMP, function (value) {
-  return value === null ? null : value;
-});
+// pg.types.setTypeParser(pg.types.builtins.TIMESTAMP, function (value) {
+//   return value === null ? null : value;
+// });
 
 export const db = new Kysely<IDatabase>({
   dialect: getDialect(),

@@ -11,11 +11,11 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("password", "varchar(255)", (c) => c.notNull())
     .addColumn("roles", "varchar(255)", (c) => c.notNull())
     .addColumn("creatorId", "integer", (c) => c.notNull())
-    .addColumn("createdAt", "timestamp", (c) =>
+    .addColumn("createdAt", "timestamptz", (c) =>
       c.notNull().defaultTo(sql`now()`),
     )
-    .addColumn("updatedAt", "timestamp")
-    .addColumn("activatedAt", "timestamp")
+    .addColumn("updatedAt", "timestamptz")
+    .addColumn("activatedAt", "timestamptz")
     .execute();
 
   await db.schema
@@ -24,11 +24,11 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("id", "varchar(255)", (c) => c.notNull())
     .addColumn("userId", "integer", (c) => c.notNull())
     .addColumn("purpose", "varchar(255)", (c) => c.notNull())
-    .addColumn("createdAt", "timestamp", (c) =>
+    .addColumn("createdAt", "timestamptz", (c) =>
       c.notNull().defaultTo(sql`now()`),
     )
-    .addColumn("updatedAt", "timestamp")
-    .addColumn("expiresAt", "timestamp", (c) => c.notNull())
+    .addColumn("updatedAt", "timestamptz")
+    .addColumn("expiresAt", "timestamptz", (c) => c.notNull())
     .execute();
 
   await db.schema
@@ -46,10 +46,10 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("isActive", "integer", (c) => c.notNull())
     .addColumn("isPublic", "integer", (c) => c.notNull())
     .addColumn("creatorId", "integer", (c) => c.notNull())
-    .addColumn("createdAt", "timestamp", (c) =>
+    .addColumn("createdAt", "timestamptz", (c) =>
       c.notNull().defaultTo(sql`now()`),
     )
-    .addColumn("updatedAt", "timestamp")
+    .addColumn("updatedAt", "timestamptz")
     .execute();
 
   await db.schema
@@ -62,10 +62,10 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("isActive", "integer", (c) => c.notNull())
     .addColumn("isPublic", "integer", (c) => c.notNull())
     .addColumn("creatorId", "integer", (c) => c.notNull())
-    .addColumn("createdAt", "timestamp", (c) =>
-      c.notNull().defaultTo(sql`current_timestamp`),
+    .addColumn("createdAt", "timestamptz", (c) =>
+      c.notNull().defaultTo(sql`current_timestamptz`),
     )
-    .addColumn("updatedAt", "timestamp")
+    .addColumn("updatedAt", "timestamptz")
     .execute();
 
   await db.schema
@@ -77,10 +77,10 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("saleId", "serial", (c) => c.notNull())
     .addColumn("cashierId", "integer", (c) => c.notNull())
     .addColumn("processorSessionId", "varchar(255)", (c) => c.notNull())
-    .addColumn("createdAt", "timestamp", (c) =>
-      c.notNull().defaultTo(sql`current_timestamp`),
+    .addColumn("createdAt", "timestamptz", (c) =>
+      c.notNull().defaultTo(sql`current_timestamptz`),
     )
-    .addColumn("updatedAt", "timestamp")
+    .addColumn("updatedAt", "timestamptz")
     .execute();
 
   await db.schema
@@ -94,10 +94,10 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("price", "integer", (c) => c.notNull())
     .addColumn("quantity", "integer", (c) => c.notNull())
     .addColumn("creatorId", "integer", (c) => c.notNull())
-    .addColumn("createdAt", "timestamp", (c) =>
-      c.notNull().defaultTo(sql`current_timestamp`),
+    .addColumn("createdAt", "timestamptz", (c) =>
+      c.notNull().defaultTo(sql`current_timestamptz`),
     )
-    .addColumn("updatedAt", "timestamp")
+    .addColumn("updatedAt", "timestamptz")
     .execute();
 
   await db.schema
@@ -108,10 +108,10 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("source", "varchar(255)", (c) => c.notNull())
     .addColumn("isTaxable", "integer", (c) => c.notNull())
     .addColumn("creatorId", "integer", (c) => c.notNull())
-    .addColumn("createdAt", "timestamp", (c) =>
-      c.notNull().defaultTo(sql`current_timestamp`),
+    .addColumn("createdAt", "timestamptz", (c) =>
+      c.notNull().defaultTo(sql`current_timestamptz`),
     )
-    .addColumn("updatedAt", "timestamp")
+    .addColumn("updatedAt", "timestamptz")
     .execute();
 
   console.info(`${process.env["DB_DRIVER"]} migrations executed succesfully!`);

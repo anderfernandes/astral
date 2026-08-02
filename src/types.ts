@@ -15,8 +15,8 @@ declare global {
     password: string;
     roles: string; //("ROLE_USER" | "ROLE_STAFF" | "ROLE_ADMIN")[];
     creatorId: number;
-    createdAt: ColumnType<string, string, never>;
-    updatedAt: ColumnType<never, string, never>;
+    createdAt: ColumnType<Date | string, never, never>;
+    updatedAt: ColumnType<never, Date | string | undefined, never>;
     activatedAt: ColumnType<string | undefined, never>;
   }
 
@@ -29,8 +29,8 @@ declare global {
     userId: number;
     purpose:
       "activation" | "authentication" | "password recovery" | "email recovery";
-    createdAt: ColumnType<string, string, never>;
-    updatedAt: ColumnType<never, string, never>;
+    createdAt: ColumnType<Date | string, never, never>;
+    updatedAt: ColumnType<never, Date | string | undefined, never>;
     expiresAt: ColumnType<string, string | undefined, string | undefined>;
   }
 
@@ -51,8 +51,8 @@ declare global {
     isActive: 0 | 1;
     isPublic: 0 | 1;
     creatorId: number;
-    createdAt: ColumnType<string, string, never>;
-    updatedAt: ColumnType<never, string, never>;
+    createdAt: ColumnType<Date | string, never, never>;
+    updatedAt: ColumnType<never, Date | string | undefined, never>;
   }
 
   type MembershipType = Selectable<IMembershipTypesTable>;
@@ -67,8 +67,8 @@ declare global {
     isActive: 0 | 1;
     isPublic: 0 | 1;
     creatorId: number;
-    createdAt: ColumnType<string, string, never>;
-    updatedAt: ColumnType<never, string, never>;
+    createdAt: ColumnType<Date | string, never, never>;
+    updatedAt: ColumnType<never, Date | string | undefined, never>;
   }
 
   type PaymentMethod = Selectable<IPaymentMethodsTable>;
