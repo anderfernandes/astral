@@ -37,6 +37,8 @@ function RouteComponent() {
 
   const saveUser = useServerFn(saveUserFn);
 
+  const context = Route.useRouteContext();
+
   return (
     <div>
       <div class="px-4 sm:px-0">
@@ -44,41 +46,47 @@ function RouteComponent() {
         <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">User details</p>
       </div>
       <Loading fallback={<p>loading...</p>}>
-        <form
-          class="mt-4"
-          onSubmit={async (e) => {
-            e.preventDefault();
-
-            if (
-              !confirm(
-                `Are you sure you want to make ${user()?.firstName} staff?`,
-              )
-            )
-              return;
-
-            await saveUser({
-              data: {
-                id: user().id,
-                roles: JSON.stringify(
-                  user().roles.includes("ROLE_STAFF")
-                    ? ["ROLE_USER"]
-                    : ["ROLE_USER", "ROLE_STAFF"],
-                ),
-              },
-            });
-
-            router.invalidate();
-          }}
+        <Show
+          when={
+            !import.meta.env.PROD || context().user.roles.includes("ROLE_STAFF")
+          }
         >
-          <Button
-            text={
-              user().roles.includes("ROLE_STAFF")
-                ? "Remove Staff Role..."
-                : "Add Staff Role"
-            }
-            type="submit"
-          />
-        </form>
+          <form
+            class="mt-4"
+            onSubmit={async (e) => {
+              e.preventDefault();
+
+              if (
+                !confirm(
+                  `Are you sure you want to make ${user()?.firstName} staff?`,
+                )
+              )
+                return;
+
+              await saveUser({
+                data: {
+                  id: user().id,
+                  roles: JSON.stringify(
+                    user().roles.includes("ROLE_STAFF")
+                      ? ["ROLE_USER"]
+                      : ["ROLE_USER", "ROLE_STAFF"],
+                  ),
+                },
+              });
+
+              router.invalidate();
+            }}
+          >
+            <Button
+              text={
+                user().roles.includes("ROLE_STAFF")
+                  ? "Remove Staff Role..."
+                  : "Add Staff Role"
+              }
+              type="submit"
+            />
+          </form>
+        </Show>
         <div class="mt-6 border-t border-gray-100">
           <dl class="divide-y divide-gray-100">
             <div class="grid">

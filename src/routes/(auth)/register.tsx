@@ -63,7 +63,7 @@ function RegisterPage() {
             </Match>
           </Switch>
           <div class="grid gap-3 lg:grid-cols-2">
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-2 gap-3 lg:col-span-2">
               <Input
                 placeholder="First Name"
                 label="First Name"
