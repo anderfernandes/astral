@@ -5,12 +5,9 @@ import {
   Outlet,
   redirect,
 } from "@tanstack/solid-router";
-import { Button } from "~components";
-import { getRequestHeader } from "@tanstack/solid-start/server";
-import { db } from "~db";
-import { getCurrentDateTimeString } from "~utils/index";
-import { createServerFn, useServerFn } from "@tanstack/solid-start";
-import { createMemo } from "solid-js";
+import { Button, Dialog } from "~components";
+import { useServerFn } from "@tanstack/solid-start";
+import { createMemo, Show } from "solid-js";
 import { getSignedInUserFn, signoutFn } from "~utils/account.functions";
 import { useMutation } from "@tanstack/solid-query";
 import { JSX } from "@solidjs/web/jsx-runtime";
@@ -18,6 +15,8 @@ import { getSettingsFn } from "~utils/settings.functions";
 
 export const Route = createFileRoute("/admin")({
   component: RouteComponent,
+  validateSearch: (search: { dialog?: "more" }) => search,
+  loaderDeps: ({ search: { dialog } }) => ({ dialog }),
   beforeLoad: async () => {
     const user = await getSignedInUserFn();
 
@@ -33,10 +32,14 @@ export const Route = createFileRoute("/admin")({
 function RouteComponent() {
   const context = Route.useRouteContext();
 
+  const search = Route.useSearch();
+
   const user = createMemo(() => context().user);
 
+  const signout = useServerFn(signoutFn);
+
   const mutation = useMutation(() => ({
-    mutationFn: useServerFn(signoutFn),
+    mutationFn: () => signout(),
   }));
 
   return (
@@ -63,9 +66,8 @@ function RouteComponent() {
           alt="Your Company"
         /> */}
         </Link>
-
         <div class="flex flex-1 flex-col overflow-y-auto">
-          <nav class="flex-1 space-y-1 px-2 py-4">
+          <aside class="flex-1 space-y-1 px-2 py-4">
             <SidebarItem
               to="/admin"
               text="Dashboard"
@@ -122,7 +124,7 @@ function RouteComponent() {
                 </svg>
               }
             />
-          </nav>
+          </aside>
         </div>
         <div class="grid gap-4 p-4">
           <form
@@ -131,7 +133,7 @@ function RouteComponent() {
               e.preventDefault();
 
               if (confirm("Are you sure you want to sign out?")) {
-                mutation.mutate({});
+                mutation.mutate();
               }
             }}
           >
@@ -172,7 +174,7 @@ function RouteComponent() {
       <div class="mb-16 p-4 lg:mx-64 lg:mb-0">
         <Outlet />
       </div>
-      <nav class="fixed bottom-0 flex h-16 w-full bg-black lg:hidden">
+      <nav class="fixed bottom-0 flex h-[calc(4rem+env(safe-area-inset-bottom))] w-full bg-black lg:hidden">
         <NavbarItem
           text="Dashboard"
           to="/admin"
@@ -229,43 +231,85 @@ function RouteComponent() {
             </svg>
           }
         />
-        <form
-          class="flex basis-1/3 items-center justify-center"
-          onSubmit={async (e) => {
-            e.preventDefault();
-
-            if (confirm("Are you sure you want to sign out?")) {
-              mutation.mutate({});
-            }
-          }}
-        >
-          <button class="flex cursor-pointer flex-col items-center justify-center gap-1 px-2 text-xs text-white">
+        <NavbarItem
+          text="More"
+          to="."
+          search={{ dialog: "more" }}
+          activeOptions={{ exact: false }}
+          icon={
             <svg viewBox="0 0 24 24" class="size-6">
               <path
                 fill="currentColor"
-                d="M14.08,15.59L16.67,13H7V11H16.67L14.08,8.41L15.5,7L20.5,12L15.5,17L14.08,15.59M19,3A2,2 0 0,1 21,5V9.67L19,7.67V5H5V19H19V16.33L21,14.33V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5C3,3.89 3.89,3 5,3H19Z"
+                d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z"
               />
             </svg>
-            Logout
-          </button>
-        </form>
+          }
+        />
       </nav>
+      <Show when={search().dialog === "more"}>
+        <Dialog title="More">
+          <div class="grid gap-3">
+            <Link to="/account" class="group block w-full">
+              <div class="flex items-center">
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="size-9"
+                  >
+                    <path d="M17.925 20.056a6 6 0 0 0-11.851.001" />
+                    <circle cx="12" cy="11" r="4" />
+                    <circle cx="12" cy="12" r="10" />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium">
+                    {user().firstName} {user().lastName}
+                  </p>
+                  <p class="text-xs font-medium text-gray-500">
+                    {user().roles}
+                  </p>
+                </div>
+              </div>
+            </Link>
+            <form
+              class="flex justify-end"
+              onSubmit={async (e) => {
+                e.preventDefault();
+
+                if (confirm("Are you sure you want to sign out?")) {
+                  signout();
+                }
+              }}
+            >
+              <Button type="submit" text="Sign Out" />
+            </form>
+          </div>
+        </Dialog>
+      </Show>
     </section>
   );
 }
 
 function NavbarItem(props: ISidebarItemProps) {
-  const { text, icon, to } = props;
   return (
     <Link
       class="group flex basis-1/3 flex-col items-center justify-center gap-1 px-2 text-xs text-white"
-      to={to}
-      activeOptions={{ exact: true }}
+      to={props.to}
+      search={props.search}
+      activeOptions={props.activeOptions || { exact: true }}
     >
       <div class="flex w-12 justify-center rounded-full py-0.5 group-[.active]:bg-white group-[.active]:text-black">
-        {icon}
+        {props.icon}
       </div>
-      {text}
+      {props.text}
     </Link>
   );
 }
@@ -275,17 +319,19 @@ interface ISidebarItemProps {
   icon: JSX.Element;
   label?: JSX.Element;
   to: LinkProps["to"];
+  search?: LinkProps["search"];
+  activeOptions?: LinkProps["activeOptions"];
 }
 
 function SidebarItem(props: ISidebarItemProps) {
-  const { text, icon, label, to } = props;
   return (
     <Link
-      to={to}
-      activeOptions={{ exact: true }}
+      to={props.to}
+      search={props.search}
+      activeOptions={props.activeOptions || { exact: true }}
       class="flex items-center gap-3 rounded-md px-2 py-2 text-sm font-medium text-white hover:bg-gray-900 data-[status=active]:bg-white data-[status=active]:text-black data-[status=active]:hover:bg-white/90"
     >
-      {icon}
+      {props.icon}
       {/* <svg
         class="mr-3 h-6 w-6 text-white group-hover:text-white"
         fill="none"
@@ -299,7 +345,7 @@ function SidebarItem(props: ISidebarItemProps) {
           d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
         />
       </svg> */}
-      <span class="flex-1">{text}</span>
+      <span class="flex-1">{props.text}</span>
       {/* <Show when={icon}>
         <span class="ml-3 inline-block rounded-full bg-white px-3 py-0.5 text-xs font-medium text-black">
           {label}

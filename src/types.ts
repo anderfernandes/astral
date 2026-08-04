@@ -30,7 +30,11 @@ declare global {
     purpose:
       "activation" | "authentication" | "password recovery" | "email recovery";
     createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<never, Date | string | undefined, never>;
+    updatedAt: ColumnType<
+      never,
+      Date | string | undefined,
+      Date | string | undefined
+    >;
     expiresAt: ColumnType<string, string | undefined, string | undefined>;
   }
 

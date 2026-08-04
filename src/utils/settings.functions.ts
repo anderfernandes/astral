@@ -13,6 +13,7 @@ export const getSettingsFn = createServerFn().handler(async () => {
     convenienceFee: Number(process.env["CONVENIENCE_FEE"]),
     hasMembershipTypes: membershipTypes.length > 0,
     locale: process.env["LOCALE"],
-    currency: process.env["USD"],
+    currency: process.env["CURRENCY"],
+    database: process.env["DB_DRIVER"],
   };
 });

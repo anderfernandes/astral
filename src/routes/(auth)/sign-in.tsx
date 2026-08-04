@@ -19,7 +19,11 @@ function SignInPage() {
   const getUserMutation = useMutation(() => ({
     mutationFn: (email: string) => getUser({ data: { email } }),
     onSuccess: (data) => {
+      setErrors([]);
       setUser(data);
+    },
+    onError: (data) => {
+      setErrors(["Invalid credentials."]);
     },
   }));
 

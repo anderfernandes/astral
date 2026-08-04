@@ -25,8 +25,8 @@ export const signoutFn = createServerFn().handler(async () => {
   setResponseHeader(
     "Set-Cookie",
     import.meta.env.PROD
-      ? `__Host-ASTRALSESSID=${token}; HttpOnly; Secure; SameSite=Lax; Path=/; MaxAge=0`
-      : `ASTRALSESSID=${token}; HttpOnly; Path=/; MaxAge=0`,
+      ? `__Host-ASTRALSESSID=DELETED; HttpOnly; Secure; SameSite=Lax; Path=/; MaxAge=0`
+      : `ASTRALSESSID=DELETED; HttpOnly; Path=/; MaxAge=0`,
   );
 
   throw redirect({ to: "/sign-in" });

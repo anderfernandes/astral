@@ -13,6 +13,7 @@
   :root {
     font-family: "Inter", sans-serif;
     font-feature-settings: "cv11"; /* Optional: Adds the 't' hook */
+    min-height: 100dvh;
   }
 
   ::selection {

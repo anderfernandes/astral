@@ -1,11 +1,8 @@
-import { Temporal } from "@js-temporal/polyfill";
-import { useQuery } from "@tanstack/solid-query";
 import { createFileRoute, useRouter } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createMemo, isPending, Loading, Show } from "solid-js";
 import { Button } from "~components";
 import { db } from "~db";
-import { toDateTimeString } from "~utils/index";
 
 function toDate(d: string | Date | undefined) {
   if (typeof d === "string") return new Date(d + "+00:00");
@@ -81,7 +78,7 @@ function RouteComponent() {
               text={
                 user().roles.includes("ROLE_STAFF")
                   ? "Remove Staff Role..."
-                  : "Add Staff Role"
+                  : "Add Staff Role..."
               }
               type="submit"
             />
@@ -89,7 +86,7 @@ function RouteComponent() {
         </Show>
         <div class="mt-6 border-t border-gray-100">
           <dl class="divide-y divide-gray-100">
-            <div class="grid">
+            <div class="grid grid-cols-2 lg:grid-cols-1">
               <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm/6 font-medium text-gray-900">First Name</dt>
                 <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">

@@ -23,7 +23,10 @@ function RouteComponent() {
 
   const navigate = useNavigate();
 
-  const parentLoaderData = Route.parentRoute.useLoaderData();
+  const context = Route.useRouteContext();
+
+  const settings = createMemo(() => context().settings);
+  const user = createMemo(() => context().user);
 
   const membershipType = Route.useLoaderData();
 
@@ -59,7 +62,7 @@ function RouteComponent() {
   );
 
   createEffect(
-    () => parentLoaderData(),
+    () => settings(),
     (value, prev) => {
       setItems((current) => [
         ...current,
@@ -80,7 +83,7 @@ function RouteComponent() {
       0,
     );
 
-    const tax = (parentLoaderData().taxRate / 100) * subtotal;
+    const tax = (settings().taxRate / 100) * subtotal;
 
     return {
       subtotal,
@@ -295,10 +298,10 @@ function RouteComponent() {
                 <p class="flex gap-1">
                   <span class="grow">
                     Tax (
-                    {(parentLoaderData().taxRate / 100).toLocaleString(
-                      "en-US",
-                      { style: "percent", minimumSignificantDigits: 1 },
-                    )}
+                    {(settings().taxRate / 100).toLocaleString("en-US", {
+                      style: "percent",
+                      minimumSignificantDigits: 1,
+                    })}
                     )
                   </span>
                   <span>{toCurrencyString(totals().tax)}</span>
