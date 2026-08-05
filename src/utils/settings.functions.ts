@@ -1,7 +1,12 @@
 import { createServerFn } from "@tanstack/solid-start";
+import { execSync } from "node:child_process";
 import { db } from "~db";
+import pkg from "../../package.json";
 
 export const getSettingsFn = createServerFn().handler(async () => {
+  const commit = execSync("git rev-parse --short HEAD").toString().trim();
+  const version = pkg.version;
+
   const membershipTypes = await db
     .selectFrom("membershipTypes")
     .selectAll()
@@ -15,5 +20,6 @@ export const getSettingsFn = createServerFn().handler(async () => {
     locale: process.env["LOCALE"],
     currency: process.env["CURRENCY"],
     database: process.env["DB_DRIVER"],
+    version: `${version} (${commit})`,
   };
 });

@@ -1,4 +1,10 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/solid-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  redirect,
+} from "@tanstack/solid-router";
+import { Badge } from "~components";
 import { getSignedInUserFn } from "~utils/account.functions";
 import { getSettingsFn } from "~utils/settings.functions";
 
@@ -17,6 +23,8 @@ export const Route = createFileRoute("/(auth)")({
 });
 
 function RouteComponent() {
+  const context = Route.useRouteContext();
+
   return (
     <section class="mx-auto grid h-svh max-w-[2160px] grid-cols-12">
       <div class="hidden bg-[url('/sky-5114501_1280.jpg')] bg-cover bg-center lg:col-span-8 lg:block">
@@ -39,6 +47,17 @@ function RouteComponent() {
             />
           </svg>
           <Outlet />
+          <hr class="my-8 border-gray-200" />
+          <div class="flex items-center justify-center">
+            <Badge text={context().settings.version} />
+          </div>
+          <a
+            href="https://github.com/anderfernandes"
+            target="_blank"
+            class="mt-4 text-center text-sm/6 font-semibold"
+          >
+            2017-{new Date().getFullYear()} Astral.
+          </a>
         </div>
       </div>
     </section>

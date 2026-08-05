@@ -142,6 +142,17 @@ declare global {
     saleItems: ISaleItemsTable;
     sales: ISalesTable;
   }
+
+  interface IRegistrationData {
+    firstName: string;
+    firstNameConfirmation: string;
+    lastName: string;
+    lastNameConfirmation: string;
+    email: string;
+    emailConfirmation: string;
+    password: string;
+    passwordConfirmation: string;
+  }
 }
 
 declare namespace NodeJS {

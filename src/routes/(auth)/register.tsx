@@ -13,8 +13,10 @@ export const Route = createFileRoute("/(auth)/register")({
 function RegisterPage() {
   const [errors, setErrors] = createSignal<string[]>([]);
 
+  const register = useServerFn(registerFn);
+
   const mutation = useMutation(() => ({
-    mutationFn: useServerFn(registerFn),
+    mutationFn: (data: IRegistrationData) => register({ data }),
     onError: (error) => {
       console.log(error.message);
 
@@ -26,7 +28,7 @@ function RegisterPage() {
 
   return (
     <>
-      <h2 class="my-3 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+      <h2 class="text-center text-xl/9 font-bold tracking-tight text-gray-900">
         Register
       </h2>
       <span class="mb-8 text-center text-sm/6 text-gray-500">
@@ -47,7 +49,24 @@ function RegisterPage() {
           onSubmit={(e) => {
             e.preventDefault();
 
-            mutation.mutate({ data: new FormData(e.currentTarget) });
+            const formData = new FormData(e.currentTarget);
+
+            mutation.mutate({
+              firstName: String(formData.get("firstName")),
+              firstNameConfirmation: String(
+                formData.get("firstNameConfirmation"),
+              ),
+              lastName: String(formData.get("lastName")),
+              lastNameConfirmation: String(
+                formData.get("lastNameConfirmation"),
+              ),
+              email: String(formData.get("email")),
+              emailConfirmation: String(formData.get("emailConfirmation")),
+              password: String(formData.get("password")),
+              passwordConfirmation: String(
+                formData.get("passwordConfirmation"),
+              ),
+            });
           }}
         >
           <Switch
@@ -145,27 +164,16 @@ function RegisterPage() {
 }
 
 const registerFn = createServerFn({ method: "POST" })
-  .validator((data: FormData) => {
-    const email = String(data.get("email"));
-    const emailConfirmation = String(data.get("emailConfirmation"));
-
-    if (email !== emailConfirmation) {
+  .validator((data: IRegistrationData) => {
+    if (data.email !== data.emailConfirmation) {
       throw new Error("Email confirmation does not match.");
     }
 
-    const password = String(data.get("password"));
-    const passwordConfirmation = String(data.get("passwordConfirmation"));
-
-    if (password !== passwordConfirmation) {
+    if (data.password !== data.passwordConfirmation) {
       throw new Error("Password confirmation doesn't match.");
     }
 
-    return {
-      firstName: String(data.get("firstName")),
-      lastName: String(data.get("lastName")),
-      email: String(data.get("email")),
-      password: String(data.get("password")),
-    };
+    return data;
   })
   .handler(
     async ({ data }) =>

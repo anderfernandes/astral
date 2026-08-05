@@ -51,7 +51,7 @@ function SignInPage() {
 
   return (
     <>
-      <h2 class="text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+      <h2 class="text-center text-xl/9 font-bold tracking-tight text-gray-900">
         <Show when={user()} fallback={<>Sign in to your account</>}>
           Welcome back, {user()?.firstName}!
         </Show>
@@ -112,6 +112,15 @@ function SignInPage() {
           class="font-semibold text-black hover:text-black/75"
         >
           Register
+        </Link>
+        .
+      </p>
+      <p class="text-center text-sm/6">
+        <Link
+          class="font-semibold text-black hover:text-black/75"
+          to="/forgot-password"
+        >
+          I forgot my password
         </Link>
         .
       </p>

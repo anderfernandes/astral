@@ -1,17 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/solid-router";
 import { createServerOnlyFn } from "@tanstack/solid-start";
-import { Alert } from "~components";
 import { Show } from "solid-js";
+import { Alert } from "~components";
 import * as UserRepository from "~repositories/UserRepository";
 
-export const Route = createFileRoute("/(auth)/activate")({
-  component: ActivatePage,
+export const Route = createFileRoute("/(auth)/recover")({
+  component: RouteComponent,
   validateSearch: (search: { token: string }) => search,
-  loaderDeps: ({ search }) => ({
-    token: search.token,
-  }),
+  loaderDeps: ({ search: { token } }) => ({ token }),
   loader: async ({ deps }) => {
-    const token = await activateAccountFn(deps.token);
+    const token = await recoverFn(deps.token);
 
     if (!token) return { success: false };
 
@@ -19,7 +17,7 @@ export const Route = createFileRoute("/(auth)/activate")({
   },
 });
 
-function ActivatePage() {
+function RouteComponent() {
   const loaderData = Route.useLoaderData();
 
   const context = Route.useRouteContext();
@@ -27,7 +25,7 @@ function ActivatePage() {
   return (
     <>
       <h2 class="my-3 text-center text-xl/9 font-bold tracking-tight text-gray-900">
-        Activate
+        Recover
       </h2>
       <span class="mb-8 text-center text-sm/6 text-gray-500">
         {context().settings.name}
@@ -54,4 +52,4 @@ function ActivatePage() {
   );
 }
 
-const activateAccountFn = createServerOnlyFn(UserRepository.activate);
+const recoverFn = createServerOnlyFn(UserRepository.recover);
