@@ -1,13 +1,14 @@
 import { createFileRoute, useRouter } from "@tanstack/solid-router";
-import { createServerFn, useServerFn } from "@tanstack/solid-start";
-import { createMemo, isPending, Loading, Show } from "solid-js";
+import {
+  createServerFn,
+  createServerOnlyFn,
+  useServerFn,
+} from "@tanstack/solid-start";
+import { createMemo, Loading, Show } from "solid-js";
 import { Button } from "~components";
 import { db } from "~db";
-
-function toDate(d: string | Date | undefined) {
-  if (typeof d === "string") return new Date(d + "+00:00");
-  return d;
-}
+import * as UserRepository from "~repositories/UserRepository";
+import { toDate } from "~utils/index";
 
 export const Route = createFileRoute("/admin/users/$id/")({
   component: RouteComponent,
@@ -61,14 +62,12 @@ function RouteComponent() {
                 return;
 
               await saveUser({
-                data: {
-                  id: user().id,
-                  roles: JSON.stringify(
-                    user().roles.includes("ROLE_STAFF")
-                      ? ["ROLE_USER"]
-                      : ["ROLE_USER", "ROLE_STAFF"],
-                  ),
-                },
+                id: user().id,
+                roles: JSON.stringify(
+                  user().roles.includes("ROLE_STAFF")
+                    ? ["ROLE_USER"]
+                    : ["ROLE_USER", "ROLE_STAFF"],
+                ),
               });
 
               router.invalidate();
@@ -243,17 +242,4 @@ const getUserFn = createServerFn()
         .executeTakeFirstOrThrow(),
   );
 
-const saveUserFn = createServerFn()
-  .validator((data: Partial<User>) => data)
-  .handler(async ({ data }) => {
-    console.log(data);
-    if (data.id) {
-      let query = db.updateTable("users");
-
-      if (data.roles) {
-        query = query.set({ roles: data.roles });
-      }
-
-      await query.where("id", "=", data.id).execute();
-    }
-  });
+const saveUserFn = createServerOnlyFn(UserRepository.save);

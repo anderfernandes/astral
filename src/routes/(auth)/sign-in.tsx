@@ -115,11 +115,8 @@ function SignInPage() {
         </Link>
         .
       </p>
-      <p class="text-center text-sm/6">
-        <Link
-          class="font-semibold text-black hover:text-black/75"
-          to="/forgot-password"
-        >
+      <p class="text-center text-sm/6 text-gray-500">
+        <Link to="/recover" class="hover:font-semibold hover:text-black">
           I forgot my password
         </Link>
         .

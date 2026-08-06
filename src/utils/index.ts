@@ -27,3 +27,9 @@ export function toDateTimeString(datetime: string) {
     .toString({ smallestUnit: "second" })
     .replace("T", " ");
 }
+
+export function toDate(d: string | Date | undefined) {
+  if (d === undefined) throw new Error("toDate is returning undefined");
+  else if (typeof d === "string") return new Date(d + "+00:00");
+  return d as Date;
+}

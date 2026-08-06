@@ -18,8 +18,6 @@ function RegisterPage() {
   const mutation = useMutation(() => ({
     mutationFn: (data: IRegistrationData) => register({ data }),
     onError: (error) => {
-      console.log(error.message);
-
       setErrors([error.message]);
     },
   }));

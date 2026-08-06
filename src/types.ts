@@ -16,7 +16,7 @@ declare global {
     roles: string; //("ROLE_USER" | "ROLE_STAFF" | "ROLE_ADMIN")[];
     creatorId: number;
     createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<never, Date | string | undefined, never>;
+    updatedAt: ColumnType<Date | string, never, string>;
     activatedAt: ColumnType<string | undefined, never>;
   }
 

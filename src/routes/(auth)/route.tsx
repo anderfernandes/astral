@@ -54,9 +54,9 @@ function RouteComponent() {
           <a
             href="https://github.com/anderfernandes"
             target="_blank"
-            class="mt-4 text-center text-sm/6 font-semibold"
+            class="mt-4 text-center text-sm/6 text-gray-500 hover:font-semibold hover:text-black"
           >
-            2017-{new Date().getFullYear()} Astral.
+            2017-{new Date().getFullYear()} Astral
           </a>
         </div>
       </div>

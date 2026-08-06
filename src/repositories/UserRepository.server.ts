@@ -96,7 +96,7 @@ export async function activate(tokenId: string) {
   return token.id;
 }
 
-export async function forgotPassword(
+export async function generateAccountRecoveryToken(
   email: string,
   origin = "http://localhost:3000",
 ) {
@@ -138,8 +138,8 @@ export async function forgotPassword(
     const res = await mailer.sendMail({
       from: process.env["MAIL_FROM"],
       to: user.email,
-      subject: `Recover your ${process.env["NAME"]} account password`,
-      html: `<h1>Recover your ${process.env["NAME"]} account password</h1><p>Click <a target="_blank" href="${origin}/recover?token=${token}">here</a> to recover your ${process.env["NAME"]} account password.</p>`,
+      subject: `${process.env["NAME"]} Account Recovery`,
+      html: `<h1>Recover your ${process.env["NAME"]} account</h1><p>Click <a target="_blank" href="${origin}/reset?token=${token}">here</a> to recover your ${process.env["NAME"]} account password. The link expires in 5 minutes.</p>`,
     });
 
     console.log(res);
@@ -148,7 +148,7 @@ export async function forgotPassword(
   }
 }
 
-export async function recover(data: string) {
+export async function getAccountRecoveryToken(data: string) {
   const token = await db
     .selectFrom("tokens")
     .where("id", "=", data)
@@ -163,4 +163,27 @@ export async function recover(data: string) {
   if (!token) return undefined;
 
   return token;
+}
+
+export async function save(data: Partial<User>) {
+  if (data.id) {
+    let query = db.updateTable("users");
+
+    if (data.password) {
+      query = query.set({ password: await createHash(data.password) });
+    }
+
+    if (data.roles) {
+      query = query.set({ roles: data.roles });
+    }
+
+    await query
+      .set({ updatedAt: getCurrentDateTimeString() as string })
+      .where("id", "=", data.id)
+      .execute();
+  }
+}
+
+export async function get(data: string | number) {
+  return await db.selectFrom("users").selectAll().executeTakeFirst();
 }
