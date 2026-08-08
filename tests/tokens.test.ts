@@ -9,7 +9,6 @@ test("1: save new authentication token", async () => {
     userId: 0,
     purpose: "authentication",
     expiresAt: Temporal.Now.zonedDateTimeISO("UTC")
-      .add({ minutes: 60 })
       .toPlainDateTime()
       .toString({ smallestUnit: "seconds" })
       .replace("T", " "),
@@ -26,18 +25,22 @@ test("1: save new authentication token", async () => {
 });
 
 test("2: update authentication token", async () => {
-  const token = await TokenRepository.get({
+  const { id } = await TokenRepository.get({
     userId: 0,
     purpose: "authentication",
   });
 
   await TokenRepository.save({
-    id: token.id,
+    id: id,
     updatedAt: Temporal.Now.zonedDateTimeISO("UTC")
-      .add({ minutes: 60 })
       .toPlainDateTime()
       .toString({ smallestUnit: "seconds" })
       .replace("T", " "),
+  });
+
+  const token = await TokenRepository.get({
+    userId: 0,
+    purpose: "authentication",
   });
 
   expect(token.userId).toBe(0);

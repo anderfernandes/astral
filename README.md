@@ -19,10 +19,13 @@ Astral works with the following databases:
 
 | Database              | Minimum Version |
 | --------------------- | --------------- |
-| SQLite (`sqlite`)     | 3               |
-| Postgres (`postgres`) | 11              |
+| SQLite (`sqlite`)     | 3.37            |
+| Postgres (`postgres`) | 14              |
+| SQL Server            | 2017            |
 
-Microsoft SQL and MySQL support will be added soon.
+MySQL support will be added soon.
+
+**Note: all columns of the database representing date and time must be in UTC.**
 
 ### General Settings
 
