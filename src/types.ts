@@ -2,18 +2,21 @@ import {
   ColumnType,
   Generated,
   Insertable,
+  JSONColumnType,
   Selectable,
   Updateable,
 } from "kysely";
 
 declare global {
+  type Role = "ROLE_USER" | "ROLE_STAFF" | "ROLE_ADMIN" | "ROLE_MEMBER";
+
   interface IUsersTable {
     id: Generated<number>;
     firstName: string;
     lastName: string;
     email: string;
     password: string;
-    roles: string; //("ROLE_USER" | "ROLE_STAFF" | "ROLE_ADMIN")[];
+    roles: JSONColumnType<Role[], Role[], Role[]> | string;
     creatorId: number;
     createdAt: ColumnType<Date | string, never, never>;
     updatedAt: ColumnType<Date | string, never, string>;

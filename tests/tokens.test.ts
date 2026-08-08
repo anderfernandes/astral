@@ -1,45 +1,46 @@
-import { sql } from "kysely";
 import { randomBytes } from "node:crypto";
 import { expect, test } from "vitest";
-import { db } from "~db";
-import { getCurrentDateTimeString } from "~utils/index";
-import * as UserRepository from "~repositories/UserRepository";
+import * as TokenRepository from "~repositories/TokenRepository";
+import { Temporal } from "@js-temporal/polyfill";
 
-test("1: save new session", async () => {
-  await db
-    .insertInto("users")
-    .values({
-      email: "token.user@astralcloud.org",
-      firstName: "Token",
-      lastName: "User",
-      password: "123456",
-      roles: "[]",
-      creatorId: 0,
-    })
-    //.returningAll()
-    .executeTakeFirstOrThrow();
+test("1: save new authentication token", async () => {
+  await TokenRepository.save({
+    id: randomBytes(32).toString("base64url"),
+    userId: 0,
+    purpose: "authentication",
+    expiresAt: Temporal.Now.zonedDateTimeISO("UTC")
+      .add({ minutes: 60 })
+      .toPlainDateTime()
+      .toString({ smallestUnit: "seconds" })
+      .replace("T", " "),
+  });
 
-  const user = await db
-    .selectFrom("users")
-    .where("email", "=", "token.user@astralcloud.org")
-    .selectAll()
-    .executeTakeFirstOrThrow();
+  const token = await TokenRepository.get({
+    userId: 0,
+    purpose: "authentication",
+  });
 
-  await db
-    .insertInto("tokens")
-    .values({
-      id: randomBytes(32).toString("base64url"),
-      userId: user.id,
-      purpose: "activation",
-      expiresAt: getCurrentDateTimeString(),
-    })
-    //.returningAll()
-    .executeTakeFirstOrThrow();
+  expect(token.userId).toBe(0);
+  expect(token.createdAt).toBeDefined();
+  expect(token.updatedAt).toBeNull();
+});
 
-  const token = await db
-    .selectFrom("tokens")
-    .selectAll()
-    .executeTakeFirstOrThrow();
+test("2: update authentication token", async () => {
+  const token = await TokenRepository.get({
+    userId: 0,
+    purpose: "authentication",
+  });
 
-  expect(token).toBeDefined();
+  await TokenRepository.save({
+    id: token.id,
+    updatedAt: Temporal.Now.zonedDateTimeISO("UTC")
+      .add({ minutes: 60 })
+      .toPlainDateTime()
+      .toString({ smallestUnit: "seconds" })
+      .replace("T", " "),
+  });
+
+  expect(token.userId).toBe(0);
+  expect(token.createdAt).toBeDefined();
+  expect(token.updatedAt).toBeDefined();
 });

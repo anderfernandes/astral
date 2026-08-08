@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/solid-query";
 import { createFileRoute, useRouter } from "@tanstack/solid-router";
 import {
   createServerFn,
@@ -12,21 +13,14 @@ import { toDate } from "~utils/index";
 
 export const Route = createFileRoute("/admin/users/$id/")({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    const user = await getUserFn({ data: { id: params.id } });
-
-    return {
-      user: {
-        ...user,
-        createdAt: toDate(user.createdAt),
-        updatedAt: toDate(user.updatedAt),
-        activatedAt: toDate(user.activatedAt),
-      },
-    };
-  },
+  loader: async ({ params }) => ({
+    user: await getUserFn({ data: { id: params.id } }),
+  }),
 });
 
 function RouteComponent() {
+  const context = Route.useRouteContext();
+
   const loaderData = Route.useLoaderData();
 
   const user = createMemo(() => loaderData().user);
@@ -35,7 +29,9 @@ function RouteComponent() {
 
   const saveUser = useServerFn(saveUserFn);
 
-  const context = Route.useRouteContext();
+  const mutation = useMutation(() => ({
+    mutationFn: (data: UserUpdateable) => saveUser({ data }),
+  }));
 
   return (
     <div>
@@ -51,7 +47,7 @@ function RouteComponent() {
         >
           <form
             class="mt-4"
-            onSubmit={async (e) => {
+            onSubmit={(e) => {
               e.preventDefault();
 
               if (
@@ -61,13 +57,11 @@ function RouteComponent() {
               )
                 return;
 
-              await saveUser({
-                id: user().id,
-                roles: JSON.stringify(
-                  user().roles.includes("ROLE_STAFF")
-                    ? ["ROLE_USER"]
-                    : ["ROLE_USER", "ROLE_STAFF"],
-                ),
+              mutation.mutate({
+                id: user()?.id,
+                roles: user().roles.includes("ROLE_STAFF")
+                  ? ["ROLE_USER"]
+                  : ["ROLE_USER", "ROLE_STAFF"],
               });
 
               router.invalidate();
@@ -79,6 +73,7 @@ function RouteComponent() {
                   ? "Remove Staff Role..."
                   : "Add Staff Role..."
               }
+              disabled={mutation.isPending}
               type="submit"
             />
           </form>
@@ -114,7 +109,7 @@ function RouteComponent() {
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt class="text-sm/6 font-medium text-gray-900">Roles</dt>
               <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {(JSON.parse(user().roles as string) as []).join(", ")}
+                {user().roles.join(", ")}
               </dd>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -232,14 +227,11 @@ function RouteComponent() {
 }
 
 const getUserFn = createServerFn()
-  .validator((data: { id: string | number }) => data)
+  .validator((data: { id: string }) => data)
   .handler(
-    async ({ data: { id } }) =>
-      await db
-        .selectFrom("users")
-        .where("id", "=", Number(id))
-        .selectAll()
-        .executeTakeFirstOrThrow(),
+    async ({ data: { id } }) => await UserRepository.get({ id: Number(id) }),
   );
 
-const saveUserFn = createServerOnlyFn(UserRepository.save);
+const saveUserFn = createServerFn({ method: "POST" })
+  .validator((data: UserUpdateable) => data)
+  .handler(async ({ data }) => await UserRepository.save(data));

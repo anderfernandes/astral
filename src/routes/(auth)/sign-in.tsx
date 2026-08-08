@@ -116,7 +116,7 @@ function SignInPage() {
         .
       </p>
       <p class="text-center text-sm/6 text-gray-500">
-        <Link to="/recover" class="hover:font-semibold hover:text-black">
+        <Link to="/recover" class="hover:underline hover:underline-offset-2">
           I forgot my password
         </Link>
         .
@@ -145,7 +145,9 @@ const signInFn = createServerFn({ method: "POST" })
       .select(["id", "email", "password", "activatedAt"])
       .executeTakeFirstOrThrow();
 
-    //console.log(user);
+    console.log(user);
+
+    if (!user.activatedAt) throw new Error("Invalid credentials");
 
     if (!(await verifyHash(password, user.password))) {
       throw new Error("Invalid credentials.");

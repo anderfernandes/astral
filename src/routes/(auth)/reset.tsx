@@ -5,7 +5,7 @@ import { createSignal, Match, Show, Switch } from "solid-js";
 import { Alert, Button, Input } from "~components";
 import * as UserRepository from "~repositories/UserRepository";
 import * as TokenRepository from "~repositories/TokenRepository";
-import { toDate } from "~utils/index";
+import { Temporal } from "@js-temporal/polyfill";
 
 export const Route = createFileRoute("/(auth)/reset")({
   component: RouteComponent,
@@ -137,19 +137,37 @@ const saveUserFn = createServerFn({ method: "POST" })
     return data;
   })
   .handler(async ({ data }) => {
-    const token = await TokenRepository.get(data.token);
+    const token = await TokenRepository.get({ id: data.token });
 
     if (token === undefined) throw new Error("An error ocurred.");
 
-    if (toDate(token.expiresAt) > new Date())
-      throw new Error("Request expired.");
+    if (token.expiresAt > new Date()) throw new Error("Request expired.");
 
-    const user = await UserRepository.get(token.id);
+    const user = await UserRepository.get({ id: token.userId });
 
     if (user === undefined)
       throw new Error("Unable to recover account at this moment.");
 
-    await UserRepository.save({ id: user.id, password: user.password });
+    await UserRepository.save({
+      id: user.id,
+      password: data.password,
+      updatedAt: Temporal.Now.zonedDateTimeISO("UTC")
+        .toPlainDateTime()
+        .toString({ smallestUnit: "seconds" })
+        .replace("T", " "),
+    });
+
+    await TokenRepository.save({
+      id: token.id,
+      updatedAt: Temporal.Now.zonedDateTimeISO("UTC")
+        .toPlainDateTime()
+        .toString({ smallestUnit: "seconds" })
+        .replace("T", " "),
+      expiresAt: Temporal.Now.zonedDateTimeISO("UTC")
+        .toPlainDateTime()
+        .toString({ smallestUnit: "seconds" })
+        .replace("T", " "),
+    });
 
     return { success: true };
   });

@@ -8,11 +8,11 @@
    "author": "",
    "license": "ISC",
    "scripts": {
-      "dev": "vite --port=3000 --host",
+      "dev": "pnpm migrate && vite --port=3000 --host",
       "build": "vite build && tsc --noEmit",
       "preview": "vite preview",
       "start": "ts-node src/index.ts",
-      "test": "npm run migrate:testing && vitest run --bail 1 --mode testing",
+      "test": "pnpm migrate:testing && vitest run --bail 1 --mode testing",
       "migrate": "vite-node src/db/migrations/index.ts",
       "migrate:testing": "rm -rf *_testing.db && vite-node --mode testing src/db/migrations/index.ts"
    },
@@ -25,13 +25,13 @@
       "@tanstack/solid-start": "beta",
       "better-sqlite3": "^12.11.1",
       "kysely": "^0.29.4",
-      "nodemailer": "^9.0.4",
+      "nodemailer": "^9.0.5",
       "pg": "^8.22.0",
       "solid-js": "2.0.0-beta.26",
       "tailwindcss": "^4.3.3",
       "tarn": "^3.1.2",
       "tedious": "^20.0.0",
-      "vite": "^8.2.0",
+      "vite": "^8.2.1",
       "vitest": "^4.1.10"
    },
    "devDependencies": {
