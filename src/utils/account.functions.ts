@@ -47,7 +47,7 @@ export const getSignedInUserFn = createServerFn().handler(async () => {
     return undefined;
   }
 
-  return await db
+  const user = await db
     .selectFrom("users")
     .leftJoin("tokens", "users.id", "tokens.userId")
     .select([
@@ -65,4 +65,9 @@ export const getSignedInUserFn = createServerFn().handler(async () => {
     .where("tokens.purpose", "=", "authentication")
     .where("tokens.expiresAt", ">=", getCurrentDateTimeString() as any)
     .executeTakeFirst();
+
+  return {
+    ...user,
+    roles: JSON.parse(user?.roles as string) as unknown as Role[],
+  };
 });
