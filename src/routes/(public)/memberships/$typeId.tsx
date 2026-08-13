@@ -1,11 +1,11 @@
-import { untrack } from "@solidjs/web";
-import { useQuery } from "@tanstack/solid-query";
 import { createFileRoute, useNavigate } from "@tanstack/solid-router";
-import { useServerFn } from "@tanstack/solid-start";
+import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { Button, Dialog, Input, Select } from "~components";
 import { toCurrencyString } from "~utils/index";
 import { getMembershipTypeFn } from "~utils/membershipTypes.functions";
+import * as MembershipTypeRepository from "~repositories/MembershipTypeRepository";
+import { useMutation } from "@tanstack/solid-query";
 
 export const Route = createFileRoute("/(public)/memberships/$typeId")({
   validateSearch: (search: {
@@ -21,6 +21,8 @@ export const Route = createFileRoute("/(public)/memberships/$typeId")({
 function RouteComponent() {
   const search = Route.useSearch();
 
+  const params = Route.useParams();
+
   const navigate = useNavigate();
 
   const context = Route.useRouteContext();
@@ -29,6 +31,15 @@ function RouteComponent() {
   const user = createMemo(() => context().user);
 
   const membershipType = Route.useLoaderData();
+
+  const processOnlineMembershipSale = useServerFn(
+    processOnlineMembershipSaleFn,
+  );
+
+  const mutation = useMutation(() => ({
+    mutationFn: (data: IOnlineMembershipSaleData) =>
+      processOnlineMembershipSale({ data }),
+  }));
 
   const [items, setItems] = createSignal<
     Pick<SaleItem, "name" | "description" | "price" | "quantity" | "type">[]
@@ -235,7 +246,18 @@ function RouteComponent() {
                 </li>
               </ul>
             </div>
-            <form class="grid content-start gap-3 lg:col-span-1">
+            <form
+              class="grid content-start gap-3 lg:col-span-1"
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                mutation.mutate({
+                  typeId: Number(params().typeId),
+                  freeSecondariesIds: [],
+                  paidSecondariesIds: [],
+                });
+              }}
+            >
               <div class="my-6 grid gap-3 lg:grid-cols-2">
                 <Show
                   when={(membershipType()?.maxFreeSecondaries as number) > 0}
@@ -287,7 +309,6 @@ function RouteComponent() {
                   </div>
                 )}
               </For>
-
               <div class="text-sm text-gray-600">
                 <p class="flex gap-1">
                   <span class="grow">Subtotal</span>
@@ -410,3 +431,30 @@ function RouteComponent() {
     </section>
   );
 }
+
+interface IOnlineMembershipSaleData {
+  typeId: number;
+  freeSecondariesIds: number[];
+  paidSecondariesIds: number[];
+}
+
+const processOnlineMembershipSaleFn = createServerFn({ method: "POST" })
+  .validator((data: IOnlineMembershipSaleData) => data)
+  .handler(async ({ data }) => {
+    const membershipType = await MembershipTypeRepository.get({
+      id: data.typeId,
+    });
+
+    if (membershipType == undefined)
+      throw new Error("Invalid membership type.");
+
+    if (
+      (membershipType.maxFreeSecondaries as number) >
+      data.freeSecondariesIds.length
+    )
+      throw new Error(
+        "Selected number of free secondaries is greater than what the membership type allows.",
+      );
+
+    console.log(membershipType);
+  });

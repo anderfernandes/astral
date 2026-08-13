@@ -13,8 +13,10 @@
       "~components": ["./src/components/index.ts"],
       "~db": ["./src/db/index.server.ts"],
       "~utils/*": ["./src/utils/*"],
+      "~repositories/MembershipTypeRepository": ["./src/repositories/MembershipTypeRepository.server.ts"],
+      "~repositories/SaleRepository":["./src/repositories/SaleRepository.server.ts"],
+      "~repositories/TokenRepository": ["./src/repositories/TokenRepository.server.ts"],
       "~repositories/UserRepository": ["./src/repositories/UserRepository.server.ts"],
-      "~repositories/TokenRepository": ["./src/repositories/TokenRepository.server.ts"]
     }
   }
 }

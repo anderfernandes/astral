@@ -59,7 +59,7 @@ declare global {
     isPublic: 0 | 1;
     creatorId: number;
     createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<never, Date | string | undefined, never>;
+    updatedAt: ColumnType<Date | string, never, string>;
   }
 
   type MembershipType = Selectable<IMembershipTypesTable>;

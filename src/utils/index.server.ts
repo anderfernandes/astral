@@ -4,6 +4,8 @@ import crypto, {
   randomBytes,
 } from "node:crypto";
 
+import Stripe from "stripe";
+
 const KEY = process.env["KEY"];
 
 if (!KEY) throw new Error("KEY not found");
@@ -79,3 +81,5 @@ export function decrypt(data: {
     decipher.final(),
   ]).toString("utf-8");
 }
+
+export const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]);

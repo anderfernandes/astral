@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/solid-start";
 import { db } from "~db";
 import { getSignedInUserFn } from "./account.functions";
 import { getCurrentDateTimeString } from ".";
+import * as MembershipTypeRepository from "~repositories/MembershipTypeRepository";
 
 export const getMembershipTypesFn = createServerFn().handler(
   async () => await db.selectFrom("membershipTypes").selectAll().execute(),
@@ -10,12 +11,8 @@ export const getMembershipTypesFn = createServerFn().handler(
 export const getMembershipTypeFn = createServerFn()
   .validator((data: { id: string | number }) => data)
   .handler(
-    async ({ data: { id } }) =>
-      await db
-        .selectFrom("membershipTypes")
-        .where("id", "=", id as number)
-        .selectAll()
-        .executeTakeFirst(),
+    async ({ data }) =>
+      await MembershipTypeRepository.get({ id: Number(data.id) }),
   );
 
 export const saveMembershipTypeFn = createServerFn({ method: "POST" })

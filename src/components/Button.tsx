@@ -22,7 +22,7 @@ export function Button(props: IButtonProps) {
       fallback={
         <button
           data-variant={props.variant ?? "primary"}
-          class="inline-flex cursor-pointer justify-center rounded-md bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-black/80 disabled:cursor-not-allowed disabled:bg-black/50 data-[variant=secondary]:bg-white data-[variant=secondary]:text-black data-[variant=secondary]:inset-ring data-[variant=secondary]:inset-ring-gray-300 disabled:data-[variant=secondary]:opacity-50 sm:w-auto"
+          class="inline-flex cursor-pointer justify-center rounded-md bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-black/95 disabled:cursor-not-allowed disabled:bg-black/50 data-[variant=secondary]:bg-white data-[variant=secondary]:text-black data-[variant=secondary]:inset-ring data-[variant=secondary]:inset-ring-gray-300 disabled:data-[variant=secondary]:opacity-50 sm:w-auto"
           disabled={props.disabled}
           type={props.type}
           onClick={props.onClick}
@@ -33,7 +33,7 @@ export function Button(props: IButtonProps) {
     >
       <Link
         data-variant={props.variant ?? "primary"}
-        class="inline-flex cursor-pointer justify-center rounded-md bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-black/80 data-[variant=secondary]:bg-white data-[variant=secondary]:text-black data-[variant=secondary]:inset-ring data-[variant=secondary]:inset-ring-gray-300 disabled:data-[variant=secondary]:opacity-50 sm:w-auto"
+        class="inline-flex cursor-pointer justify-center rounded-md bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-black/95 data-[variant=secondary]:bg-white data-[variant=secondary]:text-black data-[variant=secondary]:inset-ring data-[variant=secondary]:inset-ring-gray-300 disabled:data-[variant=secondary]:opacity-50 sm:w-auto"
         search={props.search}
         params={props.params}
         to={props.to}
