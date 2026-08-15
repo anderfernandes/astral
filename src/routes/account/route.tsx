@@ -37,7 +37,7 @@ function RouteComponent() {
         </h5>
         <nav class="flex gap-3 text-sm">
           <Link to="/">Home</Link>
-          <Show when={JSON.parse(context().user.roles).includes("ROLE_STAFF")}>
+          <Show when={context().user.roles.includes("ROLE_STAFF")}>
             <Link to="/admin">Admin</Link>
           </Show>
         </nav>

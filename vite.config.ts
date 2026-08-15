@@ -2,19 +2,18 @@
 
 import { defineConfig, type PluginOption } from "vite";
 import { tanstackStart } from "@tanstack/solid-start/plugin/vite";
-import viteSolid from "vite-plugin-solid";
+import viteSolid from "@solidjs/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
   const plugins: PluginOption = [
     tailwindcss(),
     tanstackStart(),
     // solid's vite plugin must come after start's vite plugin
     viteSolid({ ssr: true }),
+    nitro(),
   ];
-
-  if (mode === "production") plugins.push(nitro());
 
   return {
     resolve: {
