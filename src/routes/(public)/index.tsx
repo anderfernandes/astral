@@ -40,8 +40,8 @@ function IndexPage() {
             Inspiring the explorer in everyone.
           </h1>
           <p class="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8">
-            We connecting our community to the wonders of science, space, and
-            discovery through experiences that educate, entertain, and inspire.
+            We connect our community to the wonders of science, space, and
+            discovery through experiences that inspire, educate and entertain.
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
             <Button to="/" text="Events" />

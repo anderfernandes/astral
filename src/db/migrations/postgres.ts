@@ -53,30 +53,13 @@ export async function up(db: Kysely<any>): Promise<void> {
     .execute();
 
   await db.schema
-    .createTable("paymentMethods")
+    .createTable("sales")
     .ifNotExists()
     .addColumn("id", "serial", (c) => c.primaryKey())
-    .addColumn("name", "varchar(255)", (c) => c.notNull())
-    .addColumn("description", "varchar(255)", (c) => c.notNull())
-    .addColumn("type", "varchar(255)", (c) => c.notNull())
-    .addColumn("isActive", "integer", (c) => c.notNull())
-    .addColumn("isPublic", "integer", (c) => c.notNull())
+    .addColumn("status", "varchar(255)", (c) => c.notNull())
+    .addColumn("source", "varchar(255)", (c) => c.notNull())
+    .addColumn("isTaxable", "integer", (c) => c.notNull())
     .addColumn("creatorId", "integer", (c) => c.notNull())
-    .addColumn("createdAt", "timestamptz", (c) =>
-      c.notNull().defaultTo(sql`date_trunc('second', now())`),
-    )
-    .addColumn("updatedAt", "timestamptz")
-    .execute();
-
-  await db.schema
-    .createTable("payments")
-    .ifNotExists()
-    .addColumn("id", "serial", (c) => c.primaryKey())
-    .addColumn("methodId", "serial", (c) => c.notNull())
-    .addColumn("tendered", "integer", (c) => c.notNull())
-    .addColumn("saleId", "serial", (c) => c.notNull())
-    .addColumn("cashierId", "integer", (c) => c.notNull())
-    .addColumn("processorSessionId", "varchar(255)", (c) => c.notNull())
     .addColumn("createdAt", "timestamptz", (c) =>
       c.notNull().defaultTo(sql`date_trunc('second', now())`),
     )
@@ -101,13 +84,30 @@ export async function up(db: Kysely<any>): Promise<void> {
     .execute();
 
   await db.schema
-    .createTable("sales")
+    .createTable("paymentMethods")
     .ifNotExists()
     .addColumn("id", "serial", (c) => c.primaryKey())
-    .addColumn("status", "varchar(255)", (c) => c.notNull())
-    .addColumn("source", "varchar(255)", (c) => c.notNull())
-    .addColumn("isTaxable", "integer", (c) => c.notNull())
+    .addColumn("name", "varchar(255)", (c) => c.notNull())
+    .addColumn("description", "varchar(255)", (c) => c.notNull())
+    .addColumn("type", "varchar(255)", (c) => c.notNull())
+    .addColumn("isActive", "integer", (c) => c.notNull())
+    .addColumn("isPublic", "integer", (c) => c.notNull())
     .addColumn("creatorId", "integer", (c) => c.notNull())
+    .addColumn("createdAt", "timestamptz", (c) =>
+      c.notNull().defaultTo(sql`date_trunc('second', now())`),
+    )
+    .addColumn("updatedAt", "timestamptz")
+    .execute();
+
+  await db.schema
+    .createTable("payments")
+    .ifNotExists()
+    .addColumn("id", "serial", (c) => c.primaryKey())
+    .addColumn("methodId", "serial", (c) => c.notNull())
+    .addColumn("tendered", "integer", (c) => c.notNull())
+    .addColumn("saleId", "serial", (c) => c.notNull())
+    .addColumn("cashierId", "integer", (c) => c.notNull())
+    .addColumn("processorSessionId", "varchar(255)", (c) => c.notNull())
     .addColumn("createdAt", "timestamptz", (c) =>
       c.notNull().defaultTo(sql`date_trunc('second', now())`),
     )

@@ -180,8 +180,8 @@ const signInFn = createServerFn({ method: "POST" })
     setResponseHeader(
       "Set-Cookie",
       import.meta.env.PROD
-        ? `__Host-ASTRALSESSID=${token}; HttpOnly; Secure; SameSite=Lax; Path=/; MaxAge=${maxAge}`
-        : `ASTRALSESSID=${token}; HttpOnly; Path=/; MaxAge=${maxAge}`,
+        ? `__Host-ASTRALSESSID=${token}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${maxAge}`
+        : `ASTRALSESSID=${token}; HttpOnly; Path=/; Max-Age=${maxAge}`,
     );
 
     throw redirect({ to: "/admin" });

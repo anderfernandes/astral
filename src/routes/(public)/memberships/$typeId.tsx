@@ -1,11 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
-import { Button, Dialog, Input, Select } from "~components";
+import { Button, Dialog, Input } from "~components";
 import { toCurrencyString } from "~utils/index";
 import { getMembershipTypeFn } from "~utils/membershipTypes.functions";
 import * as MembershipTypeRepository from "~repositories/MembershipTypeRepository";
 import { useMutation } from "@tanstack/solid-query";
+import * as SaleRepository from "~repositories/SaleRepository";
 
 export const Route = createFileRoute("/(public)/memberships/$typeId")({
   validateSearch: (search: {
@@ -39,6 +40,12 @@ function RouteComponent() {
   const mutation = useMutation(() => ({
     mutationFn: (data: IOnlineMembershipSaleData) =>
       processOnlineMembershipSale({ data }),
+    onError: (e) => {
+      console.log(e.message);
+    },
+    onSuccess: () => {
+      alert("success");
+    },
   }));
 
   const [items, setItems] = createSignal<
@@ -457,4 +464,18 @@ const processOnlineMembershipSaleFn = createServerFn({ method: "POST" })
       );
 
     console.log(membershipType);
+
+    await SaleRepository.save({
+      status: "OPEN",
+      source: "PORTAL",
+      items: [
+        {
+          type: "MEMBERSHIP (PRIMARY)",
+          name: membershipType.name as string,
+          description: "primary",
+          price: membershipType.price as number,
+          quantity: 1,
+        },
+      ],
+    });
   });

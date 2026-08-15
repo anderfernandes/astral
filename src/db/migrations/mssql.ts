@@ -53,30 +53,13 @@ export async function up(db: Kysely<any>): Promise<void> {
     .execute();
 
   await db.schema
-    .createTable("paymentMethods")
+    .createTable("sales")
     //.ifNotExists()
     .addColumn("id", "integer", (c) => c.primaryKey().modifyEnd(sql`IDENTITY`))
-    .addColumn("name", "varchar(255)", (c) => c.notNull())
-    .addColumn("description", "varchar(255)", (c) => c.notNull())
-    .addColumn("type", "varchar(255)", (c) => c.notNull())
-    .addColumn("isActive", sql`TINYINT`, (c) => c.notNull())
-    .addColumn("isPublic", sql`TINYINT`, (c) => c.notNull())
+    .addColumn("status", "varchar(255)", (c) => c.notNull())
+    .addColumn("source", "varchar(255)", (c) => c.notNull())
+    .addColumn("isTaxable", sql`TINYINT`, (c) => c.notNull())
     .addColumn("creatorId", "integer", (c) => c.notNull())
-    .addColumn("createdAt", "datetime", (c) =>
-      c.notNull().defaultTo(sql`GETDATE()`),
-    )
-    .addColumn("updatedAt", "datetime")
-    .execute();
-
-  await db.schema
-    .createTable("payments")
-    //.ifNotExists()
-    .addColumn("id", "integer", (c) => c.primaryKey().modifyEnd(sql`IDENTITY`))
-    .addColumn("methodId", "integer", (c) => c.notNull())
-    .addColumn("tendered", "integer", (c) => c.notNull())
-    .addColumn("saleId", "integer", (c) => c.notNull())
-    .addColumn("cashierId", "integer", (c) => c.notNull())
-    .addColumn("processorSessionId", "varchar(255)", (c) => c.notNull())
     .addColumn("createdAt", "datetime", (c) =>
       c.notNull().defaultTo(sql`GETDATE()`),
     )
@@ -101,13 +84,30 @@ export async function up(db: Kysely<any>): Promise<void> {
     .execute();
 
   await db.schema
-    .createTable("sales")
+    .createTable("paymentMethods")
     //.ifNotExists()
     .addColumn("id", "integer", (c) => c.primaryKey().modifyEnd(sql`IDENTITY`))
-    .addColumn("status", "varchar(255)", (c) => c.notNull())
-    .addColumn("source", "varchar(255)", (c) => c.notNull())
-    .addColumn("isTaxable", sql`TINYINT`, (c) => c.notNull())
+    .addColumn("name", "varchar(255)", (c) => c.notNull())
+    .addColumn("description", "varchar(255)", (c) => c.notNull())
+    .addColumn("type", "varchar(255)", (c) => c.notNull())
+    .addColumn("isActive", sql`TINYINT`, (c) => c.notNull())
+    .addColumn("isPublic", sql`TINYINT`, (c) => c.notNull())
     .addColumn("creatorId", "integer", (c) => c.notNull())
+    .addColumn("createdAt", "datetime", (c) =>
+      c.notNull().defaultTo(sql`GETDATE()`),
+    )
+    .addColumn("updatedAt", "datetime")
+    .execute();
+
+  await db.schema
+    .createTable("payments")
+    //.ifNotExists()
+    .addColumn("id", "integer", (c) => c.primaryKey().modifyEnd(sql`IDENTITY`))
+    .addColumn("methodId", "integer", (c) => c.notNull())
+    .addColumn("tendered", "integer", (c) => c.notNull())
+    .addColumn("saleId", "integer", (c) => c.notNull())
+    .addColumn("cashierId", "integer", (c) => c.notNull())
+    .addColumn("processorSessionId", "varchar(255)", (c) => c.notNull())
     .addColumn("createdAt", "datetime", (c) =>
       c.notNull().defaultTo(sql`GETDATE()`),
     )

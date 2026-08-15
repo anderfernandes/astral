@@ -25,8 +25,8 @@ export const signoutFn = createServerFn().handler(async () => {
   setResponseHeader(
     "Set-Cookie",
     import.meta.env.PROD
-      ? `__Host-ASTRALSESSID=DELETED; HttpOnly; Secure; SameSite=Lax; Path=/; MaxAge=0`
-      : `ASTRALSESSID=DELETED; HttpOnly; Path=/; MaxAge=0`,
+      ? `__Host-ASTRALSESSID=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0`
+      : `ASTRALSESSID=; HttpOnly; Path=/; Max-Age=0`,
   );
 
   throw redirect({ to: "/sign-in" });
@@ -57,17 +57,22 @@ export const getSignedInUserFn = createServerFn().handler(async () => {
       "users.lastName as lastName",
       "users.roles",
       // "tokens.id as tokenId",
-      // "tokens.expiresAt as tokenExpiresAt",
+      "tokens.expiresAt as tokenExpiresAt",
       // "tokens.purpose as tokenPurpose",
       // "tokens.createdAt as tokenCreatedAt",
     ])
     .where("tokens.id", "=", token as string)
     .where("tokens.purpose", "=", "authentication")
-    .where("tokens.expiresAt", ">=", getCurrentDateTimeString() as any)
+    .where("tokens.expiresAt", ">=", getCurrentDateTimeString())
     .executeTakeFirst();
+
+  console.log("current time: ", getCurrentDateTimeString());
+  console.log("current user: ", user);
+
+  if (!user) return undefined;
 
   return {
     ...user,
-    roles: JSON.parse(user?.roles as string) as unknown as Role[],
+    roles: (user?.roles ? JSON.parse(user?.roles as string) : []) as Role[],
   };
 });

@@ -66,6 +66,64 @@ declare global {
   type MembershipTypeInsertable = Insertable<IMembershipTypesTable>;
   type MembershipTypeUpdateable = Updateable<IMembershipTypesTable>;
 
+  interface ISalesTable {
+    id: Generated<bigint>;
+    status: "OPEN" | "COMPLETED" | "CANCELED";
+    source: "CASHIER" | "ADMIN" | "PORTAL";
+    isTaxable: 0 | 1;
+    creatorId: number;
+    createdAt: ColumnType<Date | string, never, never>;
+    updatedAt: ColumnType<Date | string, never, string>;
+  }
+
+  type Sale = Selectable<ISalesTable> & {
+    items: Partial<SaleItem>[];
+    payments: Payment[];
+  };
+  type SaleInsertable = Insertable<ISalesTable> & {
+    items: SaleItem[];
+    payments: Payment[];
+  };
+  type SaleUpdateable = Updateable<ISalesTable> & {
+    items: SaleItem[];
+    payments: Payment[];
+  };
+
+  interface ISaleItemsTable {
+    id: Generated<number>;
+    saleId: bigint;
+    type:
+      | "TICKET"
+      | "PRODUCT"
+      | "MEMBERSHIP (PRIMARY)"
+      | "MEMBERSHIP (FREE SECONDARY)"
+      | "MEMBERSHIP (PAID SECONDARY)"
+      | "CONVENIENCE FEE"
+      | "SURCHARGE"
+      | "DISCOUNT";
+    name: string;
+    description: string;
+    price: number;
+    quantity: number;
+    creatorId: number;
+    createdAt: ColumnType<Date | string, never, never>;
+    updatedAt: ColumnType<Date | string, never, string>;
+  }
+
+  type SaleItem = Selectable<ISaleItemsTable>;
+  type SaleItemInsertable = Insertable<ISaleItemsTable>;
+  type SaleItemUpdatable = Updateable<ISaleItemsTable>;
+
+  interface IDatabase {
+    users: IUsersTable;
+    membershipTypes: IMembershipTypesTable;
+    paymentMethods: IPaymentMethodsTable;
+    tokens: ITokensTable;
+    sales: ISalesTable;
+    saleItems: ISaleItemsTable;
+    payments: IPaymentsTable;
+  }
+
   interface IPaymentMethodsTable {
     id: Generated<number>;
     name: string;
@@ -84,67 +142,21 @@ declare global {
 
   interface IPaymentsTable {
     id: Generated<number>;
-    method: PaymentMethod;
+    methodId: number;
     tendered: number;
-    saleId: number;
+    saleId: bigint;
     cashierId: number;
     createdAt: ColumnType<string, string, never>;
     updatedAt: ColumnType<never, string, never>;
   }
 
-  type Payment = Selectable<IPaymentsTable>;
-  type PaymentInsertable = Selectable<IPaymentsTable>;
-  type PaymentUpdateable = Selectable<IPaymentsTable>;
-
-  interface ISaleItemsTable {
-    id: Generated<number>;
-    saleId: number;
-    type:
-      | "TICKET"
-      | "PRODUCT"
-      | "MEMBERSHIP (PRIMARY)"
-      | "MEMBERSHIP (FREE SECONDARY)"
-      | "MEMBERSHIP (PAID SECONDARY)"
-      | "CONVENIENCE FEE"
-      | "SURCHARGE"
-      | "DISCOUNT";
-    name: string;
-    description: string;
-    price: number;
-    quantity: number;
-    creatorId: number;
-    createdAt: ColumnType<string, string, never>;
-    updatedAt: ColumnType<never, string, never>;
-  }
-
-  type SaleItem = Selectable<ISaleItemsTable>;
-  type SaleItemInsertable = Insertable<ISaleItemsTable>;
-  type SaleItemUpdatable = Updateable<ISaleItemsTable>;
-
-  interface ISalesTable {
-    id: Generated<number>;
-    status: "OPEN" | "COMPLETED" | "CANCELED";
-    source: "CASHIER" | "ADMIN" | "CUSTOMER";
-    isTaxable: boolean;
-    creatorId: number;
-    createdAt: ColumnType<string, string, never>;
-    updatedAt: ColumnType<never, string, never>;
-    items: SaleItem[];
-    payments: Payment;
-  }
-
-  type Sale = Selectable<ISalesTable>;
-  type SaleInsertable = Insertable<ISalesTable>;
-  type SaleUpdateable = Updateable<ISalesTable>;
-
-  interface IDatabase {
-    users: IUsersTable;
-    membershipTypes: IMembershipTypesTable;
-    paymentMethods: IPaymentMethodsTable;
-    tokens: ITokensTable;
-    saleItems: ISaleItemsTable;
-    sales: ISalesTable;
-  }
+  type Payment = Selectable<IPaymentsTable> & { method?: PaymentMethod };
+  type PaymentInsertable = Selectable<IPaymentsTable> & {
+    method?: PaymentMethod;
+  };
+  type PaymentUpdateable = Selectable<IPaymentsTable> & {
+    method?: PaymentMethod;
+  };
 
   interface IRegistrationData {
     firstName: string;
