@@ -60,6 +60,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("source", "varchar(255)", (c) => c.notNull())
     .addColumn("isTaxable", sql`TINYINT`, (c) => c.notNull())
     .addColumn("creatorId", "integer", (c) => c.notNull())
+    .addColumn("customerId", "integer", (c) => c.notNull())
     .addColumn("createdAt", "datetime", (c) =>
       c.notNull().defaultTo(sql`GETDATE()`),
     )

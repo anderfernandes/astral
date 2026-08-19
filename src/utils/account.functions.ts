@@ -6,6 +6,7 @@ import {
 import { db } from "~db";
 import { getCurrentDateTimeString } from ".";
 import { redirect } from "@tanstack/solid-router";
+import * as SaleRepository from "~repositories/SaleRepository";
 
 export const signoutFn = createServerFn().handler(async () => {
   const header = getRequestHeader("Cookie");
@@ -74,5 +75,8 @@ export const getSignedInUserFn = createServerFn().handler(async () => {
   return {
     ...user,
     roles: (user?.roles ? JSON.parse(user?.roles as string) : []) as Role[],
+    cart:
+      (await SaleRepository.get({ status: "OPEN", customerId: user.id }))
+        ?.items ?? [],
   };
 });

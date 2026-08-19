@@ -72,6 +72,7 @@ declare global {
     source: "CASHIER" | "ADMIN" | "PORTAL";
     isTaxable: 0 | 1;
     creatorId: number;
+    customerId: number;
     createdAt: ColumnType<Date | string, never, never>;
     updatedAt: ColumnType<Date | string, never, string>;
   }

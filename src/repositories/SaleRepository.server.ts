@@ -8,7 +8,9 @@ export async function get(data: Partial<Sale>) {
 
   if (data.id) query = query.where("id", "=", data.id);
 
-  const sale = await query.selectAll().executeTakeFirstOrThrow();
+  const sale = await query.selectAll().executeTakeFirst();
+
+  if (!sale) return undefined;
 
   return {
     ...sale,
@@ -42,7 +44,8 @@ export async function save(data: {
       status: data.status || "OPEN",
       source: data.source || "PORTAL",
       isTaxable: data.isTaxable === false ? 0 : 1,
-      creatorId: user.id,
+      creatorId: 0,
+      customerId: user.id,
     })
     .executeTakeFirstOrThrow();
 
@@ -54,6 +57,18 @@ export async function save(data: {
   );
 }
 
+export async function find(data: Partial<Sale>) {
+  let query = db.selectFrom("sales");
+
+  if (data.status) query = query.where("status", "=", data.status);
+
+  if (data.customerId) query = query.where("customerId", "=", data.customerId);
+
+  const sale = await query.selectAll().execute();
+
+  return { ...sale };
+}
+
 async function findItems(saleId: bigint) {
   const items = await db
     .selectFrom("saleItems")
@@ -62,7 +77,7 @@ async function findItems(saleId: bigint) {
     .execute();
 
   return items.map((item) => ({
-    ...items,
+    ...item,
     createdAt: toDate(item.createdAt),
     updatedAt: toDate(item.updatedAt),
   }));

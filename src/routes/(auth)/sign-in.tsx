@@ -8,6 +8,7 @@ import { verifyHash } from "~utils/index.server";
 import { randomBytes } from "node:crypto";
 import { setResponseHeader } from "@tanstack/solid-start/server";
 import { Temporal } from "@js-temporal/polyfill";
+import { getCurrentDateTimeString } from "~utils/index";
 
 export const Route = createFileRoute("/(auth)/sign-in")({
   component: SignInPage,
@@ -132,6 +133,7 @@ const getUserFn = createServerFn({ method: "POST" })
       await db
         .selectFrom("users")
         .where("email", "=", email)
+        .where("activatedAt", "<=", getCurrentDateTimeString())
         .select(["id", "email", "firstName"])
         .executeTakeFirstOrThrow(),
   );
@@ -147,7 +149,7 @@ const signInFn = createServerFn({ method: "POST" })
 
     console.log(user);
 
-    if (!user.activatedAt) throw new Error("Invalid credentials");
+    //if (!user.activatedAt) throw new Error("Invalid credentials");
 
     if (!(await verifyHash(password, user.password))) {
       throw new Error("Invalid credentials.");
