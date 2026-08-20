@@ -33,3 +33,21 @@ export function toDate(d: string | Date | undefined) {
   else if (typeof d === "string") return new Date(d + "+00:00");
   return d as Date;
 }
+
+export function calculateSaleTotals(
+  items: { price: number; quantity: number }[],
+  taxRate: number,
+) {
+  const subtotal = items.reduce(
+    (total, item) => item.price * item.quantity + total,
+    0,
+  );
+
+  const tax = (taxRate / 100) * subtotal;
+
+  return {
+    subtotal,
+    tax,
+    total: subtotal + tax,
+  };
+}

@@ -1,12 +1,13 @@
-import { createFileRoute, useNavigate } from "@tanstack/solid-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { Button, Dialog, Input } from "~components";
-import { toCurrencyString } from "~utils/index";
+import { calculateSaleTotals, toCurrencyString } from "~utils/index";
 import { getMembershipTypeFn } from "~utils/membershipTypes.functions";
 import * as MembershipTypeRepository from "~repositories/MembershipTypeRepository";
 import { useMutation } from "@tanstack/solid-query";
 import * as SaleRepository from "~repositories/SaleRepository";
+import { getSignedInUserFn } from "~utils/account.functions";
 
 export const Route = createFileRoute("/(public)/memberships/$typeId")({
   validateSearch: (search: {
@@ -29,7 +30,6 @@ function RouteComponent() {
   const context = Route.useRouteContext();
 
   const settings = createMemo(() => context().settings);
-  const user = createMemo(() => context().user);
 
   const membershipType = Route.useLoaderData();
 
@@ -95,23 +95,12 @@ function RouteComponent() {
     },
   );
 
-  const totals = createMemo(() => {
-    const subtotal = items().reduce(
-      (total, item) => item.price * item.quantity + total,
-      0,
-    );
-
-    const tax = (settings().taxRate / 100) * subtotal;
-
-    return {
-      subtotal,
-      tax,
-      total: subtotal + tax,
-    };
-  });
+  const totals = createMemo(() =>
+    calculateSaleTotals(items(), context().settings.taxRate),
+  );
 
   return (
-    <section class="bg-white py-24">
+    <section class="mx-auto max-w-7xl bg-white py-24">
       <div class="pt-6">
         {/* <nav aria-label="Breadcrumb">
           <ol
@@ -464,6 +453,10 @@ const processOnlineMembershipSaleFn = createServerFn({ method: "POST" })
       );
 
     console.log(membershipType);
+
+    const user = await getSignedInUserFn();
+
+    if (!user) throw redirect({ to: "/sign-in" });
 
     await SaleRepository.save({
       status: "OPEN",

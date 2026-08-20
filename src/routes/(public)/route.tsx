@@ -69,7 +69,7 @@ function RouteComponent() {
                 type="button"
                 command="show-modal"
                 commandfor="mobile-menu"
-                class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+                class="-m-2.5 inline-flex cursor-pointer items-center justify-center rounded-md p-2.5 text-gray-700"
               >
                 <span class="sr-only">Open main menu</span>
                 <svg
