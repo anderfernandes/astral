@@ -56,7 +56,9 @@ function RouteComponent() {
             <div class="flex lg:hidden">
               <Link to="/cart" class="flex items-center gap-1 text-gray-700">
                 <span class="text-xs font-semibold">
-                  {context().user?.cart.length ?? 0}
+                  {context().user?.cart.filter(
+                    (item) => item.type != "CONVENIENCE FEE",
+                  ).length ?? 0}
                 </span>
                 <svg viewBox="0 0 24 24" class="mr-2 size-6">
                   <path
@@ -105,7 +107,9 @@ function RouteComponent() {
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
               <Link to="/cart" class="flex items-center gap-1">
                 <span class="text-xs font-semibold">
-                  {context().user?.cart.length}
+                  {context().user?.cart.filter(
+                    (item) => item.type != "CONVENIENCE FEE",
+                  ).length ?? 0}
                 </span>
                 <svg viewBox="0 0 24 24" class="mr-2 size-6 text-gray-700">
                   <path
@@ -118,7 +122,7 @@ function RouteComponent() {
                 when={context().user}
                 fallback={<Button to="/sign-in" text="Sign In &rarr;" />}
               >
-                <Link to="/account">
+                <Link to="/account" class="text-gray-700">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -165,7 +169,7 @@ function RouteComponent() {
                       type="button"
                       command="close"
                       commandfor="mobile-menu"
-                      class="-m-2.5 rounded-md p-2.5 text-gray-700"
+                      class="-m-2.5 cursor-pointer rounded-md p-2.5 text-gray-700"
                     >
                       <span class="sr-only">Close menu</span>
                       <svg

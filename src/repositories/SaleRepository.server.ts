@@ -51,6 +51,15 @@ export async function save(data: {
 
   if (insertId == undefined) throw new Error("No insertId");
 
+  if (data.source === "PORTAL")
+    data.items.push({
+      type: "CONVENIENCE FEE",
+      name: "Convenience Fee",
+      description: "Convenience Fee",
+      price: Number(process.env["CONVENIENCE_FEE"]),
+      quantity: 1,
+    });
+
   await saveItems(
     insertId,
     data.items.map((item) => ({ ...item, creatorId: user.id })),

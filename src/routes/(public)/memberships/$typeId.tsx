@@ -1,4 +1,9 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/solid-router";
+import {
+  createFileRoute,
+  redirect,
+  useNavigate,
+  useRouter,
+} from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { Button, Dialog, Input } from "~components";
@@ -26,6 +31,8 @@ function RouteComponent() {
   const params = Route.useParams();
 
   const navigate = useNavigate();
+
+  const router = useRouter();
 
   const context = Route.useRouteContext();
 
@@ -244,7 +251,7 @@ function RouteComponent() {
             </div>
             <form
               class="grid content-start gap-3 lg:col-span-1"
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
 
                 mutation.mutate({
@@ -252,6 +259,8 @@ function RouteComponent() {
                   freeSecondariesIds: [],
                   paidSecondariesIds: [],
                 });
+
+                await router.invalidate();
               }}
             >
               <div class="my-6 grid gap-3 lg:grid-cols-2">

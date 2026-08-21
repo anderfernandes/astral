@@ -3,7 +3,7 @@ import { createFileRoute, redirect } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createMemo, For, Show } from "solid-js";
 import Stripe from "stripe";
-import { Badge, Button } from "~components";
+import { Alert, Badge, Button } from "~components";
 import { getSignedInUserFn } from "~utils/account.functions";
 import { calculateSaleTotals, toCurrencyString } from "~utils/index";
 import { stripe } from "~utils/index.server";
@@ -32,7 +32,11 @@ function RouteComponent() {
   return (
     <section class="mx-auto my-24 grid w-full gap-6 px-8 lg:w-2xl lg:px-0">
       <h1 class="mb-12 text-center text-4xl font-bold">Shopping Cart</h1>
-      <For each={context().user?.cart}>
+      <For
+        each={context().user?.cart.filter(
+          (item) => item.type != "CONVENIENCE FEE",
+        )}
+      >
         {(item) => (
           <div class="grid gap-3 border-y border-gray-200 py-3 text-sm">
             <div class="flex items-center">
@@ -49,58 +53,77 @@ function RouteComponent() {
           </div>
         )}
       </For>
-      <div class="text-sm text-gray-600">
-        <p class="flex gap-1">
-          <span class="grow">Subtotal</span>
-          <span>{toCurrencyString(totals().subtotal)}</span>
-        </p>
-      </div>
-      <div class="text-sm text-gray-600">
-        <p class="flex gap-1">
-          <span class="grow">
-            Tax (
-            {(context().settings.taxRate / 100).toLocaleString("en-US", {
-              style: "percent",
-              minimumSignificantDigits: 1,
-            })}
-            )
-          </span>
-          <span>{toCurrencyString(totals().tax)}</span>
-        </p>
-      </div>
-      <div>
-        <p class="flex gap-1">
-          <span class="grow">Total</span>
-          <span>{toCurrencyString(totals().total)}</span>
-        </p>
-      </div>
       <Show
-        when={context().user?.cart.some((item) =>
-          item.type.includes("MEMBERSHIP"),
-        )}
-        fallback={
-          <p class="mt-10 text-sm text-gray-600">
-            You will be redirected to Stripe to pay for the items in your cart.
+        when={context().user?.cart.length! > 0}
+        fallback={<Alert text="Nothing on your cart yet." />}
+      >
+        <div class="text-sm text-gray-600">
+          <p class="flex gap-1">
+            <span class="grow">Subtotal</span>
+            <span>{toCurrencyString(totals().subtotal)}</span>
           </p>
-        }
-      >
-        <p class="mt-10 text-sm text-gray-600">
-          You will be redirected to Stripe to pay for your membership and
-          redirected back with and given the benefits once we receive the
-          payment.
-        </p>
+        </div>
+        <Show
+          when={context().user?.cart.some(
+            (item) => item.type === "CONVENIENCE FEE",
+          )}
+        >
+          <div class="text-sm text-gray-600">
+            <p class="flex gap-1">
+              <span class="grow">Convenience Fee</span>
+              <span>{toCurrencyString(context().settings.convenienceFee)}</span>
+            </p>
+          </div>
+        </Show>
+        <div class="text-sm text-gray-600">
+          <p class="flex gap-1">
+            <span class="grow">
+              Tax (
+              {(context().settings.taxRate / 100).toLocaleString("en-US", {
+                style: "percent",
+                minimumSignificantDigits: 1,
+              })}
+              )
+            </span>
+            <span>{toCurrencyString(totals().tax)}</span>
+          </p>
+        </div>
+        <div>
+          <p class="flex gap-1">
+            <span class="grow">Total</span>
+            <span>{toCurrencyString(totals().total)}</span>
+          </p>
+        </div>
+        <Show
+          when={context().user?.cart.some((item) =>
+            item.type.includes("MEMBERSHIP"),
+          )}
+          fallback={
+            <p class="mt-10 text-sm text-gray-600">
+              You will be redirected to Stripe to pay for the items in your
+              cart.
+            </p>
+          }
+        >
+          <p class="mt-10 text-sm text-gray-600">
+            You will be redirected to Stripe to pay for your membership and
+            redirected back with and given the benefits once we receive the
+            payment.
+          </p>
+        </Show>
+        <form
+          class="grid"
+          onClick={(e) => {
+            e.preventDefault();
+
+            if (!confirm("You will be redirected to Stripe to pay.")) return;
+
+            mutation.mutate();
+          }}
+        >
+          <Button type="submit" text="Checkout" disabled={mutation.isPending} />
+        </form>
       </Show>
-      <form
-        onClick={(e) => {
-          e.preventDefault();
-
-          if (!confirm("You will be redirected to Stripe to pay.")) return;
-
-          mutation.mutate();
-        }}
-      >
-        <Button type="submit" text="Checkout" disabled={mutation.isPending} />
-      </form>
     </section>
   );
 }
@@ -114,16 +137,24 @@ const checkoutFn = createServerFn({ method: "POST" }).handler(async () => {
 
   // TODO: MAKE SURE CURRENCY IS SET
 
+  const taxRate = await stripe.taxRates.retrieve(
+    process.env["STRIPE_TAX_RATE_ID"] as string,
+  );
+
+  // TODO: CHECK IF TAX RATE EXISTS
+
   for (const item of user?.cart) {
     line_items.push({
+      tax_rates: [taxRate.id],
       quantity: item.quantity,
       price_data: {
+        tax_behavior: "exclusive",
         currency: process.env["CURRENCY"] as string,
         unit_amount: item.price,
         product_data: {
           name: item.name,
           description: item.description,
-          //images: []
+          images: ["http://localhost:3000/cover.jpg"],
         },
       },
     });
@@ -133,18 +164,15 @@ const checkoutFn = createServerFn({ method: "POST" }).handler(async () => {
     line_items,
     mode: "payment",
     //integration_identifier: "{{INTEGRATION_ID}}",
+    customer_email: user.email,
     success_url:
-      "http://localhost:3000/account/invoices/success?session_id={CHECKOUT_SESSION_ID}",
+      "http://localhost:3000/account/checkout/sessions/{CHECKOUT_SESSION_ID}",
+    cancel_url: "http://localhost:3000/account/checkout/canceled",
   });
 
   console.log("checkout URL: ", checkoutSession.url);
 
   if (!checkoutSession.url) return;
 
-  // throw new Response(null, {
-  //   status: 303,
-  //   headers: {
-  //     Location: checkoutSession.url,
-  //   },
-  // });
+  throw redirect({ href: checkoutSession.url });
 });
