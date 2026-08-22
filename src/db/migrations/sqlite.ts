@@ -59,6 +59,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("status", "varchar(255)", (c) => c.notNull())
     .addColumn("source", "varchar(255)", (c) => c.notNull())
     .addColumn("isTaxable", "integer", (c) => c.notNull())
+    .addColumn("checkoutSessionId", "varchar(255)")
     .addColumn("creatorId", "integer", (c) => c.notNull())
     .addColumn("customerId", "integer", (c) => c.notNull())
     .addColumn("createdAt", "timestamp", (c) =>

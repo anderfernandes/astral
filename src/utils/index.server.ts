@@ -81,5 +81,3 @@ export function decrypt(data: {
     decipher.final(),
   ]).toString("utf-8");
 }
-
-export const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]);

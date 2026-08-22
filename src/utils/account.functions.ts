@@ -75,8 +75,6 @@ export const getSignedInUserFn = createServerFn().handler(async () => {
   return {
     ...user,
     roles: (user?.roles ? JSON.parse(user?.roles as string) : []) as Role[],
-    cart:
-      (await SaleRepository.get({ status: "OPEN", customerId: user.id }))
-        ?.items ?? [],
+    sale: await SaleRepository.get({ status: "OPEN", customerId: user.id }),
   };
 });

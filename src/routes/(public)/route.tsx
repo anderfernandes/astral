@@ -56,7 +56,7 @@ function RouteComponent() {
             <div class="flex lg:hidden">
               <Link to="/cart" class="flex items-center gap-1 text-gray-700">
                 <span class="text-xs font-semibold">
-                  {context().user?.cart.filter(
+                  {context().user?.sale?.items.filter(
                     (item) => item.type != "CONVENIENCE FEE",
                   ).length ?? 0}
                 </span>
@@ -107,7 +107,7 @@ function RouteComponent() {
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
               <Link to="/cart" class="flex items-center gap-1">
                 <span class="text-xs font-semibold">
-                  {context().user?.cart.filter(
+                  {context().user?.sale?.items.filter(
                     (item) => item.type != "CONVENIENCE FEE",
                   ).length ?? 0}
                 </span>

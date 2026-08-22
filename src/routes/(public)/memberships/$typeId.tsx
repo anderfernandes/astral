@@ -13,6 +13,7 @@ import * as MembershipTypeRepository from "~repositories/MembershipTypeRepositor
 import { useMutation } from "@tanstack/solid-query";
 import * as SaleRepository from "~repositories/SaleRepository";
 import { getSignedInUserFn } from "~utils/account.functions";
+import { createStripeCheckoutSession } from "~utils/stripe.functions";
 
 export const Route = createFileRoute("/(public)/memberships/$typeId")({
   validateSearch: (search: {
@@ -446,6 +447,10 @@ interface IOnlineMembershipSaleData {
 const processOnlineMembershipSaleFn = createServerFn({ method: "POST" })
   .validator((data: IOnlineMembershipSaleData) => data)
   .handler(async ({ data }) => {
+    const user = await getSignedInUserFn();
+
+    if (!user) throw redirect({ to: "/sign-in" });
+
     const membershipType = await MembershipTypeRepository.get({
       id: data.typeId,
     });
@@ -461,23 +466,38 @@ const processOnlineMembershipSaleFn = createServerFn({ method: "POST" })
         "Selected number of free secondaries is greater than what the membership type allows.",
       );
 
-    console.log(membershipType);
-
-    const user = await getSignedInUserFn();
-
-    if (!user) throw redirect({ to: "/sign-in" });
-
-    await SaleRepository.save({
+    const saleId = await SaleRepository.save({
       status: "OPEN",
       source: "PORTAL",
       items: [
         {
           type: "MEMBERSHIP (PRIMARY)",
-          name: membershipType.name as string,
-          description: "primary",
+          name: membershipType?.name as string,
+          description: `${user.firstName} ${user.lastName}`,
           price: membershipType.price as number,
           quantity: 1,
         },
       ],
     });
+
+    if (!saleId) throw new Error("No sale id");
+
+    const sale = await SaleRepository.get({ id: saleId });
+
+    if (!sale)
+      throw new Error(
+        "An error has occurred obtaining the sale from the database.",
+      );
+
+    const stripeCheckoutSession = await createStripeCheckoutSession(sale);
+
+    if (!stripeCheckoutSession || !stripeCheckoutSession.url)
+      throw new Error("Unable to create checkout session.");
+
+    await SaleRepository.save({
+      id: saleId,
+      checkoutSessionId: stripeCheckoutSession.id,
+    });
+
+    throw redirect({ href: stripeCheckoutSession.url });
   });

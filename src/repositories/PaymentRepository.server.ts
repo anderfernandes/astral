@@ -11,6 +11,6 @@ export async function find(data: Partial<Payment>) {
   return payments.map((item) => ({
     ...item,
     createdAt: toDate(item.createdAt),
-    updatedAt: toDate(item.updatedAt),
+    updatedAt: item.updatedAt ? toDate(item.updatedAt) : null,
   }));
 }

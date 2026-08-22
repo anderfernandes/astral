@@ -19,7 +19,7 @@ declare global {
     roles: JSONColumnType<Role[], Role[], Role[]> | string;
     creatorId: number;
     createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<Date | string, never, string>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
     activatedAt: ColumnType<string | undefined, never>;
   }
 
@@ -33,11 +33,7 @@ declare global {
     purpose:
       "activation" | "authentication" | "password recovery" | "email recovery";
     createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<
-      never,
-      Date | string | undefined,
-      Date | string | undefined
-    >;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
     expiresAt: ColumnType<string, string | undefined, string | undefined>;
   }
 
@@ -59,7 +55,7 @@ declare global {
     isPublic: 0 | 1;
     creatorId: number;
     createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<Date | string, never, string>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
   }
 
   type MembershipType = Selectable<IMembershipTypesTable>;
@@ -71,24 +67,22 @@ declare global {
     status: "OPEN" | "COMPLETED" | "CANCELED";
     source: "CASHIER" | "ADMIN" | "PORTAL";
     isTaxable: 0 | 1;
+    checkoutSessionId: string | null | undefined;
     creatorId: number;
     customerId: number;
     createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<Date | string, never, string>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
   }
 
   type Sale = Selectable<ISalesTable> & {
-    items: Partial<SaleItem>[];
-    payments: Payment[];
-  };
-  type SaleInsertable = Insertable<ISalesTable> & {
+    subtotal: number;
+    tax: number;
+    total: number;
     items: SaleItem[];
     payments: Payment[];
   };
-  type SaleUpdateable = Updateable<ISalesTable> & {
-    items: SaleItem[];
-    payments: Payment[];
-  };
+  type SaleInsertable = Insertable<ISalesTable>;
+  type SaleUpdateable = Updateable<ISalesTable>;
 
   interface ISaleItemsTable {
     id: Generated<number>;
@@ -108,7 +102,7 @@ declare global {
     quantity: number;
     creatorId: number;
     createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<Date | string, never, string>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
   }
 
   type SaleItem = Selectable<ISaleItemsTable>;
@@ -134,7 +128,7 @@ declare global {
     isPublic: 0 | 1;
     creatorId: number;
     createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<never, Date | string | undefined, never>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
   }
 
   type PaymentMethod = Selectable<IPaymentMethodsTable>;
@@ -147,17 +141,13 @@ declare global {
     tendered: number;
     saleId: bigint;
     cashierId: number;
-    createdAt: ColumnType<string, string, never>;
-    updatedAt: ColumnType<never, string, never>;
+    createdAt: ColumnType<Date | string, string, never>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
   }
 
   type Payment = Selectable<IPaymentsTable> & { method?: PaymentMethod };
-  type PaymentInsertable = Selectable<IPaymentsTable> & {
-    method?: PaymentMethod;
-  };
-  type PaymentUpdateable = Selectable<IPaymentsTable> & {
-    method?: PaymentMethod;
-  };
+  type PaymentInsertable = Selectable<IPaymentsTable>;
+  type PaymentUpdateable = Selectable<IPaymentsTable>;
 
   interface IRegistrationData {
     firstName: string;

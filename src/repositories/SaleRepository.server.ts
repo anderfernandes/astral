@@ -1,6 +1,6 @@
 import { db } from "~db";
 import { getSignedInUserFn } from "~utils/account.functions";
-import { toDate } from "~utils/index";
+import { calculateSaleTotals, toDate } from "~utils/index";
 import * as PaymentRepository from "./PaymentRepository.server";
 
 export async function get(data: Partial<Sale>) {
@@ -12,25 +12,48 @@ export async function get(data: Partial<Sale>) {
 
   if (!sale) return undefined;
 
+  const items = await findItems(sale.id);
+
+  const taxRate = Number(process.env["SALE_TAX_RATE"]) ?? 0;
+
   return {
     ...sale,
-    items: await findItems(sale.id),
-    payments: PaymentRepository.find({ saleId: sale.id }),
-    updatedAt: toDate(sale.updatedAt),
-  };
+    ...calculateSaleTotals(items, taxRate),
+    items,
+    payments: await PaymentRepository.find({ saleId: sale.id }),
+    createdAt: toDate(sale.createdAt),
+    updatedAt: sale.updatedAt ? toDate(sale.updatedAt) : null,
+  } as Sale;
 }
 
 export async function save(data: {
-  id?: number;
-  status: Sale["status"];
-  source: Sale["source"];
+  id?: bigint;
+  status?: Sale["status"];
+  source?: Sale["source"];
   isTaxable?: boolean;
-  items: Pick<
+  checkoutSessionId?: string | undefined;
+  items?: Pick<
     SaleItem,
     "type" | "name" | "description" | "price" | "quantity"
   >[];
 }) {
-  if (data.id) return;
+  if (data.id) {
+    let query = db.updateTable("sales");
+
+    if (data.status) query = query.set("status", data.status);
+
+    if (data.source) query = query.set("source", data.source);
+
+    if (data.isTaxable)
+      query = query.set("isTaxable", Boolean(data.isTaxable) ? 1 : 0);
+
+    if (data.checkoutSessionId)
+      query = query.set("checkoutSessionId", data.checkoutSessionId);
+
+    await query.execute();
+
+    return data.id;
+  }
 
   if (!data.items || data.items.length <= 0) return;
 
@@ -44,6 +67,7 @@ export async function save(data: {
       status: data.status || "OPEN",
       source: data.source || "PORTAL",
       isTaxable: data.isTaxable === false ? 0 : 1,
+      checkoutSessionId: data.checkoutSessionId,
       creatorId: 0,
       customerId: user.id,
     })
@@ -64,6 +88,8 @@ export async function save(data: {
     insertId,
     data.items.map((item) => ({ ...item, creatorId: user.id })),
   );
+
+  return insertId;
 }
 
 export async function find(data: Partial<Sale>) {
@@ -88,8 +114,8 @@ async function findItems(saleId: bigint) {
   return items.map((item) => ({
     ...item,
     createdAt: toDate(item.createdAt),
-    updatedAt: toDate(item.updatedAt),
-  }));
+    updatedAt: item.updatedAt ? toDate(item.updatedAt) : null,
+  })) satisfies SaleItem[];
 }
 
 async function saveItems(
@@ -104,6 +130,7 @@ async function saveItems(
     creatorId: number;
   }[],
 ) {
+  // TODO: ADD IS_DELETED FOR SALE ITEMS
   for (const item of items) {
     if (item.id) break;
 

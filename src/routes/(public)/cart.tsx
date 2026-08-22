@@ -2,11 +2,10 @@ import { createMutation } from "@tanstack/solid-query";
 import { createFileRoute, redirect } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createMemo, For, Show } from "solid-js";
-import Stripe from "stripe";
 import { Alert, Badge, Button } from "~components";
 import { getSignedInUserFn } from "~utils/account.functions";
 import { calculateSaleTotals, toCurrencyString } from "~utils/index";
-import { stripe } from "~utils/index.server";
+import { getStripeCheckoutSession } from "~utils/stripe.functions";
 
 export const Route = createFileRoute("/(public)/cart")({
   component: RouteComponent,
@@ -25,15 +24,11 @@ function RouteComponent() {
     },
   }));
 
-  const totals = createMemo(() =>
-    calculateSaleTotals(context().user?.cart ?? [], context().settings.taxRate),
-  );
-
   return (
     <section class="mx-auto my-24 grid w-full gap-6 px-8 lg:w-2xl lg:px-0">
       <h1 class="mb-12 text-center text-4xl font-bold">Shopping Cart</h1>
       <For
-        each={context().user?.cart.filter(
+        each={context().user?.sale?.items.filter(
           (item) => item.type != "CONVENIENCE FEE",
         )}
       >
@@ -54,17 +49,19 @@ function RouteComponent() {
         )}
       </For>
       <Show
-        when={context().user?.cart.length! > 0}
+        when={context().user?.sale?.items.length! > 0}
         fallback={<Alert text="Nothing on your cart yet." />}
       >
         <div class="text-sm text-gray-600">
           <p class="flex gap-1">
             <span class="grow">Subtotal</span>
-            <span>{toCurrencyString(totals().subtotal)}</span>
+            <span>
+              {toCurrencyString(context().user?.sale?.subtotal as number)}
+            </span>
           </p>
         </div>
         <Show
-          when={context().user?.cart.some(
+          when={context().user?.sale?.items.some(
             (item) => item.type === "CONVENIENCE FEE",
           )}
         >
@@ -85,17 +82,19 @@ function RouteComponent() {
               })}
               )
             </span>
-            <span>{toCurrencyString(totals().tax)}</span>
+            <span>{toCurrencyString(context().user?.sale?.tax as number)}</span>
           </p>
         </div>
         <div>
           <p class="flex gap-1">
             <span class="grow">Total</span>
-            <span>{toCurrencyString(totals().total)}</span>
+            <span>
+              {toCurrencyString(context().user?.sale?.total as number)}
+            </span>
           </p>
         </div>
         <Show
-          when={context().user?.cart.some((item) =>
+          when={context().user?.sale?.items.some((item) =>
             item.type.includes("MEMBERSHIP"),
           )}
           fallback={
@@ -131,44 +130,18 @@ function RouteComponent() {
 const checkoutFn = createServerFn({ method: "POST" }).handler(async () => {
   const user = await getSignedInUserFn();
 
-  const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+  if (!user) throw redirect({ to: "/sign-in" });
 
-  if (!user?.cart || user.cart.length <= 0) return;
+  if (!user.sale) throw new Error("Sign in user has no open sales.");
 
-  // TODO: MAKE SURE CURRENCY IS SET
+  if (!user.sale.checkoutSessionId)
+    throw new Error("Checkout session of signed in user sale not found.");
 
-  const taxRate = await stripe.taxRates.retrieve(
-    process.env["STRIPE_TAX_RATE_ID"] as string,
+  const checkoutSession = await getStripeCheckoutSession(
+    user.sale.checkoutSessionId,
   );
 
-  // TODO: CHECK IF TAX RATE EXISTS
-
-  for (const item of user?.cart) {
-    line_items.push({
-      tax_rates: [taxRate.id],
-      quantity: item.quantity,
-      price_data: {
-        tax_behavior: "exclusive",
-        currency: process.env["CURRENCY"] as string,
-        unit_amount: item.price,
-        product_data: {
-          name: item.name,
-          description: item.description,
-          images: ["http://localhost:3000/cover.jpg"],
-        },
-      },
-    });
-  }
-
-  const checkoutSession = await stripe.checkout.sessions.create({
-    line_items,
-    mode: "payment",
-    //integration_identifier: "{{INTEGRATION_ID}}",
-    customer_email: user.email,
-    success_url:
-      "http://localhost:3000/account/checkout/sessions/{CHECKOUT_SESSION_ID}",
-    cancel_url: "http://localhost:3000/account/checkout/canceled",
-  });
+  if (!checkoutSession) throw new Error("Checkout session not found");
 
   console.log("checkout URL: ", checkoutSession.url);
 
