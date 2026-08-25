@@ -6,14 +6,16 @@ import viteSolid from "@solidjs/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
   const plugins: PluginOption = [
     tailwindcss(),
     tanstackStart(),
     // solid's vite plugin must come after start's vite plugin
     viteSolid({ ssr: true }),
-    nitro(),
+    //nitro(),
   ];
+
+  if (command === "build") plugins.push(nitro());
 
   return {
     resolve: {

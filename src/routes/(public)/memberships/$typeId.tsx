@@ -469,6 +469,7 @@ const processOnlineMembershipSaleFn = createServerFn({ method: "POST" })
     const saleId = await SaleRepository.save({
       status: "OPEN",
       source: "PORTAL",
+      customerId: user.id,
       items: [
         {
           type: "MEMBERSHIP (PRIMARY)",
@@ -497,6 +498,7 @@ const processOnlineMembershipSaleFn = createServerFn({ method: "POST" })
     await SaleRepository.save({
       id: saleId,
       checkoutSessionId: stripeCheckoutSession.id,
+      customerId: user.id,
     });
 
     throw redirect({ href: stripeCheckoutSession.url });

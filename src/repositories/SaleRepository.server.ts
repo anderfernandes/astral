@@ -1,5 +1,4 @@
 import { db } from "~db";
-import { getSignedInUserFn } from "~utils/account.functions";
 import { calculateSaleTotals, toDate } from "~utils/index";
 import * as PaymentRepository from "./PaymentRepository.server";
 
@@ -26,17 +25,7 @@ export async function get(data: Partial<Sale>) {
   } as Sale;
 }
 
-export async function save(data: {
-  id?: bigint;
-  status?: Sale["status"];
-  source?: Sale["source"];
-  isTaxable?: boolean;
-  checkoutSessionId?: string | undefined;
-  items?: Pick<
-    SaleItem,
-    "type" | "name" | "description" | "price" | "quantity"
-  >[];
-}) {
+export async function save(data: Partial<Sale>) {
   if (data.id) {
     let query = db.updateTable("sales");
 
@@ -55,25 +44,52 @@ export async function save(data: {
     return data.id;
   }
 
-  if (!data.items || data.items.length <= 0) return;
+  if (!data.items || data.items.length <= 0)
+    throw new Error("No items in sale.");
 
-  const user = await getSignedInUserFn();
+  if (data.customerId == undefined || data.customerId < 0)
+    throw new Error("Invalid customer.");
 
-  if (!user) return;
+  if (data.creatorId == undefined || data.creatorId < 0)
+    throw new Error("Invalid creator.");
 
-  const { insertId } = await db
-    .insertInto("sales")
-    .values({
-      status: data.status || "OPEN",
-      source: data.source || "PORTAL",
-      isTaxable: data.isTaxable === false ? 0 : 1,
-      checkoutSessionId: data.checkoutSessionId,
-      creatorId: 0,
-      customerId: user.id,
-    })
-    .executeTakeFirstOrThrow();
+  const values: SaleInsertable = {
+    status: data.status || "OPEN",
+    source: data.source || "PORTAL",
+    isTaxable: Boolean(data.isTaxable) ? 1 : 0,
+    checkoutSessionId: data.checkoutSessionId,
+    creatorId: data.customerId,
+    customerId: data.creatorId,
+  };
 
-  if (insertId == undefined) throw new Error("No insertId");
+  let saleId: number;
+
+  if (process.env.DB_DRIVER === "postgres") {
+    const result = await db
+      .insertInto("sales")
+      .values(values)
+      .returning("id")
+      .executeTakeFirstOrThrow();
+
+    saleId = result.id;
+  } else if (process.env.DB_DRIVER === "mssql") {
+    const result = await db
+      .insertInto("sales")
+      .values(values)
+      .output("inserted.id")
+      .executeTakeFirstOrThrow();
+
+    saleId = result.id;
+  } else {
+    const result = await db
+      .insertInto("sales")
+      .values(values)
+      .executeTakeFirstOrThrow();
+
+    saleId = Number(result.insertId);
+  }
+
+  if (saleId == undefined) throw new Error("No insertId");
 
   if (data.source === "PORTAL")
     data.items.push({
@@ -85,11 +101,11 @@ export async function save(data: {
     });
 
   await saveItems(
-    insertId,
-    data.items.map((item) => ({ ...item, creatorId: user.id })),
+    saleId,
+    data.items.map((item) => ({ ...item, creatorId: data.creatorId })),
   );
 
-  return insertId;
+  return saleId;
 }
 
 export async function find(data: Partial<Sale>) {
@@ -104,7 +120,7 @@ export async function find(data: Partial<Sale>) {
   return { ...sale };
 }
 
-async function findItems(saleId: bigint) {
+async function findItems(saleId: number) {
   const items = await db
     .selectFrom("saleItems")
     .where("saleId", "=", saleId)
@@ -118,18 +134,7 @@ async function findItems(saleId: bigint) {
   })) satisfies SaleItem[];
 }
 
-async function saveItems(
-  saleId: bigint,
-  items: {
-    id?: number;
-    type: SaleItem["type"];
-    name: string;
-    description: string;
-    price: number;
-    quantity: number;
-    creatorId: number;
-  }[],
-) {
+async function saveItems(saleId: number, items: Partial<SaleItem>[]) {
   // TODO: ADD IS_DELETED FOR SALE ITEMS
   for (const item of items) {
     if (item.id) break;
@@ -138,12 +143,12 @@ async function saveItems(
       .insertInto("saleItems")
       .values({
         saleId,
-        type: item.type,
-        name: item.name,
-        description: item.description,
-        price: item.price,
-        quantity: item.quantity,
-        creatorId: item.creatorId,
+        type: item.type as SaleItem["type"],
+        name: item.name as string,
+        description: item.description as string,
+        price: item.price as number,
+        quantity: item.quantity as number,
+        creatorId: item.creatorId as number,
       })
       .execute();
   }

@@ -63,7 +63,7 @@ declare global {
   type MembershipTypeUpdateable = Updateable<IMembershipTypesTable>;
 
   interface ISalesTable {
-    id: Generated<bigint>;
+    id: Generated<number>;
     status: "OPEN" | "COMPLETED" | "CANCELED";
     source: "CASHIER" | "ADMIN" | "PORTAL";
     isTaxable: 0 | 1;
@@ -78,7 +78,7 @@ declare global {
     subtotal: number;
     tax: number;
     total: number;
-    items: SaleItem[];
+    items: Partial<SaleItem>[];
     payments: Payment[];
   };
   type SaleInsertable = Insertable<ISalesTable>;
@@ -86,7 +86,7 @@ declare global {
 
   interface ISaleItemsTable {
     id: Generated<number>;
-    saleId: bigint;
+    saleId: number;
     type:
       | "TICKET"
       | "PRODUCT"
@@ -139,7 +139,7 @@ declare global {
     id: Generated<number>;
     methodId: number;
     tendered: number;
-    saleId: bigint;
+    saleId: number;
     cashierId: number;
     createdAt: ColumnType<Date | string, string, never>;
     updatedAt: ColumnType<Date | string | null, never, Date | string>;
