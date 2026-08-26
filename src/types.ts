@@ -103,6 +103,7 @@ declare global {
     creatorId: number;
     createdAt: ColumnType<Date | string, never, never>;
     updatedAt: ColumnType<Date | string | null, never, Date | string>;
+    deletedAt: ColumnType<Date | string, null, Date | string>;
   }
 
   type SaleItem = Selectable<ISaleItemsTable>;

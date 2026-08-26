@@ -4,8 +4,9 @@ import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createMemo, For, Show } from "solid-js";
 import { Alert, Badge, Button } from "~components";
 import { getSignedInUserFn } from "~utils/account.functions";
-import { calculateSaleTotals, toCurrencyString } from "~utils/index";
+import { getCurrentDateTimeString, toCurrencyString } from "~utils/index";
 import { getStripeCheckoutSession } from "~utils/stripe.functions";
+import * as SaleRepository from "~repositories/SaleRepository";
 
 export const Route = createFileRoute("/(public)/cart")({
   component: RouteComponent,
@@ -13,6 +14,8 @@ export const Route = createFileRoute("/(public)/cart")({
 
 function RouteComponent() {
   const context = Route.useRouteContext();
+
+  const sale = createMemo(() => context().user?.sale);
 
   const checkout = useServerFn(checkoutFn);
 
@@ -22,6 +25,13 @@ function RouteComponent() {
       console.log(e.message);
       alert("An error occurred.");
     },
+  }));
+
+  const removeItem = useServerFn(removeItemFn);
+
+  const removeItemMutation = createMutation(() => ({
+    mutationFn: (data: { saleId: number; saleItemId: number }) =>
+      removeItem({ data }),
   }));
 
   return (
@@ -36,15 +46,35 @@ function RouteComponent() {
           <div class="grid gap-3 border-y border-gray-200 py-3 text-sm">
             <div class="flex items-center">
               <p class="grow">{item.name}</p>
-              <p>{toCurrencyString(item.price)}</p>
+              <p>{toCurrencyString(item.price as number)}</p>
             </div>
             <div class="flex">
               <Badge text={item.type} />
             </div>
             <p class="text-gray-600">{item.description}</p>
-            <div>
-              <Button variant="secondary" text="Remove" />
-            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                if (
+                  !confirm(
+                    "Are you sure you want to remove this item from your cart?",
+                  )
+                )
+                  return;
+
+                removeItemMutation.mutate({
+                  saleId: sale()?.id as number,
+                  saleItemId: item.id as number,
+                });
+              }}
+            >
+              <Button
+                variant="secondary"
+                text={removeItemMutation.isPending ? "Removing..." : "Remove"}
+                disabled={removeItemMutation.isPending}
+              />
+            </form>
           </div>
         )}
       </For>
@@ -95,7 +125,7 @@ function RouteComponent() {
         </div>
         <Show
           when={context().user?.sale?.items.some((item) =>
-            item.type.includes("MEMBERSHIP"),
+            item?.type?.includes("MEMBERSHIP"),
           )}
           fallback={
             <p class="mt-10 text-sm text-gray-600">
@@ -149,3 +179,30 @@ const checkoutFn = createServerFn({ method: "POST" }).handler(async () => {
 
   throw redirect({ href: checkoutSession.url });
 });
+
+const removeItemFn = createServerFn({ method: "POST" })
+  .validator((data: { saleId: number; saleItemId: number }) => data)
+  .handler(async ({ data: { saleId, saleItemId } }) => {
+    const user = await getSignedInUserFn();
+
+    if (!user) throw new Error("Unable to delete item from cart.");
+
+    let sale = await SaleRepository.get({
+      id: saleId,
+      customerId: user.id,
+      source: "PORTAL",
+      status: "OPEN",
+    });
+
+    const item = sale?.items.find(
+      (x) => x.id === saleId && x.saleId === saleId,
+    );
+
+    if (!item) return;
+
+    item.deletedAt = getCurrentDateTimeString();
+
+    await SaleRepository.save({ id: saleId, items: sale?.items });
+
+    console.log(sale?.id, saleItemId);
+  });

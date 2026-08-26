@@ -1,5 +1,9 @@
 import { db } from "~db";
-import { calculateSaleTotals, toDate } from "~utils/index";
+import {
+  calculateSaleTotals,
+  getCurrentDateTimeString,
+  toDate,
+} from "~utils/index";
 import * as PaymentRepository from "./PaymentRepository.server";
 
 export async function get(data: Partial<Sale>) {
@@ -39,7 +43,11 @@ export async function save(data: Partial<Sale>) {
     if (data.checkoutSessionId)
       query = query.set("checkoutSessionId", data.checkoutSessionId);
 
+    query = query.set("updatedAt", getCurrentDateTimeString());
+
     await query.execute();
+    console.log("sale update: ", data.items);
+    if (data.items) await saveItems(data.id, data.items as SaleItemUpdatable[]);
 
     return data.id;
   }
@@ -137,19 +145,34 @@ async function findItems(saleId: number) {
 async function saveItems(saleId: number, items: Partial<SaleItem>[]) {
   // TODO: ADD IS_DELETED FOR SALE ITEMS
   for (const item of items) {
-    if (item.id) break;
-
-    await db
-      .insertInto("saleItems")
-      .values({
-        saleId,
-        type: item.type as SaleItem["type"],
-        name: item.name as string,
-        description: item.description as string,
-        price: item.price as number,
-        quantity: item.quantity as number,
-        creatorId: item.creatorId as number,
-      })
-      .execute();
+    if (item.id) {
+      await db
+        .updateTable("saleItems")
+        .set({
+          saleId,
+          type: item.type,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          quantity: item.quantity,
+          updatedAt: getCurrentDateTimeString(),
+          deletedAt: item.deletedAt,
+        })
+        .where("id", "=", item.id)
+        .execute();
+      continue;
+    } else
+      await db
+        .insertInto("saleItems")
+        .values({
+          saleId,
+          type: item.type as SaleItem["type"],
+          name: item.name as string,
+          description: item.description as string,
+          price: item.price as number,
+          quantity: item.quantity as number,
+          creatorId: item.creatorId as number,
+        })
+        .execute();
   }
 }
