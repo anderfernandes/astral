@@ -19,6 +19,7 @@ interface IInputProps extends Partial<
   label?: JSX.Element;
   hint?: JSX.Element;
   errors?: string[];
+  ref?: JSX.Ref<HTMLInputElement>;
 }
 
 export function Input(props: IInputProps) {
@@ -46,6 +47,7 @@ export function Input(props: IInputProps) {
               minlength={props.minlength}
               maxlength={props.maxlength}
               value={props.value}
+              ref={props.ref}
             />
           }
         >
@@ -61,6 +63,7 @@ export function Input(props: IInputProps) {
             minlength={props.minlength}
             maxlength={props.maxlength}
             defaultValue={props.defaultValue}
+            ref={props.ref}
           />
         </Show>
       </div>

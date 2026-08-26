@@ -2,13 +2,14 @@ import { createFileRoute, Link, redirect } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { useMutation } from "@tanstack/solid-query";
 import { Input, Button, Alert } from "~components";
-import { createSignal, Show } from "solid-js";
+import { createEffect, createSignal, Show } from "solid-js";
 import { db } from "~db";
 import { verifyHash } from "~utils/index.server";
 import { randomBytes } from "node:crypto";
 import { setResponseHeader } from "@tanstack/solid-start/server";
 import { Temporal } from "@js-temporal/polyfill";
 import { getCurrentDateTimeString } from "~utils/index";
+import { JSX } from "@solidjs/web/jsx-runtime";
 
 export const Route = createFileRoute("/(auth)/sign-in")({
   component: SignInPage,
@@ -18,7 +19,7 @@ function SignInPage() {
   const getUser = useServerFn(getUserFn);
 
   const getUserMutation = useMutation(() => ({
-    mutationFn: (email: string) => getUser({ data: { email } }),
+    mutationFn: (email: string) => getUser({ data: email }),
     onSuccess: (data) => {
       setErrors([]);
       setUser(data);
@@ -47,6 +48,15 @@ function SignInPage() {
 
   const [user, setUser] =
     createSignal<Pick<User, "id" | "email" | "firstName">>();
+
+  let passwordInput!: HTMLInputElement;
+
+  createEffect(
+    () => user(),
+    () => {
+      if (passwordInput) passwordInput.focus();
+    },
+  );
 
   const [errors, setErrors] = createSignal<string[]>([]);
 
@@ -91,17 +101,20 @@ function SignInPage() {
           label="Email"
           type="email"
           name="email"
-
+          min={3}
+          max={127}
           required
         />
-        <Show when={user()}>
+        <Show when={user()?.email}>
           <Input
             placeholder="Password"
             disabled={signInMutation.isPending}
             label="Password"
             type="password"
             name="password"
-            required
+            ref={(el) => {
+              passwordInput = el;
+            }}
           />
         </Show>
         <Button disabled={signInMutation.isPending} text="Sign in" />
@@ -127,12 +140,12 @@ function SignInPage() {
 }
 
 const getUserFn = createServerFn({ method: "POST" })
-  .validator((data: { id?: number; email: string }) => data)
+  .validator((data: string) => data)
   .handler(
-    async ({ data: { email } }) =>
+    async ({ data }) =>
       await db
         .selectFrom("users")
-        .where("email", "=", email)
+        .where("email", "=", data)
         .where("activatedAt", "<=", getCurrentDateTimeString())
         .select(["id", "email", "firstName"])
         .executeTakeFirstOrThrow(),

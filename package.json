@@ -9,7 +9,7 @@
    "license": "ISC",
    "sideEffects": false,
    "scripts": {
-      "dev": "vite dev",
+      "dev": "vite dev --port 3000 --host",
       "build": "vite build && tsc --noEmit",
       "preview": "vite preview",
       "start": "node .output/server/index.mjs",
