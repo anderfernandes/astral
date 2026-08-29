@@ -10,7 +10,7 @@ import { useServerFn } from "@tanstack/solid-start";
 import { createMemo, For, Show } from "solid-js";
 import { getSignedInUserFn, signoutFn } from "~utils/account.functions";
 import { useMutation } from "@tanstack/solid-query";
-import { JSX } from "@solidjs/web/jsx-runtime";
+import { JSX } from "@solidjs/web";
 import { getSettingsFn } from "~utils/settings.functions";
 
 export const Route = createFileRoute("/admin")({

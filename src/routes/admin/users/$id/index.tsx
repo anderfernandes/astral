@@ -1,20 +1,14 @@
 import { useMutation } from "@tanstack/solid-query";
-import { createFileRoute, useRouter } from "@tanstack/solid-router";
-import {
-  createServerFn,
-  createServerOnlyFn,
-  useServerFn,
-} from "@tanstack/solid-start";
+import { createFileRoute } from "@tanstack/solid-router";
+import { createServerFn, useServerFn } from "@tanstack/solid-start";
 import { createMemo, Loading, Show } from "solid-js";
 import { Button } from "~components";
-import { db } from "~db";
 import * as UserRepository from "~repositories/UserRepository";
-import { toDate } from "~utils/index";
 
 export const Route = createFileRoute("/admin/users/$id/")({
   component: RouteComponent,
-  loader: async ({ params }) => ({
-    user: await getUserFn({ data: { id: params.id } }),
+  loader: ({ params }) => ({
+    user: getUserFn({ data: { id: params.id } }),
   }),
 });
 
@@ -25,12 +19,15 @@ function RouteComponent() {
 
   const user = createMemo(() => loaderData().user);
 
-  const router = useRouter();
-
   const saveUser = useServerFn(saveUserFn);
+
+  const navigate = Route.useNavigate();
 
   const mutation = useMutation(() => ({
     mutationFn: (data: UserUpdateable) => saveUser({ data }),
+    onSuccess: () => {
+      navigate({ to: "." });
+    },
   }));
 
   return (
@@ -42,7 +39,8 @@ function RouteComponent() {
       <Loading fallback={<p>loading...</p>}>
         <Show
           when={
-            !import.meta.env.PROD || context().user.roles.includes("ROLE_STAFF")
+            !import.meta.env.PROD ||
+            context().user?.roles.includes("ROLE_STAFF")
           }
         >
           <form
@@ -63,8 +61,6 @@ function RouteComponent() {
                   ? ["ROLE_USER"]
                   : ["ROLE_USER", "ROLE_STAFF"],
               });
-
-              router.invalidate();
             }}
           >
             <Button
@@ -228,9 +224,7 @@ function RouteComponent() {
 
 const getUserFn = createServerFn()
   .validator((data: { id: string }) => data)
-  .handler(
-    async ({ data: { id } }) => await UserRepository.get({ id: Number(id) }),
-  );
+  .handler(({ data: { id } }) => UserRepository.get({ id: Number(id) }));
 
 const saveUserFn = createServerFn({ method: "POST" })
   .validator((data: UserUpdateable) => data)

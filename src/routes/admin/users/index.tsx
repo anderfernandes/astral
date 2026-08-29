@@ -9,9 +9,11 @@ export const Route = createFileRoute("/admin/users/")({
 });
 
 function RouteComponent() {
+  const getUsers = useServerFn(getUsersFn);
+
   const query = useQuery(() => ({
     queryKey: ["users"],
-    queryFn: useServerFn(getUsersFn),
+    queryFn: () => getUsers(),
   }));
 
   return (
@@ -65,6 +67,7 @@ function RouteComponent() {
   );
 }
 
-const getUsersFn = createServerFn().handler(async () =>
-  db.selectFrom("users").selectAll().orderBy("id", "desc").execute(),
+const getUsersFn = createServerFn().handler(
+  async () =>
+    await db.selectFrom("users").selectAll().orderBy("id", "desc").execute(),
 );
