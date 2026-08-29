@@ -9,7 +9,6 @@ import { randomBytes } from "node:crypto";
 import { setResponseHeader } from "@tanstack/solid-start/server";
 import { Temporal } from "@js-temporal/polyfill";
 import { getCurrentDateTimeString } from "~utils/index";
-import { JSX } from "@solidjs/web/jsx-runtime";
 
 export const Route = createFileRoute("/(auth)/sign-in")({
   component: SignInPage,
