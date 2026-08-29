@@ -66,8 +66,8 @@ export async function save(data: Partial<Sale>) {
     source: data.source || "PORTAL",
     isTaxable: Boolean(data.isTaxable) ? 1 : 0,
     checkoutSessionId: data.checkoutSessionId,
-    creatorId: data.customerId,
-    customerId: data.creatorId,
+    creatorId: data.creatorId,
+    customerId: data.customerId,
   };
 
   let saleId: number;

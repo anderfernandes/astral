@@ -15,7 +15,7 @@ import { getSettingsFn } from "~utils/settings.functions";
 
 export const Route = createFileRoute("/admin")({
   component: RouteComponent,
-  validateSearch: (search: { dialog?: "more" }) => search,
+  validateSearch: (search: { dialog?: "more" | "edit" | "create" }) => search,
   loaderDeps: ({ search: { dialog } }) => ({ dialog }),
   beforeLoad: async () => {
     const user = await getSignedInUserFn();
@@ -104,6 +104,18 @@ function RouteComponent() {
               }
             />
             <SidebarItem
+              to="/admin/sales"
+              text="Sales"
+              icon={
+                <svg viewBox="0 0 24 24" class="size-6">
+                  <path
+                    fill="currentColor"
+                    d="M17 2H2V17H4V4H17V2M21 22L18.5 20.32L16 22L13.5 20.32L11 22L8.5 20.32L6 22V6H21V22M10 10V12H17V10H10M15 14H10V16H15V14Z"
+                  />
+                </svg>
+              }
+            />
+            <SidebarItem
               to="/admin/settings"
               text="Settings"
               icon={
@@ -169,80 +181,95 @@ function RouteComponent() {
           </Link>
         </div>
       </div>
-      <div class="mb-16 p-4 lg:mx-64 lg:mb-0">
+      <div class="mb-[calc(4rem+env(safe-area-inset-bottom))] p-4 lg:mx-64 lg:mb-0">
         <Outlet />
       </div>
-      <nav class="fixed bottom-0 flex h-[calc(4rem+env(safe-area-inset-bottom))] w-full bg-black lg:hidden">
-        <NavbarItem
-          text="Dashboard"
-          to="/admin"
-          icon={
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="size-6"
-            >
-              <rect width="7" height="9" x="3" y="3" rx="1" />
-              <rect width="7" height="5" x="14" y="3" rx="1" />
-              <rect width="7" height="9" x="14" y="12" rx="1" />
-              <rect width="7" height="5" x="3" y="16" rx="1" />
-            </svg>
-          }
-        />
-        <NavbarItem
-          text="Users"
-          to="/admin/users"
-          icon={
-            <svg viewBox="0 0 24 24" class="size-6">
-              <path
-                fill="currentColor"
-                d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"
-              />
-            </svg>
-          }
-        />
-        <NavbarItem
-          text="Settings"
-          to="/admin/settings"
-          icon={
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="size-6"
-            >
-              <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-          }
-        />
-        <NavbarItem
-          text="More"
-          to="."
-          search={{ dialog: "more" }}
-          activeOptions={{ exact: false }}
-          icon={
-            <svg viewBox="0 0 24 24" class="size-6">
-              <path
-                fill="currentColor"
-                d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z"
-              />
-            </svg>
-          }
-        />
+      <nav class="fixed inset-x-0 bottom-0 w-full bg-black/90 backdrop-blur-sm lg:hidden">
+        <div class="flex h-16 items-center">
+          <NavbarItem
+            text="Dashboard"
+            to="/admin"
+            icon={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="size-6"
+              >
+                <rect width="7" height="9" x="3" y="3" rx="1" />
+                <rect width="7" height="5" x="14" y="3" rx="1" />
+                <rect width="7" height="9" x="14" y="12" rx="1" />
+                <rect width="7" height="5" x="3" y="16" rx="1" />
+              </svg>
+            }
+          />
+          <NavbarItem
+            text="Users"
+            to="/admin/users"
+            icon={
+              <svg viewBox="0 0 24 24" class="size-6">
+                <path
+                  fill="currentColor"
+                  d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"
+                />
+              </svg>
+            }
+          />
+          <NavbarItem
+            text="Sales"
+            to="/admin/sales"
+            icon={
+              <svg viewBox="0 0 24 24" class="size-6">
+                <path
+                  fill="currentColor"
+                  d="M17 2H2V17H4V4H17V2M21 22L18.5 20.32L16 22L13.5 20.32L11 22L8.5 20.32L6 22V6H21V22M10 10V12H17V10H10M15 14H10V16H15V14Z"
+                />
+              </svg>
+            }
+          />
+          <NavbarItem
+            text="Settings"
+            to="/admin/settings"
+            icon={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="size-6"
+              >
+                <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            }
+          />
+          <NavbarItem
+            text="More"
+            to="."
+            search={{ dialog: "more" }}
+            activeOptions={{ exact: false }}
+            icon={
+              <svg viewBox="0 0 24 24" class="size-6">
+                <path
+                  fill="currentColor"
+                  d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z"
+                />
+              </svg>
+            }
+          />
+        </div>
+        <div class="h-[env(safe-area-inset-bottom)]"></div>
       </nav>
       <Show when={search().dialog === "more"}>
         <Dialog title="More">

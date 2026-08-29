@@ -17,7 +17,7 @@ export const Route = createFileRoute("/admin/settings/membership")({
   validateSearch: (search: ISearchParams) => search,
   component: MembershipSettingsPage,
   loaderDeps: ({ search: { dialog, id } }) => ({ dialog, id }),
-  loader: async () => getMembershipTypesFn(),
+  loader: () => getMembershipTypesFn(),
 });
 
 function MembershipSettingsPage() {
@@ -27,8 +27,10 @@ function MembershipSettingsPage() {
 
   const navigate = Route.useNavigate();
 
+  const saveMembershipType = useServerFn(saveMembershipTypeFn);
+
   const mutation = useMutation(() => ({
-    mutationFn: useServerFn(saveMembershipTypeFn),
+    mutationFn: saveMembershipType,
     onSuccess: () => {
       navigate({ to: "." });
     },

@@ -5,7 +5,14 @@ import {
   useRouter,
 } from "@tanstack/solid-router";
 import { createServerFn, useServerFn } from "@tanstack/solid-start";
-import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
+import {
+  createEffect,
+  createMemo,
+  createSignal,
+  For,
+  Loading,
+  Show,
+} from "solid-js";
 import { Button, Dialog, Input } from "~components";
 import { calculateSaleTotals, toCurrencyString } from "~utils/index";
 import { getMembershipTypeFn } from "~utils/membershipTypes.functions";
@@ -49,10 +56,10 @@ function RouteComponent() {
     mutationFn: (data: IOnlineMembershipSaleData) =>
       processOnlineMembershipSale({ data }),
     onError: (e) => {
-      console.log(e.message);
+      alert(e.message);
     },
     onSuccess: () => {
-      alert("success");
+      console.log("success");
     },
   }));
 
@@ -74,32 +81,48 @@ function RouteComponent() {
   createEffect(
     () => membershipType(),
     (value, prev) => {
-      setItems((current) => [
-        ...current,
-        {
-          name: value?.name as string,
-          description: "",
-          price: value?.price as number,
-          type: "MEMBERSHIP (PRIMARY)",
-          quantity: 1,
-        },
-      ]);
+      setItems((currentItems) => {
+        if (
+          currentItems.some(
+            (curremtItem) => curremtItem.type === "MEMBERSHIP (PRIMARY)",
+          )
+        )
+          return currentItems;
+        return [
+          ...currentItems,
+          {
+            name: value?.name as string,
+            description: "",
+            price: value?.price as number,
+            type: "MEMBERSHIP (PRIMARY)",
+            quantity: 1,
+          },
+        ];
+      });
     },
   );
 
   createEffect(
     () => settings(),
     (value, prev) => {
-      setItems((current) => [
-        ...current,
-        {
-          name: "Convenience Fee",
-          description: "",
-          price: value.convenienceFee,
-          type: "CONVENIENCE FEE",
-          quantity: 1,
-        },
-      ]);
+      setItems((currentItems) => {
+        if (
+          currentItems.some(
+            (currentItem) => currentItem.type === "CONVENIENCE FEE",
+          )
+        )
+          return currentItems;
+        return [
+          ...currentItems,
+          {
+            name: "Convenience Fee",
+            description: "",
+            price: value.convenienceFee,
+            type: "CONVENIENCE FEE",
+            quantity: 1,
+          },
+        ];
+      });
     },
   );
 
@@ -185,10 +208,7 @@ function RouteComponent() {
           />
         </div> */}
 
-        <Show
-          when={membershipType() != undefined}
-          fallback={<span class="m-6 text-sm">Loading...</span>}
-        >
+        <Loading fallback={<span class="m-6 text-sm">Loading...</span>}>
           <div class="m-6 grid gap-3 lg:grid-cols-3">
             <div class="grid content-start gap-3 lg:col-span-2 lg:border-r lg:border-gray-200">
               <h2 class="sr-only">Membership Type Information</h2>
@@ -432,7 +452,7 @@ function RouteComponent() {
               </form>
             </Dialog>
           </Show>
-        </Show>
+        </Loading>
       </div>
     </section>
   );
@@ -470,6 +490,7 @@ const processOnlineMembershipSaleFn = createServerFn({ method: "POST" })
       status: "OPEN",
       source: "PORTAL",
       customerId: user.id,
+      creatorId: 0,
       items: [
         {
           type: "MEMBERSHIP (PRIMARY)",
