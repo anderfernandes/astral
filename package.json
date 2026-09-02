@@ -30,7 +30,7 @@
       "solid-js": "^2.0.0-rc.4",
       "stripe": "^22.6.0",
       "tarn": "^3.1.2",
-      "tedious": "^20.0.0"
+      "tedious": "^20.1.0"
    },
    "devDependencies": {
       "@solidjs/vite-plugin": "^3.0.0-next.35",
