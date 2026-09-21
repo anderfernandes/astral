@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    // General
+    "jsx": "preserve",
+    "jsxImportSource": "@solidjs/web",
+    "target": "ESNext",
+
+    // Modules
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+
+    // Type Checking & Safety
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["vite/client"],
+    "paths": {
+      "~components": ["./src/components/index.ts"],
+      "~db": ["./src/db/index.ts"],
+      "~lib": ["./src/lib/index.ts"]
+    }
+  }
+}

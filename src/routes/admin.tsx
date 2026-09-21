@@ -1,0 +1,255 @@
+import { action, query, RouteDefinition } from "@solidjs/router";
+import { getRequestEvent, JSX, redirect } from "@solidjs/web";
+import { createMemo, ParentProps, Show } from "solid-js";
+import { Button } from "~components";
+import db from "~db";
+
+export const route = {
+  preload: () => {
+    void getUserFn();
+  },
+} satisfies RouteDefinition;
+
+export default function AdminLayout(props: ParentProps) {
+  const user = createMemo(() => getUserFn());
+
+  return (
+    <main class="mx-auto w-full lg:max-w-540">
+      <aside class="fixed top-0 hidden h-screen w-64 flex-col bg-black lg:flex">
+        <a href="/" class="flex h-16 items-center px-4">
+          <svg
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            stroke="currentColor"
+            stroke-width="1.75"
+            class="size-8 text-white"
+          >
+            <circle cx="12" cy="12" r="4" fill="white" />
+            <path
+              stroke="currentColor"
+              fill="transparent"
+              d="M 3.3357286,6.9976809 6.3405211,6.3405212 6.9976805,3.3357289 9.9284869,4.2690082 12,1.9953613 14.071513,4.2690081 17.002319,3.3357286 17.659479,6.3405211 20.664271,6.9976805 19.730992,9.9284869 22.004639,12 l -2.273647,2.071513 0.933279,2.930806 -3.004792,0.65716 L 17.00232,20.664271 14.071513,19.730992 12,22.004639 9.9284871,19.730992 6.9976809,20.664271 6.3405212,17.659479 3.3357289,17.00232 4.2690082,14.071513 1.9953613,12 4.2690081,9.9284871 Z"
+            />
+          </svg>
+        </a>
+        <div class="flex flex-1 flex-col overflow-y-auto">
+          <div class="flex-1 space-y-1 px-2 py-4">
+            <SidebarItem
+              href="/admin"
+              text="Dashboard"
+              icon={
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="size-6"
+                >
+                  <rect width="7" height="9" x="3" y="3" rx="1" />
+                  <rect width="7" height="5" x="14" y="3" rx="1" />
+                  <rect width="7" height="9" x="14" y="12" rx="1" />
+                  <rect width="7" height="5" x="3" y="16" rx="1" />
+                </svg>
+              }
+            />
+            <SidebarItem
+              href="/admin/users"
+              text="Users"
+              icon={
+                <svg viewBox="0 0 24 24" class="size-6">
+                  <path
+                    fill="currentColor"
+                    d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"
+                  />
+                </svg>
+              }
+            />
+            <SidebarItem
+              href="/admin/sales"
+              text="Sales"
+              icon={
+                <svg viewBox="0 0 24 24" class="size-6">
+                  <path
+                    fill="currentColor"
+                    d="M17 2H2V17H4V4H17V2M21 22L18.5 20.32L16 22L13.5 20.32L11 22L8.5 20.32L6 22V6H21V22M10 10V12H17V10H10M15 14H10V16H15V14Z"
+                  />
+                </svg>
+              }
+            />
+            <SidebarItem
+              href="/admin/settings"
+              text="Settings"
+              icon={
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="size-6"
+                >
+                  <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              }
+            />
+          </div>
+        </div>
+        <div class="grid gap-4 p-4">
+          <form class="grid" action={signout} method="post">
+            <Button text="Sign out" variant="secondary" />
+          </form>
+          <a href="/account" class="group block w-full">
+            <div class="flex items-center">
+              <svg viewBox="0 0 24 24" class="size-9 text-white">
+                <Show
+                  when={user()?.roles?.includes("ROLE_STAFF")}
+                  fallback={
+                    <path
+                      fill="currentColor"
+                      d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
+                    />
+                  }
+                >
+                  <path
+                    fill="currentColor"
+                    d="M17,3H14V6H10V3H7A2,2 0 0,0 5,5V21A2,2 0 0,0 7,23H17A2,2 0 0,0 19,21V5A2,2 0 0,0 17,3M12,8A2,2 0 0,1 14,10A2,2 0 0,1 12,12A2,2 0 0,1 10,10A2,2 0 0,1 12,8M16,16H8V15C8,13.67 10.67,13 12,13C13.33,13 16,13.67 16,15V16M13,5H11V1H13V5M16,19H8V18H16V19M12,21H8V20H12V21Z"
+                  />
+                </Show>
+              </svg>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-white">
+                  {user()?.firstName} {user()?.lastName}
+                </p>
+                <div class="flex gap-1 text-xs font-medium text-gray-400 group-hover:text-white">
+                  {user()?.roles?.toString()}
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </aside>
+      <div class="mb-[calc(4rem+env(safe-area-inset-bottom))] p-4 lg:mx-64 lg:mb-0">
+        {props.children}
+      </div>
+      <nav class="fixed bottom-0 w-full p-2">
+        <div class="text-white text-xs grid grid-cols-4 content-center bg-black/90 backdrop:blur-sm w-full h-16 rounded-xl">
+          <a href="/admin" class="p-2 text-center">
+            Dashboard
+          </a>
+          <a href="/admin" class="p-2  text-center">
+            Users
+          </a>
+          <a href="/admin" class="p-2  text-center">
+            Sales
+          </a>
+          <a href="/admin" class="p-2  text-center">
+            Settings
+          </a>
+        </div>
+      </nav>
+      {/** MOBILE NAV */}
+    </main>
+  );
+}
+
+function NavbarItem(props: ISidebarItemProps) {
+  return (
+    <a
+      class="group flex basis-1/3 flex-col items-center justify-center gap-1 px-2 text-xs text-white"
+      href={props.href}
+    >
+      <div class="flex w-12 justify-center rounded-full py-0.5 group-[.active]:bg-white group-[.active]:text-black">
+        {props.icon}
+      </div>
+      {props.text}
+    </a>
+  );
+}
+
+interface ISidebarItemProps {
+  text: JSX.Element;
+  icon: JSX.Element;
+  label?: JSX.Element;
+  href?: string;
+}
+
+function SidebarItem(props: ISidebarItemProps) {
+  return (
+    <a
+      href={props.href}
+
+      class="flex items-center gap-3 rounded-md px-2 py-2 text-sm font-medium text-white hover:bg-neutral-950 data-[status=active]:bg-white data-[status=active]:text-black data-[status=active]:hover:bg-white/90"
+    >
+      {props.icon}
+      {/* <svg
+        class="mr-3 h-6 w-6 text-white group-hover:text-white"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+        />
+      </svg> */}
+      <span class="flex-1">{props.text}</span>
+      {/* <Show when={icon}>
+        <span class="ml-3 inline-block rounded-full bg-white px-3 py-0.5 text-xs font-medium text-black">
+          {label}
+        </span>
+      </Show> */}
+    </a>
+  );
+}
+
+const getUserFn = query(async () => {
+  "use server";
+
+  const token = (getRequestEvent()?.request.headers.get("cookie") as string)
+    ?.split("=")
+    ?.at(1);
+
+  if (!token) throw redirect("/sign-in");
+
+  console.log(token);
+
+  const user = await db.tokens.findBy({
+    data: token,
+    purpose: "authentication",
+  });
+
+  return user;
+}, "get-user");
+
+const signout = action(async () => {
+  "use server";
+
+  const token = (getRequestEvent()?.request.headers.get("cookie") as string)
+    .split("=")
+    .at(1);
+
+  if (!token) throw redirect("/sign-in");
+
+  await db.users.signout(token);
+
+  getRequestEvent()?.response.headers.append(
+    "set-cookie",
+    import.meta.env.PROD
+      ? "__Host-ASTRALSESSION=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0"
+      : "ASTRALSESSION=; HttpOnly; Path=/; Max-Age=0",
+  );
+
+  return redirect("/sign-in");
+});
