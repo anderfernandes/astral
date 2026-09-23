@@ -10,7 +10,6 @@ import { decrypt, encrypt, getOrganizationSettingsFn } from "~lib";
 import * as v from "valibot";
 import db from "~db";
 import { getRequestEvent, redirect, respond } from "@solidjs/web";
-import { createCookie } from "@remix-run/cookie";
 
 export const route = {
   preload: () => {

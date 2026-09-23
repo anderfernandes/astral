@@ -20,3 +20,20 @@ CREATE TABLE IF NOT EXISTS tokens (
     updatedAt INTEGER,
     expiresAt INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS membershipTypes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    cover TEXT,
+    duration INTEGER NOT NULL,
+    price INTEGER NOT NULL,
+    maxFreeSecondaries INTEGER NOT NULL,
+    paidSecondaryPrice INTEGER NOT NULL,
+    maxPaidSecondaries INTEGER NOT NULL,
+    isActive INTEGER NOT NULL,
+    isPublic INTEGER NOT NULL,
+    creatorId INTEGER NOT NULL,
+    createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
+    updatedAt INTEGER
+);

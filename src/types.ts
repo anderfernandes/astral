@@ -45,10 +45,31 @@ declare global {
   type TokenInsertable = Insertable<ITokensTable>;
   type TokenUpdateable = Updateable<ITokensTable>;
 
+  interface IMembershipTypesTable {
+    id: Generated<number>;
+    name: string;
+    description: string;
+    cover: string | null;
+    duration: number;
+    price: number;
+    maxFreeSecondaries: number;
+    paidSecondaryPrice: number;
+    maxPaidSecondaries: number;
+    isActive: 0 | 1;
+    isPublic: 0 | 1;
+    creatorId: number;
+    createdAt: ColumnType<Date | string, never, never>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
+  }
+
+  type MembershipType = Selectable<IMembershipTypesTable>;
+  type MembershipTypeInsertable = Insertable<IMembershipTypesTable>;
+  type MembershipTypeUpdateable = Updateable<IMembershipTypesTable>;
+
   interface IDatabase {
     users: IUsersTable;
     tokens: ITokensTable;
-    //membershipTypes: IMembershipTypesTable;
+    membershipTypes: IMembershipTypesTable;
     //paymentMethods: IPaymentMethodsTable;
     //sales: ISalesTable;
     //saleItems: ISaleItemsTable;

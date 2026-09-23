@@ -9,9 +9,10 @@ import {
 import * as pg from "pg";
 import * as tedious from "tedious";
 import * as tarn from "tarn";
+import { createPool } from "mysql2";
 import users from "./users";
 import tokens from "./tokens";
-import { createPool } from "mysql2";
+import membershipTypes from "./membershipTypes";
 
 function getDialect() {
   switch (process.env["DB_DRIVER"]) {
@@ -118,4 +119,5 @@ export const db = new Kysely<IDatabase>({ dialect: getDialect() });
 export default {
   users,
   tokens,
+  membershipTypes,
 };

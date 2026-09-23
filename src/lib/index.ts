@@ -1,16 +1,48 @@
 import { query } from "@solidjs/router";
+import { getRequestEvent, redirect } from "@solidjs/web";
+import db from "~db";
 
-export const getOrganizationSettingsFn = query(
-  async () => ({
+export const getOrganizationSettingsFn = query(async () => {
+  "use server";
+  return {
     name: process.env["NAME"],
     timezone: process.env["TIMEZONE"],
     locale: process.env["LOCALE"],
     currency: process.env["USD"],
     saleTaxRate: Number(process.env["SALE_TAX_RATE"]),
     convenienceFee: Number(process.env["CONVENIENCE_FEE"]),
-  }),
-  "organization-settings",
-);
+  };
+}, "organization-settings");
+
+export const getUserFn = query(async () => {
+  "use server";
+
+  const token = (getRequestEvent()?.request.headers.get("cookie") as string)
+    ?.split("=")
+    ?.at(1);
+
+  if (!token) throw redirect("/sign-in");
+
+  const user = await db.tokens.findBy({
+    data: token,
+    purpose: "authentication",
+  });
+
+  if (!user) {
+    getRequestEvent()?.response.headers.append(
+      "set-cookie",
+      import.meta.env.PROD
+        ? "__Host-ASTRALSIGNINSESSION=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0"
+        : "ASTRALSIGNINSESSION=; HttpOnly; Path=/; Max-Age=0",
+    );
+
+    throw redirect("/sign-in");
+  }
+
+  console.log(token, user);
+
+  return user;
+}, "get-user");
 
 export async function createHash(content: string, salt: string = "") {
   const randomValues = crypto.getRandomValues(new Uint8Array(16));

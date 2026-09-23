@@ -21,7 +21,9 @@ async function create(purpose: ITokensTable["purpose"], email: string) {
       userId: user.id,
       purpose,
       data,
-      expiresAt: Temporal.Now.instant().add({ minutes: 5 }).epochMilliseconds,
+      expiresAt: Temporal.Now.instant().add({
+        minutes: purpose === "account activation" ? 5 : 60,
+      }).epochMilliseconds,
     })
     .execute();
 
