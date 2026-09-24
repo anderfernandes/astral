@@ -58,8 +58,8 @@ declare global {
     isActive: 0 | 1;
     isPublic: 0 | 1;
     creatorId: number;
-    createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<Date | string | null, never, Date | string>;
+    createdAt: ColumnType<number, never, never>;
+    updatedAt: ColumnType<number | null, never, number>;
   }
 
   type MembershipType = Selectable<IMembershipTypesTable>;

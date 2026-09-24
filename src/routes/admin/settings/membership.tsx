@@ -1,11 +1,20 @@
-import { Badge, Button, Checkbox, Dialog, Input, Textarea } from "~components";
+import {
+  Alert,
+  Badge,
+  Button,
+  Checkbox,
+  Dialog,
+  Input,
+  Textarea,
+} from "~components";
 import { paths } from "../../../router";
-import { action, query, useLocation } from "@solidjs/router";
-import { createMemo, createSignal, For, Loading, Show } from "solid-js";
+import { action, useLocation } from "@solidjs/router";
+import { createMemo, For, Loading, Show } from "solid-js";
 import * as v from "valibot";
 import db from "~db";
 import { redirect, respond } from "@solidjs/web";
 import { getUserFn } from "~lib";
+import { getMembershipTypesFn } from "~lib/membership-types";
 
 export default function MembershipPage() {
   const location = useLocation();
@@ -24,7 +33,9 @@ export default function MembershipPage() {
           text="New Membership Type..."
         />
       </div>
-      <p>{items().length}</p>
+      <Show when={items().length <= 0}>
+        <Alert text="No membership types have been setup yet." />
+      </Show>
       <Show when={["create", "edit"].includes(location.query.dialog as string)}>
         <Dialog
           title={selected() ? "Update Membership Type" : "New Membership Type"}
@@ -284,8 +295,8 @@ const save = action(async (formData: FormData) => {
     maxFreeSecondaries: Number(formData.get("maxFreeSecondaries")),
     maxPaidSecondaries: Number(formData.get("maxPaidSecondaries")),
     paidSecondaryPrice: Number(formData.get("paidSecondaryPrice")),
-    isActive: Boolean(formData.get("isActive")),
-    isPublic: Boolean(formData.get("isPublic")),
+    isActive: Boolean(formData.has("isActive")),
+    isPublic: Boolean(formData.has("isPublic")),
   });
 
   console.log("output: ", output);
@@ -316,6 +327,7 @@ const save = action(async (formData: FormData) => {
 
     await db.membershipTypes.update(result.output, {
       ...output,
+      id: result.output,
       creatorId: user.userId as number,
     });
   } else {
@@ -327,8 +339,3 @@ const save = action(async (formData: FormData) => {
 
   return redirect("/admin/settings/membership");
 });
-
-const getMembershipTypesFn = query(async () => {
-  "use server";
-  return await db.membershipTypes.findAll();
-}, "membership-types");

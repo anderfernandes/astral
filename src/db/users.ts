@@ -42,7 +42,7 @@ async function update(
   console.log("user updated");
 }
 
-async function findBy(data: { email: string }) {
+async function findOneBy(data: { email: string }) {
   const user = await db
     .selectFrom("users")
     .where("email", "=", data.email)
@@ -98,4 +98,4 @@ async function signout(data: string) {
   });
 }
 
-export default { activate, create, findBy, signin, signout, update };
+export default { activate, create, findOneBy, signin, signout, update };

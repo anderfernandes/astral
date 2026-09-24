@@ -1,6 +1,7 @@
 import { query } from "@solidjs/router";
 import { getRequestEvent, redirect } from "@solidjs/web";
 import db from "~db";
+import membershipTypes from "../db/membershipTypes";
 
 export const getOrganizationSettingsFn = query(async () => {
   "use server";
@@ -11,6 +12,9 @@ export const getOrganizationSettingsFn = query(async () => {
     currency: process.env["USD"],
     saleTaxRate: Number(process.env["SALE_TAX_RATE"]),
     convenienceFee: Number(process.env["CONVENIENCE_FEE"]),
+    hasMembershipTypes: (await membershipTypes.findAll()).every(
+      (item) => item.isActive && item.isPublic,
+    ),
   };
 }, "organization-settings");
 
@@ -43,6 +47,18 @@ export const getUserFn = query(async () => {
 
   return user;
 }, "get-user");
+
+export function toCurrencyString(
+  n: number,
+  options: Intl.NumberFormatOptions = { maximumFractionDigits: 2 },
+) {
+  return (n / 100).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 2,
+    ...options,
+  });
+}
 
 export async function createHash(content: string, salt: string = "") {
   const randomValues = crypto.getRandomValues(new Uint8Array(16));

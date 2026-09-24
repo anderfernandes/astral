@@ -1,9 +1,10 @@
-import { createMemo, ParentProps } from "solid-js";
+import { createMemo, ParentProps, Show } from "solid-js";
 import { Button } from "~components";
-import { getOrganizationSettingsFn } from "~lib";
+import { getOrganizationSettingsFn, getUserFn } from "~lib";
 
 export default function Layout(props: ParentProps) {
   const organization = createMemo(() => getOrganizationSettingsFn());
+  const user = createMemo(() => getUserFn());
 
   return (
     <>
@@ -30,7 +31,7 @@ export default function Layout(props: ParentProps) {
                 />
               </svg>
               {/* <img
-                  src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+                  src=""
                   alt=""
                   class="h-8 w-auto"
                 /> */}
@@ -78,14 +79,14 @@ export default function Layout(props: ParentProps) {
             <a href="/" class="text-sm/6 font-semibold text-gray-900">
               Home
             </a>
-            {/* <Show when={context().settings.hasMembershipTypes}>
-                <Link
-                  to="/memberships"
-                  class="text-sm/6 font-semibold text-gray-900"
-                >
-                  Memberships
-                </Link>
-              </Show> */}
+            <Show when={organization().hasMembershipTypes}>
+              <a
+                href="/memberships"
+                class="text-sm/6 font-semibold text-gray-900"
+              >
+                Memberships
+              </a>
+            </Show>
           </div>
           <div class="hidden lg:flex lg:flex-1 lg:justify-end">
             {/* <Link to="/cart" class="flex items-center gap-1">
@@ -101,30 +102,30 @@ export default function Layout(props: ParentProps) {
                   />
                 </svg>
               </Link> */}
-            <Button href="/sign-in" text="Sign In &rarr;" />
-            {/* <Show
-                when={context().user}
-                fallback={<Button to="/sign-in" text="Sign In &rarr;" />}
-              >
-                <Link to="/account" class="text-gray-700">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="size-6"
-                  >
-                    <path d="M17.925 20.056a6 6 0 0 0-11.851.001" />
-                    <circle cx="12" cy="11" r="4" />
-                    <circle cx="12" cy="12" r="10" />
-                  </svg>
-                </Link>
-              </Show> */}
+
+            <Show
+              when={user()}
+              fallback={<Button href="/sign-in" text="Sign In &rarr;" />}
+            >
+              <a href="/account" class="text-black">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="size-6"
+                >
+                  <path d="M17.925 20.056a6 6 0 0 0-11.851.001" />
+                  <circle cx="12" cy="11" r="4" />
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+              </a>
+            </Show>
           </div>
         </nav>
         <div>
@@ -197,15 +198,14 @@ export default function Layout(props: ParentProps) {
                         </Show> */}
                     </div>
                     <div class="py-6">
-                      <Button href="/sign-in" text="Sign In &rarr;" />
-                      {/* <Show
-                          when={context().user}
-                          fallback={
-                            <Button to="/sign-in" text="Sign In &rarr;" />
-                          }
-                        >
-                          <Button to="/account" text="My Account &rarr;" />
-                        </Show> */}
+                      <Show
+                        when={user}
+                        fallback={
+                          <Button href="/sign-in" text="Sign In &rarr;" />
+                        }
+                      >
+                        <Button href="/account" text="My Account &rarr;" />
+                      </Show>
                     </div>
                   </div>
                 </div>

@@ -14,7 +14,6 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@solidjs/diagnostics": "^2.0.0-rc.9",
     "@solidjs/start-devtools": "^1.0.0-next.4",
     "@solidjs/testing-library": "^1.0.0-beta.3",
@@ -26,8 +25,7 @@
     "@types/node": "^26.6.2",
     "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.23.1",
-    "eslint": "^10.11.0",
-    "eslint-plugin-solid": "~0.18.0",
+    "eslint-plugin-solid": "^0.18.0",
     "filesystem-routing": "0.2.1",
     "globals": "^17.12.0",
     "jsdom": "^25.0.1",
@@ -41,9 +39,8 @@
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.5.1",
-    "@remix-run/cookie": "^0.5.4",
     "@solidjs/meta": "^1.0.0-next.2",
-    "@solidjs/router": "^2.0.0-next.26",
+    "@solidjs/router": "^2.0.0-next.27",
     "@solidjs/web": "^2.0.0-rc.9",
     "better-sqlite3": "^13.0.3",
     "kysely": "^0.29.6",

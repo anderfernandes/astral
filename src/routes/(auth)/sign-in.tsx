@@ -133,7 +133,7 @@ const signin = action(async (formData: FormData) => {
         { status: 400 },
       );
 
-    const user = await db.users.findBy({ email: output as string });
+    const user = await db.users.findOneBy({ email: output as string });
 
     if (!user) {
       console.log("user not found");
@@ -268,7 +268,7 @@ const getSigninSession = query(async () => {
 
     if (!email) return null;
 
-    const user = await db.users.findBy({ email });
+    const user = await db.users.findOneBy({ email });
 
     if (!user) return null;
 

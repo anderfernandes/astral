@@ -20,7 +20,7 @@ export function Dialog(props: IDialogProps) {
       <div
         id="backdrop"
         class="fixed inset-0 bg-black/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
-      ></div>
+      />
 
       <div
         tabindex="0"
@@ -64,7 +64,7 @@ export function Dialog(props: IDialogProps) {
                       d="M6 18 18 6M6 6l12 12"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                    ></path>
+                    />
                   </svg>
                 </a>
               </div>

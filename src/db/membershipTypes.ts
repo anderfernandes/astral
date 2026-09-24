@@ -1,3 +1,4 @@
+import { Temporal } from "@js-temporal/polyfill";
 import { db } from "~db";
 
 async function create(
@@ -14,9 +15,9 @@ async function create(
         description: data.description,
         cover: data.description,
         duration: data.duration,
-        price: data.price,
+        price: data.price * 100,
         maxFreeSecondaries: data.maxFreeSecondaries,
-        paidSecondaryPrice: data.paidSecondaryPrice,
+        paidSecondaryPrice: data.paidSecondaryPrice * 100,
         maxPaidSecondaries: data.maxPaidSecondaries,
         isActive: data.isActive ? 1 : 0,
         isPublic: data.isPublic ? 1 : 0,
@@ -32,7 +33,10 @@ async function create(
 
 async function update(
   id: number,
-  data: Omit<MembershipTypeUpdateable, "isActive" | "isPublic"> & {
+  data: Omit<
+    Required<MembershipTypeUpdateable>,
+    "isActive" | "isPublic" | "updatedAt" | "cover"
+  > & {
     isActive: boolean;
     isPublic: boolean;
   },
@@ -44,15 +48,42 @@ async function update(
       description: data.description,
       cover: data.description,
       duration: data.duration,
-      price: data.price,
+      price: data.price * 100,
       maxFreeSecondaries: data.maxFreeSecondaries,
-      paidSecondaryPrice: data.paidSecondaryPrice,
+      paidSecondaryPrice: data.paidSecondaryPrice * 100,
       maxPaidSecondaries: data.maxPaidSecondaries,
       isActive: data.isActive ? 1 : 0,
       isPublic: data.isPublic ? 1 : 0,
+      updatedAt: Temporal.Now.instant().epochMilliseconds,
     })
     .where("id", "=", id)
     .execute();
+}
+
+async function find(id: number) {
+  const data = await db
+    .selectFrom("membershipTypes")
+    .where("id", "=", id)
+    .selectAll()
+    .executeTakeFirstOrThrow();
+
+  return {
+    ...data,
+    isActive: Boolean(data.isActive),
+    isPublic: Boolean(data.isPublic),
+  };
+}
+
+async function findBy(q: { isActive?: boolean; isPublic?: boolean }) {
+  let result = await findAll();
+
+  if (q.isActive != undefined)
+    result = result.filter((item) => item.isActive == q.isActive);
+
+  if (q.isPublic != undefined)
+    result = result.filter((item) => item.isPublic == q.isPublic);
+
+  return result;
 }
 
 async function findAll() {
@@ -65,4 +96,4 @@ async function findAll() {
   }));
 }
 
-export default { create, findAll, update };
+export default { create, find, findAll, findBy, update };
