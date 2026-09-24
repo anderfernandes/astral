@@ -18,14 +18,17 @@ export const getOrganizationSettingsFn = query(async () => {
   };
 }, "organization-settings");
 
-export const getUserFn = query(async () => {
+export const getUserFn = query(async (redirectIfNotSignedIn = true) => {
   "use server";
 
   const token = (getRequestEvent()?.request.headers.get("cookie") as string)
     ?.split("=")
     ?.at(1);
 
-  if (!token) throw redirect("/sign-in");
+  if (!token) {
+    if (redirectIfNotSignedIn) throw redirect("/sign-in");
+    else return undefined;
+  }
 
   const user = await db.tokens.findBy({
     data: token,
@@ -40,7 +43,8 @@ export const getUserFn = query(async () => {
         : "ASTRALSIGNINSESSION=; HttpOnly; Path=/; Max-Age=0",
     );
 
-    throw redirect("/sign-in");
+    if (redirectIfNotSignedIn) throw redirect("/sign-in");
+    else return undefined;
   }
 
   console.log(token, user);

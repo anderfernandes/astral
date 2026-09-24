@@ -4,7 +4,7 @@ import { getOrganizationSettingsFn, getUserFn } from "~lib";
 
 export default function Layout(props: ParentProps) {
   const organization = createMemo(() => getOrganizationSettingsFn());
-  const user = createMemo(() => getUserFn());
+  const user = createMemo(() => getUserFn(false));
 
   return (
     <>
