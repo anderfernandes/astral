@@ -26,7 +26,7 @@ async function create(user: UserInsertable) {
 
 async function update(
   id: number,
-  user: Partial<Pick<UserSelectable, "activatedAt" | "roles">>,
+  user: { activatedAt?: number; roles?: Role[] },
 ) {
   let query = db.updateTable("users");
 
@@ -40,6 +40,25 @@ async function update(
   await query.where("id", "=", id).execute();
 
   console.log("user updated");
+}
+
+async function find(id: number) {
+  const user = await db
+    .selectFrom("users")
+    .where("id", "=", id)
+    .select([
+      "id",
+      "firstName",
+      "lastName",
+      "email",
+      "createdAt",
+      "updatedAt",
+      "activatedAt",
+      "roles",
+    ])
+    .executeTakeFirstOrThrow();
+
+  return { ...user, roles: JSON.parse(user.roles.toString()) as Role[] };
 }
 
 async function findOneBy(data: { email: string }) {
@@ -59,6 +78,27 @@ async function findOneBy(data: { email: string }) {
     .executeTakeFirstOrThrow();
 
   return { ...user, roles: JSON.parse(user.roles.toString()) as Role[] };
+}
+
+async function findAll() {
+  const users = await db
+    .selectFrom("users")
+    .select([
+      "id",
+      "firstName",
+      "lastName",
+      "email",
+      "createdAt",
+      "updatedAt",
+      "activatedAt",
+      "roles",
+    ])
+    .execute();
+
+  return users.map((user) => ({
+    ...user,
+    roles: JSON.parse(user.roles.toString()) as Role[],
+  }));
 }
 
 async function activate(userToken: { tokenId: number; email: string }) {
@@ -98,4 +138,13 @@ async function signout(data: string) {
   });
 }
 
-export default { activate, create, findOneBy, signin, signout, update };
+export default {
+  activate,
+  create,
+  find,
+  findAll,
+  findOneBy,
+  signin,
+  signout,
+  update,
+};

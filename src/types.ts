@@ -66,6 +66,84 @@ declare global {
   type MembershipTypeInsertable = Insertable<IMembershipTypesTable>;
   type MembershipTypeUpdateable = Updateable<IMembershipTypesTable>;
 
+  interface IPaymentMethodsTable {
+    id: Generated<number>;
+    name: string;
+    description: string;
+    type: "CASH" | "CARD" | "CHECK" | "OTHER";
+    isActive: 0 | 1;
+    isPublic: 0 | 1;
+    creatorId: number;
+    createdAt: ColumnType<Date | string, never, never>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
+  }
+
+  type PaymentMethod = Selectable<IPaymentMethodsTable>;
+  type PaymentTypeInsertable = Insertable<IPaymentMethodsTable>;
+  type PaymentTypeUpdateable = Updateable<IPaymentMethodsTable>;
+
+  interface IPaymentsTable {
+    id: Generated<number>;
+    methodId: number;
+    tendered: number;
+    saleId: number;
+    cashierId: number;
+    createdAt: ColumnType<Date | string, string, never>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
+  }
+
+  type Payment = Selectable<IPaymentsTable> & { method?: PaymentMethod };
+  type PaymentInsertable = Selectable<IPaymentsTable>;
+  type PaymentUpdateable = Selectable<IPaymentsTable>;
+
+  interface ISalesTable {
+    id: Generated<number>;
+    status: "OPEN" | "COMPLETED" | "CANCELED";
+    source: "CASHIER" | "ADMIN" | "PORTAL";
+    isTaxable: 0 | 1;
+    checkoutSessionId: string | null | undefined;
+    creatorId: number;
+    customerId: number;
+    createdAt: ColumnType<Date | string, never, never>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
+  }
+
+  type Sale = Selectable<ISalesTable> & {
+    subtotal: number;
+    tax: number;
+    total: number;
+    items: Partial<SaleItem>[];
+    payments: Payment[];
+  };
+  type SaleInsertable = Insertable<ISalesTable>;
+  type SaleUpdateable = Updateable<ISalesTable>;
+
+  interface ISaleItemsTable {
+    id: Generated<number>;
+    saleId: number;
+    type:
+      | "TICKET"
+      | "PRODUCT"
+      | "MEMBERSHIP (PRIMARY)"
+      | "MEMBERSHIP (FREE SECONDARY)"
+      | "MEMBERSHIP (PAID SECONDARY)"
+      | "CONVENIENCE FEE"
+      | "SURCHARGE"
+      | "DISCOUNT";
+    name: string;
+    description: string;
+    price: number;
+    quantity: number;
+    creatorId: number;
+    createdAt: ColumnType<Date | string, never, never>;
+    updatedAt: ColumnType<Date | string | null, never, Date | string>;
+    deletedAt: ColumnType<Date | string, null, Date | string>;
+  }
+
+  type SaleItem = Selectable<ISaleItemsTable>;
+  type SaleItemInsertable = Insertable<ISaleItemsTable>;
+  type SaleItemUpdatable = Updateable<ISaleItemsTable>;
+
   interface IDatabase {
     users: IUsersTable;
     tokens: ITokensTable;

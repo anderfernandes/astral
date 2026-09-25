@@ -1,10 +1,14 @@
+import { useNavigate } from "@solidjs/router";
 import { createMemo, ParentProps, Show } from "solid-js";
 import { Button } from "~components";
 import { getOrganizationSettingsFn, getUserFn } from "~lib";
 
 export default function Layout(props: ParentProps) {
   const organization = createMemo(() => getOrganizationSettingsFn());
+
   const user = createMemo(() => getUserFn(false));
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -184,18 +188,18 @@ export default function Layout(props: ParentProps) {
                       >
                         Home
                       </button>
-                      {/* <Show when={context().settings.hasMembershipTypes}>
-                          <button
-                            command="close"
-                            commandfor="mobile-menu"
-                            onClick={() => {
-                              navigate({ to: "/memberships" });
-                            }}
-                            class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                          >
-                            Memberships
-                          </button>
-                        </Show> */}
+                      <Show when={organization().hasMembershipTypes}>
+                        <button
+                          command="close"
+                          commandfor="mobile-menu"
+                          onClick={() => {
+                            navigate("/memberships");
+                          }}
+                          class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                        >
+                          Memberships
+                        </button>
+                      </Show>
                     </div>
                     <div class="py-6">
                       <Show

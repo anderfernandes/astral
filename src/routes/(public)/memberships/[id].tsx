@@ -1,15 +1,96 @@
-import { RouteProps } from "@solidjs/router";
-import { createMemo, Loading, Show } from "solid-js";
+import { RouteProps, useNavigate } from "@solidjs/router";
+import {
+  createEffect,
+  createMemo,
+  createStore,
+  For,
+  Loading,
+  Show,
+} from "solid-js";
 import { getMembershipTypeFn } from "~lib/membership-types";
-import { Router } from "../../../router";
-import { getOrganizationSettingsFn } from "~lib";
+import { paths, Router } from "../../../router";
+import { getOrganizationSettingsFn, toCurrencyString } from "~lib";
+import { Button } from "~components";
 
 export default function MembershipSignupPage(
   props: RouteProps<typeof Router.paths.memberships>,
 ) {
+  const navigate = useNavigate();
+
   const membershipType = createMemo(() => getMembershipTypeFn(props.params.id));
 
   const organization = createMemo(() => getOrganizationSettingsFn());
+
+  const [items, setItems] = createStore(
+    [] as Pick<
+      SaleItemInsertable,
+      "name" | "price" | "quantity" | "type" | "description"
+    >[],
+  );
+
+  const cart = createMemo(() => {
+    const subtotal = items.reduce((acc, item) => item.price * item.quantity, 0);
+    const tax = (organization().saleTaxRate / 100) * subtotal;
+    return {
+      subtotal,
+      tax,
+      total: subtotal + tax,
+      canAddFreeSecondaries:
+        items.filter((item) => item.type === "MEMBERSHIP (FREE SECONDARY)")
+          .length < membershipType().maxFreeSecondaries,
+      canAddPaidSecondaries:
+        items.filter((item) => item.type === "MEMBERSHIP (PAID SECONDARY)")
+          .length < membershipType().maxPaidSecondaries,
+    };
+  });
+
+  createEffect(
+    () => membershipType(),
+    (value) => {
+      setItems((currentItems) => {
+        if (
+          currentItems.some(
+            (curremtItem) => curremtItem.type === "MEMBERSHIP (PRIMARY)",
+          )
+        )
+          return currentItems;
+        return [
+          ...currentItems,
+          {
+            name: value?.name as string,
+            description: "",
+            price: value?.price as number,
+            type: "MEMBERSHIP (PRIMARY)",
+            quantity: 1,
+          },
+        ];
+      });
+    },
+  );
+
+  createEffect(
+    () => organization(),
+    (value) => {
+      setItems((currentItems) => {
+        if (
+          currentItems.some(
+            (currentItem) => currentItem.type === "CONVENIENCE FEE",
+          )
+        )
+          return currentItems;
+        return [
+          ...currentItems,
+          {
+            name: "Convenience Fee",
+            description: "",
+            price: value.convenienceFee,
+            type: "CONVENIENCE FEE",
+            quantity: 1,
+          },
+        ];
+      });
+    },
+  );
 
   return (
     <section class="mx-auto max-w-7xl bg-white py-24">
@@ -96,11 +177,11 @@ export default function MembershipSignupPage(
             <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
               {membershipType()?.name}
             </h1>
-            {/* <h5 class="text-3xl tracking-tight text-gray-900">
-                {toCurrencyString(membershipType()?.price as number, {
-                  minimumFractionDigits: 0,
-                })}
-              </h5> */}
+            <h5 class="text-3xl tracking-tight text-gray-900">
+              {toCurrencyString(membershipType()?.price as number, {
+                minimumFractionDigits: 0,
+              })}
+            </h5>
             <p class="text-base text-gray-900">
               {membershipType()?.description}
             </p>
@@ -128,15 +209,15 @@ export default function MembershipSignupPage(
               </Show>
               <Show when={(membershipType()?.maxPaidSecondaries as number) > 0}>
                 <li class="text-gray-400">
-                  {/* <span class="text-gray-600">
-                      up to {membershipType()?.maxPaidSecondaries} paid
-                      secondaries @{" "}
-                      {toCurrencyString(
-                        membershipType()?.paidSecondaryPrice as number,
-                        { minimumFractionDigits: 0 },
-                      )}
-                      /year each
-                    </span> */}
+                  <span class="text-gray-600">
+                    up to {membershipType()?.maxPaidSecondaries} paid
+                    secondaries @{" "}
+                    {toCurrencyString(
+                      membershipType()?.paidSecondaryPrice as number,
+                      { minimumFractionDigits: 0 },
+                    )}
+                    /year each
+                  </span>
                 </li>
               </Show>
               <li class="text-gray-400">
@@ -147,6 +228,50 @@ export default function MembershipSignupPage(
             </ul>
           </div>
           <form class="grid content-start gap-3 lg:col-span-1">
+            <div class="my-6 grid gap-3 lg:grid-cols-2">
+              <Show when={(membershipType()?.maxFreeSecondaries as number) > 0}>
+                <Button
+                  text="Add Free Secondary"
+                  variant="secondary"
+                  type="button"
+                  disabled={!cart().canAddFreeSecondaries}
+                  onClick={() => {
+                    navigate(
+                      paths.memberships({ dialog: "secondary", type: "free" }),
+                    );
+                  }}
+                />
+              </Show>
+              <Show when={(membershipType()?.maxPaidSecondaries as number) > 0}>
+                <Button
+                  text="Add Paid Secondary"
+                  variant="secondary"
+                  type="button"
+                  onClick={() => {
+                    navigate(
+                      paths.memberships({ dialog: "secondary", type: "paid" }),
+                    );
+                  }}
+                  disabled={
+                    cart().canAddFreeSecondaries && cart().canAddPaidSecondaries
+                  }
+                />
+              </Show>
+            </div>
+            <For each={items}>
+              {(item, i) => (
+                <div class="text-sm text-gray-600">
+                  <p class="flex gap-1">
+                    <span class="grow">{item.name}</span>
+                    <span>{toCurrencyString(item.price)}</span>
+                  </p>
+                  <p>{item.description}</p>
+                  <Show when={item.type != "CONVENIENCE FEE"}>
+                    <p>{item.type}</p>
+                  </Show>
+                </div>
+              )}
+            </For>
             <div class="text-sm text-gray-600">
               <p class="flex gap-1">
                 <span class="grow">
@@ -157,9 +282,45 @@ export default function MembershipSignupPage(
                   })}
                   )
                 </span>
-                {/* <span>{toCurrencyString(totals().tax)}</span> */}
+                <span>{toCurrencyString(cart().tax)}</span>
               </p>
             </div>
+            <div class="text-sm text-gray-600">
+              <p class="flex gap-1">
+                <span class="grow">Subtotal</span>
+                <span>{toCurrencyString(cart().subtotal)}</span>
+              </p>
+            </div>
+            <div class="text-sm text-gray-600">
+              <p class="flex gap-1">
+                <span class="grow">
+                  Tax (
+                  {(organization().saleTaxRate / 100).toLocaleString("en-US", {
+                    style: "percent",
+                    minimumSignificantDigits: 1,
+                  })}
+                  )
+                </span>
+                <span>{toCurrencyString(cart().tax)}</span>
+              </p>
+            </div>
+            <div>
+              <p class="flex gap-1">
+                <span class="grow">Total</span>
+                <span>{toCurrencyString(cart().total)}</span>
+              </p>
+            </div>
+            <p class="mt-10 text-sm text-gray-600">
+              You will be redirected to Stripe to pay for your membership and
+              redirected back. If the payment is successful, you will be able to
+              enjoy the benefits of the membership right away.
+            </p>
+            <button
+              type="submit"
+              class="mt-10 flex w-full cursor-pointer items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-hidden"
+            >
+              Pay {toCurrencyString(cart().total)}
+            </button>
           </form>
         </div>
       </Loading>

@@ -26,11 +26,11 @@
     "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.23.1",
     "eslint-plugin-solid": "^0.18.0",
-    "filesystem-routing": "0.2.1",
+    "filesystem-routing": "0.4.0",
     "globals": "^17.12.0",
     "jsdom": "^25.0.1",
     "oxlint": "~1.79.0",
-    "prettier": "^3.9.8",
+    "prettier": "^3.9.9",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.70.1",
@@ -40,7 +40,7 @@
   "dependencies": {
     "@js-temporal/polyfill": "^0.5.1",
     "@solidjs/meta": "^1.0.0-next.2",
-    "@solidjs/router": "^2.0.0-next.27",
+    "@solidjs/router": "^2.0.0-next.28",
     "@solidjs/web": "^2.0.0-rc.9",
     "better-sqlite3": "^13.0.3",
     "kysely": "^0.29.6",
@@ -51,7 +51,7 @@
     "stripe": "^22.6.2",
     "tailwindcss": "^4.3.3",
     "tarn": "^3.1.2",
-    "tedious": "^20.0.0",
+    "tedious": "^20.3.2",
     "valibot": "^1.5.0"
   }
 }

@@ -13,3 +13,4 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - solid-js
   - '@solidjs/*'
+  - filesystem-routing@0.4.0
