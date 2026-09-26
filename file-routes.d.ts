@@ -59,6 +59,12 @@ declare module "virtual:file-routes" {
       $$route: FileRouteEagerRef<typeof import("./src/routes/(auth)/sign-in")>;
     },
     {
+      path: "/(public)";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/(public)")>;
+      $$route?: undefined;
+    },
+    {
       path: "/(public)/";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/(public)/index")>;
@@ -146,13 +152,7 @@ declare module "virtual:file-routes" {
       path: "/(public)/memberships/:id";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/(public)/memberships/[id]")>;
-      $$route?: undefined;
-    },
-    {
-      path: "/(public)";
-      page: true;
-      $component: FileRouteLazyRef<typeof import("./src/routes/(public)")>;
-      $$route?: undefined;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/(public)/memberships/[id]")>;
     }
   ];
   export default routes;
@@ -319,7 +319,7 @@ declare module "virtual:file-routes" {
           id: "/memberships/:id";
           page: true;
           $component: FileRouteLazyRef<typeof import("./src/routes/(public)/memberships/[id]")>;
-          $$route?: undefined;
+          $$route: FileRouteEagerRef<typeof import("./src/routes/(public)/memberships/[id]")>;
           children?: undefined;
         }
       ];

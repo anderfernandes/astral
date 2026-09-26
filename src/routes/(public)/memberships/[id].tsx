@@ -1,4 +1,9 @@
-import { RouteProps, useNavigate } from "@solidjs/router";
+import {
+  RouteDefinition,
+  RouteProps,
+  useLocation,
+  useNavigate,
+} from "@solidjs/router";
 import {
   createEffect,
   createMemo,
@@ -10,12 +15,21 @@ import {
 import { getMembershipTypeFn } from "~lib/membership-types";
 import { paths, Router } from "../../../router";
 import { getOrganizationSettingsFn, toCurrencyString } from "~lib";
-import { Button } from "~components";
+import { Button, Dialog, Input } from "~components";
+
+export const route = {
+  preload: ({ params }) => {
+    void getMembershipTypeFn(params.id as string);
+    void getOrganizationSettingsFn();
+  },
+} satisfies RouteDefinition;
 
 export default function MembershipSignupPage(
   props: RouteProps<typeof Router.paths.memberships>,
 ) {
   const navigate = useNavigate();
+
+  const location = useLocation();
 
   const membershipType = createMemo(() => getMembershipTypeFn(props.params.id));
 
@@ -29,7 +43,10 @@ export default function MembershipSignupPage(
   );
 
   const cart = createMemo(() => {
-    const subtotal = items.reduce((acc, item) => item.price * item.quantity, 0);
+    const subtotal = items.reduce(
+      (acc, item) => item.price * item.quantity + acc,
+      0,
+    );
     const tax = (organization().saleTaxRate / 100) * subtotal;
     return {
       subtotal,
@@ -237,7 +254,10 @@ export default function MembershipSignupPage(
                   disabled={!cart().canAddFreeSecondaries}
                   onClick={() => {
                     navigate(
-                      paths.memberships({ dialog: "secondary", type: "free" }),
+                      paths.memberships(props.params.id, {
+                        dialog: "secondary",
+                        type: "free",
+                      }),
                     );
                   }}
                 />
@@ -249,7 +269,10 @@ export default function MembershipSignupPage(
                   type="button"
                   onClick={() => {
                     navigate(
-                      paths.memberships({ dialog: "secondary", type: "paid" }),
+                      paths.memberships(props.params.id, {
+                        dialog: "secondary",
+                        type: "paid",
+                      }),
                     );
                   }}
                   disabled={
@@ -259,7 +282,7 @@ export default function MembershipSignupPage(
               </Show>
             </div>
             <For each={items}>
-              {(item, i) => (
+              {(item) => (
                 <div class="text-sm text-gray-600">
                   <p class="flex gap-1">
                     <span class="grow">{item.name}</span>
@@ -323,6 +346,85 @@ export default function MembershipSignupPage(
             </button>
           </form>
         </div>
+        <Show when={location.query.dialog === "secondary"}>
+          <Dialog
+            title={`Add ${location.query.type} secondary`}
+            subtitle={`Adds a ${location.query.type} secondary to the membership`}
+          >
+            <form
+              class="grid gap-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                const data = new FormData(e.currentTarget);
+
+                const email = String(data.get("email"));
+
+                console.log(email);
+
+                if (items.some((item) => item.description.includes(email))) {
+                  alert(`${email} has already been added.`);
+                  return;
+                }
+
+                if (location.query.type === "free") {
+                  setItems((prev) => {
+                    prev.splice(1, 0, {
+                      name: `${data.get("firstName")} ${data.get("lastName")}`,
+                      description: email,
+                      price: 0,
+                      type: "MEMBERSHIP (FREE SECONDARY)",
+                      quantity: 1,
+                    });
+
+                    return [...prev];
+                  });
+                }
+
+                if (location.query.type === "paid") {
+                  setItems((prev) => {
+                    prev.splice(prev.length - 1, 0, {
+                      name: `${data.get("firstName")} ${data.get("lastName")}`,
+                      description: email,
+                      price: membershipType()?.paidSecondaryPrice as number,
+                      type: "MEMBERSHIP (PAID SECONDARY)",
+                      quantity: 1,
+                    });
+
+                    return [...prev];
+                  });
+                }
+
+                navigate(paths.memberships(props.params.id));
+              }}
+            >
+              <Input
+                defaultValue="Sarah"
+                label="First Name"
+                required
+                placeholder="First Name"
+                name="firstName"
+              />
+              <Input
+                defaultValue="Fernandes"
+                label="Last Name"
+                required
+                placeholder="Last Name"
+                name="lastName"
+              />
+              <Input
+                defaultValue="sarahfernandes@live.com"
+                label="Email"
+                required
+                placeholder="Email"
+                name="email"
+              />
+              <div class="flex justify-end">
+                <Button text="Add" type="submit" />
+              </div>
+            </form>
+          </Dialog>
+        </Show>
       </Loading>
     </section>
   );

@@ -12,7 +12,7 @@ export const getOrganizationSettingsFn = query(async () => {
     currency: process.env["USD"],
     saleTaxRate: Number(process.env["SALE_TAX_RATE"]),
     convenienceFee: Number(process.env["CONVENIENCE_FEE"]),
-    hasMembershipTypes: (await membershipTypes.findAll()).every(
+    hasMembershipTypes: (await membershipTypes.findAll()).some(
       (item) => item.isActive && item.isPublic,
     ),
   };
