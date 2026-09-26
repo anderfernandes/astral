@@ -1,4 +1,4 @@
-FROM debian:11
+FROM ubuntu:focal
 
 RUN mkdir /run/php
 
@@ -15,6 +15,8 @@ RUN echo 'clear_env = no' >> /etc/php/7.4/fpm/pool.d/www.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /var/www/html
+
+RUN chown -R www-data:www-data .
 
 COPY . .
 

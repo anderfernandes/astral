@@ -3,18 +3,18 @@ version: "3.8"
 # Backend
 services:
   backend:
-    image: astral:1.0.0-alpha.5
+    image: astral:dev
     container_name: astral
     ports:
       - 8000:8000
     #environment:
       #FORCE_HTTPS: "true"
     volumes:
-      - ./app:/var/www/html/app
-      - ./bootstrap:/var/www/html/bootstrap
-      - ./config:/var/www/html/config
-      - ./database:/var/www/html/database
-      - ./resources:/var/www/html/resources
-      - ./routes:/var/www/html/routes
-      - ./storage:/var/www/html/storage
+      - ./app:/var/www/html/app:z
+      #- ./bootstrap:/var/www/html/bootstrap
+      #- ./config:/var/www/html/config
+      - ./database:/var/www/html/database:z
+      - ./resources:/var/www/html/resources:z
+      - ./routes:/var/www/html/routes:z
+      - ./storage:/var/www/html/storage:z
 

@@ -860,7 +860,7 @@ Route::get('customers', function (Request $request) {
 });
 
 Route::get('organizations', function (Request $request) {
-  $organizations = Organization::where("id", "!=", 1)->with(["type"])->get();
+  $organizations = Organization::where("id", "!=", 1)->orderBy('name')->with(["type"])->get();
   return response($organizations);
 });
 
