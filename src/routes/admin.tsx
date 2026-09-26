@@ -1,4 +1,4 @@
-import { action, query, RouteDefinition } from "@solidjs/router";
+import { action, RouteDefinition } from "@solidjs/router";
 import { getRequestEvent, JSX, redirect } from "@solidjs/web";
 import { createMemo, ParentProps, Show } from "solid-js";
 import { Button } from "~components";
@@ -132,7 +132,7 @@ export default function AdminLayout(props: ParentProps) {
                   {user()?.firstName} {user()?.lastName}
                 </p>
                 <div class="flex gap-1 text-xs font-medium text-gray-400 group-hover:text-white">
-                  {user()?.roles?.toString()}
+                  {user()?.roles?.at(0)}
                 </div>
               </div>
             </div>

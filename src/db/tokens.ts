@@ -73,7 +73,7 @@ async function findBy(userToken: {
     throw new Error("Invalid, expired or already used activation code.");
   }
 
-  return t;
+  return { ...t, roles: JSON.parse(t?.roles as string) };
 }
 
 async function update(id: number, token: TokenUpdateable) {

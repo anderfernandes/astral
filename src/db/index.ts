@@ -13,6 +13,7 @@ import { createPool } from "mysql2";
 import users from "./users";
 import tokens from "./tokens";
 import membershipTypes from "./membershipTypes";
+import paymentMethods from "./paymentMethods";
 
 function getDialect() {
   switch (process.env["DB_DRIVER"]) {
@@ -83,32 +84,6 @@ function getDialect() {
         database: new SQLite(process.env["DB_DATABASE"]),
       });
 
-    case "mssql":
-      return new MssqlDialect({
-        tarn: { ...tarn, options: { min: 0, max: 10 } },
-        tedious: {
-          ...tedious,
-          connectionFactory: () =>
-            new tedious.Connection({
-              authentication: {
-                options: {
-                  password: process.env["DB_PASSWORD"],
-                  userName: process.env["DB_USER"],
-                },
-                type: "default",
-              },
-              options: {
-                database: process.env["DB_DATABASE"],
-                port: Number(process.env["DB_PORT"]),
-                trustServerCertificate: Boolean(
-                  process.env["DB_TRUST_SERVER_CERTIFICATE"],
-                ),
-              },
-              server: process.env["DB_SERVER"] as string,
-            }),
-        },
-      });
-
     default:
       throw new Error("Invalid dialect.");
   }
@@ -120,4 +95,5 @@ export default {
   users,
   tokens,
   membershipTypes,
+  paymentMethods,
 };

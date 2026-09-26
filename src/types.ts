@@ -2,7 +2,6 @@ import {
   ColumnType,
   Generated,
   Insertable,
-  JSONColumnType,
   Selectable,
   Updateable,
 } from "kysely";
@@ -16,7 +15,7 @@ declare global {
     lastName: string;
     email: string;
     password: string;
-    roles: JSONColumnType<Role[], string | undefined, string | undefined>;
+    roles: string;
     creatorId: ColumnType<number, number | undefined, number>;
     createdAt: ColumnType<number, never, never>;
     updatedAt: ColumnType<number | null, never, number>;
@@ -74,13 +73,13 @@ declare global {
     isActive: 0 | 1;
     isPublic: 0 | 1;
     creatorId: number;
-    createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<Date | string | null, never, Date | string>;
+    createdAt: ColumnType<number, never, never>;
+    updatedAt: ColumnType<number | null, never, number>;
   }
 
   type PaymentMethod = Selectable<IPaymentMethodsTable>;
-  type PaymentTypeInsertable = Insertable<IPaymentMethodsTable>;
-  type PaymentTypeUpdateable = Updateable<IPaymentMethodsTable>;
+  type PaymentMethodInsertable = Insertable<IPaymentMethodsTable>;
+  type PaymentMethodUpdateable = Updateable<IPaymentMethodsTable>;
 
   interface IPaymentsTable {
     id: Generated<number>;
@@ -88,8 +87,8 @@ declare global {
     tendered: number;
     saleId: number;
     cashierId: number;
-    createdAt: ColumnType<Date | string, string, never>;
-    updatedAt: ColumnType<Date | string | null, never, Date | string>;
+    createdAt: ColumnType<number, never, never>;
+    updatedAt: ColumnType<number | null, never, number>;
   }
 
   type Payment = Selectable<IPaymentsTable> & { method?: PaymentMethod };
@@ -104,8 +103,8 @@ declare global {
     checkoutSessionId: string | null | undefined;
     creatorId: number;
     customerId: number;
-    createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<Date | string | null, never, Date | string>;
+    createdAt: ColumnType<number, never, never>;
+    updatedAt: ColumnType<number | null, never, number>;
   }
 
   type Sale = Selectable<ISalesTable> & {
@@ -135,9 +134,10 @@ declare global {
     price: number;
     quantity: number;
     creatorId: number;
-    createdAt: ColumnType<Date | string, never, never>;
-    updatedAt: ColumnType<Date | string | null, never, Date | string>;
-    deletedAt: ColumnType<Date | string, null, Date | string>;
+    customerId: number;
+    createdAt: ColumnType<number, never, never>;
+    updatedAt: ColumnType<number | null, never, number>;
+    deletedAt: ColumnType<number | null, never, number>;
   }
 
   type SaleItem = Selectable<ISaleItemsTable>;
@@ -148,10 +148,10 @@ declare global {
     users: IUsersTable;
     tokens: ITokensTable;
     membershipTypes: IMembershipTypesTable;
-    //paymentMethods: IPaymentMethodsTable;
-    //sales: ISalesTable;
-    //saleItems: ISaleItemsTable;
-    //payments: IPaymentsTable;
+    paymentMethods: IPaymentMethodsTable;
+    sales: ISalesTable;
+    saleItems: ISaleItemsTable;
+    payments: IPaymentsTable;
   }
 }
 

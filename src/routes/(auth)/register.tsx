@@ -197,7 +197,11 @@ const register = action(async (formData: FormData) => {
     await db.users.create(user);
 
     // TODO: EMAIL TOKEN TO USER
-    console.log(await db.tokens.create("account activation", user.email));
+    const token = await db.tokens.create("account activation", user.email);
+
+    if (!import.meta.env.PROD) {
+      console.log(`http://localhost:3000/activate/${token}`);
+    }
   } catch (e) {
     const message = (e as Error).message;
 

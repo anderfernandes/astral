@@ -71,6 +71,12 @@ declare module "virtual:file-routes" {
       $$route: FileRouteEagerRef<typeof import("./src/routes/(public)/index")>;
     },
     {
+      path: "/(public)/memberships/:id";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/(public)/memberships/[id]")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/(public)/memberships/[id]")>;
+    },
+    {
       path: "/(public)/memberships/";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/(public)/memberships/index")>;
@@ -93,12 +99,6 @@ declare module "virtual:file-routes" {
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/account/index")>;
       $$route?: undefined;
-    },
-    {
-      path: "/admin";
-      page: true;
-      $component: FileRouteLazyRef<typeof import("./src/routes/admin")>;
-      $$route: FileRouteEagerRef<typeof import("./src/routes/admin")>;
     },
     {
       path: "/admin/";
@@ -131,12 +131,6 @@ declare module "virtual:file-routes" {
       $$route?: undefined;
     },
     {
-      path: "/admin/settings/payment";
-      page: true;
-      $component: FileRouteLazyRef<typeof import("./src/routes/admin/settings/payment")>;
-      $$route?: undefined;
-    },
-    {
       path: "/admin/users/:id/";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/admin/users/[id]/index")>;
@@ -149,10 +143,16 @@ declare module "virtual:file-routes" {
       $$route?: undefined;
     },
     {
-      path: "/(public)/memberships/:id";
+      path: "/admin/settings/payment";
       page: true;
-      $component: FileRouteLazyRef<typeof import("./src/routes/(public)/memberships/[id]")>;
-      $$route: FileRouteEagerRef<typeof import("./src/routes/(public)/memberships/[id]")>;
+      $component: FileRouteLazyRef<typeof import("./src/routes/admin/settings/payment")>;
+      $$route?: undefined;
+    },
+    {
+      path: "/admin";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/admin")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/admin")>;
     }
   ];
   export default routes;
