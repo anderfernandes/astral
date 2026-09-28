@@ -101,6 +101,12 @@ declare module "virtual:file-routes" {
       $$route?: undefined;
     },
     {
+      path: "/admin";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/admin")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/admin")>;
+    },
+    {
       path: "/admin/";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/admin/index")>;
@@ -131,6 +137,12 @@ declare module "virtual:file-routes" {
       $$route?: undefined;
     },
     {
+      path: "/admin/settings/payment";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/admin/settings/payment")>;
+      $$route?: undefined;
+    },
+    {
       path: "/admin/users/:id/";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/admin/users/[id]/index")>;
@@ -141,18 +153,6 @@ declare module "virtual:file-routes" {
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/admin/users/index")>;
       $$route?: undefined;
-    },
-    {
-      path: "/admin/settings/payment";
-      page: true;
-      $component: FileRouteLazyRef<typeof import("./src/routes/admin/settings/payment")>;
-      $$route?: undefined;
-    },
-    {
-      path: "/admin";
-      page: true;
-      $component: FileRouteLazyRef<typeof import("./src/routes/admin")>;
-      $$route: FileRouteEagerRef<typeof import("./src/routes/admin")>;
     }
   ];
   export default routes;

@@ -56,8 +56,8 @@ CREATE TABLE IF NOT EXISTS sales (
     source TEXT NOT NULL,
     isTaxable INTEGER NOT NULL,
     checkoutId TEXT,
-    creatorId INTEGER NOT NULL,
     customerId INTEGER NOT NULL,
+    creatorId INTEGER NOT NULL,
     createdAt BIGINT NOT NULL DEFAULT (UNIX_TIMESTAMP()),
     updatedAt BIGINT
 );
