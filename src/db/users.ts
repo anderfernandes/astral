@@ -58,7 +58,7 @@ async function find(id: number) {
     ])
     .executeTakeFirstOrThrow();
 
-  return { ...user, roles: JSON.parse(user.roles.toString()) as Role[] };
+  return { ...user, roles: JSON.parse(user.roles as string) as Role[] };
 }
 
 async function findOneBy(data: { email: string }) {
@@ -75,9 +75,9 @@ async function findOneBy(data: { email: string }) {
       "activatedAt",
       "roles",
     ])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
 
-  return { ...user, roles: JSON.parse(user.roles.toString()) as Role[] };
+  return { ...user, roles: JSON.parse(user?.roles as string) as Role[] };
 }
 
 async function findAll() {
@@ -97,7 +97,7 @@ async function findAll() {
 
   return users.map((user) => ({
     ...user,
-    roles: JSON.parse(user.roles.toString()) as Role[],
+    roles: JSON.parse(user.roles as string) as Role[],
   }));
 }
 

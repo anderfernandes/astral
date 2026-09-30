@@ -1,4 +1,5 @@
 import {
+  action,
   RouteDefinition,
   RouteProps,
   useLocation,
@@ -7,6 +8,7 @@ import {
 import {
   createEffect,
   createMemo,
+  createSignal,
   createStore,
   For,
   Loading,
@@ -14,8 +16,12 @@ import {
 } from "solid-js";
 import { getMembershipTypeFn } from "~lib/membership-types";
 import { paths, Router } from "../../../router";
-import { getOrganizationSettingsFn, toCurrencyString } from "~lib";
-import { Button, Dialog, Input } from "~components";
+import { getOrganizationSettingsFn, getUserFn, toCurrencyString } from "~lib";
+import { Button, Checkbox, Dialog, Input } from "~components";
+import * as v from "valibot";
+import { respond } from "@solidjs/web";
+import db from "~db";
+import { EmailSchema, FirstNameSchema, LastNameSchema } from "~lib/schemas";
 
 export const route = {
   preload: ({ params }) => {
@@ -34,6 +40,10 @@ export default function MembershipSignupPage(
   const membershipType = createMemo(() => getMembershipTypeFn(props.params.id));
 
   const organization = createMemo(() => getOrganizationSettingsFn());
+
+  const user = createMemo(() => getUserFn());
+
+  const [isGift, setIsGift] = createSignal(false);
 
   const [items, setItems] = createStore(
     [] as Pick<
@@ -244,8 +254,43 @@ export default function MembershipSignupPage(
               </li>
             </ul>
           </div>
-          <form class="grid content-start gap-3 lg:col-span-1">
-            <div class="my-6 grid gap-3 lg:grid-cols-2">
+          <form
+            action={checkout}
+            method="post"
+            class="grid content-start gap-3 lg:col-span-1"
+          >
+            <div class="grid">
+              <Checkbox
+                name="isGift"
+                checked={isGift()}
+                onChange={(e) => {
+                  setIsGift(e.currentTarget.checked);
+                }}
+                label="Buying for someone else as a gift."
+              />
+              <div class="grid grid-cols-2 gap-2">
+                <Input
+                  defaultValue={isGift() ? "" : (user()?.firstName as string)}
+                  disabled={!isGift()}
+                  placeholder="First Name"
+                  name="firstName"
+                  required={isGift()}
+                />
+                <Input
+                  defaultValue={isGift() ? "" : (user()?.lastName as string)}
+                  disabled={!isGift()}
+                  placeholder="Last Name"
+                  name="lastName"
+                  required={isGift()}
+                />
+              </div>
+              <Input
+                defaultValue={isGift() ? "" : (user()?.email as string)}
+                disabled={!isGift()}
+                placeholder="Email"
+              />
+            </div>
+            <div class="grid gap-3 lg:grid-cols-2">
               <Show when={(membershipType()?.maxFreeSecondaries as number) > 0}>
                 <Button
                   text="Add Free Secondary"
@@ -338,6 +383,11 @@ export default function MembershipSignupPage(
               redirected back. If the payment is successful, you will be able to
               enjoy the benefits of the membership right away.
             </p>
+            <input
+              type="hidden"
+              name="membershipTypeId"
+              value={membershipType().id}
+            />
             <button
               type="submit"
               class="mt-10 flex w-full cursor-pointer items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-hidden"
@@ -429,3 +479,76 @@ export default function MembershipSignupPage(
     </section>
   );
 }
+
+const checkout = action(async (form: FormData) => {
+  "use server";
+
+  let primary;
+
+  if (form.has("isGift")) {
+    const primaryValidator = v.safeParse(
+      v.object({
+        firstName: FirstNameSchema,
+        lastName: LastNameSchema,
+        email: EmailSchema,
+      }),
+      {
+        firstName: String(form.get("firstName")),
+        lastName: String(form.get("lastName")),
+        email: String(form.get("email")),
+      },
+    );
+
+    if (!primaryValidator.success) {
+      throw respond(
+        {
+          message: "Fix the errors below.",
+          issues: primaryValidator.issues.map(({ message }) => message),
+        },
+        { status: 400 },
+      );
+    }
+
+    primary = await db.users.findOneBy({
+      email: primaryValidator.output.email,
+    });
+
+    if (!primary) {
+      await db.users.create({
+        firstName: primaryValidator.output.firstName,
+        lastName: primaryValidator.output.lastName,
+        email: primaryValidator.output.lastName,
+        password: crypto
+          .getRandomValues(new Uint8Array(8))
+          .toBase64({ alphabet: "base64url" }),
+      });
+    }
+  }
+
+  const membershipTypeValidator = v.safeParse(
+    v.number(),
+    Number(form.get("membershipTypeId")),
+  );
+
+  if (!membershipTypeValidator.success) {
+    throw respond(
+      {
+        message: "Fix the errors below.",
+        issues: membershipTypeValidator.issues.map(({ message }) => message),
+      },
+      { status: 400 },
+    );
+  }
+
+  // CHECK IF A PRIMARY ALREADY EXISTS, IF NOT CURRENT USER IS PRIMARY
+
+  const membershipType = await db.membershipTypes.find(
+    membershipTypeValidator.output,
+  );
+
+  // CREATE SALE
+
+  // REDIRECT TO ONLINE PAYMENT PROCESSOR
+
+  console.log(membershipType);
+});

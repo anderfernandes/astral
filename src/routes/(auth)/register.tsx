@@ -184,7 +184,7 @@ const register = action(async (formData: FormData) => {
   if (!success) {
     throw respond(
       {
-        message: "Please fix the errors and try again.",
+        message: "Fix the errors below.",
         issues: issues.map(({ message }) => message),
       },
       { status: 400 },

@@ -25,13 +25,15 @@ interface IInputProps extends Partial<
 
 export function Input(props: IInputProps) {
   return (
-    <div class="group" data-has-errors={props.errors?.length! > 0}>
-      <label for="email" class="block text-sm font-medium text-gray-900">
-        {props.label}
-        <Show when={props.required}>
-          <span class="ml-1 text-red-500">*</span>
-        </Show>
-      </label>
+    <div class="group" data-has-errors={(props.errors?.length as number) > 0}>
+      <Show when={props.label}>
+        <label for="email" class="block text-sm font-medium text-gray-900">
+          {props.label}
+          <Show when={props.required}>
+            <span class="ml-1 text-red-500">*</span>
+          </Show>
+        </label>
+      </Show>
       <div class="mt-2">
         <Show
           when={props.value === undefined}

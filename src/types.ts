@@ -15,7 +15,7 @@ declare global {
     lastName: string;
     email: string;
     password: string;
-    roles: string;
+    roles?: string;
     creatorId: ColumnType<number, number | undefined, number>;
     createdAt: ColumnType<number, never, never>;
     updatedAt: ColumnType<number | null, never, number>;

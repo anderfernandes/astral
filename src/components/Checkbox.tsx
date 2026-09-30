@@ -2,7 +2,10 @@ import { Show } from "solid-js";
 import { JSX } from "@solidjs/web";
 
 interface ICheckboxProps extends Partial<
-  Pick<HTMLInputElement, "name" | "value" | "checked">
+  Pick<
+    JSX.InputHTMLAttributes<HTMLInputElement>,
+    "name" | "value" | "checked" | "onChange"
+  >
 > {
   label: JSX.Element;
   hint?: JSX.Element;
@@ -20,6 +23,7 @@ export function Checkbox(props: ICheckboxProps) {
             checked={props.checked}
             type="checkbox"
             aria-describedby={props.name}
+            onChange={props.onChange}
             class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-black checked:bg-black indeterminate:border-black indeterminate:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
           />
           <svg
