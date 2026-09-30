@@ -125,6 +125,12 @@ declare module "virtual:file-routes" {
       $$route?: undefined;
     },
     {
+      path: "/admin/settings/";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/admin/settings/index")>;
+      $$route?: undefined;
+    },
+    {
       path: "/admin/settings/membership";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/admin/settings/membership")>;
@@ -146,12 +152,6 @@ declare module "virtual:file-routes" {
       path: "/admin/users/";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/admin/users/index")>;
-      $$route?: undefined;
-    },
-    {
-      path: "/admin/settings/";
-      page: true;
-      $component: FileRouteLazyRef<typeof import("./src/routes/admin/settings/index")>;
       $$route?: undefined;
     }
   ];
