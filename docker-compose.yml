@@ -1,20 +1,24 @@
 version: "3.8"
 
-# Backend
 services:
-  backend:
+  astral:
     image: astral:dev
     container_name: astral
     ports:
       - 8000:8000
     #environment:
-      #FORCE_HTTPS: "true"
+    #FORCE_HTTPS: "true"
     volumes:
-      - ./app:/var/www/html/app:z
+      - ./app:/var/www/html/app:Z,U
       #- ./bootstrap:/var/www/html/bootstrap
       #- ./config:/var/www/html/config
-      - ./database:/var/www/html/database:z
-      - ./resources:/var/www/html/resources:z
-      - ./routes:/var/www/html/routes:z
-      - ./storage:/var/www/html/storage:z
+      - ./database:/var/www/html/database:Z,U
+      - ./resources:/var/www/html/resources:Z,U
+      - ./routes:/var/www/html/routes:Z,U
+      - ./storage:/var/www/html/storage:Z,U
+    networks:
+      - astral-muracms-net
 
+networks:
+  astral-muracms-net:
+    external: true
