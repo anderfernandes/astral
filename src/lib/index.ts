@@ -2,9 +2,12 @@ import { query } from "@solidjs/router";
 import { getRequestEvent, redirect } from "@solidjs/web";
 import db from "~db";
 import membershipTypes from "../db/membershipTypes";
+import paymentMethods from "../db/paymentMethods";
+import stripe from "../server/stripe";
 
 export const getOrganizationSettingsFn = query(async () => {
   "use server";
+
   return {
     name: process.env["NAME"],
     timezone: process.env["TIMEZONE"],
@@ -15,6 +18,10 @@ export const getOrganizationSettingsFn = query(async () => {
     hasMembershipTypes: (await membershipTypes.findAll()).some(
       (item) => item.isActive && item.isPublic,
     ),
+    hasPaymentMethods: (await paymentMethods.findAll()).some((item) =>
+      ["stripe"].includes(item.name.toLowerCase()),
+    ),
+    hasStripe: (await stripe.account.retrieveCurrent()) ? true : false,
   };
 }, "organization-settings");
 

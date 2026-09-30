@@ -37,3 +37,42 @@ CREATE TABLE IF NOT EXISTS membershipTypes (
     createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
     updatedAt INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS paymentMethods (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    type TEXT NOT NULL,
+    isActive INTEGER NOT NULL,
+    isPublic INTEGER NOT NULL,
+    creatorId INTEGER NOT NULL,
+    createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
+    updatedAt INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS sales (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    status TEXT NOT NULL,
+    source TEXT NOT NULL,
+    isTaxable INTEGER NOT NULL,
+    checkoutId TEXT,
+    customerId INTEGER NOT NULL,
+    creatorId INTEGER NOT NULL,
+    createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
+    updatedAt INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS saleItems (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    saleId INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    price INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    creatorId INTEGER NOT NULL,
+    customerId INTEGER NOT NULL,
+    createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
+    updatedAt INTEGER,
+    deletedAt INTEGER
+);
