@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import db from "~db";
 
-let user: Partial<UserSelectable>;
+let user: Partial<Omit<UserSelectable, "roles">> & { roles: Role[] };
 
 const account = {
   firstName: "John",
@@ -13,7 +13,7 @@ const account = {
 test("create", async () => {
   await db.users.create(account);
 
-  user = await db.users.findBy({ email: account.email });
+  user = await db.users.findOneBy({ email: account.email });
 
   expect(user.firstName).toBe(user.firstName);
   expect(user.lastName).toBe(user.lastName);
@@ -39,7 +39,7 @@ test("activate", async () => {
     email: userToken?.email as string,
   });
 
-  user = await db.users.findBy({ email: user.email as string });
+  user = await db.users.findOneBy({ email: user.email as string });
 
   expect(user.roles).toContain("ROLE_USER");
   expect(user.activatedAt).toBeLessThanOrEqual(
@@ -54,7 +54,7 @@ test("update", async () => {
     activatedAt: Temporal.Now.instant().epochMilliseconds,
   });
 
-  user = await db.users.findBy({ email: user.email as string });
+  user = await db.users.findOneBy({ email: user.email as string });
 
   expect(user.roles).toContain("ROLE_USER");
   expect(user.activatedAt).toBeLessThanOrEqual(

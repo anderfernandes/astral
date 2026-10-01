@@ -4,7 +4,7 @@ import { db } from "~db";
 interface IPaymentMethodDto {
   name: string;
   description: string;
-  type: PaymentMethod["type"];
+  type: PaymentMethodInsertable["type"];
   isActive: boolean;
   isPublic: boolean;
   creatorId: number;

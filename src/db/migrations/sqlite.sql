@@ -76,3 +76,11 @@ CREATE TABLE IF NOT EXISTS saleItems (
     updatedAt INTEGER,
     deletedAt INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS saleMemos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    saleId INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
+    updatedAt INTEGER
+)

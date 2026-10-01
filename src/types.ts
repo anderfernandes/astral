@@ -61,7 +61,7 @@ declare global {
     updatedAt: ColumnType<number | null, never, number>;
   }
 
-  type MembershipType = Selectable<IMembershipTypesTable>;
+  type MembershipTypeSelectable = Selectable<IMembershipTypesTable>;
   type MembershipTypeInsertable = Insertable<IMembershipTypesTable>;
   type MembershipTypeUpdateable = Updateable<IMembershipTypesTable>;
 
@@ -77,7 +77,7 @@ declare global {
     updatedAt: ColumnType<number | null, never, number>;
   }
 
-  type PaymentMethod = Selectable<IPaymentMethodsTable>;
+  type PaymentMethodSelectable = Selectable<IPaymentMethodsTable>;
   type PaymentMethodInsertable = Insertable<IPaymentMethodsTable>;
   type PaymentMethodUpdateable = Updateable<IPaymentMethodsTable>;
 
@@ -91,7 +91,9 @@ declare global {
     updatedAt: ColumnType<number | null, never, number>;
   }
 
-  type Payment = Selectable<IPaymentsTable> & { method?: PaymentMethod };
+  type Payment = Selectable<IPaymentsTable> & {
+    method?: PaymentMethodSelectable;
+  };
   type PaymentInsertable = Selectable<IPaymentsTable>;
   type PaymentUpdateable = Selectable<IPaymentsTable>;
 
@@ -100,7 +102,7 @@ declare global {
     status: "OPEN" | "COMPLETED" | "CANCELED";
     source: "CASHIER" | "ADMIN" | "PORTAL";
     isTaxable: 0 | 1;
-    checkoutSessionId: string | null | undefined;
+    checkoutId: string | null | undefined;
     creatorId: number;
     customerId: number;
     createdAt: ColumnType<number, never, never>;
@@ -144,6 +146,19 @@ declare global {
   type SaleItemInsertable = Insertable<ISaleItemsTable>;
   type SaleItemUpdatable = Updateable<ISaleItemsTable>;
 
+  interface ISaleMemosTable {
+    id: Generated<number>;
+    saleId: number;
+    message: string;
+    creatorId: number;
+    createdAt: ColumnType<number, never, never>;
+    updatedAt: ColumnType<number | null, never, number>;
+  }
+
+  type SaleMemo = Selectable<ISaleMemosTable>;
+  type SaleMemoInsertable = Insertable<ISaleMemosTable>;
+  type SaleMemoUpdateable = Updateable<ISaleMemosTable>;
+
   interface IDatabase {
     users: IUsersTable;
     tokens: ITokensTable;
@@ -151,8 +166,7 @@ declare global {
     paymentMethods: IPaymentMethodsTable;
     sales: ISalesTable;
     saleItems: ISaleItemsTable;
+    saleMemos: ISaleMemosTable;
     payments: IPaymentsTable;
   }
 }
-
-export {};

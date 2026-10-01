@@ -26,5 +26,9 @@ gitignore
 # System Files
 .DS_Store
 Thumbs.db
+
 *.db
 pnpm-lock.yaml
+.env.*
+!.env.example
+file-routes.d.ts

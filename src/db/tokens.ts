@@ -50,7 +50,7 @@ async function findBy(userToken: {
   data: string;
   purpose: TokenInsertable["purpose"];
 }) {
-  const t = await db
+  const token = await db
     .selectFrom("tokens")
     .leftJoin("users", "users.id", "tokens.userId")
     .where("tokens.data", "=", userToken.data)
@@ -68,12 +68,14 @@ async function findBy(userToken: {
     ])
     .executeTakeFirst();
 
-  if (!t && userToken.purpose === "account activation") {
+  if (!token && userToken.purpose === "account activation") {
     console.error("Invalid, expired or already used activation code.");
     throw new Error("Invalid, expired or already used activation code.");
   }
 
-  return { ...t, roles: JSON.parse(t?.roles as string) };
+  if (!token) return undefined;
+
+  return { ...token, roles: JSON.parse(token.roles as string) as Role[] };
 }
 
 async function update(id: number, token: TokenUpdateable) {
