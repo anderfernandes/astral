@@ -14,3 +14,4 @@ minimumReleaseAgeExclude:
   - solid-js
   - '@solidjs/*'
   - filesystem-routing@0.4.0
+  - stripe@23.0.0
