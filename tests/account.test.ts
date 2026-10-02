@@ -1,8 +1,6 @@
 import { expect, test } from "vitest";
 import db from "~db";
 
-let user: Partial<Omit<UserSelectable, "roles">> & { roles: Role[] };
-
 const account = {
   firstName: "John",
   lastName: "Doe",
@@ -13,20 +11,22 @@ const account = {
 test("create", async () => {
   await db.users.create(account);
 
-  user = await db.users.findOneBy({ email: account.email });
+  const user = await db.users.findOneBy({ email: account.email });
 
-  expect(user.firstName).toBe(user.firstName);
-  expect(user.lastName).toBe(user.lastName);
-  expect(user.email).toBe(user.email);
-  expect(user.createdAt).toBeDefined();
-  expect(user.updatedAt).toBeFalsy();
-  expect(user.roles?.length).toBe(0);
+  expect(user?.firstName).toBe(user?.firstName);
+  expect(user?.lastName).toBe(user?.lastName);
+  expect(user?.email).toBe(user?.email);
+  expect(user?.createdAt).toBeDefined();
+  expect(user?.updatedAt).toBeFalsy();
+  expect(user?.roles?.length).toBe(0);
 });
 
 test("activate", async () => {
+  let user = await db.users.findOneBy({ email: account.email });
+
   const token = await db.tokens.create(
     "account activation",
-    user.email as string,
+    user?.email as string,
   );
 
   const userToken = await db.tokens.findBy({
@@ -39,28 +39,30 @@ test("activate", async () => {
     email: userToken?.email as string,
   });
 
-  user = await db.users.findOneBy({ email: user.email as string });
-
-  expect(user.roles).toContain("ROLE_USER");
-  expect(user.activatedAt).toBeLessThanOrEqual(
+  user = await db.users.findOneBy({ email: user?.email as string });
+  console.log(user);
+  expect(user?.roles).toContain("ROLE_USER");
+  expect(user?.activatedAt).toBeLessThanOrEqual(
     Temporal.Now.instant().epochMilliseconds,
   );
-  expect(user.updatedAt).toBeDefined();
+  expect(user?.updatedAt).toBeDefined();
 });
 
 test("update", async () => {
+  let user = await db.users.findOneBy({ email: account.email });
+
   await db.users.update(user?.id as number, {
     roles: ["ROLE_USER"],
     activatedAt: Temporal.Now.instant().epochMilliseconds,
   });
 
-  user = await db.users.findOneBy({ email: user.email as string });
+  user = await db.users.findOneBy({ email: user?.email as string });
 
-  expect(user.roles).toContain("ROLE_USER");
-  expect(user.activatedAt).toBeLessThanOrEqual(
+  expect(user?.roles).toContain("ROLE_USER");
+  expect(user?.activatedAt).toBeLessThanOrEqual(
     Temporal.Now.instant().epochMilliseconds,
   );
-  expect(user.updatedAt).toBeDefined();
+  expect(user?.updatedAt).toBeDefined();
 });
 
 test("sign in", async () => {

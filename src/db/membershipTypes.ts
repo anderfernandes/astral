@@ -61,16 +61,20 @@ async function update(
 }
 
 async function find(id: number) {
-  const data = await db
+  const item = await db
     .selectFrom("membershipTypes")
     .where("id", "=", id)
     .selectAll()
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
+
+  if (!item) return undefined;
 
   return {
-    ...data,
-    isActive: Boolean(data.isActive),
-    isPublic: Boolean(data.isPublic),
+    ...item,
+    createdAt: item.createdAt ? Number(item.createdAt) : undefined,
+    updatedAt: item.updatedAt ? Number(item.updatedAt) : undefined,
+    isActive: Boolean(item.isActive),
+    isPublic: Boolean(item.isPublic),
   };
 }
 
@@ -87,10 +91,12 @@ async function findBy(q: { isActive?: boolean; isPublic?: boolean }) {
 }
 
 async function findAll() {
-  const data = await db.selectFrom("membershipTypes").selectAll().execute();
+  const item = await db.selectFrom("membershipTypes").selectAll().execute();
 
-  return data.map((item) => ({
+  return item.map((item) => ({
     ...item,
+    createdAt: item.createdAt ? Number(item.createdAt) : undefined,
+    updatedAt: item.updatedAt ? Number(item.updatedAt) : undefined,
     isActive: Boolean(item.isActive),
     isPublic: Boolean(item.isPublic),
   }));

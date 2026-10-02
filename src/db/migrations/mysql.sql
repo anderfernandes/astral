@@ -76,3 +76,11 @@ CREATE TABLE IF NOT EXISTS saleItems (
     updatedAt BIGINT,
     deletedAt BIGINT
 );
+
+CREATE TABLE IF NOT EXISTS saleMemos (
+    id INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    saleId INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    createdAt BIGINT NOT NULL DEFAULT (UNIX_TIMESTAMP()),
+    updatedAt BIGINT
+);

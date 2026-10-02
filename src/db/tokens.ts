@@ -36,7 +36,11 @@ async function find(id: number) {
     .leftJoin("users", "users.id", "tokens.userId")
     .where("tokens.id", "=", id)
     .where("tokens.updatedAt", "is", null)
-    .where("tokens.expiresAt", ">=", Temporal.Now.instant().epochMilliseconds)
+    .where(
+      "tokens.expiresAt",
+      ">=",
+      Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
+    )
     .select([
       "users.id as userId",
       "users.email",
@@ -56,7 +60,11 @@ async function findBy(userToken: {
     .where("tokens.data", "=", userToken.data)
     .where("tokens.purpose", "=", userToken.purpose)
     .where("tokens.updatedAt", "is", null)
-    .where("tokens.expiresAt", ">=", Temporal.Now.instant().epochMilliseconds)
+    .where(
+      "tokens.expiresAt",
+      ">=",
+      Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
+    )
     .select([
       "users.id as userId",
       "users.email",
@@ -68,14 +76,18 @@ async function findBy(userToken: {
     ])
     .executeTakeFirst();
 
-  if (!token && userToken.purpose === "account activation") {
-    console.error("Invalid, expired or already used activation code.");
-    throw new Error("Invalid, expired or already used activation code.");
-  }
+  // if (!token && userToken.purpose === "account activation") {
+  //   console.error("Invalid, expired or already used activation code.");
+  //   throw new Error("Invalid, expired or already used activation code.");
+  // }
 
   if (!token) return undefined;
 
-  return { ...token, roles: JSON.parse(token.roles as string) as Role[] };
+  return {
+    ...token,
+    createdAt: token.expiresAt ? Number(token.expiresAt) : undefined,
+    roles: JSON.parse(token.roles as string) as Role[],
+  };
 }
 
 async function update(id: number, token: TokenUpdateable) {
@@ -84,7 +96,7 @@ async function update(id: number, token: TokenUpdateable) {
   if (token.data) query = query.set({ data: token.data });
 
   query = query.set({
-    updatedAt: Temporal.Now.instant().epochMilliseconds,
+    updatedAt: Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
   });
 
   await query.where("id", "=", id).execute();

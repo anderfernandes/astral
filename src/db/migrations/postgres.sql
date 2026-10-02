@@ -73,5 +73,14 @@ CREATE TABLE IF NOT EXISTS "saleItems" (
     "customerId" INTEGER NOT NULL,
     "creatorId" INTEGER NOT NULL,
     "createdAt" BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())::BIGINT,
-    "updatedAt" BIGINT
+    "updatedAt" BIGINT,
+    "deletedAt" BIGINT
 );
+
+CREATE TABLE IF NOT EXISTS saleMemos (
+    id SERIAL PRIMARY KEY,
+    "saleId" INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    "createdAt" BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())::BIGINT,
+    "updatedAt" BIGINT
+)

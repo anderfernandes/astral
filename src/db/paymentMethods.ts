@@ -43,7 +43,11 @@ async function update(id: number, item: IPaymentMethodDto & { id: number }) {
 async function findAll() {
   const items = await db.selectFrom("paymentMethods").selectAll().execute();
 
-  return items;
+  return items.map((item) => ({
+    ...item,
+    createdAt: item.createdAt ? Number(item.createdAt) : undefined,
+    updatedAt: item.updatedAt ? Number(item.updatedAt) : undefined,
+  }));
 }
 
 export default { create, update, findAll };

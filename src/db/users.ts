@@ -34,7 +34,7 @@ async function update(
   if (user.roles) query = query.set({ roles: JSON.stringify(user.roles) });
 
   query = query.set({
-    updatedAt: Temporal.Now.instant().epochMilliseconds,
+    updatedAt: Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
   });
 
   await query.where("id", "=", id).execute();
@@ -58,7 +58,15 @@ async function find(id: number) {
     ])
     .executeTakeFirstOrThrow();
 
-  return { ...user, roles: JSON.parse(user.roles as string) as Role[] };
+  if (!user) return undefined;
+
+  return {
+    ...user,
+    createdAt: user.createdAt ? Number(user.createdAt) : undefined,
+    updatedAt: user.updatedAt ? Number(user.updatedAt) : undefined,
+    activatedAt: user.activatedAt ? Number(user.activatedAt) : undefined,
+    roles: JSON.parse(user.roles as string) as Role[],
+  };
 }
 
 async function findOneBy(data: { email: string }) {
@@ -77,7 +85,15 @@ async function findOneBy(data: { email: string }) {
     ])
     .executeTakeFirst();
 
-  return { ...user, roles: JSON.parse(user?.roles as string) as Role[] };
+  if (!user) return undefined;
+
+  return {
+    ...user,
+    createdAt: user.createdAt ? Number(user.createdAt) : undefined,
+    updatedAt: user.updatedAt ? Number(user.updatedAt) : undefined,
+    activatedAt: user.activatedAt ? Number(user.activatedAt) : undefined,
+    roles: JSON.parse(user.roles as string) as Role[],
+  };
 }
 
 async function findAll() {
@@ -111,7 +127,7 @@ async function activate(userToken: { tokenId: number; email: string }) {
 
   await update(token.userId as number, {
     roles: ["ROLE_USER"],
-    activatedAt: Temporal.Now.instant().epochMilliseconds,
+    activatedAt: Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
   });
 }
 
@@ -134,7 +150,7 @@ async function signout(data: string) {
   const token = await tokens.findBy({ data, purpose: "authentication" });
 
   await tokens.update(token?.tokenId as number, {
-    expiresAt: Temporal.Now.instant().epochMilliseconds,
+    expiresAt: Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
   });
 }
 
