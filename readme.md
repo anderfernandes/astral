@@ -11,10 +11,24 @@ Astral will be a system that will allow non-profit organizations (such as Planet
 Build image:
 
 ```
-docker build -t astral:1.0.0-alpha.5 .
+docker build -t astral:dev .
 ```
 
-Once you're done, run the container with `docker-compose`.
+Run the container with `docker-compose`.
+
+If using `sqlite`, ensure that the database file and its parent directory can be written by the container's `www-data` user.
+
+```
+docker exec astral chown www-data:www-data database
+```
+
+Finally, create and seed the database with:
+
+```
+docker exec --user www-data astral php artisan migrate:fresh --seed
+```
+
+If running in a container, you may set `DB_DATABASE` in `.env` to run the database from a different path.
 
 ### License
 
