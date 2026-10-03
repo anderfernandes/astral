@@ -15,7 +15,7 @@ services:
       - ./database:/var/www/html/database:Z,U
       - ./resources:/var/www/html/resources:Z,U
       - ./routes:/var/www/html/routes:Z,U
-      - ./storage:/var/www/html/storage:Z,U
+      - ./storage/app:/var/www/html/storage/app:Z,U
     networks:
       - astral-muracms-net
 

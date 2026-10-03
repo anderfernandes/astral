@@ -12,11 +12,13 @@ RUN apt install -y sqlite3 php-cli php-fpm php-sqlite3 php-gd php-xml nginx-core
 RUN echo 'extension=sqlite3' >> /etc/php/7.4/php.ini
 RUN echo 'clear_env = no' >> /etc/php/7.4/fpm/pool.d/www.conf
 
+RUN chown www-data:www-data -R /var/www/html
+
+USER www-data
+
 COPY nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /var/www/html
-
-RUN chown -R www-data:www-data .
 
 COPY . .
 
@@ -35,6 +37,8 @@ RUN php artisan key:generate
 RUN php artisan config:clear
 RUN php artisan config:cache
 #RUN php artisan route:cache
+
+RUN chown -R www-data:www-data .
 
 RUN nginx -t
 
