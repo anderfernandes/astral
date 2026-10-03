@@ -32,8 +32,6 @@ export default function RegisterPage() {
   const errors = (k = "") => {
     const issues = submission()?.error?.issues as string[] | undefined;
 
-    console.log(issues);
-
     if (!issues) return [];
 
     if (k)

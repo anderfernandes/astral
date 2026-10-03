@@ -21,7 +21,7 @@ export const getOrganizationSettingsFn = query(async () => {
     hasPaymentMethods: (await paymentMethods.findAll()).some((item) =>
       ["stripe"].includes(item.name.toLowerCase()),
     ),
-    hasStripe: (await stripe.account.retrieveCurrent()) ? true : false,
+    //hasStripe: (await stripe.account.retrieveCurrent()) ? true : false,
   };
 }, "organization-settings");
 
