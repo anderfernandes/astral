@@ -1,14 +1,15 @@
+import { Temporal } from "@js-temporal/polyfill";
 import { db } from "~db";
 
 export async function findBy(item: { saleId: number }) {
-  await db
+  return await db
     .selectFrom("saleItems")
     .where("saleId", "=", item.saleId)
     .selectAll()
     .execute();
 }
 
-export async function create(saleId: number, items: SaleItemInsertable[]) {
+export async function create(items: SaleItemInsertable[]) {
   let query = db.insertInto("saleItems");
 
   for (const item of items) {
@@ -32,7 +33,7 @@ export async function update(saleId: number, items: SaleItemUpdatable[]) {
 
   for (const item of items) {
     query = query.set({
-      saleId: item.saleId,
+      saleId: saleId,
       type: item.type,
       name: item.name,
       description: item.description,
@@ -40,6 +41,7 @@ export async function update(saleId: number, items: SaleItemUpdatable[]) {
       quantity: item.quantity,
       creatorId: item.creatorId,
       customerId: item.customerId,
+      updatedAt: Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
     });
   }
 

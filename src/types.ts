@@ -106,7 +106,7 @@ declare global {
     creatorId: number;
     customerId: number;
     createdAt: ColumnType<number, never, never>;
-    updatedAt: ColumnType<number | null, never, number>;
+    updatedAt: ColumnType<number | null, never, number | null>;
   }
 
   type Sale = Selectable<ISalesTable> & {
@@ -138,8 +138,8 @@ declare global {
     creatorId: number;
     customerId: number;
     createdAt: ColumnType<number, never, never>;
-    updatedAt: ColumnType<number | null, never, number>;
-    deletedAt: ColumnType<number | null, never, number>;
+    updatedAt: ColumnType<number | null, never, number | null>;
+    deletedAt: ColumnType<number | null, never, number | null>;
   }
 
   type SaleItem = Selectable<ISaleItemsTable>;
@@ -152,7 +152,7 @@ declare global {
     message: string;
     creatorId: number;
     createdAt: ColumnType<number, never, never>;
-    updatedAt: ColumnType<number | null, never, number>;
+    updatedAt: ColumnType<number | null, never, number | null>;
   }
 
   type SaleMemo = Selectable<ISaleMemosTable>;

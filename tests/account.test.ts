@@ -40,7 +40,7 @@ test("activate", async () => {
   });
 
   user = await db.users.findOneBy({ email: user?.email as string });
-  console.log(user);
+
   expect(user?.roles).toContain("ROLE_USER");
   expect(user?.activatedAt).toBeLessThanOrEqual(
     Temporal.Now.instant().epochMilliseconds,

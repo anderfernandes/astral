@@ -2,9 +2,10 @@ import { db } from "~db";
 import * as saleItems from "./saleItems";
 
 export async function create(
-  sale: SaleInsertable & {
-    items: SaleItemInsertable[];
-    payments: PaymentInsertable[];
+  sale: Omit<SaleInsertable, "isTaxable"> & {
+    isTaxable: boolean;
+    items: Omit<SaleItemInsertable, "saleId" | "creatorId" | "customerId">[];
+    payments?: PaymentInsertable[];
   },
 ) {
   let saleId: number;
@@ -12,7 +13,7 @@ export async function create(
   const query = db.insertInto("sales").values({
     status: "OPEN",
     source: sale.source,
-    isTaxable: sale.isTaxable,
+    isTaxable: sale.isTaxable ? 1 : 0,
     checkoutId: sale.checkoutId,
     creatorId: sale.creatorId,
     customerId: sale.customerId,
@@ -20,6 +21,7 @@ export async function create(
 
   if (["mysql", "mariadb"].includes(process.env.DB_DRIVER)) {
     const result = await query.executeTakeFirst();
+
     saleId = Number(result.insertId);
   } else if (process.env.DB_DRIVER === "mssql") {
     const result = await query.output("inserted.id").executeTakeFirst();
@@ -35,7 +37,49 @@ export async function create(
     saleId = result?.id;
   }
 
-  await saleItems.create(saleId, sale.items);
+  await saleItems.create(
+    sale.items.map((item) => ({
+      ...item,
+      saleId,
+      creatorId: sale.creatorId,
+      customerId: sale.customerId,
+    })),
+  );
+
+  // TODO: CALCULATE TOTALS AND UPDATE IF NECESSARY
+}
+
+export async function update(
+  saleId: number,
+  sale: Omit<SaleUpdateable, "isTaxable"> & {
+    isTaxable: boolean;
+    items: SaleItemUpdatable[];
+    payments?: PaymentUpdateable[];
+  },
+) {
+  await db
+    .updateTable("sales")
+    .set({
+      status: sale.status,
+      source: sale.source,
+      isTaxable: sale.isTaxable ? 1 : 0,
+      checkoutId: sale.checkoutId,
+      creatorId: sale.creatorId,
+      customerId: sale.customerId,
+      updatedAt: Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
+    })
+    .where("id", "=", saleId)
+    .execute();
+
+  await saleItems.update(
+    saleId,
+    sale.items.map((item) => ({
+      ...item,
+      saleId,
+      creatorId: sale.creatorId,
+      customerId: sale.customerId,
+    })),
+  );
 }
 
 export async function find(id: number) {
@@ -45,9 +89,11 @@ export async function find(id: number) {
     .selectAll()
     .executeTakeFirst();
 
+  if (!sale) return undefined;
+
   const items = await saleItems.findBy({ saleId: id });
 
-  return { ...sale, items };
+  return { ...sale, isTaxable: Boolean(sale?.isTaxable), items };
 }
 
 export async function findBy(data: { customerId: number }) {
