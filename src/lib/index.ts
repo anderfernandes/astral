@@ -25,6 +25,12 @@ export const getOrganizationSettingsFn = query(async () => {
   };
 }, "organization-settings");
 
+export const getStripeFn = query(async () => {
+  "use server";
+
+  return await stripe.account.retrieveCurrent();
+}, "get-stripe");
+
 export const getUserFn = query(async (redirectIfNotSignedIn = true) => {
   "use server";
 
@@ -54,7 +60,7 @@ export const getUserFn = query(async (redirectIfNotSignedIn = true) => {
     else return undefined;
   }
 
-  console.log(token, user);
+  console.log(token, `${user.userId} ${user.email}`);
 
   return user;
 }, "get-user");

@@ -205,10 +205,10 @@ export default function Layout(props: ParentProps) {
                       <Show
                         when={user}
                         fallback={
-                          <Button href="/sign-in" text="Sign In &rarr;" />
+                          <Button href="/account" text="My Account &rarr;" />
                         }
                       >
-                        <Button href="/account" text="My Account &rarr;" />
+                        <Button href="/sign-in" text="Sign In &rarr;" />
                       </Show>
                     </div>
                   </div>

@@ -64,10 +64,10 @@ export default function MembershipSignupPage(
       total: subtotal + tax,
       canAddFreeSecondaries:
         items.filter((item) => item.type === "MEMBERSHIP (FREE SECONDARY)")
-          .length < membershipType().maxFreeSecondaries,
+          .length < (membershipType()?.maxFreeSecondaries as number),
       canAddPaidSecondaries:
         items.filter((item) => item.type === "MEMBERSHIP (PAID SECONDARY)")
-          .length < membershipType().maxPaidSecondaries,
+          .length < (membershipType()?.maxPaidSecondaries as number),
     };
   });
 
@@ -386,7 +386,7 @@ export default function MembershipSignupPage(
             <input
               type="hidden"
               name="membershipTypeId"
-              value={membershipType().id}
+              value={membershipType()?.id}
             />
             <button
               type="submit"
@@ -509,9 +509,7 @@ const checkout = action(async (form: FormData) => {
       );
     }
 
-    primary = await db.users.findOneBy({
-      email: primaryValidator.output.email,
-    });
+    primary = await db.users.find((await getUserFn())?.userId as number);
 
     if (!primary) {
       await db.users.create({

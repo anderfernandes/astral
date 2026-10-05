@@ -1,9 +1,13 @@
 import { createMemo, For, Loading, Show } from "solid-js";
 import { getMembershipTypesFn } from "~lib/membership-types";
 import { paths } from "../../../router";
+import { getStripeFn } from "~lib";
 
 export default function MembershipPage() {
   const membershipTypes = createMemo(() => getMembershipTypesFn());
+
+  const stripe = createMemo(() => getStripeFn());
+
   return (
     <section class="bg-white py-24">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
@@ -43,14 +47,14 @@ export default function MembershipPage() {
                     </div>
 
                     <p class="mt-4 text-sm text-gray-600">{item.description}</p>
-
-                    <a
-                      href={paths.memberships(item.id)}
-                      class="black black mt-8 block rounded-md border px-4 py-2 text-center text-sm font-semibold hover:bg-gray-50"
-                    >
-                      Sign up
-                    </a>
-
+                    <Show when={stripe()}>
+                      <a
+                        href={paths.memberships(item.id)}
+                        class="black black mt-8 block rounded-md border px-4 py-2 text-center text-sm font-semibold hover:bg-gray-50"
+                      >
+                        Sign up
+                      </a>
+                    </Show>
                     <ul class="mt-8 space-y-3 text-sm text-gray-600">
                       <li class="flex gap-1">
                         <svg
