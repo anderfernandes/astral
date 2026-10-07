@@ -359,16 +359,16 @@ export default function MembershipSignupPage(
                 />
               </Show>
             </div>
-            <For each={cart().items}>
+            <For each={cart().items} keyed={(_item) => _item.name}>
               {(item) => (
                 <div class="text-sm text-gray-600">
                   <p class="flex gap-1">
-                    <span class="grow">{item.name}</span>
-                    <span>{toCurrencyString(item.price)}</span>
+                    <span class="grow">{item().name}</span>
+                    <span>{toCurrencyString(item().price)}</span>
                   </p>
-                  <p>{item.description}</p>
-                  <Show when={item.type != "CONVENIENCE FEE"}>
-                    <p>{item.type}</p>
+                  <p>{item().description}</p>
+                  <Show when={item().type != "CONVENIENCE FEE"}>
+                    <p>{item().type}</p>
                   </Show>
                 </div>
               )}
