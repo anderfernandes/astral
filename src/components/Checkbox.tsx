@@ -2,13 +2,11 @@ import { Show } from "solid-js";
 import { JSX } from "@solidjs/web";
 
 interface ICheckboxProps extends Partial<
-  Pick<
-    JSX.InputHTMLAttributes<HTMLInputElement>,
-    "name" | "value" | "checked" | "onChange"
-  >
+  Pick<JSX.InputHTMLAttributes<HTMLInputElement>, "name" | "value" | "checked">
 > {
   label: JSX.Element;
   hint?: JSX.Element;
+  onChange?: JSX.EventHandlersElement<HTMLInputElement>["onChange"];
 }
 
 export function Checkbox(props: ICheckboxProps) {

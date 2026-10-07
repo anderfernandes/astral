@@ -77,6 +77,45 @@ export function toCurrencyString(
   });
 }
 
+export function calculateSaleTotals(
+  sale: Partial<SaleInsertable> & { items: SaleItemInsertable[] },
+) {
+  const convenienceFeeItem = {
+    name: "Convenience Fee",
+    description: "",
+    price: Number(process.env["CONVENIENCE_FEE"]),
+    type: "CONVENIENCE FEE",
+    quantity: 1,
+  };
+
+  const items =
+    convenienceFeeItem.price > 0
+      ? [...sale.items, convenienceFeeItem]
+      : sale.items;
+
+  const subtotal = items.reduce(
+    (acc, item) => item.price * item?.quantity + acc,
+    0,
+  );
+
+  const tax = (Number(process.env["SALE_TAX_RATE"]) / 100) * subtotal;
+
+  return {
+    items,
+    subtotal,
+    tax,
+    total: subtotal + tax,
+  };
+}
+
+export const getSaleTotalsFn = query(
+  async (sale: Partial<SaleInsertable> & { items: SaleItemInsertable[] }) => {
+    "use server";
+    return calculateSaleTotals(sale);
+  },
+  "get-sale-totals",
+);
+
 export async function createHash(content: string, salt: string = "") {
   const randomValues = crypto.getRandomValues(new Uint8Array(16));
 

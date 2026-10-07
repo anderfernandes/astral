@@ -121,7 +121,7 @@ declare global {
 
   interface ISaleItemsTable {
     id: Generated<number>;
-    saleId: number;
+    saleId?: number;
     type:
       | "TICKET"
       | "PRODUCT"
@@ -135,8 +135,8 @@ declare global {
     description: string;
     price: number;
     quantity: number;
-    creatorId: number;
-    customerId: number;
+    creatorId?: number;
+    customerId?: number;
     createdAt: ColumnType<number, never, never>;
     updatedAt: ColumnType<number | null, never, number | null>;
     deletedAt: ColumnType<number | null, never, number | null>;

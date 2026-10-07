@@ -16,7 +16,13 @@ import {
 } from "solid-js";
 import { getMembershipTypeFn } from "~lib/membership-types";
 import { paths, Router } from "../../../router";
-import { getOrganizationSettingsFn, getUserFn, toCurrencyString } from "~lib";
+import {
+  calculateSaleTotals,
+  getOrganizationSettingsFn,
+  getSaleTotalsFn,
+  getUserFn,
+  toCurrencyString,
+} from "~lib";
 import { Button, Checkbox, Dialog, Input } from "~components";
 import * as v from "valibot";
 import { respond } from "@solidjs/web";
@@ -45,31 +51,35 @@ export default function MembershipSignupPage(
 
   const [isGift, setIsGift] = createSignal(false);
 
-  const [items, setItems] = createStore(
-    [] as Pick<
-      SaleItemInsertable,
-      "name" | "price" | "quantity" | "type" | "description"
-    >[],
-  );
-
-  const cart = createMemo(() => {
-    const subtotal = items.reduce(
-      (acc, item) => item.price * item.quantity + acc,
-      0,
-    );
-    const tax = (organization().saleTaxRate / 100) * subtotal;
-    return {
-      subtotal,
-      tax,
-      total: subtotal + tax,
-      canAddFreeSecondaries:
-        items.filter((item) => item.type === "MEMBERSHIP (FREE SECONDARY)")
-          .length < (membershipType()?.maxFreeSecondaries as number),
-      canAddPaidSecondaries:
-        items.filter((item) => item.type === "MEMBERSHIP (PAID SECONDARY)")
-          .length < (membershipType()?.maxPaidSecondaries as number),
-    };
+  const [primary, setPrimary] = createSignal({
+    firstName: "",
+    lastName: "",
+    email: "",
   });
+
+  const [items, setItems] = createStore<SaleItemInsertable[]>([]);
+
+  const cart = createMemo(() => getSaleTotalsFn({ items }));
+
+  const helper = createMemo(() => ({
+    canAddFreeSecondaries:
+      items.filter((item) => item.type === "MEMBERSHIP (FREE SECONDARY)")
+        .length < (membershipType()?.maxFreeSecondaries as number),
+    canAddPaidSecondaries:
+      items.filter((item) => item.type === "MEMBERSHIP (PAID SECONDARY)")
+        .length < (membershipType()?.maxPaidSecondaries as number),
+  }));
+
+  createEffect(
+    () => user(),
+    (value) => {
+      setPrimary({
+        firstName: value?.firstName as string,
+        lastName: value?.lastName as string,
+        email: value?.email as string,
+      });
+    },
+  );
 
   createEffect(
     () => membershipType(),
@@ -96,26 +106,17 @@ export default function MembershipSignupPage(
   );
 
   createEffect(
-    () => organization(),
+    () => primary(),
     (value) => {
-      setItems((currentItems) => {
-        if (
-          currentItems.some(
-            (currentItem) => currentItem.type === "CONVENIENCE FEE",
-          )
-        )
-          return currentItems;
-        return [
-          ...currentItems,
-          {
-            name: "Convenience Fee",
-            description: "",
-            price: value.convenienceFee,
-            type: "CONVENIENCE FEE",
-            quantity: 1,
-          },
-        ];
-      });
+      setItems((currentItems) =>
+        currentItems.map((currentItem) => {
+          if (currentItem.type === "MEMBERSHIP (PRIMARY)") {
+            currentItem.name = `${value.firstName} ${value.lastName}`;
+            currentItem.description = value.email;
+          }
+          return currentItem;
+        }),
+      );
     },
   );
 
@@ -262,32 +263,62 @@ export default function MembershipSignupPage(
             <div class="grid">
               <Checkbox
                 name="isGift"
+                label="Buying for someone else as a gift."
                 checked={isGift()}
                 onChange={(e) => {
                   setIsGift(e.currentTarget.checked);
+
+                  setPrimary({
+                    firstName: e.currentTarget.checked
+                      ? ""
+                      : (user()?.firstName as string),
+                    lastName: e.currentTarget.checked
+                      ? ""
+                      : (user()?.lastName as string),
+                    email: e.currentTarget.checked
+                      ? ""
+                      : (user()?.email as string),
+                  });
                 }}
-                label="Buying for someone else as a gift."
               />
               <div class="grid grid-cols-2 gap-2">
                 <Input
-                  defaultValue={isGift() ? "" : (user()?.firstName as string)}
+                  value={primary().firstName}
                   disabled={!isGift()}
                   placeholder="First Name"
                   name="firstName"
                   required={isGift()}
+                  onInput={(e) => {
+                    setPrimary((currentPrimary) => ({
+                      ...currentPrimary,
+                      firstName: e.currentTarget.value,
+                    }));
+                  }}
                 />
                 <Input
-                  defaultValue={isGift() ? "" : (user()?.lastName as string)}
+                  value={primary().lastName}
                   disabled={!isGift()}
                   placeholder="Last Name"
                   name="lastName"
                   required={isGift()}
+                  onInput={(e) => {
+                    setPrimary((currentPrimary) => ({
+                      ...currentPrimary,
+                      lastName: e.currentTarget.value,
+                    }));
+                  }}
                 />
               </div>
               <Input
-                defaultValue={isGift() ? "" : (user()?.email as string)}
+                value={primary().email}
                 disabled={!isGift()}
                 placeholder="Email"
+                onInput={(e) => {
+                  setPrimary((currentPrimary) => ({
+                    ...currentPrimary,
+                    email: e.currentTarget.value,
+                  }));
+                }}
               />
             </div>
             <div class="grid gap-3 lg:grid-cols-2">
@@ -296,7 +327,7 @@ export default function MembershipSignupPage(
                   text="Add Free Secondary"
                   variant="secondary"
                   type="button"
-                  disabled={!cart().canAddFreeSecondaries}
+                  disabled={!helper().canAddFreeSecondaries}
                   onClick={() => {
                     navigate(
                       paths.memberships(props.params.id, {
@@ -321,12 +352,13 @@ export default function MembershipSignupPage(
                     );
                   }}
                   disabled={
-                    cart().canAddFreeSecondaries && cart().canAddPaidSecondaries
+                    helper().canAddFreeSecondaries &&
+                    helper().canAddPaidSecondaries
                   }
                 />
               </Show>
             </div>
-            <For each={items}>
+            <For each={cart().items}>
               {(item) => (
                 <div class="text-sm text-gray-600">
                   <p class="flex gap-1">
@@ -412,7 +444,9 @@ export default function MembershipSignupPage(
 
                 console.log(email);
 
-                if (items.some((item) => item.description.includes(email))) {
+                if (
+                  cart().items.some((item) => item.description.includes(email))
+                ) {
                   alert(`${email} has already been added.`);
                   return;
                 }
@@ -432,17 +466,16 @@ export default function MembershipSignupPage(
                 }
 
                 if (location.query.type === "paid") {
-                  setItems((prev) => {
-                    prev.splice(prev.length - 1, 0, {
+                  setItems((prev) => [
+                    ...prev,
+                    {
                       name: `${data.get("firstName")} ${data.get("lastName")}`,
                       description: email,
                       price: membershipType()?.paidSecondaryPrice as number,
                       type: "MEMBERSHIP (PAID SECONDARY)",
                       quantity: 1,
-                    });
-
-                    return [...prev];
-                  });
+                    },
+                  ]);
                 }
 
                 navigate(paths.memberships(props.params.id));

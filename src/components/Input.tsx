@@ -1,5 +1,5 @@
-import { JSX, Match, Show, Switch } from "@solidjs/web";
-import { createMemo } from "solid-js";
+import { JSX } from "@solidjs/web/jsx-runtime";
+import { Show, Switch, Match } from "solid-js";
 
 interface IInputProps extends Partial<
   Pick<
@@ -15,6 +15,7 @@ interface IInputProps extends Partial<
     | "maxlength"
     | "value"
     | "defaultValue"
+    | "onInput"
   >
 > {
   label?: JSX.Element;
