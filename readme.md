@@ -24,11 +24,7 @@ Create and seed the database with:
 docker exec --user www-data astral php artisan migrate:fresh --seed
 ```
 
-Ensure that the database file can be written by the container's `www-data` user:
-
-```
-docker exec astral chown www-data:www-data database/database.sqlite
-```
+Restart the container so that the database file can have the right permissions as it must writable by the container's `www-data` user.
 
 If running in a container, you may set `DB_DATABASE` in `.env` to run the database from a different path of the host machine.
 

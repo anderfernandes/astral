@@ -19,7 +19,7 @@ services:
     environment:
       DB_DATABASE: ${DB_DATABASE}
     command: >
-      sh -c "chown www-data:www-data database && /usr/sbin/php-fpm7.4; /usr/sbin/nginx -g 'daemon off;'"
+      sh -c "chown www-data:www-data database -R && /usr/sbin/php-fpm7.4; /usr/sbin/nginx -g 'daemon off;'"
     networks:
       - astral-muracms-net
 
