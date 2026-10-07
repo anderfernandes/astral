@@ -313,6 +313,7 @@ export default function MembershipSignupPage(
                 value={primary().email}
                 disabled={!isGift()}
                 placeholder="Email"
+                required={isGift()}
                 onInput={(e) => {
                   setPrimary((currentPrimary) => ({
                     ...currentPrimary,

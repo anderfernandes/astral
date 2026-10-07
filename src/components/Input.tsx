@@ -52,6 +52,7 @@ export function Input(props: IInputProps) {
               maxlength={props.maxlength}
               value={props.value}
               ref={props.ref}
+              onInput={props.onInput}
             />
           }
         >
@@ -68,6 +69,7 @@ export function Input(props: IInputProps) {
             maxlength={props.maxlength}
             defaultValue={props.defaultValue}
             ref={props.ref}
+            onInput={props.onInput}
           />
         </Show>
       </div>
