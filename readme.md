@@ -14,21 +14,23 @@ Build image:
 docker build -t astral:dev .
 ```
 
-Run the container with `docker-compose`.
+Run the container with `docker compose up -d`.
 
-If using `sqlite`, ensure that the database file and its parent directory can be written by the container's `www-data` user.
+#### SQLite
 
-```
-docker exec astral chown www-data:www-data database
-```
-
-Finally, create and seed the database with:
+Create and seed the database with:
 
 ```
 docker exec --user www-data astral php artisan migrate:fresh --seed
 ```
 
-If running in a container, you may set `DB_DATABASE` in `.env` to run the database from a different path.
+Ensure that the database file can be written by the container's `www-data` user:
+
+```
+docker exec astral chown www-data:www-data database/database.sqlite
+```
+
+If running in a container, you may set `DB_DATABASE` in `.env` to run the database from a different path of the host machine.
 
 ### License
 
