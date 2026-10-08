@@ -17,7 +17,6 @@ import {
 import { getMembershipTypeFn } from "~lib/membership-types";
 import { paths, Router } from "../../../router";
 import {
-  calculateSaleTotals,
   getOrganizationSettingsFn,
   getSaleTotalsFn,
   getUserFn,
@@ -28,11 +27,13 @@ import * as v from "valibot";
 import { respond } from "@solidjs/web";
 import db from "~db";
 import { EmailSchema, FirstNameSchema, LastNameSchema } from "~lib/schemas";
+import { attribution } from "solid-js/attribution";
 
 export const route = {
   preload: ({ params }) => {
     void getMembershipTypeFn(params.id as string);
     void getOrganizationSettingsFn();
+    void getUserFn();
   },
 } satisfies RouteDefinition;
 
@@ -41,7 +42,11 @@ export default function MembershipSignupPage(
 ) {
   const navigate = useNavigate();
 
-  const location = useLocation();
+  const location = useLocation<{
+    dialog?: "primary" | "secondary";
+    type?: "free" | "paid";
+    item?: string;
+  }>();
 
   const membershipType = createMemo(() => getMembershipTypeFn(props.params.id));
 
@@ -72,7 +77,9 @@ export default function MembershipSignupPage(
 
   createEffect(
     () => user(),
-    (value) => {
+    (value, previousValue) => {
+      if (value?.email === previousValue?.email) return;
+
       setPrimary({
         firstName: value?.firstName as string,
         lastName: value?.lastName as string,
@@ -83,7 +90,9 @@ export default function MembershipSignupPage(
 
   createEffect(
     () => membershipType(),
-    (value) => {
+    (value, previousValue) => {
+      if (value?.id === previousValue?.id) return;
+
       setItems((currentItems) => {
         if (
           currentItems.some(
@@ -107,7 +116,9 @@ export default function MembershipSignupPage(
 
   createEffect(
     () => primary(),
-    (value) => {
+    (value, previousValue) => {
+      if (value.email === previousValue?.email) return;
+
       setItems((currentItems) =>
         currentItems.map((currentItem) => {
           if (currentItem.type === "MEMBERSHIP (PRIMARY)") {
@@ -119,6 +130,8 @@ export default function MembershipSignupPage(
       );
     },
   );
+
+  //attribution.enable();
 
   return (
     <section class="mx-auto max-w-7xl bg-white py-24">
@@ -310,6 +323,7 @@ export default function MembershipSignupPage(
                 />
               </div>
               <Input
+                type="email"
                 value={primary().email}
                 disabled={!isGift()}
                 placeholder="Email"
@@ -360,13 +374,35 @@ export default function MembershipSignupPage(
               </Show>
             </div>
             <For each={cart().items} keyed={(_item) => _item.name}>
-              {(item) => (
+              {(item, index) => (
                 <div class="text-sm text-gray-600">
                   <p class="flex gap-1">
                     <span class="grow">{item().name}</span>
                     <span>{toCurrencyString(item().price)}</span>
                   </p>
-                  <p>{item().description}</p>
+                  <p>
+                    {item().description}
+                    <Show when={item().type === "MEMBERSHIP (FREE SECONDARY)"}>
+                      {" "}
+                      &middot;{" "}
+                      <a
+                        class="underline underline-offset-2 hover:text-black"
+                        href={`?dialog=secondary&type=free&item=${index()}`}
+                      >
+                        Edit
+                      </a>
+                    </Show>
+                    <Show when={item().type === "MEMBERSHIP (PAID SECONDARY)"}>
+                      {" "}
+                      &middot;{" "}
+                      <a
+                        class="underline underline-offset-2 hover:text-black"
+                        href={`?dialog=secondary&type=paid&item=${index()}`}
+                      >
+                        Edit
+                      </a>
+                    </Show>
+                  </p>
                   <Show when={item().type != "CONVENIENCE FEE"}>
                     <p>{item().type}</p>
                   </Show>
@@ -431,8 +467,8 @@ export default function MembershipSignupPage(
         </div>
         <Show when={location.query.dialog === "secondary"}>
           <Dialog
-            title={`Add ${location.query.type} secondary`}
-            subtitle={`Adds a ${location.query.type} secondary to the membership`}
+            title={`${location.query.item ? "Update" : "Add"} ${location.query.type} secondary`}
+            subtitle={`${location.query.item ? "Update" : "Adds"} a ${location.query.type} secondary to the membership`}
           >
             <form
               class="grid gap-3"
@@ -445,66 +481,83 @@ export default function MembershipSignupPage(
 
                 console.log(email);
 
+                const index = location.query.item
+                  ? Number(location.query.item)
+                  : null;
+
                 if (
+                  index === null &&
                   cart().items.some((item) => item.description.includes(email))
                 ) {
                   alert(`${email} has already been added.`);
                   return;
                 }
 
-                if (location.query.type === "free") {
-                  setItems((prev) => {
-                    prev.splice(1, 0, {
-                      name: `${data.get("firstName")} ${data.get("lastName")}`,
-                      description: email,
-                      price: 0,
-                      type: "MEMBERSHIP (FREE SECONDARY)",
-                      quantity: 1,
-                    });
+                const secondary: SaleItemInsertable = {
+                  name: `${data.get("firstName")} ${data.get("lastName")}`,
+                  description: email,
+                  price: 0,
+                  type: "MEMBERSHIP (FREE SECONDARY)",
+                  quantity: 1,
+                };
 
+                if (location.query.type === "free") {
+                  console.log(location.query.item, index);
+
+                  setItems((prev) => {
+                    prev.splice(index ?? 1, index ? 1 : 0, secondary);
                     return [...prev];
                   });
                 }
 
                 if (location.query.type === "paid") {
-                  setItems((prev) => [
-                    ...prev,
-                    {
-                      name: `${data.get("firstName")} ${data.get("lastName")}`,
-                      description: email,
-                      price: membershipType()?.paidSecondaryPrice as number,
-                      type: "MEMBERSHIP (PAID SECONDARY)",
-                      quantity: 1,
-                    },
-                  ]);
+                  const paidSecondary: SaleItemInsertable = {
+                    ...secondary,
+                    type: "MEMBERSHIP (PAID SECONDARY)",
+                  };
+
+                  setItems((prev) => {
+                    if (!index) return [...prev, paidSecondary];
+
+                    prev.splice(index, 1, paidSecondary);
+
+                    return [...prev];
+                  });
                 }
 
                 navigate(paths.memberships(props.params.id));
               }}
             >
               <Input
-                defaultValue="Sarah"
+                defaultValue={
+                  items[Number(location.query.item)]?.name.split(" ")[0]
+                }
                 label="First Name"
                 required
                 placeholder="First Name"
                 name="firstName"
               />
               <Input
-                defaultValue="Fernandes"
+                defaultValue={
+                  items[Number(location.query.item)]?.name.split(" ")[1]
+                }
                 label="Last Name"
                 required
                 placeholder="Last Name"
                 name="lastName"
               />
               <Input
-                defaultValue="sarahfernandes@live.com"
+                defaultValue={items[Number(location.query.item)]?.description}
                 label="Email"
                 required
                 placeholder="Email"
                 name="email"
               />
               <div class="flex justify-end">
-                <Button text="Add" type="submit" />
+                <Button
+                  text={location.query.item ? "Update" : "Add"}
+                  type="submit"
+                />
               </div>
             </form>
           </Dialog>
@@ -543,16 +596,22 @@ const checkout = action(async (form: FormData) => {
       );
     }
 
+    // CHECK IF A PRIMARY ALREADY EXISTS, IF NOT CURRENT USER IS PRIMARY
+
     primary = await db.users.find((await getUserFn())?.userId as number);
 
     if (!primary) {
       await db.users.create({
         firstName: primaryValidator.output.firstName,
         lastName: primaryValidator.output.lastName,
-        email: primaryValidator.output.lastName,
+        email: primaryValidator.output.email,
         password: crypto
           .getRandomValues(new Uint8Array(8))
           .toBase64({ alphabet: "base64url" }),
+      });
+
+      primary = await db.users.findOneBy({
+        email: primaryValidator.output.email,
       });
     }
   }
@@ -572,11 +631,19 @@ const checkout = action(async (form: FormData) => {
     );
   }
 
-  // CHECK IF A PRIMARY ALREADY EXISTS, IF NOT CURRENT USER IS PRIMARY
-
   const membershipType = await db.membershipTypes.find(
     membershipTypeValidator.output,
   );
+
+  if (!membershipType) {
+    throw respond(
+      {
+        message: "Fix the errors below.",
+        issues: ["Invalid membership type."],
+      },
+      { status: 400 },
+    );
+  }
 
   // CREATE SALE
 

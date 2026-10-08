@@ -84,11 +84,11 @@ export function calculateSaleTotals(
     name: "Convenience Fee",
     description: "",
     price: Number(process.env["CONVENIENCE_FEE"]),
-    type: "CONVENIENCE FEE",
+    type: "CONVENIENCE FEE" as SaleItemInsertable["type"],
     quantity: 1,
   };
 
-  const items =
+  const items: SaleItemInsertable[] =
     convenienceFeeItem.price > 0
       ? [...sale.items, convenienceFeeItem]
       : sale.items;

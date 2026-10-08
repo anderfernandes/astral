@@ -3,6 +3,13 @@ import { getMembershipTypesFn } from "~lib/membership-types";
 import { paths } from "../../../router";
 import { getStripeFn } from "~lib";
 
+export const route = {
+  preload: () => {
+    void getMembershipTypesFn();
+    void getStripeFn();
+  },
+};
+
 export default function MembershipPage() {
   const membershipTypes = createMemo(() => getMembershipTypesFn());
 

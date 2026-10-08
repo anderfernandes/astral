@@ -129,7 +129,7 @@ export default function MembershipPage() {
       </Show>
       <ul role="list" class="divide-y divide-gray-100">
         <Loading fallback={<span class="text-sm">Loading...</span>}>
-          <For each={items()}>
+          <For each={items()} keyed={(m) => m.id}>
             {(item) => (
               <li class="flex justify-between gap-x-6 py-5">
                 <div class="flex min-w-0 grow gap-x-4">
@@ -141,8 +141,8 @@ export default function MembershipPage() {
                   </svg>
                   <div class="min-w-0 flex-auto">
                     <p class="flex gap-1 text-sm/6 font-semibold text-gray-900">
-                      {item.name}
-                      <Show when={item.isPublic}>
+                      {item().name}
+                      <Show when={item().isPublic}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
@@ -156,7 +156,7 @@ export default function MembershipPage() {
                           />
                         </svg>
                       </Show>
-                      <Show when={item.isActive}>
+                      <Show when={item().isActive}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -174,11 +174,11 @@ export default function MembershipPage() {
                       </Show>
                     </p>
                     <p class="mt-1 truncate text-xs/5 text-gray-500">
-                      {item.description}
+                      {item().description}
                     </p>
                     <div class="mt-1 flex flex-wrap gap-1">
                       <Badge
-                        text={(item.price / 100).toLocaleString("en-US", {
+                        text={(item().price / 100).toLocaleString("en-US", {
                           style: "currency",
                           currency: "USD",
                           minimumFractionDigits: 0,
@@ -193,7 +193,7 @@ export default function MembershipPage() {
                               d="M13.09 20H4C2.9 20 2 19.11 2 18V6C2 4.89 2.9 4 4 4H20C21.11 4 22 4.89 22 6V13.81C21.12 13.3 20.09 13 19 13C15.69 13 13 15.69 13 19C13 19.34 13.04 19.67 13.09 20M18 15V18H15V20H18V23H20V20H23V18H20V15H18Z"
                             />
                           </svg>
-                          {item.maxFreeSecondaries}
+                          {item().maxFreeSecondaries}
                         </span>
                       </Badge>
                       <Badge>
@@ -204,8 +204,8 @@ export default function MembershipPage() {
                               d="M21 15V18H24V20H21V23H19V20H16V18H19V15H21M14 18H3V6H19V13H21V6C21 4.89 20.11 4 19 4H3C1.9 4 1 4.89 1 6V18C1 19.11 1.9 20 3 20H14V18Z"
                             />
                           </svg>
-                          {item.maxPaidSecondaries} @{" "}
-                          {(item.paidSecondaryPrice / 100).toLocaleString(
+                          {item().maxPaidSecondaries} @{" "}
+                          {(item().paidSecondaryPrice / 100).toLocaleString(
                             "en-US",
                             {
                               style: "currency",
@@ -238,16 +238,16 @@ export default function MembershipPage() {
                             <path d="M8 2v4" />
                             <circle cx="16" cy="16" r="6" />
                           </svg>
-                          {item.duration} days
+                          {item().duration} days
                         </span>
                       </Badge>
                     </div>
                   </div>
                 </div>
                 <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                  {/* <p class="text-sm/6 text-gray-900">{item.duration} days</p> */}
+                  {/* <p class="text-sm/6 text-gray-900">{item().duration} days</p> */}
                   {/* <p class="mt-1 text-xs/5 text-gray-500">
-                    {(item.price / 100).toLocaleString("en-US", {
+                    {(item().price / 100).toLocaleString("en-US", {
                       style: "currency",
                       currency: "USD",
                     })}
@@ -258,7 +258,7 @@ export default function MembershipPage() {
                     text="Edit"
                     href={paths.admin.settings.membership({
                       dialog: "edit",
-                      id: item.id,
+                      id: item().id,
                     })}
                   />
                 </div>
