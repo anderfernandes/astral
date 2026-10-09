@@ -21,6 +21,7 @@ Route::group(
   function () {
     // Index
     Route::get('/', 'AdminController@index')->name('index');
+    Route::get('/new-calendar', function () { return view("admin.new-calendar.index"); });
     // Calendar
     Route::get('calendar', 'CalendarController@index')->name('calendar.index');
     Route::get('calendar/events', 'CalendarController@events')->name('calendar.events');

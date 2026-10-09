@@ -46,6 +46,39 @@ use App\Product;
   return $eventsArray;
 });*/
 
+// New Calendar Routes
+Route::prefix("v2")->group(function () {
+  
+  // Events
+  Route::get("/calendar/events", function (Request $request) {
+    return Event::where([
+      ['start', '>=', $request->start],
+      ['end', '<=', $request->end]
+    ])
+    ->with(['type', 'sales'])
+    ->get()
+    ->map(function ($item) {
+      $showName = $item->show->name;
+      
+      $saleCount = $item->sales->count() == 1 
+        ? '(' . $item->sales->count() . ' sale)'
+        : '(' . $item->sales->count() . ' sales)';
+      
+      return [
+        'start' => $item->start->toIso8601String(),
+        'end' => $item->end->toIso8601String(),
+        'title' => "#$item->id $showName $saleCount",
+        'color' => $item->type->color 
+      ];
+    })->values();
+  });
+  
+  // 
+  Route::get("/calendar/sales", function () {
+    return [];
+  });
+});
+
 Route::get('shows', function (Request $request) {
   
   $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->get();
