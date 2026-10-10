@@ -17,15 +17,59 @@ If you work in a non-profit planetarium, museum or science center and are strugg
 
 Astral works with the following databases:
 
-| Database              | Minimum Version |
-| --------------------- | --------------- |
-| SQLite (`sqlite`)     | 3.37            |
-| Postgres (`postgres`) | 14              |
-| SQL Server (`mssql`)  | 2017            |
-| MySQL (`mysql`)       | 8.0             |
-| MariaDB (`mariadb`)   | 10.6            |
+| Database                              | Minimum Version |
+| ------------------------------------- | --------------- |
+| SQLite (`sqlite`)                     | 3.37            |
+| Postgres (`postgres`)                 | 14              |
+| SQL Server (`mssql`)                  | 2017            |
+| MySQL (`mysql`)                       | 8.0             |
+| MariaDB (`mariadb`, via MySQL driver) | 10.6            |
 
-For all non SQLite databases, make sure the `DB_USER` set in the environment variables exist because they will receive ownership of the `DB_DATABASE`.
+For all non SQLite databases, make sure the `DB_DATABASE` exists and `DB_USER` has read and write permissions to it.
+
+Use the queries below as a _reference_ to meet those requirements replacing `astral_user`, `astral_db` and `MyStrongPassword123!` with the desired (and secure) values, making sure the password is secure.
+
+```sql
+/* postgres */
+
+CREATE USER astral_user WITH PASSWORD 'MyStrongPassword123!';
+CREATE DATABASE astral_db OWNER astral_user;
+```
+
+For `mysql` and `mariadb`, make sure to replace `host` with database host's IP or name.
+
+```sql
+/* mysql or mariadb */
+
+CREATE USER 'astral_user'@'host' IDENTIFIED BY 'MyStrongPassword123!';
+CREATE DATABASE IF NOT EXISTS astral_db;
+GRANT ALL PRIVILEGES ON astral_db TO 'astral_user'@'host';
+```
+
+```sql
+/* mssql */
+
+USE [master];
+GO
+
+IF DB_ID(N'astral_db') IS NULL
+BEGIN
+    CREATE DATABASE [astral_db];
+END;
+GO
+
+CREATE LOGIN [astral] WITH PASSWORD = 'MyStrongPassword123!';
+GO
+
+USE [astral_db];
+GO
+
+CREATE USER [astral_user] FOR LOGIN [astral_user];
+GO
+
+ALTER ROLE [db_owner] ADD MEMBER [astral_user];
+GO
+```
 
 ### General Settings
 
@@ -70,7 +114,7 @@ Astral may be configured to take online payments with Stripe.
 
 #### Online Payments with Stripe
 
-Sign up for [Stripe](https://stripe.com), setup a `STRIPE_TAX_RATE_ID`, a `STRIPE_PUBLIC_KEY` and a `STRIPE_SECRET_KEY`.
+Sign up for [Stripe](https://stripe.com) and their platformand setup a `STRIPE_TAX_RATE_ID`, a `STRIPE_PUBLIC_KEY` and a `STRIPE_SECRET_KEY`.
 
 Next, create a payment method called stripe (all lower case) with the type `OTHER`, make it `active` and `public`.
 

@@ -8,7 +8,7 @@
     "build": "vite build",
     "start": "node --env-file-if-exists=.env dist/server/node.js",
     "serve": "vite preview",
-    "test": "rm -rf astral-testing.db && pnpm migrate:testing && pnpm migrate && vitest run --bail 1 --mode testing",
+    "test": "rm -rf astral-testing.db && pnpm migrate:testing && vitest run --bail 1 --mode testing",
     "lint": "oxlint src",
     "migrate": "node --env-file=.env src/db/migrations/index.ts",
     "migrate:testing": "node --env-file=.env.testing src/db/migrations/index.ts"

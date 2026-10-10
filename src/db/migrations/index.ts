@@ -56,7 +56,7 @@ async function migrateMssql() {
     });
   }
 
-  const config = {
+  const mssql = await connect({
     server: String(process.env["DB_SERVER"]),
     authentication: {
       type: "default",
@@ -67,46 +67,11 @@ async function migrateMssql() {
     },
     options: {
       port: Number(process.env["DB_PORT"]),
+      database: process.env["DB_DATABASE"],
       trustServerCertificate: Boolean(
         process.env["DB_TRUST_SERVER_CERTIFICATE"],
       ),
     },
-  } satisfies ConnectionConfiguration;
-
-  if (process.env["DB_DATABASE"] != "master") {
-    const mssql = await connect(config);
-
-    await query(
-      mssql,
-      `
-      IF DB_ID(N'${process.env["DB_DATABASE"]}') IS NULL
-      BEGIN
-        CREATE DATABASE [${process.env["DB_DATABASE"]}];
-      END;
-    `,
-    );
-
-    if (process.env["DB_USER"] != "sa") {
-      await query(
-        mssql,
-        `
-        USE [${process.env["DB_DATABASE"]}];
-        
-        IF IS_ROLEMEMBER(N'db_owner', N'${process.env["DB_USER"]}') <> 1
-        BEGIN
-          ALTER ROLE [db_owner] ADD MEMBER [${process.env["DB_USER"]}];
-        END;
-      `,
-      );
-    }
-
-    mssql.close();
-  }
-
-  const mssql = await connect({
-    server: config.server,
-    authentication: config.authentication,
-    options: { ...config.options, database: process.env["DB_DATABASE"] },
   });
 
   await query(mssql, migration);
@@ -117,28 +82,7 @@ async function migrateMssql() {
 async function migrateMysql() {
   const migration = readFileSync(`${filePath}/mysql.sql`, "utf-8");
 
-  let mysql = await Mysql.createConnection({
-    host: process.env["DB_HOST"],
-    user: process.env["DB_USER"],
-    password: process.env["DB_PASSWORD"],
-    port: Number(process.env["DB_PORT"]),
-    multipleStatements: true,
-  });
-
-  if (process.env["DB_DATABASE"] != "sys") {
-    await mysql.query(
-      `CREATE DATABASE IF NOT EXISTS ${process.env["DB_DATABASE"]}`,
-    );
-
-    await mysql.query(`
-      GRANT ALL PRIVILEGES ON ${process.env["DB_DATABASE"]}.*
-      TO '${process.env["DB_USER"]}'@'${process.env["DB_HOST"]}'
-    `);
-  }
-
-  if (mysql) await mysql.end();
-
-  mysql = await Mysql.createConnection({
+  const mysql = await Mysql.createConnection({
     host: process.env["DB_HOST"],
     user: process.env["DB_USER"],
     database: process.env["DB_DATABASE"],
@@ -158,24 +102,7 @@ async function migratePostgres() {
     "utf-8",
   );
 
-  let postgres = new Postgres({
-    user: process.env["DB_USER"],
-    password: process.env["DB_PASSWORD"],
-    host: process.env["DB_HOST"],
-    port: Number(process.env["DB_PORT"]),
-  });
-
-  if (process.env["DB_DATABASE"] != "postgres") {
-    postgres = await postgres.connect();
-
-    await postgres.query(
-      `CREATE DATABASE ${process.env["DB_DATABASE"]} OWNER ${process.env["DB_USER"]}`,
-    );
-
-    await postgres.end();
-  }
-
-  postgres = await new Postgres({
+  const postgres = await new Postgres({
     user: process.env["DB_USER"],
     password: process.env["DB_PASSWORD"],
     host: process.env["DB_HOST"],
