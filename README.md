@@ -25,6 +25,8 @@ Astral works with the following databases:
 | MySQL (`mysql`)       | 8.0             |
 | MariaDB (`mariadb`)   | 10.6            |
 
+For all non SQLite databases, make sure the `DB_USER` set in the environment variables exist because they will receive ownership of the `DB_DATABASE`.
+
 ### General Settings
 
 Environment defined settings.
