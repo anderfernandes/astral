@@ -24,9 +24,15 @@ import {
 } from "~lib";
 import { Button, Checkbox, Dialog, Input } from "~components";
 import * as v from "valibot";
-import { respond } from "@solidjs/web";
+import { redirect, respond } from "@solidjs/web";
 import db from "~db";
-import { EmailSchema, FirstNameSchema, LastNameSchema } from "~lib/schemas";
+import {
+  EmailSchema,
+  FirstNameSchema,
+  LastNameSchema,
+  SaleItemsSchema,
+  SaleItemType,
+} from "~lib/schemas";
 import { attribution } from "solid-js/attribution";
 
 export const route = {
@@ -324,6 +330,7 @@ export default function MembershipSignupPage(
               </div>
               <Input
                 type="email"
+                name="email"
                 value={primary().email}
                 disabled={!isGift()}
                 placeholder="Email"
@@ -403,9 +410,6 @@ export default function MembershipSignupPage(
                       </a>
                     </Show>
                   </p>
-                  <Show when={item().type != "CONVENIENCE FEE"}>
-                    <p>{item().type}</p>
-                  </Show>
                 </div>
               )}
             </For>
@@ -456,6 +460,11 @@ export default function MembershipSignupPage(
               type="hidden"
               name="membershipTypeId"
               value={membershipType()?.id}
+            />
+            <input
+              type="hidden"
+              name="items"
+              value={JSON.stringify(cart().items)}
             />
             <button
               type="submit"
@@ -570,7 +579,11 @@ export default function MembershipSignupPage(
 const checkout = action(async (form: FormData) => {
   "use server";
 
-  let primary;
+  const user = await getUserFn();
+
+  if (!user) throw respond({ message: "An error occurred." }, { status: 400 });
+
+  let primary = await db.users.find(user.userId);
 
   if (form.has("isGift")) {
     const primaryValidator = v.safeParse(
@@ -587,6 +600,8 @@ const checkout = action(async (form: FormData) => {
     );
 
     if (!primaryValidator.success) {
+      console.log(primaryValidator.issues);
+
       throw respond(
         {
           message: "Fix the errors below.",
@@ -597,8 +612,6 @@ const checkout = action(async (form: FormData) => {
     }
 
     // CHECK IF A PRIMARY ALREADY EXISTS, IF NOT CURRENT USER IS PRIMARY
-
-    primary = await db.users.find((await getUserFn())?.userId as number);
 
     if (!primary) {
       await db.users.create({
@@ -615,6 +628,8 @@ const checkout = action(async (form: FormData) => {
       });
     }
   }
+
+  if (!primary) throw respond({ message: "Invalid primary." }, { status: 400 });
 
   const membershipTypeValidator = v.safeParse(
     v.number(),
@@ -645,9 +660,53 @@ const checkout = action(async (form: FormData) => {
     );
   }
 
+  //console.log(JSON.parse(String(form.get("items"))));
+
+  // VALIDATE SALE ITEMS
+  const itemsValidator = v.safeParse(
+    v.array(
+      v.object({
+        name: v.string(),
+        description: v.string(),
+        type: v.picklist(SaleItemType),
+      }),
+    ),
+    JSON.parse(String(form.get("items"))),
+  );
+
+  if (!itemsValidator.success) {
+    throw respond(
+      {
+        message: "Fix the errors and try again.",
+        issues: itemsValidator.issues.map(({ message }) => message),
+      },
+      { status: 400 },
+    );
+  }
+
   // CREATE SALE
 
-  // REDIRECT TO ONLINE PAYMENT PROCESSOR
+  const items: v.InferInput<typeof SaleItemsSchema> = [
+    {
+      type: "MEMBERSHIP (PRIMARY)",
+      name: `${primary.firstName} ${primary.lastName}`,
+      description: primary.email,
+      price: membershipType.price,
+      quantity: 1,
+    },
+  ];
 
-  console.log(membershipType);
+  console.log(itemsValidator.output);
+
+  // const sale: SaleInsertable = {
+  //   source: "PORTAL",
+  //   creatorId: 0,
+  //   customerId: user.userId
+  // };
+
+  // const items : SaleItemInsertable = [
+  //   {}
+  // ]
+
+  // REDIRECT TO ONLINE PAYMENT PROCESSOR
 });

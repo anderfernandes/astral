@@ -62,7 +62,10 @@ export const getUserFn = query(async (redirectIfNotSignedIn = true) => {
 
   console.log(token, `${user.userId} ${user.email}`);
 
-  return user;
+  return user as Pick<UserSelectable, "firstName" | "lastName" | "email"> & {
+    userId: number;
+    roles: Role[];
+  };
 }, "get-user");
 
 export function toCurrencyString(
