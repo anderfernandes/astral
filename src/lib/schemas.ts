@@ -50,6 +50,7 @@ export const SaleItemSchema = v.object({
   description: v.pipe(v.string(), v.minLength(0), v.maxLength(255)),
   price: v.pipe(v.number(), v.minValue(0)),
   quantity: v.pipe(v.number(), v.minValue(0)),
+  customerId: v.optional(v.number()),
 });
 
 export const SaleItemsSchema = v.array(SaleItemSchema);

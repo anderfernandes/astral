@@ -10,22 +10,21 @@ export async function findBy(item: { saleId: number }) {
 }
 
 export async function create(items: SaleItemInsertable[]) {
-  let query = db.insertInto("saleItems");
-
-  for (const item of items) {
-    query = query.values({
-      saleId: item.saleId,
-      type: item.type,
-      name: item.name,
-      description: item.description,
-      price: item.price,
-      quantity: item.quantity,
-      creatorId: item.creatorId,
-      customerId: item.customerId,
-    });
-  }
-
-  await query.execute();
+  await db
+    .insertInto("saleItems")
+    .values(
+      items.map((item) => ({
+        saleId: item.saleId,
+        type: item.type,
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        quantity: item.quantity,
+        creatorId: item.creatorId,
+        customerId: item.customerId,
+      })),
+    )
+    .execute();
 }
 
 export async function update(saleId: number, items: SaleItemUpdatable[]) {

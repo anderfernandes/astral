@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS sales (
     source TEXT NOT NULL,
     isTaxable INTEGER NOT NULL,
     checkoutId TEXT,
+    checkoutProcessor TEXT,
     customerId INTEGER NOT NULL,
     creatorId INTEGER NOT NULL,
     createdAt INTEGER NOT NULL DEFAULT (unixepoch()),

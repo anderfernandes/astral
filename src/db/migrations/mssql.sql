@@ -70,6 +70,7 @@ BEGIN
         source NVARCHAR(255) NOT NULL,
         isTaxable BIT NOT NULL,
         checkoutId NVARCHAR(500) NULL,
+        checkoutProcessor NVARCHAR(255),
         customerId INT NOT NULL,
         creatorId INT NOT NULL,
         createdAt BIGINT NOT NULL DEFAULT (DATEDIFF(second, '1970-01-01', GETUTCDATE())),

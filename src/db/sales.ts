@@ -3,8 +3,8 @@ import * as saleItems from "./saleItems";
 
 export async function create(
   sale: Omit<SaleInsertable, "isTaxable"> & {
-    isTaxable: boolean;
-    items: Omit<SaleItemInsertable, "saleId" | "creatorId" | "customerId">[];
+    isTaxable?: boolean;
+    items: Omit<SaleItemInsertable, "saleId" | "creatorId">[];
     payments?: PaymentInsertable[];
   },
 ) {
@@ -42,11 +42,14 @@ export async function create(
       ...item,
       saleId,
       creatorId: sale.creatorId,
-      customerId: sale.customerId,
+      customerId:
+        item.customerId != undefined ? item.customerId : sale.customerId,
     })),
   );
 
   // TODO: CALCULATE TOTALS AND UPDATE IF NECESSARY
+
+  return saleId;
 }
 
 export async function update(
@@ -57,19 +60,22 @@ export async function update(
     payments?: PaymentUpdateable[];
   },
 ) {
-  await db
-    .updateTable("sales")
-    .set({
-      status: sale.status,
-      source: sale.source,
-      isTaxable: sale.isTaxable ? 1 : 0,
-      checkoutId: sale.checkoutId,
-      creatorId: sale.creatorId,
-      customerId: sale.customerId,
-      updatedAt: Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
-    })
-    .where("id", "=", saleId)
-    .execute();
+  let query = db.updateTable("sales").set({
+    status: sale.status,
+    source: sale.source,
+    isTaxable: sale.isTaxable ? 1 : 0,
+    checkoutId: sale.checkoutId,
+    creatorId: sale.creatorId,
+    customerId: sale.customerId,
+    updatedAt: Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
+  });
+
+  if (sale.checkoutId) query = query.set({ checkoutId: sale.checkoutId });
+
+  if (sale.checkoutProcessor)
+    query = query.set({ checkoutProcessor: sale.checkoutProcessor });
+
+  await query.where("id", "=", saleId).execute();
 
   await saleItems.update(
     saleId,
@@ -77,7 +83,8 @@ export async function update(
       ...item,
       saleId,
       creatorId: sale.creatorId,
-      customerId: sale.customerId,
+      customerId:
+        item.customerId != undefined ? item.customerId : sale.customerId,
     })),
   );
 }

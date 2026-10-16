@@ -99,10 +99,11 @@ declare global {
 
   interface ISalesTable {
     id: Generated<number>;
-    status: "OPEN" | "COMPLETED" | "CANCELED";
+    status?: "OPEN" | "COMPLETED" | "CANCELED";
     source: "CASHIER" | "ADMIN" | "PORTAL";
-    isTaxable: 0 | 1;
+    isTaxable?: 0 | 1;
     checkoutId: string | null | undefined;
+    checkoutProcessor?: "STRIPE" | undefined;
     creatorId: number;
     customerId: number;
     createdAt: ColumnType<number, never, never>;
@@ -116,6 +117,7 @@ declare global {
     items: Partial<SaleItem>[];
     payments: Payment[];
   };
+
   type SaleInsertable = Insertable<ISalesTable>;
   type SaleUpdateable = Updateable<ISalesTable>;
 

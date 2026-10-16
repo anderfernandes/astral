@@ -11,6 +11,7 @@ import {
   createSignal,
   createStore,
   For,
+  isPending,
   Loading,
   Show,
 } from "solid-js";
@@ -34,6 +35,7 @@ import {
   SaleItemType,
 } from "~lib/schemas";
 import { attribution } from "solid-js/attribution";
+import { createStripeCheckout } from "../../../server/stripe";
 
 export const route = {
   preload: ({ params }) => {
@@ -467,10 +469,13 @@ export default function MembershipSignupPage(
               value={JSON.stringify(cart().items)}
             />
             <button
+              disabled={isPending(cart)}
               type="submit"
-              class="mt-10 flex w-full cursor-pointer items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-hidden"
+              class="mt-10 flex w-full aria-busy:cursor-not-allowed cursor-pointer aria-busy:bg-black/50 disabled:cursor-not-allowed disabled:bg-black/50 items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-hidden"
             >
-              Pay {toCurrencyString(cart().total)}
+              {isPending(cart)
+                ? "Loading..."
+                : `Pay ${toCurrencyString(cart().total)}`}
             </button>
           </form>
         </div>
@@ -686,6 +691,7 @@ const checkout = action(async (form: FormData) => {
 
   // CREATE SALE
 
+  // TODO: ADD SECONDARIES
   const items: v.InferInput<typeof SaleItemsSchema> = [
     {
       type: "MEMBERSHIP (PRIMARY)",
@@ -693,20 +699,69 @@ const checkout = action(async (form: FormData) => {
       description: primary.email,
       price: membershipType.price,
       quantity: 1,
+      customerId: primary.id,
     },
   ];
 
-  console.log(itemsValidator.output);
+  if (Number(process.env["CONVENIENCE_FEE"]) > 0) {
+    items.push({
+      type: "CONVENIENCE FEE",
+      name: "Convenience Fee",
+      description: "Online sale convenience fee",
+      price: Number(process.env["CONVENIENCE_FEE"]),
+      quantity: 1,
+      customerId: 1,
+    });
+  }
 
-  // const sale: SaleInsertable = {
-  //   source: "PORTAL",
-  //   creatorId: 0,
-  //   customerId: user.userId
-  // };
+  const saleId = await db.sales.create({
+    source: "PORTAL",
+    creatorId: 0,
+    customerId: user.userId,
+    items,
+  });
 
-  // const items : SaleItemInsertable = [
-  //   {}
-  // ]
+  console.log("sale: ", saleId);
+
+  const sale = await db.sales.find(saleId);
+
+  if (!sale) {
+    console.error("Error retrieving sale");
+
+    throw respond(
+      {
+        message: "An error has occurred.",
+      },
+      { status: 400 },
+    );
+  }
+
+  console.log(sale);
+
+  const stripeCheckoutSession = await createStripeCheckout(sale, {
+    ...user,
+    id: user.userId,
+  });
+
+  if (!stripeCheckoutSession || !stripeCheckoutSession.url) {
+    console.error("Unable to retrieve stripe checkout session.");
+
+    throw respond(
+      {
+        message: "An error has occurred.",
+      },
+      { status: 400 },
+    );
+  }
+
+  await db.sales.update(saleId, {
+    ...sale,
+    checkoutId: stripeCheckoutSession.id,
+    checkoutProcessor: "STRIPE",
+  });
+
+  console.log("stripe session: ", stripeCheckoutSession.id);
 
   // REDIRECT TO ONLINE PAYMENT PROCESSOR
+  return redirect(stripeCheckoutSession.url);
 });
