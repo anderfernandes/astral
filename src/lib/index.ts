@@ -39,6 +39,12 @@ export const getUserFn = query(async (redirectIfNotSignedIn = true) => {
     ?.at(1);
 
   if (!token) {
+    getRequestEvent()?.response.headers.append(
+      "set-cookie",
+      import.meta.env.PROD
+        ? "__Host-ASTRALSESSION=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0"
+        : "ASTRALSESSION=; HttpOnly; Path=/; Max-Age=0",
+    );
     if (redirectIfNotSignedIn) throw redirect("/sign-in");
     else return undefined;
   }
@@ -52,8 +58,8 @@ export const getUserFn = query(async (redirectIfNotSignedIn = true) => {
     getRequestEvent()?.response.headers.append(
       "set-cookie",
       import.meta.env.PROD
-        ? "__Host-ASTRALSIGNINSESSION=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0"
-        : "ASTRALSIGNINSESSION=; HttpOnly; Path=/; Max-Age=0",
+        ? "__Host-ASTRALSESSION=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0"
+        : "ASTRALSESSION=; HttpOnly; Path=/; Max-Age=0",
     );
 
     if (redirectIfNotSignedIn) throw redirect("/sign-in");
