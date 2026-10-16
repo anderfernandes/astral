@@ -471,7 +471,7 @@ export default function MembershipSignupPage(
             <button
               disabled={isPending(cart)}
               type="submit"
-              class="mt-10 flex w-full aria-busy:cursor-not-allowed cursor-pointer aria-busy:bg-black/50 disabled:cursor-not-allowed disabled:bg-black/50 items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-hidden"
+              class="mt-10 flex w-full cursor-pointer items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-hidden disabled:cursor-not-allowed disabled:bg-black/50 aria-busy:cursor-not-allowed aria-busy:bg-black/50"
             >
               {isPending(cart)
                 ? "Loading..."
