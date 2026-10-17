@@ -9,30 +9,29 @@ interface IDialogProps {
 }
 
 export function Dialog(props: IDialogProps) {
-  const location = useLocation();
   return (
     <dialog
-      open={true}
       id="dialog"
       aria-labelledby="dialog-title"
-      class="fixed inset-0 z-10 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent"
+      class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent"
+      open=""
     >
       <div
         id="backdrop"
-        class="fixed inset-0 bg-black/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
+        class="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
       />
 
       <div
         tabindex="0"
-        class="flex min-h-full items-center justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0"
+        class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0"
       >
         <div
           id="panel"
-          class="relative w-96 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95 lg:max-w-96"
+          class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95"
         >
-          <div class="bg-white px-5 pt-5 pb-4 sm:pb-4">
-            <div class="grid">
-              {/* <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-black sm:mx-0 sm:size-10">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -40,15 +39,15 @@ export function Dialog(props: IDialogProps) {
                   stroke-width="1.5"
                   data-slot="icon"
                   aria-hidden="true"
-                  class="size-6 text-red-600"
+                  class="size-6 text-white"
                 >
                   <path
-                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
                     stroke-linecap="round"
                     stroke-linejoin="round"
+                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
                   />
                 </svg>
-              </div> */}
+              </div>
               <div class="absolute right-0 pr-5">
                 <a href={location.pathname} class="text-gray-400">
                   <svg
@@ -68,19 +67,16 @@ export function Dialog(props: IDialogProps) {
                   </svg>
                 </a>
               </div>
-              <div class="text-center sm:mt-0 sm:text-left">
+              <div class="mt-3 w-full text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3
                   id="dialog-title"
                   class="text-base font-semibold text-gray-900"
                 >
                   {props.title}
                 </h3>
-                <div>
-                  <p class="text-sm text-gray-500">{props.subtitle}</p>
+                <div class="mt-2 h-full max-h-[75svh] scrollbar-thin scrollbar-thumb-black overflow-y-auto text-left">
+                  {props.children}
                 </div>
-              </div>
-              <div class="-mx-5 mt-2 -mb-4 grid max-h-96 overflow-y-auto scrollbar-auto  px-5 pb-6">
-                {props.children}
               </div>
             </div>
           </div>
@@ -107,3 +103,103 @@ export function Dialog(props: IDialogProps) {
     </dialog>
   );
 }
+
+// export function Dialog(props: IDialogProps) {
+//   const location = useLocation();
+//   return (
+//     <dialog
+//       open={true}
+//       id="dialog"
+//       aria-labelledby="dialog-title"
+//       class="fixed inset-0 z-10 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent"
+//     >
+//       <div
+//         id="backdrop"
+//         class="fixed inset-0 bg-black/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
+//       />
+
+//       <div
+//         tabindex="0"
+//         class="flex min-h-full items-center justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0"
+//       >
+//         <div
+//           id="panel"
+//           class="relative w-96 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95 lg:max-w-96"
+//         >
+//           <div class="bg-white px-5 pt-5 pb-4 sm:pb-4">
+//             <div class="grid">
+//               {/* <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
+//                 <svg
+//                   viewBox="0 0 24 24"
+//                   fill="none"
+//                   stroke="currentColor"
+//                   stroke-width="1.5"
+//                   data-slot="icon"
+//                   aria-hidden="true"
+//                   class="size-6 text-red-600"
+//                 >
+//                   <path
+//                     d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+//                     stroke-linecap="round"
+//                     stroke-linejoin="round"
+//                   />
+//                 </svg>
+//               </div> */}
+//               <div class="absolute right-0 pr-5">
+//                 <a href={location.pathname} class="text-gray-400">
+//                   <svg
+//                     viewBox="0 0 24 24"
+//                     fill="none"
+//                     stroke="currentColor"
+//                     stroke-width="1.5"
+//                     data-slot="icon"
+//                     aria-hidden="true"
+//                     class="size-6"
+//                   >
+//                     <path
+//                       d="M6 18 18 6M6 6l12 12"
+//                       stroke-linecap="round"
+//                       stroke-linejoin="round"
+//                     />
+//                   </svg>
+//                 </a>
+//               </div>
+//               <div class="text-center sm:mt-0 sm:text-left">
+//                 <h3
+//                   id="dialog-title"
+//                   class="text-base font-semibold text-gray-900"
+//                 >
+//                   {props.title}
+//                 </h3>
+//                 <div>
+//                   <p class="text-sm text-gray-500">{props.subtitle}</p>
+//                 </div>
+//               </div>
+//               <div class="-mx-5 mt-2 -mb-4 grid max-h-96 overflow-y-auto scrollbar-auto  px-5 pb-6">
+//                 {props.children}
+//               </div>
+//             </div>
+//           </div>
+//           {/* <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+//             <button
+//               type="button"
+//               command="close"
+//               commandfor="dialog"
+//               class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto"
+//             >
+//               Deactivate
+//             </button>
+//             <button
+//               type="button"
+//               command="close"
+//               commandfor="dialog"
+//               class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+//             >
+//               Cancel
+//             </button>
+//           </div> */}
+//         </div>
+//       </div>
+//     </dialog>
+//   );
+// }

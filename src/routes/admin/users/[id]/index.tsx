@@ -13,25 +13,25 @@ export default function UserDetailsPage(props: UserDetailsPageProps) {
   return (
     <section class="grid gap-3">
       <form method="post" action={updateUserFn}>
-        <input type="hidden" name="id" value={user().id} />
+        <input type="hidden" name="id" value={user()?.id} />
         <input
           type="hidden"
           name="isAdmin"
-          value={user().roles.includes("ROLE_STAFF") ? 1 : 0}
+          value={user()?.roles.includes("ROLE_STAFF") ? 1 : 0}
         />
         <Button
           type="submit"
           text={
-            user().roles.includes("ROLE_STAFF")
+            user()?.roles.includes("ROLE_STAFF")
               ? "Remove staff role"
               : "Add staff role"
           }
         />
       </form>
       <p>
-        #{user().id} {user().firstName} {user().lastName}
+        #{user()?.id} {user()?.firstName} {user()?.lastName}
       </p>
-      <p>{user().email}</p>
+      <p>{user()?.email}</p>
     </section>
   );
 }

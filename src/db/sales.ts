@@ -1,5 +1,6 @@
 import { db } from "~db";
 import * as saleItems from "./saleItems";
+import { calculateSaleTotals } from "~lib";
 
 export async function create(
   sale: Omit<SaleInsertable, "isTaxable"> & {
@@ -103,23 +104,55 @@ export async function find(id: number) {
   return { ...sale, isTaxable: Boolean(sale?.isTaxable), items };
 }
 
-export async function findBy(data: { customerId: number }) {
-  let query = db.selectFrom("sales");
+export async function findBy(
+  data: { customerId?: number } | undefined = undefined,
+) {
+  let query = db
+    .selectFrom("sales")
+    .innerJoin("users", "users.id", "sales.customerId");
 
-  query = query.where("customerId", "=", data.customerId);
+  if (data?.customerId) query = query.where("customerId", "=", data.customerId);
 
-  const sales = await query.selectAll().execute();
+  const sales = await query
+    .select([
+      "sales.id",
+      "sales.status",
+      "sales.source",
+      "sales.createdAt",
+      "sales.updatedAt",
+      "users.id as customerId",
+      "users.firstName as customerFirstName",
+      "users.lastName as customerLastName",
+    ])
+    .orderBy("sales.id", "desc")
+    .execute();
 
   const ids = sales.map((sale) => sale.id);
 
-  const items = await db
+  const _items = await db
     .selectFrom("saleItems")
     .where("saleId", "in", ids)
     .selectAll()
     .execute();
 
-  return sales.map((sale) => ({
-    ...sale,
-    items: items.filter((item) => item.saleId === sale.id),
-  }));
+  return sales.map((sale) => {
+    const items = _items.filter((item) => item.saleId === sale.id);
+
+    const totals = calculateSaleTotals({ ...sale, items });
+
+    return {
+      ...totals,
+      id: sale.id,
+      status: sale.status,
+      source: sale.source,
+      createdAt: Number(sale.createdAt) * 1000,
+      updatedAt: Number(sale.updatedAt) * 1000,
+      items,
+      customer: {
+        id: sale.customerId,
+        firstName: sale.customerFirstName,
+        lastName: sale.customerLastName,
+      },
+    };
+  });
 }

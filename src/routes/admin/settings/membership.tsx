@@ -121,7 +121,11 @@ export default function MembershipPage() {
               hint="Check to make it available in the public portal."
             />
             <div class="mt-3 flex justify-end gap-3">
-              <Button href="#" text="Cancel" variant="secondary" />
+              <Button
+                href="/admin/settings/membership"
+                text="Cancel"
+                variant="secondary"
+              />
               <Button text="Save" type="submit" />
             </div>
           </form>
