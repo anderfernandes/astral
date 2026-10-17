@@ -24,7 +24,7 @@ export default function SalesIndexPage() {
                   <span class="text-sm/6 font-semibold">#{sale.id}</span>
                   <Badge text={sale.status} />
                   <span class="text-sm/6">
-                    {sale.source} &middot; {toCurrencyString(sale.total)}
+                    {sale.source} &middot; {toCurrencyString(sale.total)} total
                   </span>
                 </p>
                 <p class="text-sm text-gray-500">

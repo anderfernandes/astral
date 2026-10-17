@@ -84,4 +84,16 @@ CREATE TABLE IF NOT EXISTS saleMemos (
     message TEXT NOT NULL,
     createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
     updatedAt INTEGER
-)
+);
+
+CREATE TABLE IF NOT EXISTS payments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    processorPaymentId TEXT,
+    methodId INTEGER NOT NULL,
+    tendered INTEGER NOT NULL,
+    saleId INTEGER NOT NULL,
+    cashierId INTEGER NOT NULL,
+    customerId INTEGER NOT NULL,
+    createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
+    updatedAt INTEGER
+);

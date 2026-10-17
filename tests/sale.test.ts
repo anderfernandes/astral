@@ -43,3 +43,27 @@ test("update", async () => {
   expect(sale?.updatedAt).toBeTruthy();
   expect(sale?.items[0].updatedAt).toBeTruthy();
 });
+
+test("add another item", async () => {
+  let sale = await db.sales.find(1);
+
+  if (!sale) throw new Error("sale does not exist");
+
+  await db.sales.update(sale.id, {
+    ...sale,
+    items: [
+      ...sale.items,
+      {
+        type: "PRODUCT",
+        name: "another test product",
+        description: "another test product",
+        price: 5,
+        quantity: 1,
+      },
+    ],
+  });
+
+  sale = await db.sales.find(1);
+
+  expect(sale?.items.length).toBe(2);
+});

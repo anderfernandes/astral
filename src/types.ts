@@ -83,10 +83,12 @@ declare global {
 
   interface IPaymentsTable {
     id: Generated<number>;
+    processorPaymentId: string;
     methodId: number;
     tendered: number;
     saleId: number;
     cashierId: number;
+    customerId: number;
     createdAt: ColumnType<number, never, never>;
     updatedAt: ColumnType<number | null, never, number>;
   }

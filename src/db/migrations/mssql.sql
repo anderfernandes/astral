@@ -106,3 +106,18 @@ BEGIN
         updatedAt BIGINT NULL
     );
 END
+
+IF OBJECT_ID(N'dbo.payments', N'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.payments (
+        id INT IDENTITY(1, 1) PRIMARY KEY,
+        processorPaymentId NVARCHAR(MAX),
+        methodId INT NOT NULL,
+        tendered INT NOT NULL,
+        saleId INT NOT NULL,
+        cashierId INT NOT NULL,
+        customerId INT NOT NULL,
+        createdAt BIGINT NOT NULL DEFAULT (DATEDIFF(second, '1970-01-01', GETUTCDATE())),
+        updatedAt BIGINT NULL,
+    );
+END

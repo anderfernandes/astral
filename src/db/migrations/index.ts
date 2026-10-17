@@ -56,6 +56,35 @@ async function migrateMssql() {
     });
   }
 
+  const connection = await connect({
+    server: String(process.env["DB_SERVER"]),
+    authentication: {
+      type: "default",
+      options: {
+        userName: process.env["DB_USER"],
+        password: process.env["DB_PASSWORD"],
+      },
+    },
+    options: {
+      port: Number(process.env["DB_PORT"]),
+      trustServerCertificate: Boolean(
+        process.env["DB_TRUST_SERVER_CERTIFICATE"],
+      ),
+    },
+  });
+
+  await query(
+    connection,
+    `
+    IF DB_ID(N'${process.env["DB_DATABASE"]}') IS NULL
+    BEGIN
+        CREATE DATABASE ${process.env["DB_DATABASE"]};
+    END;
+    `,
+  );
+
+  connection.close();
+
   const mssql = await connect({
     server: String(process.env["DB_SERVER"]),
     authentication: {
@@ -82,6 +111,20 @@ async function migrateMssql() {
 async function migrateMysql() {
   const migration = readFileSync(`${filePath}/mysql.sql`, "utf-8");
 
+  const connection = await Mysql.createConnection({
+    host: process.env["DB_HOST"],
+    user: process.env["DB_USER"],
+    password: process.env["DB_PASSWORD"],
+    port: Number(process.env["DB_PORT"]),
+    multipleStatements: true,
+  });
+
+  await connection.query(
+    `CREATE DATABASE IF NOT EXISTS ${process.env["DB_DATABASE"]};`,
+  );
+
+  await connection.end();
+
   const mysql = await Mysql.createConnection({
     host: process.env["DB_HOST"],
     user: process.env["DB_USER"],
@@ -101,6 +144,25 @@ async function migratePostgres() {
     `${filePath}/${process.env["DB_DRIVER"]}.sql`,
     "utf-8",
   );
+
+  const connection = await new Postgres({
+    user: process.env["DB_USER"],
+    password: process.env["DB_PASSWORD"],
+    host: process.env["DB_HOST"],
+    port: Number(process.env["DB_PORT"]),
+    database: "postgres",
+  }).connect();
+
+  const result = await connection.query(
+    "SELECT 1 FROM pg_database WHERE datname = $1",
+    [process.env["DB_DATABASE"]],
+  );
+
+  if (result.rowCount === 0) {
+    await connection.query(`CREATE DATABASE "${process.env["DB_DATABASE"]}"`);
+  }
+
+  await connection.end();
 
   const postgres = await new Postgres({
     user: process.env["DB_USER"],

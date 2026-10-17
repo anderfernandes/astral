@@ -25,51 +25,7 @@ Astral works with the following databases:
 | MySQL (`mysql`)                       | 8.0             |
 | MariaDB (`mariadb`, via MySQL driver) | 10.6            |
 
-For all non SQLite databases, make sure the `DB_DATABASE` exists and `DB_USER` has read and write permissions to it.
-
-Use the queries below as a _reference_ to meet those requirements replacing `astral_user`, `astral_db` and `MyStrongPassword123!` with the desired (and secure) values, making sure the password is secure.
-
-```sql
-/* postgres */
-
-CREATE USER astral_user WITH PASSWORD 'MyStrongPassword123!';
-CREATE DATABASE astral_db OWNER astral_user;
-```
-
-For `mysql` and `mariadb`, make sure to replace `host` with database host's IP or name.
-
-```sql
-/* mysql or mariadb */
-
-CREATE USER 'astral_user'@'host' IDENTIFIED BY 'MyStrongPassword123!';
-CREATE DATABASE IF NOT EXISTS astral_db;
-GRANT ALL PRIVILEGES ON astral_db TO 'astral_user'@'host';
-```
-
-```sql
-/* mssql */
-
-USE [master];
-GO
-
-IF DB_ID(N'astral_db') IS NULL
-BEGIN
-    CREATE DATABASE [astral_db];
-END;
-GO
-
-CREATE LOGIN [astral] WITH PASSWORD = 'MyStrongPassword123!';
-GO
-
-USE [astral_db];
-GO
-
-CREATE USER [astral_user] FOR LOGIN [astral_user];
-GO
-
-ALTER ROLE [db_owner] ADD MEMBER [astral_user];
-GO
-```
+Astral will create the databases set in `DB_DATABASE` if they don't exist. For all non SQLite databases, make sure `DB_USER` can create databases and tables as well as create, select and update records.
 
 ### General Settings
 

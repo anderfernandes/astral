@@ -85,3 +85,15 @@ CREATE TABLE IF NOT EXISTS saleMemos (
     createdAt BIGINT NOT NULL DEFAULT (UNIX_TIMESTAMP()),
     updatedAt BIGINT
 );
+
+CREATE TABLE IF NOT EXISTS payments (
+    id INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    processorPaymentId TEXT,
+    methodId INTEGER NOT NULL,
+    tendered INTEGER NOT NULL,
+    saleId INTEGER NOT NULL,
+    cashierId INTEGER NOT NULL,
+    customerId INTEGER NOT NULL,
+    createdAt BIGINT NOT NULL DEFAULT (UNIX_TIMESTAMP()),
+    updatedAt BIGINT
+);

@@ -57,7 +57,7 @@ export async function update(
   saleId: number,
   sale: Omit<SaleUpdateable, "isTaxable"> & {
     isTaxable: boolean;
-    items: SaleItemUpdatable[];
+    items: Omit<SaleItemUpdatable, "saleId">[];
     payments?: PaymentUpdateable[];
   },
 ) {
@@ -80,14 +80,35 @@ export async function update(
 
   await saleItems.update(
     saleId,
-    sale.items.map((item) => ({
-      ...item,
-      saleId,
-      creatorId: sale.creatorId,
-      customerId:
-        item.customerId != undefined ? item.customerId : sale.customerId,
-    })),
+    sale.items
+      .filter((item) => item.id)
+      .map((item) => ({
+        ...item,
+        saleId,
+        creatorId: sale.creatorId,
+        customerId:
+          item?.customerId != undefined ? item.customerId : sale.customerId,
+      })),
   );
+
+  const newItems = sale.items.filter((item) => !item.id) as Omit<
+    SaleItemInsertable,
+    "saleId" | "creatorId"
+  >[];
+
+  console.log(newItems);
+
+  if (newItems.length > 0) {
+    await saleItems.create(
+      newItems.map((item) => ({
+        ...item,
+        saleId,
+        creatorId: sale.creatorId,
+        customerId:
+          item.customerId != undefined ? item.customerId : sale.customerId,
+      })),
+    );
+  }
 }
 
 export async function find(id: number) {
@@ -135,8 +156,15 @@ export async function findBy(
     .selectAll()
     .execute();
 
+  const _payments = await db
+    .selectFrom("payments")
+    .where("saleId", "in", ids)
+    .selectAll()
+    .execute();
+
   return sales.map((sale) => {
     const items = _items.filter((item) => item.saleId === sale.id);
+    const payments = _payments.filter((p) => p.saleId === sale.id);
 
     const totals = calculateSaleTotals({ ...sale, items });
 
@@ -148,6 +176,7 @@ export async function findBy(
       createdAt: Number(sale.createdAt) * 1000,
       updatedAt: Number(sale.updatedAt) * 1000,
       items,
+      payments,
       customer: {
         id: sale.customerId,
         firstName: sale.customerFirstName,
