@@ -163,6 +163,33 @@ declare global {
   type SaleMemoInsertable = Insertable<ISaleMemosTable>;
   type SaleMemoUpdateable = Updateable<ISaleMemosTable>;
 
+  interface IMembershipsTable {
+    id: Generated<number>;
+    typeId: number;
+    creatorId: number;
+    createdAt: ColumnType<number, never, never>;
+    updatedAt: ColumnType<number | null, never, number | null>;
+  }
+
+  type MembershipInsertable = Insertable<IMembershipsTable>;
+  type MembershipUpdateable = Updateable<IMembershipsTable>;
+
+  interface IMembersTable {
+    id: Generated<number>;
+    userId: number;
+    type: "PRIMARY" | "FREE SECONDARY" | "PAID SECONDARY";
+    membershipId: number;
+    saleId: number;
+    startsAt: number;
+    endsAt: number;
+    creatorId: number;
+    createdAt: ColumnType<number, never, never>;
+    updatedAt: ColumnType<number | null, never, number | null>;
+  }
+
+  type MemberInsertable = Insertable<IMembersTable>;
+  type MemberUpdateable = Updateable<IMembersTable>;
+
   interface IDatabase {
     users: IUsersTable;
     tokens: ITokensTable;
@@ -172,5 +199,7 @@ declare global {
     saleItems: ISaleItemsTable;
     saleMemos: ISaleMemosTable;
     payments: IPaymentsTable;
+    memberships: IMembershipsTable;
+    members: IMembersTable;
   }
 }

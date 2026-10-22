@@ -19,20 +19,20 @@ test("create", async () => {
 
   const membershipType = await db.membershipTypes.find(1);
 
-  expect(membershipType.name).toBe(data.name);
+  expect(membershipType?.name).toBe(data.name);
 });
 
 test("update", async () => {
   let membershipType = await db.membershipTypes.find(1);
 
-  await db.membershipTypes.update(membershipType.id, {
+  await db.membershipTypes.update(membershipType?.id, {
     ...membershipType,
     name: "Updated test membership type",
   });
 
   membershipType = await db.membershipTypes.find(1);
 
-  expect(membershipType.name).toBe("Updated test membership type");
+  expect(membershipType?.name).toBe("Updated test membership type");
 });
 
 test("findBy", async () => {

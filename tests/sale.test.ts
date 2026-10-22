@@ -38,8 +38,6 @@ test("update", async () => {
 
   sale = await db.sales.find(1);
 
-  console.log(sale);
-
   expect(sale?.updatedAt).toBeTruthy();
   expect(sale?.items[0].updatedAt).toBeTruthy();
 });

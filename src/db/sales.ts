@@ -96,8 +96,6 @@ export async function update(
     "saleId" | "creatorId"
   >[];
 
-  console.log(newItems);
-
   if (newItems.length > 0) {
     await saleItems.create(
       newItems.map((item) => ({

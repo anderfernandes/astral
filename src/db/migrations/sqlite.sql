@@ -97,3 +97,24 @@ CREATE TABLE IF NOT EXISTS payments (
     createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
     updatedAt INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS memberships (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    typeId INTEGER NOT NULL,
+    creatorId INTEGER NOT NULL,
+    createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
+    updatedAt INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS members (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userId INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    membershipId INTEGER NOT NULL,
+    saleId INTEGER NOT NULL,
+    startsAt INTEGER NOT NULL,
+    endsAt INTEGER NOT NULL,
+    creatorId INTEGER NOT NULL,
+    createdAt INTEGER NOT NULL DEFAULT (unixepoch()),
+    updatedAt INTEGER
+);

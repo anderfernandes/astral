@@ -16,6 +16,7 @@ import membershipTypes from "./membershipTypes";
 import paymentMethods from "./paymentMethods";
 import * as sales from "./sales";
 import * as payments from "./payments";
+import * as memberships from "./memberships";
 
 function getDialect() {
   switch (process.env["DB_DRIVER"]) {
@@ -100,4 +101,5 @@ export default {
   paymentMethods,
   sales,
   payments,
+  memberships,
 };

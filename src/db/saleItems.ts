@@ -31,6 +31,7 @@ export async function update(saleId: number, items: SaleItemUpdatable[]) {
   let query = db.updateTable("saleItems");
 
   for (const item of items) {
+    // SALE ITEM ID?
     query = query.set({
       saleId: saleId,
       type: item.type,
