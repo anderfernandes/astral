@@ -60,3 +60,50 @@ export async function find(id: number) {
 
   return { ...membership, members: _members };
 }
+
+export async function update(
+  membershipId: number,
+  membership: MembershipUpdateable & {
+    members: Omit<MemberUpdateable, "membershipId">[];
+  },
+) {
+  await db
+    .updateTable("memberships")
+    .set({
+      updatedAt: Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
+    })
+    .where("id", "=", membershipId)
+    .execute();
+
+  await members.update(
+    membershipId,
+    membership.members
+      .filter((m) => m.id)
+      .map((m) => ({
+        userId: m.userId,
+        type: m.type,
+        membershipId,
+        saleId: m.saleId,
+        startsAt: m.startsAt,
+        endsAt: m.endsAt,
+        creatorId: m.creatorId,
+      })),
+  );
+
+  const newMembers = membership.members
+    .filter((m) => !m.id)
+    .map(
+      (m) =>
+        ({
+          userId: m.userId,
+          type: m.type,
+          membershipId,
+          saleId: m.saleId,
+          startsAt: m.startsAt,
+          endsAt: m.endsAt,
+          creatorId: m.creatorId,
+        }) as MemberInsertable,
+    );
+
+  if (newMembers.length > 0) await members.create(membershipId, newMembers);
+}

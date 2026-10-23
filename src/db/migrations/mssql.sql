@@ -121,3 +121,30 @@ BEGIN
         updatedAt BIGINT NULL,
     );
 END
+
+IF OBJECT_ID(N'dbo.memberships', N'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.memberships(
+        id INT IDENTITY(1, 1) PRIMARY KEY,
+        typeId INT NOT NULL,
+        creatorId INT NOT NULL,
+        createdAt BIGINT NOT NULL DEFAULT (DATEDIFF(second, '1970-01-01', GETUTCDATE())),
+        updatedAt BIGINT NULL
+    );
+END
+
+IF OBJECT_ID(N'dbo.members', N'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.members(
+        id INT IDENTITY(1, 1) PRIMARY KEY,
+        userId INT NOT NULL,
+        type NVARCHAR(MAX) NOT NULL,
+        membershipId INT NOT NULL,
+        saleId INT NOT NULL,
+        startsAt BIGINT NOT NULL,
+        endsAt BIGINT NOT NULL,
+        creatorId INT NOT NULL,
+        createdAt BIGINT NOT NULL DEFAULT (DATEDIFF(second, '1970-01-01', GETUTCDATE())),
+        updatedAt BIGINT NULL
+    );
+END

@@ -31,7 +31,7 @@ export function Dialog(props: IDialogProps) {
         >
           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-black sm:mx-0 sm:size-10">
+              {/* <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-black sm:mx-0 sm:size-10">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -47,7 +47,7 @@ export function Dialog(props: IDialogProps) {
                     d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
                   />
                 </svg>
-              </div>
+              </div> */}
               <div class="absolute right-0 pr-5">
                 <a href={location.pathname} class="text-gray-400">
                   <svg
@@ -74,7 +74,7 @@ export function Dialog(props: IDialogProps) {
                 >
                   {props.title}
                 </h3>
-                <div class="mt-2 h-full max-h-[75svh] scrollbar-thin scrollbar-thumb-black overflow-y-auto text-left">
+                <div class="-mx-6 my-2 h-full max-h-[75svh] scrollbar-thin scrollbar-thumb-black overflow-y-auto px-6 text-left">
                   {props.children}
                 </div>
               </div>

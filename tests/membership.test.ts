@@ -39,8 +39,38 @@ test("create", async () => {
 test("find", async () => {
   const membership = await db.memberships.find(1);
 
-  console.log(membership);
+  if (!membership) throw new Error();
 
   expect(membership?.updatedAt).toBeFalsy();
   expect(membership?.members.length).toBe(1);
+});
+
+test("update", async () => {
+  let membership = await db.memberships.find(1);
+
+  if (!membership) throw new Error();
+
+  await db.memberships.update(membership.id, {
+    ...membership,
+    members: [
+      ...membership.members,
+      {
+        creatorId: 0,
+        userId: 1,
+        type: "FREE SECONDARY",
+        saleId: 0,
+        startsAt: Math.floor(Temporal.Now.instant().epochMilliseconds / 1000),
+        endsAt: Math.floor(
+          Temporal.Now.instant().add({ hours: 365 * 24 }).epochMilliseconds /
+            1000,
+        ),
+      },
+    ],
+  });
+
+  membership = await db.memberships.find(1);
+
+  console.log(membership);
+
+  expect(membership?.members.length).toBe(2);
 });

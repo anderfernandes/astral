@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS "saleItems" (
 
 CREATE TABLE IF NOT EXISTS saleMemos (
     id SERIAL PRIMARY KEY,
+    "userId" INTEGER NOT NULL,
     "saleId" INTEGER NOT NULL,
     message TEXT NOT NULL,
     "createdAt" BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())::BIGINT,
@@ -96,4 +97,25 @@ CREATE TABLE IF NOT EXISTS payments (
     "customerId" INTEGER NOT NULL,
     "createdAt" BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())::BIGINT,
     "updatedAt" BIGINT
-)
+);
+
+CREATE TABLE IF NOT EXISTS memberships (
+    id SERIAL PRIMARY KEY,
+    "typeId" INTEGER NOT NULL,
+    "creatorId" INTEGER NOT NULL,
+    "createdAt" BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())::BIGINT,
+    "updatedAt" BIGINT
+);
+
+CREATE TABLE IF NOT EXISTS members (
+    id SERIAL PRIMARY KEY,
+    "userId" INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    "membershipId" INTEGER NOT NULL,
+    "saleId" INTEGER NOT NULL,
+    "startsAt" BIGINT NOT NULL,
+    "endsAt" BIGINT NOT NULL, 
+    "creatorId" INTEGER NOT NULL,
+    "createdAt" BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())::BIGINT,
+    "updatedAt" BIGINT
+);
