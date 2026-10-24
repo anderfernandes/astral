@@ -128,14 +128,22 @@ export default function SaleDetailsPage(props: SaleDetailsPageProps) {
                       <p>{item().name}</p>
                       <p class="text-gray-500">{item().description}</p>
                     </Table.DataCell>
-                    <Table.DataCell text={<Badge text={item().type} />} />
+                    <Table.DataCell>
+                      <div class="flex">
+                        <Badge text={item().type} />
+                      </div>
+                    </Table.DataCell>
                     <Table.DataCell text={item().quantity} />
                     <Table.DataCell>
-                      {formatDateTime(item().createdAt)}
+                      <div class="text-gray-500">
+                        {formatDateTime(item().createdAt)}
+                      </div>
                     </Table.DataCell>
                     <Table.DataCell>
                       <Show when={item().updatedAt} fallback="N/A">
-                        {formatDateTime(item().updatedAt as number)}
+                        <div class="text-gray-500">
+                          {formatDateTime(item().updatedAt as number)}
+                        </div>
                       </Show>
                     </Table.DataCell>
                     <Table.DataCell text={formatCurrency(item().price)} />
@@ -183,14 +191,18 @@ export default function SaleDetailsPage(props: SaleDetailsPageProps) {
                     <Table.Row>
                       <Table.DataCell text={payment().id} />
                       <Table.DataCell>
-                        {formatDateTime(payment().createdAt)}
+                        <div class="text-gray-500">
+                          {formatDateTime(payment().createdAt)}
+                        </div>
                       </Table.DataCell>
                       <Table.DataCell>
                         <Show when={payment().updatedAt} fallback="N/A">
-                          {payment().updatedAt}
+                          <div class="text-gray-500">{payment().updatedAt}</div>
                         </Show>
                       </Table.DataCell>
-                      <Table.DataCell text={payment().method.name} />
+                      <Table.DataCell>
+                        <Badge text={payment().method.name} />
+                      </Table.DataCell>
                       <Table.DataCell>
                         {payment().cashier.firstName}{" "}
                         {payment().cashier.lastName?.at(0)}.

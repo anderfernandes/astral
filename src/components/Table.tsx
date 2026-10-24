@@ -3,14 +3,14 @@ import { JSX } from "@solidjs/web/jsx-runtime";
 function Table(props: { children: JSX.Element }) {
   return (
     <div class="max-h-96 w-full overflow-auto">
-      <table class="text-sm">{props.children}</table>
+      <table class="w-full text-sm">{props.children}</table>
     </div>
   );
 }
 
 function TableHeader(props: { text: JSX.Element }) {
   return (
-    <th class="border-b border-b-gray-300 px-4 py-2 font-medium whitespace-nowrap text-gray-500">
+    <th class="border-b border-b-gray-300 px-4 py-2 text-left font-medium whitespace-nowrap text-gray-500">
       {props.text}
     </th>
   );
