@@ -23,9 +23,21 @@ export async function update(memo: SaleMemoUpdateable) {
 }
 
 export async function findBy(data: { saleId: number }) {
-  return await db
+  const results = await db
     .selectFrom("saleMemos")
     .where("saleId", "=", data.saleId)
     .orderBy("id", "desc")
+    .selectAll()
     .execute();
+
+  const memos = results.map((memo) => ({
+    id: memo.id,
+    creatorId: 1, //memo.creatorId,
+    saleId: memo.saleId,
+    message: memo.message,
+    createdAt: memo.createdAt * 1000,
+    updatedAt: memo.updatedAt ? memo.updatedAt * 1000 : null,
+  }));
+
+  return memos;
 }

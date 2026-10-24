@@ -86,8 +86,28 @@ export function toCurrencyString(
   });
 }
 
+export function formatCurrency(
+  n: number,
+  options: Intl.NumberFormatOptions = { maximumFractionDigits: 2 },
+) {
+  return (n / 100).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 2,
+    ...options,
+  });
+}
+
+export function formatDateTime(n: number) {
+  const date = Temporal.Instant.fromEpochMilliseconds(n);
+  return `${date.toLocaleString("en-US", { dateStyle: "medium" })} @ ${date.toLocaleString("en-US", { timeStyle: "medium" })}`;
+}
+
 export function calculateSaleTotals(
-  sale: Partial<SaleInsertable> & { items: SaleItemInsertable[] },
+  sale: Partial<SaleInsertable> & {
+    items: SaleItemInsertable[];
+    payments?: PaymentInsertable[];
+  },
 ) {
   const convenienceFeeItem = {
     name: "Convenience Fee",
@@ -103,17 +123,27 @@ export function calculateSaleTotals(
       : sale.items;
 
   const subtotal = items.reduce(
-    (acc, item) => item.price * item?.quantity + acc,
+    (total, item) => item.price * item?.quantity + total,
     0,
   );
 
-  const tax = (Number(process.env["SALE_TAX_RATE"]) / 100) * subtotal;
+  const tax = Math.round(
+    (Number(process.env["SALE_TAX_RATE"]) / 100) * subtotal,
+  );
+
+  const total = subtotal + tax;
+
+  const paid = sale.payments
+    ? sale.payments?.reduce((total, payment) => payment.tendered + total, 0)
+    : 0;
 
   return {
     items,
     subtotal,
     tax,
-    total: subtotal + tax,
+    total,
+    paid,
+    balance: total - paid,
   };
 }
 

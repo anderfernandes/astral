@@ -2,11 +2,16 @@ import { Temporal } from "@js-temporal/polyfill";
 import { db } from "~db";
 
 export async function findBy(item: { saleId: number }) {
-  return await db
+  const saleItems = await db
     .selectFrom("saleItems")
     .where("saleId", "=", item.saleId)
     .selectAll()
     .execute();
+  return saleItems.map((item) => ({
+    ...item,
+    createdAt: item.createdAt * 1000,
+    updatedAt: item.updatedAt ? item.updatedAt * 1000 : null,
+  }));
 }
 
 export async function create(items: SaleItemInsertable[]) {

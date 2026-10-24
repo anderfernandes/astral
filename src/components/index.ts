@@ -6,4 +6,5 @@ export * from "./Dialog";
 export * from "./Header";
 export * from "./Input";
 export * from "./Select";
+export * from "./Table";
 export * from "./Textarea";

@@ -1,6 +1,8 @@
 import { db } from "~db";
-import * as saleItems from "./saleItems";
 import { calculateSaleTotals } from "~lib";
+import * as saleItemRepository from "./saleItems";
+import * as paymentRepository from "./payments";
+import * as saleMemoRepository from "./saleMemo";
 
 export async function create(
   sale: Omit<SaleInsertable, "isTaxable"> & {
@@ -38,7 +40,7 @@ export async function create(
     saleId = result?.id;
   }
 
-  await saleItems.create(
+  await saleItemRepository.create(
     sale.items.map((item) => ({
       ...item,
       saleId,
@@ -78,7 +80,7 @@ export async function update(
 
   await query.where("id", "=", saleId).execute();
 
-  await saleItems.update(
+  await saleItemRepository.update(
     saleId,
     sale.items
       .filter((item) => item.id)
@@ -97,7 +99,7 @@ export async function update(
   >[];
 
   if (newItems.length > 0) {
-    await saleItems.create(
+    await saleItemRepository.create(
       newItems.map((item) => ({
         ...item,
         saleId,
@@ -112,17 +114,61 @@ export async function update(
 export async function find(id: number) {
   const sale = await db
     .selectFrom("sales")
-    .where("id", "=", id)
-    .selectAll()
+    .innerJoin("users as customer", "customer.id", "sales.customerId")
+    .leftJoin("users as creator", "creator.id", "sales.creatorId")
+    .where("sales.id", "=", id)
+    .select([
+      "sales.id",
+      "sales.status",
+      "sales.source",
+      "sales.isTaxable",
+      "sales.createdAt",
+      "sales.updatedAt",
+      "sales.customerId",
+      "customer.firstName as customerFirstName",
+      "customer.lastName as customerLastName",
+      "customer.email as customerEmail",
+      "sales.creatorId",
+      "creator.firstName as creatorFirstName",
+      "creator.lastName as creatorLastName",
+    ])
     .executeTakeFirst();
 
   if (!sale) return undefined;
 
-  const items = await saleItems.findBy({ saleId: id });
+  const items = await saleItemRepository.findBy({ saleId: id });
 
-  const totals = calculateSaleTotals({ ...sale, items });
+  const payments = await paymentRepository.findBy({ saleId: id });
 
-  return { ...sale, ...totals, isTaxable: Boolean(sale?.isTaxable), items };
+  const memos = await saleMemoRepository.findBy({ saleId: id });
+
+  const totals = calculateSaleTotals({ ...sale, items, payments });
+
+  const data = {
+    ...totals,
+    id: sale.id,
+    status: sale.status,
+    source: sale.source,
+    isTaxable: Boolean(sale.isTaxable),
+    createdAt: sale.createdAt * 1000,
+    updatedAt: sale.updatedAt ? sale.updatedAt * 1000 : null,
+    items,
+    payments,
+    memos,
+    customer: {
+      id: sale.customerId,
+      email: sale.customerEmail,
+      firstName: sale.customerFirstName,
+      lastName: sale.customerLastName,
+    },
+    creator: {
+      id: sale.creatorId,
+      firstName: sale.creatorFirstName,
+      lastName: sale.creatorLastName,
+    },
+  };
+
+  return data;
 }
 
 export async function findBy(
@@ -130,7 +176,8 @@ export async function findBy(
 ) {
   let query = db
     .selectFrom("sales")
-    .innerJoin("users", "users.id", "sales.customerId");
+    .innerJoin("users as customer", "customer.id", "sales.customerId")
+    .leftJoin("users as creator", "creator.id", "sales.creatorId");
 
   if (data?.customerId) query = query.where("customerId", "=", data.customerId);
 
@@ -139,11 +186,16 @@ export async function findBy(
       "sales.id",
       "sales.status",
       "sales.source",
+      "sales.isTaxable",
       "sales.createdAt",
       "sales.updatedAt",
-      "users.id as customerId",
-      "users.firstName as customerFirstName",
-      "users.lastName as customerLastName",
+      "sales.customerId",
+      "customer.firstName as customerFirstName",
+      "customer.lastName as customerLastName",
+      "customer.email as customerEmail",
+      "sales.creatorId",
+      "creator.firstName as creatorFirstName",
+      "creator.lastName as creatorLastName",
     ])
     .orderBy("sales.id", "desc")
     .execute();
@@ -162,26 +214,43 @@ export async function findBy(
     .selectAll()
     .execute();
 
+  const _memos = await db
+    .selectFrom("saleMemos")
+    .where("saleId", "in", ids)
+    .selectAll()
+    .execute();
+
   return sales.map((sale) => {
     const items = _items.filter((item) => item.saleId === sale.id);
     const payments = _payments.filter((p) => p.saleId === sale.id);
+    const memos = _memos.filter((m) => m.saleId === sale.id);
 
-    const totals = calculateSaleTotals({ ...sale, items });
+    const totals = calculateSaleTotals({ ...sale, items, payments });
 
-    return {
+    const data = {
       ...totals,
       id: sale.id,
       status: sale.status,
       source: sale.source,
-      createdAt: Number(sale.createdAt) * 1000,
-      updatedAt: Number(sale.updatedAt) * 1000,
+      isTaxable: Boolean(sale.isTaxable),
+      createdAt: sale.createdAt * 1000,
+      updatedAt: sale.updatedAt ? sale.updatedAt * 1000 : null,
       items,
       payments,
+      memos,
       customer: {
         id: sale.customerId,
+        email: sale.customerEmail,
         firstName: sale.customerFirstName,
         lastName: sale.customerLastName,
       },
+      creator: {
+        id: sale.creatorId,
+        firstName: sale.creatorFirstName,
+        lastName: sale.creatorLastName,
+      },
     };
+
+    return data;
   });
 }
