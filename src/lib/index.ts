@@ -89,20 +89,20 @@ export function toCurrencyString(
 export function calculateSaleTotals(
   sale: Partial<SaleInsertable> & { items: SaleItemInsertable[] },
 ) {
-  // const convenienceFeeItem = {
-  //   name: "Convenience Fee",
-  //   description: "",
-  //   price: Number(process.env["CONVENIENCE_FEE"]),
-  //   type: "CONVENIENCE FEE" as SaleItemInsertable["type"],
-  //   quantity: 1,
-  // };
+  const convenienceFeeItem = {
+    name: "Convenience Fee",
+    description: "",
+    price: Number(process.env["CONVENIENCE_FEE"]),
+    type: "CONVENIENCE FEE" as SaleItemInsertable["type"],
+    quantity: 1,
+  };
 
-  // const items: SaleItemInsertable[] =
-  //   convenienceFeeItem.price > 0
-  //     ? [...sale.items, convenienceFeeItem]
-  //     : sale.items;
+  const items: SaleItemInsertable[] =
+    convenienceFeeItem.price > 0
+      ? [...sale.items, convenienceFeeItem]
+      : sale.items;
 
-  const subtotal = sale.items.reduce(
+  const subtotal = items.reduce(
     (acc, item) => item.price * item?.quantity + acc,
     0,
   );
@@ -110,7 +110,7 @@ export function calculateSaleTotals(
   const tax = (Number(process.env["SALE_TAX_RATE"]) / 100) * subtotal;
 
   return {
-    items: sale.items,
+    items,
     subtotal,
     tax,
     total: subtotal + tax,
