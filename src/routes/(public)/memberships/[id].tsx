@@ -1,5 +1,5 @@
 import {
-  action,
+  formAction,
   RouteDefinition,
   RouteProps,
   useLocation,
@@ -111,7 +111,7 @@ export default function MembershipSignupPage(
         return [
           ...currentItems,
           {
-            name: value?.name as string,
+            name: "", //value?.name as string,
             description: "",
             price: value?.price as number,
             type: "MEMBERSHIP (PRIMARY)",
@@ -124,18 +124,19 @@ export default function MembershipSignupPage(
 
   createEffect(
     () => primary(),
-    (value, previousValue) => {
-      if (value.email === previousValue?.email) return;
+    (value) => {
+      setItems((currentItems) => {
+        const index = currentItems.findIndex(
+          (currentItem) => currentItem.type === "MEMBERSHIP (PRIMARY)",
+        );
 
-      setItems((currentItems) =>
-        currentItems.map((currentItem) => {
-          if (currentItem.type === "MEMBERSHIP (PRIMARY)") {
-            currentItem.name = `${value.firstName} ${value.lastName}`;
-            currentItem.description = value.email;
-          }
-          return currentItem;
-        }),
-      );
+        if (index < 0) return currentItems;
+
+        currentItems[index].name = `${value.firstName} ${value.lastName}`;
+        currentItems[index].description = value.email;
+
+        return currentItems;
+      });
     },
   );
 
@@ -309,7 +310,7 @@ export default function MembershipSignupPage(
                   placeholder="First Name"
                   name="firstName"
                   required={isGift()}
-                  onInput={(e) => {
+                  onFocusOut={(e) => {
                     setPrimary((currentPrimary) => ({
                       ...currentPrimary,
                       firstName: e.currentTarget.value,
@@ -322,7 +323,7 @@ export default function MembershipSignupPage(
                   placeholder="Last Name"
                   name="lastName"
                   required={isGift()}
-                  onInput={(e) => {
+                  onFocusOut={(e) => {
                     setPrimary((currentPrimary) => ({
                       ...currentPrimary,
                       lastName: e.currentTarget.value,
@@ -337,7 +338,7 @@ export default function MembershipSignupPage(
                 disabled={!isGift()}
                 placeholder="Email"
                 required={isGift()}
-                onInput={(e) => {
+                onFocusOut={(e) => {
                   setPrimary((currentPrimary) => ({
                     ...currentPrimary,
                     email: e.currentTarget.value,
@@ -389,6 +390,9 @@ export default function MembershipSignupPage(
                     <span class="grow">{item().name}</span>
                     <span>{toCurrencyString(item().price)}</span>
                   </p>
+                  <Show when={item().type.toLowerCase().includes("membership")}>
+                    <p>{item().type}</p>
+                  </Show>
                   <p>
                     {item().description}
                     <Show when={item().type === "MEMBERSHIP (FREE SECONDARY)"}>
@@ -415,19 +419,6 @@ export default function MembershipSignupPage(
                 </div>
               )}
             </For>
-            <div class="text-sm text-gray-600">
-              <p class="flex gap-1">
-                <span class="grow">
-                  Tax (
-                  {(organization().saleTaxRate / 100).toLocaleString("en-US", {
-                    style: "percent",
-                    minimumSignificantDigits: 1,
-                  })}
-                  )
-                </span>
-                <span>{toCurrencyString(cart().tax)}</span>
-              </p>
-            </div>
             <div class="text-sm text-gray-600">
               <p class="flex gap-1">
                 <span class="grow">Subtotal</span>
@@ -469,7 +460,6 @@ export default function MembershipSignupPage(
               value={JSON.stringify(cart().items)}
             />
             <button
-              disabled={isPending(cart)}
               type="submit"
               class="mt-10 flex w-full cursor-pointer items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-hidden disabled:cursor-not-allowed disabled:bg-black/50 aria-busy:cursor-not-allowed aria-busy:bg-black/50"
             >
@@ -581,7 +571,7 @@ export default function MembershipSignupPage(
   );
 }
 
-const checkout = action(async (form: FormData) => {
+const checkout = formAction(async (form: FormData) => {
   "use server";
 
   const user = await getUserFn();
