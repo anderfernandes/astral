@@ -16,6 +16,7 @@ interface IInputProps extends Partial<
     | "value"
     | "defaultValue"
     | "onInput"
+    | "onFocusOut"
   >
 > {
   label?: JSX.Element;
@@ -53,6 +54,7 @@ export function Input(props: IInputProps) {
               value={props.value}
               ref={props.ref}
               onInput={props.onInput}
+              onFocusOut={props.onFocusOut}
             />
           }
         >
@@ -70,6 +72,7 @@ export function Input(props: IInputProps) {
             defaultValue={props.defaultValue}
             ref={props.ref}
             onInput={props.onInput}
+            onFocusOut={props.onFocusOut}
           />
         </Show>
       </div>
