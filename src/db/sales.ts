@@ -120,7 +120,9 @@ export async function find(id: number) {
 
   const items = await saleItems.findBy({ saleId: id });
 
-  return { ...sale, isTaxable: Boolean(sale?.isTaxable), items };
+  const totals = calculateSaleTotals({ ...sale, items });
+
+  return { ...sale, ...totals, isTaxable: Boolean(sale?.isTaxable), items };
 }
 
 export async function findBy(
