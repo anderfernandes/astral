@@ -8,7 +8,7 @@ import {
   Textarea,
 } from "~components";
 import { paths } from "../../../router";
-import { action, useLocation } from "@solidjs/router";
+import { formAction, useLocation } from "@solidjs/router";
 import { createMemo, For, Loading, Show } from "solid-js";
 import * as v from "valibot";
 import db from "~db";
@@ -288,7 +288,7 @@ const MembershipTypeSchema = v.object({
   isPublic: v.boolean(),
 });
 
-const save = action(async (formData: FormData) => {
+const save = formAction(async (formData: FormData) => {
   "use server";
 
   const { output, success, issues } = v.safeParse(MembershipTypeSchema, {

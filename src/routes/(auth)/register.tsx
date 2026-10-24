@@ -1,5 +1,5 @@
 import {
-  action,
+  formAction,
   query,
   RouteDefinition,
   useSubmissions,
@@ -167,7 +167,7 @@ const RegistrationSchema = v.pipe(
   ),
 );
 
-const register = action(async (formData: FormData) => {
+const register = formAction(async (formData: FormData) => {
   "use server";
 
   const { output, success, issues } = v.safeParse(RegistrationSchema, {

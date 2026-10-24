@@ -1,5 +1,5 @@
 import {
-  action,
+  formAction,
   query,
   RouteDefinition,
   useSubmissions,
@@ -116,7 +116,7 @@ const SigninSchema = v.pipe(
   }),
 );
 
-const signin = action(async (formData: FormData) => {
+const signin = formAction(async (formData: FormData) => {
   "use server";
 
   if (!formData.has("password")) {
@@ -187,9 +187,12 @@ const signin = action(async (formData: FormData) => {
     throw respond({ message: "Invalid password." }, { status: 400 });
   }
 
-  const token = (getRequestEvent()?.request.headers.get("cookie") as string)
-    .split("=")
-    .at(1);
+  const cookie = getRequestEvent()?.request.headers.get("cookie");
+
+  if (!cookie)
+    throw respond({ message: "An error occurred." }, { status: 400 });
+
+  const token = cookie.split("=").at(1);
 
   if (!token) {
     console.error("Invalid token.");

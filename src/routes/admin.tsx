@@ -1,4 +1,4 @@
-import { action, RouteDefinition } from "@solidjs/router";
+import { formAction, RouteDefinition } from "@solidjs/router";
 import { getRequestEvent, JSX, redirect } from "@solidjs/web";
 import { createMemo, ParentProps, Show } from "solid-js";
 import { Button } from "~components";
@@ -109,7 +109,7 @@ export default function AdminLayout(props: ParentProps) {
           <form class="grid" action={signout} method="post">
             <Button text="Sign out" variant="secondary" />
           </form>
-          <a href="/account" class="group block w-full mb-16 text-white">
+          <a href="/account" class="group mb-16 block w-full text-white">
             <div class="flex items-center">
               <svg viewBox="0 0 24 24" class="size-9 text-white">
                 <Show
@@ -142,18 +142,18 @@ export default function AdminLayout(props: ParentProps) {
       <div class="mb-[calc(4rem+env(safe-area-inset-bottom))] p-4 lg:mx-64 lg:mb-0">
         {props.children}
       </div>
-      <nav class="lg:hidden fixed bottom-0 w-full p-2">
-        <div class="text-white text-xs grid grid-cols-4 content-center bg-black/90 backdrop:blur-sm w-full h-16 rounded-xl">
+      <nav class="fixed bottom-0 w-full p-2 lg:hidden">
+        <div class="grid h-16 w-full grid-cols-4 content-center rounded-xl bg-black/90 text-xs text-white backdrop:blur-sm">
           <a href="/admin" class="p-2 text-center">
             Dashboard
           </a>
-          <a href="/admin" class="p-2  text-center">
+          <a href="/admin" class="p-2 text-center">
             Users
           </a>
-          <a href="/admin" class="p-2  text-center">
+          <a href="/admin" class="p-2 text-center">
             Sales
           </a>
-          <a href="/admin" class="p-2  text-center">
+          <a href="/admin" class="p-2 text-center">
             Settings
           </a>
         </div>
@@ -215,12 +215,14 @@ function SidebarItem(props: ISidebarItemProps) {
   );
 }
 
-const signout = action(async () => {
+const signout = formAction(async () => {
   "use server";
 
-  const token = (getRequestEvent()?.request.headers.get("cookie") as string)
-    .split("=")
-    .at(1);
+  const cookie = getRequestEvent()?.request.headers.get("cookie");
+
+  if (!cookie) throw redirect("/signin");
+
+  const token = cookie.split("=").at(1);
 
   if (!token) throw redirect("/sign-in");
 

@@ -1,9 +1,8 @@
-import { action, query, RouteProps } from "@solidjs/router";
+import { formAction, query, RouteProps } from "@solidjs/router";
 import { createMemo } from "solid-js";
 import db from "~db";
 import { Router } from "../../../../router";
 import { Button } from "~components";
-import { respond } from "@solidjs/web";
 
 type UserDetailsPageProps = RouteProps<typeof Router.paths.admin.users>;
 
@@ -36,7 +35,7 @@ export default function UserDetailsPage(props: UserDetailsPageProps) {
   );
 }
 
-const updateUserFn = action(async (form: FormData) => {
+const updateUserFn = formAction(async (form: FormData) => {
   "use server";
 
   // TODO: ENSURE ONLY ROLE_ADMIN CAN CHANGE ROLES.

@@ -1,4 +1,4 @@
-import { action, useLocation } from "@solidjs/router";
+import { formAction, useLocation } from "@solidjs/router";
 import { createMemo, For, Loading, Show } from "solid-js";
 import { Alert, Button, Checkbox, Dialog, Input, Select } from "~components";
 import { getPaymentMethodsFn } from "~lib/payment-methods";
@@ -126,7 +126,7 @@ const PaymentMethodSchema = v.object({
   isPublic: v.boolean(),
 });
 
-const save = action(async (form: FormData) => {
+const save = formAction(async (form: FormData) => {
   "use server";
 
   const { output, success, issues } = v.safeParse(PaymentMethodSchema, {
