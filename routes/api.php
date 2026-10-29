@@ -49,7 +49,7 @@ use App\Product;
 // New Calendar Routes
 Route::prefix("v2")->group(function () {
   
-  // Events
+  // Calendar Events
   Route::get("/calendar/events", function (Request $request) {
     return Event::where([
       ['start', '>=', $request->start],
@@ -73,9 +73,21 @@ Route::prefix("v2")->group(function () {
     })->values();
   });
   
-  // 
+  // Calendar Sales
   Route::get("/calendar/sales", function () {
     return [];
+  });
+
+  // Events
+  Route::get("/events", function (Request $request) {
+    $today = new DateTimeImmutable('today');
+    return Event::where([
+      ['start', '>=', $request->start ?? $today->format('Y-m-d')],
+      ['end', '<=', $request->end ?? $today->modify('+7 days')->format('Y-m-d')]
+    ])
+    ->orderBy('start', 'asc')
+    ->with(['type', 'show'])
+    ->get();
   });
 });
 
