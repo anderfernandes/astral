@@ -2,7 +2,7 @@ import "server-only";
 
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]);
+const stripe = process.env["STRIPE_SECRET_KEY"] ? new Stripe(process.env["STRIPE_SECRET_KEY"]) : null;
 
 export default stripe;
 
@@ -49,7 +49,7 @@ export async function createStripeCheckout(
     line_items.push(line_item);
   }
 
-  const session = await stripe.checkout.sessions.create({
+  const session = await stripe?.checkout.sessions.create({
     line_items,
     mode: "payment",
     //integration_identifier: "{{INTEGRATION_ID}}",
@@ -71,7 +71,7 @@ export async function getStripeTaxRate() {
   }
 
   try {
-    return await stripe.taxRates.retrieve(process.env["STRIPE_TAX_RATE_ID"]);
+    return await stripe?.taxRates.retrieve(process.env["STRIPE_TAX_RATE_ID"]);
   } catch {
     console.warn("STRIPE_TAX_RATE_ID not set up");
     return null;

@@ -28,7 +28,7 @@ export const getOrganizationSettingsFn = query(async () => {
 export const getStripeFn = query(async () => {
   "use server";
 
-  return await stripe.account.retrieveCurrent();
+  return await stripe?.account.retrieveCurrent();
 }, "get-stripe");
 
 export const getUserFn = query(async (redirectIfNotSignedIn = true) => {
