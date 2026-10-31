@@ -17,3 +17,4 @@ composer.lock
 .DS_Store
 /storage/fonts/*.ttf
 /storage/fonts/*.ufm
+*.sqlite
