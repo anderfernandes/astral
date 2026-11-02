@@ -20,7 +20,7 @@ export default defineConfig({
         // `env: false` here to opt out.),
         // Emit dist/server/node.js: a ready-to-run Node server (static
         // assets + the handler). Other platforms import dist/server/server.js.
-        node: true,
+        nodeServer: true,
         // Typed env is on by convention: ./env.ts is probed automatically.
         // (Set `env: false` here to opt out.)
       },
@@ -35,7 +35,7 @@ export default defineConfig({
       // serves them from the /_server endpoint. The configure module runs
       // in the handler graph before any dispatch — it registers the
       // router's single-flight collector (see src/server-config.ts).
-      serverFunctions: { configure: "./src/server-config.ts" },
+      serverFunctions: { serverSetup: "./src/server-config.ts" },
       // `extensions` makes @solidjs/vite-plugin also compile the `?pick=` route
       // modules the fileRoutes plugin emits (their ids end in a query string).
       extensions: [".jsx", ".tsx"],
