@@ -10,7 +10,9 @@ class User extends Authenticatable
   use Notifiable;
 
   protected $casts = [
-    'newsletter' => 'boolean'
+    'newsletter' => 'boolean',
+    'active' => 'boolean',
+    'staff' => 'boolean'
   ];
 
   /**

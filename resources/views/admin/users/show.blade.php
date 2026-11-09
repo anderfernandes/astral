@@ -10,7 +10,7 @@
 
   <div class="ui container">
 
-    @if ($user->is_member)
+    @if ($user->membership_id > 1 && !$user->membership->expired)
     <div class="ui yellow icon message">
       <i class="exclamation circle icon"></i>
       <div class="content">
@@ -44,7 +44,7 @@
         @if ($user->staff) <i style="display:inline-block" class="star icon"></i> @endif
         @if ($user->newsletter) <i class="newspaper outline icon"></i> @endif
         <div class="ui black label" style="margin-left:0">{{ $user->role->name }}</div>
-        @if ($user->organization_id != 1)
+        @if ($user->organization_id > 1)
         <a href="{{ route('admin.organizations.show', $user->organization) }}" target="_blank" class="ui black label" style="margin-left:0">
           {{ $user->organization->name }}
         </a>
@@ -60,7 +60,7 @@
         @endif
         <div class="sub header">
           {{-- Display creator only if it is a no user --}}
-          @if ($user->creator_id == 1)
+          @if ($user->creator_id <= 1)
             <i class="pencil icon"></i>
             {{ $user->created_at->format('l, F j, Y \a\t g:i:s A') }} ({{ $user->created_at->diffForHumans() }})
           @else

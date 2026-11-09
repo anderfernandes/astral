@@ -8,11 +8,32 @@ use App\ProductType;
 class Product extends Model
 {
 
-    protected $fillable = ['product_id'];
+    /**
+    * The attributes that are mass assignable.
+    *
+    * @var array
+    */
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'type_id',
+        'creator_id',
+        'inventory',
+        'active',
+        'public',
+        'in_cashier',
+        'stock',
+        'cover'
+    ];
 
     protected $casts = [
       'stock' => 'integer',
       'price' => 'double',
+      'inventory' => 'integer',
+      'active' => 'boolean',
+      'public' => 'boolean',
+      'in_cashier' => 'boolean'
     ];
 
     /**
@@ -40,7 +61,7 @@ class Product extends Model
 
     /**
      * Fixes the URL of the product cover
-     * 
+     *
      * @param String $value
      * @return String
      */

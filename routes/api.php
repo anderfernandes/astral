@@ -48,58 +48,219 @@ use App\Product;
 
 // New Calendar Routes
 Route::prefix("v2")->group(function () {
-  
-  // Calendar Events
-  Route::get("/calendar/events", function (Request $request) {
-    return Event::where([
-      ['start', '>=', $request->start],
-      ['end', '<=', $request->end]
-    ])
-    ->with(['type', 'sales'])
-    ->get()
-    ->map(function ($item) {
-      $showName = $item->show->name;
-      
-      $saleCount = $item->sales->count() == 1 
-        ? '(' . $item->sales->count() . ' sale)'
-        : '(' . $item->sales->count() . ' sales)';
-      
-      return [
-        'start' => $item->start->toIso8601String(),
-        'end' => $item->end->toIso8601String(),
-        'title' => "#$item->id $showName $saleCount",
-        'color' => $item->type->color 
-      ];
-    })->values();
-  });
-  
-  // Calendar Sales
-  Route::get("/calendar/sales", function () {
-    return [];
-  });
 
-  // Events
-  Route::get("/events", function (Request $request) {
-    $today = new DateTimeImmutable('today');
-    return Event::where([
-      ['start', '>=', $request->start ?? $today->format('Y-m-d')],
-      ['end', '<=', $request->end ?? $today->modify('+7 days')->format('Y-m-d')]
-    ])
-    ->orderBy('start', 'asc')
-    ->with(['type', 'show'])
-    ->get();
-  });
+    // Calendar Events
+    Route::get("/calendar/events", function (Request $request) {
+        return Event::where([
+            ['start', '>=', $request->start],
+            ['end', '<=', $request->end]
+        ])
+        ->with(['type', 'sales'])
+        ->get()
+        ->map(function ($item) {
+            $showName = $item->show->name;
+
+            $saleCount = $item->sales->count() == 1
+            ? '(' . $item->sales->count() . ' sale)'
+            : '(' . $item->sales->count() . ' sales)';
+
+            return [
+            'start' => $item->start->toIso8601String(),
+            'end' => $item->end->toIso8601String(),
+            'title' => "#$item->id $showName $saleCount",
+            'color' => $item->type->color
+            ];
+        })->values();
+    });
+
+    // Calendar Sales
+    Route::get("/calendar/sales", function () {
+        return [];
+    });
+
+    // Events
+    Route::get("/events", function (Request $request) {
+        $today = new DateTimeImmutable('today');
+
+        return Event::where([
+            ['start', '>=', $request->start ?? $today->format('Y-m-d')],
+            ['end', '<=', $request->end ?? $today->modify('+7 days')->format('Y-m-d')]
+        ])
+        ->orderBy('start', 'asc')
+        ->with(['type', 'show'])
+        ->get();
+    });
+
+    Route::get("/member-types", function () {
+       return MemberType::all();
+    });
+
+    Route::get("/member-types/{id}", function (int $id) {
+       if ($id <= 1) return response('', 404);
+
+       return MemberType::find($id);
+    });
+
+    Route::post("/signup", function (Request $request) {
+
+        $request->validate([
+           'email' => 'required|string|email|max:127|unique:users',
+        ]);
+
+        $token = str_random(64);
+
+        DB::table('password_resets')
+            ->insert([
+                'email' => $request->email,
+                'token' => Hash::make($token),
+                'created_at' => new \DateTime()
+        ]);
+
+        // Check if email already exists
+
+        $id = DB::table('users')->insertGetId([
+            'firstname'       => $request->firstName,
+            'lastname'        => $request->lastName,
+            'email'           => $request->email,
+            'password'        => bcrypt($request->password),
+            'role_id'         => 7,
+            'organization_id' => 0,
+            'type'            => 'individual',
+            'membership_id'   => 0,
+            'phone'           => $request->phone,
+            'active'          => false,
+            'staff'           => false,
+            'creator_id'      => 0,
+            'created_at'      => new \DateTime(),
+        ]);
+
+        // TODO: UPDATE URL BELOW TO FRONTEND URL
+        Mail::send([], [], function ($message) use ($token) {
+            $message->to('handerson171@gmail.com')
+                ->subject('Activate Your Account')
+                ->setBody('
+                    <h2>Activate Your Account</h2>
+                    <p>Click the link below to activate your account</p>
+                    <a href="http://localhost:3000/activate/' . $token .'" target="_blank">Activate Account</a>
+                ', "text/html");
+        });
+
+        // Mail::raw("", function ($message) {
+        //     $message->to('handerson171@gmail.com')
+        //         ->subject('Activate Your Account');
+        // });
+    });
+
+    Route::get('/activate/{token}', function (string $token, Request $request) {
+        $items = DB::table('password_resets')
+            ->where('created_at', '>=', Carbon::now()->subMinutes(5))
+            ->get();
+
+        if (count($items) <= 0) return response('', 400);
+
+        // TODO: ALLOW ONLY ONE RESET PER CODE
+
+        foreach ($items as $item) {
+            if (Hash::check($token, $item->token)) {
+                DB::table('password_resets')
+                    ->where('token', $item->token)
+                    ->update(['created_at' => Carbon::now()->subMinutes(5)]);
+
+                return response('', 200);
+            }
+        }
+
+        return response('', 422);
+    });
+
+    Route::post("/signin", function (Request $request) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            // TODO: ACTIVE ONLY
+            $user = User::where('email', $request->email)->first();
+
+            return response()->json([
+                'id' => $user->id,
+                'firstName' => $user->firstname,
+                'lastName' => $user->lastname,
+                'email' => $user->email
+            ]);
+        };
+
+        return response('', 401);
+    });
+
+    Route::get("/account/{id}", function (int $id) {
+       return User::with(['role', 'membership.type', 'organization'])->find($id);
+    });
+
+    Route::put("/account/{id}/update", function (int $id, Request $request) {
+        // Validate
+        DB::table('users')
+            ->where('id', $id)
+            ->update([
+                'password' => bcrypt($request->password),
+                'updated_at' => new \DateTime()
+        ]);
+    });
+
+    Route::get("/account/{id}/sales", function (int $id) {
+        if ($id <= 1) return response('', 404);
+
+        return  Sale::where('customer_id', $id)->get();
+    });
+
+    Route::post("/account/{id}/sales", function (int $id, Request $request){
+        if ($id <= 1 || $request->id != $id) return response('', 404);
+
+        $availableProducts = Product::all();
+
+        // TODO: ADD TICKETS AND/OR PRODUCTS TO SALE
+        $products = [];
+
+        foreach ($request->items as $item) {
+            if ($item["type"] === 'product') {
+                for ($i = 0; $i < $item['quantity']; $i++) {
+                    array_push(
+                        $products,
+                        $availableProducts->firstWhere('name', $item['name'])->id
+                    );
+                }
+            }
+        }
+
+        // TODO: CALCULATE TOTALS
+
+        $sale = new Sale;
+
+        $sale->creator_id = 0;
+        $sale->organization_id = 0;
+        $sale->customer_id = $id;
+        $sale->status = "complete";
+        $sale->taxable = true;
+        // $sale->subtotal = $request->subtotal;
+        // $sale->tax = $request->tax;
+        // $sale->total = $request-total;
+        $sale->source = "website";
+        $sale->refund = false;
+        $sale->sell_to_organization = false;
+
+        //$sale->save();
+
+        // TODO: ADD PAYMENT TO SALE
+
+        return $products;
+    });
 });
 
 Route::get('shows', function (Request $request) {
-  
+
   $shows = Show::where('id', '!=', 1)->orderBy('name', 'asc')->get();
 
   $announcements = App\Announcement::where([
     ['public', '1'],
     ['end', '>=', now()->toDateTimeString()]
   ])->get()->toArray();
-  
+
   return response([
     'data' => $shows,
     'announcements' => $announcements,
@@ -811,17 +972,17 @@ Route::get('events', function (Request $request) {
       'memos'           => $event->memos,
     ]);
   }
-  
+
   /*$announcements = App\Announcement::where([
     ['public', '1'],
     ['end', '>=', now()->toDateTimeString()]
   ])->get()->toArray();*/
-  
+
   $eventsCollect = collect($eventsArray);
 
   $eventsCollect = $eventsCollect->sortBy('start');
   $eventsCollect = $eventsCollect->values()->all();
-  
+
   return response($eventsCollect, 201);
 });
 
@@ -1859,13 +2020,13 @@ Route::group(["prefix" => "public"], function () {
 
       $user->newsletter = true;
 
-      
+
 
       // Send email
       try {
-        
+
         Mail::to($user->email)->send(new \App\Mail\NewsletterWelcome($user));
-        
+
         $user->save();
 
         return response()->json([

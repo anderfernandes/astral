@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\MemberType;
+use App\Product;
+use App\ProductType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -104,6 +106,57 @@ class MemberTypeController extends Controller
           'max_secondaries' => 'required|numeric',
           'secondary_price' => 'required|numeric'
         ]);
+
+        // TODO: CREATE PRODUCT FOR MEMBERSHIP IF IT DOESN'T EXIST
+        if (!Product::where('name', 'LIKE', $memberType->name . '%')->exists()) {
+
+            $membershipProductType = ProductType::where('name', 'Membership')->first();
+
+            // PRIMARY
+            Product::create([
+               'name' => $memberType->name . ' (primary)',
+               'description' =>  $memberType->description,
+               'price' => $memberType->price,
+               'type_id' => $membershipProductType->id,
+               'creator_id' => Auth::user()->id,
+               'inventory' => false,
+               'active' => true,
+               'public' => false,
+               'in_cashier' => false,
+               'stock' => 0,
+               'cover' => '/default.png'
+            ]);
+
+            // FREE SECONDARY
+            Product::create([
+               'name' => $memberType->name . ' (free secondary)',
+               'description' =>  $memberType->description,
+               'price' => 0,
+               'type_id' => $membershipProductType->id,
+               'creator_id' => Auth::user()->id,
+               'inventory' => false,
+               'active' => true,
+               'public' => false,
+               'in_cashier' => false,
+               'stock' => 0,
+               'cover' => '/default.png'
+            ]);
+
+            if ($memberType->max_secondaries > 0 && $memberType->secondary_price > 0)
+                Product::create([
+                   'name' => $memberType->name . ' (non-free secondary)',
+                   'description' => $memberType->description,
+                   'price' => $memberType->secondary_price,
+                   'type_id' => $membershipProductType->id,
+                   'creator_id' => Auth::user()->id,
+                   'inventory' => false,
+                   'active' => true,
+                   'public' => false,
+                   'in_cashier' => false,
+                   'stock' => 0,
+                   'cover' => '/default.png'
+                ]);
+        }
 
         $memberType->name            = $request->name;
         $memberType->description     = $request->description;

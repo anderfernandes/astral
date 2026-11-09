@@ -72,7 +72,7 @@
   <div class="required field">
     {!! Form::label('role_id', 'Role') !!}
     @if (isSet($user))
-      @if ($user->is_member && !($user->membership->expired))
+      @if ($user->membership_id > 1 && !($user->membership->expired))
       <?php
         $member_role = \App\Role::where('name', 'Member')->first();
       ?>
