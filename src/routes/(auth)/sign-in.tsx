@@ -267,6 +267,8 @@ const getSigninSession = query(async () => {
 
     const [iv, cipherString, tag] = token.split(":");
 
+    if (!cipherString) return null;
+
     const email = await decrypt({ iv, cipherString, tag });
 
     if (!email) return null;

@@ -17,8 +17,8 @@
   "devDependencies": {
     "@solidjs/diagnostics": "^2.0.0-rc.21",
     "@solidjs/testing-library": "^1.0.0-rc.2",
-    "@solidjs/vite-plugin": "^3.0.0-next.56",
-    "@tailwindcss/vite": "^4.3.4",
+    "@solidjs/vite-plugin": "^3.0.0-next.57",
+    "@tailwindcss/vite": "^4.3.5",
     "@testing-library/jest-dom": "^7.0.1",
     "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^26.6.6",
@@ -33,7 +33,7 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.72.1",
-    "vite": "^8.3.5",
+    "vite": "^8.3.6",
     "vitest": "^5.1.0"
   },
   "dependencies": {
@@ -44,11 +44,11 @@
     "better-sqlite3": "^13.0.3",
     "kysely": "^0.29.8",
     "mysql2": "^3.24.6",
-    "nodemailer": "^10.3.1",
+    "nodemailer": "^10.4.0",
     "pg": "^8.23.1",
     "solid-js": "^2.0.0-rc.21",
     "stripe": "^23.1.0",
-    "tailwindcss": "^4.3.4",
+    "tailwindcss": "^4.3.5",
     "tarn": "^3.1.2",
     "tedious": "^20.3.8",
     "valibot": "^1.5.0"
