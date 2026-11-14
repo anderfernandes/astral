@@ -29,11 +29,11 @@
     "globals": "^17.14.0",
     "jsdom": "^25.0.1",
     "oxlint": "~1.79.0",
-    "prettier": "^3.9.10",
+    "prettier": "^3.10.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.72.1",
-    "vite": "^8.3.6",
+    "typescript-eslint": "^8.72.2",
+    "vite": "^8.3.8",
     "vitest": "^5.1.0"
   },
   "dependencies": {
@@ -41,16 +41,16 @@
     "@solidjs/meta": "^1.0.0-next.2",
     "@solidjs/router": "^2.0.0-next.44",
     "@solidjs/web": "^2.0.0-rc.21",
-    "better-sqlite3": "^13.0.3",
-    "kysely": "^0.29.8",
+    "better-sqlite3": "^13.1.1",
+    "kysely": "^0.29.9",
     "mysql2": "^3.24.6",
-    "nodemailer": "^10.4.0",
+    "nodemailer": "^10.5.0",
     "pg": "^8.23.1",
     "solid-js": "^2.0.0-rc.21",
     "stripe": "^23.1.0",
     "tailwindcss": "^4.3.5",
     "tarn": "^3.1.2",
-    "tedious": "^20.3.8",
+    "tedious": "^20.3.9",
     "valibot": "^1.5.0"
   }
 }
