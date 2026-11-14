@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Mail\Markdown;
 
 use App\{Event, Setting, User, Payment, PaymentMethod, Sale, Organization, EventType};
-use App\{MemberType, Show, TicketType};
+use App\{MemberType, Show, TicketType, Member};
 use Illuminate\Support\Facades\{Auth, Storage, Route, Validator, Hash, Mail};
 use Illuminate\Support\Carbon;
 use App\Product;
@@ -78,6 +78,16 @@ Route::prefix("v2")->group(function () {
         return [];
     });
 
+    Route::get("/settings", function () {
+        $convenienceFee = Product::where('name', 'Convenience Fee')->first();
+
+        return [
+            'convenience_fee' => $convenienceFee->price ?? 0,
+            'is_stripe_available' => PaymentMethod::where('name', 'stripe')->exists(),
+            'sale_tax_rate' => 8.25
+        ];
+    });
+
     // Events
     Route::get("/events", function (Request $request) {
         $today = new DateTimeImmutable('today');
@@ -101,6 +111,10 @@ Route::prefix("v2")->group(function () {
        return MemberType::find($id);
     });
 
+    Route::get("/products", function() {
+        return Product::with(['type'])->get();
+    });
+
     Route::post("/signup", function (Request $request) {
 
         $request->validate([
@@ -108,10 +122,11 @@ Route::prefix("v2")->group(function () {
         ]);
 
         $token = str_random(64);
+        $email = $request->email;
 
         DB::table('password_resets')
             ->insert([
-                'email' => $request->email,
+                'email' => $email,
                 'token' => Hash::make($token),
                 'created_at' => new \DateTime()
         ]);
@@ -121,7 +136,7 @@ Route::prefix("v2")->group(function () {
         $id = DB::table('users')->insertGetId([
             'firstname'       => $request->firstName,
             'lastname'        => $request->lastName,
-            'email'           => $request->email,
+            'email'           => $email,
             'password'        => bcrypt($request->password),
             'role_id'         => 7,
             'organization_id' => 0,
@@ -135,20 +150,17 @@ Route::prefix("v2")->group(function () {
         ]);
 
         // TODO: UPDATE URL BELOW TO FRONTEND URL
-        Mail::send([], [], function ($message) use ($token) {
-            $message->to('handerson171@gmail.com')
-                ->subject('Activate Your Account')
+        Mail::send([], [], function ($message) use ($token, $email) {
+            $message->to($email)
+                ->subject('Activate your Mayborn Science Theater account')
                 ->setBody('
-                    <h2>Activate Your Account</h2>
-                    <p>Click the link below to activate your account</p>
+                    <h2>Activate your Mayborn Science Theater account</h2>
+                    <p>Click the link below to activate your account:</p>
                     <a href="http://localhost:3000/activate/' . $token .'" target="_blank">Activate Account</a>
                 ', "text/html");
         });
 
-        // Mail::raw("", function ($message) {
-        //     $message->to('handerson171@gmail.com')
-        //         ->subject('Activate Your Account');
-        // });
+        return response('', 200);
     });
 
     Route::get('/activate/{token}', function (string $token, Request $request) {
@@ -165,6 +177,10 @@ Route::prefix("v2")->group(function () {
                 DB::table('password_resets')
                     ->where('token', $item->token)
                     ->update(['created_at' => Carbon::now()->subMinutes(5)]);
+
+                User::where('email', $item->email)
+                    ->first()
+                    ->update(['active', true]);
 
                 return response('', 200);
             }
@@ -206,49 +222,189 @@ Route::prefix("v2")->group(function () {
     Route::get("/account/{id}/sales", function (int $id) {
         if ($id <= 1) return response('', 404);
 
-        return  Sale::where('customer_id', $id)->get();
+        return Sale::with(['memos', 'payments'])
+            ->where('customer_id', $id)
+            ->get();
     });
 
     Route::post("/account/{id}/sales", function (int $id, Request $request){
         if ($id <= 1 || $request->id != $id) return response('', 404);
 
+        $customer = User::find($id);
+
+        // TODO: ONLY ACTIVE CUSTOMERS
+
+        if ($customer === null) return response('Customer not found', 400);
+
+        // TODO: IF GIFT, CHECK IF THEIR EMAIL IS REGISTER, CREATE ACCOUNT IF IT ISN'T
+        $primary = $customer;
+
+        // TODO: ACTIVE ONLY?
         $availableProducts = Product::all();
+        // TODO: ACTIVE ONLY
+        $memberTypes = MemberType::all();
+        $memberType = null;
+
+        if ($availableProducts->count() <= 0)
+            return response('No products on database', 400);
+
+        $method = PaymentMethod::where('name', 'stripe')->first();
+
+        if ($method === null) return response('"stripe" payment method does not exist', 400);
 
         // TODO: ADD TICKETS AND/OR PRODUCTS TO SALE
         $products = [];
+        $subtotal = 0;
 
         foreach ($request->items as $item) {
             if ($item["type"] === 'product') {
                 for ($i = 0; $i < $item['quantity']; $i++) {
-                    array_push(
-                        $products,
-                        $availableProducts->firstWhere('name', $item['name'])->id
-                    );
+                    $name = $item['name'];
+                    $product = $availableProducts->firstWhere('name', $name);
+
+                    if ($product === null) return response('Product ' . $name . ' does not exist', 401);
+
+                    array_push($products, $product->id);
+
+                    $subtotal += $product->price;
+                }
+            }
+
+            if ($item["type"] === 'membership') {
+                for ($i = 0; $i < $item['quantity']; $i++) {
+                    //$name = $item['name'];
+
+                    $memberType = $memberTypes->find($item['type_id']);
+
+                    if ($memberType === null) return response('Membership ' . $memberType->name . ' does not exist', 401);
+
+                    $product = $availableProducts->first(function ($item) use ($memberType) {
+                        return stripos($item->name, $memberType->name) !== false;
+                    });
+
+                    if ($product === null) return response('Product ' . $name . ' does not exist', 401);
+
+                    array_push($products, $product->id);
+
+                    $subtotal += $product->price;
                 }
             }
         }
 
-        // TODO: CALCULATE TOTALS
+        if ($subtotal > 0) {
+            $product = $availableProducts->firstWhere('name', 'Convenience Fee');
+            array_push($products, $product->id);
+            $subtotal += $product->price;
+        }
+
+        $tax = round(0.0825 * $subtotal, 2);
+        $total = $subtotal + $tax;
 
         $sale = new Sale;
 
-        $sale->creator_id = 0;
-        $sale->organization_id = 0;
+        $sale->creator_id = 1;
+        $sale->organization_id = 1;
         $sale->customer_id = $id;
-        $sale->status = "complete";
+        $sale->status = "open";
         $sale->taxable = true;
-        // $sale->subtotal = $request->subtotal;
-        // $sale->tax = $request->tax;
-        // $sale->total = $request-total;
+        $sale->subtotal = $subtotal;
+        $sale->tax = $tax;
+        $sale->total = $total;
         $sale->source = "website";
         $sale->refund = false;
         $sale->sell_to_organization = false;
 
-        //$sale->save();
+        $sale->save();
+
+        $sale->products()->attach($products);
+
+        // TODO: SALE MEMO WITH SALE INFORMATION
+
+        $sale->memo()->create([
+           'author_id' => 1,
+           'message' => $request->CHECKOUT_ID
+        ]);
+
+        $sale->memo()->create([
+           'author_id' => 1,
+           'message' => 'Created by customer through the website'
+        ]);
+
+        return response($sale->id, 201);
+    });
+
+    Route::post("/account/{id}/sales/{saleId}/payments", function (int $id, int $saleId, Request $request) {
+        $customer = User::find($id);
+
+        $method = PaymentMethod::where('name','LIKE', '%tripe%')->first();
+
+        // TODO: ONLY ACTIVE CUSTOMERS
+
+        if ($customer === null) return response('Customer not found', 400);
+
+        $sale = Sale::find($saleId);
+
+        if ($sale == null || $sale->balance == 0 || $sale->status == "complete")
+            return response('Sale not found', 400);
 
         // TODO: ADD PAYMENT TO SALE
 
-        return $products;
+        $sale->payments()->create([
+           'cashier_id' => 1,
+           'payment_method_id' => $method->id,
+           'tendered' => $request->tendered,
+           'total' => $sale->total,
+           'change_due' => 0,
+           'reference' => $request->CHECKOUT_ID,
+           'source' => 'website',
+        ]);
+
+        // TODO: DO NOT CLOSE SALE IF BALANCE IS 0
+        if ($sale->total == $request->tendered) {
+            $sale->status = "complete";
+            $sale->save();
+        } else {
+            $sale->memos()->create([
+               'author_id' => 1,
+               'message' => "Sale wasn't close because sale balance was not 0. $$request->tendered was passed as tendered via stripe."
+            ]);
+        }
+
+        // TODO: MEMBERSHIP OR TICKETS?
+
+        if ($sale->products->where('name', 'LIKE', '%embership%')) {
+            $name = explode(" (", $sale->products()->first()->name)[0];
+
+            $memberType = MemberType::where('name', $name)->first();
+
+            $member = Member::create([
+                'member_type_id' => $memberType->id,
+                'creator_id' => 1,
+                'primary_id' => $id,
+                'start' => new \DateTime(),
+                'end' => (new \DateTime())
+                    ->modify('+' . $memberType->duration . ' days')
+                    ->setTime(23, 59, 59)
+                ]);
+
+            $sale->memos()->create([
+                'author_id' => 1,
+                'message' => "Membership #{$member->id} created successfully."
+            ]);
+
+            User::where('id', $id)
+                ->update([
+                   'role_id' => 5, // MEMBER ROLE
+                   'membership_id' => $member->id,
+                ]);
+
+        } else if ($sale->tickets()->count() > 0) {
+            // HANDLE SALE WITH TICKETS
+        }
+
+        // TODO: CREATE MEMBERSHIP IF USER IS BUYING MEMBERSHIP
+
+        return ['sale_id' => $sale->id, 'balance' => $sale->balance];
     });
 });
 

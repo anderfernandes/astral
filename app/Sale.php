@@ -11,6 +11,13 @@ class Sale extends Model
   public $fillable = ['ticket_id', 'product_id'];
 
   /**
+       * The accessors to append to the model's array form.
+       *
+       * @var array
+       */
+      protected $appends = ['balance'];
+
+  /**
    * Return products included in this sale
    * @return App\Product An instance of the Product model.
    */
