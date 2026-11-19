@@ -8,14 +8,24 @@ use App\Product;
 class Sale extends Model
 {
 
-  public $fillable = ['ticket_id', 'product_id'];
+    public $fillable = [ 'ticket_id', 'product_id', 'status' ];
 
-  /**
-       * The accessors to append to the model's array form.
-       *
-       * @var array
-       */
-      protected $appends = ['balance'];
+    /**
+    * The accessors to append to the model's array form.
+    *
+    * @var array
+    */
+    protected $appends = ['balance'];
+
+    protected $casts = [
+      'taxable' => 'boolean',
+      'refund' => 'boolean',
+      'sell_to_organization' => 'boolean',
+      'subtotal' => 'float',
+      'tax' => 'float',
+      'total' => 'float',
+      'customer_id' => 'int'
+    ];
 
   /**
    * Return products included in this sale

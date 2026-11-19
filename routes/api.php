@@ -139,9 +139,9 @@ Route::prefix("v2")->group(function () {
             'email'           => $email,
             'password'        => bcrypt($request->password),
             'role_id'         => 7,
-            'organization_id' => 0,
+            'organization_id' => 1,
             'type'            => 'individual',
-            'membership_id'   => 0,
+            'membership_id'   => 1,
             'phone'           => $request->phone,
             'active'          => false,
             'staff'           => false,
@@ -180,7 +180,9 @@ Route::prefix("v2")->group(function () {
 
                 User::where('email', $item->email)
                     ->first()
-                    ->update(['active', true]);
+                    ->update([
+                        'active' => true
+                    ]);
 
                 return response('', 200);
             }
@@ -219,17 +221,20 @@ Route::prefix("v2")->group(function () {
         ]);
     });
 
-    Route::get("/account/{id}/sales", function (int $id) {
+    Route::get("/account/{id}/sales", function (int $id, Request $request) {
         if ($id <= 1) return response('', 404);
 
-        return Sale::with(['memos', 'payments'])
-            ->where('customer_id', $id)
+        $sales = Sale::with(['memos', 'payments'])
+            ->where('customer_id', $id);
+
+        if ($request->has('status'))
+            $sales = $sales->where('status', $request->status);
+
+        return $sales->orderBy('id', 'desc')
             ->get();
     });
 
     Route::post("/account/{id}/sales", function (int $id, Request $request){
-        if ($id <= 1 || $request->id != $id) return response('', 404);
-
         $customer = User::find($id);
 
         // TODO: ONLY ACTIVE CUSTOMERS
@@ -330,7 +335,30 @@ Route::prefix("v2")->group(function () {
            'message' => 'Created by customer through the website'
         ]);
 
-        return response($sale->id, 201);
+        return response()->json(["data" => $sale->id], 201);
+    });
+
+    Route::put("/account/{id}/sales/{saleId}", function (int $id, int $saleId, Request $request) {
+        $sale = Sale::find($saleId);
+
+        if ($sale->customer_id != $id) return response('', 404);
+
+        $data = [];
+
+        if ($request->has('status')) {
+            $data['status'] = $request->status;
+
+            $sale->memos()->create([
+                'author_id' => 1,
+                'message' => "Sale status set to $request->status by customer."
+            ]);
+        }
+
+        if (count($data) <= 0) return response('', 200);
+
+        $sale->update($data);
+
+        return response('', 201);
     });
 
     Route::post("/account/{id}/sales/{saleId}/payments", function (int $id, int $saleId, Request $request) {
