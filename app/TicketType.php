@@ -10,8 +10,9 @@ class TicketType extends Model
       'public' => 'boolean',
       'price'  => 'double',
       'in_cashier' => 'boolean',
+      'active' => 'boolean'
     ];
-    
+
     // This relationship defines what event types certain tickets are allowed
     public function allowedEvents()
     {

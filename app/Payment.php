@@ -9,6 +9,14 @@ class Payment extends Model
 
   protected $fillable = ['cashier_id', 'payment_method_id', 'tendered', 'total', 'change_due', 'source', 'sale_id', 'reference'];
 
+  protected $casts = [
+    'refunded' => 'boolean',
+    'subtotal' => 'float',
+    'tendered' => 'float',
+    'total' => 'float',
+    'balance' => 'float',
+    'customer_id' => 'int'
+  ];
 
   public function method()
   {

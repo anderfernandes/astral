@@ -101,6 +101,12 @@ Route::prefix("v2")->group(function () {
         ->get();
     });
 
+    Route::get("/events/{id}", function (int $id) {
+       return Event::where('id', $id)
+        ->with(['type.allowedTickets', 'show'])
+        ->first();
+    });
+
     Route::get("/member-types", function () {
        return MemberType::all();
     });
@@ -336,6 +342,16 @@ Route::prefix("v2")->group(function () {
         ]);
 
         return response()->json(["data" => $sale->id], 201);
+    });
+
+    Route::get("/account/{id}/sales/{saleId}", function (int $id, int $saleId) {
+       $sale = Sale::with(["products", "tickets"])
+        ->where('id',$saleId)
+        ->first();
+
+      if ($sale->customer_id != $id) return response('', 404);
+
+      return $sale;
     });
 
     Route::put("/account/{id}/sales/{saleId}", function (int $id, int $saleId, Request $request) {

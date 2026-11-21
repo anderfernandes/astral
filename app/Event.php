@@ -8,10 +8,13 @@ class Event extends Model
 {
 
   protected $fillable = ['start', 'end', 'memo', 'seats', 'creator_id', 'type_id', 'public', 'show_id'];
-  
+
   protected $appends  = ['title'];
 
-  protected $casts = ['seats' => 'integer'];
+  protected $casts = [
+      'seats' => 'integer',
+      'public' => 'boolean'
+  ];
 
   /**
    * These variables will be mutated to dates
