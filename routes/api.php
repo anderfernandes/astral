@@ -450,6 +450,27 @@ Route::prefix("v2")->group(function () {
 
         return ['sale_id' => $sale->id, 'balance' => $sale->balance];
     });
+
+    Route::get("/pricing", function () {
+       return [
+         'tickets' => TicketType::where(['active' => true ])->with(['allowedEvents'])->get(),
+         'memberships' => MemberType::where('id', '>', 1)->get(),
+       ];
+    });
+
+    Route::get("/event-types", function () {
+       return EventType::where('public', true)->get();
+    });
+
+    Route::get("/event-types/{id}", function (int $id) {
+        if ($id === 1) return response('', 404);
+
+        $eventType = EventType::find($id);
+
+        if ($eventType == null) return response('', 404);
+
+        return $eventType;
+    });
 });
 
 Route::get('shows', function (Request $request) {
