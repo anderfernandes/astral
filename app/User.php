@@ -12,7 +12,8 @@ class User extends Authenticatable
   protected $casts = [
     'newsletter' => 'boolean',
     'active' => 'boolean',
-    'staff' => 'boolean'
+    'staff' => 'boolean',
+    'membership_id' => 'int'
   ];
 
   /**
